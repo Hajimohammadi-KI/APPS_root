@@ -1,0 +1,50 @@
+"use client";
+
+import type { Route } from "next";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import type { NavigationItem } from "@/lib/navigation";
+import { cn } from "@/lib/utils";
+
+export function AppNavigation({
+  items,
+  onNavigate,
+}: Readonly<{
+  items: readonly NavigationItem[];
+  onNavigate?: () => void;
+}>) {
+  const pathname = usePathname();
+
+  return (
+    <nav aria-label="Hauptnavigation">
+      <ul className="space-y-1">
+        {items.map((item) => {
+          const active =
+            item.href === "/"
+              ? pathname === "/"
+              : pathname.startsWith(item.href);
+          const Icon = item.icon;
+
+          return (
+            <li key={item.href}>
+              <Link
+                href={item.href as Route}
+                {...(onNavigate === undefined ? {} : { onClick: onNavigate })}
+                {...(active ? { "aria-current": "page" as const } : {})}
+                className={cn(
+                  "flex min-h-10 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-accent hover:text-accent-foreground focus-visible:ring-3 focus-visible:ring-ring/50",
+                  active &&
+                    "bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-lg shadow-blue-600/20 hover:text-white",
+                )}
+              >
+                <Icon className="size-4.5" aria-hidden="true" />
+                {item.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}

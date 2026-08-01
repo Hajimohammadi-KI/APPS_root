@@ -1,0 +1,58 @@
+{
+  "name": "deutschflow-windows",
+  "version": "20.8.2",
+  "private": true,
+  "description": "DeutschFlow als einfach installierbare Windows-Desktop-App",
+  "author": "DeutschFlow",
+  "main": "main.cjs",
+  "packageManager": "bun@1.3.14",
+  "scripts": {
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "43.2.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "app.deutschflow.grammar.desktop",
+    "productName": "DeutschFlow",
+    "asar": true,
+    "files": [
+      "main.cjs",
+      "preload.bundle.cjs",
+      "offline.html"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "../../artifacts/windows-installer"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "installerLanguages": [
+        "de_DE"
+      ],
+      "language": "1031",
+      "menuCategory": "DeutschFlow",
+      "runAfterFinish": true,
+      "shortcutName": "DeutschFlow",
+      "artifactName": "DeutschFlow-Setup-${version}.${ext}"
+    }
+  }
+}

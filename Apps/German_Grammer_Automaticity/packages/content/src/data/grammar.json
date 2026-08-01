@@ -1,0 +1,3657 @@
+[
+  {
+    "level": "A1",
+    "title": "Personalpronomen und sein",
+    "rule": "Ich, du, er, sie, es, wir, ihr, sie/Sie stehen als Subjekt; sein wird unregelmäßig konjugiert.",
+    "examples": [
+      "Ich bin Studentin.",
+      "Sie ist müde.",
+      "Wir sind hier."
+    ],
+    "commonError": "Ich sein müde. → Ich bin müde.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich sein müde.",
+        "Ich bin müde."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich bin Studentin.",
+        "Ich bin Studentin."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Sie ist müde.",
+        "Sie ist müde."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/grundlagen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Personalpronomen und sein“.",
+        "explanation",
+        "Personalpronomen und sein"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/grundlagen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Personalpronomen und sein“, ohne erneute Suche.",
+        "exercise",
+        "Personalpronomen und sein"
+      ]
+    ],
+    "testAnswer": "Ich bin Studentin.",
+    "recallTest": "Ich, du, er, sie, es, wir, ihr, sie/Sie stehen als Subjekt; sein wird unregelmäßig konjugiert.",
+    "repairTest": "Ich bin müde.",
+    "transferTest": "In einer neuen Situation kann ich Personalpronomen und sein korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "haben",
+    "rule": "haben drückt Besitz, Beziehungen und Zustände aus.",
+    "examples": [
+      "Ich habe einen Termin.",
+      "Er hat zwei Kinder."
+    ],
+    "commonError": "Er haben zwei Kinder. → Er hat zwei Kinder.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Er haben zwei Kinder.",
+        "Er hat zwei Kinder."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich habe einen Termin.",
+        "Ich habe einen Termin."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Er hat zwei Kinder.",
+        "Er hat zwei Kinder."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/sein-haben",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „haben“.",
+        "explanation",
+        "haben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/sein-haben#uebungen",
+        "Direkte Übungen zum Grammatikbereich „haben“, ohne erneute Suche.",
+        "exercise",
+        "haben"
+      ]
+    ],
+    "testAnswer": "Ich habe einen Termin.",
+    "recallTest": "haben drückt Besitz, Beziehungen und Zustände aus.",
+    "repairTest": "Er hat zwei Kinder.",
+    "transferTest": "In einer neuen Situation kann ich haben korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "Präsens regelmäßiger Verben",
+    "rule": "Verbstamm + Endung; das finite Verb steht im Hauptsatz an Position 2.",
+    "examples": [
+      "Ich lerne Deutsch.",
+      "Heute lerne ich Deutsch."
+    ],
+    "commonError": "Heute ich lerne Deutsch. → Heute lerne ich Deutsch.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Heute ich lerne Deutsch.",
+        "Heute lerne ich Deutsch."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich lerne Deutsch.",
+        "Ich lerne Deutsch."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Heute lerne ich Deutsch.",
+        "Heute lerne ich Deutsch."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/praesens",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Präsens regelmäßiger Verben“.",
+        "explanation",
+        "Präsens regelmäßiger Verben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/praesens#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Präsens regelmäßiger Verben“, ohne erneute Suche.",
+        "exercise",
+        "Präsens regelmäßiger Verben"
+      ]
+    ],
+    "testAnswer": "Ich lerne Deutsch.",
+    "recallTest": "Verbstamm + Endung; das finite Verb steht im Hauptsatz an Position 2.",
+    "repairTest": "Heute lerne ich Deutsch.",
+    "transferTest": "In einer neuen Situation kann ich Präsens regelmäßiger Verben korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "Präsens unregelmäßiger Verben",
+    "rule": "Einige starke Verben ändern den Stammvokal bei du und er/sie/es.",
+    "examples": [
+      "Du fährst nach Hause.",
+      "Er liest ein Buch."
+    ],
+    "commonError": "Du fahrst. → Du fährst.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Du fahrst.",
+        "Du fährst."
+      ],
+      [
+        "Schreibe den Modellsatz: Du fährst nach Hause.",
+        "Du fährst nach Hause."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Er liest ein Buch.",
+        "Er liest ein Buch."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/praesens",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Präsens unregelmäßiger Verben“.",
+        "explanation",
+        "Präsens unregelmäßiger Verben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/praesens#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Präsens unregelmäßiger Verben“, ohne erneute Suche.",
+        "exercise",
+        "Präsens unregelmäßiger Verben"
+      ]
+    ],
+    "testAnswer": "Du fährst nach Hause.",
+    "recallTest": "Einige starke Verben ändern den Stammvokal bei du und er/sie/es.",
+    "repairTest": "Du fährst.",
+    "transferTest": "In einer neuen Situation kann ich Präsens unregelmäßiger Verben korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "W-Fragen",
+    "rule": "Fragewort + finites Verb + Subjekt.",
+    "examples": [
+      "Wo wohnst du?",
+      "Warum lernst du Deutsch?"
+    ],
+    "commonError": "Wo du wohnst? → Wo wohnst du?",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Wo du wohnst?",
+        "Wo wohnst du?"
+      ],
+      [
+        "Schreibe den Modellsatz: Wo wohnst du?",
+        "Wo wohnst du?"
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Warum lernst du Deutsch?",
+        "Warum lernst du Deutsch?"
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/fragesaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „W-Fragen“.",
+        "explanation",
+        "W-Fragen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/fragesaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „W-Fragen“, ohne erneute Suche.",
+        "exercise",
+        "W-Fragen"
+      ]
+    ],
+    "testAnswer": "Wo wohnst du?",
+    "recallTest": "Fragewort + finites Verb + Subjekt.",
+    "repairTest": "Wo wohnst du?",
+    "transferTest": "In einer neuen Situation kann ich W-Fragen korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "Ja/Nein-Fragen",
+    "rule": "Das finite Verb steht an Position 1.",
+    "examples": [
+      "Kommst du morgen?",
+      "Haben Sie Zeit?"
+    ],
+    "commonError": "Du kommst morgen? → Kommst du morgen?",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Du kommst morgen?",
+        "Kommst du morgen?"
+      ],
+      [
+        "Schreibe den Modellsatz: Kommst du morgen?",
+        "Kommst du morgen?"
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Haben Sie Zeit?",
+        "Haben Sie Zeit?"
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/fragesaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Ja/Nein-Fragen“.",
+        "explanation",
+        "Ja/Nein-Fragen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/fragesaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Ja/Nein-Fragen“, ohne erneute Suche.",
+        "exercise",
+        "Ja/Nein-Fragen"
+      ]
+    ],
+    "testAnswer": "Kommst du morgen?",
+    "recallTest": "Das finite Verb steht an Position 1.",
+    "repairTest": "Kommst du morgen?",
+    "transferTest": "In einer neuen Situation kann ich Ja/Nein-Fragen korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "bestimmter und unbestimmter Artikel",
+    "rule": "der/die/das für Bekanntes; ein/eine für Nicht-Spezifisches.",
+    "examples": [
+      "Das ist ein Buch.",
+      "Das Buch ist neu."
+    ],
+    "commonError": "Das ist Buch. → ein Buch.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Das ist Buch.",
+        "ein Buch."
+      ],
+      [
+        "Schreibe den Modellsatz: Das ist ein Buch.",
+        "Das ist ein Buch."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Das Buch ist neu.",
+        "Das Buch ist neu."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/artikel",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „bestimmter und unbestimmter Artikel“.",
+        "explanation",
+        "bestimmter und unbestimmter Artikel"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/artikel#uebungen",
+        "Direkte Übungen zum Grammatikbereich „bestimmter und unbestimmter Artikel“, ohne erneute Suche.",
+        "exercise",
+        "bestimmter und unbestimmter Artikel"
+      ]
+    ],
+    "testAnswer": "Das ist ein Buch.",
+    "recallTest": "der/die/das für Bekanntes; ein/eine für Nicht-Spezifisches.",
+    "repairTest": "ein Buch.",
+    "transferTest": "In einer neuen Situation kann ich bestimmter und unbestimmter Artikel korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "Pluralformen",
+    "rule": "Pluralformen müssen meist mit dem Nomen gelernt werden.",
+    "examples": [
+      "das Buch – die Bücher; die Frau – die Frauen"
+    ],
+    "commonError": "zwei Buch → zwei Bücher",
+    "exercises": [
+      [
+        "Korrigiere den Satz: zwei Buch",
+        "zwei Bücher"
+      ],
+      [
+        "Schreibe den Modellsatz: das Buch – die Bücher; die Frau – die Frauen",
+        "das Buch – die Bücher; die Frau – die Frauen"
+      ],
+      [
+        "Erkläre die Regel: Pluralformen",
+        "Pluralformen müssen meist mit dem Nomen gelernt werden."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/nomen/plural",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Pluralformen“.",
+        "explanation",
+        "Pluralformen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/nomen/plural#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Pluralformen“, ohne erneute Suche.",
+        "exercise",
+        "Pluralformen"
+      ]
+    ],
+    "testAnswer": "das Buch – die Bücher; die Frau – die Frauen",
+    "recallTest": "Pluralformen müssen meist mit dem Nomen gelernt werden.",
+    "repairTest": "zwei Bücher",
+    "transferTest": "In einer neuen Situation kann ich Pluralformen korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "Akkusativ",
+    "rule": "Der Akkusativ markiert häufig das direkte Objekt; der → den, ein → einen.",
+    "examples": [
+      "Ich sehe den Mann.",
+      "Ich kaufe einen Tisch."
+    ],
+    "commonError": "Ich sehe der Mann. → den Mann.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich sehe der Mann.",
+        "den Mann."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich sehe den Mann.",
+        "Ich sehe den Mann."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Ich kaufe einen Tisch.",
+        "Ich kaufe einen Tisch."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/deklination",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Akkusativ“.",
+        "explanation",
+        "Akkusativ"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/deklination#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Akkusativ“, ohne erneute Suche.",
+        "exercise",
+        "Akkusativ"
+      ]
+    ],
+    "testAnswer": "Ich sehe den Mann.",
+    "recallTest": "Der Akkusativ markiert häufig das direkte Objekt; der → den, ein → einen.",
+    "repairTest": "den Mann.",
+    "transferTest": "In einer neuen Situation kann ich Akkusativ korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "Possessivartikel",
+    "rule": "mein, dein, sein, ihr, unser, euer, Ihr werden wie ein-Wörter dekliniert.",
+    "examples": [
+      "Das ist meine Tasche.",
+      "Unser Kurs beginnt heute."
+    ],
+    "commonError": "Das ist mein Tasche. → meine Tasche.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Das ist mein Tasche.",
+        "meine Tasche."
+      ],
+      [
+        "Schreibe den Modellsatz: Das ist meine Tasche.",
+        "Das ist meine Tasche."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Unser Kurs beginnt heute.",
+        "Unser Kurs beginnt heute."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/pronomen/possessivpronomen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Possessivartikel“.",
+        "explanation",
+        "Possessivartikel"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/pronomen/possessivpronomen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Possessivartikel“, ohne erneute Suche.",
+        "exercise",
+        "Possessivartikel"
+      ]
+    ],
+    "testAnswer": "Das ist meine Tasche.",
+    "recallTest": "mein, dein, sein, ihr, unser, euer, Ihr werden wie ein-Wörter dekliniert.",
+    "repairTest": "meine Tasche.",
+    "transferTest": "In einer neuen Situation kann ich Possessivartikel korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "nicht und kein",
+    "rule": "kein negiert Nomen ohne bestimmten Artikel; nicht negiert andere Satzteile oder den ganzen Satz.",
+    "examples": [
+      "Ich habe kein Auto.",
+      "Ich komme heute nicht."
+    ],
+    "commonError": "Ich habe nicht Auto. → kein Auto.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich habe nicht Auto.",
+        "kein Auto."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich habe kein Auto.",
+        "Ich habe kein Auto."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Ich komme heute nicht.",
+        "Ich komme heute nicht."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/negation",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „nicht und kein“.",
+        "explanation",
+        "nicht und kein"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/negation#uebungen",
+        "Direkte Übungen zum Grammatikbereich „nicht und kein“, ohne erneute Suche.",
+        "exercise",
+        "nicht und kein"
+      ]
+    ],
+    "testAnswer": "Ich habe kein Auto.",
+    "recallTest": "kein negiert Nomen ohne bestimmten Artikel; nicht negiert andere Satzteile oder den ganzen Satz.",
+    "repairTest": "kein Auto.",
+    "transferTest": "In einer neuen Situation kann ich nicht und kein korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "Modalverb können",
+    "rule": "Modalverb an Position 2, Vollverb im Infinitiv am Satzende.",
+    "examples": [
+      "Ich kann gut schwimmen.",
+      "Kannst du mir helfen?"
+    ],
+    "commonError": "Ich kann schwimme. → kann schwimmen.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich kann schwimme.",
+        "kann schwimmen."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich kann gut schwimmen.",
+        "Ich kann gut schwimmen."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Kannst du mir helfen?",
+        "Kannst du mir helfen?"
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/modalverben",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Modalverb können“.",
+        "explanation",
+        "Modalverb können"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/modalverben#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Modalverb können“, ohne erneute Suche.",
+        "exercise",
+        "Modalverb können"
+      ]
+    ],
+    "testAnswer": "Ich kann gut schwimmen.",
+    "recallTest": "Modalverb an Position 2, Vollverb im Infinitiv am Satzende.",
+    "repairTest": "kann schwimmen.",
+    "transferTest": "In einer neuen Situation kann ich Modalverb können korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "Trennbare Verben",
+    "rule": "Im Hauptsatz steht die Vorsilbe am Satzende.",
+    "examples": [
+      "Ich stehe um sieben Uhr auf."
+    ],
+    "commonError": "Ich aufstehe um sieben. → Ich stehe um sieben Uhr auf.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich aufstehe um sieben.",
+        "Ich stehe um sieben Uhr auf."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich stehe um sieben Uhr auf.",
+        "Ich stehe um sieben Uhr auf."
+      ],
+      [
+        "Erkläre die Regel: Trennbare Verben",
+        "Im Hauptsatz steht die Vorsilbe am Satzende."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/trennbare-verben",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Trennbare Verben“.",
+        "explanation",
+        "Trennbare Verben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/trennbare-verben#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Trennbare Verben“, ohne erneute Suche.",
+        "exercise",
+        "Trennbare Verben"
+      ]
+    ],
+    "testAnswer": "Ich stehe um sieben Uhr auf.",
+    "recallTest": "Im Hauptsatz steht die Vorsilbe am Satzende.",
+    "repairTest": "Ich stehe um sieben Uhr auf.",
+    "transferTest": "In einer neuen Situation kann ich Trennbare Verben korrekt verwenden."
+  },
+  {
+    "level": "A1",
+    "title": "lokale Präpositionen",
+    "rule": "in, an, auf, unter, neben, zwischen beschreiben Orte; Kasus hängt von Bedeutung und Präposition ab.",
+    "examples": [
+      "Das Buch liegt auf dem Tisch."
+    ],
+    "commonError": "Das Buch liegt auf den Tisch. → auf dem Tisch.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Das Buch liegt auf den Tisch.",
+        "auf dem Tisch."
+      ],
+      [
+        "Schreibe den Modellsatz: Das Buch liegt auf dem Tisch.",
+        "Das Buch liegt auf dem Tisch."
+      ],
+      [
+        "Erkläre die Regel: lokale Präpositionen",
+        "in, an, auf, unter, neben, zwischen beschreiben Orte; Kasus hängt von Bedeutung und Präposition ab."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/praepositionen/lokal",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „lokale Präpositionen“.",
+        "explanation",
+        "lokale Präpositionen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/praepositionen/lokal#uebungen",
+        "Direkte Übungen zum Grammatikbereich „lokale Präpositionen“, ohne erneute Suche.",
+        "exercise",
+        "lokale Präpositionen"
+      ]
+    ],
+    "testAnswer": "Das Buch liegt auf dem Tisch.",
+    "recallTest": "in, an, auf, unter, neben, zwischen beschreiben Orte; Kasus hängt von Bedeutung und Präposition ab.",
+    "repairTest": "auf dem Tisch.",
+    "transferTest": "In einer neuen Situation kann ich lokale Präpositionen korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Perfekt mit haben",
+    "rule": "haben + Partizip II für viele abgeschlossene Handlungen.",
+    "examples": [
+      "Ich habe gestern gearbeitet."
+    ],
+    "commonError": "Ich habe gestern arbeiten. → gearbeitet.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich habe gestern arbeiten.",
+        "gearbeitet."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich habe gestern gearbeitet.",
+        "Ich habe gestern gearbeitet."
+      ],
+      [
+        "Erkläre die Regel: Perfekt mit haben",
+        "haben + Partizip II für viele abgeschlossene Handlungen."
+      ],
+      [
+        "Formuliere ein aktuelles Ergebnis im Perfekt: arbeiten → jetzt müde sein.",
+        "Ich habe gearbeitet, deshalb bin ich jetzt müde."
+      ],
+      [
+        "Wähle die passende Zeitform: Ich ___ seit drei Jahren in Berlin (wohnen).",
+        "Ich wohne seit drei Jahren in Berlin."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/perfekt",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Perfekt mit haben“.",
+        "explanation",
+        "Perfekt mit haben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/perfekt#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Perfekt mit haben“, ohne erneute Suche.",
+        "exercise",
+        "Perfekt mit haben"
+      ]
+    ],
+    "testAnswer": "Ich habe gestern gearbeitet.",
+    "recallTest": "haben + Partizip II für viele abgeschlossene Handlungen.",
+    "repairTest": "gearbeitet.",
+    "transferTest": "In einer neuen Situation kann ich Perfekt mit haben korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Perfekt mit sein",
+    "rule": "sein + Partizip II bei Ortswechsel und Zustandsänderung.",
+    "examples": [
+      "Wir sind nach Berlin gefahren."
+    ],
+    "commonError": "Wir haben nach Berlin gefahren. → sind gefahren.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Wir haben nach Berlin gefahren.",
+        "sind gefahren."
+      ],
+      [
+        "Schreibe den Modellsatz: Wir sind nach Berlin gefahren.",
+        "Wir sind nach Berlin gefahren."
+      ],
+      [
+        "Erkläre die Regel: Perfekt mit sein",
+        "sein + Partizip II bei Ortswechsel und Zustandsänderung."
+      ],
+      [
+        "Bilde das Perfekt: Gestern / nach Köln / fahren.",
+        "Gestern bin ich nach Köln gefahren."
+      ],
+      [
+        "Entscheide haben oder sein: Der Zug ___ pünktlich angekommen.",
+        "Der Zug ist pünktlich angekommen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/perfekt",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Perfekt mit sein“.",
+        "explanation",
+        "Perfekt mit sein"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/perfekt#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Perfekt mit sein“, ohne erneute Suche.",
+        "exercise",
+        "Perfekt mit sein"
+      ]
+    ],
+    "testAnswer": "Wir sind nach Berlin gefahren.",
+    "recallTest": "sein + Partizip II bei Ortswechsel und Zustandsänderung.",
+    "repairTest": "sind gefahren.",
+    "transferTest": "In einer neuen Situation kann ich Perfekt mit sein korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Präteritum von sein/haben/Modalverben",
+    "rule": "war, hatte, konnte, musste usw. sind in Alltag und Erzählung häufig.",
+    "examples": [
+      "Ich war krank.",
+      "Sie musste arbeiten."
+    ],
+    "commonError": "Ich bin gestern krank. → Ich war gestern krank.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich bin gestern krank.",
+        "Ich war gestern krank."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich war krank.",
+        "Ich war krank."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Sie musste arbeiten.",
+        "Sie musste arbeiten."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/praeteritum",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Präteritum von sein/haben/Modalverben“.",
+        "explanation",
+        "Präteritum von sein/haben/Modalverben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/praeteritum#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Präteritum von sein/haben/Modalverben“, ohne erneute Suche.",
+        "exercise",
+        "Präteritum von sein/haben/Modalverben"
+      ]
+    ],
+    "testAnswer": "Ich war krank.",
+    "recallTest": "war, hatte, konnte, musste usw. sind in Alltag und Erzählung häufig.",
+    "repairTest": "Ich war gestern krank.",
+    "transferTest": "In einer neuen Situation kann ich Präteritum von sein/haben/Modalverben korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Dativ",
+    "rule": "Der Dativ markiert oft den Empfänger; der/das → dem, die → der, Plural → den + n.",
+    "examples": [
+      "Ich gebe dem Mann das Buch."
+    ],
+    "commonError": "Ich gebe der Mann das Buch. → dem Mann.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich gebe der Mann das Buch.",
+        "dem Mann."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich gebe dem Mann das Buch.",
+        "Ich gebe dem Mann das Buch."
+      ],
+      [
+        "Erkläre die Regel: Dativ",
+        "Der Dativ markiert oft den Empfänger; der/das → dem, die → der, Plural → den + n."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/deklination",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Dativ“.",
+        "explanation",
+        "Dativ"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/deklination#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Dativ“, ohne erneute Suche.",
+        "exercise",
+        "Dativ"
+      ]
+    ],
+    "testAnswer": "Ich gebe dem Mann das Buch.",
+    "recallTest": "Der Dativ markiert oft den Empfänger; der/das → dem, die → der, Plural → den + n.",
+    "repairTest": "dem Mann.",
+    "transferTest": "In einer neuen Situation kann ich Dativ korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Wechselpräpositionen",
+    "rule": "Wo? + Dativ; Wohin? + Akkusativ.",
+    "examples": [
+      "Das Bild hängt an der Wand.",
+      "Ich hänge es an die Wand."
+    ],
+    "commonError": "Ich gehe in der Schule. → in die Schule.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich gehe in der Schule.",
+        "in die Schule."
+      ],
+      [
+        "Schreibe den Modellsatz: Das Bild hängt an der Wand.",
+        "Das Bild hängt an der Wand."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Ich hänge es an die Wand.",
+        "Ich hänge es an die Wand."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/praepositionen/wechselpraepositionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Wechselpräpositionen“.",
+        "explanation",
+        "Wechselpräpositionen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/praepositionen/wechselpraepositionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Wechselpräpositionen“, ohne erneute Suche.",
+        "exercise",
+        "Wechselpräpositionen"
+      ]
+    ],
+    "testAnswer": "Das Bild hängt an der Wand.",
+    "recallTest": "Wo? + Dativ; Wohin? + Akkusativ.",
+    "repairTest": "in die Schule.",
+    "transferTest": "In einer neuen Situation kann ich Wechselpräpositionen korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Modalverben müssen, dürfen, sollen, wollen",
+    "rule": "Modalverb konjugiert; Infinitiv am Ende.",
+    "examples": [
+      "Ich muss heute lernen.",
+      "Du darfst hier parken."
+    ],
+    "commonError": "Ich muss heute zu lernen. → lernen.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich muss heute zu lernen.",
+        "lernen."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich muss heute lernen.",
+        "Ich muss heute lernen."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Du darfst hier parken.",
+        "Du darfst hier parken."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/modalverben",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Modalverben müssen, dürfen, sollen, wollen“.",
+        "explanation",
+        "Modalverben müssen, dürfen, sollen, wollen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/modalverben#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Modalverben müssen, dürfen, sollen, wollen“, ohne erneute Suche.",
+        "exercise",
+        "Modalverben müssen, dürfen, sollen, wollen"
+      ]
+    ],
+    "testAnswer": "Ich muss heute lernen.",
+    "recallTest": "Modalverb konjugiert; Infinitiv am Ende.",
+    "repairTest": "lernen.",
+    "transferTest": "In einer neuen Situation kann ich Modalverben müssen, dürfen, sollen, wollen korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Komparativ und Superlativ",
+    "rule": "-er/mehr und am -sten/der -ste; unregelmäßige Formen lernen.",
+    "examples": [
+      "Deutsch ist leichter als gedacht.",
+      "Das ist am besten."
+    ],
+    "commonError": "mehr besser → besser.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: mehr besser",
+        "besser."
+      ],
+      [
+        "Schreibe den Modellsatz: Deutsch ist leichter als gedacht.",
+        "Deutsch ist leichter als gedacht."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Das ist am besten.",
+        "Das ist am besten."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/adjektive/steigerung",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Komparativ und Superlativ“.",
+        "explanation",
+        "Komparativ und Superlativ"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/adjektive/steigerung#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Komparativ und Superlativ“, ohne erneute Suche.",
+        "exercise",
+        "Komparativ und Superlativ"
+      ]
+    ],
+    "testAnswer": "Deutsch ist leichter als gedacht.",
+    "recallTest": "-er/mehr und am -sten/der -ste; unregelmäßige Formen lernen.",
+    "repairTest": "besser.",
+    "transferTest": "In einer neuen Situation kann ich Komparativ und Superlativ korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Nebensatz mit weil",
+    "rule": "Im Nebensatz steht das finite Verb am Ende.",
+    "examples": [
+      "Ich lerne Deutsch, weil ich in Deutschland lebe."
+    ],
+    "commonError": "weil ich lebe in Deutschland → weil ich in Deutschland lebe.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: weil ich lebe in Deutschland",
+        "weil ich in Deutschland lebe."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich lerne Deutsch, weil ich in Deutschland lebe.",
+        "Ich lerne Deutsch, weil ich in Deutschland lebe."
+      ],
+      [
+        "Erkläre die Regel: Nebensatz mit weil",
+        "Im Nebensatz steht das finite Verb am Ende."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/nebensaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Nebensatz mit weil“.",
+        "explanation",
+        "Nebensatz mit weil"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/nebensaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Nebensatz mit weil“, ohne erneute Suche.",
+        "exercise",
+        "Nebensatz mit weil"
+      ]
+    ],
+    "testAnswer": "Ich lerne Deutsch, weil ich in Deutschland lebe.",
+    "recallTest": "Im Nebensatz steht das finite Verb am Ende.",
+    "repairTest": "weil ich in Deutschland lebe.",
+    "transferTest": "In einer neuen Situation kann ich Nebensatz mit weil korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Nebensatz mit dass",
+    "rule": "dass leitet einen Inhaltssatz ein; Verb am Ende.",
+    "examples": [
+      "Ich glaube, dass er heute kommt."
+    ],
+    "commonError": "dass er kommt heute → dass er heute kommt.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: dass er kommt heute",
+        "dass er heute kommt."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich glaube, dass er heute kommt.",
+        "Ich glaube, dass er heute kommt."
+      ],
+      [
+        "Erkläre die Regel: Nebensatz mit dass",
+        "dass leitet einen Inhaltssatz ein; Verb am Ende."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/nebensaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Nebensatz mit dass“.",
+        "explanation",
+        "Nebensatz mit dass"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/nebensaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Nebensatz mit dass“, ohne erneute Suche.",
+        "exercise",
+        "Nebensatz mit dass"
+      ]
+    ],
+    "testAnswer": "Ich glaube, dass er heute kommt.",
+    "recallTest": "dass leitet einen Inhaltssatz ein; Verb am Ende.",
+    "repairTest": "dass er heute kommt.",
+    "transferTest": "In einer neuen Situation kann ich Nebensatz mit dass korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "wenn und als",
+    "rule": "wenn für Wiederholung/Gegenwart/Zukunft; als für einmalige Vergangenheit.",
+    "examples": [
+      "Als ich klein war, spielte ich oft draußen.",
+      "Wenn ich Zeit habe, lese ich ein Buch."
+    ],
+    "commonError": "Wenn ich klein war (einmalig) → Als ich klein war.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Wenn ich klein war (einmalig)",
+        "Als ich klein war."
+      ],
+      [
+        "Schreibe den Modellsatz: Als ich klein war, spielte ich oft draußen.",
+        "Als ich klein war, spielte ich oft draußen."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Wenn ich Zeit habe, lese ich ein Buch.",
+        "Wenn ich Zeit habe, lese ich ein Buch."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „wenn und als“.",
+        "explanation",
+        "wenn und als"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „wenn und als“, ohne erneute Suche.",
+        "exercise",
+        "wenn und als"
+      ]
+    ],
+    "testAnswer": "Als ich klein war, spielte ich oft draußen.",
+    "recallTest": "wenn für Wiederholung/Gegenwart/Zukunft; als für einmalige Vergangenheit.",
+    "repairTest": "Als ich klein war.",
+    "transferTest": "In einer neuen Situation kann ich wenn und als korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Reflexive Verben",
+    "rule": "Reflexivpronomen richtet sich nach Person und Kasus.",
+    "examples": [
+      "Ich interessiere mich für Musik."
+    ],
+    "commonError": "Ich interessiere für Musik. → mich.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich interessiere für Musik.",
+        "mich."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich interessiere mich für Musik.",
+        "Ich interessiere mich für Musik."
+      ],
+      [
+        "Erkläre die Regel: Reflexive Verben",
+        "Reflexivpronomen richtet sich nach Person und Kasus."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/reflexive-verben",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Reflexive Verben“.",
+        "explanation",
+        "Reflexive Verben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/reflexive-verben#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Reflexive Verben“, ohne erneute Suche.",
+        "exercise",
+        "Reflexive Verben"
+      ]
+    ],
+    "testAnswer": "Ich interessiere mich für Musik.",
+    "recallTest": "Reflexivpronomen richtet sich nach Person und Kasus.",
+    "repairTest": "mich.",
+    "transferTest": "In einer neuen Situation kann ich Reflexive Verben korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Adjektiv nach sein",
+    "rule": "Nach sein/werden/bleiben bleibt das Adjektiv unflektiert.",
+    "examples": [
+      "Der Kurs ist interessant."
+    ],
+    "commonError": "Der Kurs ist interessanter. (ohne Vergleich) → interessant.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Der Kurs ist interessanter. (ohne Vergleich)",
+        "interessant."
+      ],
+      [
+        "Schreibe den Modellsatz: Der Kurs ist interessant.",
+        "Der Kurs ist interessant."
+      ],
+      [
+        "Erkläre die Regel: Adjektiv nach sein",
+        "Nach sein/werden/bleiben bleibt das Adjektiv unflektiert."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/adjektive",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Adjektiv nach sein“.",
+        "explanation",
+        "Adjektiv nach sein"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/adjektive#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Adjektiv nach sein“, ohne erneute Suche.",
+        "exercise",
+        "Adjektiv nach sein"
+      ]
+    ],
+    "testAnswer": "Der Kurs ist interessant.",
+    "recallTest": "Nach sein/werden/bleiben bleibt das Adjektiv unflektiert.",
+    "repairTest": "interessant.",
+    "transferTest": "In einer neuen Situation kann ich Adjektiv nach sein korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Zeitangaben und Wortstellung",
+    "rule": "Zeit steht oft vor Art und Ort; Position 1 ist flexibel, Verb bleibt Position 2.",
+    "examples": [
+      "Morgen fahre ich mit dem Zug nach Berlin."
+    ],
+    "commonError": "Morgen ich fahre → Morgen fahre ich.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Morgen ich fahre",
+        "Morgen fahre ich."
+      ],
+      [
+        "Schreibe den Modellsatz: Morgen fahre ich mit dem Zug nach Berlin.",
+        "Morgen fahre ich mit dem Zug nach Berlin."
+      ],
+      [
+        "Erkläre die Regel: Zeitangaben und Wortstellung",
+        "Zeit steht oft vor Art und Ort; Position 1 ist flexibel, Verb bleibt Position 2."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Zeitangaben und Wortstellung“.",
+        "explanation",
+        "Zeitangaben und Wortstellung"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Zeitangaben und Wortstellung“, ohne erneute Suche.",
+        "exercise",
+        "Zeitangaben und Wortstellung"
+      ]
+    ],
+    "testAnswer": "Morgen fahre ich mit dem Zug nach Berlin.",
+    "recallTest": "Zeit steht oft vor Art und Ort; Position 1 ist flexibel, Verb bleibt Position 2.",
+    "repairTest": "Morgen fahre ich.",
+    "transferTest": "In einer neuen Situation kann ich Zeitangaben und Wortstellung korrekt verwenden."
+  },
+  {
+    "level": "A2",
+    "title": "Indefinitpronomen man/jemand/niemand",
+    "rule": "man für allgemeine Aussagen; jemand/niemand für unbekannte Personen.",
+    "examples": [
+      "In Deutschland trinkt man viel Kaffee."
+    ],
+    "commonError": "In Deutschland sie trinken viel Kaffee. → In Deutschland trinkt man viel Kaffee.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: In Deutschland sie trinken viel Kaffee.",
+        "In Deutschland trinkt man viel Kaffee."
+      ],
+      [
+        "Schreibe den Modellsatz: In Deutschland trinkt man viel Kaffee.",
+        "In Deutschland trinkt man viel Kaffee."
+      ],
+      [
+        "Erkläre die Regel: Indefinitpronomen man/jemand/niemand",
+        "man für allgemeine Aussagen; jemand/niemand für unbekannte Personen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/pronomen/indefinitpronomen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Indefinitpronomen man/jemand/niemand“.",
+        "explanation",
+        "Indefinitpronomen man/jemand/niemand"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/pronomen/indefinitpronomen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Indefinitpronomen man/jemand/niemand“, ohne erneute Suche.",
+        "exercise",
+        "Indefinitpronomen man/jemand/niemand"
+      ]
+    ],
+    "testAnswer": "In Deutschland trinkt man viel Kaffee.",
+    "recallTest": "man für allgemeine Aussagen; jemand/niemand für unbekannte Personen.",
+    "repairTest": "In Deutschland trinkt man viel Kaffee.",
+    "transferTest": "In einer neuen Situation kann ich Indefinitpronomen man/jemand/niemand korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Präteritum in Erzählungen",
+    "rule": "Präteritum wird besonders in schriftlichen Erzählungen und Berichten verwendet.",
+    "examples": [
+      "Er öffnete die Tür und ging hinaus."
+    ],
+    "commonError": "Er hat die Tür geöffnet und ging (unklarer Wechsel).",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Er hat die Tür geöffnet und ging (unklarer Wechsel).",
+        "Er öffnete die Tür und ging hinaus."
+      ],
+      [
+        "Schreibe den Modellsatz: Er öffnete die Tür und ging hinaus.",
+        "Er öffnete die Tür und ging hinaus."
+      ],
+      [
+        "Erkläre die Regel: Präteritum in Erzählungen",
+        "Präteritum wird besonders in schriftlichen Erzählungen und Berichten verwendet."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/praeteritum",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Präteritum in Erzählungen“.",
+        "explanation",
+        "Präteritum in Erzählungen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/praeteritum#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Präteritum in Erzählungen“, ohne erneute Suche.",
+        "exercise",
+        "Präteritum in Erzählungen"
+      ]
+    ],
+    "testAnswer": "Er öffnete die Tür und ging hinaus.",
+    "recallTest": "Präteritum wird besonders in schriftlichen Erzählungen und Berichten verwendet.",
+    "repairTest": "Er öffnete die Tür und ging hinaus.",
+    "transferTest": "In einer neuen Situation kann ich Präteritum in Erzählungen korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Plusquamperfekt",
+    "rule": "hatte/war + Partizip II für die Vorvergangenheit.",
+    "examples": [
+      "Nachdem ich gegessen hatte, ging ich spazieren."
+    ],
+    "commonError": "Nachdem ich gegessen habe, ging ich spazieren. → Nachdem ich gegessen hatte, ging ich spazieren.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Nachdem ich gegessen habe, ging ich spazieren.",
+        "Nachdem ich gegessen hatte, ging ich spazieren."
+      ],
+      [
+        "Schreibe den Modellsatz: Nachdem ich gegessen hatte, ging ich spazieren.",
+        "Nachdem ich gegessen hatte, ging ich spazieren."
+      ],
+      [
+        "Erkläre die Regel: Plusquamperfekt",
+        "hatte/war + Partizip II für die Vorvergangenheit."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/plusquamperfekt",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Plusquamperfekt“.",
+        "explanation",
+        "Plusquamperfekt"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/zeitformen/plusquamperfekt#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Plusquamperfekt“, ohne erneute Suche.",
+        "exercise",
+        "Plusquamperfekt"
+      ]
+    ],
+    "testAnswer": "Nachdem ich gegessen hatte, ging ich spazieren.",
+    "recallTest": "hatte/war + Partizip II für die Vorvergangenheit.",
+    "repairTest": "Nachdem ich gegessen hatte, ging ich spazieren.",
+    "transferTest": "In einer neuen Situation kann ich Plusquamperfekt korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Relativsätze Nominativ/Akkusativ",
+    "rule": "Relativpronomen richtet sich in Genus/Numerus nach dem Bezugswort und im Kasus nach seiner Rolle.",
+    "examples": [
+      "Das ist der Mann, der mir hilft.",
+      "Das ist der Mann, den ich sehe."
+    ],
+    "commonError": "der Mann, der ich sehe → den ich sehe.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: der Mann, der ich sehe",
+        "den ich sehe."
+      ],
+      [
+        "Schreibe den Modellsatz: Das ist der Mann, der mir hilft.",
+        "Das ist der Mann, der mir hilft."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Das ist der Mann, den ich sehe.",
+        "Das ist der Mann, den ich sehe."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Relativsätze Nominativ/Akkusativ“.",
+        "explanation",
+        "Relativsätze Nominativ/Akkusativ"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Relativsätze Nominativ/Akkusativ“, ohne erneute Suche.",
+        "exercise",
+        "Relativsätze Nominativ/Akkusativ"
+      ]
+    ],
+    "testAnswer": "Das ist der Mann, der mir hilft.",
+    "recallTest": "Relativpronomen richtet sich in Genus/Numerus nach dem Bezugswort und im Kasus nach seiner Rolle.",
+    "repairTest": "den ich sehe.",
+    "transferTest": "In einer neuen Situation kann ich Relativsätze Nominativ/Akkusativ korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Relativsätze Dativ",
+    "rule": "Dativformen: dem, der, denen.",
+    "examples": [
+      "Die Frau, mit der ich spreche, ist Ärztin."
+    ],
+    "commonError": "mit die ich spreche → mit der.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: mit die ich spreche",
+        "mit der."
+      ],
+      [
+        "Schreibe den Modellsatz: Die Frau, mit der ich spreche, ist Ärztin.",
+        "Die Frau, mit der ich spreche, ist Ärztin."
+      ],
+      [
+        "Erkläre die Regel: Relativsätze Dativ",
+        "Dativformen: dem, der, denen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Relativsätze Dativ“.",
+        "explanation",
+        "Relativsätze Dativ"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Relativsätze Dativ“, ohne erneute Suche.",
+        "exercise",
+        "Relativsätze Dativ"
+      ]
+    ],
+    "testAnswer": "Die Frau, mit der ich spreche, ist Ärztin.",
+    "recallTest": "Dativformen: dem, der, denen.",
+    "repairTest": "mit der.",
+    "transferTest": "In einer neuen Situation kann ich Relativsätze Dativ korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Konjunktiv II mit würde",
+    "rule": "würde + Infinitiv für irreale Wünsche, Vorschläge und höfliche Aussagen.",
+    "examples": [
+      "Ich würde gern mehr sprechen."
+    ],
+    "commonError": "Ich würde gern mehr gesprochen. → sprechen.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich würde gern mehr gesprochen.",
+        "sprechen."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich würde gern mehr sprechen.",
+        "Ich würde gern mehr sprechen."
+      ],
+      [
+        "Erkläre die Regel: Konjunktiv II mit würde",
+        "würde + Infinitiv für irreale Wünsche, Vorschläge und höfliche Aussagen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Konjunktiv II mit würde“.",
+        "explanation",
+        "Konjunktiv II mit würde"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Konjunktiv II mit würde“, ohne erneute Suche.",
+        "exercise",
+        "Konjunktiv II mit würde"
+      ]
+    ],
+    "testAnswer": "Ich würde gern mehr sprechen.",
+    "recallTest": "würde + Infinitiv für irreale Wünsche, Vorschläge und höfliche Aussagen.",
+    "repairTest": "sprechen.",
+    "transferTest": "In einer neuen Situation kann ich Konjunktiv II mit würde korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Konjunktiv II von sein/haben/Modalverben",
+    "rule": "wäre, hätte, könnte, müsste usw. sind besonders häufig.",
+    "examples": [
+      "Wenn ich Zeit hätte, könnte ich kommen."
+    ],
+    "commonError": "Wenn ich Zeit haben würde → hätte.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Wenn ich Zeit haben würde",
+        "hätte."
+      ],
+      [
+        "Schreibe den Modellsatz: Wenn ich Zeit hätte, könnte ich kommen.",
+        "Wenn ich Zeit hätte, könnte ich kommen."
+      ],
+      [
+        "Erkläre die Regel: Konjunktiv II von sein/haben/Modalverben",
+        "wäre, hätte, könnte, müsste usw. sind besonders häufig."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Konjunktiv II von sein/haben/Modalverben“.",
+        "explanation",
+        "Konjunktiv II von sein/haben/Modalverben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Konjunktiv II von sein/haben/Modalverben“, ohne erneute Suche.",
+        "exercise",
+        "Konjunktiv II von sein/haben/Modalverben"
+      ]
+    ],
+    "testAnswer": "Wenn ich Zeit hätte, könnte ich kommen.",
+    "recallTest": "wäre, hätte, könnte, müsste usw. sind besonders häufig.",
+    "repairTest": "hätte.",
+    "transferTest": "In einer neuen Situation kann ich Konjunktiv II von sein/haben/Modalverben korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Passiv Präsens",
+    "rule": "werden + Partizip II; Handlung/Ergebnis steht im Mittelpunkt.",
+    "examples": [
+      "Das Haus wird gebaut."
+    ],
+    "commonError": "Das Haus wird bauen. → gebaut.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Das Haus wird bauen.",
+        "gebaut."
+      ],
+      [
+        "Schreibe den Modellsatz: Das Haus wird gebaut.",
+        "Das Haus wird gebaut."
+      ],
+      [
+        "Erkläre die Regel: Passiv Präsens",
+        "werden + Partizip II; Handlung/Ergebnis steht im Mittelpunkt."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Passiv Präsens“.",
+        "explanation",
+        "Passiv Präsens"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Passiv Präsens“, ohne erneute Suche.",
+        "exercise",
+        "Passiv Präsens"
+      ]
+    ],
+    "testAnswer": "Das Haus wird gebaut.",
+    "recallTest": "werden + Partizip II; Handlung/Ergebnis steht im Mittelpunkt.",
+    "repairTest": "gebaut.",
+    "transferTest": "In einer neuen Situation kann ich Passiv Präsens korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Passiv Präteritum und Perfekt",
+    "rule": "wurde + Partizip II; ist + Partizip II + worden.",
+    "examples": [
+      "Das Haus wurde gebaut.",
+      "Es ist gebaut worden."
+    ],
+    "commonError": "Es ist gebaut geworden. → worden.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Es ist gebaut geworden.",
+        "worden."
+      ],
+      [
+        "Schreibe den Modellsatz: Das Haus wurde gebaut.",
+        "Das Haus wurde gebaut."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Es ist gebaut worden.",
+        "Es ist gebaut worden."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Passiv Präteritum und Perfekt“.",
+        "explanation",
+        "Passiv Präteritum und Perfekt"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Passiv Präteritum und Perfekt“, ohne erneute Suche.",
+        "exercise",
+        "Passiv Präteritum und Perfekt"
+      ]
+    ],
+    "testAnswer": "Das Haus wurde gebaut.",
+    "recallTest": "wurde + Partizip II; ist + Partizip II + worden.",
+    "repairTest": "worden.",
+    "transferTest": "In einer neuen Situation kann ich Passiv Präteritum und Perfekt korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Infinitiv mit zu",
+    "rule": "zu + Infinitiv nach vielen Verben, Adjektiven und Nomen; bei trennbaren Verben dazwischen.",
+    "examples": [
+      "Ich versuche, früher aufzustehen."
+    ],
+    "commonError": "Ich versuche, früher zu aufstehen. → aufzustehen.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich versuche, früher zu aufstehen.",
+        "aufzustehen."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich versuche, früher aufzustehen.",
+        "Ich versuche, früher aufzustehen."
+      ],
+      [
+        "Erkläre die Regel: Infinitiv mit zu",
+        "zu + Infinitiv nach vielen Verben, Adjektiven und Nomen; bei trennbaren Verben dazwischen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/infinitivsaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Infinitiv mit zu“.",
+        "explanation",
+        "Infinitiv mit zu"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/infinitivsaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Infinitiv mit zu“, ohne erneute Suche.",
+        "exercise",
+        "Infinitiv mit zu"
+      ]
+    ],
+    "testAnswer": "Ich versuche, früher aufzustehen.",
+    "recallTest": "zu + Infinitiv nach vielen Verben, Adjektiven und Nomen; bei trennbaren Verben dazwischen.",
+    "repairTest": "aufzustehen.",
+    "transferTest": "In einer neuen Situation kann ich Infinitiv mit zu korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "um...zu / damit",
+    "rule": "um...zu bei gleichem Subjekt; damit bei unterschiedlichen Subjekten.",
+    "examples": [
+      "Ich lerne, um die Prüfung zu bestehen.",
+      "Ich erkläre es, damit du es verstehst."
+    ],
+    "commonError": "damit zu verstehen → damit du verstehst.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: damit zu verstehen",
+        "damit du verstehst."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich lerne, um die Prüfung zu bestehen.",
+        "Ich lerne, um die Prüfung zu bestehen."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Ich erkläre es, damit du es verstehst.",
+        "Ich erkläre es, damit du es verstehst."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/infinitivsaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „um...zu / damit“.",
+        "explanation",
+        "um...zu / damit"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/infinitivsaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „um...zu / damit“, ohne erneute Suche.",
+        "exercise",
+        "um...zu / damit"
+      ]
+    ],
+    "testAnswer": "Ich lerne, um die Prüfung zu bestehen.",
+    "recallTest": "um...zu bei gleichem Subjekt; damit bei unterschiedlichen Subjekten.",
+    "repairTest": "damit du verstehst.",
+    "transferTest": "In einer neuen Situation kann ich um...zu / damit korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "obwohl/trotzdem",
+    "rule": "obwohl leitet Nebensatz ein; trotzdem ist ein Konnektor im Hauptsatz.",
+    "examples": [
+      "Obwohl es regnet, gehe ich raus.",
+      "Es regnet; trotzdem gehe ich raus."
+    ],
+    "commonError": "Trotzdem es regnet → Obwohl es regnet.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Trotzdem es regnet",
+        "Obwohl es regnet."
+      ],
+      [
+        "Schreibe den Modellsatz: Obwohl es regnet, gehe ich raus.",
+        "Obwohl es regnet, gehe ich raus."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Es regnet; trotzdem gehe ich raus.",
+        "Es regnet; trotzdem gehe ich raus."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „obwohl/trotzdem“.",
+        "explanation",
+        "obwohl/trotzdem"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „obwohl/trotzdem“, ohne erneute Suche.",
+        "exercise",
+        "obwohl/trotzdem"
+      ]
+    ],
+    "testAnswer": "Obwohl es regnet, gehe ich raus.",
+    "recallTest": "obwohl leitet Nebensatz ein; trotzdem ist ein Konnektor im Hauptsatz.",
+    "repairTest": "Obwohl es regnet.",
+    "transferTest": "In einer neuen Situation kann ich obwohl/trotzdem korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Genitivgrundlagen",
+    "rule": "Genitiv zeigt Zugehörigkeit; häufig nach wegen, trotz, während und in formeller Sprache.",
+    "examples": [
+      "wegen des Wetters; das Ende des Kurses"
+    ],
+    "commonError": "wegen dem Wetter (umgangssprachlich) → wegen des Wetters.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: wegen dem Wetter (umgangssprachlich)",
+        "wegen des Wetters."
+      ],
+      [
+        "Schreibe den Modellsatz: wegen des Wetters; das Ende des Kurses",
+        "wegen des Wetters; das Ende des Kurses"
+      ],
+      [
+        "Erkläre die Regel: Genitivgrundlagen",
+        "Genitiv zeigt Zugehörigkeit; häufig nach wegen, trotz, während und in formeller Sprache."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/deklination",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Genitivgrundlagen“.",
+        "explanation",
+        "Genitivgrundlagen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/deklination#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Genitivgrundlagen“, ohne erneute Suche.",
+        "exercise",
+        "Genitivgrundlagen"
+      ]
+    ],
+    "testAnswer": "wegen des Wetters; das Ende des Kurses",
+    "recallTest": "Genitiv zeigt Zugehörigkeit; häufig nach wegen, trotz, während und in formeller Sprache.",
+    "repairTest": "wegen des Wetters.",
+    "transferTest": "In einer neuen Situation kann ich Genitivgrundlagen korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "Adjektivdeklination Grundlagen",
+    "rule": "Endung hängt von Artikeltyp, Kasus, Genus und Numerus ab.",
+    "examples": [
+      "ein gutes Buch; der gute Kurs; mit einem guten Lehrer"
+    ],
+    "commonError": "ein gut Buch → ein gutes Buch.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: ein gut Buch",
+        "ein gutes Buch."
+      ],
+      [
+        "Schreibe den Modellsatz: ein gutes Buch; der gute Kurs; mit einem guten Lehrer",
+        "ein gutes Buch; der gute Kurs; mit einem guten Lehrer"
+      ],
+      [
+        "Erkläre die Regel: Adjektivdeklination Grundlagen",
+        "Endung hängt von Artikeltyp, Kasus, Genus und Numerus ab."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/adjektive/deklination",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Adjektivdeklination Grundlagen“.",
+        "explanation",
+        "Adjektivdeklination Grundlagen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/adjektive/deklination#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Adjektivdeklination Grundlagen“, ohne erneute Suche.",
+        "exercise",
+        "Adjektivdeklination Grundlagen"
+      ]
+    ],
+    "testAnswer": "ein gutes Buch; der gute Kurs; mit einem guten Lehrer",
+    "recallTest": "Endung hängt von Artikeltyp, Kasus, Genus und Numerus ab.",
+    "repairTest": "ein gutes Buch.",
+    "transferTest": "In einer neuen Situation kann ich Adjektivdeklination Grundlagen korrekt verwenden."
+  },
+  {
+    "level": "B1",
+    "title": "indirekte Fragen",
+    "rule": "Fragewort/ob + Nebensatzwortstellung.",
+    "examples": [
+      "Können Sie mir sagen, wann der Kurs beginnt?"
+    ],
+    "commonError": "wann beginnt der Kurs? im Nebensatz → wann der Kurs beginnt.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: wann beginnt der Kurs? im Nebensatz",
+        "wann der Kurs beginnt."
+      ],
+      [
+        "Schreibe den Modellsatz: Können Sie mir sagen, wann der Kurs beginnt?",
+        "Können Sie mir sagen, wann der Kurs beginnt?"
+      ],
+      [
+        "Erkläre die Regel: indirekte Fragen",
+        "Fragewort/ob + Nebensatzwortstellung."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/indirekte-fragen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „indirekte Fragen“.",
+        "explanation",
+        "indirekte Fragen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/indirekte-fragen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „indirekte Fragen“, ohne erneute Suche.",
+        "exercise",
+        "indirekte Fragen"
+      ]
+    ],
+    "testAnswer": "Können Sie mir sagen, wann der Kurs beginnt?",
+    "recallTest": "Fragewort/ob + Nebensatzwortstellung.",
+    "repairTest": "wann der Kurs beginnt.",
+    "transferTest": "In einer neuen Situation kann ich indirekte Fragen korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "Konjunktiv II Vergangenheit",
+    "rule": "hätte/wäre + Partizip II für irreale Vergangenheit.",
+    "examples": [
+      "Wenn ich mehr gelernt hätte, hätte ich bestanden."
+    ],
+    "commonError": "Wenn ich mehr gelernt würde haben → gelernt hätte.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Wenn ich mehr gelernt würde haben",
+        "gelernt hätte."
+      ],
+      [
+        "Schreibe den Modellsatz: Wenn ich mehr gelernt hätte, hätte ich bestanden.",
+        "Wenn ich mehr gelernt hätte, hätte ich bestanden."
+      ],
+      [
+        "Erkläre die Regel: Konjunktiv II Vergangenheit",
+        "hätte/wäre + Partizip II für irreale Vergangenheit."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Konjunktiv II Vergangenheit“.",
+        "explanation",
+        "Konjunktiv II Vergangenheit"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Konjunktiv II Vergangenheit“, ohne erneute Suche.",
+        "exercise",
+        "Konjunktiv II Vergangenheit"
+      ]
+    ],
+    "testAnswer": "Wenn ich mehr gelernt hätte, hätte ich bestanden.",
+    "recallTest": "hätte/wäre + Partizip II für irreale Vergangenheit.",
+    "repairTest": "gelernt hätte.",
+    "transferTest": "In einer neuen Situation kann ich Konjunktiv II Vergangenheit korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "Passiv mit Modalverben",
+    "rule": "Modalverb + Partizip II + werden.",
+    "examples": [
+      "Der Bericht muss heute geschrieben werden."
+    ],
+    "commonError": "muss geschrieben sein (andere Bedeutung).",
+    "exercises": [
+      [
+        "Korrigiere den Satz: muss geschrieben sein (andere Bedeutung).",
+        "Der Bericht muss heute geschrieben werden."
+      ],
+      [
+        "Schreibe den Modellsatz: Der Bericht muss heute geschrieben werden.",
+        "Der Bericht muss heute geschrieben werden."
+      ],
+      [
+        "Erkläre die Regel: Passiv mit Modalverben",
+        "Modalverb + Partizip II + werden."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Passiv mit Modalverben“.",
+        "explanation",
+        "Passiv mit Modalverben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Passiv mit Modalverben“, ohne erneute Suche.",
+        "exercise",
+        "Passiv mit Modalverben"
+      ]
+    ],
+    "testAnswer": "Der Bericht muss heute geschrieben werden.",
+    "recallTest": "Modalverb + Partizip II + werden.",
+    "repairTest": "Der Bericht muss heute geschrieben werden.",
+    "transferTest": "In einer neuen Situation kann ich Passiv mit Modalverben korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "Zustandspassiv",
+    "rule": "sein + Partizip II beschreibt den Zustand als Ergebnis.",
+    "examples": [
+      "Die Tür ist geschlossen."
+    ],
+    "commonError": "Die Tür wird geschlossen (Vorgang) vs ist geschlossen (Zustand).",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Die Tür wird geschlossen (Vorgang) vs ist geschlossen (Zustand).",
+        "Die Tür ist geschlossen."
+      ],
+      [
+        "Schreibe den Modellsatz: Die Tür ist geschlossen.",
+        "Die Tür ist geschlossen."
+      ],
+      [
+        "Erkläre die Regel: Zustandspassiv",
+        "sein + Partizip II beschreibt den Zustand als Ergebnis."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Zustandspassiv“.",
+        "explanation",
+        "Zustandspassiv"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Zustandspassiv“, ohne erneute Suche.",
+        "exercise",
+        "Zustandspassiv"
+      ]
+    ],
+    "testAnswer": "Die Tür ist geschlossen.",
+    "recallTest": "sein + Partizip II beschreibt den Zustand als Ergebnis.",
+    "repairTest": "Die Tür ist geschlossen.",
+    "transferTest": "In einer neuen Situation kann ich Zustandspassiv korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "Nominalisierung",
+    "rule": "Verben/Adjektive werden zu Nomen; typisch für formelle Texte.",
+    "examples": [
+      "die Durchführung der Studie; nach Abschluss der Arbeit"
+    ],
+    "commonError": "das Durchführen von die Studie → Durchführung der Studie.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: das Durchführen von die Studie",
+        "Durchführung der Studie."
+      ],
+      [
+        "Schreibe den Modellsatz: die Durchführung der Studie; nach Abschluss der Arbeit",
+        "die Durchführung der Studie; nach Abschluss der Arbeit"
+      ],
+      [
+        "Erkläre die Regel: Nominalisierung",
+        "Verben/Adjektive werden zu Nomen; typisch für formelle Texte."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/wortbildung/nominalisierung",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Nominalisierung“.",
+        "explanation",
+        "Nominalisierung"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/wortbildung/nominalisierung#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Nominalisierung“, ohne erneute Suche.",
+        "exercise",
+        "Nominalisierung"
+      ]
+    ],
+    "testAnswer": "die Durchführung der Studie; nach Abschluss der Arbeit",
+    "recallTest": "Verben/Adjektive werden zu Nomen; typisch für formelle Texte.",
+    "repairTest": "Durchführung der Studie.",
+    "transferTest": "In einer neuen Situation kann ich Nominalisierung korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "N-Deklination",
+    "rule": "Bestimmte maskuline Nomen erhalten außer im Nominativ Singular -n/-en.",
+    "examples": [
+      "mit dem Studenten; ich sehe den Kollegen"
+    ],
+    "commonError": "mit dem Student → Studenten.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: mit dem Student",
+        "Studenten."
+      ],
+      [
+        "Schreibe den Modellsatz: mit dem Studenten; ich sehe den Kollegen",
+        "mit dem Studenten; ich sehe den Kollegen"
+      ],
+      [
+        "Erkläre die Regel: N-Deklination",
+        "Bestimmte maskuline Nomen erhalten außer im Nominativ Singular -n/-en."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/nomen/n-deklination",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „N-Deklination“.",
+        "explanation",
+        "N-Deklination"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/deklination/nomen/n-deklination#uebungen",
+        "Direkte Übungen zum Grammatikbereich „N-Deklination“, ohne erneute Suche.",
+        "exercise",
+        "N-Deklination"
+      ]
+    ],
+    "testAnswer": "mit dem Studenten; ich sehe den Kollegen",
+    "recallTest": "Bestimmte maskuline Nomen erhalten außer im Nominativ Singular -n/-en.",
+    "repairTest": "Studenten.",
+    "transferTest": "In einer neuen Situation kann ich N-Deklination korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "Partizipien als Adjektive",
+    "rule": "Partizip I aktiv/gleichzeitig; Partizip II meist passiv/abgeschlossen.",
+    "examples": [
+      "die wartenden Gäste; die geschlossene Tür"
+    ],
+    "commonError": "die warten Gäste → wartenden Gäste.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: die warten Gäste",
+        "wartenden Gäste."
+      ],
+      [
+        "Schreibe den Modellsatz: die wartenden Gäste; die geschlossene Tür",
+        "die wartenden Gäste; die geschlossene Tür"
+      ],
+      [
+        "Erkläre die Regel: Partizipien als Adjektive",
+        "Partizip I aktiv/gleichzeitig; Partizip II meist passiv/abgeschlossen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/adjektive/partizipien-als-adjektive",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Partizipien als Adjektive“.",
+        "explanation",
+        "Partizipien als Adjektive"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/adjektive/partizipien-als-adjektive#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Partizipien als Adjektive“, ohne erneute Suche.",
+        "exercise",
+        "Partizipien als Adjektive"
+      ]
+    ],
+    "testAnswer": "die wartenden Gäste; die geschlossene Tür",
+    "recallTest": "Partizip I aktiv/gleichzeitig; Partizip II meist passiv/abgeschlossen.",
+    "repairTest": "wartenden Gäste.",
+    "transferTest": "In einer neuen Situation kann ich Partizipien als Adjektive korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "je...desto/umso",
+    "rule": "Zwei abhängige Vergleichsstrukturen.",
+    "examples": [
+      "Je mehr ich übe, desto sicherer spreche ich."
+    ],
+    "commonError": "Je mehr ich übe, ich spreche sicherer → desto sicherer.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Je mehr ich übe, ich spreche sicherer",
+        "desto sicherer."
+      ],
+      [
+        "Schreibe den Modellsatz: Je mehr ich übe, desto sicherer spreche ich.",
+        "Je mehr ich übe, desto sicherer spreche ich."
+      ],
+      [
+        "Erkläre die Regel: je...desto/umso",
+        "Zwei abhängige Vergleichsstrukturen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „je...desto/umso“.",
+        "explanation",
+        "je...desto/umso"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „je...desto/umso“, ohne erneute Suche.",
+        "exercise",
+        "je...desto/umso"
+      ]
+    ],
+    "testAnswer": "Je mehr ich übe, desto sicherer spreche ich.",
+    "recallTest": "Zwei abhängige Vergleichsstrukturen.",
+    "repairTest": "desto sicherer.",
+    "transferTest": "In einer neuen Situation kann ich je...desto/umso korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "sowohl...als auch / weder...noch",
+    "rule": "Korrelative Konnektoren verbinden parallele Strukturen.",
+    "examples": [
+      "Sie spricht sowohl Deutsch als auch Englisch."
+    ],
+    "commonError": "sowohl Deutsch und Englisch → als auch.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: sowohl Deutsch und Englisch",
+        "als auch."
+      ],
+      [
+        "Schreibe den Modellsatz: Sie spricht sowohl Deutsch als auch Englisch.",
+        "Sie spricht sowohl Deutsch als auch Englisch."
+      ],
+      [
+        "Erkläre die Regel: sowohl...als auch / weder...noch",
+        "Korrelative Konnektoren verbinden parallele Strukturen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „sowohl...als auch / weder...noch“.",
+        "explanation",
+        "sowohl...als auch / weder...noch"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „sowohl...als auch / weder...noch“, ohne erneute Suche.",
+        "exercise",
+        "sowohl...als auch / weder...noch"
+      ]
+    ],
+    "testAnswer": "Sie spricht sowohl Deutsch als auch Englisch.",
+    "recallTest": "Korrelative Konnektoren verbinden parallele Strukturen.",
+    "repairTest": "als auch.",
+    "transferTest": "In einer neuen Situation kann ich sowohl...als auch / weder...noch korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "erweiterte Relativsätze",
+    "rule": "Präposition + Relativpronomen, Genitiv dessen/deren, was/wo(r)-Formen.",
+    "examples": [
+      "Das Thema, über das wir sprechen, betrifft alle Studierenden."
+    ],
+    "commonError": "Das Thema, über dem wir sprechen, betrifft alle Studierenden. → Das Thema, über das wir sprechen, betrifft alle Studierenden.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Das Thema, über dem wir sprechen, betrifft alle Studierenden.",
+        "Das Thema, über das wir sprechen, betrifft alle Studierenden."
+      ],
+      [
+        "Schreibe den Modellsatz: Das Thema, über das wir sprechen, betrifft alle Studierenden.",
+        "Das Thema, über das wir sprechen, betrifft alle Studierenden."
+      ],
+      [
+        "Erkläre die Regel: erweiterte Relativsätze",
+        "Präposition + Relativpronomen, Genitiv dessen/deren, was/wo(r)-Formen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „erweiterte Relativsätze“.",
+        "explanation",
+        "erweiterte Relativsätze"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „erweiterte Relativsätze“, ohne erneute Suche.",
+        "exercise",
+        "erweiterte Relativsätze"
+      ]
+    ],
+    "testAnswer": "Das Thema, über das wir sprechen, betrifft alle Studierenden.",
+    "recallTest": "Präposition + Relativpronomen, Genitiv dessen/deren, was/wo(r)-Formen.",
+    "repairTest": "Das Thema, über das wir sprechen, betrifft alle Studierenden.",
+    "transferTest": "In einer neuen Situation kann ich erweiterte Relativsätze korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "Verben mit Präpositionen",
+    "rule": "Verb und Präposition als Einheit lernen; Frage mit wo(r)-/Präposition + wen/wem.",
+    "examples": [
+      "Ich warte auf den Bus.",
+      "Worauf wartest du?"
+    ],
+    "commonError": "Ich warte für den Bus. → auf.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich warte für den Bus.",
+        "auf."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich warte auf den Bus.",
+        "Ich warte auf den Bus."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Worauf wartest du?",
+        "Worauf wartest du?"
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/praepositionen/verben-mit-praepositionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Verben mit Präpositionen“.",
+        "explanation",
+        "Verben mit Präpositionen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/praepositionen/verben-mit-praepositionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Verben mit Präpositionen“, ohne erneute Suche.",
+        "exercise",
+        "Verben mit Präpositionen"
+      ]
+    ],
+    "testAnswer": "Ich warte auf den Bus.",
+    "recallTest": "Verb und Präposition als Einheit lernen; Frage mit wo(r)-/Präposition + wen/wem.",
+    "repairTest": "auf.",
+    "transferTest": "In einer neuen Situation kann ich Verben mit Präpositionen korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "indirekte Rede Grundlagen",
+    "rule": "Konjunktiv I markiert distanzierte Wiedergabe, besonders in Nachrichten.",
+    "examples": [
+      "Er sagt, er sei krank."
+    ],
+    "commonError": "Er sagt, er ist krank (neutral, weniger distanziert).",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Er sagt, er ist krank (neutral, weniger distanziert).",
+        "Er sagt, er sei krank."
+      ],
+      [
+        "Schreibe den Modellsatz: Er sagt, er sei krank.",
+        "Er sagt, er sei krank."
+      ],
+      [
+        "Erkläre die Regel: indirekte Rede Grundlagen",
+        "Konjunktiv I markiert distanzierte Wiedergabe, besonders in Nachrichten."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/indirekte-rede",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „indirekte Rede Grundlagen“.",
+        "explanation",
+        "indirekte Rede Grundlagen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/indirekte-rede#uebungen",
+        "Direkte Übungen zum Grammatikbereich „indirekte Rede Grundlagen“, ohne erneute Suche.",
+        "exercise",
+        "indirekte Rede Grundlagen"
+      ]
+    ],
+    "testAnswer": "Er sagt, er sei krank.",
+    "recallTest": "Konjunktiv I markiert distanzierte Wiedergabe, besonders in Nachrichten.",
+    "repairTest": "Er sagt, er sei krank.",
+    "transferTest": "In einer neuen Situation kann ich indirekte Rede Grundlagen korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "Nomen-Verb-Verbindungen / Funktionsverbgefüge",
+    "rule": "Typische Nomen-Verb-Verbindungen und Funktionsverbgefüge erkennen und idiomatisch verwenden.",
+    "examples": [
+      "eine Entscheidung treffen; in Betracht ziehen"
+    ],
+    "commonError": "eine Entscheidung machen → treffen.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: eine Entscheidung machen",
+        "treffen."
+      ],
+      [
+        "Schreibe den Modellsatz: eine Entscheidung treffen; in Betracht ziehen",
+        "eine Entscheidung treffen; in Betracht ziehen"
+      ],
+      [
+        "Erkläre die Regel: Funktionsverbgefüge",
+        "Feste Verbindungen aus Nomen und Verb in formeller Sprache."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/wortbildung/nominalisierung",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Nomen-Verb-Verbindungen / Funktionsverbgefüge“.",
+        "explanation",
+        "Nomen-Verb-Verbindungen / Funktionsverbgefüge"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/wortbildung/nominalisierung#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Nomen-Verb-Verbindungen / Funktionsverbgefüge“, ohne erneute Suche.",
+        "exercise",
+        "Nomen-Verb-Verbindungen / Funktionsverbgefüge"
+      ]
+    ],
+    "testAnswer": "eine Entscheidung treffen; in Betracht ziehen",
+    "recallTest": "Feste Verbindungen aus Nomen und Verb in formeller Sprache.",
+    "repairTest": "treffen.",
+    "transferTest": "In einer neuen Situation kann ich Funktionsverbgefüge korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "Wortstellung im Mittelfeld",
+    "rule": "Tendenzen: Pronomen vor Nomen, Dativ vor Akkusativ, bekannte vor neue Information.",
+    "examples": [
+      "Ich habe es ihm gestern gegeben."
+    ],
+    "commonError": "Ich habe ihm es → es ihm.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich habe ihm es",
+        "es ihm."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich habe es ihm gestern gegeben.",
+        "Ich habe es ihm gestern gegeben."
+      ],
+      [
+        "Erkläre die Regel: Wortstellung im Mittelfeld",
+        "Tendenzen: Pronomen vor Nomen, Dativ vor Akkusativ, bekannte vor neue Information."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Wortstellung im Mittelfeld“.",
+        "explanation",
+        "Wortstellung im Mittelfeld"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Wortstellung im Mittelfeld“, ohne erneute Suche.",
+        "exercise",
+        "Wortstellung im Mittelfeld"
+      ]
+    ],
+    "testAnswer": "Ich habe es ihm gestern gegeben.",
+    "recallTest": "Tendenzen: Pronomen vor Nomen, Dativ vor Akkusativ, bekannte vor neue Information.",
+    "repairTest": "es ihm.",
+    "transferTest": "In einer neuen Situation kann ich Wortstellung im Mittelfeld korrekt verwenden."
+  },
+  {
+    "level": "B2",
+    "title": "Konnektoren und Satzverknüpfung",
+    "rule": "deshalb, dennoch, hingegen, folglich, außerdem steuern logische Beziehungen.",
+    "examples": [
+      "Die Daten sind begrenzt; dennoch ist der Trend klar."
+    ],
+    "commonError": "dennoch ohne echten Gegensatz.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: dennoch ohne echten Gegensatz.",
+        "Die Daten sind begrenzt; dennoch ist der Trend klar."
+      ],
+      [
+        "Schreibe den Modellsatz: Die Daten sind begrenzt; dennoch ist der Trend klar.",
+        "Die Daten sind begrenzt; dennoch ist der Trend klar."
+      ],
+      [
+        "Erkläre die Regel: Konnektoren und Satzverknüpfung",
+        "deshalb, dennoch, hingegen, folglich, außerdem steuern logische Beziehungen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Konnektoren und Satzverknüpfung“.",
+        "explanation",
+        "Konnektoren und Satzverknüpfung"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Konnektoren und Satzverknüpfung“, ohne erneute Suche.",
+        "exercise",
+        "Konnektoren und Satzverknüpfung"
+      ]
+    ],
+    "testAnswer": "Die Daten sind begrenzt; dennoch ist der Trend klar.",
+    "recallTest": "deshalb, dennoch, hingegen, folglich, außerdem steuern logische Beziehungen.",
+    "repairTest": "Die Daten sind begrenzt; dennoch ist der Trend klar.",
+    "transferTest": "In einer neuen Situation kann ich Konnektoren und Satzverknüpfung korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Konjunktiv I vollständig",
+    "rule": "Formen und Ersatzformen für präzise indirekte Rede.",
+    "examples": [
+      "Die Autorin erklärt, die Ergebnisse seien vorläufig."
+    ],
+    "commonError": "sie wären vorläufig ohne Kontext → seien.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: sie wären vorläufig ohne Kontext",
+        "seien."
+      ],
+      [
+        "Schreibe den Modellsatz: Die Autorin erklärt, die Ergebnisse seien vorläufig.",
+        "Die Autorin erklärt, die Ergebnisse seien vorläufig."
+      ],
+      [
+        "Erkläre die Regel: Konjunktiv I vollständig",
+        "Formen und Ersatzformen für präzise indirekte Rede."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Konjunktiv I vollständig“.",
+        "explanation",
+        "Konjunktiv I vollständig"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Konjunktiv I vollständig“, ohne erneute Suche.",
+        "exercise",
+        "Konjunktiv I vollständig"
+      ]
+    ],
+    "testAnswer": "Die Autorin erklärt, die Ergebnisse seien vorläufig.",
+    "recallTest": "Formen und Ersatzformen für präzise indirekte Rede.",
+    "repairTest": "seien.",
+    "transferTest": "In einer neuen Situation kann ich Konjunktiv I vollständig korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Subjektive Bedeutung der Modalverben",
+    "rule": "sollen/wollen/müssen/dürften drücken Behauptung, Gerücht oder Wahrscheinlichkeit aus.",
+    "examples": [
+      "Er soll sehr erfahren sein.",
+      "Sie dürfte angekommen sein."
+    ],
+    "commonError": "Er soll kommen = Auftrag vs soll erfahren sein = Behauptung.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Er soll kommen = Auftrag vs soll erfahren sein = Behauptung.",
+        "Er soll sehr erfahren sein."
+      ],
+      [
+        "Schreibe den Modellsatz: Er soll sehr erfahren sein.",
+        "Er soll sehr erfahren sein."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Sie dürfte angekommen sein.",
+        "Sie dürfte angekommen sein."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/modalverben",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Subjektive Bedeutung der Modalverben“.",
+        "explanation",
+        "Subjektive Bedeutung der Modalverben"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/modalverben#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Subjektive Bedeutung der Modalverben“, ohne erneute Suche.",
+        "exercise",
+        "Subjektive Bedeutung der Modalverben"
+      ]
+    ],
+    "testAnswer": "Er soll sehr erfahren sein.",
+    "recallTest": "sollen/wollen/müssen/dürften drücken Behauptung, Gerücht oder Wahrscheinlichkeit aus.",
+    "repairTest": "Er soll sehr erfahren sein.",
+    "transferTest": "In einer neuen Situation kann ich Subjektive Bedeutung der Modalverben korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Ersatzformen des Passivs",
+    "rule": "sich lassen, sein + zu, bekommen-Passiv und adjektivische Formen.",
+    "examples": [
+      "Das Problem lässt sich lösen.",
+      "Die Aufgabe ist zu erledigen."
+    ],
+    "commonError": "Das Problem lässt lösen → lässt sich lösen.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Das Problem lässt lösen",
+        "lässt sich lösen."
+      ],
+      [
+        "Schreibe den Modellsatz: Das Problem lässt sich lösen.",
+        "Das Problem lässt sich lösen."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Die Aufgabe ist zu erledigen.",
+        "Die Aufgabe ist zu erledigen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Ersatzformen des Passivs“.",
+        "explanation",
+        "Ersatzformen des Passivs"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/passiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Ersatzformen des Passivs“, ohne erneute Suche.",
+        "exercise",
+        "Ersatzformen des Passivs"
+      ]
+    ],
+    "testAnswer": "Das Problem lässt sich lösen.",
+    "recallTest": "sich lassen, sein + zu, bekommen-Passiv und adjektivische Formen.",
+    "repairTest": "lässt sich lösen.",
+    "transferTest": "In einer neuen Situation kann ich Ersatzformen des Passivs korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Komplexe Nominalgruppen",
+    "rule": "Mehrfache Vor- und Nachattribute präzise strukturieren.",
+    "examples": [
+      "die im Rahmen der Studie erhobenen Daten"
+    ],
+    "commonError": "die erhobenen im Rahmen Daten → korrekte Attributstellung.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: die erhobenen im Rahmen Daten",
+        "korrekte Attributstellung."
+      ],
+      [
+        "Schreibe den Modellsatz: die im Rahmen der Studie erhobenen Daten",
+        "die im Rahmen der Studie erhobenen Daten"
+      ],
+      [
+        "Erkläre die Regel: Komplexe Nominalgruppen",
+        "Mehrfache Vor- und Nachattribute präzise strukturieren."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/deklination",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Komplexe Nominalgruppen“.",
+        "explanation",
+        "Komplexe Nominalgruppen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/deklination#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Komplexe Nominalgruppen“, ohne erneute Suche.",
+        "exercise",
+        "Komplexe Nominalgruppen"
+      ]
+    ],
+    "testAnswer": "die im Rahmen der Studie erhobenen Daten",
+    "recallTest": "Mehrfache Vor- und Nachattribute präzise strukturieren.",
+    "repairTest": "korrekte Attributstellung.",
+    "transferTest": "In einer neuen Situation kann ich Komplexe Nominalgruppen korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Partizipialkonstruktionen",
+    "rule": "Partizipgruppen verdichten Nebensätze in formellen Texten.",
+    "examples": [
+      "Von den Ergebnissen ausgehend, schlagen wir eine neue Untersuchung vor."
+    ],
+    "commonError": "Ausgehend von die Ergebnisse schlagen wir eine neue Untersuchung vor. → Von den Ergebnissen ausgehend, schlagen wir eine neue Untersuchung vor.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ausgehend von die Ergebnisse schlagen wir eine neue Untersuchung vor.",
+        "Von den Ergebnissen ausgehend, schlagen wir eine neue Untersuchung vor."
+      ],
+      [
+        "Schreibe den Modellsatz: Von den Ergebnissen ausgehend, schlagen wir eine neue Untersuchung vor.",
+        "Von den Ergebnissen ausgehend, schlagen wir eine neue Untersuchung vor."
+      ],
+      [
+        "Erkläre die Regel: Partizipialkonstruktionen",
+        "Partizipgruppen verdichten Nebensätze in formellen Texten."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/partizipialsaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Partizipialkonstruktionen“.",
+        "explanation",
+        "Partizipialkonstruktionen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/partizipialsaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Partizipialkonstruktionen“, ohne erneute Suche.",
+        "exercise",
+        "Partizipialkonstruktionen"
+      ]
+    ],
+    "testAnswer": "Von den Ergebnissen ausgehend, schlagen wir eine neue Untersuchung vor.",
+    "recallTest": "Partizipgruppen verdichten Nebensätze in formellen Texten.",
+    "repairTest": "Von den Ergebnissen ausgehend, schlagen wir eine neue Untersuchung vor.",
+    "transferTest": "In einer neuen Situation kann ich Partizipialkonstruktionen korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Appositionen",
+    "rule": "Nomen werden durch gleichrangige Zusatzinformationen präzisiert.",
+    "examples": [
+      "Frau Müller, die Projektleiterin, eröffnet die Sitzung."
+    ],
+    "commonError": "Kasusfehler in der Apposition.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Kasusfehler in der Apposition.",
+        "Frau Müller, die Projektleiterin, eröffnet die Sitzung."
+      ],
+      [
+        "Schreibe den Modellsatz: Frau Müller, die Projektleiterin, eröffnet die Sitzung.",
+        "Frau Müller, die Projektleiterin, eröffnet die Sitzung."
+      ],
+      [
+        "Erkläre die Regel: Appositionen",
+        "Nomen werden durch gleichrangige Zusatzinformationen präzisiert."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Appositionen“.",
+        "explanation",
+        "Appositionen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Appositionen“, ohne erneute Suche.",
+        "exercise",
+        "Appositionen"
+      ]
+    ],
+    "testAnswer": "Frau Müller, die Projektleiterin, eröffnet die Sitzung.",
+    "recallTest": "Nomen werden durch gleichrangige Zusatzinformationen präzisiert.",
+    "repairTest": "Frau Müller, die Projektleiterin, eröffnet die Sitzung.",
+    "transferTest": "In einer neuen Situation kann ich Appositionen korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Informationsstruktur und Vorfeld",
+    "rule": "Vorfeldbesetzung steuert Thema, Kontrast und Fokus; Verb bleibt Position 2.",
+    "examples": [
+      "Besonders wichtig ist die regelmäßige Wiederholung."
+    ],
+    "commonError": "Besonders wichtig die Wiederholung ist → ist die.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Besonders wichtig die Wiederholung ist",
+        "ist die."
+      ],
+      [
+        "Schreibe den Modellsatz: Besonders wichtig ist die regelmäßige Wiederholung.",
+        "Besonders wichtig ist die regelmäßige Wiederholung."
+      ],
+      [
+        "Erkläre die Regel: Informationsstruktur und Vorfeld",
+        "Vorfeldbesetzung steuert Thema, Kontrast und Fokus; Verb bleibt Position 2."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Informationsstruktur und Vorfeld“.",
+        "explanation",
+        "Informationsstruktur und Vorfeld"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Informationsstruktur und Vorfeld“, ohne erneute Suche.",
+        "exercise",
+        "Informationsstruktur und Vorfeld"
+      ]
+    ],
+    "testAnswer": "Besonders wichtig ist die regelmäßige Wiederholung.",
+    "recallTest": "Vorfeldbesetzung steuert Thema, Kontrast und Fokus; Verb bleibt Position 2.",
+    "repairTest": "ist die.",
+    "transferTest": "In einer neuen Situation kann ich Informationsstruktur und Vorfeld korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Ausklammerung und Nachfeld",
+    "rule": "Lange oder schwere Einheiten können ins Nachfeld gestellt werden.",
+    "examples": [
+      "Es hat sich gezeigt, dass regelmäßiger Abruf entscheidend ist."
+    ],
+    "commonError": "Unkontrollierte Ausklammerung mit unklarer Bindung.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Unkontrollierte Ausklammerung mit unklarer Bindung.",
+        "Es hat sich gezeigt, dass regelmäßiger Abruf entscheidend ist."
+      ],
+      [
+        "Schreibe den Modellsatz: Es hat sich gezeigt, dass regelmäßiger Abruf entscheidend ist.",
+        "Es hat sich gezeigt, dass regelmäßiger Abruf entscheidend ist."
+      ],
+      [
+        "Erkläre die Regel: Ausklammerung und Nachfeld",
+        "Lange oder schwere Einheiten können ins Nachfeld gestellt werden."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Ausklammerung und Nachfeld“.",
+        "explanation",
+        "Ausklammerung und Nachfeld"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Ausklammerung und Nachfeld“, ohne erneute Suche.",
+        "exercise",
+        "Ausklammerung und Nachfeld"
+      ]
+    ],
+    "testAnswer": "Es hat sich gezeigt, dass regelmäßiger Abruf entscheidend ist.",
+    "recallTest": "Lange oder schwere Einheiten können ins Nachfeld gestellt werden.",
+    "repairTest": "Es hat sich gezeigt, dass regelmäßiger Abruf entscheidend ist.",
+    "transferTest": "In einer neuen Situation kann ich Ausklammerung und Nachfeld korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Konzessive und adversative Strukturen",
+    "rule": "wenngleich, selbst wenn, während, wohingegen differenzieren Gegensatz.",
+    "examples": [
+      "Wenngleich die Stichprobe klein ist, sind die Ergebnisse relevant."
+    ],
+    "commonError": "während ohne zeitliche/adversative Klarheit.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: während ohne zeitliche/adversative Klarheit.",
+        "Wenngleich die Stichprobe klein ist, sind die Ergebnisse relevant."
+      ],
+      [
+        "Schreibe den Modellsatz: Wenngleich die Stichprobe klein ist, sind die Ergebnisse relevant.",
+        "Wenngleich die Stichprobe klein ist, sind die Ergebnisse relevant."
+      ],
+      [
+        "Erkläre die Regel: Konzessive und adversative Strukturen",
+        "wenngleich, selbst wenn, während, wohingegen differenzieren Gegensatz."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Konzessive und adversative Strukturen“.",
+        "explanation",
+        "Konzessive und adversative Strukturen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Konzessive und adversative Strukturen“, ohne erneute Suche.",
+        "exercise",
+        "Konzessive und adversative Strukturen"
+      ]
+    ],
+    "testAnswer": "Wenngleich die Stichprobe klein ist, sind die Ergebnisse relevant.",
+    "recallTest": "wenngleich, selbst wenn, während, wohingegen differenzieren Gegensatz.",
+    "repairTest": "Wenngleich die Stichprobe klein ist, sind die Ergebnisse relevant.",
+    "transferTest": "In einer neuen Situation kann ich Konzessive und adversative Strukturen korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Wissenschaftliches Hedging",
+    "rule": "scheinen, nahelegen, möglicherweise, tendenziell begrenzen Aussagen.",
+    "examples": [
+      "Die Daten legen nahe, dass weitere Untersuchungen erforderlich sind."
+    ],
+    "commonError": "Die Daten beweisen endgültig, dass die Methode immer funktioniert. → Die Daten legen nahe, dass die Methode unter diesen Bedingungen funktioniert.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Die Daten beweisen endgültig, dass die Methode immer funktioniert.",
+        "Die Daten legen nahe, dass die Methode unter diesen Bedingungen funktioniert."
+      ],
+      [
+        "Schreibe den Modellsatz: Die Daten legen nahe, dass weitere Untersuchungen erforderlich sind.",
+        "Die Daten legen nahe, dass weitere Untersuchungen erforderlich sind."
+      ],
+      [
+        "Erkläre die Regel: Wissenschaftliches Hedging",
+        "scheinen, nahelegen, möglicherweise, tendenziell begrenzen Aussagen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Wissenschaftliches Hedging“.",
+        "explanation",
+        "Wissenschaftliches Hedging"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Wissenschaftliches Hedging“, ohne erneute Suche.",
+        "exercise",
+        "Wissenschaftliches Hedging"
+      ]
+    ],
+    "testAnswer": "Die Daten legen nahe, dass weitere Untersuchungen erforderlich sind.",
+    "recallTest": "scheinen, nahelegen, möglicherweise, tendenziell begrenzen Aussagen.",
+    "repairTest": "Die Daten legen nahe, dass die Methode unter diesen Bedingungen funktioniert.",
+    "transferTest": "In einer neuen Situation kann ich Wissenschaftliches Hedging korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Textkohäsion",
+    "rule": "Referenz, Wiederaufnahme, Synonyme und Konnektoren verbinden längere Texte.",
+    "examples": [
+      "Die Stichprobe ist klein. Diese Einschränkung mindert die Aussagekraft.",
+      "Die Finanzierung fehlt. Ein solcher Faktor kann das Projekt verzögern."
+    ],
+    "commonError": "Die Stichprobe ist klein. Sie mindert sie. → Die Stichprobe ist klein. Diese Einschränkung mindert die Aussagekraft.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Die Stichprobe ist klein. Sie mindert sie.",
+        "Die Stichprobe ist klein. Diese Einschränkung mindert die Aussagekraft."
+      ],
+      [
+        "Schreibe den Modellsatz: Die Stichprobe ist klein. Diese Einschränkung mindert die Aussagekraft.",
+        "Die Stichprobe ist klein. Diese Einschränkung mindert die Aussagekraft."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Die Finanzierung fehlt. Ein solcher Faktor kann das Projekt verzögern.",
+        "Die Finanzierung fehlt. Ein solcher Faktor kann das Projekt verzögern."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Textkohäsion“.",
+        "explanation",
+        "Textkohäsion"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Textkohäsion“, ohne erneute Suche.",
+        "exercise",
+        "Textkohäsion"
+      ]
+    ],
+    "testAnswer": "Die Stichprobe ist klein. Diese Einschränkung mindert die Aussagekraft.",
+    "recallTest": "Referenz, Wiederaufnahme, Synonyme und Konnektoren verbinden längere Texte.",
+    "repairTest": "Die Stichprobe ist klein. Diese Einschränkung mindert die Aussagekraft.",
+    "transferTest": "In einer neuen Situation kann ich Textkohäsion korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Register und Stil",
+    "rule": "Grammatik und Wortwahl an Gespräch, Bewerbung, Bericht und Wissenschaft anpassen.",
+    "examples": [
+      "Könnten Sie dies näher erläutern?"
+    ],
+    "commonError": "Na, was heißt das? im formellen Gespräch.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Na, was heißt das? im formellen Gespräch.",
+        "Könnten Sie dies näher erläutern?"
+      ],
+      [
+        "Schreibe den Modellsatz: Könnten Sie dies näher erläutern?",
+        "Könnten Sie dies näher erläutern?"
+      ],
+      [
+        "Erkläre die Regel: Register und Stil",
+        "Grammatik und Wortwahl an Gespräch, Bewerbung, Bericht und Wissenschaft anpassen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Register und Stil“.",
+        "explanation",
+        "Register und Stil"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Register und Stil“, ohne erneute Suche.",
+        "exercise",
+        "Register und Stil"
+      ]
+    ],
+    "testAnswer": "Könnten Sie dies näher erläutern?",
+    "recallTest": "Grammatik und Wortwahl an Gespräch, Bewerbung, Bericht und Wissenschaft anpassen.",
+    "repairTest": "Könnten Sie dies näher erläutern?",
+    "transferTest": "In einer neuen Situation kann ich Register und Stil korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Verbalisierung und Nominalisierung abwägen",
+    "rule": "Dichte Nominalstruktur und klare Verbstruktur je nach Zweck wählen.",
+    "examples": [
+      "Wir analysierten die Daten.",
+      "Nach der Analyse der Daten veröffentlichten wir die Ergebnisse."
+    ],
+    "commonError": "Übernominalisierung macht Texte schwer.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Übernominalisierung macht Texte schwer.",
+        "Wir analysierten die Daten."
+      ],
+      [
+        "Schreibe den Modellsatz: Wir analysierten die Daten.",
+        "Wir analysierten die Daten."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Nach der Analyse der Daten veröffentlichten wir die Ergebnisse.",
+        "Nach der Analyse der Daten veröffentlichten wir die Ergebnisse."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/wortbildung/nominalisierung",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Verbalisierung und Nominalisierung abwägen“.",
+        "explanation",
+        "Verbalisierung und Nominalisierung abwägen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/wortbildung/nominalisierung#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Verbalisierung und Nominalisierung abwägen“, ohne erneute Suche.",
+        "exercise",
+        "Verbalisierung und Nominalisierung abwägen"
+      ]
+    ],
+    "testAnswer": "Wir analysierten die Daten.",
+    "recallTest": "Dichte Nominalstruktur und klare Verbstruktur je nach Zweck wählen.",
+    "repairTest": "Wir analysierten die Daten.",
+    "transferTest": "In einer neuen Situation kann ich Verbalisierung und Nominalisierung abwägen korrekt verwenden."
+  },
+  {
+    "level": "C1",
+    "title": "Parallelismus",
+    "rule": "Koordinierte Strukturen grammatisch parallel gestalten.",
+    "examples": [
+      "planen, durchführen und auswerten"
+    ],
+    "commonError": "planen, Durchführung und ausgewertet → nicht parallel.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: planen, Durchführung und ausgewertet",
+        "nicht parallel."
+      ],
+      [
+        "Schreibe den Modellsatz: planen, durchführen und auswerten",
+        "planen, durchführen und auswerten"
+      ],
+      [
+        "Erkläre die Regel: Parallelismus",
+        "Koordinierte Strukturen grammatisch parallel gestalten."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Parallelismus“.",
+        "explanation",
+        "Parallelismus"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Parallelismus“, ohne erneute Suche.",
+        "exercise",
+        "Parallelismus"
+      ]
+    ],
+    "testAnswer": "planen, durchführen und auswerten",
+    "recallTest": "Koordinierte Strukturen grammatisch parallel gestalten.",
+    "repairTest": "nicht parallel.",
+    "transferTest": "In einer neuen Situation kann ich Parallelismus korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Feine Bedeutungsunterschiede im Modus",
+    "rule": "Indikativ, Konjunktiv I/II und Modalität gezielt für Distanz, Irrealität und Höflichkeit einsetzen.",
+    "examples": [
+      "Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat."
+    ],
+    "commonError": "Die Maßnahme hat sicher keine Folgen. → Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Die Maßnahme hat sicher keine Folgen.",
+        "Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat."
+      ],
+      [
+        "Schreibe den Modellsatz: Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat.",
+        "Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat."
+      ],
+      [
+        "Erkläre die Regel: Feine Bedeutungsunterschiede im Modus",
+        "Indikativ, Konjunktiv I/II und Modalität gezielt für Distanz, Irrealität und Höflichkeit einsetzen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Feine Bedeutungsunterschiede im Modus“.",
+        "explanation",
+        "Feine Bedeutungsunterschiede im Modus"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Feine Bedeutungsunterschiede im Modus“, ohne erneute Suche.",
+        "exercise",
+        "Feine Bedeutungsunterschiede im Modus"
+      ]
+    ],
+    "testAnswer": "Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat.",
+    "recallTest": "Indikativ, Konjunktiv I/II und Modalität gezielt für Distanz, Irrealität und Höflichkeit einsetzen.",
+    "repairTest": "Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat.",
+    "transferTest": "In einer neuen Situation kann ich Feine Bedeutungsunterschiede im Modus korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Markierte Wortstellung",
+    "rule": "Nachfeld, Vorfeld, Links-/Rechtsversetzung und Parenthesen stilistisch kontrollieren.",
+    "examples": [
+      "Dieses Ergebnis, das muss betont werden, ist vorläufig."
+    ],
+    "commonError": "Markierung ohne kommunikativen Zweck.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Markierung ohne kommunikativen Zweck.",
+        "Dieses Ergebnis, das muss betont werden, ist vorläufig."
+      ],
+      [
+        "Schreibe den Modellsatz: Dieses Ergebnis, das muss betont werden, ist vorläufig.",
+        "Dieses Ergebnis, das muss betont werden, ist vorläufig."
+      ],
+      [
+        "Erkläre die Regel: Markierte Wortstellung",
+        "Nachfeld, Vorfeld, Links-/Rechtsversetzung und Parenthesen stilistisch kontrollieren."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Markierte Wortstellung“.",
+        "explanation",
+        "Markierte Wortstellung"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Markierte Wortstellung“, ohne erneute Suche.",
+        "exercise",
+        "Markierte Wortstellung"
+      ]
+    ],
+    "testAnswer": "Dieses Ergebnis, das muss betont werden, ist vorläufig.",
+    "recallTest": "Nachfeld, Vorfeld, Links-/Rechtsversetzung und Parenthesen stilistisch kontrollieren.",
+    "repairTest": "Dieses Ergebnis, das muss betont werden, ist vorläufig.",
+    "transferTest": "In einer neuen Situation kann ich Markierte Wortstellung korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Komplexe Einbettung",
+    "rule": "Mehrere Nebensätze und Attribute ohne Referenz- oder Strukturverlust verbinden.",
+    "examples": [
+      "Obwohl die Studie klein war, überzeugte ihre Methode, weil sie transparent dokumentiert wurde, was wiederum die Replikation erleichterte."
+    ],
+    "commonError": "Obwohl die Studie klein war, weil die Methode transparent war, was die Replikation erleichterte. → Obwohl die Studie klein war, überzeugte ihre Methode, weil sie transparent dokumentiert wurde, was wiederum die Replikation erleichterte.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Obwohl die Studie klein war, weil die Methode transparent war, was die Replikation erleichterte.",
+        "Obwohl die Studie klein war, überzeugte ihre Methode, weil sie transparent dokumentiert wurde, was wiederum die Replikation erleichterte."
+      ],
+      [
+        "Schreibe den Modellsatz: Obwohl die Studie klein war, überzeugte ihre Methode, weil sie transparent dokumentiert wurde, was wiederum die Replikation erleichterte.",
+        "Obwohl die Studie klein war, überzeugte ihre Methode, weil sie transparent dokumentiert wurde, was wiederum die Replikation erleichterte."
+      ],
+      [
+        "Erkläre die Regel: Komplexe Einbettung",
+        "Mehrere Nebensätze und Attribute ohne Referenz- oder Strukturverlust verbinden."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/nebensaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Komplexe Einbettung“.",
+        "explanation",
+        "Komplexe Einbettung"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/nebensaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Komplexe Einbettung“, ohne erneute Suche.",
+        "exercise",
+        "Komplexe Einbettung"
+      ]
+    ],
+    "testAnswer": "Obwohl die Studie klein war, überzeugte ihre Methode, weil sie transparent dokumentiert wurde, was wiederum die Replikation erleichterte.",
+    "recallTest": "Mehrere Nebensätze und Attribute ohne Referenz- oder Strukturverlust verbinden.",
+    "repairTest": "Obwohl die Studie klein war, überzeugte ihre Methode, weil sie transparent dokumentiert wurde, was wiederum die Replikation erleichterte.",
+    "transferTest": "In einer neuen Situation kann ich Komplexe Einbettung korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Ellipsen und Substitution",
+    "rule": "Wiederholungen natürlich vermeiden, ohne Verständlichkeit zu verlieren.",
+    "examples": [
+      "Einige stimmten zu, andere nicht."
+    ],
+    "commonError": "Ellipse ohne rekonstruierbares Element.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ellipse ohne rekonstruierbares Element.",
+        "Einige stimmten zu, andere nicht."
+      ],
+      [
+        "Schreibe den Modellsatz: Einige stimmten zu, andere nicht.",
+        "Einige stimmten zu, andere nicht."
+      ],
+      [
+        "Erkläre die Regel: Ellipsen und Substitution",
+        "Wiederholungen natürlich vermeiden, ohne Verständlichkeit zu verlieren."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Ellipsen und Substitution“.",
+        "explanation",
+        "Ellipsen und Substitution"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Ellipsen und Substitution“, ohne erneute Suche.",
+        "exercise",
+        "Ellipsen und Substitution"
+      ]
+    ],
+    "testAnswer": "Einige stimmten zu, andere nicht.",
+    "recallTest": "Wiederholungen natürlich vermeiden, ohne Verständlichkeit zu verlieren.",
+    "repairTest": "Einige stimmten zu, andere nicht.",
+    "transferTest": "In einer neuen Situation kann ich Ellipsen und Substitution korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Rhetorische Syntax",
+    "rule": "Parallelismus, Antithese, Klimax und gezielte Wiederholung grammatisch formen.",
+    "examples": [
+      "Nicht die Menge, sondern die Qualität ist entscheidend."
+    ],
+    "commonError": "unbalancierte nicht-sondern-Struktur.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: unbalancierte nicht-sondern-Struktur.",
+        "Nicht die Menge, sondern die Qualität ist entscheidend."
+      ],
+      [
+        "Schreibe den Modellsatz: Nicht die Menge, sondern die Qualität ist entscheidend.",
+        "Nicht die Menge, sondern die Qualität ist entscheidend."
+      ],
+      [
+        "Erkläre die Regel: Rhetorische Syntax",
+        "Parallelismus, Antithese, Klimax und gezielte Wiederholung grammatisch formen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Rhetorische Syntax“.",
+        "explanation",
+        "Rhetorische Syntax"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Rhetorische Syntax“, ohne erneute Suche.",
+        "exercise",
+        "Rhetorische Syntax"
+      ]
+    ],
+    "testAnswer": "Nicht die Menge, sondern die Qualität ist entscheidend.",
+    "recallTest": "Parallelismus, Antithese, Klimax und gezielte Wiederholung grammatisch formen.",
+    "repairTest": "Nicht die Menge, sondern die Qualität ist entscheidend.",
+    "transferTest": "In einer neuen Situation kann ich Rhetorische Syntax korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Ambiguitätskontrolle",
+    "rule": "Kasus, Bezug, Skopus und Anbindung so wählen, dass nur die gewünschte Lesart bleibt.",
+    "examples": [
+      "Die Forscherin informierte die Teilnehmerin, die ausgewählt worden war."
+    ],
+    "commonError": "unklar, wer ausgewählt wurde.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: unklar, wer ausgewählt wurde.",
+        "Die Forscherin informierte die Teilnehmerin, die ausgewählt worden war."
+      ],
+      [
+        "Schreibe den Modellsatz: Die Forscherin informierte die Teilnehmerin, die ausgewählt worden war.",
+        "Die Forscherin informierte die Teilnehmerin, die ausgewählt worden war."
+      ],
+      [
+        "Erkläre die Regel: Ambiguitätskontrolle",
+        "Kasus, Bezug, Skopus und Anbindung so wählen, dass nur die gewünschte Lesart bleibt."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Ambiguitätskontrolle“.",
+        "explanation",
+        "Ambiguitätskontrolle"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Ambiguitätskontrolle“, ohne erneute Suche.",
+        "exercise",
+        "Ambiguitätskontrolle"
+      ]
+    ],
+    "testAnswer": "Die Forscherin informierte die Teilnehmerin, die ausgewählt worden war.",
+    "recallTest": "Kasus, Bezug, Skopus und Anbindung so wählen, dass nur die gewünschte Lesart bleibt.",
+    "repairTest": "Die Forscherin informierte die Teilnehmerin, die ausgewählt worden war.",
+    "transferTest": "In einer neuen Situation kann ich Ambiguitätskontrolle korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Idiomatizität und Kollokation",
+    "rule": "Grammatisch mögliche, aber unübliche Strukturen erkennen und natürlicher formulieren.",
+    "examples": [
+      "eine Entscheidung treffen, Verantwortung übernehmen"
+    ],
+    "commonError": "eine Entscheidung machen.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: eine Entscheidung machen.",
+        "eine Entscheidung treffen, Verantwortung übernehmen"
+      ],
+      [
+        "Schreibe den Modellsatz: eine Entscheidung treffen, Verantwortung übernehmen",
+        "eine Entscheidung treffen, Verantwortung übernehmen"
+      ],
+      [
+        "Erkläre die Regel: Idiomatizität und Kollokation",
+        "Grammatisch mögliche, aber unübliche Strukturen erkennen und natürlicher formulieren."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/wortbildung/nominalisierung",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Idiomatizität und Kollokation“.",
+        "explanation",
+        "Idiomatizität und Kollokation"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/wortbildung/nominalisierung#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Idiomatizität und Kollokation“, ohne erneute Suche.",
+        "exercise",
+        "Idiomatizität und Kollokation"
+      ]
+    ],
+    "testAnswer": "eine Entscheidung treffen, Verantwortung übernehmen",
+    "recallTest": "Grammatisch mögliche, aber unübliche Strukturen erkennen und natürlicher formulieren.",
+    "repairTest": "eine Entscheidung treffen, Verantwortung übernehmen",
+    "transferTest": "In einer neuen Situation kann ich Idiomatizität und Kollokation korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Textsortenspezifische Grammatik",
+    "rule": "Erzählung, Bericht, Antrag, Vortrag und wissenschaftliche Diskussion gezielt strukturieren.",
+    "examples": [
+      "Der Bericht beschreibt den Ausgangszustand, bewertet die Ergebnisse und empfiehlt konkrete Maßnahmen.",
+      "Der Antrag begründet den Bedarf und nennt einen überprüfbaren Zeitplan."
+    ],
+    "commonError": "Hey Leute, hiermit beantrage ich Geld für das Projekt. → Hiermit beantrage ich eine Förderung für das Projekt.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Hey Leute, hiermit beantrage ich Geld für das Projekt.",
+        "Hiermit beantrage ich eine Förderung für das Projekt."
+      ],
+      [
+        "Schreibe den Modellsatz: Der Bericht beschreibt den Ausgangszustand, bewertet die Ergebnisse und empfiehlt konkrete Maßnahmen.",
+        "Der Bericht beschreibt den Ausgangszustand, bewertet die Ergebnisse und empfiehlt konkrete Maßnahmen."
+      ],
+      [
+        "Schreibe einen weiteren Modellsatz: Der Antrag begründet den Bedarf und nennt einen überprüfbaren Zeitplan.",
+        "Der Antrag begründet den Bedarf und nennt einen überprüfbaren Zeitplan."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Textsortenspezifische Grammatik“.",
+        "explanation",
+        "Textsortenspezifische Grammatik"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Textsortenspezifische Grammatik“, ohne erneute Suche.",
+        "exercise",
+        "Textsortenspezifische Grammatik"
+      ]
+    ],
+    "testAnswer": "Der Bericht beschreibt den Ausgangszustand, bewertet die Ergebnisse und empfiehlt konkrete Maßnahmen.",
+    "recallTest": "Erzählung, Bericht, Antrag, Vortrag und wissenschaftliche Diskussion gezielt strukturieren.",
+    "repairTest": "Hiermit beantrage ich eine Förderung für das Projekt.",
+    "transferTest": "In einer neuen Situation kann ich Textsortenspezifische Grammatik korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Stilistische Verdichtung",
+    "rule": "Apposition, Partizip, Nominalisierung und Ellipse dosiert kombinieren.",
+    "examples": [
+      "Die 2025 veröffentlichte, mehrfach zitierte Studie bestätigt den langfristigen Effekt."
+    ],
+    "commonError": "Die Studie, die im Jahr 2025 veröffentlicht wurde und die oft zitiert wurde, bestätigt den Effekt. → Die 2025 veröffentlichte, mehrfach zitierte Studie bestätigt den Effekt.",
+    "exercises": [
+      [
+        "Verdichte den Satz: Die Studie, die im Jahr 2025 veröffentlicht wurde und die oft zitiert wurde, bestätigt den Effekt.",
+        "Die 2025 veröffentlichte, mehrfach zitierte Studie bestätigt den Effekt."
+      ],
+      [
+        "Schreibe den Modellsatz: Die 2025 veröffentlichte, mehrfach zitierte Studie bestätigt den langfristigen Effekt.",
+        "Die 2025 veröffentlichte, mehrfach zitierte Studie bestätigt den langfristigen Effekt."
+      ],
+      [
+        "Erkläre die Regel: Stilistische Verdichtung",
+        "Apposition, Partizip, Nominalisierung und Ellipse dosiert kombinieren."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/partizipialsaetze",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Stilistische Verdichtung“.",
+        "explanation",
+        "Stilistische Verdichtung"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/partizipialsaetze#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Stilistische Verdichtung“, ohne erneute Suche.",
+        "exercise",
+        "Stilistische Verdichtung"
+      ]
+    ],
+    "testAnswer": "Die 2025 veröffentlichte, mehrfach zitierte Studie bestätigt den langfristigen Effekt.",
+    "recallTest": "Apposition, Partizip, Nominalisierung und Ellipse dosiert kombinieren.",
+    "repairTest": "Die 2025 veröffentlichte, mehrfach zitierte Studie bestätigt den Effekt.",
+    "transferTest": "In einer neuen Situation kann ich Stilistische Verdichtung korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Pragmatische Feinsteuerung",
+    "rule": "Direktheit, Höflichkeit, Abschwächung und Nachdruck an Beziehung und Situation anpassen.",
+    "examples": [
+      "Wären Sie so freundlich, mir die Unterlagen bis Freitag zu senden?"
+    ],
+    "commonError": "Schicken Sie mir sofort die Unterlagen! → Wären Sie so freundlich, mir die Unterlagen bis Freitag zu senden?",
+    "exercises": [
+      [
+        "Formuliere höflicher: Schicken Sie mir sofort die Unterlagen!",
+        "Wären Sie so freundlich, mir die Unterlagen bis Freitag zu senden?"
+      ],
+      [
+        "Schreibe den Modellsatz: Wären Sie so freundlich, mir die Unterlagen bis Freitag zu senden?",
+        "Wären Sie so freundlich, mir die Unterlagen bis Freitag zu senden?"
+      ],
+      [
+        "Erkläre die Regel: Pragmatische Feinsteuerung",
+        "Direktheit, Höflichkeit, Abschwächung und Nachdruck an Beziehung und Situation anpassen."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Pragmatische Feinsteuerung“.",
+        "explanation",
+        "Pragmatische Feinsteuerung"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/verben/konjunktiv#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Pragmatische Feinsteuerung“, ohne erneute Suche.",
+        "exercise",
+        "Pragmatische Feinsteuerung"
+      ]
+    ],
+    "testAnswer": "Wären Sie so freundlich, mir die Unterlagen bis Freitag zu senden?",
+    "recallTest": "Direktheit, Höflichkeit, Abschwächung und Nachdruck an Beziehung und Situation anpassen.",
+    "repairTest": "Wären Sie so freundlich, mir die Unterlagen bis Freitag zu senden?",
+    "transferTest": "In einer neuen Situation kann ich Pragmatische Feinsteuerung korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Kohärenz langer Beiträge",
+    "rule": "Argumente über mehrere Absätze oder längere mündliche Beiträge konsistent entwickeln.",
+    "examples": [
+      "These → Begründung → Einwand → Abwägung → Schluss"
+    ],
+    "commonError": "lokal richtige Sätze ohne globalen Zusammenhang.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: lokal richtige Sätze ohne globalen Zusammenhang.",
+        "These → Begründung → Einwand → Abwägung → Schluss"
+      ],
+      [
+        "Schreibe den Modellsatz: These → Begründung → Einwand → Abwägung → Schluss",
+        "These → Begründung → Einwand → Abwägung → Schluss"
+      ],
+      [
+        "Erkläre die Regel: Kohärenz langer Beiträge",
+        "Argumente über mehrere Absätze oder längere mündliche Beiträge konsistent entwickeln."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Kohärenz langer Beiträge“.",
+        "explanation",
+        "Kohärenz langer Beiträge"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau/konjunktionen#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Kohärenz langer Beiträge“, ohne erneute Suche.",
+        "exercise",
+        "Kohärenz langer Beiträge"
+      ]
+    ],
+    "testAnswer": "These → Begründung → Einwand → Abwägung → Schluss",
+    "recallTest": "Argumente über mehrere Absätze oder längere mündliche Beiträge konsistent entwickeln.",
+    "repairTest": "These → Begründung → Einwand → Abwägung → Schluss",
+    "transferTest": "In einer neuen Situation kann ich Kohärenz langer Beiträge korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Selbstreparatur im Sprechen",
+    "rule": "Fehler schnell korrigieren, ohne den Redefluss vollständig zu verlieren.",
+    "examples": [
+      "Ich habe—besser gesagt: ich hatte—bereits begonnen."
+    ],
+    "commonError": "lange Unterbrechung nach jedem Fehler.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: lange Unterbrechung nach jedem Fehler.",
+        "Ich habe—besser gesagt: ich hatte—bereits begonnen."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich habe—besser gesagt: ich hatte—bereits begonnen.",
+        "Ich habe—besser gesagt: ich hatte—bereits begonnen."
+      ],
+      [
+        "Erkläre die Regel: Selbstreparatur im Sprechen",
+        "Fehler schnell korrigieren, ohne den Redefluss vollständig zu verlieren."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Selbstreparatur im Sprechen“.",
+        "explanation",
+        "Selbstreparatur im Sprechen"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Selbstreparatur im Sprechen“, ohne erneute Suche.",
+        "exercise",
+        "Selbstreparatur im Sprechen"
+      ]
+    ],
+    "testAnswer": "Ich habe—besser gesagt: ich hatte—bereits begonnen.",
+    "recallTest": "Fehler schnell korrigieren, ohne den Redefluss vollständig zu verlieren.",
+    "repairTest": "Ich habe—besser gesagt: ich hatte—bereits begonnen.",
+    "transferTest": "In einer neuen Situation kann ich Selbstreparatur im Sprechen korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Mehrsprachige Interferenzkontrolle",
+    "rule": "Übertragungen aus Englisch/Persisch erkennen und deutsche Satzmuster automatisieren.",
+    "examples": [
+      "Ich habe Interesse an einer Mitarbeit im Forschungsprojekt."
+    ],
+    "commonError": "Ich bin Interesse an einer Mitarbeit. → Ich habe Interesse an einer Mitarbeit.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Ich bin Interesse an einer Mitarbeit.",
+        "Ich habe Interesse an einer Mitarbeit."
+      ],
+      [
+        "Schreibe den Modellsatz: Ich habe Interesse an einer Mitarbeit im Forschungsprojekt.",
+        "Ich habe Interesse an einer Mitarbeit im Forschungsprojekt."
+      ],
+      [
+        "Erkläre die Regel: Mehrsprachige Interferenzkontrolle",
+        "Übertragungen aus Englisch/Persisch erkennen und deutsche Satzmuster automatisieren."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Mehrsprachige Interferenzkontrolle“.",
+        "explanation",
+        "Mehrsprachige Interferenzkontrolle"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Mehrsprachige Interferenzkontrolle“, ohne erneute Suche.",
+        "exercise",
+        "Mehrsprachige Interferenzkontrolle"
+      ]
+    ],
+    "testAnswer": "Ich habe Interesse an einer Mitarbeit im Forschungsprojekt.",
+    "recallTest": "Übertragungen aus Englisch/Persisch erkennen und deutsche Satzmuster automatisieren.",
+    "repairTest": "Ich habe Interesse an einer Mitarbeit.",
+    "transferTest": "In einer neuen Situation kann ich Mehrsprachige Interferenzkontrolle korrekt verwenden."
+  },
+  {
+    "level": "C2",
+    "title": "Integrierte automatische Produktion",
+    "rule": "Genauigkeit, Tempo, Kohäsion und Register unter realistischem Zeitdruck halten.",
+    "examples": [
+      "Zwei-Minuten-Antwort mit Zielstrukturen und Selbstkorrektur."
+    ],
+    "commonError": "Genauigkeit bricht bei höherem Tempo ein.",
+    "exercises": [
+      [
+        "Korrigiere den Satz: Genauigkeit bricht bei höherem Tempo ein.",
+        "Zwei-Minuten-Antwort mit Zielstrukturen und Selbstkorrektur."
+      ],
+      [
+        "Schreibe den Modellsatz: Zwei-Minuten-Antwort mit Zielstrukturen und Selbstkorrektur.",
+        "Zwei-Minuten-Antwort mit Zielstrukturen und Selbstkorrektur."
+      ],
+      [
+        "Erkläre die Regel: Integrierte automatische Produktion",
+        "Genauigkeit, Tempo, Kohäsion und Register unter realistischem Zeitdruck halten."
+      ]
+    ],
+    "links": [
+      [
+        "Online explanation",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Integrierte automatische Produktion“.",
+        "explanation",
+        "Integrierte automatische Produktion"
+      ],
+      [
+        "Online exercises",
+        "https://deutsch.lingolia.com/de/grammatik/satzbau#uebungen",
+        "Direkte Übungen zum Grammatikbereich „Integrierte automatische Produktion“, ohne erneute Suche.",
+        "exercise",
+        "Integrierte automatische Produktion"
+      ]
+    ],
+    "testAnswer": "Zwei-Minuten-Antwort mit Zielstrukturen und Selbstkorrektur.",
+    "recallTest": "Genauigkeit, Tempo, Kohäsion und Register unter realistischem Zeitdruck halten.",
+    "repairTest": "Zwei-Minuten-Antwort mit Zielstrukturen und Selbstkorrektur.",
+    "transferTest": "In einer neuen Situation kann ich Integrierte automatische Produktion korrekt verwenden."
+  }
+]

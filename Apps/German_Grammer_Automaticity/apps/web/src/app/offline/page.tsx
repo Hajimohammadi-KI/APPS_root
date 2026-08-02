@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata = { title: "Offline" };
@@ -17,9 +17,9 @@ export default function OfflinePage() {
             Installierte Lektionen und gespeicherter Fortschritt bleiben
             verfügbar. Öffne die App erneut, um weiterzulernen.
           </p>
-          <Button asChild>
-            <Link href="/">App öffnen</Link>
-          </Button>
+          <Link href="/" className={buttonVariants({ variant: "default", size: "default" })}>
+            App öffnen
+          </Link>
         </CardContent>
       </Card>
     </main>

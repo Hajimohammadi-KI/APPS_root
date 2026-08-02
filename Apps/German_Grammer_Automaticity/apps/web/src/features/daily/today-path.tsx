@@ -283,7 +283,7 @@ function ActiveTodayPath({
   const dueReviews = state.reviews.filter(
     (review) => !review.mastered && review.due <= TODAY_PATH_LOADED_AT,
   );
-  const [sessionTarget, setSessionTarget] = useState<1 | 2 | 3>(() => {
+  const [sessionTarget, setSessionTarget] = useState<1 | 2 | 3 | 5>(() => {
     const latest = Object.entries(state.activity)
       .filter(([, count]) => count > 0)
       .map(([date]) => date)

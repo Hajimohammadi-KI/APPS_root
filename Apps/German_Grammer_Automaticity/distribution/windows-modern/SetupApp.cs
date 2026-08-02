@@ -73,6 +73,11 @@ namespace ModernLanguageSetup
             get { return GetPayloadPath(CurrentExecutable); }
         }
 
+        internal static string GetPayloadPath(string executablePath)
+        {
+            return Path.ChangeExtension(executablePath, ".payload.zip");
+        }
+
         internal static string InstalledSetup
         {
             get { return Path.Combine(InstallRoot, SetupFileName); }
@@ -340,11 +345,6 @@ namespace ModernLanguageSetup
                     }
                 }
             }
-        }
-
-        private static string GetPayloadPath(string executablePath)
-        {
-            return Path.ChangeExtension(executablePath, ".payload.zip");
         }
 
         private static void VerifyPayload(string root)

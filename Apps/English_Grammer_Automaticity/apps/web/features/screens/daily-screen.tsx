@@ -71,7 +71,7 @@ export function DailyScreen({
       (review) => review.status === "pending" && review.dueAt <= Date.now(),
     )
     .toSorted((a, b) => a.dueAt - b.dueAt);
-  const [sessionTarget, setSessionTarget] = React.useState<1 | 2 | 3>(
+  const [sessionTarget, setSessionTarget] = React.useState<1 | 2 | 3 | 5>(
     () => {
       const latest = Object.entries(state.activity)
         .filter(([, count]) => count > 0)

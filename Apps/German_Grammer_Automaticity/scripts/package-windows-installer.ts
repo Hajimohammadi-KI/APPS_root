@@ -44,6 +44,11 @@ if (sourceInfo.size < 250_000) {
   throw new Error("Windows setup output is unexpectedly small.");
 }
 
+const payloadInfo = await stat(payloadSource);
+if (payloadInfo.size < 1_000_000) {
+  throw new Error("Windows setup payload is unexpectedly small.");
+}
+
 const sourceBytes = await readFile(source);
 const hasher = new Bun.CryptoHasher("sha256");
 hasher.update(sourceBytes);

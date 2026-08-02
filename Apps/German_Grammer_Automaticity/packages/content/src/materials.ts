@@ -149,7 +149,7 @@ export const driveMaterialCollections = [
   },
   {
     id: "marija-conversation-building-blocks",
-    title: "Konversationsbausteine · Deutsch mit Marija",
+    title: "Konversationsbausteine · Deutschkurs",
     level: "C1",
     kind: "reference",
     description:
@@ -265,7 +265,7 @@ export const discussionGuideMaterials = [
   },
   {
     id: "discussion-guide-4",
-    title: "Konversationsbausteine · Deutsch mit Marija",
+    title: "Konversationsbausteine · Deutschkurs",
     level: "C1",
     format: "PDF",
     url: "https://drive.google.com/file/d/1MEdEk4YwGerRsA_zxKV_8X6nv0RSqOuH/view",

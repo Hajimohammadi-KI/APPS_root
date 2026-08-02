@@ -1,12 +1,5 @@
 export interface DailyPracticeStep {
-  readonly id:
-    | "warmup"
-    | "recall"
-    | "repair"
-    | "transfer"
-    | "speaking"
-    | "reflection"
-    | "review";
+  readonly id: "grammar" | "read_aloud" | "coach_conversation";
   readonly label: string;
   readonly description: string;
   readonly minutes: number;
@@ -14,45 +7,21 @@ export interface DailyPracticeStep {
 
 export const DAILY_PRACTICE_STEPS = [
   {
-    id: "warmup",
-    label: "Aufwärmen",
-    description: "Aktiviere die Zielstruktur mit einem kurzen Beispiel.",
-    minutes: 2,
+    id: "grammar",
+    label: "Grammatik",
+    description: "Schreibe einen eigenen Satz aus einer realen Situation.",
+    minutes: 8,
   },
   {
-    id: "recall",
-    label: "Abrufen",
-    description: "Erinnere die Regel ohne Hilfsmittel.",
-    minutes: 3,
+    id: "read_aloud",
+    label: "Laut lesen",
+    description: "Lies den korrigierten Satz deutlich laut vor.",
+    minutes: 10,
   },
   {
-    id: "repair",
-    label: "Reparieren",
-    description: "Finde und verbessere den typischen Fehler.",
-    minutes: 4,
-  },
-  {
-    id: "transfer",
-    label: "Übertragen",
-    description: "Verwende die Struktur in einem neuen Kontext.",
-    minutes: 5,
-  },
-  {
-    id: "speaking",
-    label: "Sprechen",
-    description: "Produziere eine freie Antwort unter leichtem Zeitdruck.",
-    minutes: 5,
-  },
-  {
-    id: "reflection",
-    label: "Reflektieren",
-    description: "Notiere eine Unsicherheit und eine gelungene Formulierung.",
-    minutes: 2,
-  },
-  {
-    id: "review",
-    label: "Wiederholen",
-    description: "Plane die nächste Wiederholung nach dem Lernintervall.",
-    minutes: 1,
+    id: "coach_conversation",
+    label: "Coach-Gespräch",
+    description: "Gib eine kurze Antwort im Studio und erhalte Feedback.",
+    minutes: 12,
   },
 ] as const satisfies readonly DailyPracticeStep[];

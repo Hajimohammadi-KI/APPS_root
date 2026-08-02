@@ -75,12 +75,12 @@ export function EffectivenessPanel({
     (review) => review.status === "pending" && review.dueAt <= Date.now(),
   ).length;
   const returning = daysAway !== null && daysAway >= 2;
-  const sessionTarget = returning ? 3 : dueReviews >= 4 ? 5 : 7;
+  const sessionTarget = returning ? 2 : 3;
   const recommendation = returning
-    ? "Return gently: complete the first three steps. The rest is optional today."
+    ? "Return gently: complete the first two steps, then add one short coached answer."
     : dueReviews >= 4
-      ? `Start with ${dueReviews} due reviews, then add one speaking task.`
-      : "Use the full learning path, but finish after one successful spontaneous transfer.";
+      ? `Start with one grammar check, then clear due reviews before coaching.`
+      : "Use all three steps: Grammar, Read aloud, and Coach conversation.";
 
   return (
     <section
@@ -137,7 +137,7 @@ export function EffectivenessPanel({
         </div>
         <aside className="w-full rounded-2xl border border-primary/15 bg-primary/5 p-4 xl:max-w-sm">
           <p className="text-xs font-extrabold uppercase tracking-wider text-primary">
-            Adaptive session · {sessionTarget} of 7 steps
+            Adaptive session · {sessionTarget} of 3 steps
           </p>
           <h3 className="mt-2 font-extrabold">
             {returning
@@ -177,11 +177,9 @@ export function EffectivenessPanel({
         </div>
         <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
           {[
-            ["Recall", "5 min", "State the rule without looking."],
-            ["Writing", "7 min", "Write 2 short original sentences."],
-            ["Speaking", "7 min", "Answer once in the studio or aloud."],
-            ["Review", "6 min", "Clear due reviews or repairs."],
-            ["Transfer", "5 min", "Use the grammar in a new context."],
+            ["Grammar", "6 min", "Write one original sentence in context."],
+            ["Read aloud", "10 min", "Read or record the corrected sentence."],
+            ["Coach conversation", "14 min", "Answer once and submit for feedback."],
           ].map(([title, minutes, description]) => (
             <div key={title} className="rounded-xl border bg-card p-3 text-sm">
               <strong className="block">{title}</strong>

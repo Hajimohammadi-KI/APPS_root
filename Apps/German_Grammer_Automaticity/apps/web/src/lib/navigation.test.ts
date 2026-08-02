@@ -17,7 +17,7 @@ describe("application navigation", () => {
     );
   });
 
-  it("exposes Deutsch mit Marija as a dedicated course section", () => {
+  it("exposes the dedicated German course materials section", () => {
     expect(
       secondaryNavigation.filter((item) => item.href === "/deutsch-mit-marija"),
     ).toHaveLength(1);

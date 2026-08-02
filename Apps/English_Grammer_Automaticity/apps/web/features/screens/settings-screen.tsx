@@ -720,7 +720,7 @@ export function SettingsScreen() {
                     draft.settings.onlineFeedback =
                       profile.privacy.allowOnlineAI;
                   });
-                  setStatus("Gemeinsames Lernprofil wurde importiert.");
+                  setStatus("Shared learning profile imported.");
                 } catch (error) {
                   setStatus(
                     error instanceof Error

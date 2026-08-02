@@ -45,7 +45,7 @@ export const primaryNavigation = [
   {
     href: "/heute",
     label: "Tagespfad",
-    subtitle: "7 Nachweise für heute",
+    subtitle: "3 Schritte für heute",
     icon: Route,
   },
   {
@@ -89,7 +89,7 @@ export const primaryNavigation = [
 export const secondaryNavigation = [
   {
     href: "/deutsch-mit-marija",
-    label: "Deutsch mit Marija",
+    label: "Deutschkurs-Materialien",
     subtitle: "Geteilte B2–C2-Kursmaterialien",
     icon: GraduationCap,
   },

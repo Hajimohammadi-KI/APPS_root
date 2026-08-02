@@ -67,7 +67,7 @@ export function DashboardScreen({
 }) {
   const { state } = useAppStore();
   const plan = currentDailyPlan(state);
-  const progress = Math.round((plan.completed.length / 7) * 100);
+  const progress = Math.round((plan.completed.length / 3) * 100);
   const dueReviews = state.reviews.filter(
     (review) => review.status === "pending" && review.dueAt <= Date.now(),
   ).length;
@@ -141,23 +141,22 @@ export function DashboardScreen({
   ] as const;
   const progressStories = [
     {
-      completed: [0, 1].every((step) => plan.completed.includes(step)),
-      description: "Recall the rule and build three original English sentences.",
+      completed: plan.completed.includes(0),
+      description: "Write a personal sentence from a real situation.",
       imagePosition: "left center",
-      title: "Recall and build",
+      title: "Grammar",
     },
     {
-      completed: [2, 3, 4].every((step) => plan.completed.includes(step)),
-      description:
-        "Speak, understand the correction, and improve your sentence out loud.",
+      completed: plan.completed.includes(1),
+      description: "Read the corrected sentence aloud to build speaking memory.",
       imagePosition: "center center",
-      title: "Speak and improve",
+      title: "Read aloud",
     },
     {
-      completed: [5, 6].every((step) => plan.completed.includes(step)),
-      description: "Transfer the grammar and retrieve it again later.",
+      completed: plan.completed.includes(2),
+      description: "Use the structure in a short coached conversation.",
       imagePosition: "right center",
-      title: "Transfer and master",
+      title: "Coach conversation",
     },
   ];
   const activeStory = Math.max(
@@ -292,7 +291,7 @@ export function DashboardScreen({
               <strong>72</strong> conversation topics
             </span>
             <span>
-              <strong>7</strong> evidence stages
+              <strong>3</strong> daily steps
             </span>
           </div>
         </div>
@@ -305,7 +304,7 @@ export function DashboardScreen({
               <div>
                 <strong className="block text-3xl">{progress}%</strong>
                 <small className="text-slate-500">
-                  {plan.completed.length} of 7 tasks completed
+                  {plan.completed.length} of 3 tasks completed
                 </small>
               </div>
               <Badge variant="secondary">{todayUnit?.level ?? "A1"}</Badge>
@@ -326,8 +325,8 @@ export function DashboardScreen({
                 Next action
               </span>
               <p className="mt-1 text-sm font-medium text-slate-900">
-                Finish {Math.max(1, 7 - plan.completed.length)} step
-                {7 - plan.completed.length === 1 ? "" : "s"} or start the 30-minute session.
+                Finish {Math.max(1, 3 - plan.completed.length)} step
+                {3 - plan.completed.length === 1 ? "" : "s"} or start the 30-minute session.
               </p>
             </div>
           </div>

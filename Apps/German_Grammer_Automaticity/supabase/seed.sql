@@ -30,7 +30,7 @@ values (
 Bildung:
 - ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind
 - Das Pronomen richtet sich nach der gemeinten Person; die Verbform richtet sich immer nach dem Subjekt.
-- Bei Nomen kann das Pronomen später ersetzen: Maria ist müde. Sie ist müde.
+- Bei Nomen kann das Pronomen später ersetzen: Lena ist müde. Sie ist müde.
 
 Verwendung:
 - Identität und Beruf: Ich bin Studentin. Er ist Arzt.

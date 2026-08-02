@@ -136,25 +136,25 @@ export function Dashboard() {
     .slice(0, 3);
   const progressStories = [
     {
-      completed: [0, 1].every((step) => plan.completed.includes(step)),
+      completed: plan.completed.includes(0),
       description:
-        "Rufe die Regel ab und bilde drei eigene, vollständige Sätze.",
+        "Schreibe einen eigenen Satz aus einer realen Situation.",
       imagePosition: "left center",
-      title: "Abrufen & Bilden",
+      title: "Grammatik",
     },
     {
-      completed: [2, 3, 4].every((step) => plan.completed.includes(step)),
+      completed: plan.completed.includes(1),
       description:
-        "Sprich, verstehe die Korrektur und repariere den Satz laut.",
+        "Lies den korrigierten Satz laut, klar und bewusst.",
       imagePosition: "center center",
-      title: "Sprechen & Reparieren",
+      title: "Laut lesen",
     },
     {
-      completed: [5, 6].every((step) => plan.completed.includes(step)),
+      completed: plan.completed.includes(2),
       description:
-        "Übertrage die Grammatik und rufe sie nach einer Pause erneut ab.",
+        "Nutze die Struktur in einer kurzen Coach-Konversation.",
       imagePosition: "right center",
-      title: "Übertragen & Meistern",
+      title: "Coach-Gespräch",
     },
   ] as const;
   const activeStory = Math.max(

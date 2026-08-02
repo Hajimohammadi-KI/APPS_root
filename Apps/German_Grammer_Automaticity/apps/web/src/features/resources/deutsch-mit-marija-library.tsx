@@ -68,10 +68,10 @@ export function DeutschMitMarijaLibrary() {
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <Badge className="bg-sky-700">Geteilte Kursmaterialien</Badge>
               <Badge variant="outline">B2–C2</Badge>
-              <Badge variant="outline">Quelle: Deutsch mit Marija</Badge>
+              <Badge variant="outline">Quelle: Geteilte Kursmaterialien</Badge>
             </div>
             <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-              Deutsch mit Marija
+              Deutschkurs-Materialien
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
               Deine freigegebenen Originaldateien sind vollständig und
@@ -80,7 +80,7 @@ export function DeutschMitMarijaLibrary() {
             </p>
           </div>
           <div
-            aria-label="Quellordner von Deutsch mit Marija"
+            aria-label="Quellordner der Kursmaterialien"
             className="grid w-full gap-2 sm:w-auto"
           >
             {deutschMitMarijaSourceFolders.map((folder) => (
@@ -138,10 +138,10 @@ export function DeutschMitMarijaLibrary() {
         ))}
       </section>
 
-      <section aria-labelledby="marija-learning-paths" className="space-y-3">
+      <section aria-labelledby="course-learning-paths" className="space-y-3">
         <div>
           <p className="section-kicker">Vier kompakte Lernpfade</p>
-          <h2 id="marija-learning-paths" className="section-title">
+          <h2 id="course-learning-paths" className="section-title">
             Material auswählen
           </h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
@@ -201,7 +201,7 @@ export function DeutschMitMarijaLibrary() {
           <p className="text-sm leading-6 text-emerald-950">
             Die Kursdateien werden nicht in die App kopiert. Jeder Eintrag
             öffnet die freigegebene Originaldatei in Google Drive; dafür muss im
-            Browser dasselbe Google-Konto angemeldet sein, für das Marija die
+            Browser dasselbe Google-Konto angemeldet sein, für das die
             Datei freigegeben hat. Die 127 einzelnen Grammatik-PDFs und alle
             vier Originalarchive sind separat erreichbar.
           </p>

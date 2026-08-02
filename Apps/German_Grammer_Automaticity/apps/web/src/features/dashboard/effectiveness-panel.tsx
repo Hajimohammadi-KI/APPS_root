@@ -73,12 +73,12 @@ export function EffectivenessPanel() {
     (review) => !review.mastered && review.due <= EFFECTIVENESS_PANEL_LOADED_AT,
   ).length;
   const returning = daysAway !== null && daysAway >= 2;
-  const sessionTarget = returning ? 2 : dueReviews >= 4 ? 5 : 7;
+  const sessionTarget = returning ? 2 : 3;
   const recommendation = returning
     ? "Sanft zurückkehren: Erledige die ersten zwei Schritte. Der Rest ist heute freiwillig."
     : dueReviews >= 4
-      ? `Beginne mit ${dueReviews} fälligen Wiederholungen und ergänze eine Sprechaufgabe.`
-      : "Nutze den vollständigen Pfad, aber beende die Einheit nach einem erfolgreichen freien Transfer.";
+      ? `Beginne mit einer Grammatikaufgabe und räume danach ${dueReviews} fällige Wiederholungen auf.`
+      : "Nutze alle drei Schritte: Grammatik, Laut lesen und Coach-Gespräch.";
 
   return (
     <section
@@ -135,7 +135,7 @@ export function EffectivenessPanel() {
         </div>
         <aside className="w-full rounded-2xl border border-primary/15 bg-primary/5 p-4 xl:max-w-sm">
           <p className="text-xs font-extrabold tracking-wider text-primary uppercase">
-            Adaptive Einheit · {sessionTarget} von 7 Schritten
+            Adaptive Einheit · {sessionTarget} von 3 Schritten
           </p>
           <h3 className="mt-2 font-extrabold">
             {returning
@@ -180,17 +180,11 @@ export function EffectivenessPanel() {
             Das ist die Zielroutine für stetigen Fortschritt, keine Garantie.
           </p>
         </div>
-        <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {[
-            ["Abrufen", "5 Min.", "Regel ohne Nachschlagen sagen."],
-            ["Schreiben", "7 Min.", "2 kurze eigene Sätze schreiben."],
-            ["Sprechen", "7 Min.", "Eine Antwort im Studio oder laut geben."],
-            [
-              "Wiederholen",
-              "6 Min.",
-              "Fällige Reviews oder Reparaturen erledigen.",
-            ],
-            ["Transfer", "5 Min.", "Grammatik in neuem Kontext anwenden."],
+            ["Grammatik", "8 Min.", "Einen eigenen Satz aus einer realen Situation schreiben."],
+            ["Laut lesen", "10 Min.", "Korrigierten Satz laut lesen oder einmal aufnehmen und anhören."],
+            ["Coach-Gespräch", "12 Min.", "Eine Antwort im Studio geben und Feedback auswerten."],
           ].map(([title, minutes, description]) => (
             <div key={title} className="rounded-xl border bg-card p-3 text-sm">
               <strong className="block">{title}</strong>

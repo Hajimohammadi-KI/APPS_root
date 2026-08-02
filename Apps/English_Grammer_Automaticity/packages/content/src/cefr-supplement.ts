@@ -70,7 +70,7 @@ const definitions: SupplementDefinition[] = [
       "The children’s bags are by the door.",
     ],
     targets: ["Maya’s", "brother’s", "Whose", "children’s"],
-    commonError: ["This is Marias bag.", "This is Maria’s bag."],
+    commonError: ["This is Saras bag.", "This is Sara’s bag."],
     sourceUrl:
       "https://learnenglish.britishcouncil.org/free-resources/grammar/a1-a2/possessive-s",
   },

@@ -5,43 +5,40 @@ import * as React from "react";
 const TOOLTIP_ID = "deutschflow-persian-help";
 
 const exactHelp: Record<string, string> = {
-  Startseite: "نمای کلی یادگیری و پیشنهاد بعدی را باز می‌کند.",
-  "Heute lernen": "برنامهٔ تمرین‌های امروز را به ترتیب باز می‌کند.",
-  Gesprächsstudio:
-    "برای تمرین گفت‌وگوی آزاد، ضبط صدا و اصلاح پاسخ استفاده می‌شود.",
-  Grammatiklabor:
-    "همهٔ موضوع‌های گرامری، توضیح‌ها و تمرین‌های آن‌ها را باز می‌کند.",
-  Sprechthemen: "موضوع‌های گفت‌وگو را بر اساس سطح و موقعیت نمایش می‌دهد.",
-  Wiederholungen: "تمرین‌هایی را که امروز باید دوباره انجام شوند نشان می‌دهد.",
-  Lernressourcen: "منابع و دوره‌های تکمیلی زبان آلمانی را باز می‌کند.",
-  Fehlerwerkstatt: "خطاهای ذخیره‌شده و مسیر اصلاح هر خطا را نمایش می‌دهد.",
-  Audiothek: "ضبط‌های صوتی ذخیره‌شده را پخش و مدیریت می‌کند.",
-  Einstellungen:
-    "تنظیمات یادگیری، دسترس‌پذیری، حریم خصوصی و پشتیبان‌گیری را باز می‌کند.",
-  Hilfe: "راهنمای کوتاه استفاده از برنامه را باز می‌کند.",
-  Vorlesen: "متن صفحه را با صدای سیستم می‌خواند.",
-  Installieren: "راهنمای نصب برنامه روی این دستگاه را باز می‌کند.",
-  Speichern: "تغییرهای فعلی را در همین دستگاه ذخیره می‌کند.",
-  Abbrechen: "پنجره را بدون ثبت تغییر جدید می‌بندد.",
-  Zurück: "به مرحله یا صفحهٔ قبلی برمی‌گردد.",
-  Weiter: "به مرحله یا صفحهٔ بعدی می‌رود.",
-  Starten: "تمرین یا فعالیت انتخاب‌شده را شروع می‌کند.",
-  Prüfen: "پاسخ شما را بر اساس هدف تمرین بررسی می‌کند.",
-  Wiederholen: "این مطلب را دوباره برای تثبیت یادگیری تمرین می‌کند.",
-  Löschen: "مورد انتخاب‌شده را پس از تأیید حذف می‌کند.",
+  Startseite: "Öffnet die Lernübersicht und den nächsten empfohlenen Schritt.",
+  "Heute lernen": "Öffnet die heutigen Übungen in der geplanten Reihenfolge.",
+  Gesprächsstudio: "Dient für freies Sprechen, Aufnahme und direkte Korrektur.",
+  Grammatiklabor: "Öffnet alle Grammatikthemen mit Erklärungen und Übungen.",
+  Sprechthemen: "Zeigt Gesprächsthemen nach Niveau und Situation.",
+  Wiederholungen: "Zeigt Aufgaben, die heute erneut geübt werden sollen.",
+  Lernressourcen: "Öffnet ergänzende Lernmaterialien und externe Quellen.",
+  Fehlerwerkstatt: "Zeigt gespeicherte Fehler und den Reparaturpfad je Fehler.",
+  Audiothek: "Spielt gespeicherte Aufnahmen ab und verwaltet sie.",
+  Einstellungen: "Öffnet Lern-, Barrierefreiheits-, Datenschutz- und Backup-Einstellungen.",
+  Hilfe: "Öffnet eine kurze Anleitung zur Nutzung der App.",
+  Vorlesen: "Liest den Seitentext mit der Systemstimme vor.",
+  Installieren: "Öffnet die Installationshilfe für dieses Gerät.",
+  Speichern: "Speichert die aktuellen Änderungen auf diesem Gerät.",
+  Abbrechen: "Schließt das Fenster ohne neue Änderungen zu speichern.",
+  Zurück: "Geht zum vorherigen Schritt oder zur vorherigen Seite.",
+  Weiter: "Geht zum nächsten Schritt oder zur nächsten Seite.",
+  Starten: "Startet die ausgewählte Übung oder Aktivität.",
+  Prüfen: "Prüft deine Antwort anhand des Übungsziels.",
+  Wiederholen: "Wiederholt den Inhalt zur Festigung.",
+  Löschen: "Entfernt den ausgewählten Eintrag nach Bestätigung.",
 };
 
 const partialHelp: ReadonlyArray<readonly [string, string]> = [
-  ["niveau", "سطح انتخابی و شواهد لازم برای پیشرفت را مدیریت می‌کند."],
-  ["sprechen", "تمرین یا مدرک مربوط به صحبت‌کردن را باز یا ثبت می‌کند."],
-  ["schreiben", "تمرین یا مدرک مربوط به نوشتن را باز یا ثبت می‌کند."],
-  ["grammatik", "محتوا یا تمرین مربوط به گرامر را نشان می‌دهد."],
-  ["audio", "ضبط یا فایل صوتی مربوط را پخش، ذخیره یا مدیریت می‌کند."],
-  ["fehler", "خطا و مسیر اصلاح آن را نشان می‌دهد."],
-  ["fortschritt", "پیشرفت ثبت‌شده و مرحلهٔ بعدی را نشان می‌دهد."],
-  ["suchen", "در محتوای همین بخش جست‌وجو می‌کند."],
-  ["filtern", "موارد نمایش‌داده‌شده را محدود می‌کند."],
-  ["öffnen", "بخش یا مورد انتخاب‌شده را باز می‌کند."],
+  ["niveau", "Verwaltet das gewählte Niveau und die Nachweise für den Fortschritt."],
+  ["sprechen", "Öffnet oder erfasst Sprechübungen und Nachweise."],
+  ["schreiben", "Öffnet oder erfasst Schreibübungen und Nachweise."],
+  ["grammatik", "Zeigt grammatikbezogene Inhalte oder Übungen."],
+  ["audio", "Spielt zugehörige Aufnahmen ab, speichert oder verwaltet sie."],
+  ["fehler", "Zeigt Fehler und den jeweiligen Reparaturpfad."],
+  ["fortschritt", "Zeigt den erfassten Fortschritt und den nächsten Schritt."],
+  ["suchen", "Sucht innerhalb des aktuellen Bereichs."],
+  ["filtern", "Begrenzt die aktuell angezeigten Einträge."],
+  ["öffnen", "Öffnet den ausgewählten Bereich oder Eintrag."],
 ];
 
 type HelpKind =
@@ -169,42 +166,42 @@ function helpFor(label: string, kind: HelpKind) {
 
   if (kind === "button") {
     return excerpt
-      ? `این دکمه عمل «${excerpt}» را اجرا می‌کند.`
-      : "این دکمه عمل مربوط را اجرا می‌کند.";
+      ? `Diese Schaltfläche führt die Aktion „${excerpt}“ aus.`
+      : "Diese Schaltfläche führt die zugehörige Aktion aus.";
   }
   if (kind === "link") {
     return excerpt
-      ? `این پیوند بخش یا منبع «${excerpt}» را باز می‌کند.`
-      : "این پیوند بخش مربوط را باز می‌کند.";
+      ? `Dieser Link öffnet den Bereich oder die Quelle „${excerpt}“.`
+      : "Dieser Link öffnet den zugehörigen Bereich.";
   }
   if (kind === "input") {
     return excerpt
-      ? `اطلاعات مربوط به «${excerpt}» را اینجا وارد یا انتخاب می‌کنید.`
-      : "اطلاعات مربوط را اینجا وارد یا انتخاب می‌کنید.";
+      ? `Hier gibst du Informationen zu „${excerpt}“ ein oder wählst sie aus.`
+      : "Hier gibst du die zugehörigen Informationen ein oder wählst sie aus.";
   }
   if (kind === "checkbox") {
     return excerpt
-      ? `گزینهٔ «${excerpt}» را فعال یا غیرفعال می‌کند.`
-      : "این گزینه را فعال یا غیرفعال می‌کند.";
+      ? `Aktiviert oder deaktiviert die Option „${excerpt}“.`
+      : "Aktiviert oder deaktiviert diese Option.";
   }
   if (kind === "label") {
     return excerpt
-      ? `این برچسب موضوع فیلد «${excerpt}» را مشخص می‌کند.`
-      : "این برچسب موضوع فیلد کنار خود را مشخص می‌کند.";
+      ? `Dieses Label beschreibt das Feld „${excerpt}“.`
+      : "Dieses Label beschreibt das zugehörige Feld.";
   }
   if (kind === "heading") {
     return excerpt
-      ? `این عنوان بخش «${excerpt}» را معرفی می‌کند.`
-      : "این عنوان موضوع بخش زیر را معرفی می‌کند.";
+      ? `Diese Überschrift führt in den Bereich „${excerpt}“ ein.`
+      : "Diese Überschrift führt in den darunterliegenden Bereich ein.";
   }
   if (kind === "box") {
     return excerpt
-      ? `این کادر اطلاعات و گزینه‌های «${excerpt}» را گروه‌بندی می‌کند.`
-      : "این کادر اطلاعات مرتبط را گروه‌بندی می‌کند.";
+      ? `Dieses Feld bündelt Informationen und Optionen zu „${excerpt}“.`
+      : "Dieses Feld bündelt zusammengehörige Informationen.";
   }
   return excerpt
-    ? `این متن دربارهٔ «${excerpt}» توضیح می‌دهد.`
-    : "این متن توضیح بخش فعلی است.";
+    ? `Dieser Text erklärt „${excerpt}“.`
+    : "Dieser Text erklärt den aktuellen Bereich.";
 }
 
 function prepare(root: ParentNode) {

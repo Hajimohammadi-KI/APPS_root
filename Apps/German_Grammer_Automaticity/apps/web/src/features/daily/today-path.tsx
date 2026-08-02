@@ -64,25 +64,6 @@ const dailyTasks = [
     description:
       "Führe im Gesprächsstudio mindestens eine ausgewertete Antwort mit der Zielgrammatik durch.",
   },
-  {
-    title: "Korrektur verstehen",
-    description: "Erkläre, was im korrigierten Satz verändert wurde und warum.",
-  },
-  {
-    title: "Korrektur laut reparieren",
-    description:
-      "Sprich den korrigierten Satz zweimal laut, ohne ihn beim zweiten Mal abzulesen.",
-  },
-  {
-    title: "Mediation und Transfer",
-    description:
-      "Erkläre nützliche Informationen für eine andere Person in einer neuen Situation und verwende dabei die Zielgrammatik.",
-  },
-  {
-    title: "Zeitversetzter Abruf",
-    description:
-      "Rufe eine fällige Korrektur oder eine Übung der heutigen Grammatik ab.",
-  },
 ] as const;
 
 const learningLevelOptions = [
@@ -302,7 +283,7 @@ function ActiveTodayPath({
   const dueReviews = state.reviews.filter(
     (review) => !review.mastered && review.due <= TODAY_PATH_LOADED_AT,
   );
-  const [sessionTarget, setSessionTarget] = useState<1 | 2 | 3 | 5 | 7>(() => {
+  const [sessionTarget, setSessionTarget] = useState<1 | 2 | 3>(() => {
     const latest = Object.entries(state.activity)
       .filter(([, count]) => count > 0)
       .map(([date]) => date)
@@ -314,7 +295,7 @@ function ActiveTodayPath({
         new Date(`${latest}T12:00:00`).valueOf()) /
         86_400_000,
     );
-    return daysAway >= 2 ? 2 : 7;
+    return daysAway >= 2 ? 2 : 3;
   });
   const latestError = state.errors.at(-1);
   const repairOriginal = latestError?.original ?? "Ich habe gegangen.";
@@ -587,7 +568,7 @@ function ActiveTodayPath({
         </CardHeader>
         <CardContent>
           <div className="mb-2 flex items-center justify-between text-sm">
-            <span>{completed} / 7 Schritte</span>
+            <span>{completed} / 3 Schritte</span>
             <span>{percentage} %</span>
           </div>
           <Progress
@@ -608,9 +589,7 @@ function ActiveTodayPath({
                 [
                   [1, "5 Min. · Rettung"],
                   [2, "10 Min. · Sanft"],
-                  [3, "15 Min. · Einstieg"],
-                  [5, "30 Min. · Kern"],
-                  [7, "Vollständig"],
+                  [3, "15 Min. · Vollständig"],
                 ] as const
               ).map(([target, label]) => (
                 <Button
@@ -667,7 +646,7 @@ function ActiveTodayPath({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
             {[
               {
                 title: "Abrufen",
@@ -691,18 +670,18 @@ function ActiveTodayPath({
                 step: "Schritt 3",
               },
               {
-                title: "Wiederholen",
-                minutes: "6 Min.",
-                description: "Fällige Reviews oder Reparaturen erledigen.",
-                exercise: `Rufe diese Form ohne Nachsehen ab: ${reviewPrompt}`,
-                step: "Schritt 7",
+                title: "Laut lesen",
+                minutes: "10 Min.",
+                description: "Korrigierten Satz deutlich vorlesen.",
+                exercise: "Lies den korrigierten Satz zweimal laut oder nimm dich einmal auf und höre danach zu.",
+                step: "Schritt 2",
               },
               {
-                title: "Transfer",
-                minutes: "5 Min.",
-                description: "Grammatik in neuem Kontext anwenden.",
-                exercise: `Erkläre den Punkt für eine andere Person und nutze ${todayGrammar.title} natürlich.`,
-                step: "Schritt 6",
+                title: "Coach-Gespräch",
+                minutes: "8 Min.",
+                description: "Eine Antwort im Studio geben und absenden.",
+                exercise: `Öffne das Studio und gib eine vollständige Antwort mit ${todayGrammar.title}.`,
+                step: "Schritt 3",
               },
             ].map(({ title, minutes, description, exercise, step }) => (
               <div

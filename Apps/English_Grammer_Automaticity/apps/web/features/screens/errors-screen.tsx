@@ -212,7 +212,7 @@ export function ErrorsScreen() {
                   className="mt-3"
                   name="error-repair-sentence"
                   onChange={(event) => setRepair(event.target.value)}
-                  placeholder="Schreibe einen neuen englischen Satz mit der korrigierten Struktur in einem anderen Kontext."
+                  placeholder="Write a new English sentence with the corrected structure in a different context."
                   value={repair}
                 />
                 <div className="mt-3 grid gap-2 md:grid-cols-2">

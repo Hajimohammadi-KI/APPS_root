@@ -45,22 +45,6 @@ const stepInfo = [
     "Coach conversation",
     "Complete one fully evaluated spoken or written answer in the studio.",
   ],
-  [
-    "Understand one correction",
-    "Explain what changed in your correction and why.",
-  ],
-  [
-    "Repair out loud",
-    "Say the corrected form twice and hide it on the second repetition.",
-  ],
-  [
-    "Mediate and transfer",
-    "Explain useful information to another person in a new situation and use the target grammar without a model.",
-  ],
-  [
-    "Delayed retrieval",
-    "Retrieve a due correction or a controlled grammar answer.",
-  ],
 ] as const;
 const defaultGrammar = requiredFirst(grammarUnits, "Grammar catalog");
 
@@ -87,7 +71,7 @@ export function DailyScreen({
       (review) => review.status === "pending" && review.dueAt <= Date.now(),
     )
     .toSorted((a, b) => a.dueAt - b.dueAt);
-  const [sessionTarget, setSessionTarget] = React.useState<1 | 2 | 3 | 5 | 7>(
+  const [sessionTarget, setSessionTarget] = React.useState<1 | 2 | 3>(
     () => {
       const latest = Object.entries(state.activity)
         .filter(([, count]) => count > 0)
@@ -100,7 +84,7 @@ export function DailyScreen({
           new Date(`${latest}T12:00:00`).valueOf()) /
           86_400_000,
       );
-      return daysAway >= 2 ? 3 : 7;
+      return daysAway >= 2 ? 2 : 3;
     },
   );
   const lastError = state.errors.toSorted((a, b) =>
@@ -113,7 +97,7 @@ export function DailyScreen({
     grammar.rule,
   ];
   const review = due[0];
-  const progress = Math.round((plan.completed.length / 7) * 100);
+  const progress = Math.round((plan.completed.length / 3) * 100);
   const sessionCompleted = plan.completed.filter(
     (step) => step < sessionTarget,
   ).length;
@@ -265,12 +249,12 @@ export function DailyScreen({
         <div>
           <h1>Daily Automaticity Path</h1>
           <p>
-            Seven real tasks. Offline practice stays low-pressure; only
-            reliable evaluations update mastery and CEFR evidence.
+            Three focused tasks for today: grammar, read aloud, then coached
+            conversation.
           </p>
         </div>
         <Badge variant={progress === 100 ? "success" : "default"}>
-          {plan.completed.length}/7 completed
+          {plan.completed.length}/3 completed
         </Badge>
       </div>
 
@@ -304,9 +288,7 @@ export function DailyScreen({
                 [
                   [1, "5 min · Rescue"],
                   [2, "10 min · Gentle"],
-                  [3, "15 min · Return"],
-                  [5, "30 min · Core"],
-                  [7, "Full path"],
+                  [3, "15 min · Full path"],
                 ] as const
               ).map(([target, label]) => (
                 <Button
@@ -412,18 +394,18 @@ export function DailyScreen({
                 step: "Step 3",
               },
               {
-                title: "Review",
-                minutes: "6 min",
-                description: "Clear due repairs or reviews.",
-                exercise: `Retrieve this without looking: ${review?.original ?? controlled[0]}`,
-                step: "Step 7",
+                title: "Read aloud",
+                minutes: "10 min",
+                description: "Read the corrected sentence aloud clearly.",
+                exercise: `Read your corrected sentence aloud twice, or record it once and listen back.`,
+                step: "Step 2",
               },
               {
-                title: "Transfer",
-                minutes: "5 min",
-                description: "Use the grammar in a new context.",
-                exercise: `Teach the useful point to a classmate and use ${grammar.title} once naturally.`,
-                step: "Step 6",
+                title: "Coach conversation",
+                minutes: "8 min",
+                description: "Answer once in Studio and submit it.",
+                exercise: `Open Studio and give one complete answer using ${grammar.title}.`,
+                step: "Step 3",
               },
             ].map(({ title, minutes, description, exercise, step }) => (
               <div key={title} className="rounded-xl border bg-muted/20 p-3 text-sm">
@@ -528,14 +510,14 @@ export function DailyScreen({
                     <div className="grid gap-2">
                       {[1, 2, 3].map((number) => (
                         <Input
-                          aria-label={`Eigener Satz ${number}`}
+                          aria-label={`Personal sentence ${number}`}
                           autoComplete="off"
                           key={number}
                           name={`daily-sentence-${number}`}
                           onChange={(event) =>
                             saveAnswer(`sentence${number}`, event.target.value)
                           }
-                          placeholder={`Eigener englischer Satz ${number}`}
+                          placeholder={`My original English sentence ${number}`}
                           value={answers[`sentence${number}`] ?? ""}
                         />
                       ))}

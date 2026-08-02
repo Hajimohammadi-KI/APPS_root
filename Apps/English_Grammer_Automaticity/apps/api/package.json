@@ -1,6 +1,6 @@
 {
   "name": "@grammar/api",
-  "version": "27.0.2",
+  "version": "27.0.3",
   "private": true,
   "scripts": {
     "dev": "bun --watch src/main.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@grammar/web",
-  "version": "27.0.2",
+  "version": "27.0.3",
   "private": true,
   "scripts": {
     "dev": "node ../../node_modules/next/dist/bin/next dev --turbopack",

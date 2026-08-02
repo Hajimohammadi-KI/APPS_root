@@ -15,8 +15,8 @@ const germanRoot = join(root, "German_Grammer_Automaticity");
 const brandSpecificInEnglish = new Set([
   "downloads/EnglishGrammar-Setup.exe",
   "downloads/EnglishGrammar-Setup.exe.sha256",
-  "downloads/EnglishGrammar-Setup-v27.0.2.exe",
-  "downloads/EnglishGrammar-Setup-v27.0.2.exe.sha256",
+  "downloads/EnglishGrammar-Setup-v27.0.3.exe",
+  "downloads/EnglishGrammar-Setup-v27.0.3.exe.sha256",
 ]);
 
 const scopes: Scope[] = [

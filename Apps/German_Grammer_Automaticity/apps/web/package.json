@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "20.8.2",
+  "version": "20.8.3",
   "private": true,
   "scripts": {
     "dev": "node ../../node_modules/next/dist/bin/next dev",

@@ -222,24 +222,24 @@ if (-not (Test-Path -LiteralPath $iconSource -PathType Leaf)) {
   throw "Setup icon does not exist: $iconSource"
 }
 
-$workRoot = Join-Path ([System.IO.Path]::GetTempPath()) 'EnglishGrammarDesktop-windows-modern-staging'
+$workRoot = Join-Path ([System.IO.Path]::GetTempPath()) (
+  'EnglishGrammarDesktop-windows-modern-staging-' + [Guid]::NewGuid().ToString('N'))
 $portableOutput = Join-Path $workRoot 'electron'
 $payloadRoot = Join-Path $workRoot 'payload'
 $payloadZip = Join-Path $workRoot 'payload.zip'
 $generatedSource = Join-Path $workRoot 'SetupApp.generated.cs'
 $setupIcon = Join-Path $workRoot 'setup.ico'
 $compiledSetup = Join-Path $workRoot ([string]$config.setupFile)
-  $payloadOutput = Join-Path $projectRoot ([IO.Path]::ChangeExtension([string]$config.outputFile, '.payload.zip'))
+$payloadOutput = Join-Path $projectRoot ([IO.Path]::ChangeExtension([string]$config.outputFile, '.payload.zip'))
 $localAppRoot = Join-Path $workRoot 'local-app'
 $webPayloadRoot = Join-Path $workRoot 'web-runtime'
 
 $resolvedWorkRoot = [System.IO.Path]::GetFullPath($workRoot)
-$expectedWorkRoot = [System.IO.Path]::GetFullPath(
-  (Join-Path ([System.IO.Path]::GetTempPath()) 'EnglishGrammarDesktop-windows-modern-staging'))
-if (-not [string]::Equals(
-    $resolvedWorkRoot.TrimEnd('\'),
-    $expectedWorkRoot.TrimEnd('\'),
-    [System.StringComparison]::OrdinalIgnoreCase)) {
+$tempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())
+if (-not $tempRoot.EndsWith('\')) {
+  $tempRoot += '\'
+}
+if (-not $resolvedWorkRoot.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
   throw "Unsafe setup staging path: $resolvedWorkRoot"
 }
 

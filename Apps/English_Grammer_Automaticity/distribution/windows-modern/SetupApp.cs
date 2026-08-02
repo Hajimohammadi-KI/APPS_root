@@ -68,6 +68,11 @@ namespace ModernLanguageSetup
             get { return Assembly.GetExecutingAssembly().Location; }
         }
 
+        internal static string CurrentPayloadFile
+        {
+            get { return GetPayloadPath(CurrentExecutable); }
+        }
+
         internal static string InstalledSetup
         {
             get { return Path.Combine(InstallRoot, SetupFileName); }
@@ -258,6 +263,10 @@ namespace ModernLanguageSetup
                 Path.GetTempPath(),
                 Product.ProductId + "-Setup-" + Guid.NewGuid().ToString("N") + ".exe");
             File.Copy(Product.CurrentExecutable, temporarySetup, true);
+            File.Copy(
+                Product.CurrentPayloadFile,
+                GetPayloadPath(temporarySetup),
+                true);
 
             Process.Start(new ProcessStartInfo
             {
@@ -274,19 +283,27 @@ namespace ModernLanguageSetup
                 Product.CurrentExecutable,
                 null,
                 NativeMethods.MoveFileDelayUntilReboot);
+
+            string payloadFile = Product.CurrentPayloadFile;
+            if (File.Exists(payloadFile))
+            {
+                NativeMethods.MoveFileEx(
+                    payloadFile,
+                    null,
+                    NativeMethods.MoveFileDelayUntilReboot);
+            }
         }
 
         private static void ExtractPayload(string destination, Action<int, string> progress)
         {
-            Stream resource = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("Payload.zip");
-            if (resource == null)
+            string payloadFile = Product.CurrentPayloadFile;
+            if (!File.Exists(payloadFile))
                 throw new InvalidDataException(Text(
-                    "Das eingebettete Installationspaket fehlt.",
-                    "The embedded installation package is missing."));
+                    "Das Installationspaket fehlt.",
+                    "The installation package is missing."));
 
-            using (resource)
-            using (ZipArchive archive = new ZipArchive(resource, ZipArchiveMode.Read, false))
+            using (FileStream stream = File.OpenRead(payloadFile))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read, false))
             {
                 int total = Math.Max(archive.Entries.Count, 1);
                 int completed = 0;
@@ -323,6 +340,11 @@ namespace ModernLanguageSetup
                     }
                 }
             }
+        }
+
+        private static string GetPayloadPath(string executablePath)
+        {
+            return Path.ChangeExtension(executablePath, ".payload.zip");
         }
 
         private static void VerifyPayload(string root)

@@ -14,6 +14,7 @@ const buildScript = resolve(
   "distribution/windows-modern/build-modern-installer.ps1",
 );
 const source = resolve(projectRoot, "DeutschFlow-Setup.exe");
+const payloadSource = resolve(projectRoot, "DeutschFlow-Setup.payload.zip");
 const skipElectronBuild = Bun.argv.includes("--skip-electron-build");
 const buildCommand = [
   "powershell.exe",
@@ -39,7 +40,7 @@ if (exitCode !== 0) {
 }
 
 const sourceInfo = await stat(source);
-if (sourceInfo.size < 10_000_000) {
+if (sourceInfo.size < 250_000) {
   throw new Error("Windows setup output is unexpectedly small.");
 }
 
@@ -60,6 +61,10 @@ const destinations = [
 for (const destination of destinations) {
   await mkdir(dirname(destination), { recursive: true });
   await copyFile(source, destination);
+  await copyFile(
+    payloadSource,
+    `${destination.replace(/\.exe$/i, "")}.payload.zip`,
+  );
   await writeFile(
     `${destination}.sha256`,
     `${checksum}  ${destination.endsWith(versionedFileName) ? versionedFileName : "DeutschFlow-Setup.exe"}\n`,

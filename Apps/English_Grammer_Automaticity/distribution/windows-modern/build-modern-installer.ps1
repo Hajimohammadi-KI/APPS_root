@@ -229,6 +229,7 @@ $payloadZip = Join-Path $workRoot 'payload.zip'
 $generatedSource = Join-Path $workRoot 'SetupApp.generated.cs'
 $setupIcon = Join-Path $workRoot 'setup.ico'
 $compiledSetup = Join-Path $workRoot ([string]$config.setupFile)
+  $payloadOutput = Join-Path $projectRoot ([IO.Path]::ChangeExtension([string]$config.outputFile, '.payload.zip'))
 $localAppRoot = Join-Path $workRoot 'local-app'
 $webPayloadRoot = Join-Path $workRoot 'web-runtime'
 
@@ -473,7 +474,6 @@ $compilerArguments = @(
   "/out:$compiledSetup",
   "/win32icon:$setupIcon",
   "/win32manifest:$(Join-Path $scriptRoot 'setup.manifest')",
-  "/resource:$payloadZip,Payload.zip",
   "/resource:$iconSource,AppIcon.png",
   "/reference:$(Join-Path $frameworkRoot 'WPF\PresentationCore.dll')",
   "/reference:$(Join-Path $frameworkRoot 'WPF\PresentationFramework.dll')",
@@ -492,6 +492,9 @@ Write-Host "[7/7] Publishing the setup file and checksum..."
 $outputDirectory = Split-Path -Parent $outputFile
 New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
 Copy-Item -LiteralPath $compiledSetup -Destination $outputFile -Force
+$payloadDirectory = Split-Path -Parent $payloadOutput
+New-Item -ItemType Directory -Force -Path $payloadDirectory | Out-Null
+Copy-Item -LiteralPath $payloadZip -Destination $payloadOutput -Force
 $hash = Get-FileHash -Algorithm SHA256 -LiteralPath $outputFile
 [System.IO.File]::WriteAllText(
   "$outputFile.sha256",

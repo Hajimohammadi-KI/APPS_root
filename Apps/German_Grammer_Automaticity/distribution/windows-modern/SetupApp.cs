@@ -270,7 +270,7 @@ namespace ModernLanguageSetup
             File.Copy(Product.CurrentExecutable, temporarySetup, true);
             File.Copy(
                 Product.CurrentPayloadFile,
-                GetPayloadPath(temporarySetup),
+                Product.GetPayloadPath(temporarySetup),
                 true);
 
             Process.Start(new ProcessStartInfo

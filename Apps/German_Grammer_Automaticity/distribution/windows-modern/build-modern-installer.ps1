@@ -299,6 +299,11 @@ if (-not $SkipElectronBuild) {
     -Destination (Join-Path $standaloneApp 'public') `
     -Recurse `
     -Force
+  $standaloneDownloads = Join-Path $standaloneApp 'public\downloads'
+  if (Test-Path -LiteralPath $standaloneDownloads -PathType Container) {
+    # Generated installers are distribution artifacts, not runtime web assets.
+    Remove-Item -LiteralPath $standaloneDownloads -Recurse -Force
+  }
   Add-Type -AssemblyName System.IO.Compression.FileSystem
   $webArchive = Join-Path $localAppRoot 'web.zip'
   [System.IO.Compression.ZipFile]::CreateFromDirectory(

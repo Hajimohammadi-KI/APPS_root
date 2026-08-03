@@ -37,6 +37,8 @@ export type ErrorClass =
 export interface Settings {
   apiBaseUrl: string;
   minWords: number;
+  dailyStudyMinutes: 10 | 15 | 20 | 25 | 30 | 40 | 50 | 60;
+  honovrLanguage: "fa" | "de" | "en" | "ar";
   saveAudio: boolean;
   onlineFeedback: boolean;
   readingProfile: "standard" | "dyslexia";
@@ -173,6 +175,8 @@ export const DEFAULT_STATE: AppState = {
       process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
       "http://localhost:4201",
     minWords: 12,
+    dailyStudyMinutes: 30,
+    honovrLanguage: "fa",
     saveAudio: true,
     onlineFeedback: false,
     readingProfile: "dyslexia",
@@ -271,6 +275,24 @@ export function normalizeAppState(value: unknown): AppState {
     settings: {
       apiBaseUrl,
       minWords,
+      dailyStudyMinutes:
+        settings.dailyStudyMinutes === 10 ||
+        settings.dailyStudyMinutes === 15 ||
+        settings.dailyStudyMinutes === 20 ||
+        settings.dailyStudyMinutes === 25 ||
+        settings.dailyStudyMinutes === 30 ||
+        settings.dailyStudyMinutes === 40 ||
+        settings.dailyStudyMinutes === 50 ||
+        settings.dailyStudyMinutes === 60
+          ? settings.dailyStudyMinutes
+          : fallback.settings.dailyStudyMinutes,
+      honovrLanguage:
+        settings.honovrLanguage === "fa" ||
+        settings.honovrLanguage === "de" ||
+        settings.honovrLanguage === "en" ||
+        settings.honovrLanguage === "ar"
+          ? settings.honovrLanguage
+          : fallback.settings.honovrLanguage,
       saveAudio:
         typeof settings.saveAudio === "boolean"
           ? settings.saveAudio

@@ -100,6 +100,58 @@ export function EvaluationResult({ evaluation }: { evaluation: Evaluation }) {
           Listen
         </Button>
       </div>
+      {evaluation.correctionReview ? (
+        <div className="mt-3 rounded-xl border bg-amber-50/70 p-3 text-sm leading-6">
+          <p className="font-semibold">Correction review:</p>
+          <p>
+            <strong>Learner sentence:</strong> {evaluation.correctionReview.learnerSentence}
+          </p>
+          <p>
+            <strong>Corrected sentence:</strong> {evaluation.correctionReview.correctedSentence}
+          </p>
+          <p>
+            <strong>Mistake type:</strong> {evaluation.correctionReview.mistakeType}
+          </p>
+          <p>
+            <strong>Explanation:</strong> {evaluation.correctionReview.explanation}
+          </p>
+        </div>
+      ) : null}
+      <div className="mt-3 space-y-3 rounded-xl border bg-slate-50/80 p-3 text-sm leading-6">
+        <div>
+          <strong>Conversation feedback</strong>
+        </div>
+        <div>
+          <p className="font-semibold">Pronunciation:</p>
+          <ul className="list-disc pl-5">
+            {evaluation.conversationFeedback.pronunciation.map((line, index) => (
+              <li key={`pronunciation-${index}`}>{line}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="font-semibold">Word choice:</p>
+          <ul className="list-disc pl-5">
+            {evaluation.conversationFeedback.wordChoice.map((line, index) => (
+              <li key={`word-choice-${index}`}>{line}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="font-semibold">Grammar:</p>
+          <ul className="list-disc pl-5">
+            {evaluation.conversationFeedback.grammar.map((line, index) => (
+              <li key={`grammar-${index}`}>{line}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div className="mt-3 rounded-xl border bg-white/80 p-3 text-sm">
+        <p className="font-semibold">Step 3 Part B (JSON):</p>
+        <pre className="mt-2 overflow-x-auto rounded-lg bg-slate-950 p-3 text-xs text-slate-100">
+{JSON.stringify(evaluation.conversationFeedback.partB, null, 2)}
+        </pre>
+      </div>
       {evaluation.targetUses < evaluation.required ? (
         <p className="mt-3 text-sm">
           <strong>Missing target structure:</strong> Use "

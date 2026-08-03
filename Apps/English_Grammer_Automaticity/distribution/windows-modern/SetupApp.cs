@@ -167,6 +167,14 @@ namespace ModernLanguageSetup
                 StopInstalledProcesses();
 
                 File.Copy(Product.CurrentExecutable, Path.Combine(staging, Product.SetupFileName), true);
+                string currentPayload = Product.CurrentPayloadFile;
+                if (File.Exists(currentPayload))
+                {
+                    File.Copy(
+                        currentPayload,
+                        Product.GetPayloadPath(Path.Combine(staging, Product.SetupFileName)),
+                        true);
+                }
 
                 bool hadPreviousInstall = Directory.Exists(Product.InstallRoot);
                 if (hadPreviousInstall)
@@ -262,16 +270,26 @@ namespace ModernLanguageSetup
             return exe.StartsWith(root, StringComparison.OrdinalIgnoreCase);
         }
 
-        internal static string RelaunchFromTemporaryCopy(string arguments)
+        internal static string RelaunchFromTemporaryCopy(string arguments, bool includePayload)
         {
             string temporarySetup = Path.Combine(
                 Path.GetTempPath(),
                 Product.ProductId + "-Setup-" + Guid.NewGuid().ToString("N") + ".exe");
             File.Copy(Product.CurrentExecutable, temporarySetup, true);
-            File.Copy(
-                Product.CurrentPayloadFile,
-                Product.GetPayloadPath(temporarySetup),
-                true);
+            if (includePayload)
+            {
+                string payloadFile = Product.CurrentPayloadFile;
+                if (!File.Exists(payloadFile))
+                    throw new FileNotFoundException(Text(
+                        "Das Installationspaket fehlt.",
+                        "The installation package is missing."),
+                        payloadFile);
+
+                File.Copy(
+                    payloadFile,
+                    Product.GetPayloadPath(temporarySetup),
+                    true);
+            }
 
             Process.Start(new ProcessStartInfo
             {
@@ -1441,7 +1459,8 @@ namespace ModernLanguageSetup
             {
                 Installer.RelaunchFromTemporaryCopy(
                     "--continue-install --operation=" +
-                    selectedOperation.ToString().ToLowerInvariant());
+                    selectedOperation.ToString().ToLowerInvariant(),
+                    true);
                 Close();
                 return;
             }
@@ -1523,7 +1542,7 @@ namespace ModernLanguageSetup
                 string argument = deleteData
                     ? "--perform-uninstall --delete-data --show-result"
                     : "--perform-uninstall --show-result";
-                Installer.RelaunchFromTemporaryCopy(argument);
+                Installer.RelaunchFromTemporaryCopy(argument, false);
                 Close();
                 return;
             }

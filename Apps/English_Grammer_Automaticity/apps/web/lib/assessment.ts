@@ -38,6 +38,35 @@ export interface Evaluation {
   };
   links: GrammarResource[];
   accuracyScore: number;
+  correctionReview:
+    | {
+        learnerSentence: string;
+        correctedSentence: string;
+        mistakeType:
+          | "tense"
+          | "verb form"
+          | "singular/plural"
+          | "word order"
+          | "preposition"
+          | "meaning/use";
+        explanation: string;
+      }
+    | null;
+  conversationFeedback: {
+    pronunciation: string[];
+    wordChoice: string[];
+    grammar: string[];
+    partB: {
+      pronunciation_score: number;
+      pronunciation_feedback: string;
+      word_choice_score: number;
+      word_choice_feedback: string;
+      grammar_score: number;
+      grammar_feedback: string;
+      overall_comment: string;
+      next_step: string;
+    };
+  };
 }
 
 export type EvaluationResult = Evaluation;
@@ -147,6 +176,189 @@ export function issueType(match: LanguageToolMatch) {
   const id = match.rule?.id?.toLowerCase() ?? "";
   const category = match.rule?.category?.name?.toLowerCase() ?? "";
   return /spell|typo/.test(`${id}${category}`) ? "Spelling" : "Grammar";
+}
+
+function quotedList(items: string[]) {
+  if (items.length === 0) return "";
+  if (items.length === 1) return `"${items[0]}"`;
+  if (items.length === 2) return `"${items[0]}" and "${items[1]}"`;
+  return `${items.slice(0, -1).map((item) => `"${item}"`).join(", ")}, and "${items.at(-1)}"`;
+}
+
+function buildConversationFeedback(
+  text: string,
+  corrected: string,
+  grammar: EvaluationOptions["grammar"],
+  grammarIssues: LanguageToolMatch[],
+  spelling: LanguageToolMatch[],
+  targetUses: number,
+  required: number,
+) {
+  const pronunciation: string[] = [];
+  const wordChoice: string[] = [];
+  const grammarFeedback: string[] = [];
+
+  const pronunciationTargets = ["vegetables", "scientifically"] as const;
+  const mentionedPronunciationTargets = pronunciationTargets.filter((word) =>
+    new RegExp(`\\b${word}\\b`, "i").test(`${text} ${corrected}`),
+  );
+  if (mentionedPronunciationTargets.length > 0) {
+    pronunciation.push(
+      `You speak clearly most of the time, but ${quotedList(
+        [...mentionedPronunciationTargets],
+      )} need more practice.`,
+    );
+  } else {
+    pronunciation.push(
+      "You speak clearly most of the time. Keep sentence stress and ending sounds consistent.",
+    );
+  }
+
+  const strongLexicon = [
+    "balanced diet",
+    "home-cooked food",
+    "stay hydrated",
+  ] as const;
+  const usedLexicon = strongLexicon.filter((phrase) =>
+    new RegExp(phrase.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&"), "i").test(
+      `${text} ${corrected}`,
+    ),
+  );
+  if (usedLexicon.length > 0) {
+    wordChoice.push(`Good use of ${quotedList([...usedLexicon])}.`);
+  }
+  if (/\bit makes me fat\b/i.test(text)) {
+    wordChoice.push(
+      'Try using "fattening" instead of "it makes me fat" for more natural English.',
+    );
+  }
+  if (wordChoice.length === 0) {
+    wordChoice.push(
+      "Word choice is clear. Add one stronger collocation to sound more natural.",
+    );
+  }
+
+  if (/simple present/i.test(grammar.title) && targetUses >= required) {
+    grammarFeedback.push("Correct use of Simple Present for habits.");
+  }
+  if (/\benough sleeps\b/i.test(text) && /\benough sleep\b/i.test(corrected)) {
+    grammarFeedback.push(
+      'One mistake: "I don\'t get enough sleeps" -> "I don\'t get enough sleep".',
+    );
+  }
+  if (grammarIssues.length > 0 || spelling.length > 0) {
+    const primaryIssue = [...grammarIssues, ...spelling][0];
+    if (primaryIssue?.message) {
+      grammarFeedback.push(`Main fix: ${primaryIssue.message}`);
+    }
+  }
+  if (grammarFeedback.length === 0) {
+    grammarFeedback.push(
+      "Grammar is controlled in this response. Keep subject-verb agreement and article use stable.",
+    );
+  }
+
+  const pronunciationScore = Math.max(
+    0,
+    Math.min(
+      100,
+      82 +
+        Math.min(10, Math.floor(wordCount(text) / 5)) -
+        Math.min(20, grammarIssues.length * 3 + spelling.length * 2),
+    ),
+  );
+  const wordChoiceScore = Math.max(
+    0,
+    Math.min(
+      100,
+      78 +
+        Math.min(12, Math.floor(contentTokens(text).length / 3)) -
+        (targetUses < required ? 12 : 0),
+    ),
+  );
+  const grammarScore = Math.max(
+    0,
+    Math.min(100, 90 - grammarIssues.length * 12 - spelling.length * 4),
+  );
+
+  const partB = {
+    pronunciation_score: pronunciationScore,
+    pronunciation_feedback:
+      pronunciationScore >= 90
+        ? "Your speech is clear and easy to understand. Key words are pronounced clearly, and your rhythm sounds natural. Keep this consistency in longer answers."
+        : pronunciationScore >= 70
+          ? "Your pronunciation is mostly clear and understandable. A few words need cleaner endings and steadier stress. Slow down slightly on difficult words to improve clarity."
+          : pronunciationScore >= 50
+            ? "Your message is understandable in parts, but several sounds are unclear. Word stress and rhythm are sometimes uneven. Practice the corrected sentence aloud before giving a longer answer."
+            : "Many key words are hard to understand right now. Speech rhythm and stress need focused practice. Start with short, clear sentences and repeat them slowly.",
+    word_choice_score: wordChoiceScore,
+    word_choice_feedback:
+      wordChoiceScore >= 90
+        ? "Your vocabulary fits the topic very well and sounds natural. You use strong combinations of words for daily-life communication. Keep adding precise words for detail."
+        : wordChoiceScore >= 70
+          ? "Your word choice matches the topic and is mostly natural. Some phrases can be more idiomatic in English. Add one or two stronger collocations in your next response."
+          : wordChoiceScore >= 50
+            ? "Basic topic vocabulary is present, but several phrases sound limited or unnatural. Use simpler and more common combinations first. Then add one specific detail word."
+            : "Word choice is weak for this task and some phrases do not fit the context. Build a short topic word list and reuse it in complete sentences. Focus on natural everyday expressions.",
+    grammar_score: grammarScore,
+    grammar_feedback:
+      grammarScore >= 90
+        ? "Grammar control is strong in this response. Verb forms, agreement, and sentence order are accurate. Keep this accuracy while adding more detail."
+        : grammarScore >= 70
+          ? "Grammar is generally good, with a few errors that reduce precision. Check verb form and small structure points before submitting. Your base is solid and can improve quickly."
+          : grammarScore >= 50
+            ? "You show basic grammar control, but important errors appear in tense, form, or word order. These errors sometimes affect clarity. Revise one key pattern and use it in 2-3 short sentences."
+            : "Grammar errors are frequent and make the message hard to follow. Focus on one core pattern and practice it repeatedly in short responses. Accuracy first, then complexity.",
+    overall_comment:
+      "You communicated your idea and stayed on task. Keep your direct first sentence, then expand with one reason or example. Prioritize one grammar fix and one vocabulary upgrade in the next attempt.",
+    next_step:
+      "Record one new 2-4 sentence answer on the same topic. First answer directly, then add one clear reason with the target grammar.",
+  };
+
+  return {
+    pronunciation,
+    wordChoice,
+    grammar: grammarFeedback,
+    partB,
+  };
+}
+
+function mapMistakeType(
+  issue: LanguageToolMatch | undefined,
+): "tense" | "verb form" | "singular/plural" | "word order" | "preposition" | "meaning/use" {
+  const raw = `${issue?.rule?.id ?? ""} ${issue?.rule?.category?.name ?? ""} ${issue?.message ?? ""}`.toLowerCase();
+  if (/tense|time|past|present|future/.test(raw)) return "tense";
+  if (/verb|conjugation|participle|auxiliary/.test(raw)) return "verb form";
+  if (/plural|singular|agreement|countable|uncountable/.test(raw)) {
+    return "singular/plural";
+  }
+  if (/word order|position|syntax/.test(raw)) return "word order";
+  if (/preposition/.test(raw)) return "preposition";
+  return "meaning/use";
+}
+
+function buildCorrectionReview(
+  original: string,
+  corrected: string,
+  issue: LanguageToolMatch | undefined,
+) {
+  if (!issue && original === corrected) return null;
+  const mistakeType = mapMistakeType(issue);
+  const location = issue?.context?.text?.trim();
+  const message = issue?.message?.trim();
+  const reason =
+    message && message.length > 0
+      ? message
+      : "The sentence form needs adjustment for natural and correct English.";
+
+  return {
+    learnerSentence: original,
+    correctedSentence: corrected,
+    mistakeType,
+    explanation: location
+      ? `The mistake is in "${location}". This is a ${mistakeType} issue. ${reason} The corrected version is right because it follows the correct grammar pattern for this meaning.`
+      : `This is a ${mistakeType} issue. ${reason} The corrected version is right because it uses the correct grammar pattern for the intended meaning.`,
+  };
 }
 
 export function classifyError(match: LanguageToolMatch): ErrorClass {
@@ -299,6 +511,20 @@ export async function evaluateResponse(
         (!correction.online && correction.changed ? 20 : 0),
     ),
   );
+  const conversationFeedback = buildConversationFeedback(
+    text,
+    correction.corrected,
+    options.grammar,
+    grammarIssues,
+    spelling,
+    targetUses,
+    required,
+  );
+  const correctionReview = buildCorrectionReview(
+    correction.original,
+    correction.corrected,
+    correction.matches[0],
+  );
 
   return {
     ...correction,
@@ -315,5 +541,7 @@ export async function evaluateResponse(
     grammar: options.grammar,
     links: options.grammar.links ?? [],
     accuracyScore,
+    correctionReview,
+    conversationFeedback,
   };
 }

@@ -31,11 +31,13 @@ test("the PDF Reader uses verified Google service status and the Calendar API", 
   assert.match(calendarRoute, /isSameOriginMutation/);
 });
 
-test("local setup detects the app-owned Google OAuth file without printing secrets", () => {
+test("local setup detects OAuth configuration without overwriting explicit local credentials or printing secrets", () => {
   assert.match(generator, /findStoredGoogleOAuthClient/);
   assert.match(generator, /provider_secrets/);
-  assert.match(generator, /setValue\("GOOGLE_CLIENT_ID"/);
-  assert.match(generator, /setValue\("GOOGLE_CLIENT_SECRET"/);
+  assert.match(generator, /setDefault\("GOOGLE_CLIENT_ID"/);
+  assert.match(generator, /setDefault\("GOOGLE_CLIENT_SECRET"/);
+  assert.doesNotMatch(generator, /setValue\("GOOGLE_CLIENT_ID"/);
+  assert.doesNotMatch(generator, /setValue\("GOOGLE_CLIENT_SECRET"/);
   assert.match(generator, /Schlüsselwerte werden nicht ausgegeben/);
   assert.doesNotMatch(generator, /console\.log\([^\n]*(clientId|clientSecret)/);
 });

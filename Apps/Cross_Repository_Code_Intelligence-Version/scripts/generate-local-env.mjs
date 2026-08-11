@@ -111,14 +111,12 @@ setDefault("GOOGLE_REDIRECT_URI", "http://127.0.0.1:4312/api/google/callback");
 const storedGoogleOAuthClient = await findStoredGoogleOAuthClient();
 const googleOAuthClient = storedGoogleOAuthClient || findGoogleOAuthClient();
 if (googleOAuthClient) {
-  if (storedGoogleOAuthClient) {
-    setValue("GOOGLE_CLIENT_ID", googleOAuthClient.clientId);
-    setValue("GOOGLE_CLIENT_SECRET", googleOAuthClient.clientSecret);
-    setValue("GOOGLE_REDIRECT_URI", googleOAuthClient.redirectUri || "http://127.0.0.1:4312/api/google/callback");
-  } else {
-    setDefault("GOOGLE_CLIENT_ID", googleOAuthClient.clientId);
-    setDefault("GOOGLE_CLIENT_SECRET", googleOAuthClient.clientSecret);
-  }
+  // The explicit local configuration is authoritative. Stored provider data
+  // may come from an older or disabled OAuth client, so it must only fill
+  // missing values and must never overwrite a newly configured client.
+  setDefault("GOOGLE_CLIENT_ID", googleOAuthClient.clientId);
+  setDefault("GOOGLE_CLIENT_SECRET", googleOAuthClient.clientSecret);
+  setDefault("GOOGLE_REDIRECT_URI", googleOAuthClient.redirectUri || "http://127.0.0.1:4312/api/google/callback");
 }
 
 writeFileSync(envPath, contents, { encoding: "utf8", mode: 0o600 });

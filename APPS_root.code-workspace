@@ -1,0 +1,24 @@
+{
+  "folders": [
+    {
+      "name": "APPS_root",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "git.autofetch": true,
+    "files.exclude": {
+      "**/.git": true,
+      "**/node_modules": true,
+      "**/.next": true,
+      "**/dist": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/.next": true,
+      "**/dist": true,
+      "deleted": true,
+      "Sources": true
+    }
+  }
+}

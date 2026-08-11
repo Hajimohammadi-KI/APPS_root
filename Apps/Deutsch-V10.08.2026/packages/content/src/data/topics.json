@@ -1,0 +1,792 @@
+[
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Persönliches",
+    "topic": "Sich vorstellen",
+    "task": "Sprich über sich vorstellen. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über sich vorstellen sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Familie",
+    "topic": "Familie und Beziehungen",
+    "task": "Sprich über familie und beziehungen. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über familie und beziehungen sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Wohnen",
+    "topic": "Wohnung und Nachbarschaft",
+    "task": "Sprich über wohnung und nachbarschaft. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über wohnung und nachbarschaft sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Alltag",
+    "topic": "Tagesablauf",
+    "task": "Sprich über tagesablauf. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über tagesablauf sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Essen",
+    "topic": "Essen und Mahlzeiten",
+    "task": "Sprich über essen und mahlzeiten. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über essen und mahlzeiten sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Einkaufen",
+    "topic": "Alltägliche Einkäufe",
+    "task": "Sprich über alltägliche einkäufe. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über alltägliche einkäufe sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Reisen",
+    "topic": "Verkehr und Wegbeschreibung",
+    "task": "Sprich über verkehr und wegbeschreibung. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über verkehr und wegbeschreibung sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Gesundheit",
+    "topic": "Arzttermin und Beschwerden",
+    "task": "Sprich über arzttermin und beschwerden. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über arzttermin und beschwerden sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Arbeit",
+    "topic": "Berufe und Arbeitsplatz",
+    "task": "Sprich über berufe und arbeitsplatz. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über berufe und arbeitsplatz sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Bildung",
+    "topic": "Schule und Lernen",
+    "task": "Sprich über schule und lernen. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über schule und lernen sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Freizeit",
+    "topic": "Hobbys und Wochenende",
+    "task": "Sprich über hobbys und wochenende. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über hobbys und wochenende sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A1",
+    "skill": "Sprechen",
+    "category": "Wetter",
+    "topic": "Wetter und Jahreszeiten",
+    "task": "Sprich über wetter und jahreszeiten. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte über wetter und jahreszeiten sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "targetGrammar": "A1"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Erfahrungen",
+    "topic": "Ein besonderer Tag",
+    "task": "Beschreibe deine Erfahrung mit ein besonderer tag, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist ein besonderer tag nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Reisen",
+    "topic": "Eine Reise planen",
+    "task": "Beschreibe deine Erfahrung mit eine reise planen, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist eine reise planen nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Gesundheit",
+    "topic": "Gesunde Gewohnheiten",
+    "task": "Beschreibe deine Erfahrung mit gesunde gewohnheiten, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist gesunde gewohnheiten nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Technik",
+    "topic": "Technik im Alltag",
+    "task": "Beschreibe deine Erfahrung mit technik im alltag, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist technik im alltag nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Gemeinschaft",
+    "topic": "In der Nachbarschaft helfen",
+    "task": "Beschreibe deine Erfahrung mit in der nachbarschaft helfen, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist in der nachbarschaft helfen nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Arbeit",
+    "topic": "Ein typischer Arbeitstag",
+    "task": "Beschreibe deine Erfahrung mit ein typischer arbeitstag, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist ein typischer arbeitstag nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Bildung",
+    "topic": "Eine neue Fähigkeit lernen",
+    "task": "Beschreibe deine Erfahrung mit eine neue fähigkeit lernen, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist eine neue fähigkeit lernen nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Kultur",
+    "topic": "Feste und Traditionen",
+    "task": "Beschreibe deine Erfahrung mit feste und traditionen, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist feste und traditionen nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Umwelt",
+    "topic": "Zu Hause Energie sparen",
+    "task": "Beschreibe deine Erfahrung mit zu hause energie sparen, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist zu hause energie sparen nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Medien",
+    "topic": "Filme, Musik und Bücher",
+    "task": "Beschreibe deine Erfahrung mit filme, musik und bücher, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist filme, musik und bücher nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Dienstleistungen",
+    "topic": "Bank, Post und Behörden",
+    "task": "Beschreibe deine Erfahrung mit bank, post und behörden, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist bank, post und behörden nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Allgemeines Deutsch",
+    "level": "A2",
+    "skill": "Sprechen",
+    "category": "Probleme",
+    "topic": "Ein Alltagsproblem lösen",
+    "task": "Beschreibe deine Erfahrung mit ein alltagsproblem lösen, nenne zwei Details und vergleiche sie mit einer anderen Situation.",
+    "modelAnswer": "Meiner Erfahrung nach ist ein alltagsproblem lösen nützlich und manchmal schwierig. Ein wichtiges Detail ist, dass es meinen Alltag beeinflusst. Im Vergleich zu früher verstehe ich das Thema heute besser.",
+    "targetGrammar": "A2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Bildung",
+    "topic": "Online- und Präsenzlernen",
+    "task": "Äußere deine Meinung zu online- und präsenzlernen, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat online- und präsenzlernen Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Technik",
+    "topic": "Technik und Lernen",
+    "task": "Äußere deine Meinung zu technik und lernen, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat technik und lernen Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Arbeit",
+    "topic": "Kompetenzen für zukünftige Berufe",
+    "task": "Äußere deine Meinung zu kompetenzen für zukünftige berufe, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat kompetenzen für zukünftige berufe Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Gesundheit",
+    "topic": "Stress und Wohlbefinden",
+    "task": "Äußere deine Meinung zu stress und wohlbefinden, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat stress und wohlbefinden Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Umwelt",
+    "topic": "Abfall reduzieren",
+    "task": "Äußere deine Meinung zu abfall reduzieren, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat abfall reduzieren Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Gemeinschaft",
+    "topic": "Ehrenamt und Verantwortung",
+    "task": "Äußere deine Meinung zu ehrenamt und verantwortung, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat ehrenamt und verantwortung Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Medien",
+    "topic": "Soziale Medien im Alltag",
+    "task": "Äußere deine Meinung zu soziale medien im alltag, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat soziale medien im alltag Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Kultur",
+    "topic": "Traditionen im Wandel",
+    "task": "Äußere deine Meinung zu traditionen im wandel, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat traditionen im wandel Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Reisen",
+    "topic": "Verantwortungsvoller Tourismus",
+    "task": "Äußere deine Meinung zu verantwortungsvoller tourismus, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat verantwortungsvoller tourismus Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Wissenschaft",
+    "topic": "Nützliche Erfindungen",
+    "task": "Äußere deine Meinung zu nützliche erfindungen, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat nützliche erfindungen Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Wirtschaft",
+    "topic": "Kleine Unternehmen und Kunden",
+    "task": "Äußere deine Meinung zu kleine unternehmen und kunden, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat kleine unternehmen und kunden Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B1",
+    "skill": "Diskutieren",
+    "category": "Persönliche Entwicklung",
+    "topic": "Motivation und Ziele",
+    "task": "Äußere deine Meinung zu motivation und ziele, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach hat motivation und ziele Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "targetGrammar": "B1"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Technik",
+    "topic": "Künstliche Intelligenz in der Bildung",
+    "task": "Diskutiere künstliche intelligenz in der bildung. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu künstliche intelligenz in der bildung gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Medien",
+    "topic": "Verlässliche Informationen im Internet",
+    "task": "Diskutiere verlässliche informationen im internet. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu verlässliche informationen im internet gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Bildung",
+    "topic": "Faire Prüfungen an Hochschulen",
+    "task": "Diskutiere faire prüfungen an hochschulen. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu faire prüfungen an hochschulen gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Arbeit",
+    "topic": "Homeoffice und Produktivität",
+    "task": "Diskutiere homeoffice und produktivität. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu homeoffice und produktivität gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Umwelt",
+    "topic": "Klimaschutz und politische Maßnahmen",
+    "task": "Diskutiere klimaschutz und politische maßnahmen. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu klimaschutz und politische maßnahmen gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Gesundheit",
+    "topic": "Prävention und öffentliche Gesundheit",
+    "task": "Diskutiere prävention und öffentliche gesundheit. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu prävention und öffentliche gesundheit gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Gesellschaft",
+    "topic": "Stadtleben und Lebensqualität",
+    "task": "Diskutiere stadtleben und lebensqualität. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu stadtleben und lebensqualität gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Wissenschaft",
+    "topic": "Wissenschaftliche Unsicherheit",
+    "task": "Diskutiere wissenschaftliche unsicherheit. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu wissenschaftliche unsicherheit gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Kultur",
+    "topic": "Sprache und Identität",
+    "task": "Diskutiere sprache und identität. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu sprache und identität gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Wirtschaft",
+    "topic": "Ethische Unternehmensentscheidungen",
+    "task": "Diskutiere ethische unternehmensentscheidungen. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu ethische unternehmensentscheidungen gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Forschung",
+    "topic": "Evidenz und Grenzen",
+    "task": "Diskutiere evidenz und grenzen. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu evidenz und grenzen gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Aspekte-neu-orientiert",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Psychologie",
+    "topic": "Entscheidungen und Verzerrungen",
+    "task": "Diskutiere entscheidungen und verzerrungen. Nenne zwei Argumente, reagiere auf einen Einwand und ziehe ein Fazit.",
+    "modelAnswer": "Zu entscheidungen und verzerrungen gibt es zwei wichtige Perspektiven. Einerseits bietet es deutliche Vorteile, andererseits dürfen die Risiken nicht unterschätzt werden. Obwohl manche Menschen anderer Meinung sind, halte ich einen ausgewogenen Ansatz für sinnvoll.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Forschung",
+    "topic": "Evidenz und methodische Grenzen",
+    "task": "Bewerte evidenz und methodische grenzen mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über evidenz und methodische grenzen lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Ethik",
+    "topic": "Freiheit und soziale Verantwortung",
+    "task": "Bewerte freiheit und soziale verantwortung mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über freiheit und soziale verantwortung lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Ökonomie",
+    "topic": "Ungleichheit und Chancen",
+    "task": "Bewerte ungleichheit und chancen mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über ungleichheit und chancen lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Technik",
+    "topic": "KI, Arbeit und Regulierung",
+    "task": "Bewerte ki, arbeit und regulierung mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über ki, arbeit und regulierung lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Umwelt",
+    "topic": "Zielkonflikte der Klimapolitik",
+    "task": "Bewerte zielkonflikte der klimapolitik mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über zielkonflikte der klimapolitik lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Medien",
+    "topic": "Überzeugung, Bias und Öffentlichkeit",
+    "task": "Bewerte überzeugung, bias und öffentlichkeit mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über überzeugung, bias und öffentlichkeit lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Bildung",
+    "topic": "Zugang und Qualität der Hochschulbildung",
+    "task": "Bewerte zugang und qualität der hochschulbildung mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über zugang und qualität der hochschulbildung lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Wissenschaft",
+    "topic": "Risiko, Unsicherheit und Vertrauen",
+    "task": "Bewerte risiko, unsicherheit und vertrauen mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über risiko, unsicherheit und vertrauen lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Kultur",
+    "topic": "Migration, Sprache und Identität",
+    "task": "Bewerte migration, sprache und identität mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über migration, sprache und identität lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Gesundheit",
+    "topic": "Prioritäten im Gesundheitssystem",
+    "task": "Bewerte prioritäten im gesundheitssystem mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über prioritäten im gesundheitssystem lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Gesellschaft",
+    "topic": "Partizipation und demokratische Debatte",
+    "task": "Bewerte partizipation und demokratische debatte mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über partizipation und demokratische debatte lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "C1",
+    "skill": "Argumentieren",
+    "category": "Wirtschaft",
+    "topic": "Innovation und Verantwortung",
+    "task": "Bewerte innovation und verantwortung mit Evidenz, Gegenargument und differenziertem Fazit.",
+    "modelAnswer": "Die Debatte über innovation und verantwortung lässt sich nicht auf eine einfache Alternative reduzieren. Die vorliegenden Hinweise sprechen für wichtige Vorteile, dennoch müssen Grenzen und Verteilungswirkungen berücksichtigt werden. Daher befürworte ich einen regulierten und regelmäßig evaluierten Ansatz.",
+    "targetGrammar": "C1"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Erkenntnistheorie",
+    "topic": "Was als verlässliches Wissen gilt",
+    "task": "Entwickle eine präzise akademische Position zu was als verlässliches wissen gilt und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu was als verlässliches wissen gilt setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Ethik",
+    "topic": "Rechte und Gemeinwohl abwägen",
+    "task": "Entwickle eine präzise akademische Position zu rechte und gemeinwohl abwägen und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu rechte und gemeinwohl abwägen setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Technik",
+    "topic": "Regulierung autonomer Systeme",
+    "task": "Entwickle eine präzise akademische Position zu regulierung autonomer systeme und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu regulierung autonomer systeme setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Ökonomie",
+    "topic": "Wachstum, Nachhaltigkeit und Verteilung",
+    "task": "Entwickle eine präzise akademische Position zu wachstum, nachhaltigkeit und verteilung und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu wachstum, nachhaltigkeit und verteilung setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Umwelt",
+    "topic": "Klimagerechtigkeit zwischen Generationen",
+    "task": "Entwickle eine präzise akademische Position zu klimagerechtigkeit zwischen generationen und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu klimagerechtigkeit zwischen generationen setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Medien",
+    "topic": "Informationsräume und Polarisierung",
+    "task": "Entwickle eine präzise akademische Position zu informationsräume und polarisierung und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu informationsräume und polarisierung setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Bildung",
+    "topic": "Zweck und Zukunft der Hochschule",
+    "task": "Entwickle eine präzise akademische Position zu zweck und zukunft der hochschule und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu zweck und zukunft der hochschule setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Wissenschaft",
+    "topic": "Grenzen von Vorhersage und Erklärung",
+    "task": "Entwickle eine präzise akademische Position zu grenzen von vorhersage und erklärung und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu grenzen von vorhersage und erklärung setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Kultur",
+    "topic": "Globalisierung und kulturelle Kontinuität",
+    "task": "Entwickle eine präzise akademische Position zu globalisierung und kulturelle kontinuität und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu globalisierung und kulturelle kontinuität setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Recht",
+    "topic": "Verhältnismäßigkeit und Nebenfolgen",
+    "task": "Entwickle eine präzise akademische Position zu verhältnismäßigkeit und nebenfolgen und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu verhältnismäßigkeit und nebenfolgen setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Forschung",
+    "topic": "Kausalität, Replikation und Generalisierung",
+    "task": "Entwickle eine präzise akademische Position zu kausalität, replikation und generalisierung und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu kausalität, replikation und generalisierung setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "Akademisches Deutsch",
+    "level": "C2",
+    "skill": "Akademische Debatte",
+    "category": "Gesellschaft",
+    "topic": "Institutionelles Vertrauen und Zusammenhalt",
+    "task": "Entwickle eine präzise akademische Position zu institutionelles vertrauen und zusammenhalt und prüfe Annahmen, Gegenpositionen und gesellschaftliche Folgen.",
+    "modelAnswer": "Eine tragfähige Position zu institutionelles vertrauen und zusammenhalt setzt die Unterscheidung zwischen empirischen Aussagen, normativen Annahmen und institutionellen Folgen voraus. Mehrere Interpretationen bleiben plausibel; die überzeugendste Schlussfolgerung ist daher konditional und an transparente Kriterien gebunden.",
+    "targetGrammar": "C2"
+  },
+  {
+    "track": "DSH-Vorbereitung",
+    "level": "B2-C1",
+    "skill": "Hörverstehen",
+    "category": "Prüfung",
+    "topic": "Akademischen Vortrag zusammenfassen",
+    "task": "Gib Thema, Hauptaussage, drei Argumente und das Fazit strukturiert wieder.",
+    "modelAnswer": "Der Vortrag behandelt die Digitalisierung der Hochschullehre. Zunächst wird ein Vorteil erläutert, danach werden zwei Probleme genannt. Abschließend empfiehlt die Sprecherin eine kombinierte Lösung.",
+    "targetGrammar": "B2-C1"
+  },
+  {
+    "track": "DSH-Vorbereitung",
+    "level": "B2-C1",
+    "skill": "Wissenschaftssprachliche Strukturen",
+    "category": "Prüfung",
+    "topic": "Nominalstil und Verknüpfungen",
+    "task": "Formuliere sachlich, benutze passende Konnektoren und vermeide umgangssprachliche Wendungen.",
+    "modelAnswer": "Die Durchführung der Untersuchung erfolgte in zwei Phasen. Daraus lässt sich schließen, dass weitere Daten erforderlich sind.",
+    "targetGrammar": "B2-C1"
+  },
+  {
+    "track": "DSH-Vorbereitung",
+    "level": "B2-C1",
+    "skill": "Mündliche Prüfung",
+    "category": "Prüfung",
+    "topic": "Grafikgestützte Stellungnahme",
+    "task": "Beschreibe eine Entwicklung, erkläre Ursachen, bewerte Folgen und nimm Stellung.",
+    "modelAnswer": "Die Grafik zeigt einen deutlichen Anstieg. Als Ursache kommt vor allem die zunehmende Digitalisierung infrage. Diese Entwicklung bietet Chancen, bringt jedoch auch Risiken mit sich.",
+    "targetGrammar": "B2-C1"
+  },
+  {
+    "track": "Digitaler TestDaF",
+    "level": "B2-C1",
+    "skill": "Sprechen",
+    "category": "Prüfung",
+    "topic": "Universitäre Entscheidung",
+    "task": "Antworte strukturiert, begründe deine Empfehlung und reagiere auf einen Einwand.",
+    "modelAnswer": "Ich empfehle die hybride Lösung, weil sie Flexibilität und direkten Austausch verbindet. Zwar ist die Organisation anspruchsvoller, dennoch überwiegen die Vorteile.",
+    "targetGrammar": "B2-C1"
+  },
+  {
+    "track": "Digitaler TestDaF",
+    "level": "B2-C1",
+    "skill": "Sprechen",
+    "category": "Prüfung",
+    "topic": "Studienorganisation und Beratung",
+    "task": "Erkläre ein Problem, schlage eine Lösung vor und begründe sie.",
+    "modelAnswer": "Viele Studierende haben Schwierigkeiten mit der Zeitplanung. Deshalb sollte die Universität kurze Beratungen und digitale Planungshilfen anbieten.",
+    "targetGrammar": "B2-C1"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "B2",
+    "skill": "Vorlesung verstehen",
+    "category": "Studium",
+    "topic": "Notizen aus einer Vorlesung",
+    "task": "Fasse die Kernaussage zusammen, ordne drei Hauptpunkte und formuliere eine Rückfrage.",
+    "modelAnswer": "Die Kernaussage lautet, dass gute Notizen aktiv strukturiert werden müssen. Wichtig sind Auswahl, Gliederung und spätere Überarbeitung.",
+    "targetGrammar": "B2"
+  },
+  {
+    "track": "Studium und Universität",
+    "level": "B2",
+    "skill": "Präsentieren",
+    "category": "Studium",
+    "topic": "Ein Seminarreferat strukturieren",
+    "task": "Formuliere Einleitung, Fragestellung, zwei Hauptpunkte und Schluss.",
+    "modelAnswer": "Mein Vortrag untersucht den Einfluss digitaler Werkzeuge auf das Lernen. Zuerst erläutere ich Chancen, danach Grenzen. Abschließend ziehe ich ein differenziertes Fazit.",
+    "targetGrammar": "B2"
+  }
+]

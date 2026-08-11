@@ -1,0 +1,336 @@
+/* Shared overflow guards: every page may shrink without widening the viewport. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* The studio lives beside the application sidebar, so viewport-based media
+   queries alone are not enough. Let both workspace columns shrink inside the
+   actual content area instead of pushing the evidence panel off-screen. */
+.workspace {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 370px) !important;
+}
+
+.workspace > *,
+.evidence,
+.panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:where(
+  .german-app-main,
+  .german-app-topbar,
+  .learning-card,
+  .learning-page-intro,
+  .daily-overview,
+  .daily-overview-main,
+  .daily-overview-aside,
+  .daily-activity-card,
+  .daily-activity-copy,
+  .studio-grid,
+  .conversation-filter-card,
+  .grammar-topic-stage
+) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:where(
+    .german-app-main,
+    .learning-card,
+    .daily-overview-main,
+    .daily-overview-aside
+  )
+  :where(h1, h2, h3, h4, p, span, strong, a, button, label) {
+  overflow-wrap: anywhere;
+}
+
+:where(.german-app-main, .learning-card)
+  :where(img, svg, canvas, video, iframe) {
+  max-width: 100%;
+}
+
+@media (max-width: 1180px) {
+  .german-app-sidebar {
+    position: fixed;
+    z-index: 50;
+    inset: 68px auto 10px 10px;
+    width: min(310px, calc(100vw - 20px));
+    max-height: calc(100dvh - 78px);
+    border: 1px solid #e3d9ef;
+    border-radius: 20px;
+    box-shadow: 0 22px 58px rgb(36 22 53 / 24%);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(calc(-100% - 20px));
+    visibility: hidden;
+    transition:
+      transform 180ms ease,
+      opacity 180ms ease,
+      visibility 180ms;
+  }
+
+  .german-app-sidebar[data-open="true"] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .german-app-main {
+    margin-left: 0 !important;
+  }
+  .german-app-topbar {
+    left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .german-app-topbar {
+    min-height: 64px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 9px 12px;
+  }
+
+  .german-app-topbar > * {
+    min-width: 0;
+  }
+
+  .daily-overview,
+  .studio-grid,
+  .grammar-layout,
+  .home-v2-grid,
+  .home-v2-lower-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .daily-overview-aside {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .conversation-filter-card,
+  .conversation-path-picker {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-hero {
+    min-height: 32rem;
+  }
+
+  .dashboard-hero-copy {
+    width: min(650px, 76%);
+  }
+
+  .progress-story-image {
+    min-height: 9.375rem;
+  }
+
+  .quick-start-guide {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-start-guide > .guide-step-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .quick-start-action {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .steps {
+    width: 100%;
+    height: auto !important;
+    overflow: visible !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px;
+  }
+
+  .steps button {
+    width: 100% !important;
+    min-width: 0;
+    padding: 10px 6px;
+    grid-template-columns: auto minmax(0, 1fr);
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .steps button span {
+    min-width: 0;
+    text-align: start;
+  }
+
+  .steps button:last-child {
+    grid-column: 1 / -1 !important;
+  }
+
+  .german-app-main {
+    padding-inline: 0 !important;
+  }
+
+  .german-app-topbar {
+    align-items: center;
+    padding-inline: 8px;
+  }
+
+  .german-app-topbar :where(button, a) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .learning-page-intro,
+  .learning-card,
+  .daily-overview-main,
+  .daily-overview-aside > div {
+    border-radius: 18px;
+  }
+
+  .learning-page-intro {
+    padding: 18px 15px;
+  }
+
+  .daily-overview {
+    gap: 10px;
+  }
+  .daily-overview-main {
+    padding: 10px;
+  }
+  .daily-overview-hero {
+    grid-template-columns: 1fr;
+    padding: 17px 14px;
+  }
+  .daily-progress-ring {
+    width: 94px;
+    justify-self: center;
+  }
+  .daily-overview-aside {
+    grid-template-columns: 1fr;
+  }
+  .daily-activity-grid-two,
+  .daily-activity-grid-three {
+    grid-template-columns: 1fr;
+  }
+  .daily-activity-card {
+    grid-template-columns: 28px 38px minmax(0, 1fr);
+    min-height: 0;
+    padding: 12px;
+  }
+  .daily-activity-title-row,
+  .daily-activity-actions {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .daily-plan-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .conversation-filter-card,
+  .conversation-path-picker {
+    grid-template-columns: 1fr;
+  }
+  .conversation-step-rail {
+    overflow-x: auto;
+  }
+  .conversation-step-rail > * {
+    flex: 0 0 auto;
+  }
+
+  :where(.german-app-main, .learning-card) :where(input, select, textarea) {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  :where(.german-app-main, .learning-card)
+    :where(.button-row, .action-row, .daily-complete-actions) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  :where(.german-app-main, .learning-card)
+    :where(.button-row, .action-row, .daily-complete-actions)
+    > * {
+    width: 100%;
+  }
+
+  .dashboard-hero {
+    min-height: 37rem;
+    border-radius: 1.625rem;
+  }
+
+  .dashboard-hero-image {
+    object-position: 64% center;
+  }
+
+  .dashboard-hero-shade {
+    background: linear-gradient(
+      180deg,
+      rgb(7 25 55 / 96%) 0%,
+      rgb(8 28 61 / 88%) 48%,
+      rgb(7 25 55 / 34%) 76%,
+      rgb(7 25 55 / 82%) 100%
+    );
+  }
+
+  .dashboard-hero-copy {
+    width: 100%;
+    padding: 1.625rem 1.375rem;
+  }
+
+  .dashboard-hero h1 {
+    max-width: 11ch;
+    font-size: clamp(2.5rem, 13vw, 3.375rem);
+  }
+
+  .dashboard-hero-actions > * {
+    width: 100%;
+  }
+
+  .dashboard-hero-proof {
+    gap: 0.375rem;
+  }
+
+  .progress-story {
+    border-radius: 1.5rem;
+    padding: 1rem;
+  }
+
+  .progress-story-heading {
+    display: block;
+  }
+
+  .progress-story-total {
+    margin-top: 0.625rem;
+    text-align: left;
+  }
+
+  .progress-story-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-story-image {
+    min-height: 12.8125rem;
+  }
+
+  .quick-start-guide {
+    border-radius: 1.5rem;
+    padding: 1rem;
+  }
+
+  .quick-start-guide > .guide-step-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-hero-image,
+  .progress-story-image img {
+    transform: none;
+  }
+}

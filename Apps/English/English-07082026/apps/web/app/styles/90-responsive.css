@@ -1,0 +1,432 @@
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* Keep the studio evidence column inside the available area beside the app
+   sidebar. The original 620px minimum made controls leave the viewport. */
+.workspace {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 370px) !important;
+}
+
+.workspace > *,
+.evidence,
+.panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:where(.app-main, .app-content, .app-topbar, .topbar-actions, .page-heading,
+  .dashboard-hero, .daily-overview, .daily-overview-main, .daily-overview-aside,
+  .daily-activity-card, .daily-activity-copy, .studio-grid, .grammar-layout,
+  .learning-card, .settings-page) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:where(.app-content, .learning-card, .daily-overview-main)
+  :where(h1, h2, h3, h4, p, span, strong, a, button, label) {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1040px) {
+  .metric-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filter-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .control-dock {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1180px) {
+  .app-shell {
+    display: block;
+  }
+
+  .app-sidebar {
+    position: fixed;
+    inset: 68px 10px auto;
+    height: auto;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: 0 20px 50px rgba(24, 43, 75, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-140%);
+    visibility: hidden;
+    transition:
+      transform 180ms ease,
+      opacity 180ms ease,
+      visibility 180ms;
+  }
+
+  .app-sidebar[data-open="true"] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  .sidebar-scrim {
+    position: fixed;
+    z-index: 35;
+    inset: 68px 0 0;
+    display: block;
+    border: 0;
+    background: rgba(20, 32, 52, 0.34);
+    padding: 0;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+
+  .brand-mark {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 860px) {
+  .app-topbar {
+    min-height: 64px;
+    height: auto;
+    flex-wrap: wrap;
+  }
+
+  .topbar-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .daily-overview,
+  .home-v2-grid,
+  .home-v2-lower-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .daily-overview-aside {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .studio-grid,
+  .grammar-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-hero {
+    min-height: 0;
+    padding-bottom: 20px;
+  }
+
+  .dashboard-hero-copy {
+    width: min(650px, 76%);
+  }
+
+  .dashboard-hero-action {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: min(340px, calc(100% - 40px));
+    margin: 0 20px 0 auto;
+  }
+
+  .progress-story-image {
+    min-height: 150px;
+  }
+
+  .quick-start-guide {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-start-action {
+    width: 100%;
+  }
+
+  .grammar-list {
+    max-height: 270px;
+  }
+
+  .filter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .install-platform-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .install-platform-card {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .steps {
+    width: 100%;
+    height: auto !important;
+    overflow: visible !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px;
+  }
+
+  .steps button {
+    width: 100% !important;
+    min-width: 0;
+    padding: 10px 6px;
+    grid-template-columns: auto minmax(0, 1fr);
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .steps button span {
+    min-width: 0;
+    text-align: start;
+  }
+
+  .steps button:last-child {
+    grid-column: 1 / -1 !important;
+  }
+
+  .app-topbar {
+    gap: 8px;
+    padding-inline: 10px;
+  }
+
+  .topbar-parity {
+    display: none;
+  }
+
+  .app-content {
+    padding-inline: 10px;
+  }
+
+  .topbar-actions { gap: 5px; }
+
+  .daily-overview-main { padding: 10px; }
+  .daily-overview-hero { grid-template-columns: 1fr; padding: 17px 14px; }
+  .daily-progress-ring { width: 94px; justify-self: center; }
+  .daily-overview-aside,
+  .daily-activity-grid-two,
+  .daily-activity-grid-three { grid-template-columns: 1fr; }
+  .daily-activity-card {
+    grid-template-columns: 28px 38px minmax(0, 1fr);
+    min-height: 0;
+    padding: 12px;
+  }
+  .daily-activity-title-row,
+  .daily-activity-actions { align-items: flex-start; flex-wrap: wrap; }
+
+  :where(.app-content, .learning-card) :where(input, select, textarea) {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  :where(.button-row, .action-row, .daily-complete-actions) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  :where(.button-row, .action-row, .daily-complete-actions) > * { width: 100%; }
+
+
+  .app-content:not([data-screen="home"]) .page-heading {
+    min-height: 0;
+    align-items: flex-start;
+    border-radius: 23px;
+    padding: 20px;
+  }
+
+  .app-content:not([data-screen="home"]) .page-heading::before {
+    right: -92px;
+  }
+
+  .dashboard-hero {
+    border-radius: 26px;
+  }
+
+  .dashboard-hero-image {
+    object-position: 64% center;
+  }
+
+  .dashboard-hero-shade {
+    background: linear-gradient(
+      180deg,
+      rgba(7, 25, 55, 0.96) 0%,
+      rgba(8, 28, 61, 0.88) 48%,
+      rgba(7, 25, 55, 0.34) 76%,
+      rgba(7, 25, 55, 0.82) 100%
+    );
+  }
+
+  .dashboard-hero-copy {
+    width: 100%;
+    padding: 26px 22px;
+  }
+
+  .app-content[data-screen="home"] .dashboard-hero h1 {
+    max-width: 11ch;
+    font-size: clamp(40px, 13vw, 54px);
+  }
+
+  .dashboard-hero-actions > * {
+    width: 100%;
+  }
+
+  .dashboard-hero-proof {
+    gap: 6px;
+  }
+
+  .dashboard-hero-action {
+    width: auto;
+    margin: 0 18px;
+  }
+
+  .quick-start-guide {
+    border-radius: 24px;
+    padding: 16px;
+  }
+
+  .guide-step-list[data-compact="true"] {
+    grid-template-columns: 1fr;
+  }
+
+  .user-guide-dialog {
+    width: calc(100vw - 16px);
+  }
+
+  .user-guide-dialog-panel {
+    border-radius: 22px;
+    padding: 18px;
+  }
+
+  .user-guide-trigger span {
+    display: none;
+  }
+
+  .user-guide-trigger {
+    width: 36px;
+    padding-inline: 0;
+  }
+
+  .progress-story {
+    border-radius: 24px;
+    padding: 16px;
+  }
+
+  .progress-story-heading {
+    display: block;
+  }
+
+  .progress-story-total {
+    margin-top: 10px;
+    text-align: left;
+  }
+
+  .progress-story-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-story-image {
+    min-height: 205px;
+  }
+
+  .metric-grid,
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .coach-stage {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .app-update-notice {
+    right: 8px;
+    bottom: 8px;
+    width: calc(100vw - 16px);
+  }
+
+  .avatar {
+    margin: auto;
+  }
+
+  .control-dock {
+    gap: 6px;
+  }
+
+  .control-button {
+    min-height: 68px;
+    font-size: 10px;
+  }
+
+  .settings-row {
+    grid-template-columns: 1fr;
+  }
+
+  .heatmap {
+    grid-template-columns: repeat(10, 1fr);
+  }
+
+  .install-dialog {
+    width: calc(100vw - 16px);
+    max-height: calc(100vh - 16px);
+  }
+
+  .install-dialog-panel {
+    max-height: calc(100vh - 16px);
+    border-radius: 22px;
+    padding: 17px;
+  }
+
+  .install-dialog-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .install-folder-action,
+  .install-step-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .install-folder-action button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 410px) {
+  .install-app-button span {
+    display: none;
+  }
+
+  .install-app-button {
+    width: 34px;
+    padding-inline: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion preferences must override component transitions */
+    scroll-behavior: auto !important;
+    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion preferences must override component transitions */
+    transition-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion preferences must override component animations */
+    animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion preferences must override repeating animations */
+    animation-iteration-count: 1 !important;
+  }
+}
+

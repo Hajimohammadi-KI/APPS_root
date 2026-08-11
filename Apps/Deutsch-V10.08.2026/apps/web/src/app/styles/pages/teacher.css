@@ -1,0 +1,217 @@
+.teacher-page {
+  min-height: 100vh;
+  padding: clamp(1rem, 3vw, 3rem);
+  background: #f7f3fb;
+  color: #171126;
+}
+.teacher-hero,
+.teacher-editor,
+.teacher-library {
+  background: #fff;
+  border: 1px solid #ded5e7;
+  border-radius: 24px;
+  box-shadow: 0 16px 40px #44256b12;
+}
+.teacher-hero {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  margin-bottom: 1.25rem;
+}
+.teacher-hero h1 {
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  line-height: 1.05;
+  margin: 0.7rem 0;
+}
+.teacher-hero p {
+  max-width: 72ch;
+  color: #655b72;
+}
+.teacher-back {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  color: #6840a4;
+  font-weight: 750;
+}
+.teacher-back svg,
+.teacher-page button svg,
+.teacher-upload svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+.teacher-kicker {
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  font-weight: 850;
+  color: #7546b7;
+}
+.teacher-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1.25rem;
+}
+.teacher-editor,
+.teacher-library {
+  padding: clamp(1rem, 2vw, 2rem);
+}
+.teacher-page label {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.8rem 0;
+  font-weight: 750;
+}
+.teacher-page input,
+.teacher-page select,
+.teacher-page textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #d9cfea;
+  border-radius: 12px;
+  padding: 0.8rem;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+.teacher-page small {
+  font-weight: 400;
+  color: #6d6475;
+}
+.teacher-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.teacher-page fieldset {
+  border: 1px solid #ded5e7;
+  border-radius: 16px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.teacher-upload {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px dashed #9b78cd;
+  border-radius: 12px;
+  padding: 0.8rem;
+  color: #6840a4;
+  cursor: pointer;
+}
+.teacher-upload input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  opacity: 0;
+}
+.teacher-primary-button,
+.teacher-secondary-button,
+.teacher-item-actions button,
+.human-audio-player button,
+.human-audio-recorder button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border: 0;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.teacher-primary-button {
+  background: #7546b7;
+  color: #fff;
+}
+.teacher-secondary-button,
+.teacher-item-actions button,
+.human-audio-player button,
+.human-audio-recorder button {
+  background: #f1eafb;
+  color: #5d378f;
+}
+.teacher-library-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.teacher-items {
+  display: grid;
+  gap: 1rem;
+}
+.teacher-items article {
+  border: 1px solid #ded5e7;
+  border-radius: 16px;
+  padding: 1rem;
+}
+.teacher-item-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  color: #675b72;
+}
+.teacher-item-meta span {
+  background: #f1eafb;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+.teacher-item-meta code {
+  overflow-wrap: anywhere;
+}
+.teacher-item-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.teacher-item-actions .danger {
+  background: #fff1f1;
+  color: #a7192e;
+}
+.teacher-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6d6475;
+}
+.teacher-empty svg {
+  width: 3rem;
+  height: 3rem;
+}
+.teacher-message {
+  border-radius: 12px;
+  background: #f0f8f3;
+  padding: 0.75rem;
+  color: #17633a;
+}
+.human-audio-player,
+.human-audio-recorder {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.human-audio-player audio {
+  max-width: 100%;
+}
+@media (max-width: 850px) {
+  .teacher-layout {
+    grid-template-columns: 1fr;
+  }
+  .teacher-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .teacher-page {
+    padding: 0.65rem;
+  }
+  .teacher-library-heading,
+  .teacher-item-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .teacher-primary-button,
+  .teacher-secondary-button,
+  .teacher-item-actions button {
+    width: 100%;
+  }
+}

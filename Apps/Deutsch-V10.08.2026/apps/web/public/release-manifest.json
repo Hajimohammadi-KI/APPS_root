@@ -1,0 +1,13 @@
+{
+  "version": "20.8.7",
+  "publishedAt": "2026-08-11",
+  "changes": [
+    "Tägliches Training und Automatik-Nachweise erscheinen als ein geführter Lernweg",
+    "Das Gesprächsstudio übernimmt Thema, Niveau und Zielgrammatik aus der aktuellen Lektion",
+    "Grammatiklektionen erklären Regeln, Wortstellung, Kontraste und typische Fehler auf der exakten Themenseite",
+    "Leselineal, geringe Reizdichte und größere Schrift bleiben auf allen Lernseiten verfügbar",
+    "App-Aktualisierungen warten auf die Zustimmung der lernenden Person",
+    "Responsive Ansichten und die aktuellen Lernseiten sind im Windows-Installer enthalten",
+    "Nach Installation oder Aktualisierung schließt sich das Setup und öffnet die aktuelle App"
+  ]
+}

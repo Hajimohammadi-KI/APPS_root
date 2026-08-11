@@ -1,0 +1,92 @@
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.werkzeug,
+.werkzeug :where(.layout, .content, .settings-content, .settings-body,
+  .settings-section, .settings-summary, .integration-grid, .provider-grid,
+  .sharing-grid, .form-grid, .calendar-card, .mail-shell, .mail-detail) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.werkzeug :where(h1, h2, h3, h4, p, span, strong, a, button, label, code) {
+  overflow-wrap: anywhere;
+}
+
+.werkzeug :where(img, svg, canvas, video, iframe) { max-width: 100%; }
+.werkzeug :where(input, select, textarea) { min-width: 0; max-width: 100%; }
+
+@media (max-width: 1100px) {
+  .werkzeug .layout { display: block; }
+  .werkzeug .sidebar {
+    position: static;
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    padding: 12px;
+    flex-flow: row wrap;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .werkzeug .sidebar > button,
+  .werkzeug .sidebar-settings { flex: 1 1 180px; }
+  .werkzeug .side-label,
+  .werkzeug .side-info { display: none; }
+  .werkzeug .content,
+  .werkzeug .settings-content { padding: 20px; }
+  .werkzeug .mail-shell { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .werkzeug .topbar {
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 9px 12px;
+  }
+  .werkzeug .topbar > * { min-width: 0; }
+  .werkzeug .secure { display: none; }
+  .werkzeug .hero { padding: 20px 16px; border-radius: 18px; }
+  .werkzeug .hero h1 { font-size: clamp(26px, 8vw, 34px); }
+  .werkzeug :where(.integration-grid, .provider-grid, .sharing-grid, .form-grid,
+    .editable-name-grid, .settings-summary, .calendar-grid) {
+    grid-template-columns: 1fr !important;
+  }
+  .werkzeug .weekdays { display: none; }
+  .werkzeug .settings-category-bar {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    overscroll-behavior-inline: contain;
+  }
+  .werkzeug .settings-category-bar > * { flex: 0 0 auto; }
+  .werkzeug :where(.integration-card-actions, .provider-actions, .source-add-actions,
+    .backup-actions, .permission-actions, .hero-actions) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .werkzeug :where(.integration-card-actions, .provider-actions, .source-add-actions,
+    .backup-actions, .permission-actions, .hero-actions) > * { width: 100%; }
+  .werkzeug .source-fields,
+  .werkzeug .client-fields { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .werkzeug .content,
+  .werkzeug .settings-content { padding: 10px; }
+  .werkzeug .sidebar { display: grid; grid-template-columns: 1fr; }
+  .werkzeug .sidebar > button,
+  .werkzeug .sidebar-settings { width: 100%; }
+  .werkzeug .settings-section-head,
+  .werkzeug .settings-body,
+  .werkzeug .integration-grid article,
+  .werkzeug .mail-detail,
+  .werkzeug .note-editor-card { padding: 13px; }
+  .werkzeug .callback-box,
+  .werkzeug .provider-foot,
+  .werkzeug .translation-preference,
+  .werkzeug .source-toolbar { align-items: stretch; flex-direction: column; }
+}

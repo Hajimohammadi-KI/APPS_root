@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>APPS_root Starter</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">A</span><div><strong>APPS_root</strong><small>Local App Starter</small></div></div>
+      <nav aria-label="Starter navigation">
+        <a class="active" href="#apps">All applications</a>
+        <a href="#learning">Language learning</a>
+        <a href="#research">Research tools</a>
+        <a href="#utilities">Utilities</a>
+      </nav>
+      <div class="privacy"><strong>Local and private</strong><span>No cloud installation is required.</span></div>
+    </aside>
+    <main>
+      <header>
+        <div><span class="eyebrow">ONE-CLICK LOCAL WORKSPACE</span><h1>Your apps are ready in one place.</h1><p>Start or open every current application without running an installer.</p></div>
+        <button id="start-all" class="primary">Start all apps</button>
+      </header>
+      <section class="summary" aria-live="polite">
+        <div><span id="online-count">0</span><small>apps running</small></div>
+        <div><span>5</span><small>current apps</small></div>
+        <div><span id="service-count">0</span><small>services online</small></div>
+      </section>
+      <section id="apps" class="app-grid" aria-label="Applications"></section>
+      <section class="help">
+        <div><strong>One file to remember</strong><p>Next time, double-click <code>D:\APPS_root\START-APPS.cmd</code>. The Starter opens automatically.</p></div>
+        <button id="refresh" class="secondary">Refresh status</button>
+      </section>
+    </main>
+  </div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
+

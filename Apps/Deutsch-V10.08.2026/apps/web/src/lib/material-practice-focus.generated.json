@@ -1,0 +1,914 @@
+{
+  "grammar-training-1-bonus-31": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": ["Zeitformen und zeitliche Bezüge"]
+  },
+  "grammar-training-1-bonus-32": {
+    "focusId": "prepositions",
+    "focus": "Präpositionen und Rektion",
+    "relatedFocus": [
+      "Pronomen und Verweiswörter",
+      "Textaufbau, Analyse und Redemittel"
+    ]
+  },
+  "grammar-training-1-day-1": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Partizipien und Partizipialkonstruktionen",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-1-day-10": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-1-day-11": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Modalverben und Bedeutungsnuancen"
+    ]
+  },
+  "grammar-training-1-day-12": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Modalverben und Bedeutungsnuancen"
+    ]
+  },
+  "grammar-training-1-day-13": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": []
+  },
+  "grammar-training-1-day-14": {
+    "focusId": "verb-prefixes",
+    "focus": "Trennbare und untrennbare Verbpräfixe",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Adjektive, Adverbien und Endungen"
+    ]
+  },
+  "grammar-training-1-day-15": {
+    "focusId": "verb-prefixes",
+    "focus": "Trennbare und untrennbare Verbpräfixe",
+    "relatedFocus": [
+      "Präpositionen und Rektion",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-1-day-16": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Präpositionen und Rektion",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-1-day-17": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Modalverben und Bedeutungsnuancen",
+      "Pronomen und Verweiswörter"
+    ]
+  },
+  "grammar-training-1-day-18": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": [
+      "Präpositionen und Rektion",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-1-day-19": {
+    "focusId": "nominalization",
+    "focus": "Nominalisierung und Substantivierung",
+    "relatedFocus": [
+      "Modalverben und Bedeutungsnuancen",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-1-day-2": {
+    "focusId": "infinitive",
+    "focus": "Infinitiv mit und ohne zu",
+    "relatedFocus": [
+      "Präpositionen und Rektion",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-1-day-20": {
+    "focusId": "connectors",
+    "focus": "Konnektoren und logische Verbindungen",
+    "relatedFocus": [
+      "Präpositionen und Rektion",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-1-day-21": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Nominalisierung und Substantivierung"
+    ]
+  },
+  "grammar-training-1-day-22": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": ["Passiv und Passiversatzformen"]
+  },
+  "grammar-training-1-day-23": {
+    "focusId": "sentence-structure",
+    "focus": "Satzbau und Wortstellung",
+    "relatedFocus": [
+      "Fehler erkennen und nachhaltig reparieren",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-1-day-24": {
+    "focusId": "infinitive",
+    "focus": "Infinitiv mit und ohne zu",
+    "relatedFocus": [
+      "Indirekte Rede und Konjunktiv",
+      "Partizipien und Partizipialkonstruktionen"
+    ]
+  },
+  "grammar-training-1-day-25": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-1-day-26": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-1-day-27": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": ["Kasus, Artikel und Deklination"]
+  },
+  "grammar-training-1-day-28": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": ["Pronomen und Verweiswörter", "Satzbau und Wortstellung"]
+  },
+  "grammar-training-1-day-29": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Pronomen und Verweiswörter",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-1-day-3": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Nominalisierung und Substantivierung",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-1-day-30": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Passiv und Passiversatzformen"
+    ]
+  },
+  "grammar-training-1-day-4": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Partizipien und Partizipialkonstruktionen",
+      "Konnektoren und logische Verbindungen"
+    ]
+  },
+  "grammar-training-1-day-5": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Infinitiv mit und ohne zu"
+    ]
+  },
+  "grammar-training-1-day-6": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-1-day-7": {
+    "focusId": "prepositions",
+    "focus": "Präpositionen und Rektion",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-1-day-8": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-1-day-9": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": ["Kasus, Artikel und Deklination"]
+  },
+  "grammar-training-2-bonus-31": {
+    "focusId": "participles",
+    "focus": "Partizipien und Partizipialkonstruktionen",
+    "relatedFocus": [
+      "Konnektoren und logische Verbindungen",
+      "Satzbau und Wortstellung"
+    ]
+  },
+  "grammar-training-2-bonus-32": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Adjektive, Adverbien und Endungen",
+      "Pronomen und Verweiswörter"
+    ]
+  },
+  "grammar-training-2-day-1": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Modalverben und Bedeutungsnuancen"
+    ]
+  },
+  "grammar-training-2-day-10": {
+    "focusId": "verb-prefixes",
+    "focus": "Trennbare und untrennbare Verbpräfixe",
+    "relatedFocus": ["Wortwahl und Bedeutungsunterschiede"]
+  },
+  "grammar-training-2-day-11": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": ["Pronomen und Verweiswörter", "Satzbau und Wortstellung"]
+  },
+  "grammar-training-2-day-12": {
+    "focusId": "connectors",
+    "focus": "Konnektoren und logische Verbindungen",
+    "relatedFocus": ["Satzbau und Wortstellung"]
+  },
+  "grammar-training-2-day-13": {
+    "focusId": "verb-prefixes",
+    "focus": "Trennbare und untrennbare Verbpräfixe",
+    "relatedFocus": [
+      "Passiv und Passiversatzformen",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-2-day-14": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Modalverben und Bedeutungsnuancen"
+    ]
+  },
+  "grammar-training-2-day-15": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": ["Satzbau und Wortstellung", "Pronomen und Verweiswörter"]
+  },
+  "grammar-training-2-day-16": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": [
+      "Trennbare und untrennbare Verbpräfixe",
+      "Konnektoren und logische Verbindungen"
+    ]
+  },
+  "grammar-training-2-day-17": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": ["Präpositionen und Rektion", "Satzbau und Wortstellung"]
+  },
+  "grammar-training-2-day-18": {
+    "focusId": "nominalization",
+    "focus": "Nominalisierung und Substantivierung",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Satzbau und Wortstellung"
+    ]
+  },
+  "grammar-training-2-day-19": {
+    "focusId": "sentence-structure",
+    "focus": "Satzbau und Wortstellung",
+    "relatedFocus": [
+      "Modalverben und Bedeutungsnuancen",
+      "Trennbare und untrennbare Verbpräfixe"
+    ]
+  },
+  "grammar-training-2-day-2": {
+    "focusId": "prepositions",
+    "focus": "Präpositionen und Rektion",
+    "relatedFocus": ["Kasus, Artikel und Deklination"]
+  },
+  "grammar-training-2-day-20": {
+    "focusId": "adjective-endings",
+    "focus": "Adjektive, Adverbien und Endungen",
+    "relatedFocus": [
+      "Partizipien und Partizipialkonstruktionen",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-2-day-21": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Pronomen und Verweiswörter",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-2-day-22": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": []
+  },
+  "grammar-training-2-day-22-supplement": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Partizipien und Partizipialkonstruktionen",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-2-day-23": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Passiv und Passiversatzformen"
+    ]
+  },
+  "grammar-training-2-day-24": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Partizipien und Partizipialkonstruktionen",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-2-day-25": {
+    "focusId": "modal-verbs",
+    "focus": "Modalverben und Bedeutungsnuancen",
+    "relatedFocus": ["Pronomen und Verweiswörter", "Satzbau und Wortstellung"]
+  },
+  "grammar-training-2-day-26": {
+    "focusId": "orthography",
+    "focus": "Rechtschreibung und Zeichensetzung",
+    "relatedFocus": [
+      "Nominalisierung und Substantivierung",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-2-day-27": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": []
+  },
+  "grammar-training-2-day-28": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Pronomen und Verweiswörter"
+    ]
+  },
+  "grammar-training-2-day-29": {
+    "focusId": "tense",
+    "focus": "Zeitformen und zeitliche Bezüge",
+    "relatedFocus": [
+      "Indirekte Rede und Konjunktiv",
+      "Modalverben und Bedeutungsnuancen"
+    ]
+  },
+  "grammar-training-2-day-3": {
+    "focusId": "adjective-endings",
+    "focus": "Adjektive, Adverbien und Endungen",
+    "relatedFocus": [
+      "Partizipien und Partizipialkonstruktionen",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-2-day-30": {
+    "focusId": "participles",
+    "focus": "Partizipien und Partizipialkonstruktionen",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Passiv und Passiversatzformen"
+    ]
+  },
+  "grammar-training-2-day-4": {
+    "focusId": "prepositions",
+    "focus": "Präpositionen und Rektion",
+    "relatedFocus": [
+      "Rechtschreibung und Zeichensetzung",
+      "Nominalisierung und Substantivierung"
+    ]
+  },
+  "grammar-training-2-day-5": {
+    "focusId": "infinitive",
+    "focus": "Infinitiv mit und ohne zu",
+    "relatedFocus": [
+      "Satzbau und Wortstellung",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-2-day-6": {
+    "focusId": "orthography",
+    "focus": "Rechtschreibung und Zeichensetzung",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Nominalisierung und Substantivierung"
+    ]
+  },
+  "grammar-training-2-day-7": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": [
+      "Infinitiv mit und ohne zu",
+      "Indirekte Rede und Konjunktiv"
+    ]
+  },
+  "grammar-training-2-day-8": {
+    "focusId": "adjective-endings",
+    "focus": "Adjektive, Adverbien und Endungen",
+    "relatedFocus": []
+  },
+  "grammar-training-2-day-9": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": [
+      "Präpositionen und Rektion",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-3-day-1": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": []
+  },
+  "grammar-training-3-day-10": {
+    "focusId": "text-analysis",
+    "focus": "Textaufbau, Analyse und Redemittel",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-3-day-11": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": []
+  },
+  "grammar-training-3-day-12": {
+    "focusId": "nominalization",
+    "focus": "Nominalisierung und Substantivierung",
+    "relatedFocus": [
+      "Indirekte Rede und Konjunktiv",
+      "Passiv und Passiversatzformen"
+    ]
+  },
+  "grammar-training-3-day-13": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-3-day-14": {
+    "focusId": "nominalization",
+    "focus": "Nominalisierung und Substantivierung",
+    "relatedFocus": [
+      "Pronomen und Verweiswörter",
+      "Adjektive, Adverbien und Endungen"
+    ]
+  },
+  "grammar-training-3-day-15": {
+    "focusId": "text-analysis",
+    "focus": "Textaufbau, Analyse und Redemittel",
+    "relatedFocus": []
+  },
+  "grammar-training-3-day-16": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-3-day-17": {
+    "focusId": "prepositions",
+    "focus": "Präpositionen und Rektion",
+    "relatedFocus": [
+      "Pronomen und Verweiswörter",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-3-day-18": {
+    "focusId": "prepositions",
+    "focus": "Präpositionen und Rektion",
+    "relatedFocus": [
+      "Rechtschreibung und Zeichensetzung",
+      "Nominalisierung und Substantivierung"
+    ]
+  },
+  "grammar-training-3-day-19": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Modalverben und Bedeutungsnuancen"
+    ]
+  },
+  "grammar-training-3-day-2": {
+    "focusId": "prepositions",
+    "focus": "Präpositionen und Rektion",
+    "relatedFocus": ["Kasus, Artikel und Deklination"]
+  },
+  "grammar-training-3-day-20": {
+    "focusId": "infinitive",
+    "focus": "Infinitiv mit und ohne zu",
+    "relatedFocus": ["Pronomen und Verweiswörter", "Satzbau und Wortstellung"]
+  },
+  "grammar-training-3-day-21": {
+    "focusId": "error-repair",
+    "focus": "Fehler erkennen und nachhaltig reparieren",
+    "relatedFocus": []
+  },
+  "grammar-training-3-day-22": {
+    "focusId": "connectors",
+    "focus": "Konnektoren und logische Verbindungen",
+    "relatedFocus": []
+  },
+  "grammar-training-3-day-23": {
+    "focusId": "verb-prefixes",
+    "focus": "Trennbare und untrennbare Verbpräfixe",
+    "relatedFocus": [
+      "Präpositionen und Rektion",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-3-day-24": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Partizipien und Partizipialkonstruktionen"
+    ]
+  },
+  "grammar-training-3-day-25": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Passiv und Passiversatzformen"
+    ]
+  },
+  "grammar-training-3-day-26": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Pronomen und Verweiswörter"
+    ]
+  },
+  "grammar-training-3-day-27": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Partizipien und Partizipialkonstruktionen",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-3-day-28": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-3-day-29": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Textaufbau, Analyse und Redemittel"
+    ]
+  },
+  "grammar-training-3-day-3": {
+    "focusId": "sentence-structure",
+    "focus": "Satzbau und Wortstellung",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Pronomen und Verweiswörter"
+    ]
+  },
+  "grammar-training-3-day-30": {
+    "focusId": "orthography",
+    "focus": "Rechtschreibung und Zeichensetzung",
+    "relatedFocus": [
+      "Nominalisierung und Substantivierung",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-3-day-4": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Pronomen und Verweiswörter"
+    ]
+  },
+  "grammar-training-3-day-5": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": [
+      "Passiv und Passiversatzformen",
+      "Rechtschreibung und Zeichensetzung"
+    ]
+  },
+  "grammar-training-3-day-6": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": ["Adjektive, Adverbien und Endungen"]
+  },
+  "grammar-training-3-day-7": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-3-day-8": {
+    "focusId": "connectors",
+    "focus": "Konnektoren und logische Verbindungen",
+    "relatedFocus": [
+      "Nominalisierung und Substantivierung",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-3-day-9": {
+    "focusId": "verb-prefixes",
+    "focus": "Trennbare und untrennbare Verbpräfixe",
+    "relatedFocus": ["Wortwahl und Bedeutungsunterschiede"]
+  },
+  "grammar-training-4-day-1": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Präpositionen und Rektion",
+      "Trennbare und untrennbare Verbpräfixe"
+    ]
+  },
+  "grammar-training-4-day-10": {
+    "focusId": "participles",
+    "focus": "Partizipien und Partizipialkonstruktionen",
+    "relatedFocus": [
+      "Konnektoren und logische Verbindungen",
+      "Satzbau und Wortstellung"
+    ]
+  },
+  "grammar-training-4-day-11": {
+    "focusId": "tense",
+    "focus": "Zeitformen und zeitliche Bezüge",
+    "relatedFocus": [
+      "Modalverben und Bedeutungsnuancen",
+      "Passiv und Passiversatzformen"
+    ]
+  },
+  "grammar-training-4-day-12-barilla": {
+    "focusId": "text-analysis",
+    "focus": "Textaufbau, Analyse und Redemittel",
+    "relatedFocus": []
+  },
+  "grammar-training-4-day-12-hospitality": {
+    "focusId": "text-analysis",
+    "focus": "Textaufbau, Analyse und Redemittel",
+    "relatedFocus": ["Rechtschreibung und Zeichensetzung"]
+  },
+  "grammar-training-4-day-13": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": ["Textaufbau, Analyse und Redemittel"]
+  },
+  "grammar-training-4-day-14": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": [
+      "Konnektoren und logische Verbindungen",
+      "Trennbare und untrennbare Verbpräfixe"
+    ]
+  },
+  "grammar-training-4-day-15": {
+    "focusId": "prepositions",
+    "focus": "Präpositionen und Rektion",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Wortwahl und Bedeutungsunterschiede"
+    ]
+  },
+  "grammar-training-4-day-16": {
+    "focusId": "text-analysis",
+    "focus": "Textaufbau, Analyse und Redemittel",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-4-day-17": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": []
+  },
+  "grammar-training-4-day-18": {
+    "focusId": "connectors",
+    "focus": "Konnektoren und logische Verbindungen",
+    "relatedFocus": [
+      "Nominalisierung und Substantivierung",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-4-day-19": {
+    "focusId": "word-choice",
+    "focus": "Wortwahl und Bedeutungsunterschiede",
+    "relatedFocus": ["Pronomen und Verweiswörter", "Satzbau und Wortstellung"]
+  },
+  "grammar-training-4-day-2": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Pronomen und Verweiswörter",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-4-day-20": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": ["Satzbau und Wortstellung", "Pronomen und Verweiswörter"]
+  },
+  "grammar-training-4-day-21": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-4-day-22": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Wortwahl und Bedeutungsunterschiede",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-4-day-23-errors": {
+    "focusId": "error-repair",
+    "focus": "Fehler erkennen und nachhaltig reparieren",
+    "relatedFocus": [
+      "Rechtschreibung und Zeichensetzung",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-4-day-24": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Partizipien und Partizipialkonstruktionen",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-4-day-25-text": {
+    "focusId": "grammar-transfer",
+    "focus": "Grammatiktransfer und Fehlerkontrolle",
+    "relatedFocus": []
+  },
+  "grammar-training-4-day-26-exercise": {
+    "focusId": "sentence-structure",
+    "focus": "Satzbau und Wortstellung",
+    "relatedFocus": [
+      "Adjektive, Adverbien und Endungen",
+      "Indirekte Rede und Konjunktiv"
+    ]
+  },
+  "grammar-training-4-day-27": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-4-day-28-examples": {
+    "focusId": "nominalization",
+    "focus": "Nominalisierung und Substantivierung",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Konnektoren und logische Verbindungen"
+    ]
+  },
+  "grammar-training-4-day-29": {
+    "focusId": "sentence-structure",
+    "focus": "Satzbau und Wortstellung",
+    "relatedFocus": [
+      "Pronomen und Verweiswörter",
+      "Konnektoren und logische Verbindungen"
+    ]
+  },
+  "grammar-training-4-day-3-solution": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Passiv und Passiversatzformen",
+      "Konnektoren und logische Verbindungen"
+    ]
+  },
+  "grammar-training-4-day-3-test": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Konnektoren und logische Verbindungen",
+      "Pronomen und Verweiswörter"
+    ]
+  },
+  "grammar-training-4-day-30": {
+    "focusId": "indirect-speech",
+    "focus": "Indirekte Rede und Konjunktiv",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Pronomen und Verweiswörter"
+    ]
+  },
+  "grammar-training-4-day-4": {
+    "focusId": "nominalization",
+    "focus": "Nominalisierung und Substantivierung",
+    "relatedFocus": [
+      "Rechtschreibung und Zeichensetzung",
+      "Präpositionen und Rektion"
+    ]
+  },
+  "grammar-training-4-day-6": {
+    "focusId": "passive",
+    "focus": "Passiv und Passiversatzformen",
+    "relatedFocus": [
+      "Zeitformen und zeitliche Bezüge",
+      "Partizipien und Partizipialkonstruktionen"
+    ]
+  },
+  "grammar-training-4-day-7": {
+    "focusId": "cases-articles",
+    "focus": "Kasus, Artikel und Deklination",
+    "relatedFocus": [
+      "Partizipien und Partizipialkonstruktionen",
+      "Zeitformen und zeitliche Bezüge"
+    ]
+  },
+  "grammar-training-4-day-8": {
+    "focusId": "infinitive",
+    "focus": "Infinitiv mit und ohne zu",
+    "relatedFocus": [
+      "Satzbau und Wortstellung",
+      "Kasus, Artikel und Deklination"
+    ]
+  },
+  "grammar-training-4-day-9": {
+    "focusId": "pronouns",
+    "focus": "Pronomen und Verweiswörter",
+    "relatedFocus": [
+      "Kasus, Artikel und Deklination",
+      "Satzbau und Wortstellung"
+    ]
+  }
+}

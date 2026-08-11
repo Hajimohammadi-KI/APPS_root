@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <link rel="icon" href="/icons/icon-192.png" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Deutsch Automaticity — Grammatik-Labor A1–C2</title>
+  <style>
+    :root {
+      --ink: #101a47;
+      --ink-soft: #586080;
+      --purple: #6740c7;
+      --purple-2: #7d59dc;
+      --purple-soft: #eee8fb;
+      --purple-wash: #f8f5ff;
+      --canvas: #fbfaff;
+      --card: #ffffff;
+      --line: #ded9ee;
+      --line-strong: #cfc5ea;
+      --success: #13a53f;
+      --warning: #c18100;
+      --danger: #cb3150;
+      --radius-sm: 10px;
+      --radius: 14px;
+      --radius-lg: 20px;
+      --shadow: 0 10px 30px rgba(63, 40, 120, .07);
+      --focus: 0 0 0 3px rgba(103, 64, 199, .28);
+      --sidebar: 292px;
+      --catalog: 330px;
+      --header-h: 80px;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--canvas); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 90% 5%, rgba(122, 83, 210, .045), transparent 26%),
+        var(--canvas);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+    .icon { width: 20px; height: 20px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    .app { display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); min-height: 100vh; }
+
+    /* Left navigation */
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--sidebar);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden auto;
+      border-right: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff 0%, #fcfaff 72%, #f4efff 100%);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 20px 18px 18px; }
+    .brand-mark {
+      display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px;
+      color: white; background: linear-gradient(145deg, #7959df, #5030ac); box-shadow: 0 8px 18px rgba(88, 49, 183, .25);
+    }
+    .brand-mark .icon { width: 31px; height: 31px; stroke-width: 1.6; }
+    .brand h1 { margin: 0; font-size: 16px; line-height: 1.15; letter-spacing: -.01em; }
+    .brand p { margin: 5px 0 0; color: var(--ink-soft); font-size: 11px; }
+    .sidebar-rule { height: 1px; margin: 0 18px 14px; background: var(--line); }
+    .nav-group { padding: 0 16px 13px; }
+    .nav-group + .nav-group { padding-top: 13px; border-top: 1px solid var(--line); }
+    .nav-title { margin: 0 8px 8px; color: #50419d; font-size: 11px; font-weight: 800; letter-spacing: .025em; text-transform: uppercase; }
+    .nav-link {
+      display: flex; align-items: center; gap: 12px; min-height: 42px; width: 100%; padding: 9px 10px;
+      border: 0; border-radius: 8px; color: var(--ink); background: transparent; text-decoration: none; text-align: left; cursor: pointer;
+      transition: background .16s ease, color .16s ease, transform .16s ease;
+    }
+    .nav-link:hover { color: var(--purple); background: #f7f4fe; }
+    .nav-link:active { transform: translateY(1px); }
+    .nav-link.active { color: #4f2db2; background: linear-gradient(90deg, #e4dcf8, #e9e1f8); font-weight: 750; }
+    .nav-link .chevron { margin-left: auto; width: 16px; height: 16px; }
+    .mascot-scene { margin-top: auto; min-height: 270px; padding: 18px 0 0; display: flex; align-items: end; justify-content: center; overflow: hidden; }
+    .mascot-scene svg { width: 292px; height: 255px; display: block; }
+
+    /* Main application shell */
+    .shell { grid-column: 2; min-width: 0; }
+    .topbar {
+      position: sticky; top: 0; z-index: 30; height: var(--header-h); display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 22px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.94); backdrop-filter: blur(14px);
+    }
+    .page-id { display: flex; align-items: center; gap: 13px; min-width: 0; }
+    .page-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; color: var(--purple); background: var(--purple-wash); }
+    .page-icon .icon { width: 26px; height: 26px; }
+    .page-id h2 { margin: 0; font-size: 20px; line-height: 1.1; letter-spacing: -.02em; }
+    .page-id p { margin: 4px 0 0; color: var(--ink-soft); font-size: 14px; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .pill, .primary-btn, .ghost-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 42px; padding: 0 15px;
+      border: 1px solid var(--line); border-radius: 11px; background: #fff; font-weight: 700; cursor: pointer; white-space: nowrap;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+    .pill:hover, .ghost-btn:hover { border-color: #bfb2e1; background: #faf8ff; }
+    .primary-btn { color: #fff; border-color: var(--purple); background: linear-gradient(135deg, var(--purple-2), #5832b7); box-shadow: 0 7px 16px rgba(90, 50, 184, .18); }
+    .primary-btn:hover { background: linear-gradient(135deg, #8765e3, #6038bf); transform: translateY(-1px); }
+    .primary-btn:active, .pill:active, .ghost-btn:active { transform: translateY(1px); }
+    .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); }
+    .mobile-menu { display: none; padding: 9px; }
+
+    .workspace { display: grid; grid-template-columns: var(--catalog) minmax(0, 1fr); min-height: calc(100vh - var(--header-h)); }
+
+    /* Topic catalog */
+    .catalog { border-right: 1px solid var(--line); padding: 24px 14px; background: rgba(255,255,255,.58); }
+    .catalog-tools { display: grid; grid-template-columns: 1fr 46px; gap: 12px; margin-bottom: 20px; }
+    .search-box { position: relative; }
+    .search-box input {
+      width: 100%; height: 44px; padding: 0 42px 0 15px; color: var(--ink); border: 1px solid var(--line); border-radius: 10px; background: #fff;
+    }
+    .search-box .icon { position: absolute; top: 12px; right: 13px; }
+    .filter-btn { display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; }
+    .level-list { display: grid; gap: 18px; }
+    .level { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: rgba(255,255,255,.75); }
+    .level summary {
+      list-style: none; display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 15px; color: var(--purple); font-weight: 800; cursor: pointer;
+    }
+    .level summary::-webkit-details-marker { display: none; }
+    .level summary::after { content: "⌄"; margin-left: auto; color: var(--ink-soft); font-size: 18px; transform-origin: center; }
+    .level[open] summary { background: linear-gradient(90deg, #efeafd, #f7f4ff); }
+    .level[open] summary::after { transform: rotate(180deg); }
+    .level-tag.a2 { color: #ae2cc5; } .level-tag.b1 { color: #ad6500; } .level-tag.b2 { color: #4b29cf; }
+    .level-tag.c1 { color: #ee4f56; } .level-tag.c2 { color: #198dc9; }
+    .topic-list { padding: 8px 10px 12px; }
+    .topic {
+      display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 8px 13px; border: 1px solid transparent;
+      border-radius: 8px; color: var(--ink); background: transparent; text-align: left; cursor: pointer;
+    }
+    .topic:hover { background: #f7f4fe; }
+    .topic.active { color: #4a25a8; border-color: #cfc1ef; background: #f6f2ff; font-weight: 800; }
+    .topic-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--purple); opacity: 0; }
+    .topic.active .topic-dot { opacity: 1; }
+
+    /* Lesson content */
+    .content { min-width: 0; padding: 0 24px 24px; }
+    .lesson-head { display: flex; align-items: center; justify-content: space-between; min-height: 54px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 10px 10px; padding: 0 14px; background: #fff; }
+    .crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; color: var(--ink-soft); }
+    .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 28px; padding: 0 9px; border-radius: 999px; color: #4e2ab4; background: #eee8ff; font-weight: 800; }
+    .use-btn { min-height: 36px; padding: 0 13px; color: #5837bb; border: 1px solid #8f70db; border-radius: 9px; background: #fff; font-weight: 750; cursor: pointer; }
+    .lesson-stack { display: grid; gap: 12px; padding-top: 14px; }
+    .goal-card {
+      display: flex; align-items: center; gap: 14px; min-height: 66px; padding: 12px 16px; border: 1px solid #f0dfaa; border-radius: 11px;
+      background: linear-gradient(100deg, #fffaf0, #fffdf5); box-shadow: 0 5px 18px rgba(150, 108, 0, .035);
+    }
+    .goal-star { display: grid; place-items: center; width: 43px; height: 43px; border-radius: 50%; color: #bd7e00; background: #fff3c7; }
+    .eyebrow { margin: 0 0 2px; color: #4630a7; font-size: 12px; font-weight: 850; letter-spacing: .025em; text-transform: uppercase; }
+    .goal-card strong { display: block; font-size: 14px; }
+    .exercise-card { padding: 14px; border: 1px solid var(--line); border-radius: 11px; background: linear-gradient(110deg, #fbfaff, #fff); }
+    .exercise-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .exercise-title h3 { margin: 5px 0 10px; font-size: 21px; letter-spacing: -.01em; }
+    .audio-btn { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 9px; color: var(--ink-soft); background: transparent; cursor: pointer; }
+    .answer-row { display: flex; gap: 10px; }
+    .answer-row input { width: 100%; height: 43px; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: 9px; color: var(--ink); background: #fff; }
+    .exercise-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .exercise-actions .primary-btn, .exercise-actions .ghost-btn { min-height: 38px; }
+    .feedback { display: none; margin-top: 10px; padding: 10px 12px; border-radius: 8px; font-weight: 700; }
+    .feedback.show { display: block; }
+    .feedback.good { color: #08702d; background: #e8f8ed; }
+    .feedback.bad { color: #9e233b; background: #fff0f2; }
+
+    .rule-panel { border: 1px solid var(--line-strong); border-radius: 11px; overflow: hidden; background: #fff; }
+    .rule-heading { display: flex; align-items: center; gap: 12px; min-height: 45px; padding: 0 14px; color: #4d2aac; background: linear-gradient(90deg, #faf8ff, #fff); }
+    .number { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: #5230b1; background: #e9e2ff; font-size: 14px; font-weight: 850; }
+    .rule-heading h3 { margin: 0; font-size: 18px; }
+    .rule-heading .chevron { margin-left: auto; }
+    .rule-body { padding: 13px 14px 14px; border-top: 1px solid var(--line-strong); }
+    .rule-intro { margin: 0 0 14px; color: #434d70; }
+    .pattern-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+    .pattern-card { min-width: 0; min-height: 197px; padding: 12px 9px; border: 1px solid var(--line); border-radius: 11px; background: linear-gradient(145deg, #fff, #fdfcff); }
+    .pattern-title { display: flex; align-items: center; gap: 7px; min-height: 26px; color: #5130b1; font-weight: 800; white-space: nowrap; }
+    .mini-icon { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; color: #7757d7; background: #eee9ff; font-size: 14px; }
+    .formula { min-height: 46px; margin: 8px 0 12px; padding: 8px; border: 1px solid #e1dbef; border-radius: 7px; color: #382182; background: #faf8ff; font-size: 11px; font-weight: 750; }
+    .pattern-card p { margin: 8px 0 0; font-size: 12px; }
+
+    .accordion-list { display: grid; gap: 7px; }
+    .accordion { border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: #fff; }
+    .accordion summary { list-style: none; display: flex; align-items: center; gap: 12px; min-height: 42px; padding: 0 14px; color: #5230ad; font-size: 15px; font-weight: 800; cursor: pointer; background: linear-gradient(90deg, #fbf9ff, #fff); }
+    .accordion summary::-webkit-details-marker { display: none; }
+    .accordion summary .chevron { margin-left: auto; transition: transform .15s ease; }
+    .accordion[open] summary .chevron { transform: rotate(180deg); }
+    .accordion-content { padding: 12px 52px; border-top: 1px solid var(--line); color: var(--ink-soft); }
+
+    /* Mobile overlays and small feedback */
+    .drawer-scrim { display: none; position: fixed; inset: 0; z-index: 35; border: 0; background: rgba(17, 16, 45, .45); }
+    .drawer-scrim.show { display: block; }
+    .toast {
+      position: fixed; left: 50%; bottom: 24px; z-index: 90; max-width: min(92vw, 560px); padding: 12px 18px; border-radius: 12px;
+      color: #fff; background: #21154c; box-shadow: 0 15px 40px rgba(23, 12, 57, .3); opacity: 0; transform: translate(-50%, 18px); pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .reading-ruler { position: fixed; z-index: 80; left: 0; right: 0; top: 45%; height: 52px; border-top: 2px solid rgba(92,55,187,.28); border-bottom: 2px solid rgba(92,55,187,.28); background: rgba(255,250,159,.18); pointer-events: none; display: none; }
+    .reading-ruler.show { display: block; }
+
+    @media (max-width: 1220px) {
+      :root { --sidebar: 250px; --catalog: 280px; }
+      .header-actions .online-label { display: none; }
+      .pattern-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .pattern-card { min-height: 178px; }
+      .mascot-scene svg { width: 250px; }
+    }
+
+    @media (max-width: 1024px) {
+      :root { --sidebar: 232px; --catalog: 260px; }
+      .topbar { padding-inline: 14px; }
+      .content { padding-right: 14px; padding-left: 14px; }
+      .header-actions { gap: 7px; }
+      .header-actions .hide-tablet { display: none; }
+      .pattern-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pattern-card:last-child { grid-column: span 2; min-height: 140px; }
+    }
+
+    @media (max-width: 820px) {
+      :root { --header-h: 70px; }
+      .app { display: block; }
+      .shell { width: 100%; }
+      .sidebar { width: min(86vw, 310px); transform: translateX(-105%); box-shadow: 16px 0 50px rgba(23, 13, 54, .2); transition: transform .22s ease; }
+      .sidebar.open { transform: translateX(0); }
+      .mobile-menu { display: grid; place-items: center; }
+      .page-icon { display: none; }
+      .page-id h2 { font-size: 18px; }
+      .page-id p { font-size: 12px; }
+      .header-actions .hide-mobile { display: none; }
+      .workspace { grid-template-columns: 245px minmax(0, 1fr); }
+      .catalog { padding: 16px 10px; }
+      .catalog-tools { grid-template-columns: 1fr; }
+      .filter-btn { display: none; }
+      .level-list { gap: 10px; }
+      .content { padding-left: 12px; padding-right: 12px; }
+      .lesson-head { min-height: 58px; }
+      .crumbs { gap: 7px; font-size: 12px; }
+      .pattern-grid { grid-template-columns: 1fr; }
+      .pattern-card, .pattern-card:last-child { grid-column: auto; min-height: 0; }
+    }
+
+    @media (max-width: 620px) {
+      body { font-size: 13px; }
+      .topbar { padding: 8px 10px; }
+      .page-id p { display: none; }
+      .header-actions .pill { padding-inline: 11px; }
+      .header-actions .primary-btn { min-width: 44px; padding: 0 10px; }
+      .header-actions .button-text { display: none; }
+      .workspace { display: block; }
+      .catalog { border-right: 0; border-bottom: 1px solid var(--line); padding: 10px; }
+      .catalog-tools { margin: 0; }
+      .level-list {
+        display: grid;
+        max-height: 19rem;
+        margin-top: 10px;
+        overflow: auto;
+        overscroll-behavior: contain;
+        scrollbar-gutter: stable;
+      }
+      .content { padding: 0 9px 16px; }
+      .lesson-head { margin-inline: -9px; padding-inline: 10px; border-left: 0; border-right: 0; border-radius: 0; }
+      .crumbs .foundations { display: none; }
+      .goal-card { align-items: flex-start; padding: 12px; }
+      .goal-card strong { font-size: 13px; }
+      .exercise-card { padding: 12px; }
+      .exercise-title h3 { font-size: 18px; }
+      .answer-row { display: block; }
+      .exercise-actions { display: grid; grid-template-columns: 1fr 1fr; }
+      .exercise-actions .primary-btn { grid-column: span 2; }
+      .rule-body { padding: 12px; }
+      .rule-heading h3 { font-size: 16px; }
+      .accordion-content { padding: 12px 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+  <style>
+    .learning-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
+    .learning-control{border:1px solid #d9cbea;border-radius:16px;background:#fff;overflow:hidden}
+    .learning-control summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;font-weight:800;cursor:pointer;list-style:none}
+    .learning-control summary::-webkit-details-marker{display:none}
+    .learning-control-body{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 16px}
+    .choice-chip{min-height:42px;padding:8px 14px;border:1px solid #cfc0e6;border-radius:12px;background:#faf8ff;color:#2e1748;font:inherit;font-weight:750;cursor:pointer}
+    .choice-chip[aria-pressed="true"]{background:#6840b7;color:#fff;border-color:#6840b7}
+    .honovr-guide{border:2px solid #6840b7;border-radius:16px;background:#fff;padding:16px;margin-bottom:16px;color:#1c1230}
+    .honovr-guide[dir="rtl"]{text-align:right;font-family:Tahoma,"Segoe UI",sans-serif;line-height:1.9}
+    .honovr-guide[dir="ltr"]{text-align:left}
+    .honovr-guide strong{display:block;margin-bottom:5px;color:#51289e}
+    .catalog-progress{display:block;margin:4px 0 0;color:#675a76;font-size:.78rem;font-weight:650}
+    .topic{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;text-align:left}
+    .topic-count{font-size:.75rem;color:#655776;white-space:nowrap}
+    .target-language{direction:ltr;text-align:left}
+    @media(max-width:980px){.learning-controls{grid-template-columns:1fr}.pattern-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:680px){.learning-controls,.pattern-grid{grid-template-columns:1fr}.exercise-actions{display:grid;grid-template-columns:1fr 1fr}.exercise-actions button{width:100%;min-width:0}.lesson-head{align-items:flex-start;gap:10px;flex-wrap:wrap}.content{min-width:0}.catalog{min-width:0}}
+  </style>
+</head>
+<body>
+  <!-- Inline SVG symbol library -->
+  <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22V5.5Z"/><path d="M21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h4.5A3.5 3.5 0 0 1 21 22V5.5Z"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3 1.4-4A7 7 0 0 1 3 12a7 7 0 0 1 7-7h5a6 6 0 0 1 6 6v4Z"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v10a2 2 0 0 1-2 2H3V6Z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 14a7 7 0 0 0 0-4l2-1-2-4-2 1a7 7 0 0 0-3-2V2h-4v2a7 7 0 0 0-3 2L5 5 3 9l2 1a7 7 0 0 0 0 4l-2 1 2 4 2-1a7 7 0 0 0 3 2v2h4v-2a7 7 0 0 0 3-2l2 1 2-4-2-1Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8L3 5Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M8 14a7 7 0 1 1 8 0c-1 .8-1 2-1 2H9s0-1.2-1-2Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9a4 4 0 0 1 0 6m2-9a8 8 0 0 1 0 12"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 1 1 3.8 2.1c-1 .6-1.5 1.1-1.5 2.4M12 17.5h.01"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 18v3h16v-3"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M4 5h16v16H4zM8 2v6m8-6v6M4 10h16"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.5 3 6 6.5 1-4.7 4.6 1.1 6.5L12 17.5l-5.9 3.1 1.1-6.5-4.7-4.6 6.5-1 3-6Z"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10m4 0h2M4 12h3m4 0h9M4 18h8m4 0h4"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></symbol>
+  </svg>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Hauptnavigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 36 36"><circle cx="18" cy="20" r="11"/><circle cx="14" cy="18" r="1.2"/><circle cx="22" cy="18" r="1.2"/><path d="M14 23c2.6 2 5.4 2 8 0M13 8l-2-5m12 5 2-5M10 13l-5-2m21 2 5-2"/><circle cx="11" cy="3" r="1.5"/><circle cx="25" cy="3" r="1.5"/></svg>
+        </div>
+        <div><h1>Deutsch-Automatik</h1><p>Messbares tägliches Sprachtraining</p></div>
+      </div>
+      <div class="sidebar-rule"></div>
+
+      <nav>
+        <section class="nav-group" aria-labelledby="daily-nav">
+          <h2 class="nav-title" id="daily-nav">Tägliches Training</h2>
+          <button class="nav-link" data-nav="Heute üben und sprechen"><svg class="icon"><use href="#i-home"/></svg>Heute üben und sprechen</button>
+          <button class="nav-link" data-nav="Heutiges Training"><svg class="icon"><use href="#i-clock"/></svg>Heutiges Training</button>
+          <button class="nav-link" data-nav="Konversationsstudio"><svg class="icon"><use href="#i-chat"/></svg>Konversationsstudio</button>
+        </section>
+        <section class="nav-group" aria-labelledby="paths-nav">
+          <h2 class="nav-title" id="paths-nav">Lernwege</h2>
+          <button class="nav-link" data-nav="Grammatik und Deutsch lernen"><svg class="icon"><use href="#i-settings"/></svg>Grammatik und Deutsch lernen <span class="chevron">⌃</span></button>
+          <button class="nav-link active" data-nav="Grammatik-Labor" aria-current="page"><svg class="icon"><use href="#i-book"/></svg>Grammatik-Labor</button>
+          <button class="nav-link" data-nav="Lernressourcen"><svg class="icon"><use href="#i-folder"/></svg>Lernressourcen</button>
+          <button class="nav-link" data-nav="Integrierte Fertigkeiten"><svg class="icon"><use href="#i-book"/></svg>Integrierte Fertigkeiten</button>
+        </section>
+        <section class="nav-group" aria-labelledby="evidence-nav">
+          <h2 class="nav-title" id="evidence-nav">Lernnachweise</h2>
+          <button class="nav-link" data-nav="Fehler und Aufnahmen"><svg class="icon"><use href="#i-clock"/></svg>Fehler und Aufnahmen <span class="chevron">⌄</span></button>
+        </section>
+        <section class="nav-group" aria-labelledby="settings-nav">
+          <h2 class="nav-title" id="settings-nav">App und Einstellungen</h2>
+          <button class="nav-link" data-nav="Speicher und persönliche Optionen"><svg class="icon"><use href="#i-settings"/></svg>Speicher und persönliche Optionen <span class="chevron">⌄</span></button>
+        </section>
+      </nav>
+
+      <div class="mascot-scene" role="img" aria-label="Friendly purple study mascot beside books and a plant">
+        <svg viewBox="0 0 292 255" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bodyG" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8268d8"/><stop offset="1" stop-color="#4d329c"/></linearGradient></defs>
+          <path d="M-10 150C22 118 48 127 68 147c-7-49 12-79 41-85 21-4 40 10 47 33 14-34 43-48 66-36 28 15 27 55 8 91 35-25 70-10 75 25v80H-10Z" fill="#eee9fb"/>
+          <path d="M0 218c25-25 37-48 38-71 18 21 24 46 19 75" fill="#9a82dc" opacity=".7"/>
+          <path d="M8 216c-1-24-7-37-18-52 20 5 30 20 30 49" fill="#6a50be"/>
+          <rect x="16" y="224" width="57" height="8" rx="2" fill="#ec7547"/><rect x="22" y="216" width="52" height="8" rx="2" fill="#f5bd46"/><rect x="29" y="208" width="43" height="8" rx="2" fill="#fff" stroke="#7959c5"/>
+          <ellipse cx="136" cy="204" rx="61" ry="19" fill="#cfc4ec"/>
+          <path d="M91 177c0-50 17-89 45-89s46 39 46 89c0 38-16 57-46 57s-45-19-45-57Z" fill="url(#bodyG)"/>
+          <path d="M110 110c7-17 45-22 55 3 9 24-4 53-29 53-28 0-36-32-26-56Z" fill="#a995e6"/>
+          <circle cx="124" cy="132" r="4" fill="#15183e"/><circle cx="151" cy="132" r="4" fill="#15183e"/><circle cx="123" cy="131" r="1" fill="#fff"/><circle cx="150" cy="131" r="1" fill="#fff"/><path d="M126 145c8 7 16 7 23 0" fill="none" stroke="#281d5e" stroke-width="2" stroke-linecap="round"/>
+          <path d="M121 92 117 75m34 17 4-18" stroke="#5b3dae" stroke-width="4" stroke-linecap="round"/><circle cx="116" cy="73" r="6" fill="#7659cc"/><circle cx="156" cy="72" r="6" fill="#7659cc"/>
+          <path d="M93 189c-21 4-26 17-23 29 13-6 24-7 36-4m75-25c21 4 27 15 25 26-12-4-23-4-36 0" fill="#664bb7"/>
+          <rect x="173" y="208" width="59" height="8" rx="2" fill="#26315f"/><path d="M180 204h46l-4-25h-38Z" fill="#fff" stroke="#7561b6"/><path d="M202 180v27" stroke="#d0c5ef"/><path d="m204 182 7-15 5 16" fill="#f08c38"/><rect x="208" y="166" width="5" height="20" rx="2" fill="#ed9e3d"/>
+        </svg>
+      </div>
+    </aside>
+    <button class="drawer-scrim" id="scrim" aria-label="Navigation schließen"></button>
+
+    <div class="shell">
+      <header class="topbar">
+        <div class="page-id">
+          <button class="ghost-btn mobile-menu" id="menuBtn" aria-controls="sidebar" aria-expanded="false" aria-label="Navigation öffnen"><svg class="icon"><use href="#i-menu"/></svg></button>
+          <div class="page-icon"><svg class="icon"><use href="#i-book"/></svg></div>
+          <div><h2>Grammatik-Labor</h2><p><span id="unitCount">144</span> vollständige Einheiten von A1 bis C2</p></div>
+        </div>
+        <div class="header-actions" aria-label="Application controls">
+          <div class="pill hide-mobile"><span class="status-dot"></span><span class="online-label">App-Dienst online</span></div>
+          <button class="pill hide-tablet" id="rulerBtn" aria-pressed="false"><svg class="icon"><use href="#i-sliders"/></svg>Leselineal</button>
+          <button class="pill hide-mobile" data-action="help"><svg class="icon"><use href="#i-help"/></svg>Hilfe</button>
+          <button class="primary-btn" data-action="install"><svg class="icon"><use href="#i-download"/></svg><span class="button-text">App installieren</span></button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="catalog" aria-label="Grammar topic browser">
+          <div class="catalog-tools">
+            <label class="search-box"><span class="sr-only">Themen suchen</span><input id="topicSearch" type="search" placeholder="Themen suchen ..." autocomplete="off"/><svg class="icon"><use href="#i-search"/></svg></label>
+            <button class="filter-btn" data-action="filter" aria-label="Filter grammar topics"><svg class="icon"><use href="#i-filter"/></svg></button>
+          </div>
+          <div class="level-list" id="levelList" aria-live="polite"></div>
+        </aside>
+
+        <section class="content" aria-labelledby="lessonTitle">
+          <div class="lesson-head">
+            <div class="crumbs"><span class="badge">A1</span><span class="foundations">Grundlagen</span><span>•</span><strong id="lessonTitle">Verb sein: bin/ist/sind</strong></div>
+            <button class="use-btn" data-action="use-today"><svg class="icon" style="vertical-align:middle;margin-right:6px"><use href="#i-calendar"/></svg>Heute verwenden</button>
+          </div>
+
+          <div class="lesson-stack">
+            <section class="learning-controls" aria-label="Lernunterstützung einstellen">
+              <details class="learning-control">
+                <summary><span>Tägliche Lernzeit</span><span id="timeSummary">15 Minuten</span></summary>
+                <div class="learning-control-body" id="timeChoices"></div>
+              </details>
+              <details class="learning-control">
+                <summary><span>Erklärungssprache (HONOVR)</span><span id="languageSummary">Deutsch</span></summary>
+                <div class="learning-control-body" id="languageChoices"></div>
+              </details>
+            </section>
+            <section class="honovr-guide" id="honovrGuide" dir="ltr" aria-live="polite"></section>
+            <article class="goal-card">
+              <div class="goal-star"><svg class="icon"><use href="#i-star"/></svg></div>
+              <div><p class="eyebrow">Lernziel</p><strong id="canDoGoal">Ich kann Personen, Orte, Gefühle und Situationen mit sein beschreiben.</strong></div>
+            </article>
+
+            <section class="exercise-card" aria-labelledby="exercisePrompt">
+              <div class="exercise-title">
+                <div><p class="eyebrow">Gelenkter Abruf</p><h3 id="exercisePrompt">Korrigiere den Satz: I am agree.</h3></div>
+                <button class="audio-btn" id="audioBtn" aria-label="Aufgabe vorlesen"><svg class="icon"><use href="#i-volume"/></svg></button>
+              </div>
+              <div class="answer-row"><label class="sr-only" for="answerInput">Deutsche Antwort eingeben</label><input id="answerInput" placeholder="Deutsche Antwort eingeben" autocomplete="off"/></div>
+              <div class="exercise-actions">
+                <button class="ghost-btn" id="previousBtn">← Zurück</button>
+                <button class="primary-btn" id="checkBtn"><svg class="icon"><use href="#i-check"/></svg>Antwort prüfen</button>
+                <button class="ghost-btn" id="hintBtn"><svg class="icon"><use href="#i-bulb"/></svg>Hinweis</button>
+                <button class="ghost-btn" id="nextBtn">Nächste Aufgabe<svg class="icon"><use href="#i-arrow"/></svg></button>
+              </div>
+              <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+            </section>
+
+            <section class="rule-panel" aria-labelledby="ruleTitle">
+              <div class="rule-heading"><span class="number">1</span><h3 id="ruleTitle">Regel und Muster</h3><span class="chevron">⌄</span></div>
+              <div class="rule-body target-language" id="ruleBody"></div>
+            </section>
+
+            <div class="accordion-list">
+              <details class="accordion"><summary><span class="number">2</span><span>♧</span>Beispiele und Kontrast <span class="chevron">⌄</span></summary><div class="accordion-content" id="examplesContent">Vergleiche passende Beispiele und achte auf die Funktion der Form im Satz.</div></details>
+              <details class="accordion"><summary><span class="number">3</span><span>⇄</span>Lernweg <span class="chevron">⌄</span></summary><div class="accordion-content">Rufe die Regel ab, korrigiere ein Beispiel, sprich es laut und verwende es danach in einem persönlichen Satz.</div></details>
+              <details class="accordion"><summary><span class="number">4</span><span>△</span>Typischer Fehler <span class="chevron">⌄</span></summary><div class="accordion-content" id="mistakeContent">Prüfe Form, Satzstellung und Bezug, bevor du deine Antwort speicherst.</div></details>
+              <details class="accordion"><summary><span class="number">5</span><span>▤</span>Ressourcen und Zusatzübungen <span class="chevron">⌄</span></summary><div class="accordion-content">Bilde fünf Aussagesätze und verwandle jeden Satz in eine Verneinung und eine Frage.</div></details>
+              <details class="accordion"><summary><span class="number">6</span><span>✧</span>Optionale KI-Erklärung <span class="chevron">⌄</span></summary><div class="accordion-content">Bitte erst nach einem eigenen Abrufversuch um eine weitere Erklärung.</div></details>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="reading-ruler" id="readingRuler" aria-hidden="true"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="dailyCompleteDialog" style="max-width:560px;width:calc(100% - 32px);border:1px solid #d8c8eb;border-radius:24px;padding:28px;box-shadow:0 24px 80px #24153855">
+    <h2>Die heutige Grammatikübung ist abgeschlossen.</h2><p>Dein Ergebnis und deine Fehler wurden im heutigen Training gespeichert.</p>
+    <div style="display:grid;gap:10px"><button class="primary-btn" id="dailyReturnBtn">OK · Zum heutigen Training</button><button class="ghost-btn" id="dailyRepeatBtn">Noch einmal üben</button><button class="ghost-btn" id="dailyMistakesBtn">Meine Fehler ansehen</button></div>
+  </dialog>
+
+  <script src="/replacements/de/grammar-catalog.js"></script>
+  <script src="/replacements/de/grammar-runtime.js"></script>
+  <script>
+    if (!window.GERMAN_GRAMMAR_RUNTIME) (() => {
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+      const toast = $('#toast');
+      const params = new URLSearchParams(location.search);
+      const dailyContext = params.get('from') === 'daily' ? { activity:Number(params.get('activity')||1), level:params.get('level')||'A1', topic:params.get('topic')||'', returnTo:params.get('return')||'/heute' } : null;
+      const dailySessionKey='deutsch-automaticity:daily-session:v1';
+      let toastTimer;
+      const notify = (message) => {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+      };
+
+      // Accessible mobile drawer.
+      const sidebar = $('#sidebar');
+      const menuBtn = $('#menuBtn');
+      const scrim = $('#scrim');
+      const setDrawer = (open) => {
+        sidebar.classList.toggle('open', open);
+        scrim.classList.toggle('show', open);
+        menuBtn.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      };
+      menuBtn.addEventListener('click', () => setDrawer(!sidebar.classList.contains('open')));
+      scrim.addEventListener('click', () => setDrawer(false));
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setDrawer(false); });
+
+      // Topic search and selection.
+      const search = $('#topicSearch');
+      search.addEventListener('input', () => {
+        const value = search.value.trim().toLowerCase();
+        $$('.topic').forEach(topic => { topic.hidden = !topic.textContent.toLowerCase().includes(value); });
+        $$('.level').forEach(level => {
+          const hasVisible = $$('.topic', level).some(topic => !topic.hidden);
+          level.hidden = value && !hasVisible;
+          if (value && hasVisible) level.open = true;
+        });
+      });
+      $$('.topic').forEach(topic => topic.addEventListener('click', () => {
+        $$('.topic').forEach(item => item.classList.remove('active'));
+        topic.classList.add('active');
+        const name = topic.textContent.trim();
+        $('#lessonTitle').textContent = name;
+        notify(`${name} selected. Lesson content preview updated.`);
+      }));
+
+      // Local navigation feedback instead of dead links.
+      $$('.nav-link').forEach(link => link.addEventListener('click', () => {
+        if (link.dataset.nav === 'Grammatik-Labor') return;
+        notify(`${link.dataset.nav} is available in the full application.`);
+        if (window.innerWidth <= 820) setDrawer(false);
+      }));
+
+      // Recall task behavior.
+      const requestedTopic=dailyContext?.topic.trim();
+      const escapeHtml=value=>String(value).replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+      const applyDailyLessonContent=topic=>{
+        const safeTopic=escapeHtml(topic);
+        $('#canDoGoal').textContent=`Ich kann ${topic} in eigenen, verständlichen Sätzen richtig verwenden.`;
+        $('#ruleBody').innerHTML=`<p class="rule-intro">Bestimme zuerst, welche Aufgabe <strong>${safeTopic}</strong> im Satz erfüllt. Wähle danach die passende Form und prüfe die Satzstellung.</p><div class="pattern-grid"><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">1</span>Bedeutung</div><div class="formula">Was möchte ich ausdrücken?</div><p>Verstehe zuerst die Aussage, bevor du eine Form auswählst.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">2</span>Muster</div><div class="formula">Bedeutung + passende Form + richtige Satzstellung</div><p>Bilde einen vollständigen deutschen Satz.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">3</span>Vergleich</div><div class="formula">Person, Zahl und Fall vergleichen</div><p>Prüfe, worauf sich die Form bezieht.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">4</span>Eigener Satz</div><div class="formula">eine wahre Situation aus deinem Leben</div><p>Verwende ${safeTopic} ohne ein Beispiel abzuschreiben.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">5</span>Übertragung</div><div class="formula">neue Situation, gleiche Regel</div><p>Sprich oder schreibe den Satz noch einmal in einem anderen Zusammenhang.</p></article></div>`;
+        $('#examplesContent').textContent=`Vergleiche zwei Sätze mit ${topic}. Achte darauf, wie sich Bedeutung, Form und Satzstellung verändern.`;
+        $('#mistakeContent').textContent=`Typischer Fehler: ${topic} wird nach Klang gewählt, ohne Bezug, Fall oder Satzfunktion zu prüfen. Bestimme zuerst die Funktion und kontrolliere danach die Form.`;
+        if(topic.toLowerCase().includes('personalpronomen')){
+          $('#canDoGoal').textContent='Ich kann mit Personalpronomen klar auf Personen und Dinge verweisen.';
+          $('#ruleBody').innerHTML='<p class="rule-intro">Personalpronomen ersetzen ein Nomen. Wähle die Form nach Person, Zahl und Satzfunktion.</p><div class="pattern-grid"><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">1</span>Nominativ</div><div class="formula">ich · du · er/sie/es · wir · ihr · sie/Sie</div><p><strong>Frage:</strong> Wer handelt?</p><p><strong>Beispiel:</strong> Fatemeh lernt. → Sie lernt.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">2</span>Akkusativ</div><div class="formula">mich · dich · ihn/sie/es · uns · euch · sie/Sie</div><p><strong>Frage:</strong> Wen oder was?</p><p><strong>Beispiel:</strong> Ich sehe den Lehrer. → Ich sehe ihn.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">3</span>Dativ</div><div class="formula">mir · dir · ihm/ihr/ihm · uns · euch · ihnen/Ihnen</div><p><strong>Frage:</strong> Wem?</p><p><strong>Beispiel:</strong> Ich helfe der Frau. → Ich helfe ihr.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">4</span>Bezug</div><div class="formula">Nomen zuerst, Pronomen danach</div><p>Der Bezug muss eindeutig bleiben.</p><p><strong>Beispiel:</strong> Der Kurs beginnt. Er dauert eine Stunde.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">5</span>Übertragung</div><div class="formula">neue Person + neue Situation</div><p>Bilde einen eigenen Satz und ersetze danach das Nomen durch ein Pronomen.</p></article></div>';
+          $('#examplesContent').textContent='Vergleiche: „Der Mann wartet. Er ist ruhig.“ – „Ich sehe den Mann. Ich sehe ihn.“ – „Ich helfe dem Mann. Ich helfe ihm.“';
+          $('#mistakeContent').textContent='Typischer Fehler: Nominativ, Akkusativ und Dativ werden verwechselt. Frage zuerst: Wer? Wen oder was? Wem?';
+        }
+      };
+      if(requestedTopic){$('#lessonTitle').textContent=requestedTopic;$('#exercisePrompt').textContent=`Schreibe einen richtigen deutschen Satz mit ${requestedTopic}.`;applyDailyLessonContent(requestedTopic);}
+      const tasks = requestedTopic ? [
+        { prompt:`Schreibe einen richtigen deutschen Satz mit ${requestedTopic}.`, answer:null, hint:`Verwende ${requestedTopic} in einem vollständigen Satz aus deinem eigenen Leben.` },
+        { prompt:`Schreibe eine zweite, andere Situation mit ${requestedTopic}.`, answer:null, hint:'Ändere Person, Ort oder Zeit.' },
+        { prompt:`Formuliere mit ${requestedTopic} eine Frage.`, answer:null, hint:'Achte auf Verbposition und Satzzeichen.' }
+      ] : [
+        { prompt:'Ergänze: Ich ___ heute müde.', answer:'bin', hint:'Bei ich steht bin.' },
+        { prompt:'Ergänze: Meine Notizen ___ auf dem Tisch.', answer:'sind', hint:'Notizen ist Plural.' },
+        { prompt:'Verneine: Sie ist müde.', answer:'sie ist nicht müde', hint:'Setze nicht nach ist.' }
+      ];
+      let taskIndex = 0;
+      let lastMistake='';
+      const answer = $('#answerInput');
+      const feedback = $('#feedback');
+      const normalize = text => text.toLowerCase().trim().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+      $('#checkBtn').addEventListener('click', () => {
+        const value = normalize(answer.value);
+        const task=tasks[taskIndex];const correct=task.answer ? value===task.answer : value.split(/\s+/).length>=4;
+        feedback.className='feedback show '+(correct?'good':'bad');
+        feedback.textContent=correct?'Richtig — gut abgerufen.':task.answer?`Versuche es noch einmal. Eine richtige Antwort ist: ${task.answer.replace(/^./,c=>c.toUpperCase())}.`:'Schreibe bitte einen vollständigen Satz mit mindestens vier Wörtern.';
+        if(!correct)lastMistake=answer.value.trim();
+        if(correct&&taskIndex===tasks.length-1&&dailyContext)finishDailyActivity();
+      });
+      $('#hintBtn').addEventListener('click', () => {
+        feedback.className = 'feedback show';
+        feedback.style.background = '#f4efff';
+        feedback.style.color = '#4e2aa9';
+        feedback.textContent = `Hinweis: ${tasks[taskIndex].hint}`;
+      });
+      $('#nextBtn').addEventListener('click', () => {
+        taskIndex = (taskIndex + 1) % tasks.length;
+        $('#exercisePrompt').textContent = tasks[taskIndex].prompt;
+        answer.value = '';
+        feedback.className = 'feedback';
+        feedback.removeAttribute('style');
+        answer.focus();
+      });
+      const finishDailyActivity=()=>{const session=JSON.parse(localStorage.getItem(dailySessionKey)||'{}');const completed=[...new Set([...(session.completedActivities||[]),dailyContext.activity])];const mistakes=lastMistake?[...(session.mistakes||[]),{activity:dailyContext.activity,topic:requestedTopic||$('#lessonTitle').textContent,answer:lastMistake}]:session.mistakes||[];localStorage.setItem(dailySessionKey,JSON.stringify({...session,currentActivity:dailyContext.activity,completedActivities:completed,mistakes,updatedAt:new Date().toISOString()}));$('#dailyCompleteDialog').showModal();};
+      $('#previousBtn').addEventListener('click',()=>{if(taskIndex>0){taskIndex-=1;$('#exercisePrompt').textContent=tasks[taskIndex].prompt;answer.value='';feedback.className='feedback';}else if(dailyContext)location.href=dailyContext.returnTo;else history.back();});
+      $('#dailyReturnBtn').addEventListener('click',()=>location.href=dailyContext?.returnTo||'/heute');
+      $('#dailyRepeatBtn').addEventListener('click',()=>{$('#dailyCompleteDialog').close();taskIndex=0;lastMistake='';$('#exercisePrompt').textContent=tasks[0].prompt;answer.value='';feedback.className='feedback';});
+      $('#dailyMistakesBtn').addEventListener('click',()=>{$('#dailyCompleteDialog').close();feedback.className='feedback show bad';feedback.textContent=lastMistake?`Deine letzte fehlerhafte Antwort: ${lastMistake}`:'In dieser Übung wurde kein Fehler gespeichert.';});
+      answer.addEventListener('keydown', event => { if (event.key === 'Enter') $('#checkBtn').click(); });
+
+      // Browser speech synthesis is optional and degrades gracefully.
+      $('#audioBtn').addEventListener('click', () => {
+        if ('speechSynthesis' in window) {
+          speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance($('#exercisePrompt').textContent);
+          utterance.lang = 'de-DE';
+          speechSynthesis.speak(utterance);
+        } else notify('Text-to-speech is not available in this browser.');
+      });
+
+      // Leselineal and meaningful button feedback.
+      const rulerBtn = $('#rulerBtn');
+      const ruler = $('#readingRuler');
+      rulerBtn.addEventListener('click', () => {
+        const active = !ruler.classList.contains('show');
+        ruler.classList.toggle('show', active);
+        rulerBtn.setAttribute('aria-pressed', String(active));
+        notify(active ? 'Leselineal enabled.' : 'Leselineal disabled.');
+      });
+      ruler.addEventListener('mousemove', event => { ruler.style.top = `${Math.max(0, event.clientY - 26)}px`; });
+      $('[data-action="use-today"]').addEventListener('click', event => {
+        event.currentTarget.innerHTML = '<svg class="icon" style="vertical-align:middle;margin-right:6px"><use href="#i-check"/></svg>Added today';
+        notify('This grammar lesson was added to today’s practice plan.');
+      });
+      $('[data-action="install"]').addEventListener('click', () => notify('Install is available when this page is served as a configured web app.'));
+      $('[data-action="help"]').addEventListener('click', () => notify('Tip: select a topic, answer the recall task, then open the supporting sections.'));
+      $('[data-action="filter"]').addEventListener('click', () => notify('All CEFR levels are currently visible.'));
+    })();
+  </script>
+<script>const navMap={'Heute üben und sprechen':'/','Heutiges Training':'/heute','Konversationsstudio':'/studio','Grammatik und Deutsch lernen':'/grammatik','Lernressourcen':'/ressourcen','Integrierte Fertigkeiten':'/integrierte-fertigkeiten','Fehler und Aufnahmen':'/fehler','Speicher und persönliche Optionen':'/einstellungen'};document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{const u=navMap[b.dataset.nav];if(u)location.href=u}));</script></body>
+</html>

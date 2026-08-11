@@ -1,0 +1,38 @@
+.selection-context-menu { position: fixed; z-index: 40; width: min(328px, calc(100vw - 24px)); transform: translate(-50%, -100%) scale(1); border: 1px solid #d3c5e4; border-radius: 14px; background: #fffdfb; color: #29233d; padding: 8px; box-shadow: 0 18px 46px #1c163128, 0 4px 12px #1c16311c; opacity: 1; transition: opacity 160ms ease, transform 160ms ease; }
+.selection-context-menu.below { transform: translate(-50%, 0) scale(1); }
+.selection-menu-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 5px 6px 7px; color: #493465; font-size: 12px; font-weight: 800; letter-spacing: .02em; }
+.selection-menu-preview { min-width: 0; max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #627083; font: 12px/1.35 Georgia, serif; font-weight: 400; }
+.selection-menu-style-row, .selection-menu-color-row { display: flex; align-items: center; gap: 6px; padding: 3px 4px; }
+.selection-menu-style-row button { width: 34px; min-height: 32px; border: 1px solid #ddd5e7; border-radius: 8px; background: #fff; color: #302640; font-size: 13px; font-weight: 800; cursor: pointer; }
+.selection-menu-style-row button:hover, .selection-menu-style-row button.picked { border-color: #8e72af; background: #f1ebf8; color: #493465; }
+.selection-color-dot { width: 27px; height: 27px; border: 2px solid transparent; border-radius: 50%; padding: 0; cursor: pointer; box-shadow: inset 0 0 0 1px #29233d12; transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease; }
+.selection-color-dot:hover { transform: scale(1.1); }
+.selection-color-dot.selected { border-color: #2d2440; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #bda4d6; }
+.selection-context-divider { height: 1px; margin: 7px 2px; background: #e5deeb; }
+.selection-menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.selection-menu-actions button, .selection-comment-actions button { min-height: 34px; border: 1px solid #ddd5e7; border-radius: 8px; background: #fff; color: #332942; padding: 7px 8px; font-size: 12px; font-weight: 700; text-align: left; cursor: pointer; transition: transform 140ms ease, background 140ms ease, border-color 140ms ease; }
+.selection-menu-actions button:hover, .selection-comment-actions button:hover { border-color: #a68ac4; background: #f6f1fb; }
+.selection-menu-actions button:active, .selection-comment-actions button:active, .selection-color-dot:active { transform: scale(.97); }
+.selection-menu-actions .eraser-action { color: #8d2a2a; background: #fff8f7; border-color: #ecc9c4; }
+.selection-menu-actions .eraser-action:hover { background: #ffecea; border-color: #dfa79f; }
+.selection-comment-form { display: grid; gap: 7px; }
+.selection-comment-form textarea { width: 100%; resize: vertical; border: 1px solid #c8b8d9; border-radius: 9px; background: #fff; color: #29233d; padding: 9px; font: 13px/1.45 Inter, Arial, sans-serif; }
+.selection-comment-form textarea:focus-visible { outline: 3px solid #d6c5ea; outline-offset: 1px; border-color: #7e5ca3; }
+.selection-comment-actions { display: flex; justify-content: flex-end; gap: 7px; }
+.selection-comment-actions button { text-align: center; }
+.selection-comment-actions .primary { border-color: #675080; background: #675080; color: #fff; }
+.selection-comment-actions .primary:hover { background: #513b70; border-color: #513b70; }
+@starting-style { .selection-context-menu { opacity: 0; transform: translate(-50%, -100%) scale(.97); } .selection-context-menu.below { transform: translate(-50%, 0) scale(.97); } }
+.filter-dot.selected { border-color: #23334d !important; transform: scale(1.12); }
+
+.yellow { --marker: rgb(255 217 102 / 32%); }
+.green { --marker: rgb(184 224 210 / 34%); }
+.blue { --marker: rgb(189 224 254 / 36%); }
+.pink { --marker: rgb(247 202 208 / 34%); }
+.red { --marker: rgb(245 183 177 / 32%); }
+.selection-color-dot.yellow, .filter-dot.yellow, .mini-dot.yellow { background: #ffe8a3; }
+.selection-color-dot.green, .filter-dot.green, .mini-dot.green { background: #cdebdc; }
+.selection-color-dot.blue, .filter-dot.blue, .mini-dot.blue { background: #cde8ff; }
+.selection-color-dot.pink, .filter-dot.pink, .mini-dot.pink { background: #f8d7e3; }
+.selection-color-dot.red, .filter-dot.red, .mini-dot.red { background: #f5cbc7; }
+

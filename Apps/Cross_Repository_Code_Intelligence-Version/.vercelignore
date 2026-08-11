@@ -1,0 +1,12 @@
+.next
+.vercel
+.env*
+.wrangler
+dist
+build
+outputs
+work
+.npm-cache
+*.log
+*.zip
+*.exe

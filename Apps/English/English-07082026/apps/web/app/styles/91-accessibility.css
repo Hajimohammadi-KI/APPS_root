@@ -1,0 +1,194 @@
+/* Neuroinclusive reading and focus preferences */
+html[data-text-scale="112"] {
+  font-size: 112.5%;
+}
+
+html[data-text-scale="125"] {
+  font-size: 125%;
+}
+
+html[data-reading-profile="dyslexia"] body {
+  background: #f7f3e8;
+  font-family: Arial, Verdana, Tahoma, sans-serif;
+}
+
+html[data-reading-profile="dyslexia"]
+  :where(p, li, dd, dt, label, input, textarea, select, button, small) {
+  letter-spacing: 0.025em;
+  line-height: 1.6;
+}
+
+html[data-reading-profile="dyslexia"] :where(p, li, dd) {
+  max-width: 70ch;
+  text-align: start;
+}
+
+html[data-reading-profile="dyslexia"] :where(input, textarea, select) {
+  font-size: max(1rem, 16px);
+}
+
+html[data-reading-profile="dyslexia"] .nav-group-copy small,
+html[data-reading-profile="dyslexia"] .text-xs {
+  font-size: 0.875rem;
+}
+
+html[data-low-stimulation="true"] *,
+html[data-low-stimulation="true"] *::before,
+html[data-low-stimulation="true"] *::after {
+  animation: none;
+  scroll-behavior: auto;
+  transition: none;
+}
+
+html[data-low-stimulation="true"]
+  :where(.hero-orb, .decorative-orb, .ambient-shape) {
+  display: none;
+}
+
+html[data-low-stimulation="true"] :where(.card, [class*="shadow"]) {
+  box-shadow: none;
+}
+
+.neuro-reader-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.neuro-ruler-toggle {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--background);
+  padding: 0.45rem 0.7rem;
+  color: var(--foreground);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.neuro-ruler-toggle input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: #713f98;
+}
+
+.neuro-reading-ruler {
+  position: fixed;
+  z-index: 90;
+  right: 0;
+  left: 0;
+  transform: translateY(-50%);
+  border-top: 2px solid rgb(146 104 0 / 70%);
+  border-bottom: 2px solid rgb(146 104 0 / 70%);
+  background: rgb(255 224 102 / 32%);
+  pointer-events: none;
+}
+
+@media (max-width: 680px) {
+  .neuro-ruler-toggle span {
+    display: none;
+  }
+}
+
+.standalone-neuro-ruler-toggle {
+  position: fixed;
+  z-index: 110;
+  top: calc(0.75rem + env(safe-area-inset-top));
+  right: 0.75rem;
+  border: 2px solid #6d28d9;
+  box-shadow: 0 8px 26px rgb(76 29 149 / 18%);
+}
+
+@media (max-width: 680px) {
+  .standalone-neuro-ruler-toggle span {
+    display: inline;
+  }
+}
+
+.neuro-reader-caption {
+  position: fixed;
+  z-index: 100;
+  right: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  left: 1rem;
+  margin-inline: auto;
+  max-width: 70ch;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--background) 96%, transparent);
+  padding: 0.85rem 1rem;
+  color: var(--foreground);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
+  box-shadow: 0 12px 40px rgb(15 23 42 / 18%);
+}
+
+.persian-word-help-card {
+  position: fixed;
+  z-index: 2147483500;
+  width: min(23rem, calc(100vw - 1.5rem));
+  max-height: min(31rem, calc(100vh - 1.5rem));
+  overflow: hidden;
+  border: 2px solid #6d28d9;
+  border-radius: 1rem;
+  background: #ffffff;
+  color: #21172d;
+  box-shadow:
+    0 18px 50px rgb(76 29 149 / 24%),
+    0 0 0 3px rgb(109 40 217 / 10%);
+  padding: 0.8rem;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.75;
+  text-align: right;
+  pointer-events: none;
+  animation: persian-word-help-in 150ms ease-out;
+}
+
+.persian-word-help-term {
+  margin: 0 0 0.55rem;
+  border-radius: 0.7rem;
+  background: #eee6f8;
+  padding: 0.45rem 0.65rem;
+  color: #38244f;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.persian-word-help-section {
+  display: grid;
+  gap: 0.08rem;
+  padding: 0.42rem 0.55rem;
+}
+
+.persian-word-help-section + .persian-word-help-section {
+  border-top: 1px solid #e4daee;
+}
+
+.persian-word-help-section strong {
+  color: #69458d;
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+@keyframes persian-word-help-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .persian-word-help-card {
+    animation: none;
+  }
+}
+

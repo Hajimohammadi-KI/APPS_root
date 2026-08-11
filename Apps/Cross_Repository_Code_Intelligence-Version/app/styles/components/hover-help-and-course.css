@@ -1,0 +1,44 @@
+.persian-hover-tooltip {
+  position: fixed;
+  z-index: 10000;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 24px));
+  transform: translateX(-50%);
+  border: 1px solid #d9c8ee;
+  border-radius: 12px;
+  background: #241a33;
+  color: #fff;
+  box-shadow: 0 12px 30px rgb(36 26 51 / 24%);
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.7;
+  direction: rtl;
+  text-align: right;
+  pointer-events: none;
+}
+.live-course-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 0 0 18px;
+  padding: 18px 20px;
+  border: 2px solid #7b5aa2;
+  border-radius: 18px;
+  background: #f2ecf8;
+  color: #251738;
+}
+
+.live-course-banner span {
+  color: #5b397e;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.live-course-banner h2 { margin: 3px 0; font-size: 20px; }
+.live-course-banner p { margin: 0; color: #4c4059; font-size: 13px; }
+.live-course-banner .button { flex: 0 0 auto; min-height: 44px; }
+

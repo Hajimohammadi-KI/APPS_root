@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LingoBridge</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="app-header">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">L</span><div><h1>LingoBridge</h1><p>Deutsch · فارسی · English</p></div></div>
+        <div class="header-actions">
+          <button class="badge-button" id="streak-button" type="button" title="Lernserie"><span aria-hidden="true">🔥</span><strong id="streak-count">0</strong></button>
+          <button class="icon-button" id="open-side-panel" type="button" title="Im Seitenpanel öffnen" aria-label="Im Seitenpanel öffnen">▥</button>
+        </div>
+      </header>
+
+      <section class="view" data-view="study" id="study-view">
+        <div class="summary-card">
+          <div><p class="eyebrow" data-i18n="todayReview">HEUTIGE WIEDERHOLUNG</p><strong id="due-count">0 Karten fällig</strong><p id="review-message">Wähle Text auf einer Seite aus, um deine erste Karte zu erstellen.</p></div>
+          <button class="primary" id="start-review" type="button">Starten</button>
+        </div>
+
+        <section class="panel" aria-labelledby="study-setup-title">
+          <div class="section-heading"><div><p class="eyebrow">LERNPLAN</p><h2 id="study-setup-title">Sitzung vorbereiten</h2></div><span class="count-pill" id="available-count">0 verfügbar</span></div>
+          <div class="two-columns">
+            <label>Deck<select id="study-deck"></select></label>
+            <label>Lernmodus<select id="learning-mode"><option value="text">Text → Text</option><option value="listening">Hören → Antwort</option><option value="typing">Tippen → Prüfen</option></select></label>
+            <label>Karten pro Sitzung<select id="cards-per-session"><option value="all">Alle fälligen</option><option value="5">5</option><option value="10">10</option><option value="20">20</option></select></label>
+            <label>Sortierung<select id="card-sort"><option value="due">Zuerst fällig</option><option value="random">Zufällig</option><option value="new">Neue zuerst</option></select></label>
+          </div>
+          <div class="toggle-grid">
+            <label class="toggle"><input id="smart-repeat" type="checkbox" /><span>Intelligente Wiederholung</span></label>
+            <label class="toggle"><input id="reverse-mode" type="checkbox" /><span>Rückwärtsmodus</span></label>
+            <label class="toggle"><input id="pronounce-answer" type="checkbox" /><span>Antwort vorlesen</span></label>
+          </div>
+        </section>
+
+        <section class="panel hidden" id="review-panel" aria-live="polite">
+          <div class="section-heading"><div><p class="eyebrow">EINE KARTE NACH DER ANDEREN</p><h2 id="review-progress">Wiederholung</h2></div><button class="quiet" id="close-review" type="button">Schließen</button></div>
+          <article class="flashcard" id="flashcard">
+            <p class="flashcard-label" id="flashcard-language">Deutsch</p>
+            <button class="listen-button hidden" id="listen-question" type="button">▶ Frage anhören</button>
+            <p class="flashcard-text" id="flashcard-front"></p>
+            <label class="typing-answer hidden" id="typing-answer-wrap">Antwort eingeben<input id="typing-answer" autocomplete="off" /></label>
+            <p class="typing-result hidden" id="typing-result"></p>
+            <div class="answer hidden" id="flashcard-answer"><p class="flashcard-label">Antwort</p><p class="flashcard-text" id="flashcard-back"></p><p class="card-notes" id="flashcard-notes"></p></div>
+          </article>
+          <div class="button-row" id="reveal-actions"><button class="primary" id="reveal-answer" type="button">Antwort zeigen</button><button class="secondary" id="speak-card" type="button">Anhören</button></div>
+          <div class="grade-row hidden" id="grade-actions"><button class="again" data-grade="again" type="button">Nochmal<small>10 Min.</small></button><button class="hard" data-grade="hard" type="button">Schwer<small>kürzer</small></button><button class="good" data-grade="good" type="button">Gut<small>pünktlich</small></button><button class="easy" data-grade="easy" type="button">Leicht<small>länger</small></button></div>
+        </section>
+      </section>
+
+      <section class="view hidden" data-view="translate" id="translate-view">
+        <section class="panel">
+          <div class="section-heading"><div><p class="eyebrow">ÜBERSETZEN & SPEICHERN</p><h2>Neue Lernkarte</h2></div><button class="quiet" id="capture-selection" type="button">Auswahl übernehmen</button></div>
+          <div class="language-row"><label>Ausgangssprache<select id="source-language"><option value="de">Deutsch</option><option value="fa">فارسی</option><option value="en">English</option></select></label><button class="swap-button" id="swap-languages" type="button" aria-label="Sprachen tauschen">⇄</button><label>Zielsprache<select id="target-language"><option value="fa">فارسی</option><option value="de">Deutsch</option><option value="en">English</option></select></label></div>
+          <label>Deck<select id="capture-deck"></select></label>
+          <label>Vorderseite<textarea id="front" rows="3" placeholder="Wort, Satz oder Ausdruck"></textarea></label>
+          <label>Rückseite<textarea id="back" rows="3" placeholder="Eigene Übersetzung oder Bedeutung"></textarea></label>
+          <label>Notiz oder Beispielsatz<textarea id="notes" rows="2" placeholder="Optional: Kontext, Grammatik oder Merkhilfe"></textarea></label>
+          <div class="button-row"><button class="primary" id="save-card" type="button">Karte speichern</button><button class="secondary" id="open-translate" type="button">Google Translate öffnen</button></div>
+          <p class="privacy-note">Eine Übersetzung wird nur nach Ihrem Klick in einem neuen Tab geöffnet. Karten bleiben lokal im Browser.</p>
+        </section>
+      </section>
+
+      <section class="view hidden" data-view="decks" id="decks-view">
+        <section class="panel">
+          <div class="section-heading"><div><p class="eyebrow">DECK-MANAGER</p><h2 id="deck-count">0 Karten</h2></div><button class="quiet" id="sync-projects" type="button">Mit Apps teilen</button></div>
+          <div class="two-columns"><label>Deck<select id="manager-deck"></select></label><label>Karten suchen<input id="card-search" type="search" placeholder="Wort oder Bedeutung" /></label></div>
+          <details class="accordion"><summary>Neues Deck erstellen</summary><div class="accordion-body"><label>Name<input id="new-deck-name" placeholder="z. B. B1 Reise" /></label><div class="language-row"><label>Von<select id="new-deck-source"><option value="de">Deutsch</option><option value="fa">فارسی</option><option value="en">English</option></select></label><span></span><label>Nach<select id="new-deck-target"><option value="fa">فارسی</option><option value="de">Deutsch</option><option value="en">English</option></select></label></div><button class="secondary" id="create-deck" type="button">Deck erstellen</button></div></details>
+          <div class="card-list" id="card-list"></div>
+        </section>
+      </section>
+
+      <section class="view hidden" data-view="settings" id="settings-view">
+        <section class="panel">
+          <div><p class="eyebrow">EINSTELLUNGEN</p><h2>Sprache und Verhalten</h2></div>
+          <label>Sprache der Oberfläche<select id="interface-language"><option value="de">Deutsch</option><option value="fa">فارسی</option><option value="en">English</option></select></label>
+          <div class="settings-list">
+            <label class="setting-row"><span><strong>Auswahl-Schaltfläche</strong><small>Nach dem Markieren von Text Speichern und Übersetzen anzeigen.</small></span><input id="selection-bubble" type="checkbox" /></label>
+            <label class="setting-row"><span><strong>Auswahl automatisch speichern</strong><small>Ausgewählten Text sofort als unvollständige Karte speichern.</small></span><input id="auto-save-selection" type="checkbox" /></label>
+            <label class="setting-row"><span><strong>Gelernte Wörter hervorheben</strong><small>Wörter aus dem aktiven Deck auf Webseiten dezent markieren.</small></span><input id="highlight-cards" type="checkbox" /></label>
+          </div>
+          <label>Auf diesen Websites deaktivieren<textarea id="disabled-sites" rows="2" placeholder="Eine Domain pro Zeile, z. B. bank.example"></textarea></label>
+          <button class="primary" id="save-settings" type="button">Einstellungen speichern</button>
+        </section>
+        <section class="panel"><div><p class="eyebrow">DATENSICHERUNG</p><h2>Lokale Daten schützen</h2></div><div class="button-row"><button class="secondary" id="export-deck" type="button">Backup exportieren</button><label class="secondary file-label">Backup importieren<input id="import-deck" accept="application/json" type="file" /></label></div></section>
+      </section>
+
+      <section class="view hidden" data-view="help" id="help-view">
+        <section class="panel"><div><p class="eyebrow">HILFE & DATENSCHUTZ</p><h2>Alles gehört Ihnen</h2></div><p>Keine Anmeldung, kein Abonnement und keine versteckten Bezahlfunktionen. Karten, Fortschritt und Einstellungen bleiben lokal und können als JSON gesichert werden.</p><ul class="feature-list"><li>Deutsch, فارسی und English</li><li>Text-, Hör- und Tipptraining</li><li>Adaptive Wiederholung und Lernserie</li><li>Decks, Suche, Bearbeiten und Verschieben</li><li>Auswahl-Menü und Webseiten-Hervorhebung</li><li>Seitenpanel und Verbindung zu Ihren drei Apps</li></ul><button class="secondary" id="restart-tour" type="button">Einführung erneut anzeigen</button></section>
+      </section>
+
+      <p class="status" id="status" role="status"></p>
+      <nav class="bottom-nav" aria-label="Hauptnavigation"><button data-route="study" class="active" type="button"><span>◴</span>Lernen</button><button data-route="translate" type="button"><span>文</span>Übersetzen</button><button data-route="decks" type="button"><span>▣</span>Decks</button><button data-route="settings" type="button"><span>⚙</span>Einstellungen</button><button data-route="help" type="button"><span>?</span>Hilfe</button></nav>
+    </main>
+
+    <div class="tour-backdrop hidden" id="tour-backdrop">
+      <section class="tour-dialog" role="dialog" aria-modal="true" aria-labelledby="tour-title"><button class="tour-close" id="tour-close" type="button" aria-label="Einführung schließen">×</button><p class="tour-icon" id="tour-icon">👋</p><h2 id="tour-title">Willkommen bei LingoBridge</h2><p id="tour-text"></p><div class="tour-progress" id="tour-progress" aria-label="Fortschritt"></div><div class="tour-actions"><button class="quiet" id="tour-later" type="button">Später</button><span></span><button class="secondary" id="tour-back" type="button">Zurück</button><button class="primary" id="tour-next" type="button">Weiter</button></div></section>
+    </div>
+    <script src="popup.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+# Dependencies and Bun
+node_modules/
+.bun/
+
+# Application builds
+.next/
+dist/
+coverage/
+playwright-report/
+test-results/
+artifacts/store-packages/
+artifacts/windows-installer/
+artifacts/windows-modern/
+*.tsbuildinfo
+.tmp/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Tooling and editor state
+.codex-skill-staging/
+.idea/
+.vscode/
+*.log
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+.vercel
+.env*

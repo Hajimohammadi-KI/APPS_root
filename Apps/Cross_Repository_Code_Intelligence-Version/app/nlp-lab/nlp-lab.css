@@ -1,0 +1,59 @@
+:root {
+  --nlp-ink: #172036;
+  --nlp-muted: #56627a;
+  --nlp-purple: #6f4a94;
+  --nlp-purple-dark: #42275f;
+  --nlp-lavender: #f2ecf8;
+  --nlp-blue: #eaf3ff;
+  --nlp-line: #d8cbe7;
+}
+
+body { background: #f8f6fb; color: var(--nlp-ink); }
+.nlp-lab-shell { width: min(1180px, calc(100% - 32px)); margin: 24px auto 110px; font-size: 16px; line-height: 1.65; }
+.nlp-lab-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .34fr); gap: 24px; padding: clamp(24px, 5vw, 48px); border: 1px solid var(--nlp-line); border-radius: 28px; background: linear-gradient(135deg, #fbf8ff, var(--nlp-lavender)); }
+.nlp-lab-eyebrow { margin: 0 0 6px; color: var(--nlp-purple); font-size: 13px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+.nlp-lab-hero h1 { margin: 0; color: var(--nlp-purple-dark); font-size: clamp(34px, 6vw, 64px); line-height: 1.05; }
+.nlp-lab-lead { max-width: 760px; margin: 18px 0 0; color: #344058; font-size: clamp(17px, 2vw, 20px); }
+.nlp-lab-time { display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 22px; border: 1px solid var(--nlp-line); border-radius: 20px; background: #fff; }
+.nlp-lab-time strong { font-size: 19px; }
+.nlp-lab-time span { color: var(--nlp-muted); }
+.nlp-lab-time a { margin-top: 8px; color: var(--nlp-purple-dark); font-weight: 800; }
+.nlp-lab-alert { margin-top: 18px; padding: 18px 22px; border: 2px solid #b98c3f; border-radius: 18px; background: #fff8e8; color: #4b3210; }
+.nlp-lab-alert p { margin: 5px 0 0; }
+.nlp-lab-grid, .nlp-lab-boundaries { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+.nlp-lab-grid article, .nlp-lab-boundaries article, .nlp-lab-use-cases, .nlp-session-card { border: 1px solid var(--nlp-line); border-radius: 20px; background: #fff; }
+.nlp-lab-grid article, .nlp-lab-boundaries article, .nlp-lab-use-cases { padding: 24px; }
+.nlp-lab-grid article > span { color: var(--nlp-purple); font-weight: 850; }
+.nlp-lab-grid h2, .nlp-lab-boundaries h2, .nlp-lab-use-cases h2, .nlp-lab-sessions > h2 { margin: 4px 0 12px; font-size: clamp(23px, 3vw, 32px); }
+.nlp-lab-grid p { color: var(--nlp-muted); }
+.nlp-lab-grid dl { margin: 0; }
+.nlp-lab-grid dl div { padding: 10px 0; border-bottom: 1px solid #ebe5f1; }
+.nlp-lab-grid dt { font-weight: 850; }
+.nlp-lab-grid dd { margin: 2px 0 0; color: var(--nlp-muted); }
+.nlp-lab-boundaries article:first-child { background: var(--nlp-blue); }
+.nlp-lab-boundaries article:last-child { background: #faf7fd; }
+.nlp-lab-boundaries li, .nlp-lab-use-cases li { margin: 8px 0; }
+.nlp-lab-use-cases, .nlp-lab-sessions { margin-top: 28px; }
+.nlp-lab-use-cases ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; }
+.nlp-session-list { display: grid; gap: 16px; }
+.nlp-session-card { overflow: hidden; }
+.nlp-session-card > header { display: flex; gap: 14px; padding: 20px 22px; background: var(--nlp-lavender); }
+.nlp-session-card time { color: var(--nlp-purple-dark); font-weight: 800; }
+.nlp-session-card h3 { margin: 2px 0; font-size: 22px; }
+.nlp-session-card header p { margin: 0; color: var(--nlp-muted); }
+.nlp-session-number { display: grid; flex: 0 0 44px; width: 44px; height: 44px; place-items: center; border-radius: 14px; background: var(--nlp-purple-dark); color: #fff; font-size: 19px; font-weight: 900; }
+.nlp-session-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding: 22px; }
+.nlp-session-body > div { padding: 16px; border-radius: 14px; background: #faf9fc; }
+.nlp-session-body h4 { margin: 0 0 5px; }
+.nlp-session-body p, .nlp-session-body ul { margin: 0 0 12px; color: var(--nlp-muted); }
+.nlp-source-list a { color: #3c397e; font-weight: 750; }
+.nlp-session-card footer { padding: 16px 22px; border-top: 1px solid var(--nlp-line); background: #fff; }
+.nlp-session-card footer p { margin: 3px 0 0; }
+.nlp-session-card code { overflow-wrap: anywhere; color: #3c2754; font-weight: 750; }
+
+@media (max-width: 760px) {
+  .nlp-lab-shell { width: min(100% - 20px, 1180px); margin-top: 10px; }
+  .nlp-lab-hero, .nlp-lab-grid, .nlp-lab-boundaries, .nlp-session-body { grid-template-columns: 1fr; }
+  .nlp-lab-use-cases ol { grid-template-columns: 1fr; padding-left: 22px; }
+  .nlp-session-card > header { align-items: flex-start; }
+}

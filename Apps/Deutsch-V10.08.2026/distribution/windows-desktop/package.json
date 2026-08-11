@@ -1,0 +1,72 @@
+{
+  "name": "deutschflow-windows",
+  "version": "20.8.5",
+  "private": true,
+  "description": "DeutschFlow als einfach installierbare Windows-Desktop-App",
+  "author": "DeutschFlow",
+  "main": "main.cjs",
+  "packageManager": "bun@1.3.14",
+  "scripts": {
+    "dist": "bun build preload.cjs --target=node --format=cjs --external electron --outfile preload.bundle.cjs && electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "43.2.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "app.deutschflow.grammar.desktop",
+    "productName": "DeutschFlow",
+    "asar": true,
+    "files": [
+      "main.cjs",
+      "preload.bundle.cjs",
+      "offline.html"
+    ],
+    "extraResources": [
+      {
+        "from": "D:/APPS_root/shared/google-calendar-bridge.cjs",
+        "to": "google-calendar-bridge.cjs"
+      },
+      {
+        "from": "D:/APPS_root/shared/learner-profile-bridge.cjs",
+        "to": "learner-profile-bridge.cjs"
+      },
+      {
+        "from": "D:/APPS_root/shared/ai-provider-bridge.cjs",
+        "to": "ai-provider-bridge.cjs"
+      }
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "../../artifacts/windows-installer"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "../../apps/web/public/icons/icon-512.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "installerLanguages": [
+        "de_DE"
+      ],
+      "language": "1031",
+      "menuCategory": "DeutschFlow",
+      "runAfterFinish": true,
+      "shortcutName": "DeutschFlow",
+      "artifactName": "DeutschFlow-Setup-${version}.${ext}"
+    }
+  }
+}

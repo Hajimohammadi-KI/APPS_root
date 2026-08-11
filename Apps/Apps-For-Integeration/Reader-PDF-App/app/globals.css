@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@import "./styles/00-foundation.css";
+@import "./styles/01-reader-shell.css";
+@import "./styles/components/selection-menu.css";
+@import "./styles/pages/document-viewer.css";
+@import "./styles/pages/study-panel.css";
+@import "./styles/components/settings-dialog.css";
+@import "./styles/components/focus-timer.css";
+@import "./styles/90-responsive.css";
+@import "./styles/91-accessibility.css";
+.daily-reader-context {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-bottom: 1px solid #ded2ee;
+  background: #f8f3ff;
+  color: #24153d;
+}
+
+.daily-reader-context div { display: grid; gap: 3px; }
+.daily-reader-context span { color: #665b74; font-size: .9rem; }
+.daily-reader-context button { white-space: normal; }
+
+.daily-complete-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(24, 12, 44, .48);
+}
+
+.daily-complete-card {
+  width: min(560px, 100%);
+  padding: 28px;
+  border: 2px solid #764bb0;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(30, 15, 52, .3);
+  color: #211432;
+  text-align: center;
+}
+
+.daily-complete-icon {
+  display: inline-grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e5f7ed;
+  color: #087a45;
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.daily-complete-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+@media (max-width: 720px) {
+  .daily-reader-context { grid-template-columns: 1fr; }
+  .daily-reader-context button { width: 100%; }
+  .daily-complete-card { padding: 22px 16px; }
+}

@@ -1,0 +1,26 @@
+.timer-modal { width: min(620px, 96vw); max-height: 92vh; overflow: auto; background: #fbfaf6; border-radius: 22px; padding: 22px; box-shadow: 0 25px 70px #0e1e36aa; }
+.timer-face { position: relative; min-height: 190px; overflow: hidden; border: 1px solid #d8cbea; border-radius: 20px; background: radial-gradient(circle at 50% 110%, #ad94cc4a, transparent 55%), linear-gradient(145deg, #f4effa, #fff); display: grid; place-items: center; align-content: center; gap: 6px; text-align: center; }
+.timer-face > span { position: absolute; width: 135px; height: 135px; border: 1px solid #8267a638; border-radius: 50%; }
+.timer-face.running > span { animation: timerOrbit 2s ease-out infinite; }
+.timer-face strong { position: relative; font: 750 clamp(44px, 9vw, 70px)/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.timer-face small { position: relative; color: #64748b; }
+@keyframes timerOrbit { from { opacity: .9; transform: scale(.82); } to { opacity: 0; transform: scale(1.5); } }
+.timer-document { display: grid; gap: 3px; border: 1px solid #dedbd2; border-radius: 14px; background: white; padding: 13px; margin-top: 12px; }
+.timer-document small, .timer-document span { color: #64748b; font-size: 11px; }
+.timer-document strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.timer-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.timer-actions button { flex: 1; min-width: 150px; border: 1px solid #d5d1c8; background: white; border-radius: 10px; padding: 11px 13px; font-weight: 700; }
+.timer-history { border: 1px solid #dedbd2; border-radius: 14px; background: white; padding: 13px; }
+.timer-history > div { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.timer-history > div span { color: #64748b; font-size: 11px; }
+.timer-history > p { color: #64748b; font-size: 12px; }
+.timer-history ul { display: grid; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+.timer-history li { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #ece9e1; padding-top: 8px; }
+.timer-history li > span { display: grid; min-width: 0; gap: 2px; }
+.timer-history li b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+.timer-history li small { color: #64748b; font-size: 10px; }
+.timer-history li > strong { color: #493465; font: 750 12px ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+.pdf-reader-root.embed .topbar, .pdf-reader-root.embed .sidebar { display: none; }
+.pdf-reader-root.embed .workspace { height: auto; flex: 1 1 auto; }
+

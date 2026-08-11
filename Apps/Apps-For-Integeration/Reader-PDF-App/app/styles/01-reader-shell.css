@@ -1,0 +1,61 @@
+.pdf-reader-root .topbar { width: 100%; min-height: 68px; flex: 0 0 auto; background: #fffdf9; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: flex-start; gap: 12px; padding: 8px 16px; position: relative; top: auto; z-index: 20; backdrop-filter: none; }
+.pdf-reader-root .brand { min-width: 148px; flex: 0 0 auto; display: flex; align-items: center; gap: 9px; color: var(--ink); text-decoration: none; font: 700 19px/1.15 Georgia, serif; white-space: nowrap; }
+.pdf-reader-root .brand > .brand-mark { display: grid; place-items: center; width: 40px; height: 40px; flex: 0 0 40px; border: 2px solid var(--ink); border-radius: 11px; background: #f1ebf8; box-shadow: none; color: var(--teal-dark); font: 800 16px/1 Inter, sans-serif; letter-spacing: 0; }
+.pdf-reader-root .brand > span:last-child { display: block; width: auto; height: auto; min-width: 0; border-radius: 0; background: transparent; box-shadow: none; color: var(--ink); }
+.reader-history { display: flex; align-items: center; gap: 5px; flex: 0 0 auto; }
+.reader-history button, .reader-history a { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid #e2dce9; border-radius: 10px; background: #fff; color: var(--ink); padding: 8px 10px; text-decoration: none; font-size: 12px; }
+.reader-history button:hover, .reader-history a:hover { border-color: #bba6d4; background: #f4effa; }
+.reader-history b { font-size: 11px; font-weight: 700; }
+.document-title-input { flex: 1; min-width: 180px; border: 1px solid transparent; background: transparent; border-radius: 9px; padding: 8px 10px; font-size: 14px; font-weight: 650; overflow: hidden; text-overflow: ellipsis; }
+.document-title-input:hover, .document-title-input:focus { border-color: var(--line); background: white; }
+.pdf-reader-root .top-actions { min-width: 0; display: flex; flex: 0 0 auto; flex-wrap: nowrap; align-items: center; gap: 6px; }
+.timer-top { border: 1px solid #d8cbea; background: #f4effa; display: grid; grid-template-columns: auto auto; gap: 0 7px; text-align: left; padding: 7px 10px; border-radius: 10px; white-space: nowrap; }
+.timer-top small { grid-column: 2; color: #5d6d7d; font-size: 10px; }
+.timer-top.running { border-color: #8267a6; box-shadow: 0 0 0 3px #8267a624; }
+.timer-top.running small { color: #493465; }
+.timer-top.paused { border-color: #e0bd78; background: #fff8e8; }
+.connection { border: 0; background: transparent; display: grid; grid-template-columns: auto auto; gap: 0 8px; text-align: left; padding: 8px 10px; border-radius: 10px; }
+.connection:hover { background: #f4effa; }
+.connection small { grid-column: 2; color: #9b6d3d; font-size: 11px; }
+.connection.online small { color: #5f4691; }
+.icon-btn { border: 1px solid var(--line); background: white; border-radius: 11px; width: 40px; height: 40px; }
+.route-link.icon-btn { display: grid; place-items: center; text-decoration: none; color: var(--ink); }
+
+.pdf-reader-root .workspace { width: 100%; height: auto; min-width: 0; min-height: 0; flex: 1 1 auto; display: flex; grid-template-columns: none; position: relative; overflow: hidden; }
+.pdf-reader-root .sidebar { position: relative; inset: auto; width: 202px; height: auto; flex: 0 0 202px; overflow-y: auto; background: #fffdfa; border-right: 1px solid var(--line); padding: 14px 10px; display: flex; flex-direction: column; gap: 5px; }
+.pdf-reader-root .sidebar > .nav-item { min-height: 42px; border: 0; background: transparent; padding: 10px 12px; border-radius: 10px; display: flex; justify-content: flex-start; gap: 10px; align-items: center; text-align: left; font-size: 13px; font-weight: 500; color: var(--ink); text-decoration: none; width: 100%; }
+.pdf-reader-root .sidebar > .nav-item > span, .pdf-reader-root .nav-bottom .nav-item > span { display: inline; width: auto; height: auto; border-radius: 0; background: transparent; box-shadow: none; color: inherit; }
+.pdf-reader-root .sidebar > .nav-item:hover, .pdf-reader-root .sidebar > .nav-item.active { background: #f1ebf8; border-color: transparent; box-shadow: none; color: #493465; }
+.pdf-reader-root .sidebar > .nav-item.active > span { background: transparent; box-shadow: none; color: inherit; }
+.nav-label { color: #8a8f98; font-size: 10px; letter-spacing: .12em; margin: 18px 12px 6px; }
+.nav-bottom { margin-top: auto; border-top: 1px solid #e5e2db; padding-top: 10px; }
+
+.reader-area { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.reader-focus-banner { display: flex; align-items: flex-start; gap: 12px; flex: 0 0 auto; border-bottom: 1px solid #d8cbea; background: #f5f0fb; color: #281c3a; padding: 11px 16px; line-height: 1.5; }
+.reader-focus-banner > span { flex: 0 0 auto; border-radius: 999px; background: #6f4f91; color: #fff; padding: 4px 9px; font-size: 11px; font-weight: 850; }
+.reader-focus-banner strong { display: block; font-size: 13px; }
+.reader-focus-banner p { margin: 2px 0 0; font-size: 12px; }
+.reader-error-card { align-self: flex-start; margin: 32px auto; max-width: 720px; border: 2px solid #a94343; background: #fff8f8; color: #321a1a; }
+.reader-error-card > strong { display: block; font-size: 20px; color: #7c2020; }
+.reader-error-card p { margin: 12px 0 0; line-height: 1.65; }
+.reader-error-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.reader-error-actions > a { display: inline-flex; align-items: center; min-height: 42px; border: 1px solid #7c2020; border-radius: 8px; padding: 8px 14px; color: #641b1b; font-weight: 750; text-decoration: none; }
+.reader-error-actions > a:hover { background: #fbe8e8; }
+.reader-toolbar { min-height: 60px; flex: 0 0 auto; background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 7px; padding: 8px 12px; }
+.reader-toolbar button, .upload-button { border: 1px solid #e1ded6; background: #fff; padding: 7px 10px; border-radius: 8px; font-size: 12px; }
+.reader-toolbar button, .reader-toolbar .upload-button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; }
+.reader-toolbar button:hover:not(:disabled), .upload-button:hover { border-color: #bba6d4; background: #f6f1fb; }
+.reader-toolbar .zoom-button { min-width: 44px; min-height: 44px; padding: 6px; font-size: 22px; font-weight: 800; line-height: 1; }
+.zoom-control { display: inline-flex; }
+.zoom-control select { min-width: 94px; min-height: 44px; border: 2px solid #c8b8d9; border-radius: 10px; background: #fff; color: #29233d; padding: 7px 30px 7px 12px; font-size: 16px; font-weight: 800; cursor: pointer; }
+.zoom-control select:focus-visible, .reader-toolbar .zoom-button:focus-visible { outline: 3px solid #675080; outline-offset: 2px; box-shadow: 0 0 0 1px #fff; }
+.upload-button input { display: none; }
+.page-chip { border: 1px solid #e1ded6; background: #fff; padding: 7px 10px; border-radius: 8px; font-size: 12px; white-space: nowrap; }
+.separator { width: 1px; height: 24px; background: #ddd; margin: 0 5px; }
+.toolbar-spacer { flex: 1; }
+.panel-toggle { color: #493465; }
+.reader-toolbar .toolbar-timer { border-color: #c8b5de; color: #493465; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.reader-toolbar .toolbar-timer.running::before { content: ""; width: 6px; height: 6px; display: inline-block; margin-right: 5px; border-radius: 50%; background: #8267a6; animation: timerBlink 1.3s ease-in-out infinite; }
+.reader-toolbar .toolbar-timer.paused { border-color: #e0bd78; background: #fff8e8; }
+@keyframes timerBlink { 50% { opacity: .3; transform: scale(.75); } }
+

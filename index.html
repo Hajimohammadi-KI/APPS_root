@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#7650bd">
+  <title>Deutsch-Automatik – Startseite</title>
+  <meta name="description" content="Direkter Einstieg in Deutsch-Automatik: Tagestraining, Grammatik, Sprechen, Wiederholen und Lernfortschritt.">
+  <style>
+    :root {
+      --ink:#17132b;--muted:#686178;--purple:#7650bd;--purple-deep:#53328e;
+      --lavender:#f5f0fb;--lavender-2:#ebe2f7;--pink:#f6a3bd;--rose:#fff0f4;
+      --peach:#fff2e8;--green:#178c57;--line:#e3daed;--card:#fffefe;
+      --shadow:0 16px 42px rgba(58,38,88,.10);--radius:26px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#faf7fd;color:var(--ink);font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    :focus-visible{outline:3px solid #9a72db;outline-offset:3px}
+    .skip{position:fixed;left:14px;top:-70px;z-index:100;padding:12px 16px;border-radius:12px;background:#17132b;color:#fff}
+    .skip:focus{top:14px}
+    .shell{min-height:100vh;display:grid;grid-template-columns:280px minmax(0,1fr)}
+    .sidebar{position:sticky;top:0;height:100vh;padding:28px 20px;display:flex;flex-direction:column;border-right:1px solid var(--line);background:rgba(255,254,255,.96);overflow:auto}
+    .brand{display:flex;align-items:center;gap:13px;margin-bottom:34px}
+    .brand-mark{width:52px;height:52px;display:grid;place-items:center;border-radius:17px;color:#fff;background:linear-gradient(145deg,#8c61d5,#5c30aa);box-shadow:0 10px 24px rgba(94,49,170,.25);font-weight:900}
+    .brand strong{display:block;font-size:19px;line-height:1.05}.brand small{color:var(--muted)}
+    .nav-label{margin:18px 10px 8px;color:#6544a0;font-size:12px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+    .nav{display:grid;gap:7px}.nav a{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:13px;color:#29213f;font-weight:650}
+    .nav a:hover,.nav a[aria-current="page"]{background:var(--lavender-2);color:#5b32a5}.nav svg{width:20px;height:20px;flex:none}
+    .sidebar-note{margin-top:auto;padding:18px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#fbf8ff,#f1e9fb)}
+    .sidebar-note strong{display:block;margin-bottom:6px}.sidebar-note span{color:var(--muted);font-size:14px}
+    .main{min-width:0}
+    .topbar{position:sticky;top:0;z-index:30;min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 34px;border-bottom:1px solid var(--line);background:rgba(250,247,253,.92);backdrop-filter:blur(16px)}
+    .top-title{display:flex;align-items:center;gap:13px}.top-title h1{margin:0;font-size:22px}.top-title p{margin:1px 0 0;color:var(--muted)}
+    .menu-button{display:none;width:46px;height:46px;border:1px solid var(--line);border-radius:14px;background:#fff;cursor:pointer}
+    .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .pill,.primary{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:0 16px;border:1px solid var(--line);border-radius:14px;background:#fff;font-weight:750;cursor:pointer}
+    .pill:hover{border-color:#bda9d7;background:#fbf8ff}.primary{border-color:transparent;background:var(--purple);color:#fff;box-shadow:0 8px 18px rgba(118,80,189,.2)}.primary:hover{background:var(--purple-deep)}
+    .status-dot{width:9px;height:9px;border-radius:50%;background:#a7a1ae}.status-dot.online{background:var(--green)}.status-dot.offline{background:#d65d62}
+    .content{padding:32px 38px 56px}
+    .welcome{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:26px}
+    .eyebrow{margin:0 0 8px;color:#7750b3;font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .welcome h2{margin:0;font-size:clamp(34px,4vw,54px);line-height:1.05;letter-spacing:-.04em}.welcome>div>p:last-child{margin:14px 0 0;color:var(--muted);font-size:18px}
+    .profile{display:flex;align-items:center;gap:10px;padding:8px 13px 8px 8px;border:1px solid var(--line);border-radius:16px;background:#fff}.avatar{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#c99bea;color:#fff;font-weight:900}
+    .grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(300px,.78fr);gap:24px}
+    .card{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+    .activity{padding:30px;min-height:445px;display:flex;flex-direction:column}
+    .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.card-head small{display:block;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.05em}.card-head h3{margin:6px 0 0;font-size:24px}.card-link{color:#7750b3;font-weight:800}
+    .summary{display:flex;gap:46px;margin-top:32px}.metric strong{display:block;font-size:25px}.metric span{color:var(--muted);font-size:14px}
+    .empty-chart{flex:1;min-height:220px;margin-top:28px;display:grid;place-items:center;border-radius:20px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 54px,#eee8f3 55px,#eee8f3 56px)}
+    .empty-chart div{max-width:420px;padding:20px;text-align:center;border-radius:18px;background:rgba(255,255,255,.92)}.empty-chart strong{display:block;font-size:20px}.empty-chart span{display:block;margin-top:7px;color:var(--muted)}
+    .courses{padding:26px}.course-list{display:grid;gap:14px;margin-top:22px}.course{display:grid;grid-template-columns:46px 1fr 24px;align-items:center;gap:13px;padding:16px;border-radius:18px;transition:transform .18s ease,box-shadow .18s ease}.course:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(54,35,80,.09)}.course.rose{background:var(--rose)}.course.lavender{background:#f0eaff}.course.peach{background:var(--peach)}.course-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:rgba(255,255,255,.78);font-size:22px}.course strong{display:block;line-height:1.25}.course small{display:block;margin-top:4px;color:var(--muted)}.arrow{font-size:24px}
+    .lower{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;margin-top:24px}.progress,.focus,.rhythm{padding:26px}.progress-row{margin-top:22px}.progress-row div:first-child{display:flex;justify-content:space-between;gap:10px}.track{height:10px;margin-top:9px;border-radius:99px;background:#eee8f3;overflow:hidden}.track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#7e54c8,#ec91b5)}
+    .continue{width:100%;margin-top:26px;justify-content:space-between;background:#17132b}.continue:hover{background:#2a2041}
+    .score{width:152px;height:152px;margin:22px auto 14px;display:grid;place-items:center;text-align:center;border-radius:50%;background:conic-gradient(#8b6be1 0deg,#ee9ab6 0deg,#eee8f3 0);position:relative}.score:after{content:"";position:absolute;inset:17px;border-radius:50%;background:#fff}.score div{position:relative;z-index:1}.score strong{display:block;font-size:34px}.score span{color:var(--muted);font-size:12px}
+    .rhythm{margin-top:24px}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin:22px 0}.week span{aspect-ratio:1;display:grid;place-items:center;border-radius:11px;background:#f0ebf4;color:#91899b;font-size:12px;font-weight:800}.rhythm>p{color:var(--muted)}
+    .quick{margin-top:24px;padding:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.quick a{padding:15px;border:1px solid var(--line);border-radius:16px;background:#fff;font-weight:750;text-align:center}.quick a:hover{border-color:#ad91d1;background:#fbf8ff}
+    .overlay{display:none}
+    @media(max-width:1100px){.shell{grid-template-columns:240px minmax(0,1fr)}.grid{grid-template-columns:1fr}.courses{grid-row:2}.course-list{grid-template-columns:repeat(3,1fr)}.course{grid-template-columns:42px 1fr}.course .arrow{display:none}.quick{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:820px){.shell{display:block}.sidebar{position:fixed;left:0;top:0;z-index:60;width:min(88vw,300px);transform:translateX(-105%);transition:transform .22s ease;box-shadow:20px 0 50px rgba(25,18,42,.18)}.sidebar.open{transform:translateX(0)}.overlay.open{display:block;position:fixed;inset:0;z-index:50;background:rgba(21,16,34,.34)}.menu-button{display:grid;place-items:center}.topbar{padding:12px 18px}.top-actions .pill span.label{display:none}.content{padding:24px 18px 44px}.welcome{align-items:center}.welcome .profile{display:none}.course-list{grid-template-columns:1fr}.lower{grid-template-columns:1fr}}
+    @media(max-width:560px){.top-title p,.top-actions .status-text{display:none}.top-title h1{font-size:19px}.top-actions{gap:6px}.pill,.primary{padding:0 12px}.content{padding-inline:12px}.welcome h2{font-size:36px}.activity,.courses,.progress,.focus,.rhythm{padding:21px}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric strong{font-size:21px}.metric span{font-size:12px}.quick{grid-template-columns:1fr;padding:16px}.card-head{align-items:center}.card-link{font-size:14px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#inhalt">Zum Inhalt springen</a>
+  <div class="overlay" id="overlay"></div>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar" aria-label="Hauptnavigation">
+      <a class="brand" href="http://127.0.0.1:3210/">
+        <span class="brand-mark">DA</span>
+        <span><strong>Deutsch-<br>Automatik</strong><small>Messbare tägliche Sprachpraxis</small></span>
+      </a>
+      <p class="nav-label">Tägliche Praxis</p>
+      <nav class="nav">
+        <a aria-current="page" href="http://127.0.0.1:3210/"><span>⌂</span> Startseite</a>
+        <a href="http://127.0.0.1:3210/heute"><span>◷</span> Heutiges Training</a>
+        <a href="http://127.0.0.1:3210/studio"><span>◯</span> Gesprächsstudio</a>
+      </nav>
+      <p class="nav-label">Lernwege</p>
+      <nav class="nav">
+        <a href="http://127.0.0.1:3210/grammatik"><span>◎</span> Grammatik-Labor</a>
+        <a href="http://127.0.0.1:3210/ressourcen"><span>▱</span> Lernressourcen</a>
+        <a href="http://127.0.0.1:3210/fertigkeiten"><span>▤</span> Integrierte Fertigkeiten</a>
+      </nav>
+      <p class="nav-label">Lernnachweise</p>
+      <nav class="nav">
+        <a href="http://127.0.0.1:3210/fortschritt"><span>↗</span> Fortschritt</a>
+        <a href="http://127.0.0.1:3210/wiederholungen"><span>↻</span> Wiederholungen</a>
+        <a href="http://127.0.0.1:3210/fehler"><span>!</span> Fehler und Reparaturen</a>
+        <a href="http://127.0.0.1:3210/pdf-reader"><span>▣</span> Notizbuch & PDF</a>
+      </nav>
+      <p class="nav-label">App und Einstellungen</p>
+      <nav class="nav"><a href="http://127.0.0.1:3210/einstellungen"><span>⚙</span> Einstellungen</a></nav>
+      <div class="sidebar-note"><strong>Ein ruhiger nächster Schritt</strong><span>Beginne mit dem heutigen Training. Die App führt dich danach weiter.</span></div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="top-title">
+          <button class="menu-button" id="menu" aria-label="Navigation öffnen" aria-expanded="false">☰</button>
+          <div><h1>Startseite</h1><p>Fortschritt und nächster Schritt</p></div>
+        </div>
+        <div class="top-actions">
+          <button class="pill" id="statusButton" type="button"><span class="status-dot" id="statusDot"></span><span class="status-text" id="statusText">App-Dienst prüfen</span></button>
+          <a class="pill" href="http://127.0.0.1:3210/support"><span>?</span><span class="label">Hilfe</span></a>
+          <a class="primary" href="http://127.0.0.1:3210/"><span>↗</span><span class="label">App öffnen</span></a>
+        </div>
+      </header>
+
+      <main class="content" id="inhalt">
+        <section class="welcome">
+          <div><p class="eyebrow">Persönliches Lern-Dashboard</p><h2 id="greeting">Willkommen, Lernende</h2><p>Kleine, messbare Übungen machen Deutsch zu einer sicher anwendbaren Fertigkeit.</p></div>
+          <a class="profile" href="http://127.0.0.1:3210/einstellungen"><span class="avatar">L</span><strong>Lernende</strong></a>
+        </section>
+
+        <div class="grid">
+          <div>
+            <section class="card activity" aria-labelledby="activityTitle">
+              <div class="card-head"><div><small>Lernaktivität</small><h3 id="activityTitle">Dein echter Fortschritt</h3></div><a class="card-link" href="http://127.0.0.1:3210/fortschritt">Details ansehen ↗</a></div>
+              <div class="summary"><div class="metric"><strong>0%</strong><span>heutige Mission</span></div><div class="metric"><strong>0</strong><span>automatische Themen</span></div><div class="metric"><strong>0%</strong><span>Sprechgenauigkeit</span></div></div>
+              <div class="empty-chart"><div><strong>Noch keine Lernaktivität</strong><span>Nach deiner ersten gespeicherten Übung zeigt die App hier ausschließlich echte Daten.</span></div></div>
+            </section>
+
+            <div class="lower">
+              <section class="card progress"><div class="card-head"><div><small>Aktuelles Niveau · A1</small><h3>Dein Lernfortschritt</h3></div><span>↗</span></div><div class="progress-row"><div><span>Bearbeitete Themen</span><strong>0%</strong></div><div class="track"><span style="width:0%"></span></div></div><div class="progress-row"><div><span>Heutige Übung</span><strong>0%</strong></div><div class="track"><span style="width:0%"></span></div></div><div class="progress-row"><div><span>Sprech-Nachweise</span><strong>0%</strong></div><div class="track"><span style="width:0%"></span></div></div><a class="primary continue" href="http://127.0.0.1:3210/heute">Heutiges Training beginnen <span>›</span></a></section>
+              <section class="card focus"><div class="card-head"><div><small>Lernnachweise</small><h3>Dein Fokuswert</h3></div><span>◉</span></div><div class="score"><div><strong>0%</strong><span>ausgewogener Fortschritt</span></div></div><p style="color:var(--muted);text-align:center">Der Wert entsteht erst aus gespeicherten Übungen, Beherrschung und freiem Sprechen.</p></section>
+            </div>
+          </div>
+
+          <aside>
+            <section class="card courses"><div class="card-head"><div><small>Heute lernen</small><h3>Lernweg auswählen</h3></div><a class="card-link" href="http://127.0.0.1:3210/ressourcen">↗</a></div><div class="course-list">
+              <a class="course rose" href="http://127.0.0.1:3210/ressourcen"><span class="course-icon">▤</span><span><strong>Deutschen Wortschatz erweitern</strong><small>A1–C2 · passende Ressourcen</small></span><span class="arrow">›</span></a>
+              <a class="course lavender" href="http://127.0.0.1:3210/grammatik"><span class="course-icon">◎</span><span><strong>Starke Grammatik aufbauen</strong><small>A1–C2 · verstehen und anwenden</small></span><span class="arrow">›</span></a>
+              <a class="course peach" href="http://127.0.0.1:3210/studio"><span class="course-icon">◯</span><span><strong>Gespräche sicher meistern</strong><small>Aufnehmen, auswerten, wiederholen</small></span><span class="arrow">›</span></a>
+            </div></section>
+            <section class="card rhythm"><div class="card-head"><div><small>Beständigkeit</small><h3>0-Tage-Rhythmus</h3></div><span>▦</span></div><div class="week"><span>M</span><span>D</span><span>M</span><span>D</span><span>F</span><span>S</span><span>S</span></div><p>Noch keine Wiederholung ist fällig. Beginne ohne Druck mit dem ersten Training.</p></section>
+          </aside>
+        </div>
+
+        <nav class="card quick" aria-label="Schnellzugriff"><a href="http://127.0.0.1:3210/heute">Heute trainieren</a><a href="http://127.0.0.1:3210/studio">Sprechen üben</a><a href="http://127.0.0.1:3210/wiederholungen">Wiederholen</a><a href="http://127.0.0.1:3210/einstellungen">Einstellungen</a></nav>
+      </main>
+    </div>
+  </div>
+  <script>
+    const APP='http://127.0.0.1:3210/';
+    const sidebar=document.getElementById('sidebar');
+    const overlay=document.getElementById('overlay');
+    const menu=document.getElementById('menu');
+    function closeMenu(){sidebar.classList.remove('open');overlay.classList.remove('open');menu.setAttribute('aria-expanded','false')}
+    menu.addEventListener('click',()=>{const open=!sidebar.classList.contains('open');sidebar.classList.toggle('open',open);overlay.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open))});
+    overlay.addEventListener('click',closeMenu);
+    document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu()});
+    const hour=new Date().getHours();
+    document.getElementById('greeting').textContent=(hour<11?'Guten Morgen':hour<18?'Guten Tag':'Guten Abend')+', Lernende';
+    async function checkService(){const dot=document.getElementById('statusDot');const text=document.getElementById('statusText');text.textContent='Wird geprüft …';dot.className='status-dot';try{await fetch(APP,{mode:'no-cors',cache:'no-store'});dot.className='status-dot online';text.textContent='App-Dienst bereit'}catch(error){dot.className='status-dot offline';text.textContent='App noch nicht gestartet'}}
+    document.getElementById('statusButton').addEventListener('click',checkService);
+    checkService();
+  </script>
+</body>
+</html>

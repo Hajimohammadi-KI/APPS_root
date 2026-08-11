@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "labels": {
+    "appName": "Einstellungen",
+    "appSubtitle": "Zentrale Einstellungen für alle Apps",
+    "groups": {
+      "personal": "Profil & Darstellung",
+      "work": "Arbeit, Planung & Fokus",
+      "services": "Dienste & Berechtigungen",
+      "organization": "Projekte, Ordner & Apps",
+      "data": "Daten & Sicherung"
+    },
+    "sections": {
+      "profile": "Profilbild und menschlicher Avatar",
+      "planning": "Persönliche Planparameter",
+      "accessibility": "ADHS- und Dyslexie-Einstellungen",
+      "permissions": "Berechtigungen und verbundene Dienste",
+      "organization": "Projekte und verschachtelte Ordner",
+      "sharing": "Von anderen Programmen aufrufen",
+      "backup": "Datensicherung"
+    },
+    "services": {
+      "google": "Google Workspace",
+      "calendar": "Google Calendar",
+      "gmail": "Gmail",
+      "drive": "Google Drive",
+      "openai": "OpenAI",
+      "deepl": "DeepL"
+    },
+    "folderLevels": {
+      "project": "Projekt",
+      "subproject": "Teilprojekt",
+      "topic": "Thema",
+      "material": "Material"
+    },
+    "navigation": {
+      "workspace": "Arbeitsbereich",
+      "calendar": "Kalender & Kapazität",
+      "calendarSubtitle": "Programm und Termine",
+      "programEntries": "Programmeinträge",
+      "mail": "E-Mails & Dokumente",
+      "mailSubtitle": "Selektiver Import",
+      "notes": "Notizen",
+      "notesSubtitle": "Automatisch gespeichert",
+      "connections": "Verbindungen",
+      "connectionsSubtitle": "Google & Einbettung",
+      "centralSettings": "Zentrale Einstellungen",
+      "centralSettingsSubtitle": "Für alle verbundenen Apps",
+      "standaloneApp": "Eigenständige App"
+    },
+    "cards": {
+      "centralSettings": "Zentrale Einstellungen",
+      "jsonImport": "JSON-Plan importieren",
+      "embed": "In andere Apps einbetten",
+      "integrationApi": "Sichere Integrations-API"
+    }
+  },
+  "profile": {
+    "displayName": "Elahe",
+    "language": "de",
+    "timezone": "Europe/Berlin",
+    "humanAvatar": true
+  },
+  "planning": {
+    "dailyCapacityMinutes": 240,
+    "weeklyGoalMinutes": 1200,
+    "workdayStart": "09:00",
+    "restDays": [0, 6]
+  },
+  "accessibility": {
+    "focusMode": false,
+    "largerText": false,
+    "generousLineHeight": true,
+    "readingRuler": false,
+    "reducedMotion": false
+  },
+  "permissions": {
+    "googleCalendarRead": true,
+    "gmailRead": true,
+    "googleDriveRead": false
+  },
+  "ai": {
+    "explanationProvider": "openai",
+    "translationProvider": "deepl",
+    "targetLanguage": "fa"
+  },
+  "organization": {
+    "nestedFolders": true,
+    "defaultProjectFolder": "Projekte",
+    "sources": [
+      {
+        "id": "github-study-tracker",
+        "name": "Study Tracker Repository",
+        "kind": "github",
+        "location": "https://github.com/OWNER/REPOSITORY",
+        "enabled": true
+      },
+      {
+        "id": "drive-articles",
+        "name": "Artikel aus Google Drive",
+        "kind": "google_drive",
+        "location": "https://drive.google.com/drive/folders/FOLDER_ID",
+        "enabled": true
+      },
+      {
+        "id": "local-research",
+        "name": "Lokale Forschungsunterlagen",
+        "kind": "local",
+        "location": "Forschungsprojekte",
+        "enabled": true
+      }
+    ]
+  },
+  "integration": {
+    "trustedOrigins": [],
+    "clients": [],
+    "notifyOnChange": true,
+    "links": {
+      "homeUrl": "https://werkzeug-study-tools.education-hajimohamm.chatgpt.site",
+      "settingsUrl": "https://werkzeug-study-tools.education-hajimohamm.chatgpt.site/settings",
+      "embedUrl": "https://werkzeug-study-tools.education-hajimohamm.chatgpt.site/settings?embed=1",
+      "sdkUrl": "https://werkzeug-study-tools.education-hajimohamm.chatgpt.site/einstellungen.js",
+      "apiBaseUrl": "https://werkzeug-study-tools.education-hajimohamm.chatgpt.site/api",
+      "helpUrl": "https://werkzeug-study-tools.education-hajimohamm.chatgpt.site/settings",
+      "googleCallbackUrl": "https://werkzeug-study-tools.education-hajimohamm.chatgpt.site/api/google/callback"
+    }
+  },
+  "updatedAt": ""
+}

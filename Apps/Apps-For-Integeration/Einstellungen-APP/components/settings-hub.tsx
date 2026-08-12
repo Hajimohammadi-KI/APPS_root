@@ -212,7 +212,7 @@ export default function SettingsHub({ settings, onChange, onToast, saveState, co
         </div>
         <div className="source-manager">
           <div className="source-toolbar">
-            <div><b>Projektquellen verbinden</b><small>Füge beliebig viele Quellen hinzu. Name, Typ und Adresse bleiben jederzeit bearbeitbar.</small></div>
+            <div><b>Projektquellen notieren</b><small>Reine Referenznotizen: Name, Typ und Adresse merken – ohne Anmeldung und ohne dass diese App Zugriff auf GitHub oder Google Drive erhält oder prüft.</small></div>
             <div className="source-add-actions">
               <button type="button" onClick={() => addSource("github")}>＋ GitHub</button>
               <button type="button" onClick={() => addSource("google_drive")}>＋ Google Drive</button>
@@ -235,7 +235,7 @@ export default function SettingsHub({ settings, onChange, onToast, saveState, co
               </div>
             </article>) : <div className="empty-sources"><span>▱</span><b>Noch keine Projektquelle eingetragen</b><p>Du kannst zwei, drei oder beliebig viele GitHub-Repositories, Drive-Ordner und lokale Ordner hinzufügen.</p></div>}
           </div>
-          <p className="source-privacy-note">Bei lokalen Ordnern wird nur der sichtbare Ordnername gespeichert. Eine Browser-Berechtigung wird ausschließlich beim Klick auf „Ordner auswählen“ angefragt und nicht exportiert.</p>
+          <p className="source-privacy-note">Bei GitHub- und Google-Drive-Einträgen wird nur der eingegebene Name bzw. Link als Notiz gespeichert – es gibt keine Anmeldung, keinen Datenzugriff und keine automatische Verbindungsprüfung, anders als bei den echten Verbindungen unter „Google, KI und Übersetzung“. Bei lokalen Ordnern wird nur der sichtbare Ordnername gespeichert. Eine Browser-Berechtigung wird ausschließlich beim Klick auf „Ordner auswählen“ angefragt und nicht exportiert.</p>
         </div>
       </>)}
 

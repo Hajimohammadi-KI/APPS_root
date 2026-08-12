@@ -160,15 +160,36 @@ Ohne echte Zugangsdaten zeigt die App Google, OpenAI, DeepL und Neon als
 **NICHT EINGERICHTET / NOT CONFIGURED**. Ein vorhandenes Formular oder ein
 voreingestellter Modellname ist kein Beleg für eine aktive Verbindung.
 
-Für Google Cloud lautet die lokale und in den Einstellungen editierbare
-Callback-URL:
+### Google-Verbindung: einmalige Einrichtung durch die Herausgeberin
+
+Lernende richten **kein** eigenes Google-Cloud-Projekt mehr ein und laden keine
+JSON-Datei herunter. Die Anmeldung läuft über PKCE mit einem einzigen
+mitgelieferten OAuth-Client; ein Client-Secret wird nicht mehr benötigt.
+
+Einmalig – nicht pro Lernender – in der Google Cloud Console anlegen:
+
+1. **APIs & Dienste → Anmeldedaten → OAuth-Client-ID erstellen**
+2. Anwendungstyp **Desktop-App** wählen (nicht „Web“). Desktop-Clients
+   erlauben jeden Loopback-Port und brauchen kein Secret.
+3. Die erzeugte Client-ID als `GOOGLE_CLIENT_ID` in `.env.local` eintragen.
+   `GOOGLE_CLIENT_SECRET` bleibt leer.
 
 ```text
-http://127.0.0.1:4312/api/google/callback
+GOOGLE_CLIENT_ID=<einmalige Desktop-Client-ID>
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=http://127.0.0.1:4312/api/google/callback
 ```
 
-Dieselbe URL muss in Google Cloud als autorisierte Redirect-URI eingetragen
-werden. Für OpenAI ist `gpt-5.6-sol` als Standardmodell für wissenschaftliche
+Bestehende Installationen mit einem selbst registrierten „Web“-Client
+funktionieren unverändert weiter: Ist ein Secret gesetzt, wird es weiterhin
+mitgesendet.
+
+Standardmäßig wird nur der Kalender-Scope angefragt. Drive und Gmail sind
+sensible bzw. eingeschränkte Scopes, die eine Google-Sicherheitsprüfung und
+einen deutlich abschreckenderen Zustimmungsdialog auslösen; sie werden nur
+angefragt, wenn eine Funktion sie ausdrücklich über `?services=` anfordert.
+
+Für OpenAI ist `gpt-5.6-sol` als Standardmodell für wissenschaftliche
 Erklärungen und Übersetzungen voreingestellt; der Modellname bleibt editierbar.
 
 Für den PDF-Reader muss außerdem die folgende JavaScript-Quelle eingetragen

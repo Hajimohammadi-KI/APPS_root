@@ -111,32 +111,6 @@ export function UserGuideButton({
   );
 }
 
-export function QuickStartGuide({
-  navigate,
-}: {
-  navigate: (screen: string) => void;
-}) {
-  return (
-    <section className="quick-start-guide" aria-labelledby="quick-start-title">
-      <div className="quick-start-heading">
-        <span className="quick-start-icon">
-          <CircleHelp aria-hidden />
-        </span>
-        <div>
-          <p>New here?</p>
-          <h2 id="quick-start-title">Start confidently in three steps</h2>
-          <span>Follow this order. Everything is saved automatically.</span>
-        </div>
-      </div>
-      <GuideSteps compact />
-      <Button className="quick-start-action" onClick={() => navigate("daily")}>
-        Start Step 1
-        <ArrowRight aria-hidden />
-      </Button>
-    </section>
-  );
-}
-
 function GuideSteps({ compact = false }: { compact?: boolean }) {
   return (
     <ol className="guide-step-list" data-compact={compact}>

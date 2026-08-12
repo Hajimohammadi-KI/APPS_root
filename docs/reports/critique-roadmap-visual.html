@@ -1,0 +1,683 @@
+<!-- Title: رودمپ اصلاح پنج اپ -->
+<title>رودمپ اصلاح پنج اپ</title>
+<style>
+  :root {
+    --bg: #eef1f3;
+    --surface: #ffffff;
+    --surface-2: #f6f8f9;
+    --line: #d7dee3;
+    --line-strong: #b9c4cc;
+    --text: #182430;
+    --text-dim: #56636f;
+    --accent: #1f4e79;
+    --accent-strong: #163a5c;
+    --accent-soft: #e4edf5;
+
+    --critical: #b3261e;
+    --critical-soft: #fbeae8;
+    --high: #a5570a;
+    --high-soft: #fbeedd;
+    --medium: #157a6e;
+    --medium-soft: #e1f3ef;
+    --long: #6b5ca5;
+    --long-soft: #efebf7;
+    --release: #1f4e79;
+    --release-soft: #e4edf5;
+
+    --shadow: 0 1px 2px rgba(24, 36, 48, 0.06), 0 8px 24px rgba(24, 36, 48, 0.06);
+    --dot: rgba(31, 78, 121, 0.07);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1620;
+      --surface: #172131;
+      --surface-2: #1c2739;
+      --line: #2b3a4c;
+      --line-strong: #3a4c62;
+      --text: #e7ecf1;
+      --text-dim: #97a5b3;
+      --accent: #6fa8dc;
+      --accent-strong: #8fbfe8;
+      --accent-soft: #1d3852;
+
+      --critical: #ff6b62;
+      --critical-soft: #3b1917;
+      --high: #f0a559;
+      --high-soft: #3a2712;
+      --medium: #4fd1be;
+      --medium-soft: #0f332e;
+      --long: #b6a6e0;
+      --long-soft: #2a2440;
+      --release: #6fa8dc;
+      --release-soft: #1d3852;
+
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 28px rgba(0, 0, 0, 0.3);
+      --dot: rgba(111, 168, 220, 0.08);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0f1620;
+    --surface: #172131;
+    --surface-2: #1c2739;
+    --line: #2b3a4c;
+    --line-strong: #3a4c62;
+    --text: #e7ecf1;
+    --text-dim: #97a5b3;
+    --accent: #6fa8dc;
+    --accent-strong: #8fbfe8;
+    --accent-soft: #1d3852;
+
+    --critical: #ff6b62;
+    --critical-soft: #3b1917;
+    --high: #f0a559;
+    --high-soft: #3a2712;
+    --medium: #4fd1be;
+    --medium-soft: #0f332e;
+    --long: #b6a6e0;
+    --long-soft: #2a2440;
+    --release: #6fa8dc;
+    --release-soft: #1d3852;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 28px rgba(0, 0, 0, 0.3);
+    --dot: rgba(111, 168, 220, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 22px 22px;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .page {
+    direction: rtl;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+    font-family: "Segoe UI", Tahoma, "Vazirmatn", "Noto Sans Arabic", sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+
+  .ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- header ---------- */
+
+  .eyebrow {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 5px 12px;
+    border-radius: 3px;
+  }
+
+  h1 {
+    font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.35;
+    margin: 18px 0 10px;
+    font-weight: 700;
+    text-wrap: balance;
+  }
+
+  .lede {
+    font-size: 17px;
+    line-height: 1.95;
+    color: var(--text-dim);
+    max-width: 62ch;
+    margin: 0 0 20px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    font-size: 14px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+
+  .meta-row strong { color: var(--text); font-weight: 600; }
+
+  /* ---------- kpi strip ---------- */
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .kpi {
+    background: var(--surface);
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .kpi-num {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent-strong);
+  }
+
+  .kpi-label {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ---------- section heads ---------- */
+
+  section > .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .section-note {
+    font-size: 13.5px;
+    color: var(--text-dim);
+  }
+
+  /* ---------- severity badges ---------- */
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 4px 11px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .badge::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+
+  .badge--critical { color: var(--critical); background: var(--critical-soft); }
+  .badge--high { color: var(--high); background: var(--high-soft); }
+  .badge--medium { color: var(--medium); background: var(--medium-soft); }
+  .badge--long { color: var(--long); background: var(--long-soft); }
+  .badge--release { color: var(--release); background: var(--release-soft); }
+
+  /* ---------- app cards ---------- */
+
+  .app-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .app-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .app-card-head {
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .app-name {
+    font-size: 17px;
+    font-weight: 700;
+    margin-inline-end: auto;
+  }
+
+  .app-meta {
+    font-size: 12.5px;
+    color: var(--text-dim);
+  }
+
+  .findings {
+    list-style: none;
+    margin: 0;
+    padding: 0 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .findings li {
+    font-size: 14.5px;
+    line-height: 1.9;
+    padding-inline-start: 16px;
+    position: relative;
+  }
+
+  .findings li::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.7em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+
+  .findings code {
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-size: 12.5px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 6px;
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+  }
+
+  details.more {
+    border-top: 1px solid var(--line);
+  }
+
+  details.more summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 12px 22px;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+
+  details.more summary::-webkit-details-marker { display: none; }
+
+  details.more summary::before {
+    content: "▸";
+    display: inline-block;
+    font-size: 10px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    details.more summary::before { transition: transform 0.15s ease; }
+  }
+
+  details.more[open] summary::before { transform: rotate(-90deg); }
+
+  details.more summary:focus-visible,
+  .app-card-head:has(+ .findings) summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  details.more .findings { padding-top: 4px; }
+
+  /* ---------- timeline ---------- */
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-bottom: 26px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+
+  .timeline {
+    position: relative;
+    padding-inline-end: 26px;
+    border-inline-end: 2px solid var(--line);
+  }
+
+  .phase {
+    position: relative;
+    padding-inline-end: 30px;
+    padding-bottom: 40px;
+  }
+
+  .phase:last-child { padding-bottom: 4px; }
+
+  .phase::before {
+    content: "";
+    position: absolute;
+    inset-inline-end: -7px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 3px solid var(--phase-color, var(--accent));
+  }
+
+  .phase-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .phase-title {
+    font-size: 16.5px;
+    font-weight: 700;
+  }
+
+  .phase-window {
+    font-size: 12.5px;
+    color: var(--phase-color, var(--accent));
+    font-weight: 600;
+    background: var(--phase-soft, var(--accent-soft));
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  .phase-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pill {
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 7px 13px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-inline-start: 3px solid var(--phase-color, var(--accent));
+    box-shadow: var(--shadow);
+  }
+
+  /* ---------- footer ---------- */
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-top: 22px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.9;
+  }
+
+  @media (max-width: 560px) {
+    .page { padding: 40px 16px 72px; }
+    .app-name { margin-inline-end: 0; }
+  }
+</style>
+
+<div class="page">
+
+  <header>
+    <span class="eyebrow">ENGINEERING AUDIT · <span class="ltr">2026-08-12</span></span>
+    <h1>رودمپ اصلاح پنج اپ</h1>
+    <p class="lede">
+      نقد فنی بر پایهٔ بررسی مستقیم کد — نه مستندات — برای پنج اپلیکیشن یادگیری زبان در مونوریپوی
+      <span class="ltr">APPS_root</span>. الگوی تکرارشونده: اسکریپت‌ها و مستندات یک لایه «سبزتر» از اجرای واقعی‌اند.
+    </p>
+    <div class="meta-row">
+      <span>دامنه: <strong>English · German · Tracker · PDF Reader · Settings</strong></span>
+      <span>روش: خواندن مستقیم کد، لاگ‌های اجرا، و نتایج تست ثبت‌شده</span>
+    </div>
+  </header>
+
+  <section aria-label="خلاصهٔ آماری">
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-num">۵</div>
+        <div class="kpi-label">اپ بررسی‌شده با کد واقعی، نه فقط مستندات</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">۴</div>
+        <div class="kpi-label">فایل تست در Tracker که هرگز اجرا نمی‌شوند</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">۲</div>
+        <div class="kpi-label">شکست/کرش تأییدشده در اجرای واقعی (نه فقط اسکریپت ایزوله)</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">۵</div>
+        <div class="kpi-label">فاز رودمپ، از این هفته تا سخت‌سازی نهایی</div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="نقد به تفکیک اپ">
+    <div class="section-head">
+      <h2>نقد به تفکیک اپ</h2>
+      <span class="section-note">سه یافتهٔ اول همیشه نمایان است؛ «توضیحات بیشتر» نکات مثبت را هم نشان می‌دهد</span>
+    </div>
+
+    <div class="app-cards">
+
+      <article class="app-card">
+        <div class="app-card-head">
+          <span class="app-name">English Automaticity</span>
+          <span class="app-meta ltr">web 3202 · api 4201 · no CI</span>
+          <span class="badge badge--critical">بحرانی</span>
+        </div>
+        <ul class="findings">
+          <li>آخرین اجرای Playwright <strong>شکست خورد</strong> — تست‌ها روی کد مردهٔ <code>dashboard-screen.tsx</code> اجرا می‌شوند که <code>app-shell.tsx:30,506</code> هرگز import نمی‌کند.</li>
+          <li>نام شخصی هاردکد‌شدهٔ <code>"Good morning, Elahe"</code> در <code>public/replacements/en/daily.html:31</code> برای هر بازدیدکننده ارسال می‌شود.</li>
+          <li>سه پیاده‌سازی موازی داشبورد روزانه هم‌زمان در کد وجود دارد: یکی مرده، یکی زنده، یکی استاتیک.</li>
+        </ul>
+        <details class="more">
+          <summary>توضیحات بیشتر</summary>
+          <ul class="findings">
+            <li>حلقهٔ یادگیری اصلی (Recall → Automate aloud → Transfer → مرور تأخیری) واقعاً با <code>localStorage</code> کار می‌کند — مصنوعی نیست (<code>automaticity.spec.ts</code>).</li>
+            <li>مصرف هدر هویتی محدود و امن است: فقط برای انتخاب کلید provider در <code>api/ai/route.ts:9-15</code>.</li>
+          </ul>
+        </details>
+      </article>
+
+      <article class="app-card">
+        <div class="app-card-head">
+          <span class="app-name">German Automaticity</span>
+          <span class="app-meta ltr">web 3210 · api 4210</span>
+          <span class="badge badge--critical">بحرانی</span>
+        </div>
+        <ul class="findings">
+          <li>اسکریپت <code>verify</code> سبز است، اما یک session واقعی dev کرش می‌کند: <code>EADDRINUSE</code> روی پورت ۴۲۱۰ به‌علاوهٔ پنیک Turbopack روی <code>teacher.css</code> که به <code>GET / 500</code> ختم می‌شود (<code>runtime-german.log:35-108</code>).</li>
+          <li><code>supabase/seed.sql</code> با ۲۱٬۲۱۹ خط و یک migration با ۱۳۷۹ خط کاملاً یتیم‌اند — هیچ <code>createClient</code>/<code>@supabase</code> در <code>apps/</code> استفاده نمی‌شود.</li>
+        </ul>
+        <details class="more">
+          <summary>توضیحات بیشتر</summary>
+          <ul class="findings">
+            <li>حلقهٔ یادگیری واقعاً پیاده‌سازی شده: مأموریت سه‌مرحله‌ای + دروازهٔ shadowing پنج‌مرحله‌ای + مرور با فاصلهٔ واقعی.</li>
+            <li>English و German عمداً کد مشترک ندارند؛ تطابق با اسکریپت diff بین دو ریپو کنترل می‌شود — تصمیم معماری، نه بدهی.</li>
+          </ul>
+        </details>
+      </article>
+
+      <article class="app-card">
+        <div class="app-card-head">
+          <span class="app-name">Cross Repository Tracker</span>
+          <span class="app-meta ltr">web 4312 · api 4313</span>
+          <span class="badge badge--critical">بحرانی — بیشترین ریسک</span>
+        </div>
+        <ul class="findings">
+          <li>چهار فایل تست — از جمله <code>safe-remote-url.test.ts</code> و <code>recall-scheduler.test.ts</code> از فیکس امنیتی هفتهٔ گذشته — هرگز در <code>bun test</code> اجرا نمی‌شوند (<code>package.json:27</code>).</li>
+          <li><code>db/schema.ts</code> صفر جدول برای EvidenceRecord/Retrieval/Evaluation دارد؛ پایپ‌لاین تز عملاً پیاده نشده.</li>
+          <li>فایل مرجع legacy (<code class="ltr">StudyPlan_..._V6_3_1.html</code>) در کل دیسک پیدا نشد — خودِ اپ در <code>RECOVERED-LEGACY-INVENTORY.md</code> این را تأیید می‌کند.</li>
+        </ul>
+        <details class="more">
+          <summary>توضیحات بیشتر</summary>
+          <ul class="findings">
+            <li><code class="ltr">typescript@5.9.3</code> و <code class="ltr">typescript7@7.0.2</code> هم‌زمان نصب‌اند (<code>package.json:66-67</code>) — مشخص نیست کدام کامپایلر مرجع است.</li>
+            <li>نام اپ («Cross Repository Code Intelligence») با scope واقعی — یک ابزار شخصی مطالعه/PDF — هم‌خوانی ندارد.</li>
+          </ul>
+        </details>
+      </article>
+
+      <article class="app-card">
+        <div class="app-card-head">
+          <span class="app-name">PDF Reader</span>
+          <span class="app-meta ltr">web/api 4322</span>
+          <span class="badge badge--high">بالا</span>
+        </div>
+        <ul class="findings">
+          <li>«صف مرور» پیاده نشده — تنها چیزی که هست سوییچ به تب یادداشت‌هاست (<code>app/page.tsx:869-874</code>)، نه یک صف واقعی.</li>
+          <li>موقعیت خواندن فقط در <code>localStorage</code> ذخیره می‌شود؛ <code>db/schema.ts</code> این اپ خالی است — بدون سینک بین‌دستگاه.</li>
+          <li>پراکسی AI/ترجمه به Tracker (۴۳۱۲) می‌رود، نه به Settings (۴۳۲۳) — هرگز از سکرت رمزنگاری‌شدهٔ Settings استفاده نمی‌کند.</li>
+        </ul>
+        <details class="more">
+          <summary>توضیحات بیشتر</summary>
+          <ul class="findings">
+            <li>باز کردن فایل دقیق، یادداشت/حاشیه‌نویسی، و خروجی (Word/Excel/تصویر/فلش‌کارت) واقعی و کامل پیاده شده‌اند.</li>
+          </ul>
+        </details>
+      </article>
+
+      <article class="app-card">
+        <div class="app-card-head">
+          <span class="app-name">Settings App</span>
+          <span class="app-meta ltr">web/api 4323</span>
+          <span class="badge badge--high">بالا</span>
+        </div>
+        <ul class="findings">
+          <li>هیچ مسیر GET/list برای فایل‌های آپلودشده وجود ندارد — <code>files/route.ts:4-21</code> فقط POST دارد.</li>
+          <li><code class="ltr">GitHub</code> یک provider واقعی نیست؛ فقط یک فیلد متنی آزاد بدون OAuth یا health-check است (<code>settings-hub.tsx:19-23</code>).</li>
+          <li>رمزنگاری سکرت (AES-256-GCM) و رفرش OAuth گوگل — دو بحرانی‌ترین مسیر امنیتی — صفر پوشش تست دارند.</li>
+        </ul>
+        <details class="more">
+          <summary>توضیحات بیشتر</summary>
+          <ul class="findings">
+            <li>Google/OpenAI/DeepL واقعاً و زنده تست می‌شوند (<code>lib/provider-tests.ts:15-56</code>)؛ سکرت‌ها در D1 رمزنگاری‌شده ذخیره می‌شوند.</li>
+          </ul>
+        </details>
+      </article>
+
+    </div>
+  </section>
+
+  <section aria-label="رودمپ رفع عیب">
+    <div class="section-head">
+      <h2>رودمپ رفع عیب</h2>
+      <span class="section-note">پنج فاز، از فوری تا بلندمدت</span>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:var(--critical)"></span>مسدودکننده</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--high)"></span>بدهی معماری</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--medium)"></span>تکمیل ویژگی</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--long)"></span>بلندمدت/پژوهشی</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--release)"></span>سخت‌سازی نهایی</span>
+    </div>
+
+    <div class="timeline">
+
+      <div class="phase" style="--phase-color:var(--critical); --phase-soft:var(--critical-soft)">
+        <div class="phase-head">
+          <span class="phase-title">فاز ۱ — این هفته</span>
+          <span class="phase-window ltr">2026-08-12 → 08-15</span>
+        </div>
+        <div class="phase-items">
+          <span class="pill">وصل ۴ فایل تست گمشدهٔ Tracker به <code class="ltr">bun test</code></span>
+          <span class="pill">رفع کرش German: <code class="ltr">EADDRINUSE</code> + <code class="ltr">teacher.css</code></span>
+          <span class="pill">حذف نام هاردکد «Elahe» از <code class="ltr">daily.html</code></span>
+          <span class="pill">تصمیم دربارهٔ <code class="ltr">dashboard-screen.tsx</code> مرده در English</span>
+        </div>
+      </div>
+
+      <div class="phase" style="--phase-color:var(--high); --phase-soft:var(--high-soft)">
+        <div class="phase-head">
+          <span class="phase-title">فاز ۲ — ۲ تا ۴ هفته</span>
+          <span class="phase-window ltr">08-17 → 09-07</span>
+        </div>
+        <div class="phase-items">
+          <span class="pill">یکی‌کردن <code class="ltr">safe-remote-url.ts</code> در پکیج مشترک</span>
+          <span class="pill">یکی‌کردن <code class="ltr">model-config.ts</code> در پکیج مشترک</span>
+          <span class="pill">افزودن CI حداقلی برای هر ۵ اپ</span>
+          <span class="pill">تعیین تکلیف Supabase SQL و <code class="ltr">legacy/</code> یتیم آلمانی</span>
+          <span class="pill">افزودن مسیر GET/list برای فایل‌های Settings</span>
+        </div>
+      </div>
+
+      <div class="phase" style="--phase-color:var(--medium); --phase-soft:var(--medium-soft)">
+        <div class="phase-head">
+          <span class="phase-title">فاز ۳ — ۱ تا ۲ ماه</span>
+          <span class="phase-window ltr">08-31 → 10-05</span>
+        </div>
+        <div class="phase-items">
+          <span class="pill">پیاده‌سازی صف مرور واقعی در PDF Reader</span>
+          <span class="pill">تصمیم: سینک سرور برای موقعیت خواندن یا مستندسازی محلی-فقط</span>
+          <span class="pill">تست‌نویسی برای رمزنگاری سکرت و رفرش OAuth</span>
+          <span class="pill">پیاده‌سازی واقعی GitHub یا حذف فیلد گمراه‌کننده</span>
+          <span class="pill">یکسان‌سازی TypeScript 7 در Tracker</span>
+        </div>
+      </div>
+
+      <div class="phase" style="--phase-color:var(--long); --phase-soft:var(--long-soft)">
+        <div class="phase-head">
+          <span class="phase-title">فاز ۴ — بلندمدت / پژوهشی</span>
+          <span class="phase-window ltr">08-17 → 09-07+</span>
+        </div>
+        <div class="phase-items">
+          <span class="pill">پیاده‌سازی pipeline EvidenceRecord → Retrieval → Evaluation</span>
+          <span class="pill">بازیابی یا جایگزینی رسمی فایل legacy گمشدهٔ Tracker</span>
+          <span class="pill">تأیید مرز اعتماد هدر <code class="ltr">oai-authenticated-user-*</code> در دیپلوی</span>
+        </div>
+      </div>
+
+      <div class="phase" style="--phase-color:var(--release); --phase-soft:var(--release-soft)">
+        <div class="phase-head">
+          <span class="phase-title">فاز ۵ — سخت‌سازی نهایی</span>
+          <span class="phase-window ltr">10-01 →</span>
+        </div>
+        <div class="phase-items">
+          <span class="pill">حذف مسیر <code class="ltr">client_secret</code> قدیمی OAuth پس از مهاجرت کامل</span>
+          <span class="pill">ممیزی امنیتی English/German برای الگوی دور زدن هویت</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    منبع: بررسی مستقیم کد در <span class="ltr">d:\APPS_root</span> — نه صرفاً مستندات موجود. جزئیات کامل در
+    <span class="ltr">docs/roadmaps/CRITIQUE-AND-ROADMAP-2026-08-12.md</span> و
+    <span class="ltr">docs/reports/SECURITY-EVALUATION-2026-08-12.md</span>.
+  </footer>
+
+</div>

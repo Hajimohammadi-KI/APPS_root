@@ -8,8 +8,11 @@ const calendarRoute = await readFile(new URL("../app/api/google/calendar/route.t
 const reader = await readFile(new URL("../app/pdf-reader/page.tsx", import.meta.url), "utf8");
 const generator = await readFile(new URL("../scripts/generate-local-env.mjs", import.meta.url), "utf8");
 
-test("Google one-click OAuth requests Calendar and Drive and returns to the calling page", () => {
-  assert.match(authRoute, /calendar,drive/);
+test("Google one-click OAuth defaults to Calendar only and returns to the calling page", () => {
+  // Drive and Gmail are sensitive/restricted scopes that trigger a Google
+  // security assessment and a far more alarming consent screen, so they are
+  // no longer part of the default. Callers that need them ask explicitly.
+  assert.match(authRoute, /"services"\) \|\| "calendar"/);
   assert.match(authRoute, /calendar\.events/);
   assert.match(authRoute, /drive\.readonly/);
   assert.match(authRoute, /include_granted_scopes/);
@@ -18,6 +21,24 @@ test("Google one-click OAuth requests Calendar and Drive and returns to the call
   assert.match(callbackRoute, /safeReturnTo/);
   assert.match(callbackRoute, /werkzeug_google_return/);
   assert.match(callbackRoute, /target\.searchParams\.set\("google", result\)/);
+});
+
+test("the connect flow uses PKCE so no per-learner client secret is needed", () => {
+  assert.match(authRoute, /code_challenge_method/);
+  assert.match(authRoute, /S256/);
+  assert.match(authRoute, /werkzeug_google_verifier/);
+  // The gate must not demand a client secret any more.
+  assert.doesNotMatch(authRoute, /!client\.clientSecret/);
+  assert.match(callbackRoute, /code_verifier/);
+  // A secret is still forwarded when a legacy Web client provides one.
+  assert.match(callbackRoute, /client\.clientSecret \? \{ client_secret/);
+  assert.match(callbackRoute, /werkzeug_google_verifier/);
+});
+
+test("the over-broad cloud-platform scope is not requested", () => {
+  // `cloud-platform` would grant this app full control of the learner's
+  // entire Google Cloud account; translation needs only cloud-translation.
+  assert.doesNotMatch(authRoute, /auth\/cloud-platform/);
 });
 
 test("the PDF Reader uses verified Google service status and the Calendar API", () => {

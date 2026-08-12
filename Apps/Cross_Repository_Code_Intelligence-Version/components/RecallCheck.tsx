@@ -14,7 +14,7 @@ import { useRecallEntries } from '@/lib/recall/useRecallEntries';
 import type { ConfidenceLevel } from '@/lib/recall/types';
 
 export function RecallCheck() {
-  const { dueToday, submitReview } = useRecallEntries();
+  const { dueToday, hydrated, submitReview } = useRecallEntries();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [recallFA, setRecallFA] = useState('');
   const [recallDE, setRecallDE] = useState('');
@@ -34,6 +34,11 @@ export function RecallCheck() {
     setRecallDE('');
     setShowOriginal(false);
   }
+
+  // Die Einträge liegen im localStorage und stehen erst nach dem ersten
+  // Client-Render bereit. Ohne diese Prüfung blitzt "keine Wiederholung"
+  // kurz auf, obwohl Konzepte fällig sind.
+  if (!hydrated) return null;
 
   if (dueToday.length === 0) {
     return (

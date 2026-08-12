@@ -144,9 +144,12 @@ export async function getProviderSecretForRequest<T>(request: Request, provider:
     const apiKey = String(env.DEEPL_API_KEY || process.env.DEEPL_API_KEY);
     return { apiKey, tier: apiKey.endsWith(":fx") ? "free" : "pro" } as T;
   }
-  if (provider === "google" && (env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID) && (env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET)) return {
+  // The client secret is optional on purpose: a shipped "Desktop app" client
+  // uses PKCE and has no secret, which is what lets a learner connect Google
+  // without ever creating their own Google Cloud project.
+  if (provider === "google" && (env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID)) return {
     clientId: String(env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID),
-    clientSecret: String(env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET),
+    clientSecret: String(env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET || ""),
     redirectUri: String(env.GOOGLE_REDIRECT_URI || process.env.GOOGLE_REDIRECT_URI || ""),
   } as T;
   return null;

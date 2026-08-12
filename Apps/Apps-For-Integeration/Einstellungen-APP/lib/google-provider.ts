@@ -1,7 +1,11 @@
 import { deleteProviderSecret, getProviderSecret, getProviderSecretForRequest, saveProviderSecret, updateProviderState } from "./provider-secrets";
 import { requestOwner } from "./server-user";
 
-export type GoogleClientConfig = { clientId: string; clientSecret: string; redirectUri?: string };
+/**
+ * `clientSecret` is empty for a shipped Desktop/PKCE client and only set for
+ * legacy installations that registered their own Google Cloud "Web" client.
+ */
+export type GoogleClientConfig = { clientId: string; clientSecret?: string; redirectUri?: string };
 export type GoogleTokens = { accessToken: string; refreshToken?: string; expiresAt: number; scope?: string; tokenType?: string };
 
 async function safeJson(response: Response) {
@@ -33,7 +37,12 @@ export async function googleAccessToken(request: Request) {
     const response = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ client_id: client.clientId, client_secret: client.clientSecret, refresh_token: tokens.refreshToken, grant_type: "refresh_token" }),
+      body: new URLSearchParams({
+        client_id: client.clientId,
+        ...(client.clientSecret ? { client_secret: client.clientSecret } : {}),
+        refresh_token: tokens.refreshToken,
+        grant_type: "refresh_token",
+      }),
       signal: AbortSignal.timeout(12000),
     });
     const data = await safeJson(response);
@@ -104,4 +113,3 @@ export async function disconnectGoogle(request: Request) {
   await deleteProviderSecret(owner, "google_tokens");
   await updateProviderState(owner, "google", "untested", { account: "", services: {}, message: "" }, null);
 }
-

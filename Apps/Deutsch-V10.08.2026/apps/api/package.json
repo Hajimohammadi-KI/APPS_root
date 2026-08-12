@@ -6,9 +6,9 @@
   "type": "module",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "bun --watch src/main.ts",
+    "dev": "bun scripts/check-port.mjs && bun --watch src/main.ts",
     "build": "node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
-    "start": "bun dist/main.js",
+    "start": "bun scripts/check-port.mjs && bun dist/main.js",
     "lint": "biome lint src test",
     "typecheck": "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.json",
     "test": "bun test",

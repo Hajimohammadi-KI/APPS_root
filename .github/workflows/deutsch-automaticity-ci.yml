@@ -1,13 +1,21 @@
-name: CI
+name: German Automaticity CI
 
 on:
-  pull_request:
   push:
     branches:
       - main
+    paths:
+      - "Apps/Deutsch-V10.08.2026/**"
+  pull_request:
+    paths:
+      - "Apps/Deutsch-V10.08.2026/**"
 
 permissions:
   contents: read
+
+defaults:
+  run:
+    working-directory: Apps/Deutsch-V10.08.2026
 
 jobs:
   verify:

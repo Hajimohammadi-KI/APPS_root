@@ -1,5 +1,6 @@
+import { MAX_PDF_BYTES, TOO_LARGE_MESSAGE as TOO_LARGE, readCapped } from "../../../../lib/safe-remote-url";
+
 const DRIVE_ID = /^[a-zA-Z0-9_-]{10,200}$/;
-const MAX_PDF_BYTES = 50 * 1024 * 1024;
 
 export async function GET(request: Request) {
   try {
@@ -18,9 +19,9 @@ export async function GET(request: Request) {
       );
     }
     const length = Number(response.headers.get("content-length") || 0);
-    if (length > MAX_PDF_BYTES) return Response.json({ message: "Die PDF ist größer als 50 MB." }, { status: 413 });
-    const bytes = await response.arrayBuffer();
-    if (bytes.byteLength > MAX_PDF_BYTES) return Response.json({ message: "Die PDF ist größer als 50 MB." }, { status: 413 });
+    if (length > MAX_PDF_BYTES) return Response.json({ message: TOO_LARGE }, { status: 413 });
+    const bytes = await readCapped(response);
+    if (!bytes) return Response.json({ message: TOO_LARGE }, { status: 413 });
     const signature = new TextDecoder().decode(bytes.slice(0, 5));
     const contentType = response.headers.get("content-type") || "";
     if (signature !== "%PDF-" && !contentType.includes("application/pdf")) {

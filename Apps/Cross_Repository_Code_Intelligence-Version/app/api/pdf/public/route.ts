@@ -1,27 +1,9 @@
-const MAX_PDF_BYTES = 200 * 1024 * 1024;
-const MAX_REDIRECTS = 4;
-const BLOCKED_HOST = /^(?:localhost|0\.0\.0\.0|127(?:\.\d{1,3}){3}|10(?:\.\d{1,3}){3}|169\.254(?:\.\d{1,3}){2}|192\.168(?:\.\d{1,3}){2}|::1)$/i;
+import { MAX_PDF_BYTES, TOO_LARGE_MESSAGE as TOO_LARGE, readCapped, safeRemotePdfUrl } from "../../../../lib/safe-remote-url";
 
-function safePublicPdfUrl(value: string) {
-  const url = new URL(value);
-  const trustedLocalMaterial = url.protocol === "http:"
-    && url.hostname === "127.0.0.1"
-    && url.port === "3199"
-    && url.pathname.startsWith("/api/materials/");
-  if ((!trustedLocalMaterial && url.protocol !== "https:") || url.username || url.password) {
-    throw new Error("invalid-url");
-  }
-  const host = url.hostname.toLowerCase();
-  if (
-    !trustedLocalMaterial && (BLOCKED_HOST.test(host)
-    || host.endsWith(".local")
-    || host.endsWith(".internal")
-    || /^172\.(?:1[6-9]|2\d|3[01])\./.test(host))
-  ) {
-    throw new Error("private-url");
-  }
-  return url;
-}
+const MAX_REDIRECTS = 4;
+
+/** The tracker may also load its own locally served study materials. */
+const safePublicPdfUrl = (value: string) => safeRemotePdfUrl(value, { allowLocalMaterial: true });
 
 async function fetchPublicPdf(initialUrl: URL) {
   let url = initialUrl;
@@ -57,11 +39,11 @@ export async function GET(request: Request) {
     }
     const length = Number(response.headers.get("content-length") || 0);
     if (length > MAX_PDF_BYTES) {
-      return Response.json({ message: "Die PDF ist größer als 200 MB." }, { status: 413 });
+      return Response.json({ message: TOO_LARGE }, { status: 413 });
     }
-    const bytes = await response.arrayBuffer();
-    if (bytes.byteLength > MAX_PDF_BYTES) {
-      return Response.json({ message: "Die PDF ist größer als 200 MB." }, { status: 413 });
+    const bytes = await readCapped(response);
+    if (!bytes) {
+      return Response.json({ message: TOO_LARGE }, { status: 413 });
     }
     if (new TextDecoder().decode(bytes.slice(0, 5)) !== "%PDF-") {
       return Response.json(

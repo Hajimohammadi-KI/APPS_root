@@ -5,8 +5,8 @@
     "skill": "Sprechen",
     "category": "Persönliches",
     "topic": "Sich vorstellen",
-    "task": "Sprich über sich vorstellen. Bilde vier kurze Sätze und stelle eine Frage.",
-    "modelAnswer": "Ich möchte über sich vorstellen sprechen. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
+    "task": "Sprich darüber, wie man sich vorstellt. Bilde vier kurze Sätze und stelle eine Frage.",
+    "modelAnswer": "Ich möchte darüber sprechen, wie man sich vorstellt. Das gehört zu meinem Alltag. Ich habe damit Erfahrung. Was denkst du darüber?",
     "targetGrammar": "A1"
   },
   {
@@ -305,8 +305,8 @@
     "skill": "Diskutieren",
     "category": "Medien",
     "topic": "Soziale Medien im Alltag",
-    "task": "Äußere deine Meinung zu soziale medien im alltag, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
-    "modelAnswer": "Meiner Meinung nach hat soziale medien im alltag Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
+    "task": "Äußere deine Meinung zu sozialen Medien im Alltag, nenne einen Vorteil, einen Nachteil und ein persönliches Beispiel.",
+    "modelAnswer": "Meiner Meinung nach haben soziale Medien im Alltag Vor- und Nachteile. Ein Vorteil ist, dass es den Alltag erleichtern kann. Ein Nachteil besteht darin, dass neue Probleme entstehen können. Das habe ich zum Beispiel beim Lernen erlebt.",
     "targetGrammar": "B1"
   },
   {

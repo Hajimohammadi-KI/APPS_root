@@ -49,9 +49,9 @@ export const b1Explanations = defineExplanations({
     memoryTip:
       "Setze einen Punkt in der Vergangenheit; alles, was davor fertig war, steht im Plusquamperfekt.",
   },
-  "Relativsätze Nominativ/Akkusativ": {
+  "Relativsätze Nominativ/Akkusativ Vertiefung": {
     overview:
-      "Relativsätze beschreiben ein Bezugsnomen genauer. Das Relativpronomen übernimmt im Nebensatz eine Satzfunktion; Genus und Numerus kommen vom Bezugsnomen, der Kasus vom Relativsatz.",
+      "Diese Einheit vertieft die Relativsätze im Nominativ aus A2 und ergänzt den Akkusativ. Das Relativpronomen übernimmt im Nebensatz eine Satzfunktion; Genus und Numerus kommen vom Bezugsnomen, der Kasus vom Relativsatz.",
     formation: [
       "Nominativ: der/die/das/die: Das ist der Mann, der hier arbeitet.",
       "Akkusativ: den/die/das/die: Das ist der Mann, den ich kenne.",
@@ -284,9 +284,9 @@ export const b1Explanations = defineExplanations({
     memoryTip:
       "Des und eines rufen bei Maskulinum und Neutrum fast immer ein zusätzliches -(e)s am Nomen.",
   },
-  "Adjektivdeklination Grundlagen": {
+  "Adjektivdeklination Wiederholung und Erweiterung": {
     overview:
-      "Ein Adjektiv vor einem Nomen trägt eine Endung. Sie zeigt gemeinsam mit Artikel und Nomen Genus, Numerus und Kasus.",
+      "Diese Einheit wiederholt die Adjektivendungen nach Artikeln aus A2 und erweitert sie auf Adjektive ohne Artikel. Ein Adjektiv vor einem Nomen trägt eine Endung, die gemeinsam mit Artikel und Nomen Genus, Numerus und Kasus zeigt.",
     formation: [
       "Nach bestimmtem Artikel meist schwach: der gute Film, den guten Film, die gute Idee.",
       "Nach ein-Wörtern gemischt: ein guter Film, einen guten Film, eine gute Idee.",

@@ -27,7 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAppStore, recalculateMastery } from "@/features/store/app-store";
 import {
   analyzePresentPerfect,
-  practiceAnswerMatches,
+  evaluatePracticeAnswer,
   type AutomaticityAnalysis,
 } from "@/lib/automaticity-analysis";
 import { evaluateResponse } from "@/lib/assessment";
@@ -293,7 +293,10 @@ export function AutomaticityScreen({
 
   function checkPractice() {
     const results = answers.map((answer, index) =>
-      practiceAnswerMatches(answer, exercises[index]?.expected ?? ""),
+      evaluatePracticeAnswer(answer, {
+        prompt: exercises[index]?.prompt ?? "",
+        expected: exercises[index]?.expected ?? "",
+      }),
     );
     setCheckedAnswers(results);
     const score = Math.round(

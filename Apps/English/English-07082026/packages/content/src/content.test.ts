@@ -12,6 +12,8 @@ import {
   INTEGRATED_SKILLS,
   buildAutomaticitySteps,
   integratedSkillsLevels,
+  ensureSixExercises,
+  repairMislabeledResourceLinks,
 } from "./index";
 import { repairGrammarUnitLinks } from "./resource-links";
 
@@ -202,27 +204,58 @@ describe("legacy content parity", () => {
   test("adds the researched curriculum without changing the legacy core", () => {
     expect(grammarUnits).toHaveLength(112);
     expect(grammarUnits.slice(0, legacyGrammarUnits.length)).toEqual(
-      legacyGrammarUnits.map((unit) =>
-        repairGrammarUnitLinks({
-          ...unit,
-          exercises: [
-            ...unit.exercises,
-            [
-              `State the rule for “${unit.title}” from memory.`,
-              unit.recallTest,
-            ],
-            [
-              `Write the transfer model for “${unit.title}” accurately.`,
-              unit.transferTest,
-            ],
-            [
-              `Repair this common error for “${unit.title}” and write the full corrected sentence.`,
-              unit.repairTest,
-            ],
-          ],
-        }),
-      ),
+      legacyGrammarUnits
+        .map(ensureSixExercises)
+        .map(repairGrammarUnitLinks)
+        .map(repairMislabeledResourceLinks),
     );
+  });
+
+  test("never serves a fragment or leaked-template answer as a completed exercise", () => {
+    for (const unit of grammarUnits) {
+      for (const [prompt, answer] of unit.exercises) {
+        const trimmed = answer.trim();
+        expect(trimmed, `${unit.title}: ${prompt}`).not.toMatch(/\.\.\.\s*$/);
+        expect(trimmed, `${unit.title}: ${prompt}`).not.toMatch(
+          /^\s*(?:vs|\/)\s+/i,
+        );
+      }
+    }
+  });
+
+  test("fixes the specific malformed legacy exercises found in the content audit", () => {
+    const cohesion = grammarUnits.find(
+      (unit) => unit.title === "Advanced cohesion",
+    );
+    const register = grammarUnits.find(
+      (unit) => unit.title === "Register control",
+    );
+    expect(cohesion).toBeDefined();
+    expect(register).toBeDefined();
+
+    expect(cohesion!.exercises.map(([, answer]) => answer)).not.toContain(
+      "This limitation...",
+    );
+    expect(
+      register!.exercises.map(([prompt]) => prompt),
+    ).not.toContain("Type another model sentence: vs What do you mean?");
+    expect(register!.exercises.map(([, answer]) => answer)).not.toContain(
+      "vs What do you mean?",
+    );
+    expect(cohesion!.exercises.length).toBeGreaterThanOrEqual(6);
+    expect(register!.exercises.length).toBeGreaterThanOrEqual(6);
+  });
+
+  test("points mislabeled C2 units at genuinely advanced resources instead of B2 pages", () => {
+    for (const title of ["Advanced cohesion", "Genre-specific grammar"]) {
+      const unit = grammarUnits.find((candidate) => candidate.title === title);
+      expect(unit, title).toBeDefined();
+      for (const link of unit!.links) {
+        expect(link[1], title).not.toMatch(
+          /test-english\.com\/grammar-points\/b2\//,
+        );
+      }
+    }
   });
 
   test("replaces retired external links with current official resources", () => {
@@ -253,9 +286,18 @@ describe("legacy content parity", () => {
       0,
       legacyGrammarUnits.length,
     );
+    // These two C2 units were audited off this guarantee on purpose: their
+    // legacy links pointed at test-english.com/grammar-points/b2/... pages
+    // mislabeled as the "exact-topic" resource despite the unit being C2.
+    // See "points mislabeled C2 units at genuinely advanced resources...".
+    const correctedTitles = new Set([
+      "Advanced cohesion",
+      "Genre-specific grammar",
+    ]);
 
     for (const [index, legacyUnit] of legacyGrammarUnits.entries()) {
       expect(repairedLegacyUnits[index]?.title).toBe(legacyUnit.title);
+      if (correctedTitles.has(legacyUnit.title)) continue;
       expect(repairedLegacyUnits[index]?.links.map((link) => link[1])).toEqual(
         legacyUnit.links.map((link) => link[1]),
       );

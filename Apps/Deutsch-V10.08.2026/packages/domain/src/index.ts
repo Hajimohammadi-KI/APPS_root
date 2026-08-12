@@ -44,12 +44,14 @@ export {
   median,
   recordMasteryAttempt,
   recordMasteryReview,
+  recordVerifiedMasteryAttempt,
   setMasteryCriticalErrors,
   type MasteryAttempt,
   type MasteryMode,
   type MasteryRecord,
   type MasteryScores,
   type MasteryStatus,
+  type VerifiableMasteryAttempt,
 } from "./mastery";
 export {
   CEFR_LEVELS,

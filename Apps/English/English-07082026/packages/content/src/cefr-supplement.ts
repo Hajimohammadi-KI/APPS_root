@@ -527,7 +527,7 @@ const definitions: SupplementDefinition[] = [
       "https://learnenglish.britishcouncil.org/free-resources/grammar/c1/unreal-time",
   },
   {
-    level: "C1",
+    level: "B2",
     title: "Word order in phrasal verbs",
     rule:
       "Place noun objects according to whether a phrasal verb is separable, but put pronoun objects between a separable verb and its particle.",

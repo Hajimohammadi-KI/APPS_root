@@ -1324,8 +1324,8 @@
   },
   {
     "level": "B1",
-    "title": "Relativsätze Nominativ/Akkusativ",
-    "rule": "Relativpronomen richtet sich in Genus/Numerus nach dem Bezugswort und im Kasus nach seiner Rolle.",
+    "title": "Relativsätze Nominativ/Akkusativ Vertiefung",
+    "rule": "Vertiefe die Relativsätze im Nominativ aus A2 und ergänze den Akkusativ: Das Relativpronomen richtet sich in Genus/Numerus nach dem Bezugswort und im Kasus nach seiner Rolle.",
     "examples": [
       "Das ist der Mann, der mir hilft.",
       "Das ist der Mann, den ich sehe."
@@ -1349,22 +1349,22 @@
       [
         "Online explanation",
         "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze",
-        "Direkte Erklärung mit Regeln und Beispielen passend zu „Relativsätze Nominativ/Akkusativ“.",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Relativsätze Nominativ/Akkusativ Vertiefung“.",
         "explanation",
-        "Relativsätze Nominativ/Akkusativ"
+        "Relativsätze Nominativ/Akkusativ Vertiefung"
       ],
       [
         "Online exercises",
         "https://deutsch.lingolia.com/de/grammatik/satzbau/relativsaetze#uebungen",
-        "Direkte Übungen zum Grammatikbereich „Relativsätze Nominativ/Akkusativ“, ohne erneute Suche.",
+        "Direkte Übungen zum Grammatikbereich „Relativsätze Nominativ/Akkusativ Vertiefung“, ohne erneute Suche.",
         "exercise",
-        "Relativsätze Nominativ/Akkusativ"
+        "Relativsätze Nominativ/Akkusativ Vertiefung"
       ]
     ],
     "testAnswer": "Das ist der Mann, der mir hilft.",
     "recallTest": "Relativpronomen richtet sich in Genus/Numerus nach dem Bezugswort und im Kasus nach seiner Rolle.",
     "repairTest": "den ich sehe.",
-    "transferTest": "In einer neuen Situation kann ich Relativsätze Nominativ/Akkusativ korrekt verwenden."
+    "transferTest": "In einer neuen Situation kann ich Relativsätze Nominativ/Akkusativ Vertiefung korrekt verwenden."
   },
   {
     "level": "B1",
@@ -1758,8 +1758,8 @@
   },
   {
     "level": "B1",
-    "title": "Adjektivdeklination Grundlagen",
-    "rule": "Endung hängt von Artikeltyp, Kasus, Genus und Numerus ab.",
+    "title": "Adjektivdeklination Wiederholung und Erweiterung",
+    "rule": "Wiederhole die Endungen nach Artikeln aus A2 und erweitere sie auf Adjektive ohne Artikel: Die Endung hängt von Artikeltyp, Kasus, Genus und Numerus ab.",
     "examples": [
       "ein gutes Buch; der gute Kurs; mit einem guten Lehrer"
     ],
@@ -1774,7 +1774,7 @@
         "ein gutes Buch; der gute Kurs; mit einem guten Lehrer"
       ],
       [
-        "Erkläre die Regel: Adjektivdeklination Grundlagen",
+        "Erkläre die Regel: Adjektivdeklination Wiederholung und Erweiterung",
         "Endung hängt von Artikeltyp, Kasus, Genus und Numerus ab."
       ]
     ],
@@ -1782,22 +1782,22 @@
       [
         "Online explanation",
         "https://deutsch.lingolia.com/de/grammatik/adjektive/deklination",
-        "Direkte Erklärung mit Regeln und Beispielen passend zu „Adjektivdeklination Grundlagen“.",
+        "Direkte Erklärung mit Regeln und Beispielen passend zu „Adjektivdeklination Wiederholung und Erweiterung“.",
         "explanation",
-        "Adjektivdeklination Grundlagen"
+        "Adjektivdeklination Wiederholung und Erweiterung"
       ],
       [
         "Online exercises",
         "https://deutsch.lingolia.com/de/grammatik/adjektive/deklination#uebungen",
-        "Direkte Übungen zum Grammatikbereich „Adjektivdeklination Grundlagen“, ohne erneute Suche.",
+        "Direkte Übungen zum Grammatikbereich „Adjektivdeklination Wiederholung und Erweiterung“, ohne erneute Suche.",
         "exercise",
-        "Adjektivdeklination Grundlagen"
+        "Adjektivdeklination Wiederholung und Erweiterung"
       ]
     ],
     "testAnswer": "ein gutes Buch; der gute Kurs; mit einem guten Lehrer",
     "recallTest": "Endung hängt von Artikeltyp, Kasus, Genus und Numerus ab.",
     "repairTest": "ein gutes Buch.",
-    "transferTest": "In einer neuen Situation kann ich Adjektivdeklination Grundlagen korrekt verwenden."
+    "transferTest": "In einer neuen Situation kann ich Adjektivdeklination Wiederholung und Erweiterung korrekt verwenden."
   },
   {
     "level": "B1",

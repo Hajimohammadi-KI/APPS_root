@@ -155,7 +155,11 @@ export function ReviewCenter() {
         inputText: answer.trim(),
         correctedText: result.corrected,
         targetHit: exact && result.targetHit,
-        verified: true,
+        // Mastery may only advance from evaluations that were actually
+        // confirmed online. Offline fallbacks (result.verified === false)
+        // still complete the review below, but must not count toward
+        // "stable"/"automatic" status.
+        verified: result.verified,
         accuracyScore: exact ? 100 : 40,
         ...(timedActive ? { latencyMs: (8 - secondsLeft) * 1_000 } : {}),
       });
@@ -412,6 +416,13 @@ export function ReviewCenter() {
                     </strong>
                     {report.changed && (
                       <p className="mt-1">Korrigiert: {report.corrected}</p>
+                    )}
+                    {!report.verified && (
+                      <p className="mt-1 text-muted-foreground">
+                        Diese Wiederholung wird gespeichert, zählt aber erst
+                        für deinen Automatisierungs-Fortschritt, sobald sie
+                        online bestätigt wurde.
+                      </p>
                     )}
                   </div>
                 )}

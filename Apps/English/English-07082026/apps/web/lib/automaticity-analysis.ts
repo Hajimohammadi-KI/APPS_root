@@ -75,6 +75,9 @@ const PRESENT_PERFECT = new RegExp(
 	"gi",
 );
 
+const WRONG_HAS_PATTERN = /\b(?:I|you|we|they)\s+has\b/i;
+const WRONG_HAVE_PATTERN = /\b(?:he|she|it)\s+have\b/i;
+
 function sentences(text: string): string[] {
 	return text
 		.split(/(?:[.!?]+|\n+)/)
@@ -97,7 +100,7 @@ export function analyzePresentPerfect(text: string): AutomaticityAnalysis {
 	const targetUses = countPresentPerfectUses(cleanText);
 	const issues: AutomaticityIssue[] = [];
 
-	const wrongHas = cleanText.match(/\b(?:I|you|we|they)\s+has\b/i);
+	const wrongHas = cleanText.match(WRONG_HAS_PATTERN);
 	if (wrongHas) {
 		issues.push({
 			code: "auxiliary_agreement",
@@ -107,7 +110,7 @@ export function analyzePresentPerfect(text: string): AutomaticityAnalysis {
 		});
 	}
 
-	const wrongHave = cleanText.match(/\b(?:he|she|it)\s+have\b/i);
+	const wrongHave = cleanText.match(WRONG_HAVE_PATTERN);
 	if (wrongHave) {
 		issues.push({
 			code: "auxiliary_agreement",
@@ -164,4 +167,99 @@ export function practiceAnswerMatches(
 	expected: string,
 ): boolean {
 	return normalizePracticeAnswer(value) === normalizePracticeAnswer(expected);
+}
+
+const PRACTICE_STOPWORDS = new Set([
+	"a", "an", "the", "to", "of", "in", "on", "at", "for", "and", "or", "but",
+	"is", "are", "was", "were", "i", "you", "he", "she", "it", "we", "they",
+	"this", "that", "these", "those", "my", "your", "his", "her", "its",
+	"our", "their", "be", "been", "being", "do", "does", "did", "not", "so",
+	"very", "just",
+]);
+
+// Exercises whose prompt asks the learner to transform, complete, or correct
+// a given sentence genuinely have more than one valid surface form (e.g.
+// "I have worked on this project since May" and "I've worked on this
+// project since May" are both correct). Exercises that ask the learner to
+// reproduce or fill in one specific model sentence do not — exact match
+// stays authoritative there.
+const OPEN_PRODUCTION_PROMPT = /^(?:Transform|Complete|Correct the sentence)\s*:/i;
+
+function expandContractions(text: string): string {
+	return text
+		.replace(/\bwon't\b/gi, "will not")
+		.replace(/\bcan't\b/gi, "cannot")
+		.replace(/n't\b/gi, " not")
+		.replace(/'ve\b/gi, " have")
+		.replace(/'re\b/gi, " are")
+		.replace(/'m\b/gi, " am");
+}
+
+function significantWords(text: string): Set<string> {
+	return new Set(
+		words(expandContractions(text))
+			.map((word) => word.toLowerCase())
+			.filter((word) => word.length > 2 && !PRACTICE_STOPWORDS.has(word)),
+	);
+}
+
+function extractPromptReference(prompt: string): string {
+	const match = prompt.match(/^(?:Transform|Complete|Correct the sentence)\s*:\s*(.+)$/i);
+	return match?.[1] ?? "";
+}
+
+/**
+ * Grades a controlled Grammar Lab answer without requiring verbatim
+ * reproduction of the single stored `expected` string. An exact
+ * (normalized) match is always accepted. For open-production prompts
+ * ("Transform:", "Complete:", "Correct the sentence:"), an answer is also
+ * accepted when it (a) contains the grammar marker introduced by the model
+ * answer relative to the prompt's source sentence, and (b) doesn't trip a
+ * known auxiliary-agreement error. Prompts that ask the learner to
+ * reproduce one specific model sentence (e.g. "Type the model sentence:")
+ * keep requiring an exact match, since they genuinely have one right form.
+ */
+export function evaluatePracticeAnswer(
+	answer: string,
+	exercise: { prompt: string; expected: string },
+): boolean {
+	if (practiceAnswerMatches(answer, exercise.expected)) return true;
+
+	const trimmedAnswer = answer.trim();
+	if (!trimmedAnswer) return false;
+	if (!OPEN_PRODUCTION_PROMPT.test(exercise.prompt.trim())) return false;
+
+	// Reject an answer that just repeats the wrong/original sentence given
+	// in the prompt unchanged.
+	const reference = extractPromptReference(exercise.prompt);
+	if (
+		reference &&
+		normalizePracticeAnswer(trimmedAnswer) === normalizePracticeAnswer(reference)
+	) {
+		return false;
+	}
+
+	if (
+		WRONG_HAS_PATTERN.test(trimmedAnswer) ||
+		WRONG_HAVE_PATTERN.test(trimmedAnswer)
+	) {
+		return false;
+	}
+
+	const expectedWords = significantWords(exercise.expected);
+	const referenceWords = significantWords(reference);
+	const markerWords = [...expectedWords].filter((word) => !referenceWords.has(word));
+	// If nothing distinguishes the model answer from the prompt's source
+	// sentence, fall back to requiring the full expected word set so the
+	// check never degrades into accepting anything.
+	const requiredWords = markerWords.length > 0 ? markerWords : [...expectedWords];
+	if (requiredWords.length === 0) return false;
+
+	const answerWords = significantWords(trimmedAnswer);
+	const hasAllMarkers = requiredWords.every((word) => answerWords.has(word));
+	if (!hasAllMarkers) return false;
+
+	const overlap = [...expectedWords].filter((word) => answerWords.has(word)).length;
+	const overlapRatio = expectedWords.size ? overlap / expectedWords.size : 0;
+	return overlapRatio >= 0.5;
 }

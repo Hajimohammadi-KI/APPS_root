@@ -19,8 +19,8 @@ import {
   getTodayKey,
   LEGACY_STORAGE_KEY,
   normalizeLearnerState,
-  recordMasteryAttempt,
   recordMasteryReview,
+  recordVerifiedMasteryAttempt,
   setMasteryCriticalErrors,
   type ErrorClass,
   type ErrorRecord,
@@ -748,27 +748,30 @@ export function LearnerStateProvider({
           id: createId("attempt"),
           date: new Date(now).toISOString(),
         };
+        // Only verified evaluations (e.g. confirmed online) may progress
+        // mastery. Unverified/offline attempts are still recorded for
+        // history and feedback, but recordVerifiedMasteryAttempt leaves the
+        // mastery record untouched so they can never grant real progress.
+        const nextMasteryForTopic = recordVerifiedMasteryAttempt(
+          current.mastery[attempt.topic],
+          {
+            mode: attempt.mode,
+            accuracyScore: attempt.accuracyScore,
+            targetHit: attempt.targetHit,
+            verified: attempt.verified === true,
+            ...(attempt.latencyMs === undefined
+              ? {}
+              : { latencyMs: attempt.latencyMs }),
+            createdAt: now,
+          },
+        );
         return {
           ...current,
           attempts: [...current.attempts, row].slice(-1_000),
           mastery:
-            attempt.verified === true
-              ? {
-                  ...current.mastery,
-                  [attempt.topic]: recordMasteryAttempt(
-                    current.mastery[attempt.topic],
-                    {
-                      mode: attempt.mode,
-                      accuracyScore: attempt.accuracyScore,
-                      targetHit: attempt.targetHit,
-                      ...(attempt.latencyMs === undefined
-                        ? {}
-                        : { latencyMs: attempt.latencyMs }),
-                      createdAt: now,
-                    },
-                  ),
-                }
-              : current.mastery,
+            nextMasteryForTopic === undefined
+              ? current.mastery
+              : { ...current.mastery, [attempt.topic]: nextMasteryForTopic },
         };
       });
     },

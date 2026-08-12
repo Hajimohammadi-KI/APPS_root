@@ -256,6 +256,34 @@ export function recordMasteryAttempt(
   });
 }
 
+export interface VerifiableMasteryAttempt extends MasteryAttempt {
+  /**
+   * Whether the underlying evaluation was actually confirmed correct (e.g.
+   * the online LanguageTool check succeeded) rather than a best-effort
+   * offline fallback or self-report. Only verified attempts may progress
+   * mastery toward "stable"/"automatic" status.
+   */
+  readonly verified: boolean;
+}
+
+/**
+ * Applies a mastery attempt only when its evaluation was verified. This is
+ * the single gate that decides whether practice counts toward the
+ * "Automaticity" mission: offline fallbacks and unverified self-reports
+ * still let the learner practice, but they must not silently advance
+ * mastery scores or unlock "stable"/"automatic" status. Unverified attempts
+ * leave the record unchanged (practice happens, nothing is graded).
+ */
+export function recordVerifiedMasteryAttempt(
+  current: MasteryRecord | undefined,
+  attempt: VerifiableMasteryAttempt,
+): MasteryRecord | undefined {
+  if (!attempt.verified) {
+    return current;
+  }
+  return recordMasteryAttempt(current, attempt);
+}
+
 export function recordMasteryReview(
   current: MasteryRecord | undefined,
   successful: boolean,

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -9,6 +10,7 @@ import {
   ChevronRight,
   Flame,
   MessageCircle,
+  Pencil,
   Search,
   Sparkles,
   Target,
@@ -23,6 +25,15 @@ import {
   getTodayKey,
 } from "@grammar/domain";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
+import { PlacementCheck } from "@/features/settings/placement-check";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const dayNames = ["M", "D", "M", "D", "F", "S", "S"];
 
@@ -34,7 +45,8 @@ function dateKey(daysAgo: number) {
 }
 
 export function Dashboard() {
-  const { state } = useLearnerState();
+  const { state, updateLearnerProfile } = useLearnerState();
+  const [levelSheetOpen, setLevelSheetOpen] = useState(false);
   const plan = getDailyPlan(state);
   const name = state.learner.displayName.trim() || "Lernende";
   const level = state.learningLevel ?? state.learner.selfDeclaredLevel ?? "A1";
@@ -239,6 +251,45 @@ export function Dashboard() {
                 <div>
                   <p>Aktuelles Niveau · {level}</p>
                   <h2>Dein Lernfortschritt</h2>
+                  <Sheet onOpenChange={setLevelSheetOpen} open={levelSheetOpen}>
+                    <SheetTrigger
+                      render={
+                        <button
+                          aria-label="Niveau ändern"
+                          className="home-v2-level-edit"
+                          type="button"
+                        />
+                      }
+                    >
+                      <Pencil aria-hidden="true" />
+                      Niveau ändern
+                    </SheetTrigger>
+                    <SheetContent
+                      className="w-[min(92vw,28rem)] overflow-y-auto sm:max-w-md"
+                      side="right"
+                    >
+                      <SheetHeader className="border-b px-5 py-5">
+                        <SheetTitle>Niveau ändern</SheetTitle>
+                        <SheetDescription>
+                          Dein aktuelles Niveau ist {level}. Der freiwillige
+                          Einstufungstest gibt dir eine Empfehlung – du
+                          entscheidest, ob du sie übernimmst.
+                        </SheetDescription>
+                      </SheetHeader>
+                      <div className="px-5 pb-5">
+                        <PlacementCheck
+                          onAccept={(nextLevel) => {
+                            updateLearnerProfile({
+                              selfDeclaredLevel: nextLevel,
+                              placementMode: "optional_test",
+                              placementCheckedAt: new Date().toISOString(),
+                            });
+                            setLevelSheetOpen(false);
+                          }}
+                        />
+                      </div>
+                    </SheetContent>
+                  </Sheet>
                 </div>
                 <TrendingUp />
               </div>

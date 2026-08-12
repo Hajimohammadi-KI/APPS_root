@@ -20,7 +20,7 @@
     "build:vercel": "bun run prepare:pdf-worker && next build",
     "build:api": "bun run --cwd apps/api build",
     "build:all": "bun run build && bun run build:api",
-    "start": "wrangler dev dist/server/index.js --config dist/server/wrangler.json --persist-to .wrangler/state --port 4312 --ip 127.0.0.1 --log-level warn",
+    "start": "node scripts/fix-wrangler-config.mjs && wrangler dev dist/server/index.js --config dist/server/wrangler.json --persist-to .wrangler/state --port 4312 --ip 127.0.0.1 --log-level warn",
     "start:web": "vinext start --hostname 127.0.0.1 --port 4312",
     "start:vercel": "next start",
     "start:api": "bun run --cwd apps/api start",
@@ -69,7 +69,7 @@
     "vercel": "58.7.1",
     "vinext": "0.0.50",
     "vite": "8.0.13",
-    "wrangler": "4.92.0"
+    "wrangler": "^4.122.0"
   },
   "type": "module",
   "displayName": "Cross Repository Code Intelligence Study Tracker – Version2"

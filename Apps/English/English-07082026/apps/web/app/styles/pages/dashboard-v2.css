@@ -50,6 +50,7 @@
 .home-v2-progress-track { height: 8px; margin-top: 8px; overflow: hidden; border-radius: 99px; background: #f0ebf2; }
 .home-v2-progress-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#ef9bb7,#9d84ed); transition: width 220ms cubic-bezier(.23,1,.32,1); }
 .home-v2-primary { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 20px; border: 0; border-radius: 14px; background: #171426; padding: 12px 14px; color: white; font-size: 12px; font-weight: 800; cursor: pointer; }
+.home-v2-level-check { margin-top: 16px; }
 .home-v2-score { display: grid; place-items: center; width: 130px; height: 130px; margin: 22px auto; border: 12px solid #efe9f7; border-top-color: #9a83ef; border-right-color: #f2a1ba; border-radius: 50%; }
 .home-v2-score strong { font-size: 27px; letter-spacing: -.04em; }
 .home-v2-score span { margin-top: -15px; color: var(--v2-muted); font-size: 9px; }

@@ -171,6 +171,26 @@
   font-size: 12px;
   font-weight: 800;
 }
+.home-v2-level-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #795b9d;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.home-v2-level-edit:hover {
+  color: #5d378f;
+}
+.home-v2-level-edit svg {
+  width: 14px;
+  height: 14px;
+}
 .home-v2-chart-summary {
   display: flex;
   flex-wrap: wrap;

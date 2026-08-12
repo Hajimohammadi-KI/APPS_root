@@ -26,9 +26,11 @@
   color: #655b72;
 }
 .teacher-back {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   gap: 0.45rem;
   align-items: center;
+  margin-bottom: 0.85rem;
   color: #6840a4;
   font-weight: 750;
 }
@@ -39,6 +41,8 @@
   height: 1.1rem;
 }
 .teacher-kicker {
+  display: block;
+  margin-bottom: 0.35rem;
   font-size: 0.76rem;
   letter-spacing: 0.14em;
   font-weight: 850;

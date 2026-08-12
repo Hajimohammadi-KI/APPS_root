@@ -13,7 +13,8 @@ import {
   Target,
   TrendingUp,
 } from "lucide-react";
-import { grammarUnits } from "@grammar/content";
+import { grammarUnits, type CefrLevel } from "@grammar/content";
+import { PlacementCheck } from "@/features/components/placement-check";
 import { currentDailyPlan, useAppStore } from "@/features/store/app-store";
 
 const dayNames = ["M", "T", "W", "T", "F", "S", "S"];
@@ -26,7 +27,7 @@ function dateKey(daysAgo: number) {
 }
 
 export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => void }) {
-  const { state } = useAppStore();
+  const { state, mutate } = useAppStore();
   const plan = currentDailyPlan(state);
   const name = state.learner.displayName.trim() || "Learner";
   const level = state.learner.selfDeclaredLevel ?? "A1";
@@ -54,6 +55,13 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
   const speakingAverage = state.sessions.length
     ? Math.min(100, Math.round(state.sessions.reduce((total, session) => total + Math.min(100, session.seconds), 0) / state.sessions.length))
     : 0;
+  const handlePlacementAccept = (nextLevel: CefrLevel) => {
+    mutate((draft) => {
+      draft.learner.selfDeclaredLevel = nextLevel;
+      draft.learner.placementMode = "optional_test";
+      draft.learner.placementCheckedAt = new Date().toISOString();
+    });
+  };
 
   const courses = [
     { title: "Expand Your English Vocabulary", detail: `${level} · ${dueReviews} reviews due`, tone: "rose", screen: "flashcards", icon: BookOpen },
@@ -113,6 +121,9 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
               <ProgressRow label="Today’s practice" value={todayProgress} />
               <ProgressRow label="Speaking evidence" value={Math.min(100, state.sessions.length * 10)} />
               <button className="home-v2-primary" type="button" onClick={() => navigate("daily")}>Continue today’s practice <ChevronRight /></button>
+              <div className="home-v2-level-check">
+                <PlacementCheck onAccept={handlePlacementAccept} />
+              </div>
             </article>
 
             <article className="home-v2-focus-card">

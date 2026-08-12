@@ -631,6 +631,11 @@ test("runs saved assessment, error repair, and daily gates", async ({
   expect(stored.errors[0].repairStatus).toBe("fixed");
 });
 
+// Unlike the "**/api/assessment" route mocked earlier in this file, this
+// test talks to a real, separately-running Nest API instance. It exists to
+// catch the case where that mock's response shape has quietly drifted from
+// what the actual backend returns — something a mocked-only test suite can
+// never detect on its own.
 test("connects to the Nest assessment API", async ({ request }) => {
   const apiUrl = process.env.E2E_API_URL ?? "http://localhost:4201";
   const health = await request.get(`${apiUrl}/api/health`);
@@ -653,10 +658,24 @@ test("connects to the Nest assessment API", async ({ request }) => {
   });
 });
 
+// Real Speech Synthesis (text-to-speech) and MediaRecorder/microphone APIs
+// need actual audio hardware and OS-level permission prompts that a headless
+// Playwright browser does not have, so before the page even loads this test
+// swaps both browser APIs out for small fake implementations (TestUtterance,
+// TestMediaRecorder, defined below). That lets it drive the full
+// "coach speaks -> learner records an answer -> a playable local recording
+// is produced" flow end-to-end and deterministically, without any real audio
+// device ever being involved.
 test("records a speaking answer and creates a playable local recording", async ({
   page,
 }) => {
   await page.addInitScript(() => {
+    // Fakes the browser's SpeechSynthesisUtterance, the object the app
+    // constructs to describe one line of speech (its text) and attaches
+    // lifecycle callbacks to (onstart/onend/onerror/onboundary), the same
+    // way it would with the real Web Speech API. This class only needs to
+    // hold those fields — the fake `speechSynthesis.speak()` further below
+    // is what actually "plays" it by calling `onstart`.
     class TestUtterance {
       lang = "";
       onboundary: (() => void) | null = null;
@@ -666,6 +685,12 @@ test("records a speaking answer and creates a playable local recording", async (
       rate = 1;
       constructor(public text: string) {}
     }
+    // Fakes the browser's MediaRecorder, which the app uses to capture the
+    // learner's spoken answer from the microphone. It mimics just enough of
+    // the real recording state machine (start/pause/resume/stop) and its
+    // event callbacks for the app to believe a genuine recording happened,
+    // finishing with a fake audio Blob so the app can build a real, playable
+    // <audio> element from it — which is what this test ultimately checks.
     class TestMediaRecorder {
       mimeType = "audio/webm";
       ondataavailable: ((event: BlobEvent) => void) | null = null;
@@ -673,6 +698,11 @@ test("records a speaking answer and creates a playable local recording", async (
       state: RecordingState = "inactive";
       private stopListeners: Array<() => void> = [];
 
+      // The real MediaRecorder supports both setting `recorder.onstop = fn`
+      // and calling `recorder.addEventListener("stop", fn)`. Since it's not
+      // certain which style the app (or a library it depends on) uses, this
+      // fake supports both: listeners registered here are queued and then
+      // invoked from stop() alongside onstop.
       addEventListener(
         type: string,
         listener: EventListenerOrEventListenerObject,
@@ -696,6 +726,10 @@ test("records a speaking answer and creates a playable local recording", async (
         this.state = "recording";
       }
 
+      // Simulate the recorder finishing: hand back one fake audio chunk via
+      // ondataavailable, exactly as the real API would when recording stops,
+      // then notify every stop listener so app code waiting on either
+      // `onstop` or `addEventListener("stop", ...)` moves on.
       stop() {
         this.state = "inactive";
         this.ondataavailable?.({
@@ -706,10 +740,19 @@ test("records a speaking answer and creates a playable local recording", async (
       }
     }
 
+    // Install the fakes onto the page's real global objects so the app code
+    // under test picks them up transparently. Object.defineProperty (rather
+    // than a plain `window.MediaRecorder = ...` assignment) is used because
+    // some of these globals are non-writable by default in the browser;
+    // `configurable: true` allows redefining them again on a later reload.
     Object.defineProperty(window, "MediaRecorder", {
       configurable: true,
       value: TestMediaRecorder,
     });
+    // Stub getUserMedia so the app's "ask for microphone access" step
+    // resolves immediately instead of hanging on a real OS permission
+    // prompt. The fake track only needs a no-op stop() because that's all
+    // the app calls on it once recording ends.
     Object.defineProperty(navigator, "mediaDevices", {
       configurable: true,
       value: {
@@ -722,6 +765,9 @@ test("records a speaking answer and creates a playable local recording", async (
       configurable: true,
       value: TestUtterance,
     });
+    // Fake speak() fires onstart synchronously, as if the coach's voice line
+    // started playing immediately, so the app's "speaking to you" state can
+    // proceed without waiting on real audio playback.
     Object.defineProperty(window, "speechSynthesis", {
       configurable: true,
       value: {
@@ -757,6 +803,9 @@ test("records a speaking answer and creates a playable local recording", async (
     page.getByText("Speaking to you", { exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Record answer" }).click();
+  // Switching learning paths mid-recording would orphan the in-progress
+  // capture, so the selector must be locked for the whole recording and
+  // freed again the instant it stops.
   await expect(page.getByLabel("Learning path")).toBeDisabled();
   await expect(
     page.getByText("Listening to you", { exact: true }),
@@ -764,6 +813,9 @@ test("records a speaking answer and creates a playable local recording", async (
   await page.getByRole("button", { name: "Stop recording" }).click();
   await expect(page.getByLabel("Learning path")).toBeEnabled();
 
+  // Stopping the fake recorder above produced a real Blob, so the app should
+  // have built an actual playable <audio> element from it, not just a
+  // "recording complete" message.
   await expect(page.locator("audio")).toBeVisible();
   await page.locator("audio").dispatchEvent("play");
   await expect(
@@ -776,6 +828,9 @@ test("records a speaking answer and creates a playable local recording", async (
     ),
   ).toBeVisible();
 
+  // Recording a second, "improved" attempt must start from a clean text
+  // field rather than carrying over the first attempt's transcript, so the
+  // two recordings stay clearly separate.
   await page
     .getByLabel("Conversation answer")
     .fill("This text belongs only to the first attempt.");

@@ -4,6 +4,20 @@ on:
   push:
     branches:
       - main
+    # This repo holds several independent apps in one monorepo. Scoping
+    # `paths` to just this app's directory means a push/PR that only touches
+    # a different app (e.g. the Cross Repository Tracker or Settings app)
+    # will not trigger this workflow at all — each app gets its own CI run,
+    # only when its own code actually changes.
+    #
+    # shared/check-duplicated-files.mjs is also watched even though it lives
+    # outside this app's folder: it guards a handful of security-critical
+    # files (like the SSRF guard lib/safe-remote-url.ts and the model-config
+    # this app shares with the Settings app) that are intentionally
+    # duplicated byte-for-byte across this app and the other two instead of
+    # living in one shared package. A change to that guard script itself
+    # should re-run this app's CI too, since it is one of the apps whose
+    # files it checks.
     paths:
       - "Apps/Apps-For-Integeration/Reader-PDF-App/**"
       - "shared/check-duplicated-files.mjs"
@@ -17,6 +31,11 @@ permissions:
 
 defaults:
   run:
+    # Every step below (install, lint, typecheck, test) runs with this
+    # directory as its cwd. This app is built and tested standalone, with
+    # its own package.json/lockfile — it is not part of a shared workspace
+    # root — so every command needs to execute from inside the app's own
+    # folder.
     working-directory: Apps/Apps-For-Integeration/Reader-PDF-App
 
 jobs:

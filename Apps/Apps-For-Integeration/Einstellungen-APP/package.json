@@ -11,10 +11,11 @@
     "dev": "vite",
     "build": "vinext build",
     "start": "wrangler dev dist/server/index.js --config dist/server/wrangler.json --persist-to .wrangler/state --ip 127.0.0.1 --port 4323",
-    "test": "bun run build && bun test tests/werkzeug-settings.test.ts && node --test tests/rendered-html.test.mjs",
+    "test": "bun run build && bun test tests/werkzeug-settings.test.ts tests/provider-secrets.test.ts tests/google-provider.test.ts && node --test tests/rendered-html.test.mjs",
     "validate:artifact": "bash scripts/validate-artifact.sh",
     "typecheck": "node node_modules/typescript7/lib/tsc.js --noEmit --incremental false",
-    "lint": "eslint \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"db/**/*.ts\" \"scripts/**/*.{js,mjs,ts}\" \"tests/**/*.{js,mjs,ts}\" \"*.{ts,tsx,js,mjs}\" --no-error-on-unmatched-pattern",
+    "check:duplicates": "node ../../../shared/check-duplicated-files.mjs",
+    "lint": "node ../../../shared/check-duplicated-files.mjs && eslint \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"db/**/*.ts\" \"scripts/**/*.{js,mjs,ts}\" \"tests/**/*.{js,mjs,ts}\" \"*.{ts,tsx,js,mjs}\" --no-error-on-unmatched-pattern",
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"
   },
   "dependencies": {

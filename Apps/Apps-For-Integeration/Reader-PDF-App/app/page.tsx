@@ -866,7 +866,10 @@ export default function Home() {
     setDailyComplete(true);
   };
 
-  const reviewDailyNotes = () => {
+  // Just switches to the Notes tab and scrolls it into view — there is no
+  // spaced-repetition or review-queue logic here, so naming/copy must not
+  // imply one.
+  const openDailyNotes = () => {
     setDailyComplete(false);
     setTab("notes");
     setPanelOpen(true);
@@ -1220,7 +1223,7 @@ export default function Home() {
             <div className="daily-complete-actions">
               <button type="button" className="primary" onClick={returnToDailyPractice}>{dailyLanguage === "en" ? "OK · Return to Daily Practice" : "OK · Zurück zur Tagesübung"}</button>
               <button type="button" onClick={() => setDailyComplete(false)}>{dailyLanguage === "en" ? "Do it again" : "Noch einmal"}</button>
-              <button type="button" onClick={reviewDailyNotes}>{dailyLanguage === "en" ? "Review my notes" : "Meine Notizen prüfen"}</button>
+              <button type="button" onClick={openDailyNotes}>{dailyLanguage === "en" ? "Open notes" : "Notizen öffnen"}</button>
             </div>
           </section>
         </div>

@@ -5,9 +5,13 @@ async function openNavigationLink(page: Page, label: string, group: string) {
   const navigation = page.getByRole("navigation", {
     name: "Product navigation",
   });
-  const trigger = navigation.getByRole("button", {
-    name: new RegExp(`^${group}`),
-  });
+  // The group's visible section label (e.g. "Daily Practice") is a plain
+  // paragraph; the expandable trigger button underneath it carries its own
+  // caption text (e.g. "Practice and speak today"). Locate by section
+  // structure instead of the trigger's caption so this stays correct if the
+  // caption copy changes.
+  const section = navigation.locator("section", { hasText: group }).first();
+  const trigger = section.getByRole("button").first();
   if ((await trigger.getAttribute("aria-expanded")) !== "true") {
     await trigger.click();
   }
@@ -15,6 +19,9 @@ async function openNavigationLink(page: Page, label: string, group: string) {
 }
 
 test.beforeEach(async ({ page }) => {
+  // Start every test from a clean slate — but only once per test, not once
+  // per navigation within a test: the sessionStorage flag stops later
+  // in-test page.goto() calls from wiping state the test itself just set up.
   await page.addInitScript(() => {
     if (!window.sessionStorage.getItem("english-e2e-initialized")) {
       window.localStorage.clear();
@@ -25,21 +32,27 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
+// Confirms the live dashboard (DashboardV2Screen) renders correctly and
+// that the product nav lists only current route names — not the retired
+// "Daily Training" / "Automaticity Mission" labels from the dead
+// dashboard-screen.tsx this test used to (incorrectly) assert against.
 test("loads the focused dashboard and complete product navigation", async ({
   page,
 }) => {
   await expect(
-    page.getByRole("heading", {
-      level: 1,
-      name: "Use English confidently and automatically",
-    }),
+    page.getByRole("heading", { level: 1, name: "Good morning, Learner" }),
   ).toBeAttached();
-  const heroProof = page.locator(".dashboard-hero-proof");
   await expect(
-    heroProof.getByText("112 grammar units", { exact: true }),
+    page.getByText("Personal learning dashboard", { exact: true }),
+  ).toBeVisible();
+  const courseList = page.locator(".home-v2-course-list");
+  await expect(
+    courseList.getByRole("button", { name: /Build Strong Grammar Skills/ }),
   ).toBeVisible();
   await expect(
-    heroProof.getByText("72 conversation topics", { exact: true }),
+    courseList.getByRole("button", {
+      name: /Master Everyday Conversations/,
+    }),
   ).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "Product navigation" }),
@@ -62,9 +75,6 @@ test("loads the focused dashboard and complete product navigation", async ({
       exact: true,
     }),
   ).toHaveCount(0);
-  await expect(
-    page.getByRole("heading", { name: "Start confidently in three steps" }),
-  ).toBeVisible();
   await page.getByRole("button", { name: "Open help" }).click();
   const help = page.getByRole("dialog", {
     name: "How to use English Automaticity",
@@ -81,39 +91,35 @@ test("loads the focused dashboard and complete product navigation", async ({
   });
 });
 
-test("selects a level and turns it into today's exact next action", async ({
+// Checks the dashboard shows the learner's saved CEFR level and that its
+// "continue practice" button actually lands on the daily-practice route.
+test("shows the learner's current level and starts today's practice from the dashboard", async ({
   page,
 }) => {
-  let practiceCard = page.locator(".dashboard-hero-action");
-
   await expect(
-    practiceCard.getByRole("heading", {
-      name: "Build your first daily practice",
-    }),
-  ).toBeVisible();
-  await practiceCard.getByLabel("Your English level").selectOption("B1");
-  await expect(practiceCard.getByText("B1", { exact: true })).toBeVisible();
-  await expect(
-    practiceCard.getByRole("button", { name: /start 15-minute practice/i }),
+    page.getByText("Current level · A1", { exact: true }),
   ).toBeVisible();
 
-  await page.reload();
-  practiceCard = page.locator(".dashboard-hero-action");
-  await expect(practiceCard.getByText("B1", { exact: true })).toBeVisible();
-  await practiceCard
-    .getByRole("button", { name: /start 15-minute practice/i })
-    .click();
+  const continueButton = page
+    .getByRole("button", { name: "Continue today’s practice" })
+    .first();
+  await expect(continueButton).toBeVisible();
+  await continueButton.click();
 
-  await expect(page).toHaveURL(/screen=daily/);
+  await expect(page).toHaveURL(/\/daily$/);
   await expect(
-    page.getByRole("heading", { level: 1, name: "Today’s Practice" }),
+    page.getByRole("heading", { name: "Today's 15-minute learning mission" }),
   ).toBeVisible();
 });
 
+// Walks every nav link/group pair and confirms each one lands on a page
+// with the expected top-level heading — a broad "nothing is 404 or
+// misrouted" sweep across the whole product nav in one test.
 test("opens every legacy product surface", async ({ page }) => {
   const navigation = page.getByRole("navigation", {
     name: "Product navigation",
   });
+  // [button label, section it lives under, expected page heading once open]
   const surfaces = [
     ["Conversation Studio", "Daily Practice", "Conversation Studio"],
     ["Today’s Practice", "Daily Practice", "Today’s Practice"],
@@ -122,7 +128,7 @@ test("opens every legacy product surface", async ({ page }) => {
     ["Error Workshop", "Learning Evidence", "Error Workshop"],
     ["Audio Library", "Learning Evidence", "Audio Library"],
     ["Settings", "App and Settings", "Settings"],
-    ["Home", "Daily Practice", "Use English confidently and automatically"],
+    ["Home", "Daily Practice", "Good morning, Learner"],
   ] as const;
 
   for (const [button, group, heading] of surfaces) {
@@ -133,6 +139,10 @@ test("opens every legacy product surface", async ({ page }) => {
   }
 });
 
+// Guards the catalog's actual size (72 topics, 112 grammar units, 43
+// resources — these numbers regress if content generation or filtering
+// breaks), exercises search + deep-link + reload for one grammar unit, and
+// confirms the retired "thesis" screen has no surviving nav link.
 test("preserves catalog counts and supports grammar practice", async ({
   page,
 }) => {
@@ -145,15 +155,20 @@ test("preserves catalog counts and supports grammar practice", async ({
 
   await openNavigationLink(page, "Grammar Lab", "Learning Paths");
   await expect(page.getByText("112 units", { exact: true })).toBeVisible();
+  // Search narrows the list down to exactly one matching unit...
   await page.getByLabel("Search grammar").fill("Word order in phrasal verbs");
   await expect(page.getByText("1 of 112 units", { exact: true })).toBeVisible();
   await page
     .getByRole("button", { name: /Word order in phrasal verbs/ })
     .click();
+  // ...and opening it updates the URL to a deep link that identifies the
+  // exact topic, so it can be reloaded or shared directly.
   await expect(page).toHaveURL(
     /screen=grammar.*topic=Word(?:\+|%20)order(?:\+|%20)in(?:\+|%20)phrasal(?:\+|%20)verbs#grammar-topic$/,
   );
   await expect(page.locator("#grammar-topic")).toBeInViewport();
+  // A hard reload from that deep link must land back on the same unit —
+  // not just an animated scroll within one page session.
   await page.reload();
   await expect(
     page.getByRole("heading", {
@@ -163,6 +178,7 @@ test("preserves catalog counts and supports grammar practice", async ({
   ).toBeVisible();
   await expect(page.getByText("1/9", { exact: true })).toBeVisible();
 
+  // Answer the first practice item correctly and confirm real feedback.
   const answer = page.getByPlaceholder("Enter English answer");
   await answer.fill("Turn it down.");
   await page.getByRole("button", { name: "Check answer" }).click();
@@ -175,9 +191,14 @@ test("preserves catalog counts and supports grammar practice", async ({
     page.getByText("43 direct resources", { exact: true }),
   ).toBeVisible();
 
+  // The old "thesis" screen was retired — its nav link must be gone, not
+  // just hidden or broken.
   await expect(navigation.locator('a[href*="screen=thesis"]')).toHaveCount(0);
 });
 
+// At a phone-sized viewport, the sidebar nav must start hidden and only
+// appear via the explicit "Open navigation" toggle — otherwise it would
+// eat most of a small screen permanently.
 test("is usable through the compact mobile navigation", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const navigation = page.getByRole("navigation", {
@@ -185,19 +206,12 @@ test("is usable through the compact mobile navigation", async ({ page }) => {
   });
 
   await expect(
-    page.getByRole("heading", { name: "From recall to confident speaking" }),
+    page.getByRole("heading", { name: "Select a course" }),
   ).toBeVisible();
-  await expect(page.locator(".progress-story-card")).toHaveCount(3);
   await expect(
-    page
-      .locator(".dashboard-hero-image")
-      .evaluate(
-        (image) =>
-          image instanceof HTMLImageElement &&
-          image.complete &&
-          image.naturalWidth > 0,
-      ),
-  ).resolves.toBe(true);
+    page.locator(".home-v2-course-list .home-v2-course"),
+  ).toHaveCount(3);
+  await expect(page.locator(".home-v2-chart-wrap")).toBeVisible();
   await page.screenshot({
     fullPage: true,
     path: "test-results/dashboard-mobile.png",
@@ -222,6 +236,10 @@ test("is usable through the compact mobile navigation", async ({ page }) => {
   });
 });
 
+// Two unrelated things share one test purely because they both live in the
+// sidebar chrome: (1) a nav section's expand/collapse toggle via keyboard,
+// and (2) the "install this app" dialog plus the PWA manifest/service
+// worker it depends on.
 test("provides accordion navigation and cross-platform installation", async ({
   page,
   request,
@@ -229,21 +247,28 @@ test("provides accordion navigation and cross-platform installation", async ({
   const navigation = page.getByRole("navigation", {
     name: "Product navigation",
   });
-  const practiceGroup = navigation.getByRole("button", {
-    name: /^Daily Practice/,
-  });
+  const practiceGroup = navigation
+    .locator("section", { hasText: "Daily Practice" })
+    .first()
+    .getByRole("button")
+    .first();
 
+  // Collapsing the group via Enter removes its links from the accessibility
+  // tree entirely (not just visually hidden)...
   await expect(practiceGroup).toHaveAttribute("aria-expanded", "true");
   await practiceGroup.press("Enter");
   await expect(practiceGroup).toHaveAttribute("aria-expanded", "false");
   await expect(
     navigation.getByRole("link", { name: "Home", exact: true }),
   ).not.toBeAttached();
+  // ...and pressing Enter again restores them.
   await practiceGroup.press("Enter");
   await expect(
     navigation.getByRole("link", { name: "Home", exact: true }),
   ).toBeVisible();
 
+  // The install dialog must not mention infra the learner never sets up
+  // themselves (Slack, Vercel) — it should read as consumer software.
   await page
     .getByRole("button", { name: "Open installation guide" })
     .press("Enter");
@@ -286,6 +311,8 @@ test("provides accordion navigation and cross-platform installation", async ({
   await guide.getByRole("button", { name: "Close installation guide" }).click();
   await expect(guide).not.toBeVisible();
 
+  // Same dialog, reachable from a differently-labeled trigger at mobile
+  // width — confirms both entry points open the same install flow.
   await page.setViewportSize({ width: 390, height: 844 });
   await page
     .getByRole("button", { name: "Install English Automaticity" })
@@ -297,6 +324,8 @@ test("provides accordion navigation and cross-platform installation", async ({
   });
   await guide.getByRole("button", { name: "Close installation guide" }).click();
 
+  // Below: the actual PWA files a browser/OS needs to offer "install as
+  // app" — the dialog above is just UI, this is what makes install real.
   const manifestResponse = await request.get("/manifest.webmanifest");
   expect(manifestResponse.ok()).toBeTruthy();
   const manifest = await manifestResponse.json();
@@ -307,11 +336,16 @@ test("provides accordion navigation and cross-platform installation", async ({
     start_url: "/",
   });
   expect(manifest.icons).toHaveLength(4);
+  // Both an "any" and a "maskable" icon are required for Android/adaptive
+  // icon shapes to render correctly, not just one generic icon.
   expect(
     manifest.icons.map((icon: { purpose: string }) => icon.purpose),
   ).toEqual(expect.arrayContaining(["any", "maskable"]));
   expect(manifest.shortcuts).toHaveLength(3);
 
+  // The service worker's cache-version string changing is how a stale
+  // installed copy knows to update — and these specific strings confirm it
+  // actually serves the daily-practice route it's meant to.
   const serviceWorkerResponse = await request.get("/sw.js");
   expect(serviceWorkerResponse.ok()).toBeTruthy();
   const serviceWorker = await serviceWorkerResponse.text();
@@ -322,6 +356,11 @@ test("provides accordion navigation and cross-platform installation", async ({
   expect(serviceWorker).toContain("SKIP_WAITING");
 });
 
+// The real File System Access API needs a user gesture and a native folder
+// picker Playwright can't drive directly, so this fakes
+// `showDirectoryPicker` with one backed by the Origin Private File System
+// (an in-browser virtual filesystem) — real enough to prove export actually
+// writes bytes to the chosen folder.
 test("writes progress backups to the folder selected during setup", async ({
   page,
 }) => {
@@ -380,6 +419,9 @@ test("writes progress backups to the folder selected during setup", async ({
   expect(backup.version).toBe(27);
 });
 
+// Confirms the browser's own Back/Forward buttons work correctly across
+// screen changes — a common regression when routing is driven by client-side
+// state instead of real history entries.
 test("deep-links every screen and preserves browser navigation", async ({
   page,
 }) => {
@@ -389,6 +431,8 @@ test("deep-links every screen and preserves browser navigation", async ({
 
   await openNavigationLink(page, "Grammar Lab", "Learning Paths");
   await expect(page).toHaveURL(/\?screen=grammar$/);
+  // A hard reload on this URL must land on the same screen, not the home
+  // screen — proves the route is real, not just client-side navigation state.
   await page.reload();
   await expect(
     page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
@@ -406,9 +450,15 @@ test("deep-links every screen and preserves browser navigation", async ({
   ).toBeVisible();
 });
 
+// A "thesis" screen and its local-storage keys used to exist and have since
+// been retired. This simulates a learner who still has that old data saved
+// on their device and confirms visiting the dead route both redirects them
+// home instead of erroring, and cleans up the leftover data rather than
+// leaving it orphaned forever.
 test("retires the private route and removes its old local data", async ({
   page,
 }) => {
+  // Seed localStorage exactly as an old build would have left it.
   await page.evaluate(() => {
     const current = JSON.parse(
       localStorage.getItem("grammar-automaticity:v27") ?? "{}",
@@ -426,12 +476,11 @@ test("retires the private route and removes its old local data", async ({
   await page.goto("/?screen=thesis");
   await expect(page).toHaveURL(/\/$/);
   await expect(
-    page.getByRole("heading", {
-      level: 1,
-      name: "Use English confidently and automatically",
-    }),
+    page.getByRole("heading", { level: 1, name: "Good morning, Learner" }),
   ).toBeVisible();
 
+  // The cleanup may not be synchronous with the redirect, so poll instead
+  // of a single immediate assertion.
   await expect
     .poll(() =>
       page.evaluate(() => {
@@ -447,9 +496,18 @@ test("retires the private route and removes its old local data", async ({
     .toEqual({ retired: null, hasPrivateState: false });
 });
 
+// The largest end-to-end scenario: enabling the optional AI grammar check,
+// getting a real-looking correction, saving it as an error, repairing that
+// error in a new sentence, and separately completing enough of a daily
+// practice session to trigger its "2/3 completed" gate. Covers the full
+// recall -> evidence -> repair loop in one pass rather than in isolation.
 test("runs saved assessment, error repair, and daily gates", async ({
   page,
 }) => {
+  // Stand in for the real grammar-check backend: flag any sentence
+  // containing "don't" as a third-person-agreement error and offer the
+  // "doesn't" correction, so the test can exercise the full
+  // detect -> save -> repair flow deterministically.
   await page.route("**/api/assessment", async (route) => {
     const request = route.request();
     const payload = request.postDataJSON() as { text: string };
@@ -541,6 +599,8 @@ test("runs saved assessment, error repair, and daily gates", async ({
     .click();
   await expect(page.locator(".daily-step").first()).toBeVisible();
   const recallAnswers = page.getByPlaceholder("Write your sentence here.");
+  // One real sentence per recall prompt, each naturally using the target
+  // grammar/vocabulary for that item.
   const examples = [
     "In today's situation, my normal activity with a friend is a long conversation.",
     "In this work situation, my real project this week is difficult.",

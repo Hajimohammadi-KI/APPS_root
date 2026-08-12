@@ -1,0 +1,46 @@
+name: Cross Repository Tracker CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Apps/Cross_Repository_Code_Intelligence-Version/**"
+      - "shared/check-duplicated-files.mjs"
+  pull_request:
+    paths:
+      - "Apps/Cross_Repository_Code_Intelligence-Version/**"
+      - "shared/check-duplicated-files.mjs"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: Apps/Cross_Repository_Code_Intelligence-Version
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun run test

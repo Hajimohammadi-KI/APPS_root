@@ -15,7 +15,8 @@
     "test": "bun run build && bun test tests/pdf-marks.test.ts tests/pdf-reader-state.test.ts tests/provider-integration.test.ts tests/document-converters.test.ts && node --test tests/rendered-html.test.mjs",
     "validate:artifact": "bash scripts/validate-artifact.sh",
     "typecheck": "node node_modules/typescript7/lib/tsc.js --noEmit --incremental false",
-    "lint": "eslint \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"db/**/*.ts\" \"scripts/**/*.{js,mjs,ts}\" \"tests/**/*.{js,mjs,ts}\" \"*.{ts,tsx,js,mjs}\" --no-error-on-unmatched-pattern",
+    "check:duplicates": "node ../../../shared/check-duplicated-files.mjs",
+    "lint": "node ../../../shared/check-duplicated-files.mjs && eslint \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"db/**/*.ts\" \"scripts/**/*.{js,mjs,ts}\" \"tests/**/*.{js,mjs,ts}\" \"*.{ts,tsx,js,mjs}\" --no-error-on-unmatched-pattern",
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"
   },
   "dependencies": {

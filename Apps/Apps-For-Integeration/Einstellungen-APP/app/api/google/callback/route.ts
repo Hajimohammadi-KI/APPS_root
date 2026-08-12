@@ -27,6 +27,7 @@ function finish(request: Request, returnTo: string, result: string) {
   target.searchParams.set("google", result);
   const headers = new Headers({ Location: target.toString() });
   headers.append("Set-Cookie", cookie(request, "werkzeug_google_state", "", 0));
+  headers.append("Set-Cookie", cookie(request, "werkzeug_google_verifier", "", 0));
   headers.append("Set-Cookie", cookie(request, "werkzeug_google_return", "", 0));
   return new Response(null, { status: 302, headers });
 }
@@ -36,17 +37,26 @@ export async function GET(request: Request) {
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
   const expected = readCookie(request, "werkzeug_google_state");
+  const verifier = readCookie(request, "werkzeug_google_verifier");
   const returnTo = readCookie(request, "werkzeug_google_return") || "/settings";
   const owner = requestOwner(request);
   const client = await googleClient(request);
   if (url.searchParams.get("error")) return finish(request, returnTo, "cancelled");
-  if (!owner || !client || !code || !state || expected !== state) return finish(request, returnTo, "invalid");
+  if (!owner || !client || !code || !state || !verifier || expected !== state) return finish(request, returnTo, "invalid");
   try {
     const callback = client.redirectUri || `${url.origin}/api/google/callback`;
     const response = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ code, client_id: client.clientId, client_secret: client.clientSecret, redirect_uri: callback, grant_type: "authorization_code" }),
+      body: new URLSearchParams({
+        code,
+        client_id: client.clientId,
+        // Only legacy self-registered "Web" clients still carry a secret.
+        ...(client.clientSecret ? { client_secret: client.clientSecret } : {}),
+        code_verifier: verifier,
+        redirect_uri: callback,
+        grant_type: "authorization_code",
+      }),
       signal: AbortSignal.timeout(15000),
     });
     const data = await response.json() as { access_token?: string; refresh_token?: string; expires_in?: number; scope?: string; token_type?: string };
@@ -66,4 +76,3 @@ export async function GET(request: Request) {
     return finish(request, returnTo, "failed");
   }
 }
-

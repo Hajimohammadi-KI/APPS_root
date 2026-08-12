@@ -527,3 +527,7 @@
 .expose-plan-actions { display: grid; min-width: 210px; gap: 8px; }
 .expose-plan-actions .button { width: 100%; min-width: 0; min-height: 44px; white-space: normal; text-align: center; }
 
+
+/* Wiederholungskarte ("Recall Check") unter den Kennzahlen. Die Karte selbst
+   bringt ihre Tailwind-Klassen mit; hier wird nur der Abstand gesetzt. */
+.dashboard-recall { display: block; }

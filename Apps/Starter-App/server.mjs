@@ -9,6 +9,10 @@ const port = 4300;
 const root = resolve(import.meta.dirname);
 const publicRoot = join(root, "public");
 const logRoot = join(root, "logs");
+// Everything is resolved from this file's own location so the collection is not
+// pinned to one absolute drive letter.
+const appsRoot = resolve(root, "..");
+const integration = join(appsRoot, "Apps-For-Integeration");
 mkdirSync(logRoot, { recursive: true });
 
 const apps = {
@@ -18,8 +22,8 @@ const apps = {
     url: "http://127.0.0.1:3202",
     ports: [3202, 4201],
     commands: [
-      { cwd: "D:\\APPS_root\\Apps\\English\\English-07082026", command: "bun run --cwd apps/api start", log: "english-api" },
-      { cwd: "D:\\APPS_root\\Apps\\English\\English-07082026", command: "bun run --cwd apps/web start -- --hostname 127.0.0.1 --port 3202", log: "english-web" },
+      { cwd: join(appsRoot, "English", "English-07082026"), command: "bun run --cwd apps/api start", log: "english-api" },
+      { cwd: join(appsRoot, "English", "English-07082026"), command: "bun run --cwd apps/web start -- --hostname 127.0.0.1 --port 3202", log: "english-web" },
     ],
   },
   german: {
@@ -28,8 +32,8 @@ const apps = {
     url: "http://127.0.0.1:3210",
     ports: [3210, 4210],
     commands: [
-      { cwd: "D:\\APPS_root\\Apps\\Deutsch-V10.08.2026", command: "bun run --cwd apps/api start", log: "german-api" },
-      { cwd: "D:\\APPS_root\\Apps\\Deutsch-V10.08.2026", command: "bun run --cwd apps/web start -- --hostname 127.0.0.1 --port 3210", log: "german-web" },
+      { cwd: join(appsRoot, "Deutsch-V10.08.2026"), command: "bun run --cwd apps/api start", log: "german-api" },
+      { cwd: join(appsRoot, "Deutsch-V10.08.2026"), command: "bun run --cwd apps/web start -- --hostname 127.0.0.1 --port 3210", log: "german-web" },
     ],
   },
   tracker: {
@@ -38,8 +42,8 @@ const apps = {
     url: "http://127.0.0.1:4312",
     ports: [4312, 4313],
     commands: [
-      { cwd: "D:\\APPS_root\\Apps\\Cross_Repository_Code_Intelligence-Version", command: "bun run start:api", log: "tracker-api" },
-      { cwd: "D:\\APPS_root\\Apps\\Cross_Repository_Code_Intelligence-Version", command: "bun run start", log: "tracker-web" },
+      { cwd: join(appsRoot, "Cross_Repository_Code_Intelligence-Version"), command: "bun run start:api", log: "tracker-api" },
+      { cwd: join(appsRoot, "Cross_Repository_Code_Intelligence-Version"), command: "bun run start", log: "tracker-web" },
     ],
   },
   settings: {
@@ -48,7 +52,7 @@ const apps = {
     url: "http://127.0.0.1:4323/settings",
     ports: [4323],
     commands: [
-      { cwd: "D:\\APPS_root\\Apps\\Apps-For-Integeration\\Einstellungen-APP", command: "bun run start --port 4323", log: "settings" },
+      { cwd: join(integration, "Einstellungen-APP"), command: "bun run start --port 4323", log: "settings" },
     ],
   },
   pdf: {
@@ -57,7 +61,7 @@ const apps = {
     url: "http://127.0.0.1:4322",
     ports: [4322],
     commands: [
-      { cwd: "D:\\APPS_root\\Apps\\Apps-For-Integeration\\Reader-PDF-App", command: "bun run start --port 4322", log: "pdf-reader" },
+      { cwd: join(integration, "Reader-PDF-App"), command: "bun run start --port 4322", log: "pdf-reader" },
     ],
   },
 };

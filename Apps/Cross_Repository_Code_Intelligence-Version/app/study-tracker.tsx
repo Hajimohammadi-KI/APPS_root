@@ -23,6 +23,7 @@ import {
   countCompletedItems,
   estimatedLearningHours,
 } from "../lib/study-progress";
+import { RecallCheck } from "../components/RecallCheck";
 import {
   currentSessionSeconds,
   isTimedSessionState,
@@ -2194,6 +2195,10 @@ export default function StudyTracker({
                 <span className="dashboard-metric-icon"><Icon name="flame" /></span>
                 <span><small>Aktive Tage</small><strong>{displayNumber(completedDays)}</strong></span>
               </article>
+            </section>
+
+            <section className="dashboard-recall" aria-label="Fällige Wiederholungen">
+              <RecallCheck />
             </section>
 
             <details

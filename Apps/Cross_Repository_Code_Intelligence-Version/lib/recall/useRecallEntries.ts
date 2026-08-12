@@ -6,19 +6,33 @@
 
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useSyncExternalStore } from 'react';
 import type { RecallEntry, ConfidenceLevel } from './types';
-import { loadRecallEntries, saveRecallEntries } from './storage';
+import {
+  getRecallServerSnapshot,
+  getRecallSnapshot,
+  loadRecallEntries,
+  saveRecallEntries,
+  subscribeToRecallEntries,
+} from './storage';
 import { computeNextInterval, addDays, isDueToday } from './scheduler';
 
 export function useRecallEntries() {
-  const [entries, setEntries] = useState<RecallEntry[]>([]);
-  const [hydrated, setHydrated] = useState(false);
+  // Der externe Store wird direkt gelesen; kein setState im Effekt und damit
+  // auch kein Auseinanderlaufen, wenn die Karte mehrfach eingehängt ist.
+  const entries = useSyncExternalStore(
+    subscribeToRecallEntries,
+    getRecallSnapshot,
+    getRecallServerSnapshot,
+  );
 
-  useEffect(() => {
-    setEntries(loadRecallEntries());
-    setHydrated(true);
-  }, []);
+  // Auf dem Server false, im Browser true — so lässt sich das kurze
+  // Aufblitzen von "keine Wiederholung fällig" vermeiden.
+  const hydrated = useSyncExternalStore(
+    subscribeToRecallEntries,
+    () => true,
+    () => false,
+  );
 
   const dueToday = useMemo(
     () => entries.filter((e) => isDueToday(e.nextReviewDate)),
@@ -46,11 +60,7 @@ export function useRecallEntries() {
         reviews: [],
         nextReviewDate: addDays(now, 1), // Tag 1 = erste Wiederholung
       };
-      setEntries((prev) => {
-        const next = [...prev, entry];
-        saveRecallEntries(next);
-        return next;
-      });
+      saveRecallEntries([...loadRecallEntries(), entry]);
       return entry;
     },
     []
@@ -64,33 +74,30 @@ export function useRecallEntries() {
       recallDE: string,
       confidence: ConfidenceLevel
     ) => {
-      setEntries((prev) => {
-        const next = prev.map((e) => {
-          if (e.id !== entryId) return e;
-          const lastInterval =
-            e.reviews.length > 0
-              ? e.reviews[e.reviews.length - 1].intervalDay
-              : 0;
-          const nextInterval = computeNextInterval(lastInterval, confidence);
-          const nowIso = new Date().toISOString();
-          return {
-            ...e,
-            reviews: [
-              ...e.reviews,
-              {
-                date: nowIso,
-                intervalDay: nextInterval,
-                recallFA,
-                recallDE,
-                confidence,
-              },
-            ],
-            nextReviewDate: addDays(nowIso, nextInterval),
-          };
-        });
-        saveRecallEntries(next);
-        return next;
+      const next = loadRecallEntries().map((e) => {
+        if (e.id !== entryId) return e;
+        const lastInterval =
+          e.reviews.length > 0
+            ? e.reviews[e.reviews.length - 1].intervalDay
+            : 0;
+        const nextInterval = computeNextInterval(lastInterval, confidence);
+        const nowIso = new Date().toISOString();
+        return {
+          ...e,
+          reviews: [
+            ...e.reviews,
+            {
+              date: nowIso,
+              intervalDay: nextInterval,
+              recallFA,
+              recallDE,
+              confidence,
+            },
+          ],
+          nextReviewDate: addDays(nowIso, nextInterval),
+        };
       });
+      saveRecallEntries(next);
     },
     []
   );

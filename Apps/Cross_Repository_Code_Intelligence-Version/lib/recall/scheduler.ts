@@ -23,14 +23,28 @@ export function computeNextInterval(
   return INTERVALS[Math.min(idx + 1, INTERVALS.length - 1)];
 }
 
-/** Addiert `days` Tage zu einem ISO-Datum und gibt ein neues ISO-Datum zurück. */
+/**
+ * Addiert `days` Tage und setzt die Uhrzeit auf den Beginn des lokalen Tages.
+ *
+ * Ohne die Normalisierung würde eine Wiederholung um 21:00 Uhr erst am
+ * Folgetag um 21:00 Uhr fällig — die Tageskarte bliebe morgens leer, obwohl
+ * die Wiederholung für "morgen" geplant war.
+ */
 export function addDays(dateStr: string, days: number): string {
   const d = new Date(dateStr);
   d.setDate(d.getDate() + days);
+  d.setHours(0, 0, 0, 0);
   return d.toISOString();
 }
 
-/** Prüft, ob ein Eintrag heute (oder überfällig) zur Wiederholung fällig ist. */
-export function isDueToday(nextReviewDate: string): boolean {
-  return new Date(nextReviewDate) <= new Date();
+/**
+ * Prüft, ob ein Eintrag heute oder früher fällig ist — verglichen wird der
+ * lokale Kalendertag, nicht der genaue Zeitstempel.
+ */
+export function isDueToday(nextReviewDate: string, now: Date = new Date()): boolean {
+  const due = new Date(nextReviewDate);
+  if (Number.isNaN(due.getTime())) return false;
+  const endOfToday = new Date(now);
+  endOfToday.setHours(23, 59, 59, 999);
+  return due <= endOfToday;
 }

@@ -1,3 +1,5 @@
+import { DEFAULT_OPENAI_MODEL } from "../../../lib/model-config";
+
 const MAX_TEXT_LENGTH = 28_000;
 const centralStudyApp = process.env.CENTRAL_STUDY_APP_URL?.trim() || "http://127.0.0.1:4312";
 
@@ -65,7 +67,7 @@ export async function POST(request: Request) {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || "gpt-5.6-luna",
+        model: process.env.OPENAI_MODEL || DEFAULT_OPENAI_MODEL,
         store: false,
         max_output_tokens: body.mode === "test" ? 24 : 900,
         instructions: `You are a careful academic reading assistant. ${modeInstruction}`,

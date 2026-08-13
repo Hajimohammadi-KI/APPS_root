@@ -4,7 +4,7 @@ export type SettingsClient = { id: string; displayName: string; origin: string; 
 export type ProjectSourceKind = "github" | "google_drive" | "local";
 export type ProjectSource = { id: string; name: string; kind: ProjectSourceKind; location: string; enabled: boolean };
 
-const CURRENT_SITE_ORIGIN = "https://werkzeug-study-tools.education-hajimohamm.chatgpt.site";
+const CURRENT_SITE_ORIGIN = "http://127.0.0.1:4323";
 const LEGACY_CHATGPT_SITE_ORIGIN = /^https:\/\/[^/]+\.chatgpt\.site(?=\/|$)/i;
 
 export type WerkzeugSettings = {

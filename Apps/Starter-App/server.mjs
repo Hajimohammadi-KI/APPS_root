@@ -1,19 +1,29 @@
-import { createServer } from "node:http";
+import http, { createServer } from "node:http";
 import { createReadStream, existsSync, mkdirSync, openSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 import { spawn } from "node:child_process";
-import net from "node:net";
 
 const host = "127.0.0.1";
 const port = 4300;
 const root = resolve(import.meta.dirname);
 const publicRoot = join(root, "public");
 const logRoot = join(root, "logs");
+const wslDir = join(root, "wsl");
 // Everything is resolved from this file's own location so the collection is not
 // pinned to one absolute drive letter.
 const appsRoot = resolve(root, "..");
 const integration = join(appsRoot, "Apps-For-Integeration");
 mkdirSync(logRoot, { recursive: true });
+
+// Tracker, PDF Reader, and Settings all run wrangler/workerd, whose listening
+// socket is not reachable from Windows on this machine through any firewall,
+// portproxy, or WSL2 networking-mode configuration -- confirmed through
+// extensive testing (see docs/reports/WSL2-DEV-ENVIRONMENT-2026-08-13.md).
+// A plain relay socket in front of it IS reachable, so these three run inside
+// WSL2 via a small relay rather than directly on Windows like English/German.
+function wslCommand(scriptName) {
+  return `wsl.exe -d Ubuntu -u root -- bash /mnt/d/APPS_root/Apps/Starter-App/wsl/${scriptName}`;
+}
 
 const apps = {
   english: {
@@ -22,8 +32,8 @@ const apps = {
     url: "http://127.0.0.1:3202",
     ports: [3202, 4201],
     commands: [
-      { cwd: join(appsRoot, "English", "English-07082026"), command: "bun run --cwd apps/api start", log: "english-api" },
-      { cwd: join(appsRoot, "English", "English-07082026"), command: "bun run --cwd apps/web start -- --hostname 127.0.0.1 --port 3202", log: "english-web" },
+      { cwd: join(appsRoot, "English", "English-07082026"), command: "bun run --cwd apps/api start", log: "english-api", port: 4201 },
+      { cwd: join(appsRoot, "English", "English-07082026"), command: "bun run --cwd apps/web start -- --hostname 127.0.0.1 --port 3202", log: "english-web", port: 3202 },
     ],
   },
   german: {
@@ -32,8 +42,8 @@ const apps = {
     url: "http://127.0.0.1:3210",
     ports: [3210, 4210],
     commands: [
-      { cwd: join(appsRoot, "Deutsch-V10.08.2026"), command: "bun run --cwd apps/api start", log: "german-api" },
-      { cwd: join(appsRoot, "Deutsch-V10.08.2026"), command: "bun run --cwd apps/web start -- --hostname 127.0.0.1 --port 3210", log: "german-web" },
+      { cwd: join(appsRoot, "Deutsch-V10.08.2026"), command: "bun run --cwd apps/api start", log: "german-api", port: 4210 },
+      { cwd: join(appsRoot, "Deutsch-V10.08.2026"), command: "bun run --cwd apps/web start -- --hostname 127.0.0.1 --port 3210", log: "german-web", port: 3210 },
     ],
   },
   tracker: {
@@ -41,9 +51,10 @@ const apps = {
     description: "Study tracker, thesis plan, PDF workflow and integrations",
     url: "http://127.0.0.1:4312",
     ports: [4312, 4313],
+    runsInWsl: true,
     commands: [
-      { cwd: join(appsRoot, "Cross_Repository_Code_Intelligence-Version"), command: "bun run start:api", log: "tracker-api" },
-      { cwd: join(appsRoot, "Cross_Repository_Code_Intelligence-Version"), command: "bun run start", log: "tracker-web" },
+      { cwd: root, command: wslCommand("launch-tracker-api.sh"), log: "tracker-api", port: 4313 },
+      { cwd: root, command: wslCommand("launch-tracker.sh"), log: "tracker-web", port: 4312 },
     ],
   },
   settings: {
@@ -51,8 +62,9 @@ const apps = {
     description: "Reusable preferences, accessibility and backup settings",
     url: "http://127.0.0.1:4323/settings",
     ports: [4323],
+    runsInWsl: true,
     commands: [
-      { cwd: join(integration, "Einstellungen-APP"), command: "bun run start --port 4323", log: "settings" },
+      { cwd: root, command: wslCommand("launch-settings.sh"), log: "settings", port: 4323 },
     ],
   },
   pdf: {
@@ -60,30 +72,75 @@ const apps = {
     description: "Read, select, highlight, annotate and save PDFs",
     url: "http://127.0.0.1:4322",
     ports: [4322],
+    runsInWsl: true,
     commands: [
-      { cwd: join(integration, "Reader-PDF-App"), command: "bun run start --port 4322", log: "pdf-reader" },
+      { cwd: root, command: wslCommand("launch-pdf-reader.sh"), log: "pdf-reader", port: 4322 },
     ],
   },
 };
 
-function isPortOpen(checkPort) {
+// Ports that need a Windows->WSL portproxy bridge (see ensure-portproxy.ps1).
+// Set up once per Starter-App run, the first time any WSL-hosted app is
+// started, rather than at startup -- avoids an unconditional UAC prompt for
+// someone who only ever uses English/German.
+let portproxyReady = false;
+function ensurePortproxy() {
+  if (portproxyReady) return;
+  portproxyReady = true;
+  const stdout = openSync(join(logRoot, "ensure-portproxy.out.log"), "a");
+  const stderr = openSync(join(logRoot, "ensure-portproxy.error.log"), "a");
+  const child = spawn(
+    "powershell.exe",
+    ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", join(wslDir, "ensure-portproxy.ps1")],
+    { cwd: wslDir, windowsHide: true, stdio: ["ignore", stdout, stderr] },
+  );
+  // Intentionally NOT detached/unref'd -- callers that need the bridge in
+  // place (startApp) await its exit before proceeding.
+  return new Promise((resolveReady) => {
+    child.on("exit", () => resolveReady());
+    child.on("error", () => resolveReady());
+  });
+}
+
+// A raw TCP connect is not a reliable "is the app actually up" check for
+// the three WSL-routed apps: once ensurePortproxy() creates the
+// 127.0.0.1:<port> -> <wsl-ip>:<port> rule, Windows' own portproxy listener
+// accepts the TCP handshake immediately -- regardless of whether the WSL
+// side is actually listening -- so a bare TCP connect alone would report
+// "running" even for a dead backend. An HTTP request has to actually
+// round-trip through the relay to succeed.
+function isHttpUp(checkPort) {
   return new Promise((resolvePort) => {
-    const socket = net.createConnection({ host, port: checkPort });
-    const done = (value) => { socket.destroy(); resolvePort(value); };
-    socket.setTimeout(350);
-    socket.once("connect", () => done(true));
-    socket.once("timeout", () => done(false));
-    socket.once("error", () => done(false));
+    let settled = false;
+    const settle = (value) => {
+      if (settled) return;
+      settled = true;
+      resolvePort(value);
+    };
+    const request = http.get({ host, port: checkPort, path: "/", timeout: 1500 }, (response) => {
+      response.resume();
+      settle(true);
+    });
+    request.on("timeout", () => { request.destroy(); settle(false); });
+    request.on("error", () => settle(false));
   });
 }
 
 async function appStatus(app) {
-  const states = await Promise.all(app.ports.map(isPortOpen));
+  const states = await Promise.all(app.ports.map(isHttpUp));
   return {
     running: states[0] === true,
     ready: states.every(Boolean),
     services: app.ports.map((servicePort, index) => ({ port: servicePort, running: states[index] })),
   };
+}
+
+// Per-command status, keyed by each command's own declared port -- not
+// positional index into `ports`, since command order and port order don't
+// always match (e.g. the api command is listed before the web command, but
+// `ports` lists web first to match the app's public URL).
+async function commandRunning(command) {
+  return isHttpUp(command.port);
 }
 
 function launch(command) {
@@ -102,9 +159,9 @@ function launch(command) {
 async function startApp(id) {
   const app = apps[id];
   if (!app) throw new Error("Unknown app");
-  const before = await appStatus(app);
-  for (let index = 0; index < app.commands.length; index++) {
-    if (!before.services[index]?.running) launch(app.commands[index]);
+  if (app.runsInWsl) await ensurePortproxy();
+  for (const command of app.commands) {
+    if (!(await commandRunning(command))) launch(command);
   }
   for (let attempt = 0; attempt < 80; attempt++) {
     await new Promise((resolveWait) => setTimeout(resolveWait, 250));

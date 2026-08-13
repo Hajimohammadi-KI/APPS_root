@@ -106,11 +106,107 @@ URL, even an obscure random one, for routine local dev use is a real security po
 worth the tradeoff. If this is ever revisited, that's the fastest fix, but treat it as a deliberate,
 consent-required decision, not a default.
 
-**Practical result:** Tracker, PDF Reader, and Settings are WSL2 dev/testing-only for now (works great — see
-above). The Windows-facing installer/launcher integration for these three remains unwired.
+**RESOLVED, 2026-08-13 (later the same day).** Found the fix: instead of asking Windows to reach `workerd`
+directly, run a tiny local TCP relay (`Apps/Starter-App/wsl/tcp-relay.mjs`) inside WSL in front of it. The
+relay is an ordinary Node socket — the same kind already proven reachable — so it bridges cleanly where
+`workerd`'s own socket wouldn't. Combined with `netsh portproxy` (Windows `127.0.0.1:<port>` →
+current WSL VM IP) and a firewall rule, this is now fully wired into `Apps/Starter-App/server.mjs` and
+verified stable through the real launcher API for all three apps, holding steady for 30+ seconds under load
+— not just an instant response.
+
+Two real bugs surfaced and got fixed along the way, both worth knowing about if this breaks again:
+1. **False "already running" status.** `netsh portproxy`'s own Windows-side listener accepts a TCP
+   handshake immediately regardless of whether anything is listening on the WSL side. A plain TCP-connect
+   health check (the original `isPortOpen`) is fooled by this — it happily reports "running" for a
+   completely dead backend. Fixed by replacing it with a real HTTP request (`isHttpUp` in `server.mjs`) that
+   has to round-trip through the relay to succeed.
+2. **Tracker's API was never built** in the WSL-side copy (`~/apps/tracker/apps/api/dist/main.js` didn't
+   exist) — a setup gap, not a code bug. `bun run build` inside that directory fixes it; needed once per
+   fresh WSL-side copy.
+
+**Architecture, for future reference:**
+- `Apps/Starter-App/wsl/tcp-relay.mjs` — the generic relay (listen port, target port as argv).
+- `Apps/Starter-App/wsl/launch-via-relay.sh` — starts a backend on an internal-only port, waits for it to
+  actually respond, then starts the relay on the public port. Used by three thin per-app wrappers
+  (`launch-tracker.sh`, `launch-tracker-api.sh`, `launch-pdf-reader.sh`, `launch-settings.sh`) so
+  `server.mjs` never has to build a fragile multi-layer-quoted command string.
+- `Apps/Starter-App/wsl/ensure-portproxy.ps1` — self-elevating (one UAC prompt), idempotent, refreshes the
+  portproxy target IP every run since the WSL VM's DHCP-assigned IP can change across restarts. Called once
+  per `Starter-App/server.mjs` session, only when a WSL-hosted app is actually requested (not unconditionally
+  at startup, so English/German-only users never see a UAC prompt).
+- Internal ports are the public port + 11000 (e.g. Tracker web `4312` → internal `15312`) — arbitrary but
+  consistent, chosen to avoid colliding with anything else in the 1000-9999 range already in use.
+
+**Practical result:** Tracker, PDF Reader, and Settings now start and stay running through
+`Apps/Starter-App`'s real `/api/start/<id>` and `/api/start-all` endpoints — the same ones the Starter-App UI
+calls — exactly like English and German. `START-APPS.cmd` → Starter-App → any of the 5 apps now works
+uniformly from a user's perspective; the WSL relay indirection is invisible to them.
 
 ## Still true, unchanged by any of this
 
 Everything else about these three apps — the security fixes, CI, the drift-check script, the file:line
 findings in the critique docs — is unaffected. This only fixes *running the dev server locally on this
 machine*. Nothing here was committed; it's local environment setup, not a repo change.
+
+## Update 2026-08-13 (later still): Tracker's own standalone Windows installer had the same bug
+
+Everything above fixes the **dev workflow** (`Apps/Starter-App`'s launcher). But Tracker
+(`Apps/Cross_Repository_Code_Intelligence-Version`) also ships its own independent, self-contained Windows
+installer (`SETUP-WINDOWS.bat` → `scripts/setup-windows.ps1` → `scripts/start-local-app.ps1`), which a real
+user runs directly — this is a completely separate code path from Starter-App and was not fixed by anything
+above. Confirmed by direct reproduction: running this installer's own exact `"start"` script
+(`wrangler dev dist/server/index.js --config dist/server/wrangler.json ...`) natively crashes with the
+identical `std::terminate()` inside `workerd.exe`. A user would get past install (npm ci + build don't touch
+workerd) and only hit the crash at the very last step — the app failing to start after a "successful"
+install.
+
+Note: Tracker's API (`apps/api`, plain Bun/NestJS, `bun dist/main.js`) has no workerd dependency and always
+ran fine natively — only the web half needed this fix.
+
+**Fix applied directly inside Tracker's own repo, self-contained (does not depend on `Apps/Starter-App` being
+present — this installer is meant to be redistributable on its own):**
+
+- `scripts/wsl/tcp-relay.mjs` — same generic relay as Starter-App's, copied in.
+- `scripts/wsl/prepare-wsl.sh` — rsyncs the installed app into `~/apps/cross-repository-code-intelligence-installed`
+  (WSL-native filesystem, for the same node_modules-native-binary reason as above) and runs `bun install`
+  there once, so `wrangler`/`workerd` resolve to Linux-native binaries. Only needs the build *output*
+  (`dist/server`, `apps/api/dist`) synced over — the actual build still happens on Windows as before.
+- `scripts/wsl/run-web.sh` — starts `wrangler dev` on an internal-only port (`15412`) inside that WSL copy,
+  waits for it to respond, then starts the relay on the public port (`4312`). Self-healing: kills anything
+  already on either port before starting, so a previous failed/killed attempt never blocks a retry.
+- `scripts/wsl/ensure-portproxy.ps1` — same idea as Starter-App's, scoped to just port 4312 (Tracker's API
+  doesn't need it — see above). Improved here to check *first*, as a normal user, whether the existing
+  portproxy rule already points at the current WSL IP, and only elevates (one UAC prompt) when something
+  actually needs to change — avoids a UAC prompt on every single ordinary app launch once set up once.
+- `scripts/setup-windows.ps1` — `Install-Dependencies` now calls a new `Initialize-WslCopy` step right after
+  the Windows build succeeds, so `prepare-wsl.sh` runs once at install/update/repair time rather than lazily
+  during the first start (keeps `Wait-ForAppReady`'s 180s timeout comfortable).
+- `scripts/start-local-app.ps1` — the web process launch changed from
+  `Start-Process $BunExecutable -ArgumentList @("run","start")` to
+  `Start-Process wsl.exe -ArgumentList @("-d","Ubuntu","-u","root","--","bash",$RunWebScriptWsl)`. The API
+  launch is untouched (still native). `Stop-StaleRuntimeProcesses` now also matches a stray `wsl.exe`
+  running `run-web.sh` by command-line substring, since Windows path-based matching doesn't apply to it.
+
+**A real bug surfaced by testing the actual files, not a synthetic replication:** backslashes were silently
+eaten somewhere in the PowerShell → `wsl.exe` → `wslpath` argument-passing chain — `"D:\APPS_root\..."`
+arrived at `wslpath` as `"D:APPS_root..."` (no separators at all), breaking every path conversion. Fixed by
+converting to forward slashes (`$WindowsPath.Replace('\','/')`) before calling `wslpath -a` — Windows path
+APIs accept forward slashes fine, and it sidesteps the escaping ambiguity entirely. Both call sites
+(`ConvertTo-WslPath` in `start-local-app.ps1`, and the inline calls in `setup-windows.ps1`'s
+`Initialize-WslCopy`) needed this fix.
+
+**Verified working end-to-end using the real, final files** (not a manual stand-in): ran the actual
+`scripts/start-local-app.ps1` as the installer will invoke it. Output: `Web und API sind bereit.` 4 seconds
+after starting, on the first attempt. Both `http://127.0.0.1:4312/api/state` and
+`http://127.0.0.1:4313/v1/health` held `200` for 30+ seconds under polling, then both processes (WSL-side
+wrangler/relay and native API) shut down cleanly with no leftover processes on either side.
+
+**One environment gotcha hit during this testing, not a code bug:** Starter-App's dev-flow portproxy had a
+stale rule forwarding port 4313 (Tracker's API port) to its own WSL-side relay, left over from earlier
+verification runs. Since a portproxy rule genuinely occupies the port on the Windows side, this collided
+with Tracker's native API trying to bind directly to the same port (`EADDRINUSE`). Not a bug in either
+installer — it's an expected consequence of Starter-App's dev flow and Tracker's own standalone installer
+both defaulting to the same public ports, and only one of the two should be running at a time. Cleared with
+`netsh interface portproxy delete v4tov4 listenport=4313 listenaddress=127.0.0.1` (elevated); Starter-App's
+own `ensure-portproxy.ps1` will simply re-add it next time Starter-App is used to run Tracker, since it
+unconditionally re-applies all its ports every run.

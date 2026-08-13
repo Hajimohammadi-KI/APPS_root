@@ -264,9 +264,44 @@ function Install-Dependencies($Prerequisites) {
         -not (Test-Path -LiteralPath (Join-Path $InstallRoot "apps\api\dist\main.js"))) {
       throw "Die kompilierten Programmdateien sind unvollständig. Bitte das Installationsprotokoll prüfen: $SetupLog"
     }
+
+    Initialize-WslCopy
   }
   finally {
     Pop-Location
+  }
+}
+
+function Initialize-WslCopy {
+  # The web server ("wrangler dev" / workerd) crashes natively on Windows on
+  # this machine, so it runs inside WSL instead (see
+  # docs/reports/WSL2-DEV-ENVIRONMENT-2026-08-13.md and scripts/wsl/*.md).
+  # This prepares that WSL-side copy here, at install time, so the first
+  # "Jetzt starten" doesn't have to do a slow first-time `bun install`
+  # inside WSL within Wait-ForAppReady's timeout.
+  $wslCheck = & wsl.exe -d Ubuntu -u root -- echo ok 2>$null
+  if ($LASTEXITCODE -ne 0 -or $wslCheck -ne "ok") {
+    Add-Content -LiteralPath $SetupLog -Value "`r`nWSL2 (Ubuntu) wurde nicht gefunden -- der Webserver kann später nicht gestartet werden." -Encoding UTF8
+    return
+  }
+  # Backslashes get silently eaten somewhere in the PowerShell -> wsl.exe ->
+  # wslpath argument-passing chain (confirmed: "D:\APPS_root\..." arrives at
+  # wslpath as "D:APPS_root..."). Forward slashes sidestep the ambiguity.
+  $prepareScript = Join-Path $InstallRoot "scripts\wsl\prepare-wsl.sh"
+  $wslInstallRoot = (& wsl.exe wslpath -a "$($InstallRoot.Replace('\', '/'))") 2>$null
+  if (-not $wslInstallRoot) {
+    Add-Content -LiteralPath $SetupLog -Value "`r`nDer Installationspfad konnte nicht für WSL umgewandelt werden." -Encoding UTF8
+    return
+  }
+  $wslInstallRoot = $wslInstallRoot.Trim()
+  $prepareScriptWsl = (& wsl.exe wslpath -a "$($prepareScript.Replace('\', '/'))") 2>$null
+  if ($prepareScriptWsl) { $prepareScriptWsl = $prepareScriptWsl.Trim() }
+  $output = & wsl.exe -d Ubuntu -u root -- bash $prepareScriptWsl $wslInstallRoot 2>&1
+  foreach ($line in $output) {
+    Add-Content -LiteralPath $SetupLog -Value $line.ToString() -Encoding UTF8
+  }
+  if ($LASTEXITCODE -ne 0) {
+    throw "Die WSL-Umgebung für den lokalen Webserver konnte nicht vorbereitet werden.`r`n`r`nLetzte Meldungen:`r`n$($output -join "`r`n")`r`n`r`nVollständiges Protokoll:`r`n$SetupLog"
   }
 }
 

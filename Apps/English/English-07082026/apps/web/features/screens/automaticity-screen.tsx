@@ -32,6 +32,7 @@ import {
 } from "@/lib/automaticity-analysis";
 import { evaluateResponse } from "@/lib/assessment";
 import { putAudio } from "@/lib/audio-db";
+import { analyzeAudioFluency, scoreFromActiveSpeech } from "@/lib/audio-fluency";
 import { makeId, todayKey } from "@/lib/utils";
 import { DueReviews } from "@/features/components/due-reviews";
 
@@ -81,6 +82,30 @@ function lessonExercises(grammar: GrammarUnit) {
     prompt,
     expected,
   }));
+}
+
+// GrammarUnit.transferTest is a generic checklist label ("In a new
+// situation, I can use X accurately"), not an actual task prompt -- content
+// reconstruction with real per-unit transfer scenarios is separately
+// scoped (contract §11). Until then, these situations are genuinely
+// different in communicative framing from the writing step's "connected to
+// your life" prompt (a §8.3 requirement: a sufficiently new situation, not
+// the same exercise re-labeled), picked deterministically per topic so a
+// learner sees a consistent situation across a session but different
+// topics don't all get the same one.
+const TRANSFER_SITUATIONS = [
+  "A friend who wasn't there is asking what happened. Explain it to them without assuming they know the background.",
+  "You're messaging a new colleague about this for the first time. Give them the short version.",
+  "Someone you've just met asks about this in conversation. Answer naturally, as you would out loud.",
+  "Write a brief note explaining this to someone covering for you, who needs the key facts quickly.",
+] as const;
+
+function transferSituation(grammar: GrammarUnit) {
+  let hash = 0;
+  for (let index = 0; index < grammar.title.length; index += 1) {
+    hash = (hash * 31 + grammar.title.charCodeAt(index)) >>> 0;
+  }
+  return TRANSFER_SITUATIONS[hash % TRANSFER_SITUATIONS.length];
 }
 
 function lessonModel(grammar: GrammarUnit) {
@@ -222,6 +247,11 @@ export function AutomaticityScreen({
     React.useState<AutomaticityAnalysis | null>(null);
   const [speechAnalysis, setSpeechAnalysis] =
     React.useState<AutomaticityAnalysis | null>(null);
+  const [transferAttempt, setTransferAttempt] = React.useState("");
+  const [transferAnalysis, setTransferAnalysis] =
+    React.useState<AutomaticityAnalysis | null>(null);
+  const [transferChecking, setTransferChecking] = React.useState(false);
+  const situation = transferSituation(grammar);
   const [activeStep, setActiveStep] = React.useState<number>(
     focusedStep ?? [0, 1, 2].find((step) => !plan.completed.includes(step)) ?? 0,
   );
@@ -235,6 +265,7 @@ export function AutomaticityScreen({
   const streamRef = React.useRef<MediaStream | null>(null);
   const chunksRef = React.useRef<Blob[]>([]);
   const audioRef = React.useRef<Blob | null>(null);
+  const rawTranscriptRef = React.useRef("");
   const startedAtRef = React.useRef(0);
   const restoredRef = React.useRef(false);
 
@@ -313,7 +344,13 @@ export function AutomaticityScreen({
       fluencyScore: 0,
       latencyMs: null,
       passed: results.every(Boolean),
-      verified: false,
+      // evaluatePracticeAnswer is a deterministic exact-match check against a
+      // known-correct answer (with a narrow open-production allowance) --
+      // not self-rated, not a network call, not fabricated. It's a distinct
+      // and legitimate verification basis from the online-provider one used
+      // for writing/speaking, so it can set verified on the same footing:
+      // true only when the check itself passed.
+      verified: results.every(Boolean),
     });
     if (results.every(Boolean)) {
       writePlan(`${key}:practice`, "done");
@@ -448,6 +485,7 @@ export function AutomaticityScreen({
       score: evaluation.accuracyScore,
       targetHit: evaluation.pass,
       issues,
+      masteryEligible: evaluation.masteryEligible,
     };
   }
 
@@ -465,7 +503,7 @@ export function AutomaticityScreen({
       fluencyScore: 0,
       latencyMs: null,
       passed: analysis.targetHit,
-      verified: false,
+      verified: analysis.masteryEligible,
     });
     addIssuesToErrorWorkshop(analysis, journal);
     if (analysis.targetHit) writePlan(`${key}:writing`, "done");
@@ -474,6 +512,37 @@ export function AutomaticityScreen({
         ? `Journal saved. You have created real ${topic} output.`
         : `Draft saved. Use the feedback to produce complete, accurate ${topic} sentences.`,
     );
+  }
+
+  // Transfer (contract §8.3): a distinct task requiring the same target
+  // grammar in a new communicative situation, not the writing step's "your
+  // life" prompt re-labeled. The reference/model is never shown before this
+  // runs -- analyzeLessonOutput only evaluates what the learner already
+  // submitted -- and the attempt is recorded with mode:"transfer" so
+  // recalculateMastery's transferScore reflects real evidence instead of
+  // staying permanently empty.
+  async function saveTransfer() {
+    setTransferChecking(true);
+    try {
+      const analysis = await analyzeLessonOutput(transferAttempt, 2);
+      setTransferAnalysis(analysis);
+      recordAttempt({
+        grammarTitle: topic,
+        mode: "transfer",
+        inputText: transferAttempt,
+        correctedText: transferAttempt,
+        targetHit: analysis.targetHit,
+        accuracyScore: analysis.score,
+        fluencyScore: 0,
+        latencyMs: null,
+        passed: analysis.targetHit,
+        verified: analysis.masteryEligible,
+      });
+      addIssuesToErrorWorkshop(analysis, transferAttempt);
+      if (analysis.targetHit) writePlan(`${key}:transfer`, "done");
+    } finally {
+      setTransferChecking(false);
+    }
   }
 
   async function startRecording() {
@@ -543,6 +612,11 @@ export function AutomaticityScreen({
     } catch {
       /* already stopped */
     }
+    // Snapshot the transcript right as recording stops, before the learner
+    // has any chance to edit it in the review textarea below -- this is
+    // what Attempt.rawTranscript should preserve, separately from whatever
+    // (possibly edited) text ends up in inputText at save time.
+    rawTranscriptRef.current = transcript;
     setRecording(false);
     setMessage("Recording stopped. Check and save the transcript.");
   }
@@ -564,6 +638,21 @@ export function AutomaticityScreen({
         targetUses: analysis.targetUses,
       });
     });
+    const willSaveAudio = state.settings.saveAudio && Boolean(audioRef.current);
+    const audioId = willSaveAudio ? makeId("automaticity-audio") : undefined;
+    // Real, audio-derived fluency when a recording is available to analyze
+    // (independent of whether it's being *persisted* -- analysis just needs
+    // the in-memory blob, not long-term storage). If there's no audio to
+    // analyze, 0 follows this codebase's existing "not applicable/not
+    // measured" convention (the same value every non-speaking mode already
+    // passes here) rather than presenting a text-derived estimate as if it
+    // were a measured fluency score.
+    const audioFluency = audioRef.current
+      ? await analyzeAudioFluency(audioRef.current)
+      : null;
+    const fluencyScore = audioFluency
+      ? scoreFromActiveSpeech(analysis.wordCount, audioFluency.activeSpeechSeconds)
+      : 0;
     recordAttempt({
       grammarTitle: topic,
       mode: "speaking",
@@ -571,21 +660,20 @@ export function AutomaticityScreen({
       correctedText: transcript,
       targetHit: analysis.targetHit && seconds >= 45,
       accuracyScore: analysis.score,
-      fluencyScore: Math.min(
-        100,
-        Math.round((analysis.wordCount / Math.max(1, seconds) / 2) * 100),
-      ),
+      fluencyScore,
       latencyMs: null,
       passed: analysis.targetHit && seconds >= 45,
-      verified: false,
+      verified: analysis.masteryEligible,
+      audioId,
+      rawTranscript: rawTranscriptRef.current || transcript,
     });
     addIssuesToErrorWorkshop(analysis, transcript);
     if (analysis.targetHit && (seconds >= 45 || !audioRef.current)) {
       writePlan(`${key}:speaking`, "done");
     }
-    if (state.settings.saveAudio && audioRef.current) {
+    if (willSaveAudio && audioRef.current && audioId) {
       await putAudio({
-        id: makeId("automaticity-audio"),
+        id: audioId,
         blob: audioRef.current,
         createdAt: new Date().toISOString(),
         grammarTitle: topic,
@@ -880,6 +968,28 @@ export function AutomaticityScreen({
           />
           <Button onClick={saveSpeaking}>Analyse and save speaking</Button>
           {speechAnalysis ? <Feedback analysis={speechAnalysis} /> : null}
+
+          <div className="mt-2 space-y-3 rounded-2xl border border-violet-200 bg-violet-50/60 p-4">
+            <div>
+              <p className="text-sm font-bold text-violet-950">
+                Transfer: a new situation
+              </p>
+              <p className="text-sm text-muted-foreground">{situation}</p>
+            </div>
+            <Textarea
+              aria-label="Transfer response"
+              onChange={(event) => setTransferAttempt(event.target.value)}
+              placeholder="Respond to the situation above using this lesson's target form."
+              value={transferAttempt}
+            />
+            <Button
+              disabled={!transferAttempt.trim() || transferChecking}
+              onClick={() => void saveTransfer()}
+            >
+              {transferChecking ? "Checking…" : "Check transfer"}
+            </Button>
+            {transferAnalysis ? <Feedback analysis={transferAnalysis} /> : null}
+          </div>
         </CardContent>
       </Card> : null}
 

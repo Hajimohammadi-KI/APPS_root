@@ -86,6 +86,17 @@ export interface Attempt {
 	passed: boolean;
 	verified?: boolean;
 	createdAt: string;
+	// Speaking attempts only. audioId links to the matching record saved via
+	// putAudio() (lib/audio-db.ts), so a speaking score is traceable back to
+	// the exact recording it was derived from. rawTranscript is the
+	// speech-to-text output captured the moment recording stopped, before
+	// the learner has any chance to edit it in the review textarea --
+	// inputText for a speaking attempt is that post-edit ("reviewed")
+	// version. The two are intentionally allowed to be identical (most
+	// learners don't edit); what matters is that editing one never
+	// overwrites the other.
+	audioId?: string;
+	rawTranscript?: string;
 }
 
 export interface ErrorItem {

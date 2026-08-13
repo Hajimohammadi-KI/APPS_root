@@ -19,6 +19,12 @@ export interface AutomaticityAnalysis {
 	score: number;
 	targetHit: boolean;
 	issues: AutomaticityIssue[];
+	// Mirrors lib/assessment.ts's Evaluation.masteryEligible: true only when a
+	// real online provider assessed this exact response and it passed. This
+	// is what recordAttempt's `verified` flag should be set from -- an
+	// attempt must never count toward mastery just because the task was
+	// completed or the learner marked it done.
+	masteryEligible: boolean;
 }
 
 const IRREGULAR_PARTICIPLES = [
@@ -152,6 +158,11 @@ export function analyzePresentPerfect(text: string): AutomaticityAnalysis {
 		score,
 		targetHit: sentenceCount >= 6 && targetUses >= 4 && issues.length === 0,
 		issues,
+		// This path is a local regex heuristic (auxiliary-agreement pattern
+		// matching), not an exact-match check and not a real online provider
+		// call -- unlike recognition mode's exact-match, it can misfire, so it
+		// does not count as a verified assessment.
+		masteryEligible: false,
 	};
 }
 

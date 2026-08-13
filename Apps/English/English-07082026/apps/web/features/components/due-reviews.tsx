@@ -6,18 +6,31 @@
 // analyzeLessonOutput) and scheduled with dueAt/intervalDays/successStreak,
 // but nothing ever displayed them or let the learner work through a due
 // item -- completeReview() (the scheduling update) didn't exist either.
-// Free recall first, reference revealed after, self-rated pass/fail --
-// the same core loop as a classic spaced-repetition flashcard review,
-// which is the right fit here since each review already carries its own
-// original/corrected reference text.
+//
+// The recall attempt is graded the same way Mission grades writing/speaking
+// (lib/assessment.ts's evaluateResponse, the same masteryEligible signal
+// F1 wired into recordAttempt) -- not a self-rated "I got it right" button.
+// Per AUTOMATICITY_PRODUCT_CONTRACT.md §8.2, a self-rating must never
+// independently advance mastery, automaticity, or a review's schedule; an
+// earlier version of this component used exactly that anti-pattern.
 
 import * as React from "react";
 import { RotateCcw, Sparkles } from "lucide-react";
+import { grammarUnits } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppStore } from "@/features/store/app-store";
+import { evaluateResponse, type Evaluation } from "@/lib/assessment";
+
+function grammarFor(topic: string) {
+  return (
+    grammarUnits.find((unit) => unit.title === topic) ??
+    grammarUnits.find((unit) => unit.title.toLocaleLowerCase("en") === "present perfect") ??
+    grammarUnits.at(0) ?? null
+  );
+}
 
 export function DueReviews() {
   const { state, completeReview } = useAppStore();
@@ -30,27 +43,46 @@ export function DueReviews() {
   );
   const [index, setIndex] = React.useState(0);
   const [attempt, setAttempt] = React.useState("");
-  const [revealed, setRevealed] = React.useState(false);
+  const [checking, setChecking] = React.useState(false);
+  const [result, setResult] = React.useState<Evaluation | null>(null);
 
   const current = dueItems[Math.min(index, dueItems.length - 1)];
 
   React.useEffect(() => {
     setIndex(0);
     setAttempt("");
-    setRevealed(false);
+    setResult(null);
   }, [dueItems.length === 0]);
 
   if (!current) return null;
 
   const advance = () => {
     setAttempt("");
-    setRevealed(false);
+    setResult(null);
     setIndex((value) => Math.min(value + 1, Math.max(dueItems.length - 2, 0)));
   };
 
-  const handleResult = (wasCorrect: boolean) => {
-    completeReview(current.id, wasCorrect);
-    advance();
+  const checkRecall = async () => {
+    const grammar = grammarFor(current.topic);
+    if (!grammar) return;
+    setChecking(true);
+    try {
+      const evaluation = await evaluateResponse(
+        attempt,
+        {
+          grammar,
+          minWords: 4,
+          minSentences: 1,
+          requiredTargetUses: 1,
+          taskPrompt: `Recall from memory: ${current.topic}. Write it without looking anything up.`,
+        },
+        state.settings,
+      );
+      setResult(evaluation);
+      completeReview(current.id, evaluation.masteryEligible);
+    } finally {
+      setChecking(false);
+    }
   };
 
   return (
@@ -69,7 +101,7 @@ export function DueReviews() {
         <div>
           <strong>{current.topic}</strong>
           <p className="text-sm text-muted-foreground">
-            Recall this from memory before checking the reference below. Streak: {current.successStreak}
+            Recall this from memory before checking. Streak: {current.successStreak}
           </p>
         </div>
         <Textarea
@@ -77,23 +109,28 @@ export function DueReviews() {
           onChange={(event) => setAttempt(event.target.value)}
           placeholder="Write it from memory, without looking anything up."
           rows={3}
+          disabled={checking}
         />
-        {!revealed ? (
-          <Button onClick={() => setRevealed(true)} disabled={!attempt.trim()}>
-            <Sparkles className="size-4" /> Reveal reference
+        {!result ? (
+          <Button onClick={() => void checkRecall()} disabled={!attempt.trim() || checking}>
+            <Sparkles className="size-4" /> {checking ? "Checking…" : "Check my recall"}
           </Button>
         ) : (
           <div className="space-y-3">
             <div className="rounded-lg border border-amber-200 bg-white p-3 text-sm">
-              <p className="text-muted-foreground">Reference:</p>
+              <p className="text-muted-foreground">
+                {result.masteryEligible
+                  ? "Correct — this counts toward your review streak."
+                  : result.online
+                    ? "Not quite yet — this attempt did not pass, so the streak resets rather than advances."
+                    : "Could not verify online, so this attempt does not count toward your streak. Reconnect and try again when you can."}
+              </p>
+              <p className="mt-2 text-muted-foreground">Reference:</p>
               <p>{current.corrected}</p>
             </div>
-            <div className="flex flex-wrap gap-2">
-              <Button onClick={() => handleResult(true)}>I got it right</Button>
-              <Button variant="outline" onClick={() => handleResult(false)}>
-                I need more practice
-              </Button>
-            </div>
+            <Button variant="outline" onClick={advance}>
+              Next
+            </Button>
           </div>
         )}
       </CardContent>

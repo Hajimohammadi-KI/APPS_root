@@ -92,7 +92,7 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
   };
 
   const courses = [
-    { title: "Expand Your English Vocabulary", detail: `${level} · ${dueReviews} reviews due`, tone: "rose", screen: "flashcards", icon: BookOpen },
+    { title: "Expand Your English Vocabulary", detail: `${level} · ${dueReviews} reviews due`, tone: "rose", screen: "progress", icon: BookOpen },
     { title: "Build Strong Grammar Skills", detail: `${practiced} of ${levelUnits.length} units explored`, tone: "lavender", screen: "grammar", icon: Target },
     { title: "Master Everyday Conversations", detail: `${state.sessions.length} speaking sessions saved`, tone: "peach", screen: "studio", icon: MessageCircle },
   ] as const;

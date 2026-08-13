@@ -190,7 +190,10 @@ if (-not (Test-Path -LiteralPath $configurationPath -PathType Leaf)) {
   throw "Setup configuration does not exist: $configurationPath"
 }
 
-$config = Get-Content -Raw -LiteralPath $configurationPath | ConvertFrom-Json
+# Same BOM-less-file encoding trap as SetupApp.cs below: setup.config.json
+# has no BOM (JSON convention), so without forcing UTF-8, Get-Content reads
+# its umlauts (tagline etc.) through the system codepage and corrupts them.
+$config = Get-Content -Raw -Encoding UTF8 -LiteralPath $configurationPath | ConvertFrom-Json
 $configDirectory = Split-Path -Parent $configurationPath
 $projectRoot = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.projectRoot)
 $desktopProject = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.desktopProject)
@@ -437,7 +440,11 @@ if (Test-Path -LiteralPath $payloadZip) {
   $false)
 
 Write-Host "[5/7] Applying the product identity and modern visual theme..."
-$source = Get-Content -Raw -LiteralPath (Join-Path $scriptRoot 'SetupApp.cs')
+# SetupApp.cs has no UTF-8 BOM, and Windows PowerShell's Get-Content defaults
+# a BOM-less file to the system codepage (not UTF-8) -- silently mangling
+# every umlaut (ü/ä/ö/Ä/Ö/Ü) into mojibake ("Ã¼" etc.) before it's even
+# written back out with a correct encoding. Force UTF-8 on read.
+$source = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $scriptRoot 'SetupApp.cs')
 $replacements = [ordered]@{
   '__PRODUCT_NAME__' = ConvertTo-CSharpLiteralContent ([string]$config.productName)
   '__VERSION__' = ConvertTo-CSharpLiteralContent ([string]$config.version)

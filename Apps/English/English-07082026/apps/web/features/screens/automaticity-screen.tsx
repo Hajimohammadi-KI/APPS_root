@@ -33,6 +33,7 @@ import {
 import { evaluateResponse } from "@/lib/assessment";
 import { putAudio } from "@/lib/audio-db";
 import { makeId, todayKey } from "@/lib/utils";
+import { DueReviews } from "@/features/components/due-reviews";
 
 function requireDefaultGrammar() {
   const grammar =
@@ -629,6 +630,8 @@ export function AutomaticityScreen({
           </CardHeader>
         </Card>
       ) : null}
+
+      {!embedded ? <DueReviews /> : null}
 
       {!embedded ? <Card className="border-violet-200 bg-violet-50/70" id="mission">
         <CardContent className="space-y-4 pt-5">

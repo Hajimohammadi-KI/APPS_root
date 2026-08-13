@@ -228,6 +228,33 @@ async function startLocalApplication() {
   ]);
 }
 
+// Injected into every page after it finishes loading (see did-finish-load
+// below). Idempotent: re-running it on a page that already has the button
+// (e.g. a second did-finish-load on the same document) just no-ops instead
+// of adding a duplicate. history.back() is a browser-standard no-op when
+// there's nowhere to go, so the button never needs to compute or track
+// whether "back" is currently possible -- it's always safe to show.
+const BACK_BUTTON_SCRIPT = `(function () {
+  if (document.getElementById("desktop-back-button")) return;
+  var button = document.createElement("button");
+  button.id = "desktop-back-button";
+  button.type = "button";
+  button.setAttribute("aria-label", "Go back");
+  button.textContent = "\\u2190";
+  button.style.cssText = [
+    "position:fixed", "top:12px", "left:12px", "z-index:2147483647",
+    "width:36px", "height:36px", "border-radius:50%",
+    "border:1px solid rgba(73,52,101,0.25)", "background:rgba(255,255,255,0.92)",
+    "color:#493465", "font-size:18px", "font-weight:700", "line-height:1",
+    "cursor:pointer", "box-shadow:0 2px 8px rgba(36,27,47,0.18)",
+    "display:flex", "align-items:center", "justify-content:center",
+  ].join(";");
+  button.addEventListener("mouseenter", function () { button.style.background = "#f1eafa"; });
+  button.addEventListener("mouseleave", function () { button.style.background = "rgba(255,255,255,0.92)"; });
+  button.addEventListener("click", function () { window.history.back(); });
+  document.body.appendChild(button);
+})();`;
+
 function isAppUrl(value) {
   try {
     return new URL(value).origin === APP_ORIGIN;
@@ -240,6 +267,29 @@ function isSafeExternalUrl(value) {
   try {
     const url = new URL(value);
     return url.protocol === "https:" || url.protocol === "mailto:";
+  } catch {
+    return false;
+  }
+}
+
+// The suite's other local apps (Tracker, PDF Reader, Settings) are trusted
+// integration targets on the same machine, not arbitrary external sites --
+// e.g. /notebook redirects here so "Notebook & PDF Reader" opens the real
+// PDF Reader app. Without this, isAppUrl's strict same-origin check treats
+// that redirect as "external", isSafeExternalUrl rejects it too (plain
+// http, not https), and the navigation is silently blocked -- or, if the
+// redirect slips past will-navigate/will-redirect and the target isn't
+// running, it fails and falls through to the generic offline.html with a
+// misleading "check your connection" message.
+const COMPANION_APP_ORIGINS = new Set([
+  "http://127.0.0.1:4312", // Tracker
+  "http://127.0.0.1:4322", // PDF Reader
+  "http://127.0.0.1:4323", // Settings
+]);
+
+function isCompanionAppUrl(value) {
+  try {
+    return COMPANION_APP_ORIGINS.has(new URL(value).origin);
   } catch {
     return false;
   }
@@ -382,10 +432,15 @@ function createMainWindow() {
     void mainWindow.webContents.insertCSS(
       ".install-app-controls { display: none !important; }",
     );
+    // No page in this app (or the static/offline fallback pages) has its
+    // own "go back" control, and an Electron window has no browser chrome
+    // to fall back on -- so every page gets one injected here, once, at
+    // the shell level, instead of needing it built into each page.
+    void mainWindow.webContents.executeJavaScript(BACK_BUTTON_SCRIPT, true);
   });
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    if (isAppUrl(url)) {
+    if (isAppUrl(url) || isCompanionAppUrl(url)) {
       void mainWindow.loadURL(url, { userAgent: desktopUserAgent });
     } else if (isSafeExternalUrl(url)) {
       void shell.openExternal(url);
@@ -394,7 +449,17 @@ function createMainWindow() {
   });
 
   mainWindow.webContents.on("will-navigate", (event, url) => {
-    if (isAppUrl(url)) {
+    if (isAppUrl(url) || isCompanionAppUrl(url)) {
+      return;
+    }
+    event.preventDefault();
+    if (isSafeExternalUrl(url)) {
+      void shell.openExternal(url);
+    }
+  });
+
+  mainWindow.webContents.on("will-redirect", (event, url) => {
+    if (isAppUrl(url) || isCompanionAppUrl(url)) {
       return;
     }
     event.preventDefault();
@@ -410,12 +475,13 @@ function createMainWindow() {
   let showingOfflinePage = false;
   mainWindow.webContents.on(
     "did-fail-load",
-    (_event, errorCode, _description, _url, isMainFrame) => {
+    (_event, errorCode, _description, url, isMainFrame) => {
       if (!isMainFrame || errorCode === -3 || showingOfflinePage) {
         return;
       }
       showingOfflinePage = true;
-      void mainWindow.loadFile(path.join(__dirname, "offline.html"));
+      const query = isCompanionAppUrl(url) ? { reason: "companion" } : {};
+      void mainWindow.loadFile(path.join(__dirname, "offline.html"), { query });
     },
   );
 

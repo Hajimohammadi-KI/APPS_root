@@ -79,8 +79,13 @@
         line-height: 1.7;
       }
 
-      button {
+      .actions {
+        display: flex;
+        gap: 0.75rem;
         margin-top: 1.6rem;
+      }
+
+      button {
         border: 1px solid #493465;
         border-radius: 0.8rem;
         background: #493465;
@@ -94,19 +99,43 @@
       button:hover {
         color: #7a5aa0;
       }
+
+      button.secondary {
+        background: transparent;
+        color: #493465;
+      }
     </style>
   </head>
   <body>
     <main>
       <div class="mark" aria-hidden="true">A→</div>
       <p class="eyebrow">English Grammar Automaticity</p>
-      <h1>You are currently offline.</h1>
-      <p>
+      <h1 id="heading">You are currently offline.</h1>
+      <p id="detail">
         The learning app could not reach its secure online service. Check your
         connection, then try again. Your saved desktop data remains on this
         computer.
       </p>
-      <button type="button" onclick="location.reload()">Try again</button>
+      <div class="actions">
+        <button type="button" class="secondary" onclick="window.history.back()">
+          ← Go back
+        </button>
+        <button type="button" onclick="location.reload()">Try again</button>
+      </div>
     </main>
+    <script>
+      // did-fail-load in main.cjs passes ?reason=companion when the failed
+      // navigation was to one of this suite's other local apps (Tracker,
+      // PDF Reader, Settings) rather than a real connectivity problem --
+      // most often because that app just isn't running yet.
+      if (new URLSearchParams(location.search).get("reason") === "companion") {
+        document.getElementById("heading").textContent =
+          "A connected app isn't running.";
+        document.getElementById("detail").textContent =
+          "This feature opens one of the other local study apps (Tracker, PDF Reader, or Settings), " +
+          "which isn't currently running. Start it from its own shortcut, or use the Starter App to launch " +
+          "all the apps together, then try again.";
+      }
+    </script>
   </body>
 </html>

@@ -194,6 +194,14 @@ const LEGACY_KEY = "GrammarAutomaticityV11_en";
 const RETIRED_PRIVATE_STORAGE_KEY = "thesis-b2-sprint-v24";
 export const CEFR_ORDER: readonly CefrLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
+// Spaced-repetition schedule for reviews: each correct recall advances one
+// step (reset to the first step on a miss). Reaching the streak threshold
+// means the item has been recalled correctly enough times running that it's
+// considered automatized, and it retires from the active review queue.
+export const RECALL_INTERVAL_STEPS_DAYS: readonly number[] = [1, 3, 7, 14, 30, 60];
+const FIRST_RECALL_INTERVAL_DAYS = 1;
+export const RECALL_MASTERY_STREAK_THRESHOLD = 5;
+
 function persistAppState(state: AppState) {
 	if (typeof window === "undefined") return;
 	try {
@@ -909,6 +917,7 @@ interface StoreValue {
 	replaceState: (state: AppState) => void;
 	recordAttempt: (attempt: Omit<Attempt, "id" | "createdAt">) => void;
 	setTodayGrammar: (grammar: GrammarUnit) => void;
+	completeReview: (reviewId: string, wasCorrect: boolean) => void;
 }
 
 const AppStoreContext = React.createContext<StoreValue | null>(null);
@@ -1154,6 +1163,39 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 		[mutate],
 	);
 
+	const completeReview = React.useCallback(
+		(reviewId: string, wasCorrect: boolean) => {
+			mutate((draft) => {
+				const review = draft.reviews.find((item) => item.id === reviewId);
+				if (!review) return;
+				if (wasCorrect) {
+					review.successStreak += 1;
+					review.stabilityScore = Math.min(100, review.stabilityScore + 15);
+					if (review.successStreak >= RECALL_MASTERY_STREAK_THRESHOLD) {
+						review.status = "done";
+						return;
+					}
+					const stepIndex = RECALL_INTERVAL_STEPS_DAYS.indexOf(review.intervalDays);
+					const clampedIndex = Math.min(
+						Math.max(stepIndex + 1, 0),
+						RECALL_INTERVAL_STEPS_DAYS.length - 1,
+					);
+					const nextInterval = RECALL_INTERVAL_STEPS_DAYS[clampedIndex] ?? FIRST_RECALL_INTERVAL_DAYS;
+					review.intervalDays = nextInterval;
+					review.dueAt = Date.now() + nextInterval * 86_400_000;
+					review.status = "pending";
+				} else {
+					review.successStreak = 0;
+					review.stabilityScore = Math.max(0, review.stabilityScore - 20);
+					review.intervalDays = FIRST_RECALL_INTERVAL_DAYS;
+					review.dueAt = Date.now() + FIRST_RECALL_INTERVAL_DAYS * 86_400_000;
+					review.status = "pending";
+				}
+			});
+		},
+		[mutate],
+	);
+
 	const value = React.useMemo(
 		() => ({
 			state,
@@ -1162,8 +1204,9 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 			replaceState,
 			recordAttempt,
 			setTodayGrammar,
+			completeReview,
 		}),
-		[state, hydrated, mutate, replaceState, recordAttempt, setTodayGrammar],
+		[state, hydrated, mutate, replaceState, recordAttempt, setTodayGrammar, completeReview],
 	);
 
 	return (

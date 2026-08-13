@@ -22,13 +22,13 @@
   .rhythm-summary .circular-progress { grid-row: 1 / 4; }
   .rhythm-summary .activity-legend { justify-content: flex-start; }
   .journey-track { gap: 18px; }
-  .hero { grid-template-columns: 1fr 190px; }
+  .hero { grid-template-columns: minmax(0, 1fr) 190px; }
   .integration-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .settings-plan-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .settings-plan-overview article:first-child { grid-column: 1 / -1; }
   .settings-plan-overview > .button { justify-self: start; }
-  .filter-panel { grid-template-columns: 1fr 1fr; }
+  .filter-panel { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .search-field { grid-column: 1 / -1; }
   .expose-plan-card { grid-template-columns: 52px minmax(0, 1fr); }
   .expose-plan-actions { grid-column: 1 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -78,7 +78,7 @@
   .hero { grid-template-columns: 1fr; }
   .schedule-strip { grid-template-columns: 1fr; }
   .progress-orbit {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
     justify-content: start;
   }
   .progress-ring,
@@ -130,7 +130,7 @@
   .dashboard-metrics { grid-template-columns: 1fr; }
   .rhythm-card, .journey-card { padding: 14px; }
   .rhythm-week { grid-template-columns: 1fr; gap: 8px; }
-  .rhythm-week > header { grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
+  .rhythm-week > header { grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 8px; }
   .rhythm-week > header span { text-align: right; }
   .rhythm-days { grid-template-columns: repeat(6, minmax(44px, 1fr)); gap: 5px; }
   .rhythm-summary {

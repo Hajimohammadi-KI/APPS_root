@@ -9,7 +9,7 @@
 .modal-head h2 { margin: 4px 0; font-size: 28px; }
 .modal-head p { color: #535f6e; margin: 0; font-size: 14px; }
 .modal-head > button { border: 0; background: transparent; font-size: 28px; }
-.setting-card { display: grid; grid-template-columns: 1fr auto; gap: 10px 14px; border: 1px solid #ddd9d0; background: white; border-radius: 15px; padding: 16px; margin-bottom: 10px; }
+.setting-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 14px; border: 1px solid #ddd9d0; background: white; border-radius: 15px; padding: 16px; margin-bottom: 10px; }
 .setting-card p { color: #525e6e; font-size: 14px; margin: 5px 0; line-height: 1.65; }
 .setting-card > button { border: 1px solid #d4d0c7; background: #f7f5ef; border-radius: 10px; padding: 10px 12px; }
 .setting-card .accent-button { background: #f1ebf8; border-color: #c8b5de; color: #493465; font-weight: 700; }
@@ -30,7 +30,7 @@
 .drive-api-actions a { background: #8b5a12; color: #fff; text-decoration: none; }
 .drive-api-actions button { background: #fff; color: #6f450c; }
 .drive-api-actions a:focus-visible, .drive-api-actions button:focus-visible { outline: 3px solid #675080; outline-offset: 3px; }
-.setting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.setting-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
 .setting-card.compact { display: flex; flex-direction: column; }
 .model-hint { border-left: 3px solid #5b5ce2; background: #f4f3ff; border-radius: 8px; padding: 8px 10px; }
 .provider-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
@@ -38,7 +38,7 @@
 .button-row button { flex: 1; min-height: 44px; border: 1px solid #d4d0c7; background: #f7f5ef; border-radius: 9px; padding: 10px; font-size: 13px; font-weight: 700; }
 .button-row button:disabled { border-color: #cfc4dc; background: #eee8f4; color: #5e556d; opacity: 1; cursor: not-allowed; }
 .drive-file-list { max-height: 220px; overflow: auto; display: flex; flex-direction: column; gap: 7px; }
-.drive-file-list button { width: 100%; border: 1px solid #dedbd2; background: #fff; border-radius: 10px; padding: 10px; display: grid; grid-template-columns: auto 1fr auto; gap: 10px; text-align: left; align-items: center; }
+.drive-file-list button { width: 100%; border: 1px solid #dedbd2; background: #fff; border-radius: 10px; padding: 10px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; text-align: left; align-items: center; }
 .drive-file-list button:hover { border-color: #bba6d4; background: #f6f1fb; }
 .drive-file-list small { display: block; color: #768292; margin-top: 3px; }
 .export-buttons { display: flex; flex-wrap: wrap; gap: 8px; }

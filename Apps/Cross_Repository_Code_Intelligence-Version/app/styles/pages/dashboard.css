@@ -483,7 +483,7 @@
 .journey-actions .button { min-height: 44px; font-size: 12px; }
 .journey-track { position: relative; display: grid; grid-template-columns: repeat(5, minmax(130px, 1fr)); gap: 32px; overflow-x: auto; margin-top: 13px; padding: 4px 0; }
 .journey-track::before { position: absolute; top: 40px; right: 7%; left: 7%; border-top: 1px dashed #afa3bd; content: ""; }
-.journey-track button { position: relative; z-index: 1; display: grid; min-width: 130px; grid-template-columns: auto 1fr; gap: 0 10px; align-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 14px; color: inherit; cursor: pointer; text-align: left; transition: border-color 160ms ease, transform 140ms cubic-bezier(.23, 1, .32, 1), box-shadow 160ms ease; }
+.journey-track button { position: relative; z-index: 1; display: grid; min-width: 130px; grid-template-columns: auto minmax(0, 1fr); gap: 0 10px; align-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 14px; color: inherit; cursor: pointer; text-align: left; transition: border-color 160ms ease, transform 140ms cubic-bezier(.23, 1, .32, 1), box-shadow 160ms ease; }
 .journey-track button:hover { border-color: var(--teal-500); box-shadow: var(--shadow-sm); }
 .journey-track button.current { border: 2px solid var(--teal-700); }
 .journey-track button.complete { background: var(--mint-50); }

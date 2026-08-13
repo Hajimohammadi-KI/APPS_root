@@ -118,7 +118,7 @@
 
 .brand-mark {
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 42px minmax(0, 1fr);
   align-items: center;
   gap: 10px;
   margin: 0 6px 24px;

@@ -23,7 +23,7 @@ body {
 .app-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 230px 1fr;
+  grid-template-columns: 230px minmax(0, 1fr);
   max-width: 1500px;
   margin: auto;
   background: white;
@@ -219,7 +219,7 @@ header p,
 }
 .steps {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 6px;
@@ -230,7 +230,7 @@ header p,
   border: 0;
   border-radius: 12px;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 4px;
   padding: 12px 8px;
@@ -304,7 +304,7 @@ header p,
   border-radius: 18px;
   padding: 20px;
   display: grid;
-  grid-template-columns: 150px 1fr 70px;
+  grid-template-columns: 150px minmax(0, 1fr) 70px;
   gap: 14px;
   align-items: center;
   min-height: 390px;
@@ -423,7 +423,7 @@ header p,
 }
 .metrics {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 .metrics div {
   border: 1px solid var(--line);
@@ -502,7 +502,7 @@ footer {
   border-top: 1px solid var(--line);
   padding: 16px 22px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 20px;
 }
 .end {
@@ -516,17 +516,17 @@ input {
 }
 @media (max-width: 1100px) {
   .app-shell {
-    grid-template-columns: 190px 1fr;
+    grid-template-columns: 190px minmax(0, 1fr);
   }
   .workspace {
     grid-template-columns: 1fr;
   }
   .evidence {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .topic-bar {
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
   }
   .status {
     display: none;
@@ -556,7 +556,7 @@ input {
   }
   .topic-bar {
     margin: 12px;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
   }
   .topic-bar button {
     display: none;
@@ -586,7 +586,7 @@ input {
     display: none;
   }
   .record-controls {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .record-controls .primary {
     grid-column: 1/-1;
@@ -655,7 +655,7 @@ input {
 }
 .improve-compare {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
   margin: 18px 0;
 }
@@ -786,7 +786,7 @@ input {
 }
 .review-grid {
   display: grid;
-  grid-template-columns: 1fr 1.4fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr);
   gap: 10px;
   margin-top: 18px;
 }
@@ -810,7 +810,7 @@ input {
 }
 .correction-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
   margin-top: 18px;
 }
@@ -822,7 +822,7 @@ input {
 }
 .save-summary {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin-top: 18px;
 }

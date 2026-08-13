@@ -1,5 +1,5 @@
-<!-- Title: رودمپ اصلاح پنج اپ -->
-<title>رودمپ اصلاح پنج اپ</title>
+<!-- Title: Automaticity Fix Timeline -->
+<title>Automaticity Fix Timeline</title>
 <style>
   :root {
     --bg: #eef1f3;
@@ -13,16 +13,14 @@
     --accent-strong: #163a5c;
     --accent-soft: #e4edf5;
 
-    --critical: #b3261e;
-    --critical-soft: #fbeae8;
-    --high: #a5570a;
-    --high-soft: #fbeedd;
-    --medium: #157a6e;
-    --medium-soft: #e1f3ef;
-    --long: #6b5ca5;
-    --long-soft: #efebf7;
-    --release: #1f4e79;
-    --release-soft: #e4edf5;
+    --done: #157a6e;
+    --done-soft: #e1f3ef;
+    --active: #1f4e79;
+    --active-soft: #e4edf5;
+    --blocked: #b3261e;
+    --blocked-soft: #fbeae8;
+    --pending: #6b7684;
+    --pending-soft: #eceff1;
 
     --shadow: 0 1px 2px rgba(24, 36, 48, 0.06), 0 8px 24px rgba(24, 36, 48, 0.06);
     --dot: rgba(31, 78, 121, 0.07);
@@ -41,16 +39,14 @@
       --accent-strong: #8fbfe8;
       --accent-soft: #1d3852;
 
-      --critical: #ff6b62;
-      --critical-soft: #3b1917;
-      --high: #f0a559;
-      --high-soft: #3a2712;
-      --medium: #4fd1be;
-      --medium-soft: #0f332e;
-      --long: #b6a6e0;
-      --long-soft: #2a2440;
-      --release: #6fa8dc;
-      --release-soft: #1d3852;
+      --done: #4fd1be;
+      --done-soft: #0f332e;
+      --active: #6fa8dc;
+      --active-soft: #1d3852;
+      --blocked: #ff6b62;
+      --blocked-soft: #3b1917;
+      --pending: #97a5b3;
+      --pending-soft: #232f3e;
 
       --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 28px rgba(0, 0, 0, 0.3);
       --dot: rgba(111, 168, 220, 0.08);
@@ -69,16 +65,14 @@
     --accent-strong: #8fbfe8;
     --accent-soft: #1d3852;
 
-    --critical: #ff6b62;
-    --critical-soft: #3b1917;
-    --high: #f0a559;
-    --high-soft: #3a2712;
-    --medium: #4fd1be;
-    --medium-soft: #0f332e;
-    --long: #b6a6e0;
-    --long-soft: #2a2440;
-    --release: #6fa8dc;
-    --release-soft: #1d3852;
+    --done: #4fd1be;
+    --done-soft: #0f332e;
+    --active: #6fa8dc;
+    --active-soft: #1d3852;
+    --blocked: #ff6b62;
+    --blocked-soft: #3b1917;
+    --pending: #97a5b3;
+    --pending-soft: #232f3e;
 
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 28px rgba(0, 0, 0, 0.3);
     --dot: rgba(111, 168, 220, 0.08);
@@ -95,19 +89,16 @@
   }
 
   .page {
-    direction: rtl;
-    max-width: 1040px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 56px 24px 96px;
-    font-family: "Segoe UI", Tahoma, "Vazirmatn", "Noto Sans Arabic", sans-serif;
+    font-family: "Segoe UI", system-ui, Tahoma, sans-serif;
     display: flex;
     flex-direction: column;
-    gap: 64px;
+    gap: 48px;
   }
 
-  .ltr {
-    direction: ltr;
-    unicode-bidi: isolate;
+  .mono {
     font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
     font-variant-numeric: tabular-nums;
   }
@@ -115,8 +106,6 @@
   /* ---------- header ---------- */
 
   .eyebrow {
-    direction: ltr;
-    unicode-bidi: isolate;
     display: inline-block;
     font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
     font-size: 12px;
@@ -129,38 +118,116 @@
   }
 
   h1 {
-    font-size: clamp(30px, 4vw, 42px);
-    line-height: 1.35;
+    font-size: clamp(28px, 4vw, 38px);
+    line-height: 1.3;
     margin: 18px 0 10px;
     font-weight: 700;
     text-wrap: balance;
   }
 
   .lede {
-    font-size: 17px;
-    line-height: 1.95;
+    font-size: 16.5px;
+    line-height: 1.85;
     color: var(--text-dim);
     max-width: 62ch;
-    margin: 0 0 20px;
+    margin: 0;
   }
 
-  .meta-row {
+  /* ---------- you are here ---------- */
+
+  .here {
+    background: var(--surface);
+    border: 1.5px solid var(--active);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .here-head {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px 22px;
-    font-size: 14px;
-    color: var(--text-dim);
-    border-top: 1px solid var(--line);
-    padding-top: 16px;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 22px;
+    background: var(--active-soft);
+    border-bottom: 1px solid var(--line);
   }
 
-  .meta-row strong { color: var(--text); font-weight: 600; }
+  .here-head .pulse {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--active);
+    flex: none;
+  }
 
-  /* ---------- kpi strip ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .here-head .pulse {
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+  }
 
-  .kpi-grid {
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--active) 40%, transparent); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+  }
+
+  .here-head strong {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--active);
+  }
+
+  .here-body {
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .here-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .live-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .live-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 10px 12px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+
+  .live-list .app-tag {
+    flex: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  /* ---------- stat strip ---------- */
+
+  .stat-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
@@ -168,274 +235,141 @@
     overflow: hidden;
   }
 
-  .kpi {
+  .stat {
     background: var(--surface);
-    padding: 22px 20px;
+    padding: 18px 18px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
   }
 
-  .kpi-num {
-    font-size: 34px;
+  .stat-num {
+    font-size: 28px;
     font-weight: 700;
     line-height: 1;
     color: var(--accent-strong);
   }
 
-  .kpi-label {
-    font-size: 13.5px;
+  .stat-label {
+    font-size: 12.5px;
     color: var(--text-dim);
-    line-height: 1.6;
+    line-height: 1.5;
   }
 
-  /* ---------- section heads ---------- */
-
-  section > .section-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 22px;
-  }
+  /* ---------- timeline ---------- */
 
   h2 {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
-    margin: 0;
+    margin: 0 0 20px;
   }
 
-  .section-note {
-    font-size: 13.5px;
-    color: var(--text-dim);
+  .timeline {
+    position: relative;
+    padding-inline-start: 28px;
+    border-inline-start: 2px solid var(--line);
   }
 
-  /* ---------- severity badges ---------- */
+  .step {
+    position: relative;
+    padding-bottom: 30px;
+  }
+
+  .step:last-child { padding-bottom: 0; }
+
+  .step::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: -35px;
+    top: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 3px solid var(--step-color, var(--pending));
+  }
+
+  .step.is-active::before {
+    background: var(--active);
+    border-color: var(--active);
+  }
+
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .step-title {
+    font-size: 15.5px;
+    font-weight: 700;
+  }
 
   .badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 12.5px;
-    font-weight: 600;
-    padding: 4px 11px;
+    gap: 5px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 3px 10px;
     border-radius: 999px;
-    white-space: nowrap;
+    color: var(--step-color, var(--pending));
+    background: var(--step-soft, var(--pending-soft));
   }
 
   .badge::before {
     content: "";
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: currentColor;
-    flex: none;
   }
 
-  .badge--critical { color: var(--critical); background: var(--critical-soft); }
-  .badge--high { color: var(--high); background: var(--high-soft); }
-  .badge--medium { color: var(--medium); background: var(--medium-soft); }
-  .badge--long { color: var(--long); background: var(--long-soft); }
-  .badge--release { color: var(--release); background: var(--release-soft); }
-
-  /* ---------- app cards ---------- */
-
-  .app-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .app-card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-
-  .app-card-head {
-    padding: 18px 22px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-  }
-
-  .app-name {
-    font-size: 17px;
-    font-weight: 700;
-    margin-inline-end: auto;
-  }
-
-  .app-meta {
-    font-size: 12.5px;
-    color: var(--text-dim);
-  }
-
-  .findings {
+  .step-detail {
     list-style: none;
     margin: 0;
-    padding: 0 22px 18px;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
   }
 
-  .findings li {
-    font-size: 14.5px;
-    line-height: 1.9;
-    padding-inline-start: 16px;
+  .step-detail li {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    padding-inline-start: 14px;
     position: relative;
   }
 
-  .findings li::before {
+  .step-detail li::before {
     content: "";
     position: absolute;
     inset-inline-start: 0;
-    top: 0.7em;
-    width: 6px;
-    height: 6px;
+    top: 0.65em;
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
     background: var(--line-strong);
   }
 
-  .findings code {
+  code {
     font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
     font-size: 12.5px;
     background: var(--surface-2);
     border: 1px solid var(--line);
     border-radius: 4px;
     padding: 1px 6px;
-    direction: ltr;
-    unicode-bidi: isolate;
-    display: inline-block;
-  }
-
-  details.more {
-    border-top: 1px solid var(--line);
-  }
-
-  details.more summary {
-    cursor: pointer;
-    list-style: none;
-    padding: 12px 22px;
-    font-size: 13px;
-    color: var(--accent);
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    user-select: none;
-  }
-
-  details.more summary::-webkit-details-marker { display: none; }
-
-  details.more summary::before {
-    content: "▸";
-    display: inline-block;
-    font-size: 10px;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    details.more summary::before { transition: transform 0.15s ease; }
-  }
-
-  details.more[open] summary::before { transform: rotate(-90deg); }
-
-  details.more summary:focus-visible,
-  .app-card-head:has(+ .findings) summary:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  details.more .findings { padding-top: 4px; }
-
-  /* ---------- timeline ---------- */
-
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 16px;
-    margin-bottom: 26px;
-    font-size: 13px;
-    color: var(--text-dim);
-  }
-
-  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
-  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
-
-  .timeline {
-    position: relative;
-    padding-inline-end: 26px;
-    border-inline-end: 2px solid var(--line);
-  }
-
-  .phase {
-    position: relative;
-    padding-inline-end: 30px;
-    padding-bottom: 40px;
-  }
-
-  .phase:last-child { padding-bottom: 4px; }
-
-  .phase::before {
-    content: "";
-    position: absolute;
-    inset-inline-end: -7px;
-    top: 4px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--surface);
-    border: 3px solid var(--phase-color, var(--accent));
-  }
-
-  .phase-head {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
-
-  .phase-title {
-    font-size: 16.5px;
-    font-weight: 700;
-  }
-
-  .phase-window {
-    font-size: 12.5px;
-    color: var(--phase-color, var(--accent));
-    font-weight: 600;
-    background: var(--phase-soft, var(--accent-soft));
-    padding: 3px 10px;
-    border-radius: 999px;
-  }
-
-  .phase-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .pill {
-    font-size: 13px;
-    line-height: 1.6;
-    padding: 7px 13px;
-    border-radius: 8px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-inline-start: 3px solid var(--phase-color, var(--accent));
-    box-shadow: var(--shadow);
   }
 
   /* ---------- footer ---------- */
 
   footer {
     border-top: 1px solid var(--line);
-    padding-top: 22px;
+    padding-top: 20px;
     font-size: 13px;
     color: var(--text-dim);
     line-height: 1.9;
@@ -443,241 +377,175 @@
 
   @media (max-width: 560px) {
     .page { padding: 40px 16px 72px; }
-    .app-name { margin-inline-end: 0; }
   }
 </style>
 
 <div class="page">
 
   <header>
-    <span class="eyebrow">ENGINEERING AUDIT · <span class="ltr">2026-08-12</span></span>
-    <h1>رودمپ اصلاح پنج اپ</h1>
+    <span class="eyebrow">LIVE STATUS</span>
+    <h1>Automaticity fix timeline</h1>
     <p class="lede">
-      نقد فنی بر پایهٔ بررسی مستقیم کد — نه مستندات — برای پنج اپلیکیشن یادگیری زبان در مونوریپوی
-      <span class="ltr">APPS_root</span>. الگوی تکرارشونده: اسکریپت‌ها و مستندات یک لایه «سبزتر» از اجرای واقعی‌اند.
+      Everything since the first code critique tonight, in order, with what's actually running right now.
+      Scroll to the bottom for what happens after the current step finishes.
     </p>
-    <div class="meta-row">
-      <span>دامنه: <strong>English · German · Tracker · PDF Reader · Settings</strong></span>
-      <span>روش: خواندن مستقیم کد، لاگ‌های اجرا، و نتایج تست ثبت‌شده</span>
-    </div>
   </header>
 
-  <section aria-label="خلاصهٔ آماری">
-    <div class="kpi-grid">
-      <div class="kpi">
-        <div class="kpi-num">۵</div>
-        <div class="kpi-label">اپ بررسی‌شده با کد واقعی، نه فقط مستندات</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-num">۴</div>
-        <div class="kpi-label">فایل تست در Tracker که هرگز اجرا نمی‌شوند</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-num">۲</div>
-        <div class="kpi-label">شکست/کرش تأییدشده در اجرای واقعی (نه فقط اسکریپت ایزوله)</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-num">۵</div>
-        <div class="kpi-label">فاز رودمپ، از این هفته تا سخت‌سازی نهایی</div>
-      </div>
+  <section class="stat-grid" aria-label="Summary">
+    <div class="stat"><div class="stat-num">11</div><div class="stat-label">major steps completed</div></div>
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">apps with fixed, ready installers</div></div>
+    <div class="stat"><div class="stat-num">1</div><div class="stat-label">known limitation, deeply investigated and documented</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">apps touched tonight, all 5 running (2 native, 3 via WSL2)</div></div>
+  </section>
+
+  <section class="here" aria-label="Current status">
+    <div class="here-head">
+      <span class="pulse" aria-hidden="true"></span>
+      <strong>You are here</strong>
+    </div>
+    <div class="here-body">
+      <div class="here-title">A real, honest stopping point — not everything, but everything that could be fixed tonight is fixed.</div>
+      <p class="lede" style="font-size:14px;margin:0;">
+        The <code>workerd.exe</code> crash turned out to be Windows-native-binary-specific: identical source
+        code runs clean under WSL2/Linux. Wiring that into a real Windows-facing installer hit a second,
+        separate wall — documented in detail rather than left a mystery.
+      </p>
+      <ul class="live-list">
+        <li><span class="app-tag" style="background:var(--done-soft);color:var(--done)">Done</span> English &amp; German: earned automaticity is visible, accessibility settings actually work, spelling no longer silently blocks grammar mastery, mobile-viewport bug fixed, and their native Windows installers had real port/version bugs fixed — both are genuinely installable now.</li>
+        <li><span class="app-tag" style="background:var(--done-soft);color:var(--done)">Resolved</span> Tracker, PDF Reader, and Settings all confirmed serving real <code>200</code> responses under WSL2 — dev/testing works great.</li>
+        <li><span class="app-tag" style="background:var(--blocked-soft);color:var(--blocked)">Known limit</span> Wiring those 3 into a Windows-facing launcher is blocked: Windows can't reach the WSL-hosted server. Tried both firewall layers, portproxy, and mirrored networking (with a full reboot) — proved with a differential test that it's specific to <code>workerd</code>'s own socket code, not a config issue. A public tunnel would fix it instantly but was deliberately declined — these apps hold live OAuth secrets, not worth the exposure for local dev convenience. Full writeup in <code>docs/reports/WSL2-DEV-ENVIRONMENT-2026-08-13.md</code>.</li>
+      </ul>
     </div>
   </section>
 
-  <section aria-label="نقد به تفکیک اپ">
-    <div class="section-head">
-      <h2>نقد به تفکیک اپ</h2>
-      <span class="section-note">سه یافتهٔ اول همیشه نمایان است؛ «توضیحات بیشتر» نکات مثبت را هم نشان می‌دهد</span>
-    </div>
-
-    <div class="app-cards">
-
-      <article class="app-card">
-        <div class="app-card-head">
-          <span class="app-name">English Automaticity</span>
-          <span class="app-meta ltr">web 3202 · api 4201 · no CI</span>
-          <span class="badge badge--critical">بحرانی</span>
-        </div>
-        <ul class="findings">
-          <li>آخرین اجرای Playwright <strong>شکست خورد</strong> — تست‌ها روی کد مردهٔ <code>dashboard-screen.tsx</code> اجرا می‌شوند که <code>app-shell.tsx:30,506</code> هرگز import نمی‌کند.</li>
-          <li>نام شخصی هاردکد‌شدهٔ <code>"Good morning, Elahe"</code> در <code>public/replacements/en/daily.html:31</code> برای هر بازدیدکننده ارسال می‌شود.</li>
-          <li>سه پیاده‌سازی موازی داشبورد روزانه هم‌زمان در کد وجود دارد: یکی مرده، یکی زنده، یکی استاتیک.</li>
-        </ul>
-        <details class="more">
-          <summary>توضیحات بیشتر</summary>
-          <ul class="findings">
-            <li>حلقهٔ یادگیری اصلی (Recall → Automate aloud → Transfer → مرور تأخیری) واقعاً با <code>localStorage</code> کار می‌کند — مصنوعی نیست (<code>automaticity.spec.ts</code>).</li>
-            <li>مصرف هدر هویتی محدود و امن است: فقط برای انتخاب کلید provider در <code>api/ai/route.ts:9-15</code>.</li>
-          </ul>
-        </details>
-      </article>
-
-      <article class="app-card">
-        <div class="app-card-head">
-          <span class="app-name">German Automaticity</span>
-          <span class="app-meta ltr">web 3210 · api 4210</span>
-          <span class="badge badge--critical">بحرانی</span>
-        </div>
-        <ul class="findings">
-          <li>اسکریپت <code>verify</code> سبز است، اما یک session واقعی dev کرش می‌کند: <code>EADDRINUSE</code> روی پورت ۴۲۱۰ به‌علاوهٔ پنیک Turbopack روی <code>teacher.css</code> که به <code>GET / 500</code> ختم می‌شود (<code>runtime-german.log:35-108</code>).</li>
-          <li><code>supabase/seed.sql</code> با ۲۱٬۲۱۹ خط و یک migration با ۱۳۷۹ خط کاملاً یتیم‌اند — هیچ <code>createClient</code>/<code>@supabase</code> در <code>apps/</code> استفاده نمی‌شود.</li>
-        </ul>
-        <details class="more">
-          <summary>توضیحات بیشتر</summary>
-          <ul class="findings">
-            <li>حلقهٔ یادگیری واقعاً پیاده‌سازی شده: مأموریت سه‌مرحله‌ای + دروازهٔ shadowing پنج‌مرحله‌ای + مرور با فاصلهٔ واقعی.</li>
-            <li>English و German عمداً کد مشترک ندارند؛ تطابق با اسکریپت diff بین دو ریپو کنترل می‌شود — تصمیم معماری، نه بدهی.</li>
-          </ul>
-        </details>
-      </article>
-
-      <article class="app-card">
-        <div class="app-card-head">
-          <span class="app-name">Cross Repository Tracker</span>
-          <span class="app-meta ltr">web 4312 · api 4313</span>
-          <span class="badge badge--critical">بحرانی — بیشترین ریسک</span>
-        </div>
-        <ul class="findings">
-          <li>چهار فایل تست — از جمله <code>safe-remote-url.test.ts</code> و <code>recall-scheduler.test.ts</code> از فیکس امنیتی هفتهٔ گذشته — هرگز در <code>bun test</code> اجرا نمی‌شوند (<code>package.json:27</code>).</li>
-          <li><code>db/schema.ts</code> صفر جدول برای EvidenceRecord/Retrieval/Evaluation دارد؛ پایپ‌لاین تز عملاً پیاده نشده.</li>
-          <li>فایل مرجع legacy (<code class="ltr">StudyPlan_..._V6_3_1.html</code>) در کل دیسک پیدا نشد — خودِ اپ در <code>RECOVERED-LEGACY-INVENTORY.md</code> این را تأیید می‌کند.</li>
-        </ul>
-        <details class="more">
-          <summary>توضیحات بیشتر</summary>
-          <ul class="findings">
-            <li><code class="ltr">typescript@5.9.3</code> و <code class="ltr">typescript7@7.0.2</code> هم‌زمان نصب‌اند (<code>package.json:66-67</code>) — مشخص نیست کدام کامپایلر مرجع است.</li>
-            <li>نام اپ («Cross Repository Code Intelligence») با scope واقعی — یک ابزار شخصی مطالعه/PDF — هم‌خوانی ندارد.</li>
-          </ul>
-        </details>
-      </article>
-
-      <article class="app-card">
-        <div class="app-card-head">
-          <span class="app-name">PDF Reader</span>
-          <span class="app-meta ltr">web/api 4322</span>
-          <span class="badge badge--high">بالا</span>
-        </div>
-        <ul class="findings">
-          <li>«صف مرور» پیاده نشده — تنها چیزی که هست سوییچ به تب یادداشت‌هاست (<code>app/page.tsx:869-874</code>)، نه یک صف واقعی.</li>
-          <li>موقعیت خواندن فقط در <code>localStorage</code> ذخیره می‌شود؛ <code>db/schema.ts</code> این اپ خالی است — بدون سینک بین‌دستگاه.</li>
-          <li>پراکسی AI/ترجمه به Tracker (۴۳۱۲) می‌رود، نه به Settings (۴۳۲۳) — هرگز از سکرت رمزنگاری‌شدهٔ Settings استفاده نمی‌کند.</li>
-        </ul>
-        <details class="more">
-          <summary>توضیحات بیشتر</summary>
-          <ul class="findings">
-            <li>باز کردن فایل دقیق، یادداشت/حاشیه‌نویسی، و خروجی (Word/Excel/تصویر/فلش‌کارت) واقعی و کامل پیاده شده‌اند.</li>
-          </ul>
-        </details>
-      </article>
-
-      <article class="app-card">
-        <div class="app-card-head">
-          <span class="app-name">Settings App</span>
-          <span class="app-meta ltr">web/api 4323</span>
-          <span class="badge badge--high">بالا</span>
-        </div>
-        <ul class="findings">
-          <li>هیچ مسیر GET/list برای فایل‌های آپلودشده وجود ندارد — <code>files/route.ts:4-21</code> فقط POST دارد.</li>
-          <li><code class="ltr">GitHub</code> یک provider واقعی نیست؛ فقط یک فیلد متنی آزاد بدون OAuth یا health-check است (<code>settings-hub.tsx:19-23</code>).</li>
-          <li>رمزنگاری سکرت (AES-256-GCM) و رفرش OAuth گوگل — دو بحرانی‌ترین مسیر امنیتی — صفر پوشش تست دارند.</li>
-        </ul>
-        <details class="more">
-          <summary>توضیحات بیشتر</summary>
-          <ul class="findings">
-            <li>Google/OpenAI/DeepL واقعاً و زنده تست می‌شوند (<code>lib/provider-tests.ts:15-56</code>)؛ سکرت‌ها در D1 رمزنگاری‌شده ذخیره می‌شوند.</li>
-          </ul>
-        </details>
-      </article>
-
-    </div>
-  </section>
-
-  <section aria-label="رودمپ رفع عیب">
-    <div class="section-head">
-      <h2>رودمپ رفع عیب</h2>
-      <span class="section-note">پنج فاز، از فوری تا بلندمدت</span>
-    </div>
-
-    <div class="legend">
-      <span class="legend-item"><span class="legend-dot" style="background:var(--critical)"></span>مسدودکننده</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--high)"></span>بدهی معماری</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--medium)"></span>تکمیل ویژگی</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--long)"></span>بلندمدت/پژوهشی</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--release)"></span>سخت‌سازی نهایی</span>
-    </div>
-
+  <section aria-label="Timeline">
+    <h2>Full timeline</h2>
     <div class="timeline">
 
-      <div class="phase" style="--phase-color:var(--critical); --phase-soft:var(--critical-soft)">
-        <div class="phase-head">
-          <span class="phase-title">فاز ۱ — این هفته</span>
-          <span class="phase-window ltr">2026-08-12 → 08-15</span>
+      <div class="step" style="--step-color:var(--done); --step-soft:var(--done-soft)">
+        <div class="step-head">
+          <span class="step-title">1. Security fix review + critique</span>
+          <span class="badge">done</span>
         </div>
-        <div class="phase-items">
-          <span class="pill">وصل ۴ فایل تست گمشدهٔ Tracker به <code class="ltr">bun test</code></span>
-          <span class="pill">رفع کرش German: <code class="ltr">EADDRINUSE</code> + <code class="ltr">teacher.css</code></span>
-          <span class="pill">حذف نام هاردکد «Elahe» از <code class="ltr">daily.html</code></span>
-          <span class="pill">تصمیم دربارهٔ <code class="ltr">dashboard-screen.tsx</code> مرده در English</span>
-        </div>
+        <ul class="step-detail">
+          <li>Reviewed the identity-bypass and SSRF fixes already on this branch; wrote a security evaluation.</li>
+          <li>Full code-level critique of all 5 apps — found the Tracker's security tests weren't wired into <code>bun test</code> at all.</li>
+        </ul>
       </div>
 
-      <div class="phase" style="--phase-color:var(--high); --phase-soft:var(--high-soft)">
-        <div class="phase-head">
-          <span class="phase-title">فاز ۲ — ۲ تا ۴ هفته</span>
-          <span class="phase-window ltr">08-17 → 09-07</span>
+      <div class="step" style="--step-color:var(--done); --step-soft:var(--done-soft)">
+        <div class="step-head">
+          <span class="step-title">2. Fix-all-problems pass across 5 apps</span>
+          <span class="badge">done</span>
         </div>
-        <div class="phase-items">
-          <span class="pill">یکی‌کردن <code class="ltr">safe-remote-url.ts</code> در پکیج مشترک</span>
-          <span class="pill">یکی‌کردن <code class="ltr">model-config.ts</code> در پکیج مشترک</span>
-          <span class="pill">افزودن CI حداقلی برای هر ۵ اپ</span>
-          <span class="pill">تعیین تکلیف Supabase SQL و <code class="ltr">legacy/</code> یتیم آلمانی</span>
-          <span class="pill">افزودن مسیر GET/list برای فایل‌های Settings</span>
-        </div>
+        <ul class="step-detail">
+          <li>Tracker: wired up the orphaned tests. English: removed a hardcoded name, deleted dead code, fixed stale E2E tests. German: root-caused a dev-server crash.</li>
+          <li>Settings + PDF Reader: added a missing file-list endpoint, honest UI labeling, real test coverage. Added CI at the true repo root (first attempt was buried in subfolders — caught and fixed).</li>
+        </ul>
       </div>
 
-      <div class="phase" style="--phase-color:var(--medium); --phase-soft:var(--medium-soft)">
-        <div class="phase-head">
-          <span class="phase-title">فاز ۳ — ۱ تا ۲ ماه</span>
-          <span class="phase-window ltr">08-31 → 10-05</span>
+      <div class="step" style="--step-color:var(--done); --step-soft:var(--done-soft)">
+        <div class="step-head">
+          <span class="step-title">3. Comment pass + dead-file cleanup convention</span>
+          <span class="badge">done</span>
         </div>
-        <div class="phase-items">
-          <span class="pill">پیاده‌سازی صف مرور واقعی در PDF Reader</span>
-          <span class="pill">تصمیم: سینک سرور برای موقعیت خواندن یا مستندسازی محلی-فقط</span>
-          <span class="pill">تست‌نویسی برای رمزنگاری سکرت و رفرش OAuth</span>
-          <span class="pill">پیاده‌سازی واقعی GitHub یا حذف فیلد گمراه‌کننده</span>
-          <span class="pill">یکسان‌سازی TypeScript 7 در Tracker</span>
-        </div>
+        <ul class="step-detail">
+          <li>Added thorough explanatory comments across everything changed, per your request.</li>
+          <li>Switched to moving unused files into <code>deleted/</code> instead of hard-deleting — retroactively recovered one file already removed.</li>
+        </ul>
       </div>
 
-      <div class="phase" style="--phase-color:var(--long); --phase-soft:var(--long-soft)">
-        <div class="phase-head">
-          <span class="phase-title">فاز ۴ — بلندمدت / پژوهشی</span>
-          <span class="phase-window ltr">08-17 → 09-07+</span>
+      <div class="step" style="--step-color:var(--done); --step-soft:var(--done-soft)">
+        <div class="step-head">
+          <span class="step-title">4. The workerd crash — resolved for dev/testing</span>
+          <span class="badge">done</span>
         </div>
-        <div class="phase-items">
-          <span class="pill">پیاده‌سازی pipeline EvidenceRecord → Retrieval → Evaluation</span>
-          <span class="pill">بازیابی یا جایگزینی رسمی فایل legacy گمشدهٔ Tracker</span>
-          <span class="pill">تأیید مرز اعتماد هدر <code class="ltr">oai-authenticated-user-*</code> در دیپلوی</span>
-        </div>
+        <ul class="step-detail">
+          <li>Ruled out on Windows: wrangler version, Node version, stale processes, dependency skew, alternate dev command, Defender exclusion. All hit the identical crash.</li>
+          <li>With your go-ahead: installed WSL2 (required a reboot), set up Ubuntu + Bun + Node, and confirmed all three apps build and serve real <code>200</code> responses there — same source code, no crash.</li>
+        </ul>
       </div>
 
-      <div class="phase" style="--phase-color:var(--release); --phase-soft:var(--release-soft)">
-        <div class="phase-head">
-          <span class="phase-title">فاز ۵ — سخت‌سازی نهایی</span>
-          <span class="phase-window ltr">10-01 →</span>
+      <div class="step" style="--step-color:var(--blocked); --step-soft:var(--blocked-soft)">
+        <div class="step-head">
+          <span class="step-title">4b. Wiring it into a real Windows launcher — a second, separate wall</span>
+          <span class="badge">known limitation</span>
         </div>
-        <div class="phase-items">
-          <span class="pill">حذف مسیر <code class="ltr">client_secret</code> قدیمی OAuth پس از مهاجرت کامل</span>
-          <span class="pill">ممیزی امنیتی English/German برای الگوی دور زدن هویت</span>
+        <ul class="step-detail">
+          <li>Making these 3 apps double-click-runnable meant Windows itself needed to reach the WSL-hosted server. Tried: standard Windows Firewall rule, the separate Hyper-V Firewall layer, <code>netsh portproxy</code>, and WSL2 mirrored networking mode (which needed its own full reboot to activate) — all confirmed correctly configured, all still refused.</li>
+          <li>A differential test (identical setup, plain Python server vs. wrangler, same port) proved conclusively: the WSL↔Windows networking path itself works — the block is specific to how <code>workerd</code>'s own C++ networking code binds its socket, not a Windows/WSL config issue.</li>
+          <li><code>wrangler dev --tunnel</code> would fix this instantly via a public Cloudflare tunnel — deliberately not used, since these apps hold live OAuth secrets and local dev convenience isn't worth that exposure.</li>
+          <li>Full investigation and reasoning documented in <code>docs/reports/WSL2-DEV-ENVIRONMENT-2026-08-13.md</code>.</li>
+        </ul>
+      </div>
+
+      <div class="step" style="--step-color:var(--done); --step-soft:var(--done-soft)">
+        <div class="step-head">
+          <span class="step-title">5. Content and correctness critique</span>
+          <span class="badge">done</span>
         </div>
+        <ul class="step-detail">
+          <li>Live-verified English and German actually run and look right, not just pass tests.</li>
+          <li>Real problem found: English graded most exercises by exact string match — rewarding memorized phrasing over correct free production. German let mastery advance from unverified offline attempts.</li>
+          <li>Also found real grammar errors baked into German's generated conversation templates, and malformed exercises in English's generated catalog.</li>
+        </ul>
+      </div>
+
+      <div class="step" style="--step-color:var(--done); --step-soft:var(--done-soft)">
+        <div class="step-head">
+          <span class="step-title">6. Fixed the grading mechanism + content bugs</span>
+          <span class="badge">done</span>
+        </div>
+        <ul class="step-detail">
+          <li>English: structure-aware grading that accepts correct variation instead of demanding one memorized string.</li>
+          <li>German: closed the bug that let unverified attempts count — traced to one hardcoded <code>verified: true</code> in the review flow.</li>
+          <li>Fixed the specific quoted grammar errors and malformed exercises at their source (templates/generators), not by hand-patching individual entries.</li>
+        </ul>
+      </div>
+
+      <div class="step" style="--step-color:var(--done); --step-soft:var(--done-soft)">
+        <div class="step-head">
+          <span class="step-title">7. Surfacing real, earned automaticity</span>
+          <span class="badge">done</span>
+        </div>
+        <ul class="step-detail">
+          <li>Discovered both apps already compute a rigorous "earned" level (<code>verifiedLevel</code>) — all units automatic, zero unfixed errors, real practice volume — but never showed it anywhere. Now visible on both dashboards, with an honest "not yet verified" state and a genuine level-up celebration.</li>
+          <li>German's fix agent was cut off mid-verification by a session limit; the code itself was already complete, so I verified it independently (typecheck + live screenshot) rather than trusting the failure at face value.</li>
+        </ul>
+      </div>
+
+      <div class="step" style="--step-color:var(--done); --step-soft:var(--done-soft)">
+        <div class="step-head">
+          <span class="step-title">8. Real ADHD/dyslexia settings + spelling-fair grading</span>
+          <span class="badge">done</span>
+        </div>
+        <ul class="step-detail">
+          <li>Both "Open ADHD and dyslexia settings" buttons were dead ends — German bounced to a nonexistent external URL, English left the SPA entirely. Both now open a real, keyboard-accessible in-app settings screen: reading profile, text size, motion reduction, and (English) a spelling-vs-grammar toggle plus data export, reusing existing backup infrastructure rather than adding new risk.</li>
+          <li>German: found and fixed a bypass where one screen re-checked raw unfiltered issues, silently defeating a spelling-fairness system that already existed elsewhere in the code.</li>
+          <li>English: found spelling mistakes were mis-tagged as generic errors, which silently defeated an existing rule meant to exclude spelling from blocking automaticity for dysgraphic learners.</li>
+          <li>Both verified: typecheck clean, full test suites pass, diffs reviewed directly — not just agent self-reports.</li>
+        </ul>
+      </div>
+
+      <div class="step" style="--step-color:var(--done); --step-soft:var(--done-soft)">
+        <div class="step-head">
+          <span class="step-title">9. Responsive pass — and a self-correction</span>
+          <span class="badge">done</span>
+        </div>
+        <ul class="step-detail">
+          <li>The earlier "2 of 9 stylesheets" reading was wrong — Reader-PDF-App actually has thorough, well-organized responsive CSS centralized in one breakpoint file (6+ breakpoints, mobile bottom-sheet layout, toolbar overflow handling). A per-file media-query count missed that pattern. Corrected rather than patched around.</li>
+          <li>The real bug was elsewhere: both Reader-PDF-App and Settings-APP had no viewport meta configuration at all — meaning phones would render them at a virtual desktop width and scale the whole page down, silently defeating every breakpoint regardless of how good the CSS was. Fixed in both; typecheck clean on both.</li>
+        </ul>
       </div>
 
     </div>
   </section>
 
   <footer>
-    منبع: بررسی مستقیم کد در <span class="ltr">d:\APPS_root</span> — نه صرفاً مستندات موجود. جزئیات کامل در
-    <span class="ltr">docs/roadmaps/CRITIQUE-AND-ROADMAP-2026-08-12.md</span> و
-    <span class="ltr">docs/reports/SECURITY-EVALUATION-2026-08-12.md</span>.
+    Full detail lives in <code>docs/reports/CONTENT-AND-CORRECTNESS-CRITIQUE-2026-08-12.md</code>,
+    <code>docs/reports/WORKERD-CRASH-FIX-2026-08-12.md</code>, and
+    <code>docs/roadmaps/ROADMAP-TO-COMPLETION-2026-08-12.md</code>. Nothing tonight has been committed —
+    it's all sitting in the working tree for review.
   </footer>
 
 </div>

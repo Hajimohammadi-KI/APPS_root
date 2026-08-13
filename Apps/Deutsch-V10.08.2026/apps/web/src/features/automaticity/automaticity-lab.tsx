@@ -502,7 +502,12 @@ export function AutomaticityLab({
       100,
       Math.round((analysis.wordCount / Math.max(1, seconds) / 2) * 100),
     );
-    const speakingReady = analysis.issues.length === 0 && analysis.targetHit;
+    // analysis.targetHit already requires result.practiceReady, which is
+    // spelling-accommodated (see evaluation-client.ts): purely-spelling
+    // slips don't block it unless spellingAffectsMastery is enabled.
+    // Re-checking raw analysis.issues.length here would re-introduce a
+    // spelling-only block, so we rely on targetHit alone.
+    const speakingReady = analysis.targetHit;
 
     recordAttempt({
       topic: TOPIC,

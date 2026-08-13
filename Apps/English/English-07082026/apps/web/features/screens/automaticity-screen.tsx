@@ -337,7 +337,9 @@ export function AutomaticityScreen({
             ? "auxiliary"
             : issue.code === "language_error"
               ? "other"
-              : "tense";
+              : issue.code === "spelling_error"
+                ? "spelling"
+                : "tense";
         const existing = draft.errors.find(
           (row) =>
             row.grammarTitle === topic &&
@@ -401,15 +403,27 @@ export function AutomaticityScreen({
       },
       state.settings,
     );
-    const issues: AutomaticityAnalysis["issues"] = evaluation.matches.map(
-      (match) => ({
-        code: "language_error",
+    // Spelling and grammar matches are mapped to distinct issue codes so a
+    // spelling-only slip is never recorded to the Error Workshop as a
+    // generic ("other"-class) language error later in
+    // addIssuesToErrorWorkshop. Grammar automaticity is the pedagogical
+    // target here, not spelling perfection — a learner should still see the
+    // correction, but it must not read as a grammar mistake or block
+    // automaticity the way an actual grammar error does.
+    const issues: AutomaticityAnalysis["issues"] = [
+      ...evaluation.spelling.map((match) => ({
+        code: "spelling_error" as const,
         message: match.message,
         original: match.context?.text ?? evaluation.original,
-        corrected:
-          match.replacements[0]?.value ?? evaluation.corrected,
-      }),
-    );
+        corrected: match.replacements[0]?.value ?? evaluation.corrected,
+      })),
+      ...evaluation.grammarIssues.map((match) => ({
+        code: "language_error" as const,
+        message: match.message,
+        original: match.context?.text ?? evaluation.original,
+        corrected: match.replacements[0]?.value ?? evaluation.corrected,
+      })),
+    ];
     if (evaluation.targetUses < evaluation.required) {
       issues.push({
         code: "missing_target",

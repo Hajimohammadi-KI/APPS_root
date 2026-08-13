@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown, Clock3, Folder, Settings } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { AppNavigation } from "@/components/app-navigation";
@@ -18,14 +18,15 @@ import {
 } from "@/lib/navigation";
 import { UserGuideButton } from "@/components/user-guide";
 import { NeuroReader } from "@/components/neuro-reader";
+import { ReadingFocusSettings } from "@/components/reading-focus-settings";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
 export function AppShell({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
-  const router = useRouter();
   const { state, updateSettings } = useLearnerState();
+  const [readingSettingsOpen, setReadingSettingsOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState({
     practice: true,
     learning: true,
@@ -143,10 +144,16 @@ export function AppShell({
             <div className="flex min-w-0 items-center gap-2 justify-self-end">
               <ApiConnectionStatus />
               <NeuroReader
-                onOpenSettings={() => router.push("/einstellungen")}
+                onOpenSettings={() => setReadingSettingsOpen(true)}
                 onToggleReadingRuler={(readingRuler) =>
                   updateSettings({ readingRuler })
                 }
+                settings={state.settings}
+              />
+              <ReadingFocusSettings
+                onOpenChange={setReadingSettingsOpen}
+                onUpdateSettings={updateSettings}
+                open={readingSettingsOpen}
                 settings={state.settings}
               />
               <UserGuideButton />

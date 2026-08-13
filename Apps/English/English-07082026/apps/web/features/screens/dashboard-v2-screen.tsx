@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Award,
   ArrowUpRight,
   Bell,
   BookOpen,
@@ -9,13 +10,18 @@ import {
   Flame,
   MessageCircle,
   Search,
+  ShieldCheck,
   Sparkles,
   Target,
   TrendingUp,
+  X,
 } from "lucide-react";
+import * as React from "react";
 import { grammarUnits, type CefrLevel } from "@grammar/content";
 import { PlacementCheck } from "@/features/components/placement-check";
-import { currentDailyPlan, useAppStore } from "@/features/store/app-store";
+import { CEFR_ORDER, currentDailyPlan, useAppStore } from "@/features/store/app-store";
+
+const VERIFIED_CELEBRATION_KEY = "grammar-automaticity:verified-celebrated";
 
 const dayNames = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -27,14 +33,36 @@ function dateKey(daysAgo: number) {
 }
 
 export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => void }) {
-  const { state, mutate } = useAppStore();
+  const { state, hydrated, mutate } = useAppStore();
   const plan = currentDailyPlan(state);
   const name = state.learner.displayName.trim() || "Learner";
   const level = state.learner.selfDeclaredLevel ?? "A1";
+  const verifiedLevel = state.learner.verifiedLevel;
   const levelUnits = grammarUnits.filter((unit) => unit.level === level);
   const practiced = levelUnits.filter((unit) => state.mastery[unit.title]?.status !== "new").length;
   const finished = levelUnits.filter((unit) => ["stable", "automatic"].includes(state.mastery[unit.title]?.status ?? "new")).length;
   const progress = levelUnits.length ? Math.round((finished / levelUnits.length) * 100) : 0;
+  const [celebrateLevel, setCelebrateLevel] = React.useState<CefrLevel | null>(null);
+
+  React.useEffect(() => {
+    if (!hydrated || !verifiedLevel) return;
+    let stored: string | null = null;
+    try {
+      stored = localStorage.getItem(VERIFIED_CELEBRATION_KEY);
+    } catch {
+      stored = null;
+    }
+    const lastIndex = stored ? CEFR_ORDER.indexOf(stored as CefrLevel) : -1;
+    const currentIndex = CEFR_ORDER.indexOf(verifiedLevel);
+    if (currentIndex > lastIndex) {
+      setCelebrateLevel(verifiedLevel);
+      try {
+        localStorage.setItem(VERIFIED_CELEBRATION_KEY, verifiedLevel);
+      } catch {
+        // The celebration still shows for this session even if storage is blocked.
+      }
+    }
+  }, [hydrated, verifiedLevel]);
   const todayProgress = Math.round((new Set(plan.completed).size / 3) * 100);
   const week = Array.from({ length: 7 }, (_, index) => state.activity[dateKey(6 - index)] ?? 0);
   const chartPoints = week.map((value, index) => {
@@ -86,6 +114,27 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
         </div>
       </header>
 
+      {celebrateLevel ? (
+        <div aria-live="polite" className="home-v2-celebrate" role="status">
+          <span className="home-v2-celebrate-icon"><Award aria-hidden /></span>
+          <div>
+            <strong>You’ve verified automatic mastery of {celebrateLevel}!</strong>
+            <span>
+              Every {celebrateLevel} grammar unit is automatic, error-free, and proven with real
+              speaking, writing, and transfer practice — genuine automaticity, not a self-reported
+              label.
+            </span>
+          </div>
+          <button
+            aria-label="Dismiss celebration"
+            onClick={() => setCelebrateLevel(null)}
+            type="button"
+          >
+            <X aria-hidden />
+          </button>
+        </div>
+      ) : null}
+
       <div className="home-v2-grid">
         <main className="home-v2-main">
           <section className="home-v2-chart-card" aria-labelledby="performance-title">
@@ -120,6 +169,25 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
               <ProgressRow label="Finished lessons" value={progress} />
               <ProgressRow label="Today’s practice" value={todayProgress} />
               <ProgressRow label="Speaking evidence" value={Math.min(100, state.sessions.length * 10)} />
+              <div
+                aria-live="polite"
+                className={`home-v2-verified ${verifiedLevel ? "is-verified" : "is-pending"}`}
+              >
+                <span className="home-v2-verified-icon"><ShieldCheck aria-hidden /></span>
+                <div>
+                  <p>Automaticity check · stricter than “practiced”</p>
+                  <strong>
+                    {verifiedLevel
+                      ? `Working level: ${level} · Automaticity verified through: ${verifiedLevel}`
+                      : `Working level: ${level} · Automaticity not yet verified for any level`}
+                  </strong>
+                  <span>
+                    {verifiedLevel
+                      ? `Every ${verifiedLevel} unit is automatic, has zero unfixed critical errors, and is backed by real speaking, writing, and transfer attempts — not just self-reported progress.`
+                      : "Keep practicing — this is only earned once every unit in a level is automatic, error-free, and proven with enough real speaking, writing, and transfer attempts."}
+                  </span>
+                </div>
+              </div>
               <button className="home-v2-primary" type="button" onClick={() => navigate("daily")}>Continue today’s practice <ChevronRight /></button>
               <div className="home-v2-level-check">
                 <PlacementCheck onAccept={handlePlacementAccept} />

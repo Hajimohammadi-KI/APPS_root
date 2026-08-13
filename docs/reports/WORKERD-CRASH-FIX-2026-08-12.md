@@ -1,5 +1,15 @@
 # Fixing the Tracker/PDF Reader/Settings crash — ready-to-run steps
 
+## RESOLVED — 2026-08-13, via WSL2
+
+Option A (Defender exclusion) did not fix it — confirmed, same crash. Option B (WSL2) does: all three apps
+build and serve real 200 responses under WSL2/Linux, with the identical source code. This is conclusive:
+the crash is specific to the Windows build of `workerd.exe` on this machine, not the app code. See
+`docs/reports/WSL2-DEV-ENVIRONMENT-2026-08-13.md` for the working setup and how to run these three apps
+going forward.
+
+The section below is kept for the historical record of what was ruled out.
+
 ## What's blocked
 
 `Tracker`, `Reader-PDF-App`, and `Einstellungen-APP` (the three Cloudflare Workers apps) cannot start locally. Every `wrangler dev` / `vite dev` attempt crashes identically:

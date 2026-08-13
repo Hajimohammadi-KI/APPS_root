@@ -13,11 +13,11 @@ const {
   shell,
 } = require("electron");
 
-const WEB_PORT = 3201;
+const WEB_PORT = 3202;
 const API_PORT = 4201;
 const APP_URL = `http://127.0.0.1:${WEB_PORT}/`;
 const APP_ORIGIN = new URL(APP_URL).origin;
-const DESKTOP_USER_AGENT_TOKEN = "EnglishGrammarAutomaticityDesktop/27.0";
+const DESKTOP_USER_AGENT_TOKEN = "EnglishGrammarAutomaticityDesktop/27.1";
 const ALLOWED_PERMISSIONS = new Set(["media", "notifications"]);
 const USER_DATA_DIRECTORY = "English Grammar Automaticity";
 const PDF_CHANNEL = "desktop:choose-pdf";

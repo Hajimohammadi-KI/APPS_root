@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -12,14 +12,17 @@ import {
   MessageCircle,
   Pencil,
   Search,
+  ShieldCheck,
   Sparkles,
   Target,
   TrendingUp,
+  X,
 } from "lucide-react";
 
 import { grammarUnits } from "@grammar/content";
 import {
   calculateDailyProgress,
+  CEFR_LEVELS,
   DAILY_PRACTICE_STEPS,
   getDailyPlan,
   getTodayKey,
@@ -36,6 +39,7 @@ import {
 } from "@/components/ui/sheet";
 
 const dayNames = ["M", "D", "M", "D", "F", "S", "S"];
+const LAST_SEEN_VERIFIED_LEVEL_KEY = "deutsch-app:last-seen-verified-level";
 
 function dateKey(daysAgo: number) {
   const date = new Date();
@@ -44,12 +48,66 @@ function dateKey(daysAgo: number) {
   return getTodayKey(date);
 }
 
+function levelRank(level: string | null): number {
+  return level ? CEFR_LEVELS.indexOf(level as (typeof CEFR_LEVELS)[number]) : -1;
+}
+
 export function Dashboard() {
-  const { state, updateLearnerProfile } = useLearnerState();
+  const { state, hydrated, updateLearnerProfile } = useLearnerState();
   const [levelSheetOpen, setLevelSheetOpen] = useState(false);
+  const [justVerifiedLevel, setJustVerifiedLevel] = useState<string | null>(
+    null,
+  );
   const plan = getDailyPlan(state);
   const name = state.learner.displayName.trim() || "Lernende";
   const level = state.learningLevel ?? state.learner.selfDeclaredLevel ?? "A1";
+  const verifiedLevel = state.learner.verifiedLevel;
+
+  // Celebrate a genuine automaticity milestone: only when verifiedLevel
+  // advances to a higher CEFR level than the last one this browser tab
+  // observed. Gated on `hydrated` so the pre-hydration default state
+  // (verifiedLevel always null before localStorage loads) never counts as
+  // the baseline — otherwise every fresh tab would misread "default null
+  // -> real stored value" as a brand-new achievement. The baseline read
+  // (first post-hydration effect run per tab) never celebrates, so
+  // re-opening the dashboard with an already-earned level from a previous
+  // session stays silent — only a real transition, witnessed during this
+  // session, triggers the banner.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (typeof window === "undefined") return;
+    let stored: string | null;
+    try {
+      stored = window.sessionStorage.getItem(LAST_SEEN_VERIFIED_LEVEL_KEY);
+    } catch {
+      return;
+    }
+    if (stored === null) {
+      try {
+        window.sessionStorage.setItem(
+          LAST_SEEN_VERIFIED_LEVEL_KEY,
+          verifiedLevel ?? "",
+        );
+      } catch {
+        // Ignore storage failures (e.g. private browsing quota).
+      }
+      return;
+    }
+    const storedLevel = stored === "" ? null : stored;
+    if (verifiedLevel && levelRank(verifiedLevel) > levelRank(storedLevel)) {
+      setJustVerifiedLevel(verifiedLevel);
+    }
+    if (verifiedLevel !== storedLevel) {
+      try {
+        window.sessionStorage.setItem(
+          LAST_SEEN_VERIFIED_LEVEL_KEY,
+          verifiedLevel ?? "",
+        );
+      } catch {
+        // Ignore storage failures (e.g. private browsing quota).
+      }
+    }
+  }, [hydrated, verifiedLevel]);
   const levelUnits = grammarUnits.filter((unit) => unit.level === level);
   const levelRecords = levelUnits
     .map((unit) => state.mastery[unit.title])
@@ -173,6 +231,30 @@ export function Dashboard() {
         </div>
       </header>
 
+      {justVerifiedLevel ? (
+        <div className="home-v2-celebration" role="status">
+          <div className="home-v2-celebration-body">
+            <Sparkles aria-hidden="true" />
+            <div>
+              <strong>Du hast das Niveau {justVerifiedLevel} automatisiert!</strong>
+              <p>
+                Das ist kein Quiz-Ergebnis, sondern echte Automatik: alle
+                Themen in {justVerifiedLevel} beherrschst du fehlerfrei und
+                nachweislich im Sprechen, Schreiben und freien Transfer.
+              </p>
+            </div>
+          </div>
+          <button
+            aria-label="Meldung schließen"
+            className="home-v2-celebration-close"
+            onClick={() => setJustVerifiedLevel(null)}
+            type="button"
+          >
+            <X aria-hidden="true" />
+          </button>
+        </div>
+      ) : null}
+
       <div className="home-v2-grid">
         <main className="home-v2-main">
           <section
@@ -251,6 +333,29 @@ export function Dashboard() {
                 <div>
                   <p>Aktuelles Niveau · {level}</p>
                   <h2>Dein Lernfortschritt</h2>
+                  <p
+                    className={
+                      verifiedLevel
+                        ? "home-v2-verified-line"
+                        : "home-v2-verified-line is-pending"
+                    }
+                  >
+                    <ShieldCheck aria-hidden="true" />
+                    {verifiedLevel ? (
+                      <span>
+                        Automatisierung bestätigt bis{" "}
+                        <strong>{verifiedLevel}</strong> — alle Themen
+                        automatisiert, ohne offene kritische Fehler, geprüft
+                        in Sprechen, Schreiben &amp; Transfer.
+                      </span>
+                    ) : (
+                      <span>
+                        Noch kein Niveau vollständig automatisiert bestätigt
+                        — übe weiter in Sprechen, Schreiben und Transfer, um
+                        es zu erreichen.
+                      </span>
+                    )}
+                  </p>
                   <Sheet onOpenChange={setLevelSheetOpen} open={levelSheetOpen}>
                     <SheetTrigger
                       render={

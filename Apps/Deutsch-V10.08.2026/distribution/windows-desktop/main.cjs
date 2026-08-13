@@ -13,11 +13,11 @@ const {
   shell,
 } = require("electron");
 
-const WEB_PORT = 3000;
-const API_PORT = 4000;
+const WEB_PORT = 3210;
+const API_PORT = 4210;
 const APP_URL = `http://127.0.0.1:${WEB_PORT}/`;
 const APP_ORIGIN = new URL(APP_URL).origin;
-const DESKTOP_USER_AGENT_TOKEN = "DeutschFlowDesktop/1.0";
+const DESKTOP_USER_AGENT_TOKEN = "DeutschFlowDesktop/10.8.2026";
 const ALLOWED_PERMISSIONS = new Set(["media", "notifications"]);
 const USER_DATA_DIRECTORY = "DeutschFlow";
 const PDF_CHANNEL = "desktop:choose-pdf";

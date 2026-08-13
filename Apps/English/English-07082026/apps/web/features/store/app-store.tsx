@@ -192,7 +192,7 @@ export interface AppState {
 const STORAGE_KEY = "grammar-automaticity:v27";
 const LEGACY_KEY = "GrammarAutomaticityV11_en";
 const RETIRED_PRIVATE_STORAGE_KEY = "thesis-b2-sprint-v24";
-const CEFR_ORDER: readonly CefrLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
+export const CEFR_ORDER: readonly CefrLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 function persistAppState(state: AppState) {
 	if (typeof window === "undefined") return;
@@ -642,9 +642,17 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 	current.speakingScore = scoreFor("speaking");
 	current.repairScore = scoreFor("repair");
 	current.transferScore = scoreFor("transfer");
+	// Spelling mistakes are tracked and shown like any other error, but they
+	// do not gate grammar automaticity — the same policy already applied to
+	// deriveVerifiedLevel's CEFR-level check below. Without this exclusion an
+	// unresolved spelling slip (a dysgraphia-adjacent, non-grammar issue)
+	// could hold a topic below "automatic" status indefinitely even once its
+	// grammar is genuinely mastered.
 	current.activeErrorCount = draft.errors.filter(
 		(error) =>
-			error.grammarTitle === grammarTitle && error.repairStatus !== "fixed",
+			error.grammarTitle === grammarTitle &&
+			error.repairStatus !== "fixed" &&
+			error.errorClass !== "spelling",
 	).length;
 	current.successfulReviews = draft.reviews.filter(
 		(review) =>

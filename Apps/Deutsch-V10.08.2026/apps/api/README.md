@@ -17,5 +17,5 @@ Current endpoints:
 - `GET /api/v1/health`
 - `GET /api/v1/bootstrap`
 
-The default development port is `4000`. Set `API_PORT` and `WEB_ORIGINS` through
+The default development port is `4210`. Set `API_PORT` and `WEB_ORIGINS` through
 the environment when needed.

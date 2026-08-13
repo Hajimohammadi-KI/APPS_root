@@ -56,6 +56,11 @@ const AudioScreen = dynamic(() =>
 		(module) => module.AudioScreen,
 	),
 );
+const SettingsScreen = dynamic(() =>
+	import("@/features/screens/settings-screen").then(
+		(module) => module.SettingsScreen,
+	),
+);
 
 type ScreenId =
 	| "home"
@@ -218,13 +223,18 @@ function isScreenId(value: string | null): value is ScreenId {
 	return navigation.some((item) => item.id === value);
 }
 
+// "settings" is intentionally not listed here: it renders in place (like
+// progress/resources/errors/library/integrated-skills below) instead of
+// doing a full-page navigation. It used to point at "/settings", a route
+// that only 307-redirected to an external settings service that isn't part
+// of this app — so the "Open ADHD and dyslexia settings" button silently
+// left the app instead of opening working accessibility controls.
 const replacementRoutes: Partial<Record<ScreenId, string>> = {
 	daily: "/daily",
 	studio: "/studio",
 	grammar: "/grammar",
 	notebook: "/notebook",
 	flashcards: "/flashcards",
-	settings: "/settings",
 	teacher: "/teacher",
 };
 
@@ -511,6 +521,7 @@ export function AppShell() {
 					{screen === "resources" ? <ResourcesScreen /> : null}
 					{screen === "errors" ? <ErrorsScreen /> : null}
 					{screen === "library" ? <AudioScreen /> : null}
+					{screen === "settings" ? <SettingsScreen /> : null}
 				</div>
 				<AppUpdateNotice />
 			</main>

@@ -2,6 +2,7 @@ export type AutomaticityIssueCode =
 	| "missing_target"
 	| "auxiliary_agreement"
 	| "language_error"
+	| "spelling_error"
 	| "unfinished_sentence";
 
 export interface AutomaticityIssue {

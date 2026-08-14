@@ -1,6 +1,7 @@
 import {
   BookOpen,
   Bug,
+  CaseSensitive,
   ChartNoAxesCombined,
   CircleHelp,
   CloudOff,
@@ -26,6 +27,7 @@ export interface NavigationItem {
     | "/gemischtes-training"
     | "/studio"
     | "/grammatik"
+    | "/kasus-trainer"
     | "/wiederholungen"
     | "/vokabelkarten"
     | "/fehler"
@@ -78,6 +80,12 @@ export const primaryNavigation = [
     label: "Grammatik-Labor",
     subtitle: "144 Themen von A1 bis C2",
     icon: BookOpen,
+  },
+  {
+    href: "/kasus-trainer",
+    label: "Kasus-Trainer",
+    subtitle: "Verb → Rolle → Kasus → Artikel → Endung → Sprechen",
+    icon: CaseSensitive,
   },
   {
     href: "/wiederholungen",

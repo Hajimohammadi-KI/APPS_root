@@ -56,7 +56,9 @@ export function AppShell({
     ),
   );
   const learningNavigation = allNavigation.filter((item) =>
-    ["/grammatik", "/fertigkeiten", "/ressourcen"].includes(item.href),
+    ["/grammatik", "/kasus-trainer", "/fertigkeiten", "/ressourcen"].includes(
+      item.href,
+    ),
   );
   const evidenceNavigation = allNavigation.filter((item) =>
     ["/fortschritt", "/fehler", "/audio"].includes(item.href),

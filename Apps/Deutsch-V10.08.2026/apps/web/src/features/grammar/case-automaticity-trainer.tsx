@@ -15,7 +15,11 @@ import {
 import { Progress } from "@/components/ui/progress";
 
 type GermanCase = "Nominativ" | "Akkusativ" | "Dativ" | "Genitiv";
-type Stage = "case" | "article" | "ending" | "speak";
+// Six real steps, not four: find the word that governs the case, name the
+// sentence role that word creates, only then decide the case itself, build
+// article + ending, speak it aloud, and (via nextChallenge) apply the same
+// pattern to a new sentence -- the transfer step.
+type Stage = "verb" | "role" | "case" | "article" | "ending" | "speak";
 
 type Challenge = Readonly<{
   id: string;
@@ -23,6 +27,13 @@ type Challenge = Readonly<{
   pattern: string;
   completed: string;
   question: string;
+  // The verb or preposition that actually forces this case -- e.g. "helfe"
+  // (helfen governs Dativ) or "mit" (always Dativ). For genitive attributes
+  // there's no governing verb, so this is the noun being modified instead
+  // ("Fahrrad des Mannes" -- Fahrrad is what's possessed).
+  keyWord: string;
+  keyWordOptions: readonly string[];
+  role: string;
   caseAnswer: GermanCase;
   articleAnswer: string;
   articleOptions: readonly string[];
@@ -39,6 +50,17 @@ const CASES: readonly GermanCase[] = [
   "Genitiv",
 ];
 
+const ROLE_SUBJECT = "Subjekt (Nominativ)";
+const ROLE_DIRECT_OBJECT = "direktes Objekt (Akkusativ)";
+const ROLE_DATIVE = "Dativobjekt / Präpositionalobjekt (Dativ)";
+const ROLE_GENITIVE = "Genitivattribut (Zugehörigkeit)";
+const ROLE_OPTIONS: readonly string[] = [
+  ROLE_SUBJECT,
+  ROLE_DIRECT_OBJECT,
+  ROLE_DATIVE,
+  ROLE_GENITIVE,
+];
+
 export const caseAutomaticityChallenges: readonly Challenge[] = [
   {
     id: "nom-m-def",
@@ -46,6 +68,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "___ ruhig___ Mann wartet vor der Tür.",
     completed: "Der ruhige Mann wartet vor der Tür.",
     question: "Wer wartet?",
+    keyWord: "wartet",
+    keyWordOptions: ["wartet", "ruhige", "Tür"],
+    role: ROLE_SUBJECT,
     caseAnswer: "Nominativ",
     articleAnswer: "der",
     articleOptions: ["der", "den", "dem", "des"],
@@ -61,6 +86,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Ich sehe ___ ruhig___ Mann.",
     completed: "Ich sehe den ruhigen Mann.",
     question: "Wen sehe ich?",
+    keyWord: "sehe",
+    keyWordOptions: ["sehe", "ruhigen", "Ich"],
+    role: ROLE_DIRECT_OBJECT,
     caseAnswer: "Akkusativ",
     articleAnswer: "den",
     articleOptions: ["der", "den", "dem", "des"],
@@ -76,6 +104,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Ich helfe ___ ruhig___ Mann.",
     completed: "Ich helfe dem ruhigen Mann.",
     question: "Wem helfe ich?",
+    keyWord: "helfe",
+    keyWordOptions: ["helfe", "ruhigen", "Ich"],
+    role: ROLE_DATIVE,
     caseAnswer: "Dativ",
     articleAnswer: "dem",
     articleOptions: ["der", "den", "dem", "des"],
@@ -91,6 +122,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Das Fahrrad ___ ruhig___ Mannes ist neu.",
     completed: "Das Fahrrad des ruhigen Mannes ist neu.",
     question: "Wessen Fahrrad ist das?",
+    keyWord: "Fahrrad",
+    keyWordOptions: ["Fahrrad", "ruhigen", "neu"],
+    role: ROLE_GENITIVE,
     caseAnswer: "Genitiv",
     articleAnswer: "des",
     articleOptions: ["der", "den", "dem", "des"],
@@ -106,6 +140,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "___ jung___ Ärztin arbeitet heute.",
     completed: "Die junge Ärztin arbeitet heute.",
     question: "Wer arbeitet heute?",
+    keyWord: "arbeitet",
+    keyWordOptions: ["arbeitet", "junge", "heute"],
+    role: ROLE_SUBJECT,
     caseAnswer: "Nominativ",
     articleAnswer: "die",
     articleOptions: ["die", "der", "den", "das"],
@@ -121,6 +158,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Ich besuche ___ jung___ Ärztin.",
     completed: "Ich besuche die junge Ärztin.",
     question: "Wen besuche ich?",
+    keyWord: "besuche",
+    keyWordOptions: ["besuche", "junge", "Ich"],
+    role: ROLE_DIRECT_OBJECT,
     caseAnswer: "Akkusativ",
     articleAnswer: "die",
     articleOptions: ["die", "der", "den", "das"],
@@ -136,6 +176,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Ich danke ___ jung___ Ärztin.",
     completed: "Ich danke der jungen Ärztin.",
     question: "Wem danke ich?",
+    keyWord: "danke",
+    keyWordOptions: ["danke", "jungen", "Ich"],
+    role: ROLE_DATIVE,
     caseAnswer: "Dativ",
     articleAnswer: "der",
     articleOptions: ["die", "der", "den", "dem"],
@@ -151,6 +194,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Die Praxis ___ jung___ Ärztin ist modern.",
     completed: "Die Praxis der jungen Ärztin ist modern.",
     question: "Wessen Praxis ist das?",
+    keyWord: "Praxis",
+    keyWordOptions: ["Praxis", "jungen", "modern"],
+    role: ROLE_GENITIVE,
     caseAnswer: "Genitiv",
     articleAnswer: "der",
     articleOptions: ["die", "der", "den", "dem"],
@@ -166,6 +212,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "___ klein___ Kind lacht.",
     completed: "Das kleine Kind lacht.",
     question: "Wer lacht?",
+    keyWord: "lacht",
+    keyWordOptions: ["lacht", "kleine", "Kind"],
+    role: ROLE_SUBJECT,
     caseAnswer: "Nominativ",
     articleAnswer: "das",
     articleOptions: ["das", "dem", "des", "den"],
@@ -181,6 +230,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Wir hören ___ klein___ Kind.",
     completed: "Wir hören das kleine Kind.",
     question: "Wen hören wir?",
+    keyWord: "hören",
+    keyWordOptions: ["hören", "kleine", "Wir"],
+    role: ROLE_DIRECT_OBJECT,
     caseAnswer: "Akkusativ",
     articleAnswer: "das",
     articleOptions: ["das", "dem", "des", "den"],
@@ -196,6 +248,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Sie gibt ___ klein___ Kind Wasser.",
     completed: "Sie gibt dem kleinen Kind Wasser.",
     question: "Wem gibt sie Wasser?",
+    keyWord: "gibt",
+    keyWordOptions: ["gibt", "kleinen", "Wasser"],
+    role: ROLE_DATIVE,
     caseAnswer: "Dativ",
     articleAnswer: "dem",
     articleOptions: ["das", "dem", "des", "den"],
@@ -211,6 +266,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Das Spielzeug ___ klein___ Kindes liegt hier.",
     completed: "Das Spielzeug des kleinen Kindes liegt hier.",
     question: "Wessen Spielzeug ist das?",
+    keyWord: "Spielzeug",
+    keyWordOptions: ["Spielzeug", "kleinen", "hier"],
+    role: ROLE_GENITIVE,
     caseAnswer: "Genitiv",
     articleAnswer: "des",
     articleOptions: ["das", "dem", "des", "den"],
@@ -226,6 +284,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "___ neu___ Bücher sind interessant.",
     completed: "Die neuen Bücher sind interessant.",
     question: "Was ist interessant?",
+    keyWord: "sind",
+    keyWordOptions: ["sind", "neuen", "Bücher"],
+    role: ROLE_SUBJECT,
     caseAnswer: "Nominativ",
     articleAnswer: "die",
     articleOptions: ["die", "den", "der", "des"],
@@ -241,6 +302,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Ich kaufe ___ neu___ Bücher.",
     completed: "Ich kaufe die neuen Bücher.",
     question: "Was kaufe ich?",
+    keyWord: "kaufe",
+    keyWordOptions: ["kaufe", "neuen", "Ich"],
+    role: ROLE_DIRECT_OBJECT,
     caseAnswer: "Akkusativ",
     articleAnswer: "die",
     articleOptions: ["die", "den", "der", "des"],
@@ -256,6 +320,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Ich lerne mit ___ neu___ Büchern.",
     completed: "Ich lerne mit den neuen Büchern.",
     question: "Mit welchen Büchern lerne ich?",
+    keyWord: "mit",
+    keyWordOptions: ["mit", "lerne", "neuen"],
+    role: ROLE_DATIVE,
     caseAnswer: "Dativ",
     articleAnswer: "den",
     articleOptions: ["die", "den", "der", "des"],
@@ -271,6 +338,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Die Seiten ___ neu___ Bücher sind sauber.",
     completed: "Die Seiten der neuen Bücher sind sauber.",
     question: "Die Seiten welcher Bücher?",
+    keyWord: "Seiten",
+    keyWordOptions: ["Seiten", "neuen", "sauber"],
+    role: ROLE_GENITIVE,
     caseAnswer: "Genitiv",
     articleAnswer: "der",
     articleOptions: ["die", "den", "der", "des"],
@@ -286,6 +356,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "___ gut___ Plan hilft uns.",
     completed: "Ein guter Plan hilft uns.",
     question: "Was hilft uns?",
+    keyWord: "hilft",
+    keyWordOptions: ["hilft", "guter", "uns"],
+    role: ROLE_SUBJECT,
     caseAnswer: "Nominativ",
     articleAnswer: "ein",
     articleOptions: ["ein", "einen", "einem", "eines"],
@@ -301,6 +374,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Wir brauchen ___ gut___ Plan.",
     completed: "Wir brauchen einen guten Plan.",
     question: "Was brauchen wir?",
+    keyWord: "brauchen",
+    keyWordOptions: ["brauchen", "guten", "Wir"],
+    role: ROLE_DIRECT_OBJECT,
     caseAnswer: "Akkusativ",
     articleAnswer: "einen",
     articleOptions: ["ein", "einen", "einem", "eines"],
@@ -316,6 +392,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Ich antworte ___ neu___ Kollegin.",
     completed: "Ich antworte einer neuen Kollegin.",
     question: "Wem antworte ich?",
+    keyWord: "antworte",
+    keyWordOptions: ["antworte", "neuen", "Ich"],
+    role: ROLE_DATIVE,
     caseAnswer: "Dativ",
     articleAnswer: "einer",
     articleOptions: ["eine", "einer", "einen", "einem"],
@@ -330,6 +409,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "___ klein___ Problem bleibt.",
     completed: "Ein kleines Problem bleibt.",
     question: "Was bleibt?",
+    keyWord: "bleibt",
+    keyWordOptions: ["bleibt", "kleines", "Problem"],
+    role: ROLE_SUBJECT,
     caseAnswer: "Nominativ",
     articleAnswer: "ein",
     articleOptions: ["ein", "einem", "eines", "einen"],
@@ -345,6 +427,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "___ frisch___ Kaffee ist fertig.",
     completed: "Frischer Kaffee ist fertig.",
     question: "Was ist fertig?",
+    keyWord: "ist",
+    keyWordOptions: ["ist", "frischer", "fertig"],
+    role: ROLE_SUBJECT,
     caseAnswer: "Nominativ",
     articleAnswer: "ohne Artikel",
     articleOptions: ["ohne Artikel", "der", "ein", "den"],
@@ -360,6 +445,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Wir brauchen ___ frisch___ Wasser.",
     completed: "Wir brauchen frisches Wasser.",
     question: "Was brauchen wir?",
+    keyWord: "brauchen",
+    keyWordOptions: ["brauchen", "frisches", "Wir"],
+    role: ROLE_DIRECT_OBJECT,
     caseAnswer: "Akkusativ",
     articleAnswer: "ohne Artikel",
     articleOptions: ["ohne Artikel", "das", "ein", "dem"],
@@ -375,6 +463,9 @@ export const caseAutomaticityChallenges: readonly Challenge[] = [
     pattern: "Sie spricht mit ___ gut___ Freunden.",
     completed: "Sie spricht mit guten Freunden.",
     question: "Mit wem spricht sie?",
+    keyWord: "mit",
+    keyWordOptions: ["mit", "spricht", "guten"],
+    role: ROLE_DATIVE,
     caseAnswer: "Dativ",
     articleAnswer: "ohne Artikel",
     articleOptions: ["ohne Artikel", "die", "den", "der"],
@@ -398,15 +489,26 @@ function speak(text: string) {
 }
 
 function stageLabel(stage: Stage) {
-  if (stage === "case") return "Kasus erkennen";
+  if (stage === "verb") return "Signalwort finden";
+  if (stage === "role") return "Satzrolle bestimmen";
+  if (stage === "case") return "Kasus ableiten";
   if (stage === "article") return "Artikel wählen";
   if (stage === "ending") return "Adjektivendung bilden";
   return "Laut sprechen";
 }
 
+const STAGE_ORDER: readonly Stage[] = [
+  "verb",
+  "role",
+  "case",
+  "article",
+  "ending",
+  "speak",
+];
+
 export function CaseAutomaticityTrainer() {
   const [challengeIndex, setChallengeIndex] = useState(0);
-  const [stage, setStage] = useState<Stage>("case");
+  const [stage, setStage] = useState<Stage>("verb");
   const [selected, setSelected] = useState("");
   const [passed, setPassed] = useState(false);
   const [message, setMessage] = useState("");
@@ -418,8 +520,7 @@ export function CaseAutomaticityTrainer() {
     caseAutomaticityChallenges[
       challengeIndex % caseAutomaticityChallenges.length
     ]!;
-  const stageNumber =
-    stage === "case" ? 1 : stage === "article" ? 2 : stage === "ending" ? 3 : 4;
+  const stageNumber = STAGE_ORDER.indexOf(stage) + 1;
   const sessionComplete = sessionDone >= sessionGoal;
 
   useEffect(() => {
@@ -440,6 +541,8 @@ export function CaseAutomaticityTrainer() {
   }, []);
 
   const options = useMemo<readonly string[]>(() => {
+    if (stage === "verb") return challenge.keyWordOptions;
+    if (stage === "role") return ROLE_OPTIONS;
     if (stage === "case") return CASES;
     if (stage === "article") return challenge.articleOptions;
     if (stage === "ending") return challenge.endingOptions;
@@ -447,22 +550,30 @@ export function CaseAutomaticityTrainer() {
   }, [challenge, stage]);
 
   const answer =
-    stage === "case"
-      ? challenge.caseAnswer
-      : stage === "article"
-        ? challenge.articleAnswer
-        : challenge.endingAnswer;
+    stage === "verb"
+      ? challenge.keyWord
+      : stage === "role"
+        ? challenge.role
+        : stage === "case"
+          ? challenge.caseAnswer
+          : stage === "article"
+            ? challenge.articleAnswer
+            : challenge.endingAnswer;
 
   function choose(option: string) {
     setSelected(option);
     if (option === answer) {
       setPassed(true);
       setMessage(
-        stage === "case"
-          ? `Richtig. ${challenge.explanation}`
-          : stage === "article"
-            ? "Richtig. Wähle jetzt die Adjektivendung passend zu diesem Artikel."
-            : "Richtig. Höre jetzt den vollständigen Satz und sprich ihn selbst laut.",
+        stage === "verb"
+          ? "Richtig. Dieses Wort erzwingt den Kasus -- jetzt die Rolle benennen, die es der Wortgruppe gibt."
+          : stage === "role"
+            ? "Richtig. Aus dieser Rolle folgt der Kasus fast automatisch."
+            : stage === "case"
+              ? `Richtig. ${challenge.explanation}`
+              : stage === "article"
+                ? "Richtig. Wähle jetzt die Adjektivendung passend zu diesem Artikel."
+                : "Richtig. Höre jetzt den vollständigen Satz und sprich ihn selbst laut.",
       );
     } else {
       setPassed(false);
@@ -475,9 +586,9 @@ export function CaseAutomaticityTrainer() {
     setSelected("");
     setPassed(false);
     setMessage("");
-    if (stage === "case") setStage("article");
-    else if (stage === "article") setStage("ending");
-    else if (stage === "ending") setStage("speak");
+    const currentIndex = STAGE_ORDER.indexOf(stage);
+    const next = STAGE_ORDER[currentIndex + 1];
+    if (next) setStage(next);
   }
 
   function nextChallenge() {
@@ -487,7 +598,7 @@ export function CaseAutomaticityTrainer() {
     setChallengeIndex(nextIndex);
     setTotalCompleted(nextTotal);
     setSessionDone((value) => value + 1);
-    setStage("case");
+    setStage("verb");
     setSelected("");
     setPassed(false);
     setMessage("");
@@ -500,7 +611,7 @@ export function CaseAutomaticityTrainer() {
 
   function startAnotherSession() {
     setSessionDone(0);
-    setStage("case");
+    setStage("verb");
     setSelected("");
     setPassed(false);
     setMessage("");
@@ -580,7 +691,7 @@ export function CaseAutomaticityTrainer() {
             <section className="rounded-2xl border bg-background p-4 sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-xs font-extrabold tracking-[0.12em] text-violet-800 uppercase">
-                  Schritt {stageNumber} von 4 · {stageLabel(stage)}
+                  Schritt {stageNumber} von {STAGE_ORDER.length} · {stageLabel(stage)}
                 </p>
                 <Badge variant="outline">
                   Satz {sessionDone + 1} von {sessionGoal}
@@ -627,8 +738,9 @@ export function CaseAutomaticityTrainer() {
                       disabled={!spoke}
                       onClick={nextChallenge}
                       type="button"
+                      title="Wendet denselben Entscheidungsweg auf einen neuen Satz an."
                     >
-                      Nächster Satz
+                      Weiter: neuer Satz, gleiches Muster
                     </Button>
                   </div>
                 </div>
@@ -637,7 +749,11 @@ export function CaseAutomaticityTrainer() {
                   <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3">
                     <strong className="block text-amber-950">Leitfrage</strong>
                     <span className="mt-1 block text-sm leading-6 text-amber-950">
-                      {challenge.question}
+                      {stage === "verb"
+                        ? "Welches Wort in diesem Satz bestimmt den Kasus der markierten Wortgruppe?"
+                        : stage === "role"
+                          ? `Welche Rolle spielt die Wortgruppe im Satz, ausgehend von „${challenge.keyWord}“?`
+                          : challenge.question}
                     </span>
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -682,12 +798,16 @@ export function CaseAutomaticityTrainer() {
 
             <aside className="space-y-3">
               <div className="rounded-2xl border border-violet-200 bg-violet-50 p-4">
-                <strong className="text-violet-950">Entscheidungsweg</strong>
+                <strong className="text-violet-950">Entscheidungsweg (6 Schritte)</strong>
                 <ol className="mt-3 grid gap-2 text-sm leading-6 text-violet-950">
-                  <li>1. Finde das Verb oder die Präposition.</li>
-                  <li>2. Frage: Wer? Wen? Wem? Wessen?</li>
-                  <li>3. Bestimme Genus und Numerus des Nomens.</li>
-                  <li>4. Bilde Artikel und Adjektivendung.</li>
+                  {STAGE_ORDER.map((step, index) => (
+                    <li
+                      className={step === stage ? "font-extrabold text-violet-700" : undefined}
+                      key={step}
+                    >
+                      {index + 1}. {stageLabel(step)}
+                    </li>
+                  ))}
                 </ol>
               </div>
               <details className="rounded-2xl border bg-background p-4">

@@ -11,8 +11,10 @@ interface ReleaseManifest {
 }
 
 const fallbackRelease: ReleaseManifest = {
-  version: "27.1.0",
+  version: "27.2.0",
   changes: [
+    "Task Definition versioning and lifecycle monitoring foundations",
+    "Deterministic legacy-event upcasting without rewriting learner history",
     "Daily Training and Automaticity Mission now appear as one Today’s Practice route",
     "An original visual conversation coach",
     "Integrated Skills lessons open directly in Conversation Studio",

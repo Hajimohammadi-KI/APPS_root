@@ -1,0 +1,18 @@
+{
+  "eventId": "evt-historical-001",
+  "streamId": "attempt-historical-001",
+  "sequence": 1,
+  "eventType": "attempt.submitted",
+  "eventVersion": "1.0.0",
+  "occurredAt": "2026-01-15T09:30:00.000Z",
+  "payload": {
+    "attemptId": "attempt-historical-001",
+    "taskId": "task-ordering-food",
+    "inputText": "I would like a coffee, please.",
+    "mode": "speaking"
+  },
+  "metadata": {
+    "appVersion": "27.0.0",
+    "producer": "legacy-web"
+  }
+}

@@ -1,7 +1,9 @@
 {
-  "version": "27.1.0",
-  "publishedAt": "2026-08-11",
+  "version": "27.2.0",
+  "publishedAt": "2026-08-14",
   "changes": [
+    "Task Definition versioning and lifecycle monitoring foundations are included without changing existing learner evidence",
+    "Legacy events can be read through deterministic upcasting without rewriting stored history",
     "Daily Training and Automaticity Mission now appear as one Today’s Practice route",
     "An original visual conversation coach with clearer speaking states",
     "Integrated Skills speaking lessons now open with the correct lesson context",

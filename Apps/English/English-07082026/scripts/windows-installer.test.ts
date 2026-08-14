@@ -13,6 +13,10 @@ const setupConfig = JSON.parse(
     "utf8",
   ),
 ) as Record<string, string>;
+const desktopSource = readFileSync(
+  resolve(projectRoot, "distribution/windows-desktop/main.cjs"),
+  "utf8",
+);
 
 describe("Windows installation roadmap", () => {
   test("offers the same four lifecycle actions as the tracker", () => {
@@ -62,6 +66,13 @@ describe("Windows installation roadmap", () => {
     expect(setupSource).toContain("IsChecked='False'");
     expect(setupSource).toContain(
       "selectedOperation == SetupOperation.Install && openDeepLCheckBox.IsChecked == true",
+    );
+  });
+
+  test("keeps the installed runtime identity aligned with the installer version", () => {
+    const runtimeVersion = setupConfig.version.split(".").slice(0, 2).join(".");
+    expect(desktopSource).toContain(
+      `EnglishGrammarAutomaticityDesktop/${runtimeVersion}`,
     );
   });
 });

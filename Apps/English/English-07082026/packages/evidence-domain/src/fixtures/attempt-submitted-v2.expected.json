@@ -1,0 +1,28 @@
+{
+  "eventId": "evt-historical-001",
+  "streamId": "attempt-historical-001",
+  "sequence": 1,
+  "eventType": "attempt.submitted",
+  "eventVersion": "2.0.0",
+  "occurredAt": "2026-01-15T09:30:00.000Z",
+  "payload": {
+    "attemptId": "attempt-historical-001",
+    "taskId": "task-ordering-food",
+    "taskVersion": null,
+    "response": {
+      "text": "I would like a coffee, please.",
+      "transcriptProvenance": "legacy_unknown"
+    },
+    "mode": "speaking",
+    "evidenceEligibility": {
+      "speaking": false,
+      "pronunciation": false,
+      "independentRecall": false,
+      "reason": "legacy_provenance_unknown"
+    }
+  },
+  "metadata": {
+    "appVersion": "27.0.0",
+    "producer": "legacy-web"
+  }
+}

@@ -166,6 +166,29 @@ export interface TopicMastery {
 	medianWritingLatencyMs: number | null;
 }
 
+export type FlashcardSource = "lesson" | "pdf" | "highlight" | "conversation" | "manual";
+export type FlashcardGrade = "again" | "hard" | "good";
+
+export interface FlashcardItem {
+	id: string;
+	front: string;
+	back: string;
+	source: FlashcardSource;
+	sourceLabel?: string;
+	level: CefrLevel | null;
+	lesson?: string;
+	originalSentence?: string;
+	createdAt: string;
+	// Index into RECALL_INTERVAL_STEPS_DAYS -- the same Leitner ladder the
+	// grammar review queue already uses, reused here rather than inventing a
+	// second scheduling algorithm.
+	stage: number;
+	dueAt: number;
+	successStreak: number;
+	lapses: number;
+	lastGrade: FlashcardGrade | null;
+}
+
 export interface Session {
 	id: string;
 	date: string;
@@ -220,6 +243,7 @@ export interface AppState {
 	mastery: Record<string, TopicMastery>;
 	reviews: ReviewItem[];
 	sessions: Session[];
+	flashcards: FlashcardItem[];
 	todayGrammar: { title: string; level: string; date: string } | null;
 }
 
@@ -301,6 +325,7 @@ export const DEFAULT_STATE: AppState = {
 	mastery: {},
 	reviews: [],
 	sessions: [],
+	flashcards: [],
 	todayGrammar: null,
 };
 
@@ -539,6 +564,7 @@ export function normalizeAppState(value: unknown): AppState {
 			: {},
 		reviews: recordArray<ReviewItem>(value.reviews),
 		sessions: recordArray<Session>(value.sessions),
+		flashcards: recordArray<FlashcardItem>(value.flashcards),
 		todayGrammar,
 	};
 }
@@ -1012,6 +1038,17 @@ interface StoreValue {
 	recordAttempt: (attempt: Omit<Attempt, "id" | "createdAt">) => void;
 	setTodayGrammar: (grammar: GrammarUnit) => void;
 	completeReview: (reviewId: string, wasCorrect: boolean) => void;
+	addFlashcard: (card: {
+		front: string;
+		back: string;
+		source: FlashcardSource;
+		sourceLabel?: string;
+		level?: CefrLevel | null;
+		lesson?: string;
+		originalSentence?: string;
+	}) => FlashcardItem | null;
+	gradeFlashcard: (cardId: string, grade: FlashcardGrade) => void;
+	deleteFlashcard: (cardId: string) => void;
 }
 
 const AppStoreContext = React.createContext<StoreValue | null>(null);
@@ -1310,6 +1347,96 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 		[mutate],
 	);
 
+	const addFlashcard = React.useCallback(
+		(card: {
+			front: string;
+			back: string;
+			source: FlashcardSource;
+			sourceLabel?: string;
+			level?: CefrLevel | null;
+			lesson?: string;
+			originalSentence?: string;
+		}) => {
+			let created: FlashcardItem | null = null;
+			mutate((draft) => {
+				const front = card.front.trim();
+				const back = card.back.trim();
+				if (!front || !back) return;
+				// Same word/meaning pair from any source shouldn't create a
+				// second card -- keep the queue meaningful, not padded.
+				const duplicate = draft.flashcards.find(
+					(existing) =>
+						existing.front.trim().toLocaleLowerCase() === front.toLocaleLowerCase() &&
+						existing.back.trim().toLocaleLowerCase() === back.toLocaleLowerCase(),
+				);
+				if (duplicate) {
+					created = duplicate;
+					return;
+				}
+				const entry: FlashcardItem = {
+					id: makeId("flashcard"),
+					front,
+					back,
+					source: card.source,
+					sourceLabel: card.sourceLabel,
+					level: card.level ?? null,
+					lesson: card.lesson,
+					originalSentence: card.originalSentence,
+					createdAt: new Date().toISOString(),
+					stage: 0,
+					dueAt: Date.now(),
+					successStreak: 0,
+					lapses: 0,
+					lastGrade: null,
+				};
+				draft.flashcards.push(entry);
+				created = entry;
+			});
+			return created;
+		},
+		[mutate],
+	);
+
+	const gradeFlashcard = React.useCallback(
+		(cardId: string, grade: FlashcardGrade) => {
+			mutate((draft) => {
+				const card = draft.flashcards.find((item) => item.id === cardId);
+				if (!card) return;
+				card.lastGrade = grade;
+				if (grade === "again") {
+					// Short relearn step, not the full ladder reset -- the card
+					// comes back within the same session instead of tomorrow.
+					card.stage = 0;
+					card.successStreak = 0;
+					card.lapses += 1;
+					card.dueAt = Date.now() + 10 * 60_000;
+					return;
+				}
+				if (grade === "hard") {
+					// Same stage, shorter-than-normal interval: still due sooner
+					// than a "good" answer, but doesn't reset progress like "again".
+					const interval = RECALL_INTERVAL_STEPS_DAYS[card.stage] ?? FIRST_RECALL_INTERVAL_DAYS;
+					card.dueAt = Date.now() + Math.max(1, Math.round(interval / 2)) * 86_400_000;
+					return;
+				}
+				card.successStreak += 1;
+				card.stage = Math.min(card.stage + 1, RECALL_INTERVAL_STEPS_DAYS.length - 1);
+				const interval = RECALL_INTERVAL_STEPS_DAYS[card.stage] ?? FIRST_RECALL_INTERVAL_DAYS;
+				card.dueAt = Date.now() + interval * 86_400_000;
+			});
+		},
+		[mutate],
+	);
+
+	const deleteFlashcard = React.useCallback(
+		(cardId: string) => {
+			mutate((draft) => {
+				draft.flashcards = draft.flashcards.filter((item) => item.id !== cardId);
+			});
+		},
+		[mutate],
+	);
+
 	const value = React.useMemo(
 		() => ({
 			state,
@@ -1319,8 +1446,22 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 			recordAttempt,
 			setTodayGrammar,
 			completeReview,
+			addFlashcard,
+			gradeFlashcard,
+			deleteFlashcard,
 		}),
-		[state, hydrated, mutate, replaceState, recordAttempt, setTodayGrammar, completeReview],
+		[
+			state,
+			hydrated,
+			mutate,
+			replaceState,
+			recordAttempt,
+			setTodayGrammar,
+			completeReview,
+			addFlashcard,
+			gradeFlashcard,
+			deleteFlashcard,
+		],
 	);
 
 	return (

@@ -113,7 +113,7 @@ const navigation: NavigationItem[] = [
 	{
 		id: "flashcards",
 		label: "Vocabulary & Flashcards",
-		subtitle: "LexiBridge recall and spaced review",
+		subtitle: "Spaced-repetition vocabulary review",
 		icon: Languages,
 	},
 	{

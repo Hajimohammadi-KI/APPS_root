@@ -13,6 +13,7 @@ import {
   type StoredEvaluationIssue,
 } from "./conversation-storage";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
+import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
 const nav = [
   "Tägliches Training",
@@ -107,6 +108,8 @@ function formatTime(seconds: number) {
 }
 
 export default function Home() {
+  const { state: learnerState, hydrated: learnerHydrated } =
+    useLearnerState();
   const [path] = useState<(typeof paths)[number]>(paths[0]);
   const language: StudioLanguage = "de";
   const text = copy[language];
@@ -173,6 +176,33 @@ export default function Home() {
       );
     if (matching) setTopicId(matching.id);
   }, []);
+
+  // Without a "?from=daily" deep link, this page always defaulted to
+  // conversationTopics[0] -- the same fixed topic regardless of the
+  // learner's actual level, current lesson, or last quiz result. Once the
+  // learner state is hydrated, default to their real current level instead
+  // (still overridden by the deep-link effect above when one is present).
+  // Applies only once on load -- must not fight a level/topic the learner
+  // picks manually afterward whenever unrelated learner state changes.
+  const appliedLearnerLevelDefault = useRef(false);
+  useEffect(() => {
+    if (!learnerHydrated || appliedLearnerLevelDefault.current) return;
+    if (new URLSearchParams(window.location.search).get("from") === "daily") {
+      appliedLearnerLevelDefault.current = true;
+      return;
+    }
+    const currentLevel =
+      learnerState.learningLevel ?? learnerState.learner.selfDeclaredLevel;
+    if (!currentLevel) return;
+    const matching = conversationTopics.find(
+      (topic) => topic.level === currentLevel,
+    );
+    if (matching) {
+      setLevel(currentLevel);
+      setTopicId(matching.id);
+    }
+    appliedLearnerLevelDefault.current = true;
+  }, [learnerHydrated, learnerState]);
 
   function finishDailyActivity() {
     if (dailyActivity === null) return;

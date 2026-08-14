@@ -1188,7 +1188,17 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 			const draft = structuredClone(current);
 			mutation(draft);
 			refreshVerifiedLevel(draft);
-			persistAppState(draft);
+			// These four grew without bound: months of daily use pushed the
+			// deep-cloned/persisted state size (and recalculateMastery's scan
+			// cost) up linearly forever. Capped to the same magnitude German
+			// already caps `attempts` at.
+			if (draft.attempts.length > 1_000) draft.attempts = draft.attempts.slice(-1_000);
+			if (draft.errors.length > 500) draft.errors = draft.errors.slice(-500);
+			if (draft.reviews.length > 1_000) draft.reviews = draft.reviews.slice(-1_000);
+			if (draft.sessions.length > 500) draft.sessions = draft.sessions.slice(-500);
+			// Persistence happens once, in the `useEffect([hydrated, state])`
+			// below that watches every state change -- calling persistAppState
+			// here too meant every mutation wrote to localStorage twice.
 			return draft;
 		});
 	}, []);
@@ -1197,7 +1207,6 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 		mutationVersion.current += 1;
 		const normalized = normalizeAppState(next);
 		refreshVerifiedLevel(normalized);
-		persistAppState(normalized);
 		setState(normalized);
 	}, []);
 

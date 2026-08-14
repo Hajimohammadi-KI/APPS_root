@@ -5,7 +5,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useState,
 } from "react";
@@ -31,6 +30,7 @@ import {
   type OutcomeEvidence,
   type ReviewMode,
   type ReviewConfidence,
+  type ReviewRecord,
   type ReviewSourceType,
   type SessionRecord,
   type UserAttempt,
@@ -340,7 +340,7 @@ export function LearnerStateProvider({
     return () => window.clearTimeout(timer);
   }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (hydrated) {
       localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify(state));
     }
@@ -691,10 +691,13 @@ export function LearnerStateProvider({
 
       return {
         ...current,
-        errors: nextErrors,
+        // Unlike `attempts` (capped at 1_000 above), these grew without a
+        // bound -- kept in check the same way so months of daily use don't
+        // grow the persisted/cloned state forever.
+        errors: nextErrors.slice(-500),
         reviews: reviewExists
           ? current.reviews
-          : [
+          : ([
               ...current.reviews,
               {
                 id: createId("review"),
@@ -710,7 +713,7 @@ export function LearnerStateProvider({
                 stabilityScore: 0,
                 reviewMode: "repair",
               },
-            ],
+            ] satisfies ReviewRecord[]).slice(-1_000),
         mastery: {
           ...current.mastery,
           [error.topic]: setMasteryCriticalErrors(
@@ -733,7 +736,7 @@ export function LearnerStateProvider({
             id: createId("session"),
             date: new Date().toISOString(),
           },
-        ],
+        ].slice(-500),
       }));
     },
     [],
@@ -817,7 +820,7 @@ export function LearnerStateProvider({
               stabilityScore: 0,
               reviewMode: options.reviewMode ?? "production",
             },
-          ],
+          ].slice(-1_000),
         };
       });
     },

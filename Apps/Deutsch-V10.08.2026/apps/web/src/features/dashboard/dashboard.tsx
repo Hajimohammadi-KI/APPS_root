@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -101,69 +101,103 @@ export function Dashboard() {
       }
     }
   }, [hydrated, verifiedLevel]);
-  const levelUnits = grammarUnits.filter((unit) => unit.level === level);
-  const levelRecords = levelUnits
-    .map((unit) => state.mastery[unit.title])
-    .filter((record) => record !== undefined);
-  const progressDimensions = calculateDailyProgress({
-    levelTopicCount: levelUnits.length,
-    coveredTopicCount: levelRecords.filter(
-      (record) =>
-        record.scores.recognition > 0 ||
-        record.scores.writing > 0 ||
-        record.scores.speaking > 0 ||
-        record.scores.repair > 0 ||
-        record.scores.transfer > 0,
-    ).length,
-    masteryScores: levelRecords.map(
-      (record) =>
-        (record.scores.recognition +
-          record.scores.writing +
-          record.scores.speaking +
-          record.scores.repair +
-          record.scores.transfer) /
-        5,
-    ),
-    automaticityScore: levelRecords.length
-      ? levelRecords.reduce(
-          (sum, record) => sum + record.scores.automaticity,
-          0,
-        ) / levelRecords.length
-      : 0,
-  });
-  const todayProgress = Math.round(
-    (plan.completed.length / DAILY_PRACTICE_STEPS.length) * 100,
-  );
-  const week = Array.from(
-    { length: 7 },
-    (_, index) => state.activity[dateKey(6 - index)] ?? 0,
-  );
-  const hasWeekActivity = week.some((value) => value > 0);
-  const chartPoints = week
-    .map((value, index) => {
-      const x = 8 + index * 15.3;
-      const y = value > 0 ? 82 - Math.min(68, value * 12) : 82;
-      return `${x},${y}`;
-    })
-    .join(" ");
-  const streak = calculateStreak(state.activity);
-  const dueReviews = state.reviews.filter(
-    (review) => !review.mastered && review.due <= Date.now(),
-  ).length;
-  const automatic = levelRecords.filter(
-    (record) => record.status === "automatic",
-  ).length;
-  const speakingAttempts = state.attempts.filter(
-    (attempt) => attempt.mode === "speaking",
-  );
-  const speakingAccuracy = speakingAttempts.length
-    ? Math.round(
-        speakingAttempts.reduce(
-          (sum, attempt) => sum + attempt.accuracyScore,
-          0,
-        ) / speakingAttempts.length,
-      )
-    : 0;
+  // All of this used to recompute on every render -- including renders
+  // triggered by state that has nothing to do with these numbers -- by
+  // chaining several separate .filter()/.map() passes over grammarUnits,
+  // state.mastery, state.attempts and state.reviews. Combined into one
+  // memoized pass keyed on the real dependencies instead.
+  const {
+    levelUnits,
+    levelRecords,
+    progressDimensions,
+    todayProgress,
+    week,
+    hasWeekActivity,
+    chartPoints,
+    streak,
+    dueReviews,
+    automatic,
+    speakingAttemptCount,
+    speakingAccuracy,
+  } = useMemo(() => {
+    const levelUnits = grammarUnits.filter((unit) => unit.level === level);
+    const levelRecords = levelUnits
+      .map((unit) => state.mastery[unit.title])
+      .filter((record) => record !== undefined);
+    const progressDimensions = calculateDailyProgress({
+      levelTopicCount: levelUnits.length,
+      coveredTopicCount: levelRecords.filter(
+        (record) =>
+          record.scores.recognition > 0 ||
+          record.scores.writing > 0 ||
+          record.scores.speaking > 0 ||
+          record.scores.repair > 0 ||
+          record.scores.transfer > 0,
+      ).length,
+      masteryScores: levelRecords.map(
+        (record) =>
+          (record.scores.recognition +
+            record.scores.writing +
+            record.scores.speaking +
+            record.scores.repair +
+            record.scores.transfer) /
+          5,
+      ),
+      automaticityScore: levelRecords.length
+        ? levelRecords.reduce(
+            (sum, record) => sum + record.scores.automaticity,
+            0,
+          ) / levelRecords.length
+        : 0,
+    });
+    const todayProgress = Math.round(
+      (plan.completed.length / DAILY_PRACTICE_STEPS.length) * 100,
+    );
+    const week = Array.from(
+      { length: 7 },
+      (_, index) => state.activity[dateKey(6 - index)] ?? 0,
+    );
+    const hasWeekActivity = week.some((value) => value > 0);
+    const chartPoints = week
+      .map((value, index) => {
+        const x = 8 + index * 15.3;
+        const y = value > 0 ? 82 - Math.min(68, value * 12) : 82;
+        return `${x},${y}`;
+      })
+      .join(" ");
+    const streak = calculateStreak(state.activity);
+    const dueReviews = state.reviews.filter(
+      (review) => !review.mastered && review.due <= Date.now(),
+    ).length;
+    const automatic = levelRecords.filter(
+      (record) => record.status === "automatic",
+    ).length;
+    const speakingAttempts = state.attempts.filter(
+      (attempt) => attempt.mode === "speaking",
+    );
+    const speakingAccuracy = speakingAttempts.length
+      ? Math.round(
+          speakingAttempts.reduce(
+            (sum, attempt) => sum + attempt.accuracyScore,
+            0,
+          ) / speakingAttempts.length,
+        )
+      : 0;
+    return {
+      levelUnits,
+      levelRecords,
+      progressDimensions,
+      todayProgress,
+      week,
+      hasWeekActivity,
+      chartPoints,
+      streak,
+      dueReviews,
+      automatic,
+      speakingAttemptCount: speakingAttempts.length,
+      speakingAccuracy,
+    };
+  }, [level, state.mastery, state.activity, state.reviews, state.attempts, plan.completed]);
 
   const courses = [
     {
@@ -182,7 +216,7 @@ export function Dashboard() {
     },
     {
       title: "Alltagsgespräche sicher meistern",
-      detail: `${speakingAttempts.length} Sprechproben gespeichert`,
+      detail: `${speakingAttemptCount} Sprechproben gespeichert`,
       tone: "peach",
       href: "/studio",
       icon: MessageCircle,

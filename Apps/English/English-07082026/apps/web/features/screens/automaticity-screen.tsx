@@ -327,9 +327,17 @@ export function AutomaticityScreen({
   const [transferAnalysis, setTransferAnalysis] =
     React.useState<AutomaticityAnalysis | null>(null);
   const [transferChecking, setTransferChecking] = React.useState(false);
-  const priorTransferAttempts = state.attempts.filter(
-    (attempt) => attempt.grammarTitle === topic && attempt.mode === "transfer",
-  ).length;
+  // Was recomputed by filtering the whole (potentially 1000-entry) attempts
+  // array on every render, including ones triggered by unrelated state
+  // (typing in the journal Textarea re-renders this component but doesn't
+  // change state.attempts or topic).
+  const priorTransferAttempts = React.useMemo(
+    () =>
+      state.attempts.filter(
+        (attempt) => attempt.grammarTitle === topic && attempt.mode === "transfer",
+      ).length,
+    [state.attempts, topic],
+  );
   const situation = transferSituation(grammar, priorTransferAttempts);
   const [activeStep, setActiveStep] = React.useState<number>(
     focusedStep ?? [0, 1, 2].find((step) => !plan.completed.includes(step)) ?? 0,

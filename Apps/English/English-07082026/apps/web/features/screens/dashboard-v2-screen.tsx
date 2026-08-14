@@ -32,10 +32,6 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
   const name = state.learner.displayName.trim() || "Learner";
   const level = state.learner.selfDeclaredLevel ?? "A1";
   const verifiedLevel = state.learner.verifiedLevel;
-  const levelUnits = grammarUnits.filter((unit) => unit.level === level);
-  const practiced = levelUnits.filter((unit) => state.mastery[unit.title]?.status !== "new").length;
-  const finished = levelUnits.filter((unit) => ["stable", "automatic"].includes(state.mastery[unit.title]?.status ?? "new")).length;
-  const progress = levelUnits.length ? Math.round((finished / levelUnits.length) * 100) : 0;
   const [celebrateLevel, setCelebrateLevel] = React.useState<CefrLevel | null>(null);
 
   React.useEffect(() => {
@@ -57,19 +53,42 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
       }
     }
   }, [hydrated, verifiedLevel]);
-  const todayProgress = Math.round((new Set(plan.completed).size / 3) * 100);
-  const week = Array.from({ length: 7 }, (_, index) => state.activity[dateKey(6 - index)] ?? 0);
-  const chartPoints = week.map((value, index) => {
-    const x = 8 + index * 15.3;
-    const y = value > 0 ? 82 - Math.min(68, value * 12) : 82;
-    return `${x},${y}`;
-  }).join(" ");
-  const streak = calculateStreak(state.activity);
-  const dueReviews = state.reviews.filter((review) => review.status === "pending" && review.dueAt <= Date.now()).length;
-  const automatic = Object.values(state.mastery).filter((item) => item.status === "automatic").length;
-  const speakingAverage = state.sessions.length
-    ? Math.min(100, Math.round(state.sessions.reduce((total, session) => total + Math.min(100, session.seconds), 0) / state.sessions.length))
-    : 0;
+  // Combined into one memoized pass -- these used to be 9 separate
+  // unmemoized filter/map/reduce calls over grammarUnits and state's
+  // (potentially large) mastery/reviews/sessions collections, recomputed on
+  // every render including ones triggered by unrelated state.
+  const {
+    levelUnits,
+    practiced,
+    finished,
+    progress,
+    todayProgress,
+    week,
+    chartPoints,
+    streak,
+    dueReviews,
+    automatic,
+    speakingAverage,
+  } = React.useMemo(() => {
+    const levelUnits = grammarUnits.filter((unit) => unit.level === level);
+    const practiced = levelUnits.filter((unit) => state.mastery[unit.title]?.status !== "new").length;
+    const finished = levelUnits.filter((unit) => ["stable", "automatic"].includes(state.mastery[unit.title]?.status ?? "new")).length;
+    const progress = levelUnits.length ? Math.round((finished / levelUnits.length) * 100) : 0;
+    const todayProgress = Math.round((new Set(plan.completed).size / 3) * 100);
+    const week = Array.from({ length: 7 }, (_, index) => state.activity[dateKey(6 - index)] ?? 0);
+    const chartPoints = week.map((value, index) => {
+      const x = 8 + index * 15.3;
+      const y = value > 0 ? 82 - Math.min(68, value * 12) : 82;
+      return `${x},${y}`;
+    }).join(" ");
+    const streak = calculateStreak(state.activity);
+    const dueReviews = state.reviews.filter((review) => review.status === "pending" && review.dueAt <= Date.now()).length;
+    const automatic = Object.values(state.mastery).filter((item) => item.status === "automatic").length;
+    const speakingAverage = state.sessions.length
+      ? Math.min(100, Math.round(state.sessions.reduce((total, session) => total + Math.min(100, session.seconds), 0) / state.sessions.length))
+      : 0;
+    return { levelUnits, practiced, finished, progress, todayProgress, week, chartPoints, streak, dueReviews, automatic, speakingAverage };
+  }, [level, state.mastery, plan.completed, state.activity, state.reviews, state.sessions]);
   const handlePlacementAccept = (nextLevel: CefrLevel) => {
     mutate((draft) => {
       draft.learner.selfDeclaredLevel = nextLevel;

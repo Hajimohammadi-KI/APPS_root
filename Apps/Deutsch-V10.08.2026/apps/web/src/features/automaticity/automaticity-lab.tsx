@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpenCheck,
   Check,
@@ -269,9 +269,16 @@ export function AutomaticityLab({
   const [transferAnalysis, setTransferAnalysis] =
     useState<AutomatikAnalysis | null>(null);
   const [transferChecking, setTransferChecking] = useState(false);
-  const priorTransferAttempts = state.attempts.filter(
-    (attempt) => attempt.topic === TOPIC && attempt.mode === "transfer",
-  ).length;
+  // Was recomputed by filtering the whole attempts array on every render,
+  // including ones triggered by unrelated state (typing in a Textarea
+  // re-renders this component without changing state.attempts).
+  const priorTransferAttempts = useMemo(
+    () =>
+      state.attempts.filter(
+        (attempt) => attempt.topic === TOPIC && attempt.mode === "transfer",
+      ).length,
+    [state.attempts],
+  );
   const situation = transferSituation(TOPIC, priorTransferAttempts);
   const [recording, setRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);

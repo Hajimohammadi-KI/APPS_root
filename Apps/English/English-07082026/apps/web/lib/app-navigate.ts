@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 export const SCREEN_PATHS = {
 	home: "/",
 	daily: "/daily",
+	practice: "/practice",
 	studio: "/studio",
 	progress: "/progress",
 	grammar: "/grammar",

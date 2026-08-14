@@ -3,7 +3,15 @@ import { grammarUnits as legacyGrammarUnits } from "./generated/grammar";
 import { repairGrammarUnitLinks } from "./resource-links";
 import type { GrammarExercise, GrammarResource, GrammarUnit } from "./types";
 
-const MINIMUM_CONTROLLED_EXERCISES = 6;
+// Raised from 6 -- the original candidate pool below only had enough
+// distinct, safe prompts to reach ~6-7 per unit regardless of this
+// constant. The expanded pool (more prompts per already-verified field,
+// plus one per example sentence) realistically reaches ~10-12 for most
+// units. This is still short of the "hundreds of repetitions" skill
+// acquisition research calls for -- it is what can be generated safely
+// from content that already exists per unit without fabricating new
+// example sentences (which would risk introducing bad grammar).
+const MINIMUM_CONTROLLED_EXERCISES = 10;
 
 // Some legacy units were generated from a `commonError` that was only a
 // category label (e.g. "Unclear pronoun reference.", "Using slang in a
@@ -46,14 +54,26 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
     isWellFormedExercise(exercise, unit),
   );
 
-  // `rule`/`recallTest`/`transferTest`/`commonError` are always complete,
-  // well-formed sentences (never derived from the fragmentary `examples`
-  // entries that caused the bug above), so every candidate below is safe
-  // filler even for units whose original exercises were entirely broken.
+  // `rule`/`recallTest`/`transferTest`/`commonError`/`testAnswer` are
+  // always complete, well-formed sentences (never derived from the
+  // fragmentary `examples` entries that caused the bug above), so every
+  // fixed candidate below is safe filler even for units whose original
+  // exercises were entirely broken. Several fields get a second, distinct
+  // prompt phrasing rather than a second field, since asking the same
+  // verified-correct answer a different way is still genuine additional
+  // retrieval practice without risking new, unverified sentences.
   const candidatePool: GrammarExercise[] = [
     [`State the rule for “${unit.title}” from memory.`, unit.recallTest],
     [
+      `Recall the rule for “${unit.title}” without looking it up.`,
+      unit.recallTest,
+    ],
+    [
       `Write the transfer model for “${unit.title}” accurately.`,
+      unit.transferTest,
+    ],
+    [
+      `Apply “${unit.title}” correctly in a new sentence of your own.`,
       unit.transferTest,
     ],
     [
@@ -61,15 +81,23 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
       unit.repairTest,
     ],
     [`Explain the rule for “${unit.title}” in your own words.`, unit.rule],
+    [`Teach “${unit.title}” to a classmate in one sentence.`, unit.rule],
     [
       `Name the common error learners make with “${unit.title}”.`,
       unit.commonError,
     ],
     [
-      `Apply “${unit.title}” correctly in a new sentence of your own.`,
-      unit.transferTest,
+      `Write the standard reference answer for “${unit.title}”.`,
+      unit.testAnswer,
     ],
-    [`Teach “${unit.title}” to a classmate in one sentence.`, unit.rule],
+    ...unit.examples.map(
+      (example, index): GrammarExercise => [
+        index === 0
+          ? `Type the model sentence: ${example}`
+          : `Type another model sentence: ${example}`,
+        example,
+      ],
+    ),
   ];
   const candidates = candidatePool.filter((candidate) =>
     isWellFormedExercise(candidate, unit),

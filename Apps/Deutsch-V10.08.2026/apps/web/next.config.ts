@@ -13,16 +13,6 @@ const nextConfig: NextConfig = {
     "@grammar/domain",
   ],
   typedRoutes: true,
-  async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: "/grammatik",
-          destination: "/replacements/de/grammatik.html",
-        },
-      ],
-    };
-  },
   async headers() {
     return [
       {

@@ -67,6 +67,28 @@ function transferSituation(title: string, priorTransferAttempts: number) {
   return TRANSFER_SITUATIONS[index];
 }
 
+// The full pool a topic can draw rounds from -- exercise-completion.ts
+// guarantees at least MINIMUM_CONTROLLED_EXERCISES (10) well-formed
+// exercises per unit. Each Mission round only shows ROUND_SIZE of them, so
+// a learner can repeat controlled practice on the same topic several times
+// without seeing an identical round, instead of a one-shot fixed set.
+const ROUND_SIZE = 6;
+
+function shuffled<T>(items: readonly T[]): T[] {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    const temp = copy[index]!;
+    copy[index] = copy[swapIndex]!;
+    copy[swapIndex] = temp;
+  }
+  return copy;
+}
+
+function pickRound<T>(pool: readonly T[], size: number): T[] {
+  return shuffled(pool).slice(0, Math.min(size, pool.length));
+}
+
 const shadowingStages = [
   "Nur zuhören",
   "Zuhören und Text mitlesen",
@@ -195,21 +217,21 @@ export function AutomaticityLab({
     grammarUnits[0]!;
   const TOPIC = grammar.title;
   const KEY = lessonKey(TOPIC);
-  // exercise-completion.ts guarantees at least MINIMUM_CONTROLLED_EXERCISES
-  // (6) well-formed exercises per unit; use all of them rather than an
-  // arbitrary first-3 subset -- more controlled repetition before free
-  // production.
-  const exercises = grammar.exercises.slice(0, 6).map((exercise) => ({
+  const exercises = grammar.exercises.map((exercise) => ({
     prompt: exercise[0] ?? "Bearbeite die Aufgabe.",
     expected: exercise[1] ?? grammar.testAnswer,
   }));
   const modelText = grammar.examples.join(" ");
   const today = new Date().toISOString().slice(0, 10);
   const plan = state.dailyPlans[today] ?? { completed: [], answers: {} };
+  const [roundExercises, setRoundExercises] = useState(() =>
+    pickRound(exercises, ROUND_SIZE),
+  );
   const [answers, setAnswers] = useState<string[]>(() =>
-    exercises.map(() => ""),
+    roundExercises.map(() => ""),
   );
   const [checkedAnswers, setCheckedAnswers] = useState<readonly boolean[]>([]);
+  const [practiceRounds, setPracticeRounds] = useState(0);
   const [journal, setJournal] = useState("");
   const [transcript, setTranscript] = useState("");
   const [journalAnalysis, setJournalAnalysis] =
@@ -243,6 +265,12 @@ export function AutomaticityLab({
   const [hasAudioBlob, setHasAudioBlob] = useState(false);
   const startedAtRef = useRef(0);
   const restoredRef = useRef(false);
+  // Timestamp of the first keystroke in the writing Textarea, cleared after
+  // save -- feeds AUTOMATICITY_LATENCY_THRESHOLD_MS in
+  // packages/domain/src/mastery.ts, which already gates "automatic" status
+  // on median response latency but never received a writing latency
+  // before (only saveSpeaking passed latencyMs).
+  const journalStartRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!hydrated || restoredRef.current) return;
@@ -352,17 +380,17 @@ export function AutomaticityLab({
 
   function checkPractice() {
     const results = answers.map((answer, index) =>
-      practiceAnswerMatches(answer, exercises[index]?.expected ?? ""),
+      practiceAnswerMatches(answer, roundExercises[index]?.expected ?? ""),
     );
     setCheckedAnswers(results);
     const score = Math.round(
-      (results.filter(Boolean).length / exercises.length) * 100,
+      (results.filter(Boolean).length / roundExercises.length) * 100,
     );
     recordAttempt({
       topic: TOPIC,
       mode: "recognition",
       inputText: answers.join("\n"),
-      correctedText: exercises.map((item) => item.expected).join("\n"),
+      correctedText: roundExercises.map((item) => item.expected).join("\n"),
       targetHit: results.every(Boolean),
       // practiceAnswerMatches is a deterministic exact-match check against a
       // known-correct answer -- not self-rated, not a network call, not
@@ -383,6 +411,19 @@ export function AutomaticityLab({
       );
     }
     markActivity(1);
+  }
+
+  // Repetition without repeating the same round: draws a fresh shuffled
+  // subset from the full exercise pool (up to 10 items per topic since the
+  // exercise-completion.ts pool expansion) so a learner can do several
+  // genuinely different retrieval rounds on the same topic in one sitting.
+  function practiceAgain() {
+    const nextRound = pickRound(exercises, ROUND_SIZE);
+    setRoundExercises(nextRound);
+    setAnswers(nextRound.map(() => ""));
+    setCheckedAnswers([]);
+    setPracticeRounds((count) => count + 1);
+    setMessage("Neue Runde bereit. Der Schritt bleibt trotzdem abgeschlossen.");
   }
 
   function saveDetectedErrors(analysis: AutomatikAnalysis, sourceText: string) {
@@ -409,6 +450,10 @@ export function AutomaticityLab({
     const analysis = await analyzeLessonOutput(journal, 4);
     setJournalAnalysis(analysis);
     setDailyAnswer(`${KEY}:journal`, journal);
+    const latencyMs = journalStartRef.current
+      ? Date.now() - journalStartRef.current
+      : undefined;
+    journalStartRef.current = null;
     recordAttempt({
       topic: TOPIC,
       mode: "writing",
@@ -417,6 +462,7 @@ export function AutomaticityLab({
       targetHit: analysis.targetHit,
       verified: analysis.online && analysis.targetHit,
       accuracyScore: analysis.score,
+      ...(latencyMs === undefined ? {} : { latencyMs }),
     });
     saveDetectedErrors(analysis, journal);
     if (analysis.targetHit) setDailyAnswer(`${KEY}:writing`, "done");
@@ -801,7 +847,7 @@ export function AutomaticityLab({
                 <p className="mt-2">{grammar.commonError}</p>
               </div>
             </div>
-            {exercises.map((item, index) => (
+            {roundExercises.map((item, index) => (
               <label className="block space-y-2" key={item.prompt}>
                 <span className="text-sm font-bold">{item.prompt}</span>
                 <input
@@ -831,7 +877,17 @@ export function AutomaticityLab({
                 ) : null}
               </label>
             ))}
-            <Button onClick={checkPractice}>Alle drei prüfen</Button>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button onClick={checkPractice}>Antworten prüfen</Button>
+              {checkedAnswers.length && exercises.length > roundExercises.length ? (
+                <Button onClick={practiceAgain} variant="outline">
+                  <RotateCcw /> Neue Runde üben
+                </Button>
+              ) : null}
+              {practiceRounds > 0 ? (
+                <Badge>{practiceRounds + 1} Runden in dieser Sitzung</Badge>
+              ) : null}
+            </div>
           </CardContent>
         </Card>
       ) : null}
@@ -848,7 +904,12 @@ export function AutomaticityLab({
           <CardContent className="space-y-4">
             <Textarea
               aria-label={`${TOPIC}-Tagebuch`}
-              onChange={(event) => setJournal(event.target.value)}
+              onChange={(event) => {
+                if (journalStartRef.current === null) {
+                  journalStartRef.current = Date.now();
+                }
+                setJournal(event.target.value);
+              }}
               placeholder={grammar.examples[0] ?? grammar.testAnswer}
               value={journal}
             />

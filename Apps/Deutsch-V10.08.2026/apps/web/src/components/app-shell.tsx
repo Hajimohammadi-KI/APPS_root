@@ -43,18 +43,24 @@ export function AppShell({
       item.href === "/" ? pathname === "/" : pathname.startsWith(item.href),
     ) ?? coreNavigation[0]!;
   const CurrentIcon = current.icon;
-  const practiceNavigation = [
-    primaryNavigation[0]!,
-    primaryNavigation[2]!,
-    primaryNavigation[3]!,
-  ];
-  const learningNavigation = [
-    primaryNavigation[4]!,
-    secondaryNavigation[0]!,
-    secondaryNavigation[1]!,
-  ];
-  const evidenceNavigation = [primaryNavigation[6]!, primaryNavigation[7]!];
-  const settingsNavigation = secondaryNavigation.filter((item) =>
+  // Filtered by href rather than positional index -- a prior version
+  // indexed into primaryNavigation/secondaryNavigation by array position,
+  // which silently left "/fortschritt" and "/wiederholungen" out of every
+  // group (unreachable from the sidebar, only linkable by typing the URL
+  // directly) and would have broken again the moment an item was inserted
+  // or reordered, as happened when Mixed Practice was added.
+  const practiceNavigation = allNavigation.filter((item) =>
+    ["/", "/heute", "/gemischtes-training", "/studio", "/wiederholungen"].includes(
+      item.href,
+    ),
+  );
+  const learningNavigation = allNavigation.filter((item) =>
+    ["/grammatik", "/fertigkeiten", "/ressourcen"].includes(item.href),
+  );
+  const evidenceNavigation = allNavigation.filter((item) =>
+    ["/fortschritt", "/fehler", "/audio"].includes(item.href),
+  );
+  const settingsNavigation = allNavigation.filter((item) =>
     ["/einstellungen", "/lehrkraft"].includes(item.href),
   );
   const groups = [

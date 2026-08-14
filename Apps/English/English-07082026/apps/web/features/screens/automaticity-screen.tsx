@@ -51,7 +51,7 @@ const defaultGrammar = requireDefaultGrammar();
 // changes later. Not a real Task/Rubric version (packages/evidence-domain
 // defines that concept but nothing in this runtime calls it yet) -- this is
 // what's honestly available today.
-const EVIDENCE_CONTENT_VERSION = "27.2.0";
+export const EVIDENCE_CONTENT_VERSION = "27.2.0";
 // A speaking attempt needs at least this much actual decoded speech (not
 // silence/pauses) before its language-correctness check is allowed to count
 // as verified speaking evidence -- otherwise a two-second "yes" with a long
@@ -85,16 +85,33 @@ function lessonKey(grammar: GrammarUnit) {
     .replace(/^-|-$/g, "")}`;
 }
 
+// The full pool a topic can draw rounds from -- curriculum.ts guarantees at
+// least MINIMUM_CONTROLLED_EXERCISES (10) well-formed exercises per unit.
+// Each Mission round only shows ROUND_SIZE of them (see pickRound below),
+// so a learner can repeat controlled practice on the same topic multiple
+// times without seeing an identical round, instead of a one-shot fixed set.
+const ROUND_SIZE = 6;
+
+function shuffled<T>(items: readonly T[]): T[] {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    const temp = copy[index]!;
+    copy[index] = copy[swapIndex]!;
+    copy[swapIndex] = temp;
+  }
+  return copy;
+}
+
+function pickRound<T>(pool: readonly T[], size: number): T[] {
+  return shuffled(pool).slice(0, Math.min(size, pool.length));
+}
+
 function lessonExercises(grammar: GrammarUnit) {
   if (grammar.title.toLocaleLowerCase("en") === "present perfect") {
     return presentPerfectExercises;
   }
-  // curriculum.ts guarantees at least MINIMUM_CONTROLLED_EXERCISES (6)
-  // well-formed exercises per unit; use all of them rather than an
-  // arbitrary first-3 subset -- more controlled repetition before moving to
-  // free production, per the same skill-acquisition logic that motivates
-  // controlled practice existing as a distinct first step at all.
-  return grammar.exercises.slice(0, 6).map(([prompt, expected]) => ({
+  return grammar.exercises.map(([prompt, expected]) => ({
     prompt,
     expected,
   }));
@@ -265,10 +282,14 @@ export function AutomaticityScreen({
   const exercises = lessonExercises(grammar);
   const modelText = lessonModel(grammar);
   const plan = state.dailyPlans[todayKey()] ?? { completed: [], answers: {} };
+  const [roundExercises, setRoundExercises] = React.useState<
+    ReturnType<typeof lessonExercises>
+  >(() => pickRound(exercises, ROUND_SIZE));
   const [answers, setAnswers] = React.useState<string[]>(() =>
-    exercises.map(() => ""),
+    roundExercises.map(() => ""),
   );
   const [checkedAnswers, setCheckedAnswers] = React.useState<boolean[]>([]);
+  const [practiceRounds, setPracticeRounds] = React.useState(0);
   const [journal, setJournal] = React.useState("");
   const [transcript, setTranscript] = React.useState("");
   const [journalAnalysis, setJournalAnalysis] =
@@ -297,6 +318,14 @@ export function AutomaticityScreen({
   const chunksRef = React.useRef<Blob[]>([]);
   const audioRef = React.useRef<Blob | null>(null);
   const rawTranscriptRef = React.useRef("");
+  // Timestamp of the first keystroke in each Textarea, cleared after the
+  // attempt is saved. Feeds the writing/transfer latency dimension of
+  // recalculateMastery -- automaticity is a speed claim, not just an
+  // accuracy one, so composing quickly (not just correctly) has to be part
+  // of what "automatic" measures, the same way German's domain package
+  // already gates on median response latency.
+  const journalStartRef = React.useRef<number | null>(null);
+  const transferStartRef = React.useRef<number | null>(null);
   const startedAtRef = React.useRef(0);
   const restoredRef = React.useRef(false);
 
@@ -357,19 +386,19 @@ export function AutomaticityScreen({
   function checkPractice() {
     const results = answers.map((answer, index) =>
       evaluatePracticeAnswer(answer, {
-        prompt: exercises[index]?.prompt ?? "",
-        expected: exercises[index]?.expected ?? "",
+        prompt: roundExercises[index]?.prompt ?? "",
+        expected: roundExercises[index]?.expected ?? "",
       }),
     );
     setCheckedAnswers(results);
     const score = Math.round(
-      (results.filter(Boolean).length / exercises.length) * 100,
+      (results.filter(Boolean).length / roundExercises.length) * 100,
     );
     recordAttempt({
       grammarTitle: topic,
       mode: "recognition",
       inputText: answers.join("\n"),
-      correctedText: exercises.map((item) => item.expected).join("\n"),
+      correctedText: roundExercises.map((item) => item.expected).join("\n"),
       targetHit: results.every(Boolean),
       accuracyScore: score,
       fluencyScore: 0,
@@ -393,6 +422,20 @@ export function AutomaticityScreen({
     } else {
       setMessage("Review the model answers and correct the highlighted items.");
     }
+  }
+
+  // Repetition without repeating the same round: draws a fresh shuffled
+  // subset from the full exercise pool (up to ~10 items per topic since the
+  // curriculum.ts pool expansion) so a learner can do several genuinely
+  // different retrieval rounds on the same topic in one sitting, instead of
+  // the controlled-practice step being a one-shot, never-repeated task.
+  function practiceAgain() {
+    const nextRound = pickRound(exercises, ROUND_SIZE);
+    setRoundExercises(nextRound);
+    setAnswers(nextRound.map(() => ""));
+    setCheckedAnswers([]);
+    setPracticeRounds((count) => count + 1);
+    setMessage("New round ready. The step stays complete either way.");
   }
 
   function addIssuesToErrorWorkshop(
@@ -527,6 +570,10 @@ export function AutomaticityScreen({
     const analysis = await analyzeLessonOutput(journal, 4);
     setJournalAnalysis(analysis);
     writePlan(`${key}:journal`, journal);
+    const latencyMs = journalStartRef.current
+      ? Date.now() - journalStartRef.current
+      : null;
+    journalStartRef.current = null;
     recordAttempt({
       grammarTitle: topic,
       mode: "writing",
@@ -535,7 +582,7 @@ export function AutomaticityScreen({
       targetHit: analysis.targetHit,
       accuracyScore: analysis.score,
       fluencyScore: 0,
-      latencyMs: null,
+      latencyMs,
       passed: analysis.targetHit,
       verified: analysis.masteryEligible,
       assessedBy: analysis.online ? "online" : "offline",
@@ -562,6 +609,10 @@ export function AutomaticityScreen({
     try {
       const analysis = await analyzeLessonOutput(transferAttempt, 2);
       setTransferAnalysis(analysis);
+      const latencyMs = transferStartRef.current
+        ? Date.now() - transferStartRef.current
+        : null;
+      transferStartRef.current = null;
       recordAttempt({
         grammarTitle: topic,
         mode: "transfer",
@@ -570,7 +621,7 @@ export function AutomaticityScreen({
         targetHit: analysis.targetHit,
         accuracyScore: analysis.score,
         fluencyScore: 0,
-        latencyMs: null,
+        latencyMs,
         passed: analysis.targetHit,
         verified: analysis.masteryEligible,
         assessedBy: analysis.online ? "online" : "offline",
@@ -902,7 +953,7 @@ export function AutomaticityScreen({
               </p>
             </div>
           </div>
-          {exercises.map((item, index) => (
+          {roundExercises.map((item, index) => (
             <label className="block space-y-2" key={item.prompt}>
               <span className="text-sm font-bold">{item.prompt}</span>
               <input
@@ -932,7 +983,19 @@ export function AutomaticityScreen({
               ) : null}
             </label>
           ))}
-          <Button onClick={checkPractice}>Check all three</Button>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button onClick={checkPractice}>Check answers</Button>
+            {checkedAnswers.length && exercises.length > roundExercises.length ? (
+              <Button onClick={practiceAgain} variant="outline">
+                <RotateCcw className="size-4" /> Practice again (new round)
+              </Button>
+            ) : null}
+            {practiceRounds > 0 ? (
+              <Badge variant="secondary">
+                {practiceRounds + 1} rounds this session
+              </Badge>
+            ) : null}
+          </div>
         </CardContent>
       </Card> : null}
 
@@ -947,7 +1010,12 @@ export function AutomaticityScreen({
         <CardContent className="space-y-4">
           <Textarea
             aria-label={`${topic} journal`}
-            onChange={(event) => setJournal(event.target.value)}
+            onChange={(event) => {
+              if (journalStartRef.current === null) {
+                journalStartRef.current = Date.now();
+              }
+              setJournal(event.target.value);
+            }}
             placeholder={grammar.examples[0] ?? "Write your own example…"}
             value={journal}
           />
@@ -1032,7 +1100,12 @@ export function AutomaticityScreen({
             </div>
             <Textarea
               aria-label="Transfer response"
-              onChange={(event) => setTransferAttempt(event.target.value)}
+              onChange={(event) => {
+                if (transferStartRef.current === null) {
+                  transferStartRef.current = Date.now();
+                }
+                setTransferAttempt(event.target.value);
+              }}
               placeholder="Respond to the situation above using this lesson's target form."
               value={transferAttempt}
             />

@@ -14,7 +14,6 @@ const nextConfig: NextConfig = {
 		return {
 			beforeFiles: [
 				{ source: "/daily", destination: "/replacements/en/daily.html" },
-				{ source: "/grammar", destination: "/replacements/en/grammar.html" },
 			],
 		};
 	},

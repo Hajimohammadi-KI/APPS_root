@@ -183,7 +183,10 @@ export const grammarUnits: readonly GrammarUnit[] = [
       explanation,
     });
   }),
-  ...supplementalGrammarUnits,
+  ...supplementalGrammarUnits.map((unit) => ({
+    ...unit,
+    exercises: completeControlledExercises(unit),
+  })),
 ];
 
 export const catalogSummary = {

@@ -19,6 +19,7 @@ import {
 	Menu,
 	MessagesSquare,
 	Settings,
+	Shuffle,
 	Languages,
 	GraduationCap,
 	X,
@@ -53,6 +54,12 @@ const navigation: NavigationItem[] = [
 		label: "Today’s Practice",
 		subtitle: "Adaptive recall and automaticity",
 		icon: Flame,
+	},
+	{
+		id: "practice",
+		label: "Mixed Practice",
+		subtitle: "Interleaved recall across topics",
+		icon: Shuffle,
 	},
 	{
 		id: "studio",
@@ -138,7 +145,9 @@ const navigationGroups: NavigationGroup[] = [
 		label: "Daily Practice",
 		caption: "Practice and speak today",
 		icon: Clock3,
-		items: navigation.slice(0, 3),
+		items: navigation.filter((item) =>
+			["home", "daily", "practice", "studio"].includes(item.id),
+		),
 	},
 	{
 		id: "curriculum",

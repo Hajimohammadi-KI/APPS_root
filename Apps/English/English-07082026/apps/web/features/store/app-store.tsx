@@ -159,6 +159,11 @@ export interface TopicMastery {
 	activeErrorCount: number;
 	lastSuccessAt: string | null;
 	nextReviewAt: number | null;
+	// Median of the last 10 verified writing/transfer attempts' latencyMs
+	// (time from first keystroke to save). null until enough timed attempts
+	// exist. Automaticity is a speed claim, not just an accuracy one -- see
+	// WRITING_LATENCY_THRESHOLD_MS below.
+	medianWritingLatencyMs: number | null;
 }
 
 export interface Session {
@@ -651,8 +656,25 @@ export function emptyMastery(grammarTitle: string): TopicMastery {
 		activeErrorCount: 0,
 		lastSuccessAt: null,
 		nextReviewAt: null,
+		medianWritingLatencyMs: null,
 	};
 }
+
+function median(values: number[]): number | null {
+	if (values.length === 0) return null;
+	const sorted = [...values].sort((a, b) => a - b);
+	const middle = Math.floor(sorted.length / 2);
+	return sorted.length % 2 === 0
+		? Math.round(((sorted[middle - 1] ?? 0) + (sorted[middle] ?? 0)) / 2)
+		: (sorted[middle] ?? 0);
+}
+
+// Calibrated for composing several original sentences (writing/transfer),
+// not a quick spoken recall -- deliberately more generous than a
+// recall-style threshold would be. Same purpose as German's
+// AUTOMATICITY_LATENCY_THRESHOLD_MS (packages/domain/src/mastery.ts):
+// automaticity requires fast, not just eventually-correct, production.
+const WRITING_LATENCY_THRESHOLD_MS = 90_000;
 
 function average(values: number[]) {
 	if (values.length === 0) return 0;
@@ -676,6 +698,12 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 	current.speakingScore = scoreFor("speaking");
 	current.repairScore = scoreFor("repair");
 	current.transferScore = scoreFor("transfer");
+	current.medianWritingLatencyMs = median(
+		[...verifiedFor("writing"), ...verifiedFor("transfer")]
+			.slice(-10)
+			.map((attempt) => attempt.latencyMs)
+			.filter((value): value is number => value !== null),
+	);
 	// Spelling mistakes are tracked and shown like any other error, but they
 	// do not gate grammar automaticity — the same policy already applied to
 	// deriveVerifiedLevel's CEFR-level check below. Without this exclusion an
@@ -740,6 +768,14 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 		verifiedFor("speaking").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC &&
 		verifiedFor("transfer").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC;
 
+	// Correctness alone isn't automaticity -- it also has to be fast.
+	// Requires an actual measured median (not just "no data yet"): a topic
+	// with no timed writing/transfer attempts hasn't demonstrated speed, so
+	// it shouldn't default to passing this gate.
+	const hasFastEnoughWriting =
+		current.medianWritingLatencyMs !== null &&
+		current.medianWritingLatencyMs <= WRITING_LATENCY_THRESHOLD_MS;
+
 	if (
 		current.recognitionScore >= 85 &&
 		current.writingScore >= 80 &&
@@ -749,7 +785,8 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 		current.successfulReviews >= 2 &&
 		current.activeErrorCount <= 1 &&
 		hasEnoughAttempts &&
-		!hasLapsedRetention
+		!hasLapsedRetention &&
+		hasFastEnoughWriting
 	) {
 		current.status = "automatic";
 	} else if (

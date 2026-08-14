@@ -8,9 +8,17 @@ export interface ExerciseCompletionInput {
   readonly testAnswer: string;
   readonly repairTest: string;
   readonly transferTest: string;
+  readonly rule: string;
+  readonly recallTest: string;
 }
 
-const MINIMUM_CONTROLLED_EXERCISES = 6;
+// Raised from 6 -- the original 4 generated candidate types only reached
+// ~6 per unit regardless of this constant. The additional candidates below
+// (recallTest/rule/testAnswer-based prompts, one per example sentence)
+// realistically reach ~10-12 for most units, all still built from fields
+// that already exist and are already verified correct per unit -- no new,
+// unverified sentences are fabricated.
+const MINIMUM_CONTROLLED_EXERCISES = 10;
 
 function cleanSentence(sentence: string): string {
   return sentence.trim().replace(/\s+/g, " ");
@@ -146,6 +154,28 @@ export function completeControlledExercises(
       `Korrigiere den Satz vollständig und achte auf „${unit.title}“: ${incorrectSentence}`,
       correctedSentence,
     ],
+    [`Nenne die Regel für „${unit.title}“ auswendig.`, unit.recallTest],
+    [
+      `Rufe die Regel für „${unit.title}“ ab, ohne nachzusehen.`,
+      unit.recallTest,
+    ],
+    [`Erkläre die Regel für „${unit.title}“ mit eigenen Worten.`, unit.rule],
+    [
+      `Trage „${unit.title}“ einem Mitlernenden in einem Satz vor.`,
+      unit.rule,
+    ],
+    [
+      `Schreibe die Standard-Referenzantwort für „${unit.title}“.`,
+      unit.testAnswer,
+    ],
+    ...unit.examples.map(
+      (example, index): GrammarExercise => [
+        index === 0
+          ? `Tippe den Beispielsatz: ${example}`
+          : `Tippe einen weiteren Beispielsatz: ${example}`,
+        cleanSentence(example),
+      ],
+    ),
   ];
   const prompts = new Set(existing.map(([prompt]) => prompt));
 

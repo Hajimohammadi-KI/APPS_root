@@ -11,6 +11,7 @@ import {
   Repeat2,
   Route,
   Shapes,
+  Shuffle,
   Settings,
   GraduationCap,
   type LucideIcon,
@@ -21,6 +22,7 @@ export interface NavigationItem {
     | "/"
     | "/fortschritt"
     | "/heute"
+    | "/gemischtes-training"
     | "/studio"
     | "/grammatik"
     | "/wiederholungen"
@@ -56,6 +58,12 @@ export const primaryNavigation = [
     label: "Heutiges Training",
     subtitle: "Adaptiver Abruf und Automatik",
     icon: Route,
+  },
+  {
+    href: "/gemischtes-training",
+    label: "Gemischtes Training",
+    subtitle: "Themen gemischt statt blockweise üben",
+    icon: Shuffle,
   },
   {
     href: "/studio",

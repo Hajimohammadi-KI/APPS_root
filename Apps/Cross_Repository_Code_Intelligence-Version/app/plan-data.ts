@@ -1043,6 +1043,41 @@ export const allTaskItems = allDays.flatMap((day) =>
   day.tasks.flatMap((task) => task.items),
 );
 
+// Plan versioning: when the professor changes the project's direction and
+// the plan itself has to change, this is the record of *that it changed,
+// why, when it took effect, and exactly which tasks were removed, moved to
+// a different week, or newly added* -- instead of silently overwriting the
+// previous plan with no trace of what used to be there. This does NOT
+// migrate completed/notes/attachments tied to the old day ids (PlannedDay.id
+// is the ISO date string itself, so re-dating the whole plan still changes
+// every id -- see the separate, still-open finding about that). What this
+// gives is real visibility: a changelog entry per revision, and a
+// one-time "the plan changed" notice the next time the app opens after a
+// new version ships.
+export interface PlanVersionEntry {
+  readonly version: number;
+  readonly effectiveDate: string;
+  readonly reason: string;
+  readonly tasksRemoved: readonly string[];
+  readonly tasksMoved: readonly string[];
+  readonly tasksAdded: readonly string[];
+}
+
+export const PLAN_VERSION_HISTORY: readonly PlanVersionEntry[] = [
+  {
+    version: 1,
+    effectiveDate: "2026-08-14",
+    reason:
+      "Erster 25-Wochen-Plan generiert und auf den heutigen Starttag datiert.",
+    tasksRemoved: [],
+    tasksMoved: [],
+    tasksAdded: [],
+  },
+];
+
+export const PLAN_VERSION =
+  PLAN_VERSION_HISTORY[PLAN_VERSION_HISTORY.length - 1]?.version ?? 1;
+
 export const planMeta = {
   start: "2026-08-14",
   designEnd: "2026-09-19",

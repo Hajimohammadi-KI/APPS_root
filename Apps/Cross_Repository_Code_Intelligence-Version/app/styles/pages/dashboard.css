@@ -531,3 +531,26 @@
 /* Wiederholungskarte ("Recall Check") unter den Kennzahlen. Die Karte selbst
    bringt ihre Tailwind-Klassen mit; hier wird nur der Abstand gesetzt. */
 .dashboard-recall { display: block; }
+
+.plan-version-banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #d8cbea;
+  background: linear-gradient(135deg, #f1ebf8, #faf7fd);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.plan-version-banner > div { min-width: 0; }
+.plan-version-banner strong { display: block; margin-bottom: 6px; }
+.plan-version-banner button { flex: 0 0 auto; white-space: nowrap; }
+.plan-version-entry { font-size: 13px; line-height: 1.6; color: #494258; margin-top: 6px; }
+.plan-version-entry p { margin: 2px 0; }
+.plan-version-entry em { color: #675080; font-style: normal; font-weight: 700; }
+.plan-version-empty { color: #8a8f98; font-style: italic; }
+.plan-changelog-disclosure { border: 1px solid var(--line); border-radius: 13px; background: var(--paper); margin-bottom: 14px; overflow: hidden; }
+.plan-changelog-disclosure > summary { padding: 12px 15px; font-weight: 750; cursor: pointer; }
+.plan-changelog-list { padding: 0 15px 15px; display: grid; gap: 12px; }
+.plan-changelog-list article { border-top: 1px solid var(--line); padding-top: 10px; }

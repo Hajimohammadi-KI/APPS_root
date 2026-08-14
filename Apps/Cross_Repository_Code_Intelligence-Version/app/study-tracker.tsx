@@ -14,8 +14,11 @@ import {
   nlpCourseSessions,
   planMeta,
   planWeeks,
+  PLAN_VERSION,
+  PLAN_VERSION_HISTORY,
   sources,
   type PlannedDay,
+  type PlanVersionEntry,
   type PlanWeek,
   type SourceDefinition,
 } from "./plan-data";
@@ -791,6 +794,8 @@ export default function StudyTracker({
   const [showFullPlan, setShowFullPlan] = useState(false);
   const [showProgressOverview, setShowProgressOverview] = useState(false);
   const [showJourneyOverview, setShowJourneyOverview] = useState(false);
+  const [acknowledgedPlanVersion, setAcknowledgedPlanVersion] = useState<number | null>(null);
+  const [showPlanChangelog, setShowPlanChangelog] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [resumeDate, setResumeDate] = useState(today);
   const [requestedStartDate, setRequestedStartDate] = useState(today);
@@ -842,6 +847,25 @@ export default function StudyTracker({
       document.removeEventListener("visibilitychange", refreshWhenVisible);
     };
   }, []);
+
+  useEffect(() => {
+    // Silent on first-ever load (a brand-new user hasn't "missed" any
+    // version); from then on, a stored value lower than PLAN_VERSION means
+    // the plan changed since they last looked, so the changelog banner shows.
+    const key = "cross-repo-tracker:acknowledged-plan-version";
+    const stored = Number(localStorage.getItem(key));
+    if (Number.isFinite(stored) && stored > 0) {
+      setAcknowledgedPlanVersion(stored);
+    } else {
+      localStorage.setItem(key, String(PLAN_VERSION));
+      setAcknowledgedPlanVersion(PLAN_VERSION);
+    }
+  }, []);
+
+  const acknowledgePlanVersion = () => {
+    localStorage.setItem("cross-repo-tracker:acknowledged-plan-version", String(PLAN_VERSION));
+    setAcknowledgedPlanVersion(PLAN_VERSION);
+  };
 
   useEffect(() => {
     const standalone = window.matchMedia("(display-mode: standalone)");
@@ -2251,9 +2275,46 @@ export default function StudyTracker({
               </article>
             </section>
 
+            {acknowledgedPlanVersion !== null && acknowledgedPlanVersion < PLAN_VERSION && (
+              <section className="plan-version-banner" aria-label="Planänderung">
+                <div>
+                  <strong>Der Plan wurde aktualisiert (Version {PLAN_VERSION}).</strong>
+                  {PLAN_VERSION_HISTORY.filter((entry) => entry.version > acknowledgedPlanVersion).map((entry) => (
+                    <div className="plan-version-entry" key={entry.version}>
+                      <p><em>{formatDate(entry.effectiveDate)}</em> — {entry.reason}</p>
+                      {entry.tasksRemoved.length > 0 && <p>Entfernt: {entry.tasksRemoved.join(", ")}</p>}
+                      {entry.tasksMoved.length > 0 && <p>Verschoben: {entry.tasksMoved.join(", ")}</p>}
+                      {entry.tasksAdded.length > 0 && <p>Neu: {entry.tasksAdded.join(", ")}</p>}
+                    </div>
+                  ))}
+                </div>
+                <button className="button secondary compact" onClick={acknowledgePlanVersion} type="button">
+                  Verstanden
+                </button>
+              </section>
+            )}
+
             <section className="dashboard-recall" aria-label="Fällige Wiederholungen">
               <RecallCheck />
             </section>
+
+            <details className="plan-changelog-disclosure" open={showPlanChangelog} onToggle={(event) => setShowPlanChangelog(event.currentTarget.open)}>
+              <summary>Planänderungen ({PLAN_VERSION_HISTORY.length} Version{PLAN_VERSION_HISTORY.length === 1 ? "" : "en"})</summary>
+              <div className="plan-changelog-list">
+                {PLAN_VERSION_HISTORY.toSorted((a, b) => b.version - a.version).map((entry: PlanVersionEntry) => (
+                  <article className="plan-version-entry" key={entry.version}>
+                    <p><strong>Version {entry.version}</strong> · <em>{formatDate(entry.effectiveDate)}</em></p>
+                    <p>{entry.reason}</p>
+                    {entry.tasksRemoved.length > 0 && <p>Entfernt: {entry.tasksRemoved.join(", ")}</p>}
+                    {entry.tasksMoved.length > 0 && <p>Verschoben: {entry.tasksMoved.join(", ")}</p>}
+                    {entry.tasksAdded.length > 0 && <p>Neu: {entry.tasksAdded.join(", ")}</p>}
+                    {entry.tasksRemoved.length === 0 && entry.tasksMoved.length === 0 && entry.tasksAdded.length === 0 && (
+                      <p className="plan-version-empty">Keine Aufgabenänderungen -- nur Zeitplan/Datierung.</p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </details>
 
             <details
               className="rhythm-card dashboard-disclosure"

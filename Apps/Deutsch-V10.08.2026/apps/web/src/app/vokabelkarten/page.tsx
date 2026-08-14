@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState, type FormEvent } from "react";
+import Link from "next/link";
+import { grammarUnits } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,11 +12,17 @@ import { useLearnerState } from "@/features/learner-state/learner-state-provider
 import type { FlashcardGrade } from "@grammar/domain";
 
 export default function VokabelkartenPage() {
-  const { state, addFlashcard, gradeFlashcard, deleteFlashcard } = useLearnerState();
+  const { state, addFlashcard, gradeFlashcard, deleteFlashcard, setTodayGrammar } =
+    useLearnerState();
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
   const [originalSentence, setOriginalSentence] = useState("");
   const [revealed, setRevealed] = useState(false);
+  // A forgotten card ("Nochmal") previously just went back into the queue
+  // with no way to actually practice the pattern it came from -- when the
+  // card was added from a grammar lesson, offer a direct link to work
+  // that lesson in today's Mission instead of only re-testing recall.
+  const [correctiveLesson, setCorrectiveLesson] = useState<string | null>(null);
 
   const now = Date.now();
   const dueCards = useMemo(
@@ -41,7 +49,14 @@ export default function VokabelkartenPage() {
   function grade(cardGrade: FlashcardGrade) {
     if (!activeCard) return;
     gradeFlashcard(activeCard.id, cardGrade);
+    setCorrectiveLesson(cardGrade === "again" ? (activeCard.lesson ?? null) : null);
     setRevealed(false);
+  }
+
+  function practiceCorrectiveLesson() {
+    if (!correctiveLesson) return;
+    const unit = grammarUnits.find((candidate) => candidate.title === correctiveLesson);
+    if (unit) setTodayGrammar(unit.title, unit.level);
   }
 
   return (
@@ -69,6 +84,21 @@ export default function VokabelkartenPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {correctiveLesson ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm">
+              <span>
+                Diese Karte stammt aus <strong>{correctiveLesson}</strong> --
+                übe das Muster selbst, nicht nur das Wort.
+              </span>
+              <Button
+                onClick={practiceCorrectiveLesson}
+                render={<Link href="/heute" />}
+                size="sm"
+              >
+                {correctiveLesson} üben
+              </Button>
+            </div>
+          ) : null}
           {!activeCard ? (
             <p className="text-sm text-muted-foreground">
               Gerade nichts fällig. Neue oder bewertete Karten erscheinen hier,

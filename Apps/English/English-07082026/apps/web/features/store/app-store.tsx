@@ -898,12 +898,60 @@ function deriveVerifiedLevel(state: AppState): CefrLevel | null {
 	return verified;
 }
 
+export function pickNextGrammarUnit(state: AppState): GrammarUnit | null {
+	const level = state.learner.selfDeclaredLevel;
+	if (!level) return null;
+	const nextInLevel = grammarUnits.find(
+		(unit) =>
+			unit.level === level && state.mastery[unit.title]?.status !== "automatic",
+	);
+	if (nextInLevel) return nextInLevel;
+	const nextLevel = CEFR_ORDER[CEFR_ORDER.indexOf(level) + 1];
+	if (!nextLevel) return null;
+	return grammarUnits.find((unit) => unit.level === nextLevel) ?? null;
+}
+
+// Moves daily practice forward on its own once a topic (or a whole level)
+// has real verified-automatic evidence behind it, instead of leaving the
+// learner stuck on a finished topic until they manually pick the next one
+// in Grammar Lab. Never touches an in-progress topic.
+export function advanceDailyGrammar(state: AppState) {
+	const level = state.learner.selfDeclaredLevel;
+	if (!level) return;
+
+	if (state.learner.verifiedLevel === level) {
+		const nextLevel = CEFR_ORDER[CEFR_ORDER.indexOf(level) + 1];
+		if (nextLevel && grammarUnits.some((unit) => unit.level === nextLevel)) {
+			state.learner.selfDeclaredLevel = nextLevel;
+		}
+	}
+
+	const currentLevel = state.learner.selfDeclaredLevel;
+	const currentTitle = state.todayGrammar?.title;
+	const currentStatus = currentTitle
+		? state.mastery[currentTitle]?.status
+		: undefined;
+	if (
+		currentTitle &&
+		currentStatus !== "automatic" &&
+		state.todayGrammar?.level === currentLevel
+	) {
+		return;
+	}
+
+	const next = pickNextGrammarUnit(state);
+	if (!next || next.title === currentTitle) return;
+	state.learner.selfDeclaredLevel = next.level;
+	state.todayGrammar = { title: next.title, level: next.level, date: todayKey() };
+}
+
 function refreshVerifiedLevel(state: AppState) {
 	if (!state.learner.selfDeclaredLevel) {
 		state.learner.verifiedLevel = null;
 		return;
 	}
 	state.learner.verifiedLevel = deriveVerifiedLevel(state);
+	advanceDailyGrammar(state);
 }
 
 const REVIEW_INTERVALS = [1, 3, 7, 14, 30] as const;

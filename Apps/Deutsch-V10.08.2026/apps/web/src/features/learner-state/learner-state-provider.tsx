@@ -37,9 +37,10 @@ import {
   type ReviewRecord,
   type ReviewSourceType,
   type SessionRecord,
+  type TodayGrammarRecord,
   type UserAttempt,
 } from "@grammar/domain";
-import { grammarUnits } from "@grammar/content";
+import { grammarUnits, type GrammarUnit } from "@grammar/content";
 import {
   learnerStateCalendarEvents,
   readDesktopCalendarStatus,
@@ -138,7 +139,7 @@ function average(values: readonly number[]): number | null {
   );
 }
 
-const CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
+export const CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 
 function deriveVerifiedLevel(
   state: LearnerState,
@@ -193,11 +194,81 @@ function deriveVerifiedLevel(
   return verified;
 }
 
+export function pickNextGrammarUnit(state: LearnerState): GrammarUnit | null {
+  const level = state.learningLevel ?? state.learner.selfDeclaredLevel;
+  if (!level || !(CEFR_ORDER as readonly string[]).includes(level)) return null;
+  const nextInLevel = grammarUnits.find(
+    (unit) =>
+      unit.level === level && state.mastery[unit.title]?.status !== "automatic",
+  );
+  if (nextInLevel) return nextInLevel;
+  const nextLevel =
+    CEFR_ORDER[CEFR_ORDER.indexOf(level as (typeof CEFR_ORDER)[number]) + 1];
+  if (!nextLevel) return null;
+  return grammarUnits.find((unit) => unit.level === nextLevel) ?? null;
+}
+
+// Moves daily practice forward on its own once a topic (or a whole level)
+// has real verified-automatic evidence behind it, instead of leaving the
+// learner stuck on a finished topic until they manually pick the next one
+// in Grammatik-Labor. Never touches an in-progress topic.
+export function advanceDailyGrammar(
+  state: LearnerState,
+  verifiedLevel: LearnerState["learner"]["verifiedLevel"],
+): { learningLevel: string | null; todayGrammar: TodayGrammarRecord | null } {
+  let level = state.learningLevel ?? state.learner.selfDeclaredLevel;
+  if (!level) {
+    return {
+      learningLevel: state.learningLevel ?? null,
+      todayGrammar: state.todayGrammar ?? null,
+    };
+  }
+
+  if (verifiedLevel === level) {
+    const nextLevel =
+      CEFR_ORDER[
+        CEFR_ORDER.indexOf(level as (typeof CEFR_ORDER)[number]) + 1
+      ];
+    if (nextLevel && grammarUnits.some((unit) => unit.level === nextLevel)) {
+      level = nextLevel;
+    }
+  }
+
+  const currentTitle = state.todayGrammar?.title;
+  const currentStatus = currentTitle
+    ? state.mastery[currentTitle]?.status
+    : undefined;
+  if (
+    currentTitle &&
+    currentStatus !== "automatic" &&
+    state.todayGrammar?.level === level
+  ) {
+    return { learningLevel: level, todayGrammar: state.todayGrammar ?? null };
+  }
+
+  const next = pickNextGrammarUnit({ ...state, learningLevel: level });
+  if (!next || next.title === currentTitle) {
+    return { learningLevel: level, todayGrammar: state.todayGrammar ?? null };
+  }
+  return {
+    learningLevel: next.level,
+    todayGrammar: { title: next.title, level: next.level, date: getTodayKey() },
+  };
+}
+
 function withAutomaticVerifiedLevel(state: LearnerState): LearnerState {
   const nextVerified = state.learner.selfDeclaredLevel
     ? deriveVerifiedLevel(state)
     : null;
-  if (state.learner.verifiedLevel === nextVerified) {
+  const { learningLevel, todayGrammar } = advanceDailyGrammar(
+    state,
+    nextVerified,
+  );
+  if (
+    state.learner.verifiedLevel === nextVerified &&
+    state.learningLevel === learningLevel &&
+    state.todayGrammar === todayGrammar
+  ) {
     return state;
   }
   return {
@@ -206,6 +277,8 @@ function withAutomaticVerifiedLevel(state: LearnerState): LearnerState {
       ...state.learner,
       verifiedLevel: nextVerified,
     },
+    learningLevel,
+    todayGrammar,
   };
 }
 

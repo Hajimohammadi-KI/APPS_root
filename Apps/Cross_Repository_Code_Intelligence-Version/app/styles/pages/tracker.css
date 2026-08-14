@@ -1110,6 +1110,39 @@ details[open] > summary .summary-marker {
   margin-top: 8px;
 }
 
+.structured-note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+.structured-note-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 750;
+}
+.structured-note-field textarea {
+  min-height: 68px;
+  margin-top: 0;
+}
+.structured-note-field select {
+  min-height: 40px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.structured-note-field-wide {
+  grid-column: 1 / -1;
+}
+@media (max-width: 640px) {
+  .structured-note-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .note-box > div > span {
   color: var(--muted);
   font-size: 10px;

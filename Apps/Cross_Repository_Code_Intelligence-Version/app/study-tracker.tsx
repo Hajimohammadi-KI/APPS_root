@@ -101,6 +101,59 @@ type ExposeMeta = {
 
 type AttachmentKind = "image" | "pdf" | "audio" | "video" | "text" | "office" | "other";
 
+// Structured Tagesabschlussnotiz -- stored JSON-encoded inside the existing
+// note:string field (backend/API contract stays a plain string, no schema
+// change), so old free-text notes still round-trip as the "concept" field.
+type DailyNoteFields = {
+  concept: string;
+  problem: string;
+  method: string;
+  projectLink: string;
+  recallResult: "" | "weak" | "medium" | "good";
+  errors: string;
+  tomorrowAction: string;
+};
+
+const EMPTY_DAILY_NOTE: DailyNoteFields = {
+  concept: "",
+  problem: "",
+  method: "",
+  projectLink: "",
+  recallResult: "",
+  errors: "",
+  tomorrowAction: "",
+};
+
+function parseDailyNote(raw: string): DailyNoteFields {
+  if (!raw) return { ...EMPTY_DAILY_NOTE };
+  try {
+    const parsed = JSON.parse(raw) as Partial<DailyNoteFields> & { __dailyNoteV1?: boolean };
+    if (parsed && typeof parsed === "object" && parsed.__dailyNoteV1) {
+      return {
+        concept: typeof parsed.concept === "string" ? parsed.concept : "",
+        problem: typeof parsed.problem === "string" ? parsed.problem : "",
+        method: typeof parsed.method === "string" ? parsed.method : "",
+        projectLink: typeof parsed.projectLink === "string" ? parsed.projectLink : "",
+        recallResult: parsed.recallResult === "weak" || parsed.recallResult === "medium" || parsed.recallResult === "good" ? parsed.recallResult : "",
+        errors: typeof parsed.errors === "string" ? parsed.errors : "",
+        tomorrowAction: typeof parsed.tomorrowAction === "string" ? parsed.tomorrowAction : "",
+      };
+    }
+  } catch {
+    // Not JSON -- this is an older plain-text note; keep it visible below.
+  }
+  return { ...EMPTY_DAILY_NOTE, concept: raw };
+}
+
+function serializeDailyNote(fields: DailyNoteFields): string {
+  return JSON.stringify({ __dailyNoteV1: true, ...fields });
+}
+
+function dailyNoteSearchText(raw: string): string {
+  const fields = parseDailyNote(raw);
+  return [fields.concept, fields.problem, fields.method, fields.projectLink, fields.errors, fields.tomorrowAction].join(" ");
+}
+
 type FocusSession = {
   id: string;
   contextId: string;
@@ -3389,18 +3442,53 @@ function DayCard({
               : "210 Minuten Arbeit + zwei Pausen à 15 Minuten = 4 Stunden."}
         </p>
 
-        <section className="note-box">
-          <label htmlFor={`note-${day.id}`}>
+        <section className="note-box structured-note-box">
+          <label>
             <Icon name="note" size={18} /> Tagesabschlussnotiz
           </label>
-          <textarea
-            id={`note-${day.id}`}
-            value={note}
-            onChange={(event) => onNoteChange(event.target.value)}
-            placeholder="Was habe ich verstanden? Was hat funktioniert? Wo mache ich morgen genau weiter?"
-          />
+          {(() => {
+            const noteFields = parseDailyNote(note);
+            const updateField = <K extends keyof DailyNoteFields>(key: K, value: DailyNoteFields[K]) => {
+              onNoteChange(serializeDailyNote({ ...noteFields, [key]: value }));
+            };
+            return <div className="structured-note-grid">
+              <label className="structured-note-field">
+                <span>Konzept</span>
+                <textarea id={`note-${day.id}`} value={noteFields.concept} onChange={(event) => updateField("concept", event.target.value)} placeholder="Was habe ich heute inhaltlich gelernt?" />
+              </label>
+              <label className="structured-note-field">
+                <span>Problem</span>
+                <textarea value={noteFields.problem} onChange={(event) => updateField("problem", event.target.value)} placeholder="Welches Problem/welche Frage stand im Zentrum?" />
+              </label>
+              <label className="structured-note-field">
+                <span>Methode</span>
+                <textarea value={noteFields.method} onChange={(event) => updateField("method", event.target.value)} placeholder="Womit habe ich es untersucht/gelöst?" />
+              </label>
+              <label className="structured-note-field">
+                <span>Bezug zur Thesis</span>
+                <textarea value={noteFields.projectLink} onChange={(event) => updateField("projectLink", event.target.value)} placeholder="RQ, Architektur, Code, Daten oder Evaluation?" />
+              </label>
+              <label className="structured-note-field">
+                <span>Recall-Ergebnis</span>
+                <select value={noteFields.recallResult} onChange={(event) => updateField("recallResult", event.target.value as DailyNoteFields["recallResult"])}>
+                  <option value="">— nicht bewertet —</option>
+                  <option value="weak">Schwach</option>
+                  <option value="medium">Mittel</option>
+                  <option value="good">Gut</option>
+                </select>
+              </label>
+              <label className="structured-note-field">
+                <span>Fehler</span>
+                <textarea value={noteFields.errors} onChange={(event) => updateField("errors", event.target.value)} placeholder="Was ist schiefgelaufen oder unklar geblieben?" />
+              </label>
+              <label className="structured-note-field structured-note-field-wide">
+                <span>Genaue Aktion für morgen</span>
+                <textarea value={noteFields.tomorrowAction} onChange={(event) => updateField("tomorrowAction", event.target.value)} placeholder="Womit mache ich morgen konkret weiter?" />
+              </label>
+            </div>;
+          })()}
           <div>
-            <span>{displayNumber(note.length)} Zeichen</span>
+            <span>{displayNumber(dailyNoteSearchText(note).length)} Zeichen</span>
             <button className="button secondary compact" type="button" onClick={() => onSaveNote(day.id)}>
               Notiz speichern
             </button>

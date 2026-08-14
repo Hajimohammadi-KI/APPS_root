@@ -21,8 +21,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { useAppStore } from "@/features/store/app-store";
+import { transferSituation, useAppStore } from "@/features/store/app-store";
 import { evaluateResponse, type Evaluation } from "@/lib/assessment";
+
+// Distinguishes the near-term recall check (interval 1-3 days: "can you
+// still produce this pattern at all") from the long-interval checkpoint
+// (interval 7+ days: RECALL_INTERVAL_STEPS_DAYS[2] and beyond). Per the
+// spacing/transfer literature this session is applying throughout, testing
+// the exact same sentence forever only proves memorization of that one
+// sentence -- the 7-day-and-beyond checkpoint instead asks the learner to
+// apply the pattern to a brand new situation, the same rotation the
+// same-day Transfer step already uses.
+const TRANSFER_CHECKPOINT_INTERVAL_DAYS = 7;
 
 function grammarFor(topic: string) {
   return (
@@ -56,6 +66,14 @@ export function DueReviews() {
 
   if (!current) return null;
 
+  const grammar = grammarFor(current.topic);
+  const isTransferCheckpoint =
+    current.intervalDays >= TRANSFER_CHECKPOINT_INTERVAL_DAYS;
+  const situation =
+    isTransferCheckpoint && grammar
+      ? transferSituation(grammar, current.successStreak)
+      : null;
+
   const advance = () => {
     setAttempt("");
     setResult(null);
@@ -63,7 +81,6 @@ export function DueReviews() {
   };
 
   const checkRecall = async () => {
-    const grammar = grammarFor(current.topic);
     if (!grammar) return;
     setChecking(true);
     try {
@@ -74,7 +91,9 @@ export function DueReviews() {
           minWords: 4,
           minSentences: 1,
           requiredTargetUses: 1,
-          taskPrompt: `Recall from memory: ${current.topic}. Write it without looking anything up.`,
+          taskPrompt: situation
+            ? `Apply this to a new situation, from memory, without looking anything up: ${situation}`
+            : `Recall from memory: ${current.topic}. Write it without looking anything up.`,
         },
         state.settings,
       );
@@ -90,7 +109,8 @@ export function DueReviews() {
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <CardTitle className="flex items-center gap-2">
-            <RotateCcw className="size-4" /> Due for review
+            <RotateCcw className="size-4" />
+            {isTransferCheckpoint ? "Transfer checkpoint" : "Due for review"}
           </CardTitle>
           <Badge variant="default">
             {dueItems.length} {dueItems.length === 1 ? "item" : "items"} due
@@ -101,13 +121,22 @@ export function DueReviews() {
         <div>
           <strong>{current.topic}</strong>
           <p className="text-sm text-muted-foreground">
-            Recall this from memory before checking. Streak: {current.successStreak}
+            {situation
+              ? `Day ${current.intervalDays}+ checkpoint: apply the pattern to a new situation, not the original sentence. Streak: ${current.successStreak}`
+              : `Recall this from memory before checking. Streak: ${current.successStreak}`}
           </p>
+          {situation ? (
+            <p className="mt-2 rounded-lg bg-white p-3 text-sm">{situation}</p>
+          ) : null}
         </div>
         <Textarea
           value={attempt}
           onChange={(event) => setAttempt(event.target.value)}
-          placeholder="Write it from memory, without looking anything up."
+          placeholder={
+            situation
+              ? "Respond to the situation above using this pattern, from memory."
+              : "Write it from memory, without looking anything up."
+          }
           rows={3}
           disabled={checking}
         />

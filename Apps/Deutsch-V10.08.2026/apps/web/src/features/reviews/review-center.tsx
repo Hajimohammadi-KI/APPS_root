@@ -40,8 +40,16 @@ import {
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import { requestEvaluation } from "@/lib/evaluation-client";
 import { API_BASE_URL } from "@/lib/api-config";
+import { transferSituation } from "@/features/automaticity/automaticity-lab";
 
 const REVIEW_CENTER_LOADED_AT = Date.now();
+
+// Beyond this interval step, testing the exact same stored sentence forever
+// only proves memorization of that one sentence -- REVIEW_INTERVAL_DAYS[2]
+// is 7, so from the third successful review onward the checkpoint instead
+// asks the learner to apply the pattern to a new situation, mirroring the
+// same-day Transfer step and the equivalent fix in the English app.
+const TRANSFER_CHECKPOINT_STAGE = 2;
 
 function speak(text: string) {
   if (!text || !("speechSynthesis" in window)) {
@@ -98,6 +106,12 @@ export function ReviewCenter() {
   ] as const;
   const timedActive =
     selected?.reviewMode === "timed" && state.settings.timedChallenges;
+  const isTransferCheckpoint =
+    (selected?.stage ?? 0) >= TRANSFER_CHECKPOINT_STAGE;
+  const situation =
+    selected && isTransferCheckpoint
+      ? transferSituation(selected.topic, selected.stage)
+      : null;
 
   useEffect(() => {
     if (!timedActive) {
@@ -135,14 +149,22 @@ export function ReviewCenter() {
           examples: grammar.examples,
         },
         kind: "review",
-        taskPrompt: `Rufe die gespeicherte Korrektur zu „${selected.topic}“ ohne Nachsehen ab.`,
+        taskPrompt: situation
+          ? `Wende „${selected.topic}“ auf eine neue Situation an, ohne nachzusehen: ${situation}`
+          : `Rufe die gespeicherte Korrektur zu „${selected.topic}“ ohne Nachsehen ab.`,
         spellingAffectsMastery: state.settings.spellingAffectsMastery,
       });
       setReport(result);
       speak(result.corrected);
-      const exact =
-        answer.trim().toLocaleLowerCase("de") ===
-        selected.corrected.trim().toLocaleLowerCase("de");
+      // At a transfer checkpoint the learner wrote a brand new sentence, not
+      // the stored one -- grading it against selected.corrected verbatim
+      // would always fail. Success there means the evaluator confirmed the
+      // target pattern was used correctly, the same signal the same-day
+      // Transfer step already relies on.
+      const exact = situation
+        ? result.targetHit
+        : answer.trim().toLocaleLowerCase("de") ===
+          selected.corrected.trim().toLocaleLowerCase("de");
       const mode: MasteryMode =
         selected.reviewMode === "repair"
           ? "repair"
@@ -167,7 +189,9 @@ export function ReviewCenter() {
         completeReview(selected.id, false);
         setSecondsLeft(8);
         setMessage(
-          `Noch nicht vollständig richtig. Das Intervall wurde verkürzt. Erwartete Fassung: ${selected.corrected}`,
+          situation
+            ? "Das Zielmuster wurde in der neuen Situation noch nicht sicher verwendet. Das Intervall wurde verkürzt."
+            : `Noch nicht vollständig richtig. Das Intervall wurde verkürzt. Erwartete Fassung: ${selected.corrected}`,
         );
       } else if (!result.practiceReady && result.changed) {
         completeReview(selected.id, false);
@@ -341,19 +365,23 @@ export function ReviewCenter() {
             <>
               <CardHeader>
                 <Badge className="mb-2 w-fit">
-                  {selected.reviewMode === "timed" && !timedActive
-                    ? "Abruf ohne Zeitdruck"
-                    : reviewModeLabels[selected.reviewMode]}{" "}
+                  {situation
+                    ? "Übertragungs-Checkpoint"
+                    : selected.reviewMode === "timed" && !timedActive
+                      ? "Abruf ohne Zeitdruck"
+                      : reviewModeLabels[selected.reviewMode]}{" "}
                   · Wiederholung {selected.stage + 1}
                 </Badge>
                 <CardTitle>{selected.topic}</CardTitle>
                 <CardDescription>
-                  Rufe die richtige Fassung ohne Nachschlagen ab.
+                  {situation
+                    ? "Wende das Muster auf eine neue Situation an, nicht auf den ursprünglichen Satz."
+                    : "Rufe die richtige Fassung ohne Nachschlagen ab."}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="rounded-xl border bg-muted/50 p-4 text-sm">
-                  {selected.original}
+                  {situation ?? selected.original}
                 </div>
                 {timedActive && (
                   <p

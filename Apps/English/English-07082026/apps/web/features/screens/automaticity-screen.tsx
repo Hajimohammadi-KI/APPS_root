@@ -29,6 +29,7 @@ import {
   recalculateMastery,
   lessonKey,
   dailyPlanCompletion,
+  transferSituation,
 } from "@/features/store/app-store";
 import {
   analyzePresentPerfect,
@@ -112,40 +113,6 @@ function lessonExercises(grammar: GrammarUnit) {
     prompt,
     expected,
   }));
-}
-
-// GrammarUnit.transferTest is a generic checklist label ("In a new
-// situation, I can use X accurately"), not an actual task prompt -- content
-// reconstruction with real per-unit transfer scenarios is separately
-// scoped (contract §11). Until then, these situations are genuinely
-// different in communicative framing from the writing step's "connected to
-// your life" prompt (a §8.3 requirement: a sufficiently new situation, not
-// the same exercise re-labeled), picked deterministically per topic so a
-// learner sees a consistent situation across a session but different
-// topics don't all get the same one.
-const TRANSFER_SITUATIONS = [
-  "A friend who wasn't there is asking what happened. Explain it to them without assuming they know the background.",
-  "You're messaging a new colleague about this for the first time. Give them the short version.",
-  "Someone you've just met asks about this in conversation. Answer naturally, as you would out loud.",
-  "Write a brief note explaining this to someone covering for you, who needs the key facts quickly.",
-] as const;
-
-function transferSituation(grammar: GrammarUnit, priorTransferAttempts: number) {
-  // A fixed hash-of-title selection means every Transfer attempt for a given
-  // topic gets the exact same prompt forever -- after the first encounter
-  // that's no longer transfer to a new situation, it's reproducing a
-  // memorized answer. Rotate through all situations before repeating any,
-  // keyed off how many transfer attempts this topic already has, so
-  // repeated practice of the same grammar point keeps landing on a
-  // genuinely different framing each time (contract §8.3's "sufficiently
-  // new situation").
-  let hash = 0;
-  for (let index = 0; index < grammar.title.length; index += 1) {
-    hash = (hash * 31 + grammar.title.charCodeAt(index)) >>> 0;
-  }
-  const startOffset = hash % TRANSFER_SITUATIONS.length;
-  const index = (startOffset + priorTransferAttempts) % TRANSFER_SITUATIONS.length;
-  return TRANSFER_SITUATIONS[index];
 }
 
 function lessonModel(grammar: GrammarUnit) {

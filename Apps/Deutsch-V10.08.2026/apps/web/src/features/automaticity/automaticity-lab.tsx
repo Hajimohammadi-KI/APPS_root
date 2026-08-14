@@ -51,14 +51,14 @@ function lessonKey(title: string) {
 // transfer attempts this topic already has, so repeated practice of the
 // same grammar point keeps landing on a different framing instead of
 // reproducing a memorized answer to the same prompt every time.
-const TRANSFER_SITUATIONS = [
+export const TRANSFER_SITUATIONS = [
   "Eine Freundin, die nicht dabei war, fragt, was passiert ist. Erkläre es ihr, ohne den Hintergrund vorauszusetzen.",
   "Du schreibst einer neuen Kollegin zum ersten Mal darüber. Gib ihr die Kurzfassung.",
   "Jemand, den du gerade erst kennengelernt hast, fragt im Gespräch danach. Antworte natürlich, so wie du es laut sagen würdest.",
   "Schreibe eine kurze Notiz für jemanden, der dich vertritt und die wichtigsten Fakten schnell braucht.",
 ] as const;
 
-function transferSituation(title: string, priorTransferAttempts: number) {
+export function transferSituation(title: string, priorTransferAttempts: number) {
   let hash = 0;
   for (let index = 0; index < title.length; index += 1) {
     hash = (hash * 31 + title.charCodeAt(index)) >>> 0;

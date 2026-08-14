@@ -2,6 +2,7 @@ import {
   calculateAutomaticityScore,
   calculateMasteryStatus,
   createEmptyMasteryRecord,
+  EMPTY_MASTERY_ATTEMPT_COUNTS,
   MASTERY_MODES,
   type MasteryMode,
   type MasteryRecord,
@@ -524,11 +525,17 @@ function normalizeMastery(
           responseLatenciesMs,
         ),
       };
+      // Legacy rows never recorded a per-mode attempt count, and we cannot
+      // reconstruct a real one from just controlled/free/spoken booleans --
+      // defaulting to zero (not inferring 3+) is the honest choice: a
+      // migrated record has to earn "automatic"/"stable" under the new gate
+      // rather than being grandfathered in on unverifiable history.
       const calculatedStatus = calculateMasteryStatus(
         scores,
         successfulReviews,
         activeCriticalErrors,
         responseLatenciesMs,
+        EMPTY_MASTERY_ATTEMPT_COUNTS,
       );
       const empty = createEmptyMasteryRecord();
 

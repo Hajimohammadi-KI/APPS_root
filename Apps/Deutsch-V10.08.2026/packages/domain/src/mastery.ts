@@ -27,12 +27,28 @@ export interface MasteryScores {
   readonly automaticity: number;
 }
 
+export type MasteryAttemptCounts = Readonly<Record<MasteryMode, number>>;
+
+export const EMPTY_MASTERY_ATTEMPT_COUNTS: MasteryAttemptCounts = {
+  recognition: 0,
+  writing: 0,
+  speaking: 0,
+  repair: 0,
+  transfer: 0,
+};
+
 export interface MasteryRecord {
   readonly status: MasteryStatus;
   readonly scores: MasteryScores;
   readonly successfulReviews: number;
   readonly activeCriticalErrors: number;
   readonly responseLatenciesMs: readonly number[];
+  /**
+   * How many verified attempts have been recorded per mode. Gates
+   * "automatic"/"stable" status so a single lucky attempt cannot reach
+   * them -- mirrors English's MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC.
+   */
+  readonly attemptCounts: MasteryAttemptCounts;
   readonly completedAt?: number;
   readonly lastSuccessAt?: number;
   /**
@@ -61,6 +77,15 @@ const SCORE_THRESHOLDS = {
   repair: 80,
   transfer: 75,
 } as const;
+
+// A single lucky attempt in a mode used to be able to set that mode's score
+// straight to a passing value (recordMasteryAttempt has no smoothing on the
+// very first attempt) and, combined with two spaced reviews, reach
+// "automatic" off essentially one real practice event per mode. Requiring
+// this many verified attempts per mode before "automatic"/"stable" can be
+// reached closes that gap -- matches English's
+// MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC.
+const MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS = 3;
 
 function clampScore(value: number): number {
   return Math.round(Math.min(100, Math.max(0, value)));
@@ -110,6 +135,7 @@ export function calculateMasteryStatus(
   successfulReviews: number,
   activeCriticalErrors: number,
   responseLatenciesMs: readonly number[],
+  attemptCounts: MasteryAttemptCounts = EMPTY_MASTERY_ATTEMPT_COUNTS,
 ): MasteryStatus {
   const latency = median(responseLatenciesMs);
   const allAutomaticThresholdsMet =
@@ -118,9 +144,16 @@ export function calculateMasteryStatus(
     scores.speaking >= SCORE_THRESHOLDS.speaking &&
     scores.repair >= SCORE_THRESHOLDS.repair &&
     scores.transfer >= SCORE_THRESHOLDS.transfer;
+  const allAutomaticAttemptsMet =
+    attemptCounts.recognition >= MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS &&
+    attemptCounts.writing >= MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS &&
+    attemptCounts.speaking >= MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS &&
+    attemptCounts.repair >= MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS &&
+    attemptCounts.transfer >= MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS;
 
   if (
     allAutomaticThresholdsMet &&
+    allAutomaticAttemptsMet &&
     successfulReviews >= 2 &&
     activeCriticalErrors === 0 &&
     latency !== null &&
@@ -133,6 +166,9 @@ export function calculateMasteryStatus(
     scores.writing >= SCORE_THRESHOLDS.writing &&
     scores.speaking >= SCORE_THRESHOLDS.speaking &&
     scores.transfer >= SCORE_THRESHOLDS.transfer &&
+    attemptCounts.writing >= MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS &&
+    attemptCounts.speaking >= MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS &&
+    attemptCounts.transfer >= MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS &&
     successfulReviews >= 1
   ) {
     return "stable";
@@ -172,6 +208,7 @@ export function createEmptyMasteryRecord(): MasteryRecord {
     successfulReviews: 0,
     activeCriticalErrors: 0,
     responseLatenciesMs: [],
+    attemptCounts: EMPTY_MASTERY_ATTEMPT_COUNTS,
     controlled: false,
     free: false,
   };
@@ -198,6 +235,7 @@ function refreshMasteryRecord(
       record.successfulReviews,
       record.activeCriticalErrors,
       record.responseLatenciesMs,
+      record.attemptCounts,
     ),
   };
 }
@@ -236,6 +274,10 @@ export function recordMasteryAttempt(
       repair: attempt.mode === "repair" ? nextScore : record.scores.repair,
       transfer:
         attempt.mode === "transfer" ? nextScore : record.scores.transfer,
+    },
+    attemptCounts: {
+      ...record.attemptCounts,
+      [attempt.mode]: (record.attemptCounts[attempt.mode] ?? 0) + 1,
     },
     responseLatenciesMs: latencies,
     controlled:

@@ -24,6 +24,7 @@ import {
   estimatedLearningHours,
 } from "../lib/study-progress";
 import { RecallCheck } from "../components/RecallCheck";
+import { useRecallEntries } from "../lib/recall/useRecallEntries";
 import {
   currentSessionSeconds,
   isTimedSessionState,
@@ -3262,6 +3263,17 @@ function DayCard({
   const focusMinutes = workModeTaskMinutes(settings.dailyWorkMode, focusTaskIndex);
   const planIsRunning = settings.planStatus === "running";
 
+  // The spaced-recall pipeline (RecallCheck, lib/recall/*) was fully built
+  // -- concept, exact Exposé section, Persian/German answers, next review
+  // date -- but nothing ever called addEntry() at the end of a "Finden und
+  // verstehen" block, so it never received real data. Wiring it in here
+  // once "Finden und verstehen" (task 0) is complete.
+  const { entries: recallEntries, addEntry: addRecallEntry } = useRecallEntries();
+  const [recallFA, setRecallFA] = useState("");
+  const [recallDE, setRecallDE] = useState("");
+  const findenUndVerstehenDone = (taskProgress[0] ?? 0) === 3;
+  const alreadyRegisteredForRecall = recallEntries.some((entry) => entry.concept === day.title);
+
   return (
     <details
       className={`day-card ${state} ${active ? "search-hit" : ""}`}
@@ -3432,6 +3444,55 @@ function DayCard({
             );
           })}
         </div>
+
+        {findenUndVerstehenDone && (
+          <section className="recall-register-box">
+            {alreadyRegisteredForRecall ? (
+              <p className="recall-register-done">
+                <Icon name="check" size={16} /> Für die Wiederholungs-Pipeline registriert. Sieh unter „Was solltest du heute wiederholen?“ nach, sobald es fällig ist.
+              </p>
+            ) : (
+              <>
+                <label htmlFor={`recall-fa-${day.id}`}>
+                  <Icon name="note" size={18} /> Für Wiederholung registrieren
+                </label>
+                <p className="recall-register-hint">
+                  Schreib deine Antwort ohne in die Quelle zu schauen. Ab morgen fragt „Was solltest du heute wiederholen?“ genau das ab, bevor es die Originalnotiz zeigt.
+                </p>
+                <div className="structured-note-grid">
+                  <label className="structured-note-field">
+                    <span>فارسی</span>
+                    <textarea id={`recall-fa-${day.id}`} value={recallFA} onChange={(event) => setRecallFA(event.target.value)} dir="rtl" placeholder="بدون نگاه به منبع، از حافظه بنویس..." />
+                  </label>
+                  <label className="structured-note-field">
+                    <span>Deutsch</span>
+                    <textarea value={recallDE} onChange={(event) => setRecallDE(event.target.value)} placeholder="Schreibe es auf Deutsch, ohne nachzuschauen..." />
+                  </label>
+                </div>
+                <div>
+                  <button
+                    className="button secondary compact"
+                    type="button"
+                    disabled={!recallFA.trim() && !recallDE.trim()}
+                    onClick={() => {
+                      addRecallEntry({
+                        concept: day.title,
+                        sourceId: day.proposal.length ? `§ ${day.proposal.join(", § ")}` : undefined,
+                        sourceTitle: sources[day.sourceIds[0]]?.label,
+                        originalNoteFA: recallFA.trim() || undefined,
+                        originalNoteDE: recallDE.trim() || undefined,
+                      });
+                      setRecallFA("");
+                      setRecallDE("");
+                    }}
+                  >
+                    Für Wiederholung registrieren
+                  </button>
+                </div>
+              </>
+            )}
+          </section>
+        )}
 
         <p className="break-note">
           <Icon name="clock" size={17} />

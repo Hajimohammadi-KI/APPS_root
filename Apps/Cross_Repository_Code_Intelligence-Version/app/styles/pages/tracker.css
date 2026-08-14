@@ -728,11 +728,41 @@ details[open] > summary .summary-marker {
 .output-card,
 .context-grid > section,
 .sources-block,
-.note-box {
+.note-box,
+.recall-register-box {
   border: 1px solid var(--line);
   border-radius: 13px;
   background: var(--paper);
   padding: 13px;
+}
+
+.recall-register-box {
+  border-left: 3px solid var(--teal, #8267a6);
+  margin-top: 14px;
+}
+.recall-register-box label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 800;
+}
+.recall-register-hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 6px 0 0;
+}
+.recall-register-box > div {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+.recall-register-done {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
 }
 
 .reason-card {

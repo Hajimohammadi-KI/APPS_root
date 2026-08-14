@@ -915,11 +915,11 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phase: "Design 6: Finalisierung",
     phaseId: "design-freeze",
     title: "Traceability, Baseline und Oktober-Bereitschaft",
-    goal: "Bis 9. September wird das Design versioniert; danach sind nur kontrollierte Änderungen erlaubt.",
+    goal: "Bis 19. September wird das Design versioniert; danach sind nur kontrollierte Änderungen erlaubt.",
     startDate: "2026-09-18",
     days: [
       d("Vollständige Traceability Matrix", ["proposal", "hevner"], "Keine Anforderung, kein Modul, kein Test und keine Forschungsfrage darf unverbunden bleiben.", ["Verbinde Requirement→Component", "Verbinde Component→Test/Metric", "Verbinde Metric→RQ/Thesis Section"], ["7", "16", "21"], "Design / Traceability", "traceability-matrix.csv"),
-      d("Design Freeze und Readiness Gate", ["proposal", "adr", "arc42"], "Der 9. September beendet das Design; die Ergebnisse müssen für den unabhängigen Start am 1. Oktober ausreichen.", ["Schließe alle Design-Checklisten", "Versioniere ADRs und erlaubte offene Punkte", "Bereite den ersten technischen Oktobertag und seine Eingaben vor"], ["16", "20", "37"], "Design / Baseline", "design-baseline-2026-09-09.zip"),
+      d("Design Freeze und Readiness Gate", ["proposal", "adr", "arc42"], "Der 19. September beendet das Design; die Ergebnisse müssen für den unabhängigen Start am 11. Oktober ausreichen.", ["Schließe alle Design-Checklisten", "Versioniere ADRs und erlaubte offene Punkte", "Bereite den ersten technischen Oktobertag und seine Eingaben vor"], ["16", "20", "37"], "Design / Baseline", "design-baseline-2026-09-19.zip"),
     ],
   },
 ];

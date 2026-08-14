@@ -34,6 +34,7 @@ import {
   type AutomatikIssue,
 } from "@/features/automaticity/automaticity-analysis";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
+import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import { requestEvaluation } from "@/lib/evaluation-client";
 import { API_BASE_URL } from "@/lib/api-config";
 import { speakingEvidenceBlock } from "./speaking-evidence";
@@ -126,7 +127,22 @@ function getSpeechRecognition(): SpeechRecognitionConstructor | undefined {
   return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
 }
 
-function speak(text: string) {
+// A real human-audio store already exists (lib/teacher-content.ts,
+// authored via /lehrkraft) with a priority-playback function
+// (playTeacherAudioByContextKey) -- Conversation Studio already used it,
+// but Mission's model-sentence playback called speechSynthesis directly
+// with no attempt to check for a human recording first, so a teacher's
+// recorded voice could never actually take priority over the synthetic
+// one here. contextKey convention: "grammar-<unit title>", so a teacher
+// adding a recording for "Akkusativ" in /lehrkraft types
+// "grammar-Akkusativ" as the Inhaltsschlüssel.
+async function speak(text: string, contextKey?: string) {
+  if (contextKey) {
+    const played = await playTeacherAudioByContextKey(contextKey).catch(
+      () => false,
+    );
+    if (played) return;
+  }
   if (!("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
@@ -1019,7 +1035,7 @@ export function AutomaticityLab({
               <p className="leading-7">{modelText}</p>
               <Button
                 className="mt-4 bg-white text-violet-950 hover:bg-violet-100"
-                onClick={() => speak(modelText)}
+                onClick={() => void speak(modelText, `grammar-${TOPIC}`)}
               >
                 <Volume2 /> Modell abspielen
               </Button>

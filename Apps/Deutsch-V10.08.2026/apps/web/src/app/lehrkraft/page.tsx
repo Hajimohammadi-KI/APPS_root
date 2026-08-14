@@ -138,7 +138,12 @@ export default function LehrkraftPage() {
               placeholder="grammatik.perfekt.beispiel.1"
             />
             <small>
-              Verbindet Inhalt und Aufnahme mit der richtigen Stelle in der App.
+              Verbindet Inhalt und Aufnahme mit der richtigen Stelle in der
+              App. Für das Modellsatz-Audio in der Automatik-Mission genau
+              „grammar-&lt;Titel der Einheit&gt;“ verwenden, z. B.{" "}
+              <code>grammar-Akkusativ</code> für die Einheit „Akkusativ“ --
+              diese Aufnahme ersetzt dann automatisch die synthetische
+              Stimme dort.
             </small>
           </label>
           <label>

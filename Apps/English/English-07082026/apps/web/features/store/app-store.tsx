@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { produce } from "immer";
 import {
 	grammarUnits,
 	type CefrLevel,
@@ -1221,23 +1222,30 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 
 	const mutate = React.useCallback((mutation: (draft: AppState) => void) => {
 		mutationVersion.current += 1;
-		setState((current) => {
-			const draft = structuredClone(current);
-			mutation(draft);
-			refreshVerifiedLevel(draft);
-			// These four grew without bound: months of daily use pushed the
-			// deep-cloned/persisted state size (and recalculateMastery's scan
-			// cost) up linearly forever. Capped to the same magnitude German
-			// already caps `attempts` at.
-			if (draft.attempts.length > 1_000) draft.attempts = draft.attempts.slice(-1_000);
-			if (draft.errors.length > 500) draft.errors = draft.errors.slice(-500);
-			if (draft.reviews.length > 1_000) draft.reviews = draft.reviews.slice(-1_000);
-			if (draft.sessions.length > 500) draft.sessions = draft.sessions.slice(-500);
-			// Persistence happens once, in the `useEffect([hydrated, state])`
-			// below that watches every state change -- calling persistAppState
-			// here too meant every mutation wrote to localStorage twice.
-			return draft;
-		});
+		setState((current) =>
+			// Immer's produce() replaces the previous structuredClone(current)
+			// + direct mutation: it only clones the paths a mutation actually
+			// touches (structural sharing) instead of deep-cloning the entire
+			// state on every single call, while every one of the ~26 existing
+			// `mutate((draft) => draft.foo.push(...))` call sites across the
+			// app keeps working completely unchanged -- the draft-mutation API
+			// is identical, only the cost underneath it changed.
+			produce(current, (draft) => {
+				mutation(draft as AppState);
+				refreshVerifiedLevel(draft as AppState);
+				// These four grew without bound: months of daily use pushed the
+				// deep-cloned/persisted state size (and recalculateMastery's scan
+				// cost) up linearly forever. Capped to the same magnitude German
+				// already caps `attempts` at.
+				if (draft.attempts.length > 1_000) draft.attempts = draft.attempts.slice(-1_000);
+				if (draft.errors.length > 500) draft.errors = draft.errors.slice(-500);
+				if (draft.reviews.length > 1_000) draft.reviews = draft.reviews.slice(-1_000);
+				if (draft.sessions.length > 500) draft.sessions = draft.sessions.slice(-500);
+			}),
+		);
+		// Persistence happens once, in the `useEffect([hydrated, state])`
+		// below that watches every state change -- calling persistAppState
+		// here too meant every mutation wrote to localStorage twice.
 	}, []);
 
 	const replaceState = React.useCallback((next: AppState) => {

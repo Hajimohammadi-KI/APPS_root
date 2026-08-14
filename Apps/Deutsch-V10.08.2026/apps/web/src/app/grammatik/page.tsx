@@ -11,11 +11,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AutomaticityLab } from "@/features/automaticity/automaticity-lab";
+import { PrerequisiteChainPanel } from "@/features/automaticity/prerequisite-chain-panel";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
 export default function GrammatikPage() {
   const { state, setTodayGrammar } = useLearnerState();
   const selectedTitle = state.todayGrammar?.title;
+  const selectedUnit = grammarUnits.find(
+    (unit) => unit.title === selectedTitle,
+  );
 
   return (
     <div className="space-y-5">
@@ -76,6 +80,13 @@ export default function GrammatikPage() {
           })}
         </CardContent>
       </Card>
+      {selectedUnit ? (
+        <PrerequisiteChainPanel
+          mastery={state.mastery}
+          onSelectPrerequisite={(unit) => setTodayGrammar(unit.title, unit.level)}
+          unit={selectedUnit}
+        />
+      ) : null}
       <AutomaticityLab />
     </div>
   );

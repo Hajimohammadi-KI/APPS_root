@@ -15,6 +15,7 @@ import {
   getDailyPlan,
   getNextReviewDate,
   getReviewProgressAfterResult,
+  REVIEW_INTERVAL_DAYS,
   getTodayKey,
   LEGACY_STORAGE_KEY,
   normalizeLearnerState,
@@ -23,6 +24,9 @@ import {
   setMasteryCriticalErrors,
   type ErrorClass,
   type ErrorRecord,
+  type FlashcardGrade,
+  type FlashcardRecord,
+  type FlashcardSource,
   type LearnerProfilePreferences,
   type LearnerSettings,
   type LearnerState,
@@ -91,6 +95,17 @@ interface LearnerStateContextValue {
   ) => void;
   readonly recordErrorRepair: (errorId: string, successful: boolean) => void;
   readonly setMastery: (title: string, mastery: MasteryRecord) => void;
+  readonly addFlashcard: (card: {
+    front: string;
+    back: string;
+    source: FlashcardSource;
+    sourceLabel?: string;
+    level?: string | null;
+    lesson?: string;
+    originalSentence?: string;
+  }) => FlashcardRecord | null;
+  readonly gradeFlashcard: (cardId: string, grade: FlashcardGrade) => void;
+  readonly deleteFlashcard: (cardId: string) => void;
   readonly importState: (value: unknown) => void;
   readonly resetState: () => void;
 }
@@ -742,6 +757,100 @@ export function LearnerStateProvider({
     [],
   );
 
+  const addFlashcard = useCallback(
+    (card: {
+      front: string;
+      back: string;
+      source: FlashcardSource;
+      sourceLabel?: string;
+      level?: string | null;
+      lesson?: string;
+      originalSentence?: string;
+    }) => {
+      let created: FlashcardRecord | null = null;
+      setState((current) => {
+        const front = card.front.trim();
+        const back = card.back.trim();
+        if (!front || !back) return current;
+        // Same word/meaning pair from any source shouldn't create a second
+        // card -- keep the queue meaningful, not padded.
+        const duplicate = current.flashcards.find(
+          (existing) =>
+            existing.front.trim().toLocaleLowerCase() === front.toLocaleLowerCase() &&
+            existing.back.trim().toLocaleLowerCase() === back.toLocaleLowerCase(),
+        );
+        if (duplicate) {
+          created = duplicate;
+          return current;
+        }
+        const entry: FlashcardRecord = {
+          id: createId("flashcard"),
+          front,
+          back,
+          source: card.source,
+          ...(card.sourceLabel ? { sourceLabel: card.sourceLabel } : {}),
+          level: card.level ?? null,
+          ...(card.lesson ? { lesson: card.lesson } : {}),
+          ...(card.originalSentence ? { originalSentence: card.originalSentence } : {}),
+          createdAt: new Date().toISOString(),
+          stage: 0,
+          dueAt: Date.now(),
+          successStreak: 0,
+          lapses: 0,
+          lastGrade: null,
+        };
+        created = entry;
+        return { ...current, flashcards: [...current.flashcards, entry] };
+      });
+      return created;
+    },
+    [],
+  );
+
+  const gradeFlashcard = useCallback((cardId: string, grade: FlashcardGrade) => {
+    setState((current) => ({
+      ...current,
+      flashcards: current.flashcards.map((card) => {
+        if (card.id !== cardId) return card;
+        if (grade === "again") {
+          // Short relearn step, not the full ladder reset -- the card comes
+          // back within the same session instead of tomorrow.
+          return {
+            ...card,
+            stage: 0,
+            successStreak: 0,
+            lapses: card.lapses + 1,
+            dueAt: Date.now() + 10 * 60_000,
+            lastGrade: grade,
+          };
+        }
+        // Reuses the same stage/confidence math the grammar review queue
+        // already uses instead of inventing a second scheduling algorithm.
+        const progress = getReviewProgressAfterResult(
+          card.stage,
+          true,
+          new Date(),
+          grade === "hard" ? "hard" : "good",
+        );
+        const maxInterval = REVIEW_INTERVAL_DAYS[REVIEW_INTERVAL_DAYS.length - 1] ?? 30;
+        return {
+          ...card,
+          stage: progress.stage,
+          successStreak: card.successStreak + 1,
+          dueAt: progress.dueAt ? progress.dueAt.getTime() : Date.now() + maxInterval * DAY_IN_MILLISECONDS,
+          lastGrade: grade,
+        };
+      }),
+    }));
+  }, []);
+
+  const deleteFlashcard = useCallback((cardId: string) => {
+    setState((current) => ({
+      ...current,
+      flashcards: current.flashcards.filter((card) => card.id !== cardId),
+    }));
+  }, []);
+
   const recordAttempt = useCallback(
     (attempt: Omit<UserAttempt, "id" | "date">) => {
       setState((current) => {
@@ -1011,15 +1120,21 @@ export function LearnerStateProvider({
       completeReview,
       recordErrorRepair,
       setMastery,
+      addFlashcard,
+      gradeFlashcard,
+      deleteFlashcard,
       importState,
       resetState,
     }),
     [
       addError,
+      addFlashcard,
       addSession,
       advanceReview,
       completeReview,
       completeDailyStep,
+      deleteFlashcard,
+      gradeFlashcard,
       hydrated,
       importState,
       markActivity,

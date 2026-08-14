@@ -157,6 +157,27 @@ export interface SessionRecord {
   readonly latencyMs?: number;
 }
 
+export type FlashcardSource = "lesson" | "pdf" | "highlight" | "conversation" | "manual";
+export type FlashcardGrade = "again" | "hard" | "good";
+
+export interface FlashcardRecord {
+  readonly id: string;
+  readonly front: string;
+  readonly back: string;
+  readonly source: FlashcardSource;
+  readonly sourceLabel?: string;
+  readonly level?: string | null;
+  readonly lesson?: string;
+  readonly originalSentence?: string;
+  readonly createdAt: string;
+  /** Completed-review count for getReviewProgressAfterResult's stage math. */
+  readonly stage: number;
+  readonly dueAt: number;
+  readonly successStreak: number;
+  readonly lapses: number;
+  readonly lastGrade: FlashcardGrade | null;
+}
+
 export interface UserAttempt {
   readonly id: string;
   readonly date: string;
@@ -193,6 +214,7 @@ export interface LearnerState {
   readonly reviews: readonly ReviewRecord[];
   readonly sessions: readonly SessionRecord[];
   readonly attempts: readonly UserAttempt[];
+  readonly flashcards: readonly FlashcardRecord[];
   readonly mastery: Readonly<Record<string, MasteryRecord>>;
   readonly dailyPlans: Readonly<Record<string, DailyPlanRecord>>;
   readonly learningLevel?: string | null;
@@ -454,6 +476,56 @@ function normalizeAttempts(value: unknown): readonly UserAttempt[] {
   });
 }
 
+const FLASHCARD_SOURCE_SET = new Set<FlashcardSource>(["lesson", "pdf", "highlight", "conversation", "manual"]);
+const FLASHCARD_GRADE_SET = new Set<FlashcardGrade>(["again", "hard", "good"]);
+
+function normalizeFlashcards(value: unknown): readonly FlashcardRecord[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value.flatMap((row, index) => {
+    if (!isRecord(row) || !isString(row.front) || !isString(row.back)) {
+      return [];
+    }
+    return [
+      {
+        id: isString(row.id) ? row.id : `legacy-flashcard-${index}`,
+        front: row.front,
+        back: row.back,
+        source: isStringInSet(row.source, FLASHCARD_SOURCE_SET)
+          ? (row.source as FlashcardSource)
+          : "manual",
+        ...(isString(row.sourceLabel) ? { sourceLabel: row.sourceLabel } : {}),
+        level: isString(row.level) ? row.level : null,
+        ...(isString(row.lesson) ? { lesson: row.lesson } : {}),
+        ...(isString(row.originalSentence)
+          ? { originalSentence: row.originalSentence }
+          : {}),
+        createdAt: isString(row.createdAt) ? row.createdAt : new Date(0).toISOString(),
+        stage:
+          typeof row.stage === "number" && Number.isFinite(row.stage)
+            ? Math.max(0, Math.floor(row.stage))
+            : 0,
+        dueAt:
+          typeof row.dueAt === "number" && Number.isFinite(row.dueAt)
+            ? row.dueAt
+            : Date.now(),
+        successStreak:
+          typeof row.successStreak === "number" && Number.isFinite(row.successStreak)
+            ? Math.max(0, Math.floor(row.successStreak))
+            : 0,
+        lapses:
+          typeof row.lapses === "number" && Number.isFinite(row.lapses)
+            ? Math.max(0, Math.floor(row.lapses))
+            : 0,
+        lastGrade: isStringInSet(row.lastGrade, FLASHCARD_GRADE_SET)
+          ? (row.lastGrade as FlashcardGrade)
+          : null,
+      },
+    ];
+  });
+}
+
 function normalizeActivity(value: unknown): Readonly<Record<string, number>> {
   if (!isRecord(value)) {
     return {};
@@ -611,6 +683,7 @@ export function createInitialLearnerState(): LearnerState {
     reviews: [],
     sessions: [],
     attempts: [],
+    flashcards: [],
     mastery: {},
     dailyPlans: {},
     learningLevel: null,
@@ -752,6 +825,7 @@ export function normalizeLearnerState(value: unknown): LearnerState {
     reviews: normalizeReviews(value.reviews),
     sessions: normalizeSessions(value.sessions),
     attempts: normalizeAttempts(value.attempts),
+    flashcards: normalizeFlashcards(value.flashcards),
     mastery: normalizeMastery(value.mastery),
     dailyPlans: normalizeDailyPlans(value.dailyPlans),
     learningLevel:

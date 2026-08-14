@@ -6,6 +6,7 @@ import {
   CloudOff,
   Headphones,
   House,
+  Layers,
   Library,
   Mic2,
   Repeat2,
@@ -26,6 +27,7 @@ export interface NavigationItem {
     | "/studio"
     | "/grammatik"
     | "/wiederholungen"
+    | "/vokabelkarten"
     | "/fehler"
     | "/audio"
     | "/ressourcen"
@@ -82,6 +84,12 @@ export const primaryNavigation = [
     label: "Wiederholungen",
     subtitle: "1 · 3 · 7 · 14 · 30 Tage",
     icon: Repeat2,
+  },
+  {
+    href: "/vokabelkarten",
+    label: "Vokabelkarten",
+    subtitle: "Echte Wiederholung mit Karten",
+    icon: Layers,
   },
   {
     href: "/fehler",

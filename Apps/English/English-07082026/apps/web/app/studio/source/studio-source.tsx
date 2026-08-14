@@ -486,7 +486,7 @@ export default function Home() {
             <div className="coach-card">
               <div className="coach-topic"><h2>{selected.topic}</h2><span>{selected.level} · {selected.category}</span></div>
               <div className="coach-stage">
-                <div className="coach-glow"><Image src="/coach-ava.png" width={360} height={420} alt="Ava, the speaking coach" priority /></div>
+                <div className="coach-glow"><Image src="/coach-ava.webp" width={360} height={420} alt="Ava, the speaking coach" priority /></div>
                 <div className="coach-dialogue"><strong>Ava · {language === "de" ? "Deine Sprechtrainerin" : "Your speaking coach"}</strong><p>{selected.task}</p><button className="prompt-audio" onClick={() => speak(selected.task)}>▶ {language === "de" ? "Aufgabe anhören" : "Hear prompt"}</button></div>
               </div>
             </div>

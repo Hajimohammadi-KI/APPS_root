@@ -796,7 +796,7 @@ export default function Home() {
               <div className="coach-stage">
                 <div className="coach-glow">
                   <Image
-                    src="/coach-ava.png"
+                    src="/coach-ava.webp"
                     width={360}
                     height={420}
                     alt="Ava, the speaking coach"

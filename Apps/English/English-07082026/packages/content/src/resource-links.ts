@@ -54,16 +54,35 @@ function canonicalOnlineResourceUrl(resource: OnlineResource): string {
   return `${LEARN_ENGLISH_BASE}`;
 }
 
+// test-english.com has no C1/C2 grammar pages, so the legacy generator fell
+// back to the nearest lower-level page for every C1/C2 unit that didn't get
+// a hand-verified override in curriculum.ts's RESOURCE_LEVEL_OVERRIDES. This
+// disclosed that fallback in the label instead of presenting a B2 page as an
+// exact-level match, since we can't fabricate a real C1/C2 page that doesn't exist.
+const TEST_ENGLISH_URL_LEVEL = /\/grammar-points\/([a-c][12])\//i;
+
 export function repairGrammarUnitLinks(unit: GrammarUnit): GrammarUnit {
   const links = unit.links.map((resource): GrammarResource => {
     const [, url, description, role] = resource;
     if (!url.startsWith("https://test-english.com/")) return resource;
 
     if (url.startsWith("https://test-english.com/grammar-points/")) {
+      const urlLevel = url.match(TEST_ENGLISH_URL_LEVEL)?.[1]?.toUpperCase();
+      const isLevelMismatch =
+        (unit.level === "C1" || unit.level === "C2") &&
+        urlLevel !== undefined &&
+        urlLevel !== unit.level;
+
       return [
-        role === "exercise" ? "Test-English exercises" : "Test-English explanation",
+        isLevelMismatch
+          ? `Test-English ${role === "exercise" ? "exercises" : "explanation"} (closest match: ${urlLevel}, no dedicated ${unit.level} page exists)`
+          : role === "exercise"
+            ? "Test-English exercises"
+            : "Test-English explanation",
         url,
-        description,
+        isLevelMismatch
+          ? `No test-english.com page exists at ${unit.level} for "${unit.title}"; this links to the closest related ${urlLevel}-level page instead.`
+          : description,
         role,
       ];
     }

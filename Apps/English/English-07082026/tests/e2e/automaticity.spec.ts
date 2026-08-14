@@ -1,16 +1,28 @@
 import { expect, test } from "@playwright/test";
 
+// Present perfect's controlled-practice pool is a fixed 3-item hardcoded
+// set (presentPerfectExercises in automaticity-screen.tsx), so -- unlike
+// every other grammar unit's now-expanded, shuffled pool -- these three
+// prompt/answer pairs are always exactly the ones shown, just in a
+// possibly-shuffled order. Target each by its own prompt label rather than
+// by position so the test doesn't depend on shuffle order.
+const PRESENT_PERFECT_ANSWERS: Record<string, string> = {
+  "Transform: I started this project in May and I still work on it.":
+    "I have worked on this project since May",
+  "Complete: She ___ already ___ the report. (write)":
+    "She has already written the report",
+  "Transform: This is my first experience with shadowing.":
+    "I have never tried shadowing before",
+};
+
 test("automaticity mission saves writing evidence and restores it", async ({
   page,
 }) => {
-  await page.goto("/?screen=automaticity");
-  await expect(page).toHaveURL(/screen=daily/);
-
-  await page.goto("/?screen=grammar&topic=Present%20perfect#grammar-topic");
-  await expect(
-    page.getByRole("heading", { level: 2, name: "Present perfect" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Use today" }).click();
+  await page.goto("/grammar");
+  await page
+    .getByTestId("grammar-topic-list")
+    .getByRole("button", { name: "Present perfect", exact: true })
+    .click();
   await expect
     .poll(() =>
       page.evaluate(() => {
@@ -21,27 +33,28 @@ test("automaticity mission saves writing evidence and restores it", async ({
       }),
     )
     .toBe("Present perfect");
-  await page.goto("/?screen=progress");
+
+  await page.goto("/progress");
   await expect(
     page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
   ).toBeVisible();
   const evidence = page;
   await expect(evidence.getByText("Present perfect", { exact: true })).toBeVisible();
 
-  const answers = [
-    "I have worked on this project since May",
-    "She has already written the report",
-    "I have never tried shadowing before",
-  ];
-  const controlledAnswers = evidence.locator('input:not([type="checkbox"])');
-  for (const [index, answer] of answers.entries()) {
-    await controlledAnswers.nth(index).fill(answer);
+  for (const [prompt, answer] of Object.entries(PRESENT_PERFECT_ANSWERS)) {
+    await evidence.getByLabel(prompt).fill(answer);
   }
-  await evidence.getByRole("button", { name: "Check all three" }).click();
+  await evidence.getByRole("button", { name: "Check answers" }).click();
   await expect(
     evidence.getByText("Controlled practice complete."),
   ).toBeVisible();
 
+  // The Mission shows one step at a time; it starts on step 1 (controlled
+  // practice) until switched, so step 2's writing Textarea isn't in the DOM
+  // until this is clicked.
+  await evidence
+    .getByRole("button", { name: /^2\. Automate & write/ })
+    .click();
   const journal =
     "I have worked on my project today. I have written two notes. I have never used this method before. My friend has given me advice. The advice is useful. I feel more confident now.";
   await evidence.getByLabel("Present perfect journal").fill(journal);
@@ -52,6 +65,12 @@ test("automaticity mission saves writing evidence and restores it", async ({
 
   await page.reload();
   const restoredEvidence = page;
+  // The Mission always reopens on step 1 (controlled practice) regardless
+  // of what was last completed -- it doesn't remember which step was open,
+  // only what evidence was saved.
+  await restoredEvidence
+    .getByRole("button", { name: /^2\. Automate & write/ })
+    .click();
   await expect(restoredEvidence.getByLabel("Present perfect journal")).toHaveValue(
     journal,
   );
@@ -66,7 +85,7 @@ test("automaticity mission remains usable on a phone viewport", async ({
     if (message.type() === "error") consoleErrors.push(message.text());
   });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/?screen=progress");
+  await page.goto("/progress");
 
   await expect(
     page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
@@ -74,7 +93,14 @@ test("automaticity mission remains usable on a phone viewport", async ({
   await expect(
     page.getByRole("button", { name: "Start evidence practice" }),
   ).toBeVisible();
-  await expect(page.getByLabel("Present perfect journal")).toBeVisible();
+  await page
+    .getByRole("button", { name: /^2\. Automate & write/ })
+    .click();
+  // A brand-new browser context has no todayGrammar or selfDeclaredLevel
+  // set, so the Mission falls back to the first A1-level unit in the
+  // catalog ("Verb be: am/is/are"), not the "present perfect" default that
+  // only applies once nothing else matches.
+  await expect(page.getByLabel("Verb be: am/is/are journal")).toBeVisible();
   await expect(
     page.locator(
       "[data-nextjs-dialog], .vite-error-overlay, #webpack-dev-server-client-overlay",
@@ -90,16 +116,22 @@ test("automaticity mission remains usable on a phone viewport", async ({
 test("automaticity mission follows the lesson selected in Grammar Lab", async ({
   page,
 }) => {
-  await page.goto("/?screen=grammar");
-  const useToday = page.getByRole("button", { name: "Use today" });
-  await expect(useToday).toBeVisible();
-  const selectedLesson = await useToday
-    .locator("xpath=..")
-    .getByRole("heading", { level: 2 })
-    .innerText();
+  await page.goto("/grammar");
+  // Pick a topic other than Present perfect so this test actually proves
+  // selection changes the Mission, rather than trivially matching the
+  // default fallback grammar unit. Scoped to the topic-picker's own test id
+  // so it doesn't accidentally match sidebar/nav buttons elsewhere on the
+  // page.
+  const otherTopic = page
+    .getByTestId("grammar-topic-list")
+    .getByRole("button")
+    .filter({ hasNotText: "Present perfect" })
+    .first();
+  const selectedLesson = (await otherTopic.textContent())?.trim() ?? "";
+  expect(selectedLesson).not.toBe("");
   expect(selectedLesson).not.toBe("Present perfect");
 
-  await useToday.click();
+  await otherTopic.click();
   await expect
     .poll(() =>
       page.evaluate(() => {
@@ -110,8 +142,11 @@ test("automaticity mission follows the lesson selected in Grammar Lab", async ({
       }),
     )
     .toBe(selectedLesson);
-  await page.goto("/?screen=progress");
 
+  await page.goto("/progress");
   await expect(page.getByText(selectedLesson, { exact: true }).first()).toBeVisible();
+  await page
+    .getByRole("button", { name: /^2\. Automate & write/ })
+    .click();
   await expect(page.getByLabel(`${selectedLesson} journal`)).toBeVisible();
 });

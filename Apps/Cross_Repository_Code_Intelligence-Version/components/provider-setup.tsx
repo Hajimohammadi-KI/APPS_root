@@ -27,6 +27,47 @@ const stateText: Record<ProviderState, string> = {
 function badgeClass(state: ProviderState) { return state === "connected" ? "ready" : state === "untested" || state === "not_configured" ? "waiting" : "failed"; }
 function dateLabel(value?: string | null) { return value ? new Date(value).toLocaleString("de-DE") : "Noch nicht geprüft"; }
 
+// OpenAI and DeepL are both a plain API-key form (key + one extra field + save/test/remove);
+// only Google is a distinct OAuth flow, so it stays its own markup below.
+type ApiKeyProviderCardProps = {
+  icon: string;
+  title: string;
+  description: string;
+  state: ProviderState;
+  configured: boolean;
+  keyValue: string;
+  onKeyChange: (value: string) => void;
+  keyPlaceholder: string;
+  extraField: React.ReactNode;
+  hint?: React.ReactNode;
+  busy: boolean;
+  onSubmit: (event: FormEvent) => void;
+  onRemove?: () => void;
+  footLink: { href: string; label: string };
+  footExtra?: React.ReactNode;
+  message?: string;
+};
+
+function ApiKeyProviderCard(props: ApiKeyProviderCardProps) {
+  return (
+    <article className="provider-card">
+      <div className="permission-title">
+        <span className="integration-icon">{props.icon}</span>
+        <div><h3>{props.title}</h3><p>{props.description}</p></div>
+        <em className={badgeClass(props.state)}>{stateText[props.state]}</em>
+      </div>
+      <form className="provider-form stacked" onSubmit={props.onSubmit}>
+        <label><span>API-Schlüssel</span><input type="password" value={props.keyValue} onChange={(event) => props.onKeyChange(event.target.value)} placeholder={props.keyPlaceholder} autoComplete="new-password"/></label>
+        {props.extraField}
+        {props.hint}
+        <div className="provider-actions"><button className="primary action" disabled={props.busy}>{props.busy ? "Verbindung wird geprüft …" : "Speichern & Verbindung testen"}</button>{props.configured && props.onRemove ? <button type="button" className="danger-button compact" onClick={props.onRemove}>Entfernen</button> : null}</div>
+      </form>
+      <div className="provider-foot"><a href={props.footLink.href} target="_blank" rel="noreferrer">{props.footLink.label} ↗</a>{props.footExtra}</div>
+      {props.message ? <p className="provider-message">{props.message}</p> : null}
+    </article>
+  );
+}
+
 export default function ProviderSetup({ connections, scopes, labels, onRefresh, onToast }: Props) {
   const [openaiKey, setOpenaiKey] = useState("");
   const [deeplKey, setDeeplKey] = useState("");
@@ -116,19 +157,41 @@ export default function ProviderSetup({ connections, scopes, labels, onRefresh, 
     </article>
 
     <div className="provider-grid provider-config-grid">
-      <article className="provider-card"><div className="permission-title"><span className="integration-icon">AI</span><div><h3>{labels.openai}</h3><p>OpenAI verwendet keinen Google-Login. Dafür wird einmalig ein eigener API-Schlüssel benötigt.</p></div><em className={badgeClass(connections.openai.state)}>{stateText[connections.openai.state]}</em></div>
-        <form className="provider-form stacked" onSubmit={saveOpenAI}><label><span>API-Schlüssel</span><input type="password" value={openaiKey} onChange={(event) => setOpenaiKey(event.target.value)} placeholder={connections.openai.configured ? `Gespeichert ${String(connections.openai.metadata?.keyHint || "")}` : "sk-…"} autoComplete="new-password"/></label><label><span>Modell</span><input value={openaiModel} onChange={(event) => setOpenaiModel(event.target.value)} placeholder={DEFAULT_OPENAI_MODEL}/></label><p className="provider-model-hint">Empfohlen für wissenschaftliche Erklärungen und mehrsprachige Übersetzungen: <code>{DEFAULT_OPENAI_MODEL}</code>. Der Modellname bleibt editierbar.</p><div className="provider-actions"><button className="primary action" disabled={busy === "openai"}>{busy === "openai" ? "Verbindung wird geprüft …" : "Speichern & Verbindung testen"}</button>{connections.openai.configured ? <button type="button" className="danger-button compact" onClick={() => void remove("openai")}>Entfernen</button> : null}</div></form>
-        <div className="provider-foot"><a href="https://platform.openai.com/api-keys" target="_blank" rel="noreferrer">OpenAI API-Schlüssel öffnen ↗</a><span>Letzter Test: {dateLabel(connections.openai.testedAt)}</span></div>{(messages.openai || String(connections.openai.metadata?.message || "")) ? <p className="provider-message">{messages.openai || String(connections.openai.metadata?.message || "")}</p> : null}
-      </article>
-      <article className="provider-card"><div className="permission-title"><span className="integration-icon">文</span><div><h3>{labels.deepl} API</h3><p>DeepL API Free übersetzt ausgewählten PDF-Text zwischen Deutsch und Englisch. Der Schlüssel wird verschlüsselt auf dem lokalen Server gespeichert und nie an den Browser zurückgegeben.</p></div><em className={badgeClass(connections.deepl.state)}>{stateText[connections.deepl.state]}</em></div>
-        <form className="provider-form stacked" onSubmit={saveDeepL}>
-          <label><span>API-Schlüssel</span><input type="password" value={deeplKey} onChange={(event) => setDeeplKey(event.target.value)} placeholder={connections.deepl.configured ? `Gespeichert ${String(connections.deepl.metadata?.keyHint || "")}` : "DeepL Auth Key"} autoComplete="new-password"/></label>
-          <label><span>Tarif</span><select value={deeplTier} onChange={(event) => setDeeplTier(event.target.value as "free" | "pro")}><option value="free">DeepL API Free</option><option value="pro">DeepL API Pro</option></select></label>
-          <div className="provider-actions"><button className="primary action" disabled={busy === "deepl"}>{busy === "deepl" ? "Verbindung wird geprüft …" : "Speichern & Verbindung testen"}</button>{connections.deepl.configured ? <button type="button" className="danger-button compact" onClick={() => void remove("deepl")}>Entfernen</button> : null}</div>
-        </form>
-        <div className="provider-foot"><a href="https://www.deepl.com/account/summary" target="_blank" rel="noreferrer">DeepL API-Konto öffnen ↗</a><span>Deutsch · Englisch · kein Persisch</span></div>
-        {(messages.deepl || String(connections.deepl.metadata?.message || "")) ? <p className="provider-message">{messages.deepl || String(connections.deepl.metadata?.message || "")}</p> : null}
-      </article>
+      <ApiKeyProviderCard
+        icon="AI"
+        title={labels.openai}
+        description="OpenAI verwendet keinen Google-Login. Dafür wird einmalig ein eigener API-Schlüssel benötigt."
+        state={connections.openai.state}
+        configured={connections.openai.configured}
+        keyValue={openaiKey}
+        onKeyChange={setOpenaiKey}
+        keyPlaceholder={connections.openai.configured ? `Gespeichert ${String(connections.openai.metadata?.keyHint || "")}` : "sk-…"}
+        extraField={<label><span>Modell</span><input value={openaiModel} onChange={(event) => setOpenaiModel(event.target.value)} placeholder={DEFAULT_OPENAI_MODEL}/></label>}
+        hint={<p className="provider-model-hint">Empfohlen für wissenschaftliche Erklärungen und mehrsprachige Übersetzungen: <code>{DEFAULT_OPENAI_MODEL}</code>. Der Modellname bleibt editierbar.</p>}
+        busy={busy === "openai"}
+        onSubmit={saveOpenAI}
+        onRemove={() => void remove("openai")}
+        footLink={{ href: "https://platform.openai.com/api-keys", label: "OpenAI API-Schlüssel öffnen" }}
+        footExtra={<span>Letzter Test: {dateLabel(connections.openai.testedAt)}</span>}
+        message={messages.openai || String(connections.openai.metadata?.message || "") || undefined}
+      />
+      <ApiKeyProviderCard
+        icon="文"
+        title={`${labels.deepl} API`}
+        description="DeepL API Free übersetzt ausgewählten PDF-Text zwischen Deutsch und Englisch. Der Schlüssel wird verschlüsselt auf dem lokalen Server gespeichert und nie an den Browser zurückgegeben."
+        state={connections.deepl.state}
+        configured={connections.deepl.configured}
+        keyValue={deeplKey}
+        onKeyChange={setDeeplKey}
+        keyPlaceholder={connections.deepl.configured ? `Gespeichert ${String(connections.deepl.metadata?.keyHint || "")}` : "DeepL Auth Key"}
+        extraField={<label><span>Tarif</span><select value={deeplTier} onChange={(event) => setDeeplTier(event.target.value as "free" | "pro")}><option value="free">DeepL API Free</option><option value="pro">DeepL API Pro</option></select></label>}
+        busy={busy === "deepl"}
+        onSubmit={saveDeepL}
+        onRemove={() => void remove("deepl")}
+        footLink={{ href: "https://www.deepl.com/account/summary", label: "DeepL API-Konto öffnen" }}
+        footExtra={<span>Deutsch · Englisch · kein Persisch</span>}
+        message={messages.deepl || String(connections.deepl.metadata?.message || "") || undefined}
+      />
     </div>
   </div>;
 }

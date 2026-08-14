@@ -151,6 +151,75 @@
   gap: 8px;
 }
 
+.profile-progress-badge {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 10px 12px;
+  border: 1px solid #e3eaf3;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.74);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.profile-progress-badge:hover {
+  border-color: var(--screen-accent, #2a73f5);
+  box-shadow: 0 6px 16px rgba(24, 43, 75, 0.06);
+}
+
+.profile-progress-avatar,
+.profile-progress-avatar-fallback {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-progress-avatar-fallback {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, #2a73f5, #1148be);
+  color: white;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.profile-progress-copy {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+
+.profile-progress-name {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-progress-level {
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-progress-streak {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: #e4692c;
+  font-weight: 800;
+  font-size: 12px;
+}
+
 .nav-group {
   overflow: hidden;
   border: 1px solid #e3eaf3;

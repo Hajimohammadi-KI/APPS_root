@@ -224,14 +224,41 @@ export function AutomaticityLab({
   const modelText = grammar.examples.join(" ");
   const today = new Date().toISOString().slice(0, 10);
   const plan = state.dailyPlans[today] ?? { completed: [], answers: {} };
+  // Deterministic (unshuffled) for the very first render so server and
+  // client agree during hydration -- pickRound() uses Math.random(), which
+  // runs independently during SSR and the initial client render and would
+  // otherwise produce two different rounds, a real hydration mismatch
+  // (caught by an actual e2e run, not typecheck/unit tests).
   const [roundExercises, setRoundExercises] = useState(() =>
-    pickRound(exercises, ROUND_SIZE),
+    exercises.slice(0, ROUND_SIZE),
   );
   const [answers, setAnswers] = useState<string[]>(() =>
     roundExercises.map(() => ""),
   );
   const [checkedAnswers, setCheckedAnswers] = useState<readonly boolean[]>([]);
   const [practiceRounds, setPracticeRounds] = useState(0);
+  // Re-shuffles into a genuine random round on mount (client-only, so it
+  // never runs during SSR/hydration), and again any time KEY changes -- KEY
+  // is derived from the grammar topic, so this also resets the round
+  // whenever the topic changes on a re-render rather than a full remount
+  // (e.g. picking a different unit in Grammatik-Labor, which renders this
+  // same AutomaticityLab instance with a new `grammar` prop instead of
+  // unmounting it). Without this, roundExercises/answers stayed frozen on
+  // whatever topic was active at the *first* mount -- the heading and rule
+  // text would correctly show the newly selected topic while the exercises
+  // below kept showing the old one, a real mismatch an actual e2e run
+  // caught that no amount of typechecking would have.
+  const previousKeyRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (previousKeyRef.current === KEY) return;
+    previousKeyRef.current = KEY;
+    const freshRound = pickRound(exercises, ROUND_SIZE);
+    setRoundExercises(freshRound);
+    setAnswers(freshRound.map(() => ""));
+    setCheckedAnswers([]);
+    setPracticeRounds(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `exercises` is derived from `grammar`, which KEY already uniquely identifies; re-running per `exercises` identity would refire every render
+  }, [KEY]);
   const [journal, setJournal] = useState("");
   const [transcript, setTranscript] = useState("");
   const [journalAnalysis, setJournalAnalysis] =

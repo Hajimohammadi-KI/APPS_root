@@ -76,9 +76,21 @@ function buildQueue(studiedTitles: readonly string[]): QueueItem[] {
 
 export default function MixedPracticePage() {
   const { state, recordAttempt } = useAppStore();
-  const [queue] = React.useState<QueueItem[]>(() =>
-    buildQueue(Object.keys(state.mastery)),
-  );
+  // Starts empty rather than calling buildQueue() (which shuffles via
+  // Math.random()) directly in the initializer -- that ran independently
+  // during SSR and the initial client render and produced two different
+  // queues, a real hydration mismatch caught by an actual e2e run. Built
+  // once, client-only, in the effect below instead.
+  const [queue, setQueue] = React.useState<QueueItem[]>([]);
+  const [queueReady, setQueueReady] = React.useState(false);
+  const builtRef = React.useRef(false);
+  React.useEffect(() => {
+    if (builtRef.current) return;
+    builtRef.current = true;
+    setQueue(buildQueue(Object.keys(state.mastery)));
+    setQueueReady(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount only
+  }, []);
   const [index, setIndex] = React.useState(0);
   const [answer, setAnswer] = React.useState("");
   const [correct, setCorrect] = React.useState<boolean | null>(null);
@@ -113,7 +125,7 @@ export default function MixedPracticePage() {
     setCorrect(null);
   }
 
-  if (queue.length === 0) {
+  if (queueReady && queue.length === 0) {
     return (
       <Empty className="border">
         <EmptyHeader>
@@ -129,6 +141,8 @@ export default function MixedPracticePage() {
       </Empty>
     );
   }
+
+  if (!queueReady) return null;
 
   if (!current) {
     return (

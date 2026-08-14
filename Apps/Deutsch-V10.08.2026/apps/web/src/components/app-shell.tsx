@@ -18,6 +18,7 @@ import {
 } from "@/lib/navigation";
 import { UserGuideButton } from "@/components/user-guide";
 import { NeuroReader } from "@/components/neuro-reader";
+import { ProfileProgressBadge } from "@/components/profile-progress-badge";
 import { ReadingFocusSettings } from "@/components/reading-focus-settings";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
@@ -127,6 +128,7 @@ export function AppShell({
             );
           })}
         </div>
+        <ProfileProgressBadge />
       </aside>
 
       <div className="min-w-0 xl:pl-[310px]">

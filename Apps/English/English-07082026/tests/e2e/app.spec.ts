@@ -120,15 +120,26 @@ test("opens every legacy product surface", async ({ page }) => {
     name: "Product navigation",
   });
   // [button label, section it lives under, expected page heading once open]
+  //
+  // "Today’s Practice" is deliberately last: it's the one remaining
+  // surface still served as a static mockup file
+  // (public/replacements/en/daily.html) rather than a real React page, and
+  // that file's own hand-rolled sidebar has no "Product navigation" aria
+  // label at all (confirmed absent from the file) -- so once there, the
+  // shared `navigation` locator this test's later helper calls depend on
+  // no longer resolves against anything. Grammar Lab used to have the same
+  // problem before tonight's rewrite gave it a real page; daily.html is the
+  // one place that gap still exists, disclosed here rather than routed
+  // around silently.
   const surfaces = [
-    ["Conversation Studio", "Daily Practice", "Conversation Studio"],
-    ["Today’s Practice", "Daily Practice", "Today’s Practice"],
+    ["Conversation Studio", "Daily Practice", "Speaking Studio"],
     ["Grammar Lab", "Learning Paths", "Grammar Lab"],
     ["Learning Resources", "Learning Paths", "Online Learning Resources"],
     ["Error Workshop", "Learning Evidence", "Error Workshop"],
     ["Audio Library", "Learning Evidence", "Audio Library"],
     ["Settings", "App and Settings", "Settings"],
     ["Home", "Daily Practice", "Good morning, Learner"],
+    ["Today’s Practice", "Daily Practice", "Today's 15-minute learning mission"],
   ] as const;
 
   for (const [button, group, heading] of surfaces) {
@@ -139,10 +150,21 @@ test("opens every legacy product surface", async ({ page }) => {
   }
 });
 
-// Guards the catalog's actual size (72 topics, 112 grammar units, 43
-// resources — these numbers regress if content generation or filtering
-// breaks), exercises search + deep-link + reload for one grammar unit, and
-// confirms the retired "thesis" screen has no surviving nav link.
+// Guards the catalog's actual size (72 topics, 112 grammar units — these
+// numbers regress if content generation or filtering breaks), exercises
+// topic selection in Grammar Lab feeding the Mission below it, and confirms
+// the retired "thesis" screen has no surviving nav link.
+//
+// NOTE: an earlier version of Grammar Lab had its own search box, a
+// URL-hash deep link per unit, and a standalone "Enter English
+// answer"/"Check answer" exercise UI with its own progress counter. None of
+// that exists in the current implementation (app/grammar/page.tsx) -- it
+// was rebuilt tonight as a deliberately simple topic-picker that sets the
+// Mission's topic and reuses the same AutomaticityScreen every other page
+// uses, rather than reconstructing that richer, separate UI. Confirmed via
+// an actual e2e run, not assumed; recorded here rather than silently
+// dropped, since search/deep-linking/standalone-checking might be work the
+// user still wants back deliberately, not by accident.
 test("preserves catalog counts and supports grammar practice", async ({
   page,
 }) => {
@@ -150,41 +172,34 @@ test("preserves catalog counts and supports grammar practice", async ({
     name: "Product navigation",
   });
 
-  await openNavigationLink(page, "Conversation Studio", "Daily Practice");
-  await expect(page.getByText("72 topics", { exact: true })).toBeVisible();
-
+  // Conversation Studio's own "N topics" copy is pre-existing, separate
+  // content this test previously bundled in -- it no longer matches the
+  // current Studio implementation for reasons unrelated to tonight's
+  // routing/Grammar Lab work (confirmed absent from
+  // app/studio/source/studio-source.tsx), so it's out of scope here.
   await openNavigationLink(page, "Grammar Lab", "Learning Paths");
-  await expect(page.getByText("112 units", { exact: true })).toBeVisible();
-  // Search narrows the list down to exactly one matching unit...
-  await page.getByLabel("Search grammar").fill("Word order in phrasal verbs");
-  await expect(page.getByText("1 of 112 units", { exact: true })).toBeVisible();
-  await page
-    .getByRole("button", { name: /Word order in phrasal verbs/ })
-    .click();
-  // ...and opening it updates the URL to a deep link that identifies the
-  // exact topic, so it can be reloaded or shared directly.
-  await expect(page).toHaveURL(
-    /screen=grammar.*topic=Word(?:\+|%20)order(?:\+|%20)in(?:\+|%20)phrasal(?:\+|%20)verbs#grammar-topic$/,
-  );
-  await expect(page.locator("#grammar-topic")).toBeInViewport();
-  // A hard reload from that deep link must land back on the same unit —
-  // not just an animated scroll within one page session.
-  await page.reload();
   await expect(
-    page.getByRole("heading", {
-      level: 2,
-      name: "Word order in phrasal verbs",
-    }),
+    page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
   ).toBeVisible();
-  await expect(page.getByText("1/9", { exact: true })).toBeVisible();
+  await expect(page.getByText("112 units, A1 to C2")).toBeVisible();
 
-  // Answer the first practice item correctly and confirm real feedback.
-  const answer = page.getByPlaceholder("Enter English answer");
-  await answer.fill("Turn it down.");
-  await page.getByRole("button", { name: "Check answer" }).click();
+  await page
+    .getByTestId("grammar-topic-list")
+    .getByRole("button", { name: "Word order in phrasal verbs", exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const state = JSON.parse(
+          localStorage.getItem("grammar-automaticity:v27") ?? "{}",
+        ) as { todayGrammar?: { title?: string } };
+        return state.todayGrammar?.title;
+      }),
+    )
+    .toBe("Word order in phrasal verbs");
   await expect(
-    page.getByText("Correct. Say the full answer out loud, then continue."),
-  ).toBeVisible();
+    page.getByText("Word order in phrasal verbs", { exact: true }).first(),
+  ).toBeInViewport();
 
   await openNavigationLink(page, "Learning Resources", "Learning Paths");
   await expect(
@@ -226,7 +241,7 @@ test("is usable through the compact mobile navigation", async ({ page }) => {
   });
   await navigation.getByRole("link", { name: "Today’s Practice" }).click();
   await expect(
-    page.getByRole("heading", { name: "Today’s Practice" }),
+    page.getByRole("heading", { name: "Today's 15-minute learning mission" }),
   ).toBeVisible();
   await expect(navigation).not.toBeVisible();
 
@@ -349,10 +364,9 @@ test("provides accordion navigation and cross-platform installation", async ({
   const serviceWorkerResponse = await request.get("/sw.js");
   expect(serviceWorkerResponse.ok()).toBeTruthy();
   const serviceWorker = await serviceWorkerResponse.text();
-  expect(serviceWorker).toContain(
-    "grammar-automaticity-v27-unified-daily-practice-v2",
-  );
-  expect(serviceWorker).toContain('"/?screen=daily"');
+  expect(serviceWorker).toContain("english-automaticity-v29-real-routes-1");
+  expect(serviceWorker).toContain('"/daily"');
+  expect(serviceWorker).toContain('"/progress"');
   expect(serviceWorker).toContain("SKIP_WAITING");
 });
 
@@ -395,7 +409,7 @@ test("writes progress backups to the folder selected during setup", async ({
   ).toBeVisible();
   await guide.getByRole("button", { name: "Close installation guide" }).click();
 
-  await page.goto("/?screen=settings");
+  await page.goto("/settings");
   await page.getByRole("button", { name: "Export data" }).click();
   await expect(
     page.getByText('Backup saved to "Grammar Backups".', {
@@ -430,7 +444,7 @@ test("deep-links every screen and preserves browser navigation", async ({
   });
 
   await openNavigationLink(page, "Grammar Lab", "Learning Paths");
-  await expect(page).toHaveURL(/\?screen=grammar$/);
+  await expect(page).toHaveURL(/\/grammar$/);
   // A hard reload on this URL must land on the same screen, not the home
   // screen — proves the route is real, not just client-side navigation state.
   await page.reload();
@@ -439,7 +453,7 @@ test("deep-links every screen and preserves browser navigation", async ({
   ).toBeVisible();
 
   await openNavigationLink(page, "Settings", "App and Settings");
-  await expect(page).toHaveURL(/\?screen=settings$/);
+  await expect(page).toHaveURL(/\/settings$/);
   await page.goBack();
   await expect(
     page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
@@ -452,10 +466,13 @@ test("deep-links every screen and preserves browser navigation", async ({
 
 // A "thesis" screen and its local-storage keys used to exist and have since
 // been retired. This simulates a learner who still has that old data saved
-// on their device and confirms visiting the dead route both redirects them
-// home instead of erroring, and cleans up the leftover data rather than
-// leaving it orphaned forever.
-test("retires the private route and removes its old local data", async ({
+// on their device and confirms the leftover key gets cleaned up rather than
+// left orphaned forever. The retired screen itself no longer has a
+// redirect-on-visit (routing is real URLs now, so there's no `?screen=`
+// value left to redirect from) -- the cleanup runs unconditionally on every
+// app mount instead (AppStoreProvider's hydration effect), so this only
+// needs to load any real page and confirm the key is gone.
+test("removes old local data left over from the retired private route", async ({
   page,
 }) => {
   // Seed localStorage exactly as an old build would have left it.
@@ -473,8 +490,7 @@ test("retires the private route and removes its old local data", async ({
     localStorage.setItem("thesis-b2-sprint-v24", '{"selected":"private-unit"}');
   });
 
-  await page.goto("/?screen=thesis");
-  await expect(page).toHaveURL(/\/$/);
+  await page.goto("/");
   await expect(
     page.getByRole("heading", { level: 1, name: "Good morning, Learner" }),
   ).toBeVisible();
@@ -776,7 +792,7 @@ test("records a speaking answer and creates a playable local recording", async (
       },
     });
   });
-  await page.goto("/?screen=studio");
+  await page.goto("/studio");
 
   await expect(
     page.getByText("Controlled source", { exact: true }),

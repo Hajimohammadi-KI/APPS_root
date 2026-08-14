@@ -46,7 +46,7 @@ export function ApiConnectionStatus({ baseUrl }: { baseUrl: string }) {
 		<span
 			aria-live="polite"
 			className="hidden min-h-9 items-center gap-2 rounded-full border border-slate-300 bg-white px-3 text-xs font-bold text-slate-800 sm:inline-flex"
-			title={`${statusCopy[status]} · ${baseUrl}`}
+			title={`${statusCopy[status]} · Confirms only the local API service, not AI or translation providers. · ${baseUrl}`}
 		>
 			<span
 				aria-hidden="true"

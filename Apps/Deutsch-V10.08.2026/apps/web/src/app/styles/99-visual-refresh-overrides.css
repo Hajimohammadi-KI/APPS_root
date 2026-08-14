@@ -108,6 +108,68 @@ body {
   font-size: 16px;
   font-weight: 500;
 }
+.german-profile-progress-badge {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 10px 4px;
+  padding: 10px 12px;
+  border: 1px solid #e3d9ef;
+  border-radius: 15px;
+  background: #faf7ff;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.german-profile-progress-badge:hover {
+  border-color: #5c2eb5;
+  box-shadow: 0 6px 16px rgba(92, 46, 181, 0.08);
+}
+.german-profile-progress-avatar,
+.german-profile-progress-avatar-fallback {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.german-profile-progress-avatar-fallback {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, #8656c6, #5c2eb5);
+  color: white;
+  font-weight: 800;
+  font-size: 13px;
+}
+.german-profile-progress-copy {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+.german-profile-progress-name {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.german-profile-progress-level {
+  overflow: hidden;
+  color: #6c6579;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.german-profile-progress-streak {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: #e4692c;
+  font-weight: 800;
+  font-size: 12px;
+}
+
 .german-sidebar-section nav a[aria-current="page"] {
   background: #e8dcf7;
   color: #5c2eb5;

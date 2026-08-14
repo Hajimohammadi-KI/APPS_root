@@ -61,9 +61,9 @@ export type NlpCourseSession = {
 export const defaultSettings = {
   projectName: "Cross_Repository_Code_Intelligence",
   planName: "Cross Repository Code Intelligence – 25-Wochen-Lernplan",
-  planStartDate: "2026-08-07",
-  planEndDate: "2027-02-13",
-  planStatus: "not_started" as "not_started" | "running" | "paused",
+  planStartDate: "2026-08-14",
+  planEndDate: "2027-02-20",
+  planStatus: "running" as "not_started" | "running" | "paused",
   planPausedAt: "",
   dailyWorkMode: "light" as "rescue" | "light" | "full",
   dailyStart: "09:00",
@@ -841,7 +841,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-requirements",
     title: "Problem, Stakeholder und vertretbarer Scope",
     goal: "Vor dem Coding werden Problem, Nutzende, Anforderungen und Projektgrenzen präzise und testbar.",
-    startDate: "2026-08-04",
+    startDate: "2026-08-14",
     days: [
       d("Problemstellung und Projektwert", ["proposal", "hevner"], "Ohne präzises Problem zerfallen Architektur und Implementierung in unverbundene Funktionen.", ["Formuliere das Kernproblem der Cross-Repository-Analyse in einem Satz", "Kläre den Unterschied zwischen Evidenz und Textähnlichkeit", "Beschreibe den Artefaktwert für drei Rollen getrennt"], ["1", "6", "7"], "Design / Problem Framing", "problem-statement-v1.md"),
       d("Stakeholder und Personas", ["proposal", "sweqa"], "Developer, Architect und QA benötigen unterschiedliche Fragen und Evidenzstufen.", ["Extrahiere das Ziel jeder Persona", "Bestimme die Entscheidung, die jede Rolle mit der Antwort trifft", "Dokumentiere Informationen, die einer Rolle nicht gezeigt werden dürfen"], ["1.6", "25", "26"], "Design / Stakeholders", "stakeholders-and-personas.md"),
@@ -856,7 +856,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-architecture",
     title: "C4, Datenfluss und Modulgrenzen",
     goal: "Systemstruktur von Context bis Component sowie Modulverträge werden vor der Implementierung fixiert.",
-    startDate: "2026-08-11",
+    startDate: "2026-08-21",
     days: [
       d("System Context Diagram", ["c4", "proposal"], "Das Diagramm zeigt die Beziehungen zu Nutzenden, GitHub/lokalen Repositories, Neo4j und LLM.", ["Bestimme externe Personen und Softwaresysteme", "Definiere Vertrauen und Eigentum jeder Boundary", "Entferne Technologiedetails aus dem Context"], ["1.6", "3", "9"], "Architecture / C4", "c4-context.dsl"),
       d("Container Diagram", ["c4", "arc42"], "Container trennen Ausführung, Speicherung und Benutzeroberfläche.", ["Grenze CLI/API, Extractor, Graph Store und UI ab", "Beschreibe Protokoll und übertragene Daten jeder Beziehung", "Definiere jeden Container als stateful oder stateless"], ["3", "10", "38.2"], "Architecture / C4", "c4-containers.dsl"),
@@ -871,7 +871,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-evidence-model",
     title: "Gemeinsame Sprache, Program Graph und Provenance",
     goal: "Entitäten, Beziehungen, Evidenz und Unsicherheitsstatus werden schriftlich und in JSON-Beispielen fixiert.",
-    startDate: "2026-08-18",
+    startDate: "2026-08-28",
     days: [
       d("Domänenglossar", ["proposal", "allamanis"], "Gemeinsame Begriffe verhindern Bedeutungsunterschiede zwischen Text, Code und Graph.", ["Definiere Fact, Evidence, Claim und Path getrennt", "Präzisiere Repository, Project, File, Type und Method", "Operationalisiere READ, WRITE und Persistence"], ["2", "3.2", "3.3"], "Domain Model", "domain-glossary.md"),
       d("Node Types des Program Graph", ["allamanis", "yamaguchi"], "Nodes sollen Projektfragen dienen und nicht den gesamten AST kopieren.", ["Liste Nodes von Repository bis Table", "Bestimme notwendige Identität und Properties jedes Nodes", "Entferne Nodes ohne Nutzen für die Forschungsfragen"], ["3.3", "10.3"], "Graph Model", "node-catalog-v1.yaml"),
@@ -886,7 +886,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-evaluation",
     title: "Goldstandard, RQ1/RQ2 und Teststrategie",
     goal: "Vor dem Bau des Artefakts wird die Messung von Erfolg und Scheitern vollständig definiert.",
-    startDate: "2026-08-25",
+    startDate: "2026-09-04",
     days: [
       d("Akzeptanzkriterien des Gesamtsystems", ["proposal", "hevner"], "Die Definition of Done muss von Evidenz und Forschungsfragen abhängen, nicht vom guten Eindruck einer Demo.", ["Extrahiere die Erfolgskriterien des Artefakts", "Trenne verpflichtende und sekundäre Metriken", "Markiere Schwellenwerte, die Betreuungsgenehmigung benötigen"], ["16", "17", "20"], "Evaluation / Acceptance", "system-acceptance-criteria.md"),
       d("Annotationsprotokoll entwerfen", ["proposal", "sweqa"], "Der Goldstandard ist nur mit stabiler Annotationseinheit und Anleitung valide.", ["Definiere die Einheiten Method, Table und Relation", "Definiere Positive, Negative und Hard Negative", "Beschreibe Disagreement- und Zweitprüfungsprozess"], ["12", "13.3", "29.4"], "Evaluation / Gold", "annotation-guideline-v1.md"),
@@ -901,7 +901,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-delivery-plan",
     title: "Corpus, Repository-Struktur und technisches Backlog",
     goal: "Das Design wird in einen versionierten, planbaren und eindeutigen Umsetzungsplan überführt.",
-    startDate: "2026-09-01",
+    startDate: "2026-09-11",
     days: [
       d("Corpus Manifest und Freeze Plan", ["danphe", "proposal"], "Eine feste Eingabe ist Voraussetzung für reproduzierbare Ergebnisse.", ["Dokumentiere den festen Danphe-Commit", "Bestimme Solutions und Projects im Scope", "Dokumentiere Lizenz, Build und Ausschlüsse"], ["9.2 bis 9.3", "11.3"], "Delivery / Corpus", "corpus-manifest-v1.yaml"),
       d("Repository- und Ordnerstruktur", ["arc42", "proposal"], "Die Dateistruktur muss Architekturgrenzen und Testzyklus widerspiegeln.", ["Entwirf src, tests, corpus, gold und reports", "Ordne jedem Ordner ein verantwortliches Modul zu", "Trenne generierte Ausgabe vom Quellcode"], ["10", "11", "17"], "Delivery / Repository", "repository-layout.md"),
@@ -916,7 +916,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-freeze",
     title: "Traceability, Baseline und Oktober-Bereitschaft",
     goal: "Bis 9. September wird das Design versioniert; danach sind nur kontrollierte Änderungen erlaubt.",
-    startDate: "2026-09-08",
+    startDate: "2026-09-18",
     days: [
       d("Vollständige Traceability Matrix", ["proposal", "hevner"], "Keine Anforderung, kein Modul, kein Test und keine Forschungsfrage darf unverbunden bleiben.", ["Verbinde Requirement→Component", "Verbinde Component→Test/Metric", "Verbinde Metric→RQ/Thesis Section"], ["7", "16", "21"], "Design / Traceability", "traceability-matrix.csv"),
       d("Design Freeze und Readiness Gate", ["proposal", "adr", "arc42"], "Der 9. September beendet das Design; die Ergebnisse müssen für den unabhängigen Start am 1. Oktober ausreichen.", ["Schließe alle Design-Checklisten", "Versioniere ADRs und erlaubte offene Punkte", "Bereite den ersten technischen Oktobertag und seine Eingaben vor"], ["16", "20", "37"], "Design / Baseline", "design-baseline-2026-09-09.zip"),
@@ -973,7 +973,7 @@ export const planWeeks: PlanWeek[] = scheduledWeekSpecs.map((week, weekIndex) =>
   const weekStart = week.startDate
     ? new Date(`${week.startDate}T12:00:00Z`)
     : addUtcDays(
-        new Date("2026-10-01T12:00:00Z"),
+        new Date("2026-10-11T12:00:00Z"),
         (week.technicalIndex ?? 0) * 7,
       );
   const dates: Date[] = [];
@@ -1044,11 +1044,11 @@ export const allTaskItems = allDays.flatMap((day) =>
 );
 
 export const planMeta = {
-  start: "2026-08-04",
-  designEnd: "2026-09-09",
-  restStart: "2026-09-10",
-  restEnd: "2026-09-30",
-  technicalStart: "2026-10-01",
+  start: "2026-08-14",
+  designEnd: "2026-09-19",
+  restStart: "2026-09-20",
+  restEnd: "2026-10-10",
+  technicalStart: "2026-10-11",
   end: allDays[allDays.length - 1]?.date ?? "2027-02-10",
   designDays: planWeeks
     .filter((week) => week.phaseId.startsWith("design-"))

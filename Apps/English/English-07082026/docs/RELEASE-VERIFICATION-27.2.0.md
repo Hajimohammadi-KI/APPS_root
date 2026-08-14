@@ -55,6 +55,33 @@ The disposable verification installations were removed after these results were 
 - Payload: `artifacts/windows-installer/EnglishGrammar-Setup-v27.2.0.payload.zip`
 - Payload size: `240133572` bytes
 
+## Addendum — 2026-08-14 rebuild
+
+The installer was rebuilt again the same day to pick up later source changes
+(a resource-link honesty fix in `packages/content/src/resource-links.ts` and
+a status-badge tooltip fix in
+`apps/web/features/components/api-connection-status.tsx`). The full CLI
+lifecycle (`--silent-install` → `--silent-update` → `--silent-repair` →
+`--silent-uninstall`, with a synthetic data marker checked before/after each
+step) was re-run against isolated Install/Data roots and passed cleanly:
+install/update/repair/uninstall all exited `0`, and the data marker's
+SHA-256 was unchanged after every step. New installer SHA-256:
+`99cb7a75cc796de0b13075113387fd72dcff6919ea5f3a2908ea4a9dc67130f1`.
+
+A live launch-and-health-check (the `/api/health`/`/` + process-count rows
+in the table above) was **not** repeated this time — attempting it hung
+past a 2-minute budget with no process ever appearing, consistent with an
+Electron GPU/renderer-context stall in this automated session rather than
+an installer defect. That specific runtime-route smoke test should be
+redone by hand before public release.
+
+This app directory has no `.env`/`.env.local` and no
+`GOOGLE_CALENDAR_CLIENT_ID`/`GOOGLE_CALENDAR_SECRET` were set in the shell
+that ran this rebuild, so — same as the German app's 2026-08-14 rebuild —
+**this specific `EnglishGrammar-Setup.exe`'s Google Calendar/Drive OAuth
+credentials are empty.** Rebuild with real credentials set before
+distributing this artifact if Calendar/Drive integration is required.
+
 ## Deliberate limitation
 
 `002_task_definition_versioning.sql` was not applied to a live PostgreSQL/Neon environment in this work. No target connection or approved deployment environment was supplied. The migration received source-level contract checks, but staging must still execute the SQL, transition fixtures, monitoring queries, permission checks, and rollback rehearsal before production deployment.

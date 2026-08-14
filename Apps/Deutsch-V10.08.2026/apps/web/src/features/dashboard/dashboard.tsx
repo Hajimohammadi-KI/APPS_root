@@ -25,10 +25,10 @@ import {
   CEFR_LEVELS,
   DAILY_PRACTICE_STEPS,
   getDailyPlan,
-  getTodayKey,
 } from "@grammar/domain";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import { PlacementCheck } from "@/features/settings/placement-check";
+import { calculateStreak, dateKey } from "@/lib/streak";
 import {
   Sheet,
   SheetContent,
@@ -40,13 +40,6 @@ import {
 
 const dayNames = ["M", "D", "M", "D", "F", "S", "S"];
 const LAST_SEEN_VERIFIED_LEVEL_KEY = "deutsch-app:last-seen-verified-level";
-
-function dateKey(daysAgo: number) {
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
-  date.setDate(date.getDate() - daysAgo);
-  return getTodayKey(date);
-}
 
 function levelRank(level: string | null): number {
   return level ? CEFR_LEVELS.indexOf(level as (typeof CEFR_LEVELS)[number]) : -1;
@@ -153,14 +146,7 @@ export function Dashboard() {
       return `${x},${y}`;
     })
     .join(" ");
-  const streak = (() => {
-    let count = 0;
-    for (let index = 0; index < 60; index += 1) {
-      if ((state.activity[dateKey(index)] ?? 0) > 0) count += 1;
-      else break;
-    }
-    return count;
-  })();
+  const streak = calculateStreak(state.activity);
   const dueReviews = state.reviews.filter(
     (review) => !review.mastered && review.due <= Date.now(),
   ).length;

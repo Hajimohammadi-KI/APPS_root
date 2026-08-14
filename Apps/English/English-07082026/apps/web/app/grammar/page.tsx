@@ -15,8 +15,8 @@ export default function GrammarPage() {
 	return (
 		<div className="page-stack">
 			<div className="page-heading">
-				<Badge>Grammar Lab</Badge>
-				<h1>{grammarUnits.length} units, A1 to C2</h1>
+				<Badge>{grammarUnits.length} units, A1 to C2</Badge>
+				<h1>Grammar Lab</h1>
 				<p>Pick a unit to make it today's Automaticity Mission below.</p>
 			</div>
 			<Card>
@@ -29,7 +29,7 @@ export default function GrammarPage() {
 						transfer.
 					</CardDescription>
 				</CardHeader>
-				<CardContent className="space-y-5">
+				<CardContent className="space-y-5" data-testid="grammar-topic-list">
 					{CEFR_ORDER.map((level) => {
 						const units = grammarUnits.filter((unit) => unit.level === level);
 						if (units.length === 0) return null;

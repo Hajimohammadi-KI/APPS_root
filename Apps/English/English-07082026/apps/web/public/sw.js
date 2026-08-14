@@ -1,9 +1,19 @@
-const CACHE = "english-automaticity-v28-integrated-pages-1";
+const CACHE = "english-automaticity-v29-real-routes-1";
 const PRECACHE = [
   "/",
   "/daily",
   "/studio",
   "/grammar",
+  "/practice",
+  "/progress",
+  "/integrated-skills",
+  "/resources",
+  "/errors",
+  "/library",
+  "/notebook",
+  "/flashcards",
+  "/settings",
+  "/teacher",
   "/offline",
   "/manifest.webmanifest",
   "/icons/icon-192.png",

@@ -20,17 +20,11 @@ import * as React from "react";
 import { grammarUnits, type CefrLevel } from "@grammar/content";
 import { PlacementCheck } from "@/features/components/placement-check";
 import { CEFR_ORDER, currentDailyPlan, useAppStore } from "@/features/store/app-store";
+import { calculateStreak, dateKey } from "@/lib/streak";
 
 const VERIFIED_CELEBRATION_KEY = "grammar-automaticity:verified-celebrated";
 
 const dayNames = ["M", "T", "W", "T", "F", "S", "S"];
-
-function dateKey(daysAgo: number) {
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
-  date.setDate(date.getDate() - daysAgo);
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-}
 
 export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => void }) {
   const { state, hydrated, mutate } = useAppStore();
@@ -70,14 +64,7 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
     const y = value > 0 ? 82 - Math.min(68, value * 12) : 82;
     return `${x},${y}`;
   }).join(" ");
-  const streak = (() => {
-    let count = 0;
-    for (let index = 0; index < 60; index += 1) {
-      if ((state.activity[dateKey(index)] ?? 0) > 0) count += 1;
-      else break;
-    }
-    return count;
-  })();
+  const streak = calculateStreak(state.activity);
   const dueReviews = state.reviews.filter((review) => review.status === "pending" && review.dueAt <= Date.now()).length;
   const automatic = Object.values(state.mastery).filter((item) => item.status === "automatic").length;
   const speakingAverage = state.sessions.length

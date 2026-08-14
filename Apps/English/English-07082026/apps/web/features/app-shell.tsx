@@ -29,6 +29,7 @@ import { AppUpdateNotice } from "@/features/components/app-update-notice";
 import { ApiConnectionStatus } from "@/features/components/api-connection-status";
 import { InstallAppControl } from "@/features/components/install-app-control";
 import { NeuroReader } from "@/features/components/neuro-reader";
+import { ProfileProgressBadge } from "@/features/components/profile-progress-badge";
 import { useAppStore } from "@/features/store/app-store";
 import { UserGuideButton } from "@/features/user-guide";
 import { SCREEN_PATHS, useAppNavigate, type ScreenId } from "@/lib/app-navigate";
@@ -353,6 +354,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 						);
 					})}
 				</nav>
+				<ProfileProgressBadge />
 			</aside>
 			{menuOpen ? (
 				<button

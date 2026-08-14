@@ -197,6 +197,8 @@ html, body { margin: 0; min-height: 100%; }
 .delete-mark { min-height: 34px; border: 1px solid #efc7c7; background: #fff5f4; color: #a82d2d; border-radius: 8px; padding: 6px 9px; }
 .delete-mark:hover { background: #ffe3e0; }
 .note-card p { font: 13px/1.5 Georgia, serif; margin: 8px 0; }
+.note-card p.review-prompt { font: 600 13px/1.55 Inter, sans-serif; color: #493465; font-style: italic; }
+.project-section-tag { display: inline-block; margin-top: 6px; border: 1px solid #d8cbea; background: #f4effa; color: #493465; border-radius: 999px; padding: 3px 9px; font-size: 10px; font-weight: 700; }
 .note-card small { display: block; color: #5f6b7b; margin-top: 7px; }
 .note-card [dir="rtl"], .result-card [dir="rtl"] { direction: rtl; text-align: right; unicode-bidi: plaintext; overflow-wrap: anywhere; }
 .note-edit-form { display: grid; gap: 10px; margin-top: 10px; border-top: 1px solid #ebe5ef; padding-top: 10px; }

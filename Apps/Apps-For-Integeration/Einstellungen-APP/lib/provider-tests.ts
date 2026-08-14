@@ -3,7 +3,7 @@ export type DeepLConfig = { apiKey: string; tier: "free" | "pro" };
 
 type TestResult = {
   ok: boolean;
-  state: "connected" | "quota_exhausted" | "error";
+  state: "connected" | "quota_exhausted" | "invalid_key" | "unreachable" | "error";
   message: string;
   metadata?: Record<string, unknown>;
 };
@@ -22,12 +22,12 @@ export async function testOpenAI(config: OpenAIConfig): Promise<TestResult> {
     });
     const data = await safeJson(response);
     if (response.ok) return { ok: true, state: "connected", message: "OpenAI hat erfolgreich geantwortet.", metadata: { model: String(data.model || config.model) } };
-    if (response.status === 401) return { ok: false, state: "error", message: "Der OpenAI API-Schlüssel ist ungültig oder wurde widerrufen." };
+    if (response.status === 401) return { ok: false, state: "invalid_key", message: "Der OpenAI API-Schlüssel ist ungültig oder wurde widerrufen." };
     if (response.status === 429) return { ok: false, state: "quota_exhausted", message: "OpenAI meldet ein Limit- oder Guthabenproblem. Bitte API-Konto und Abrechnung prüfen." };
     if (response.status === 404 || response.status === 400) return { ok: false, state: "error", message: `Das Modell „${config.model}“ ist für diesen API-Schlüssel nicht verfügbar oder falsch geschrieben.` };
-    return { ok: false, state: "error", message: "OpenAI konnte die Testanfrage nicht verarbeiten. Bitte später erneut versuchen." };
+    return { ok: false, state: "unreachable", message: "OpenAI konnte die Testanfrage nicht verarbeiten. Bitte später erneut versuchen." };
   } catch {
-    return { ok: false, state: "error", message: "OpenAI konnte nicht erreicht werden. Bitte Internetverbindung prüfen und erneut testen." };
+    return { ok: false, state: "unreachable", message: "OpenAI konnte nicht erreicht werden. Bitte Internetverbindung prüfen und erneut testen." };
   }
 }
 
@@ -46,11 +46,11 @@ export async function testDeepL(config: DeepLConfig): Promise<TestResult> {
         characterLimit: Number(data.character_limit || data.api_key_character_limit || 0),
       },
     };
-    if (response.status === 401 || response.status === 403) return { ok: false, state: "error", message: "Der DeepL API-Schlüssel ist ungültig oder passt nicht zur gewählten Free/Pro-Version." };
+    if (response.status === 401 || response.status === 403) return { ok: false, state: "invalid_key", message: "Der DeepL API-Schlüssel ist ungültig oder passt nicht zur gewählten Free/Pro-Version." };
     if (response.status === 456) return { ok: false, state: "quota_exhausted", message: "Das DeepL-Kontingent ist aufgebraucht." };
-    if (response.status === 429) return { ok: false, state: "error", message: "DeepL hat zu viele Anfragen erhalten. Bitte kurz warten und erneut testen." };
-    return { ok: false, state: "error", message: "DeepL konnte die Testanfrage nicht verarbeiten." };
+    if (response.status === 429) return { ok: false, state: "unreachable", message: "DeepL hat zu viele Anfragen erhalten. Bitte kurz warten und erneut testen." };
+    return { ok: false, state: "unreachable", message: "DeepL konnte die Testanfrage nicht verarbeiten." };
   } catch {
-    return { ok: false, state: "error", message: "DeepL konnte nicht erreicht werden. Bitte später erneut testen." };
+    return { ok: false, state: "unreachable", message: "DeepL konnte nicht erreicht werden. Bitte später erneut testen." };
   }
 }

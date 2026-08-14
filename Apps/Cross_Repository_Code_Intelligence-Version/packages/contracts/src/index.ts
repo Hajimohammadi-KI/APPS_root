@@ -1,4 +1,4 @@
-export type ProviderState = "not_configured" | "untested" | "connected" | "expired" | "quota_exhausted" | "error";
+export type ProviderState = "not_configured" | "untested" | "connected" | "expired" | "quota_exhausted" | "invalid_key" | "unreachable" | "error";
 
 export type ProviderStatus = {
   configured: boolean;

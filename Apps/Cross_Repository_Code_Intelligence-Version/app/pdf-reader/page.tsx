@@ -27,6 +27,12 @@ import {
   writeDeviceSessions,
 } from "../../lib/device-session-store";
 import { DEVICE_ONLY_STORAGE } from "../../lib/storage-mode";
+import { planWeeks } from "../plan-data";
+
+// Real week titles from the study plan, not a generic free-text tag --
+// so a highlight can be linked to the actual project/Exposé section it
+// belongs to, the way the backlog item asked for.
+const PROJECT_SECTIONS = planWeeks.map((week) => `W${week.number} · ${week.title}`);
 
 type Tab = "ai" | "translate" | "notes";
 type Tone = PdfMarkVisual["tone"];
@@ -217,9 +223,12 @@ export default function Home() {
   const [translation, setTranslation] = useState("");
   const [translationError, setTranslationError] = useState("");
   const [note, setNote] = useState("");
+  const [reviewMode, setReviewMode] = useState(false);
+  const [revealedMarkIds, setRevealedMarkIds] = useState<Set<string>>(new Set());
   const [editingMarkId, setEditingMarkId] = useState<string | null>(null);
   const [editingComment, setEditingComment] = useState("");
   const [editingTranslation, setEditingTranslation] = useState("");
+  const [editingProjectSection, setEditingProjectSection] = useState("");
   const [busy, setBusy] = useState(false);
   const [driveBusy, setDriveBusy] = useState(false);
   const [tone, setTone] = useState<Tone>("yellow");
@@ -293,6 +302,12 @@ export default function Home() {
       setEmbed(params.get("embed") === "1");
       const savedWidth = Number(localStorage.getItem("pdf-studio-panel-width"));
       if (savedWidth) setPanelWidth(Math.min(760, Math.max(360, savedWidth)));
+      // Restore the panel's open/closed state from the last session, but never
+      // on a phone-width viewport -- the compact-viewport effect above forces
+      // it closed there on purpose so it doesn't cover the whole screen.
+      if (localStorage.getItem("pdf-studio-panel-open") === "1" && !window.matchMedia("(max-width: 720px)").matches) {
+        setPanelOpen(true);
+      }
       setGoogleClientId(localStorage.getItem("pdf-studio-google-client-id") || "");
       setTargetLanguage(localStorage.getItem("pdf-studio-target-language") || "DE");
       const savedZoom = Number(localStorage.getItem("pdf-studio-zoom"));
@@ -432,6 +447,11 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem("pdf-studio-panel-width", String(panelWidth));
   }, [panelWidth]);
+
+  useEffect(() => {
+    if (!storageReady) return;
+    localStorage.setItem("pdf-studio-panel-open", panelOpen ? "1" : "0");
+  }, [panelOpen, storageReady]);
 
   useEffect(() => {
     if (!storageReady) return;
@@ -788,21 +808,25 @@ export default function Home() {
     setEditingMarkId(mark.id);
     setEditingComment(mark.note ?? "");
     setEditingTranslation(mark.translation ?? "");
+    setEditingProjectSection(mark.projectSection ?? "");
   };
 
   const cancelEditingMark = () => {
     setEditingMarkId(null);
     setEditingComment("");
     setEditingTranslation("");
+    setEditingProjectSection("");
   };
 
   const saveEditedMark = (id: string) => {
     const nextComment = editingComment.trim();
     const nextTranslation = editingTranslation.trim();
+    const nextProjectSection = editingProjectSection.trim();
     setMarks((current) => current.map((mark) => mark.id === id ? {
       ...mark,
       note: nextComment || undefined,
       translation: nextTranslation || undefined,
+      projectSection: nextProjectSection || undefined,
     } : mark));
     cancelEditingMark();
     showToast("Kommentar aktualisiert");
@@ -1543,16 +1567,39 @@ export default function Home() {
               <textarea className="note-editor" value={note} onChange={(event) => setNote(event.target.value)} placeholder="Deine Notiz …" />
               <button className="primary" onClick={saveNote}>Notiz speichern</button>
               <div className="filters"><button className={toneFilter === "all" ? "picked" : ""} onClick={() => setToneFilter("all")}>Alle</button>{(Object.keys(toneLabels) as Tone[]).map((color) => <button className={`filter-dot ${color} ${toneFilter === color ? "selected" : ""}`} key={color} onClick={() => setToneFilter(color)} title={toneLabels[color]} />)}</div>
-              <div className="bulk-actions"><button onClick={deletePageMarks}>Seite {currentPage} leeren</button><button className="danger-link" onClick={deleteAllMarks}>Alle löschen</button></div>
-              <div className="note-list">{filteredMarks.length ? filteredMarks.map((item) => <article className={`note-card ${item.tone}`} key={item.id} onClick={() => { if (editingMarkId !== item.id) jumpToMark(item); }}>
-                <div><span className={`mini-dot ${item.tone}`} /><b>Seite {item.page}</b><span>{item.type === "highlight" ? "Highlight" : item.type === "underline" ? "Unterstrichen" : "Durchgestrichen"}</span><button className="edit-mark" title="Kommentar bearbeiten" aria-label="Kommentar bearbeiten" onClick={(event) => { event.stopPropagation(); startEditingMark(item); }}>Bearbeiten</button><button className="delete-mark" title="Markierung löschen" aria-label="Markierung löschen" onClick={(event) => { event.stopPropagation(); deleteMark(item.id); }}>Löschen</button></div>
-                <p dir={textDirection(item.text)}>{item.text}</p>
-                {editingMarkId === item.id ? <form className="note-edit-form" onClick={(event) => event.stopPropagation()} onSubmit={(event) => { event.preventDefault(); saveEditedMark(item.id); }}>
-                  <label>Kommentar<textarea value={editingComment} onChange={(event) => setEditingComment(event.target.value)} dir={textDirection(editingComment)} placeholder="Kommentar hinzufügen …" /></label>
-                  <label>Übersetzung<textarea value={editingTranslation} onChange={(event) => setEditingTranslation(event.target.value)} dir={textDirection(editingTranslation)} placeholder="Übersetzung ergänzen …" /></label>
-                  <div><button type="button" onClick={cancelEditingMark}>Abbrechen</button><button type="submit" className="primary">Änderungen speichern</button></div>
-                </form> : <>{item.translation && <small dir={textDirection(item.translation)}><b>Übersetzung:</b> {item.translation}</small>}{item.note && <small dir={textDirection(item.note)}><b>Kommentar:</b> {item.note}</small>}</>}
-              </article>) : <div className="empty-notes">Keine passenden Markierungen gefunden.</div>}</div>
+              <div className="bulk-actions">
+                <button
+                  className={reviewMode ? "primary" : ""}
+                  onClick={() => { setReviewMode((value) => !value); setRevealedMarkIds(new Set()); }}
+                  title="Erst selbst erinnern, dann die Quelle zeigen"
+                >
+                  {reviewMode ? "✓ Testmodus" : "Testmodus"}
+                </button>
+                <button onClick={deletePageMarks}>Seite {currentPage} leeren</button>
+                <button className="danger-link" onClick={deleteAllMarks}>Alle löschen</button>
+              </div>
+              <div className="note-list">{filteredMarks.length ? filteredMarks.map((item) => {
+                const revealed = !reviewMode || revealedMarkIds.has(item.id);
+                return <article className={`note-card ${item.tone}`} key={item.id} onClick={() => { if (editingMarkId !== item.id && revealed) jumpToMark(item); }}>
+                <div><span className={`mini-dot ${item.tone}`} /><b>Seite {item.page}</b><span>{item.type === "highlight" ? "Highlight" : item.type === "underline" ? "Unterstrichen" : "Durchgestrichen"}</span>{revealed && <button className="edit-mark" title="Kommentar bearbeiten" aria-label="Kommentar bearbeiten" onClick={(event) => { event.stopPropagation(); startEditingMark(item); }}>Bearbeiten</button>}<button className="delete-mark" title="Markierung löschen" aria-label="Markierung löschen" onClick={(event) => { event.stopPropagation(); deleteMark(item.id); }}>Löschen</button></div>
+                {item.projectSection && <span className="project-section-tag">▱ {item.projectSection}</span>}
+                {!revealed ? <>
+                  <p className="review-prompt">{item.note ? <span dir={textDirection(item.note)}>{item.note}</span> : "Was stand an dieser Stelle? Versuch dich zu erinnern, bevor du die Quelle zeigst."}</p>
+                  <button type="button" className="secondary" onClick={(event) => { event.stopPropagation(); setRevealedMarkIds((current) => new Set(current).add(item.id)); }}>Quelle zeigen</button>
+                </> : <>
+                  <p dir={textDirection(item.text)}>{item.text}</p>
+                  {editingMarkId === item.id ? <form className="note-edit-form" onClick={(event) => event.stopPropagation()} onSubmit={(event) => { event.preventDefault(); saveEditedMark(item.id); }}>
+                    <label>Kommentar<textarea value={editingComment} onChange={(event) => setEditingComment(event.target.value)} dir={textDirection(editingComment)} placeholder="Kommentar hinzufügen …" /></label>
+                    <label>Übersetzung<textarea value={editingTranslation} onChange={(event) => setEditingTranslation(event.target.value)} dir={textDirection(editingTranslation)} placeholder="Übersetzung ergänzen …" /></label>
+                    <label>Projekt-Abschnitt<select value={editingProjectSection} onChange={(event) => setEditingProjectSection(event.target.value)}>
+                      <option value="">— Keinem Abschnitt zugeordnet —</option>
+                      {PROJECT_SECTIONS.map((section) => <option key={section} value={section}>{section}</option>)}
+                    </select></label>
+                    <div><button type="button" onClick={cancelEditingMark}>Abbrechen</button><button type="submit" className="primary">Änderungen speichern</button></div>
+                  </form> : <>{item.translation && <small dir={textDirection(item.translation)}><b>Übersetzung:</b> {item.translation}</small>}{item.note && <small dir={textDirection(item.note)}><b>Kommentar:</b> {item.note}</small>}</>}
+                </>}
+              </article>;
+              }) : <div className="empty-notes">Keine passenden Markierungen gefunden.</div>}</div>
             </div>}
           </aside>
         </>}

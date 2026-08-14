@@ -34,6 +34,8 @@ export default function SettingsHub({ settings, onChange, onToast, saveState, co
   const [open, setOpen] = useState<Section | null>(null);
   const [group, setGroup] = useState<WorkGroup>("all");
   const [editingNames, setEditingNames] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const isFirstRun = !settings.profile.displayName;
   const update = (next: Partial<WerkzeugSettings>) => onChange(normalizeWerkzeugSettings({ ...settings, ...next }));
   const visible = (name: Exclude<WorkGroup, "all">) => group === "all" || group === name;
   const scopes = useMemo(() => [
@@ -143,6 +145,11 @@ export default function SettingsHub({ settings, onChange, onToast, saveState, co
       <div><span>3</span><b>In Apps verwenden</b><small>{settings.labels.appName} als Settings-Modul aufrufen</small></div>
     </div>
 
+    {isFirstRun && <div className="quick-start-banner">
+      <div><b>Schnellstart in drei Schritten</b><p>Name und Sprache festlegen, dann bei Bedarf Google, KI oder Übersetzung verbinden. Alles andere ist optional.</p></div>
+      <button type="button" className="primary action" onClick={() => setOpen("profile")}>Jetzt einrichten</button>
+    </div>}
+
     <div className="settings-category-bar" aria-label="Einstellungen nach Arbeitsart filtern">
       <button className={group === "all" ? "active" : ""} onClick={() => setGroup("all")}>Alle</button>
       {(Object.entries(settings.labels.groups) as Array<[Exclude<WorkGroup, "all">, string]>).map(([id, label]) => <button className={group === id ? "active" : ""} key={id} onClick={() => setGroup(id)}>{label}</button>)}
@@ -207,6 +214,13 @@ export default function SettingsHub({ settings, onChange, onToast, saveState, co
         <div className="translation-preference"><label><span>Standard-Zielsprache</span><select value={settings.ai.targetLanguage} onChange={(event) => update({ ai: { ...settings.ai, targetLanguage: event.target.value as WerkzeugSettings["ai"]["targetLanguage"] } })}><option value="fa">Persisch</option><option value="de">Deutsch</option><option value="en">Englisch</option></select></label><p>Google Translation übersetzt die Auswahl direkt im PDF Reader. LanguageTool bleibt für Rechtschreibung und Grammatik zuständig.</p></div>
       </>)}
 
+      <div className="advanced-settings-toggle">
+        <button type="button" className="action secondary" onClick={() => setShowAdvanced((value) => !value)} aria-expanded={showAdvanced}>
+          {showAdvanced ? "⌃ Erweiterte Einstellungen ausblenden" : "⌄ Erweiterte Einstellungen anzeigen (Entwickler & Integrationen)"}
+        </button>
+      </div>
+
+      {showAdvanced && <>
       {visible("organization") && accordion("organization", "▱", settings.labels.sections.organization, "Mehrere GitHub-, Google-Drive- und lokale Projektquellen gemeinsam verwalten", <>
         <div className="form-grid organization-basics">
           <label><span>Standard-Projektordner</span><input value={settings.organization.defaultProjectFolder} onChange={(event) => update({ organization: { ...settings.organization, defaultProjectFolder: event.target.value } })}/></label>
@@ -256,6 +270,7 @@ export default function SettingsHub({ settings, onChange, onToast, saveState, co
         <div className="sharing-grid integration-code-grid"><div className="sharing-help"><b>Sicherheitsregel</b><p>Nur exakt eingetragene und aktive App-Adressen erhalten Einstellungen. Schlüssel, Tokens und Passwörter werden nie übertragen.</p></div><div className="code-card editable-code-card"><div className="code-editor-head"><b>Einstellungen-Modul einbetten</b><span>✎ Direkt editierbar</span></div><label className="code-line"><code>&lt;script src=&quot;</code><input aria-label="JavaScript-SDK-Adresse bearbeiten" value={settings.integration.links.sdkUrl} onChange={(event) => update({ integration: { ...settings.integration, links: { ...settings.integration.links, sdkUrl: event.target.value } } })}/><code>&quot;&gt;&lt;/script&gt;</code></label><pre>{`<div id="einstellungen"></div>\n<script>\n  Einstellungen.mount({\n    container: "#einstellungen"\n  });\n</script>`}</pre></div></div>
         <div className="endpoint-row"><span><b>Direkter Embed-Link</b><input aria-label="Direkten Embed-Link bearbeiten" value={settings.integration.links.embedUrl} onChange={(event) => update({ integration: { ...settings.integration, links: { ...settings.integration.links, embedUrl: event.target.value } } })}/></span><button onClick={() => navigator.clipboard?.writeText(settings.integration.links.embedUrl).then(() => onToast("Embed-Link kopiert"))}>Kopieren</button></div>
       </>)}
+      </>}
 
       {visible("data") && accordion("backup", "⇩", settings.labels.sections.backup, "Einstellungen exportieren, wieder einlesen oder zurücksetzen", <div className="backup-actions">
         <button className="primary action" onClick={exportSettings}>Einstellungen exportieren</button>

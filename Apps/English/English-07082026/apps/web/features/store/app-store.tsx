@@ -1537,3 +1537,29 @@ export function useAppStore() {
 export function currentDailyPlan(state: AppState): DailyPlan {
 	return state.dailyPlans[todayKey()] ?? { completed: [], answers: {} };
 }
+
+export function lessonKey(grammarTitle: string): string {
+	if (grammarTitle.toLocaleLowerCase("en") === "present perfect") {
+		return "automaticity:present-perfect";
+	}
+	return `automaticity:${grammarTitle
+		.toLocaleLowerCase("en")
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-|-$/g, "")}`;
+}
+
+// The single source of truth for "is today's mission done". Both the Home
+// dashboard and Daily Practice must derive this from the same three answer
+// keys -- DailyPlan.completed is never actually written to anywhere, so
+// anything reading it (Home's progress ring used to) always saw 0% even
+// after every activity in Daily Practice was finished.
+export function dailyPlanCompletion(
+	plan: DailyPlan,
+	key: string,
+): readonly [boolean, boolean, boolean] {
+	return [
+		plan.answers[`${key}:practice`] === "done",
+		plan.answers[`${key}:writing`] === "done",
+		plan.answers[`${key}:speaking`] === "done",
+	];
+}

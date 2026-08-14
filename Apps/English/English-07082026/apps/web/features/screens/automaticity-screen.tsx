@@ -24,7 +24,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { useAppStore, recalculateMastery } from "@/features/store/app-store";
+import {
+  useAppStore,
+  recalculateMastery,
+  lessonKey,
+  dailyPlanCompletion,
+} from "@/features/store/app-store";
 import {
   analyzePresentPerfect,
   evaluatePracticeAnswer,
@@ -75,15 +80,6 @@ const presentPerfectExercises = [
   },
 ] as const;
 
-function lessonKey(grammar: GrammarUnit) {
-  if (grammar.title.toLocaleLowerCase("en") === "present perfect") {
-    return "automaticity:present-perfect";
-  }
-  return `automaticity:${grammar.title
-    .toLocaleLowerCase("en")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")}`;
-}
 
 // The full pool a topic can draw rounds from -- curriculum.ts guarantees at
 // least MINIMUM_CONTROLLED_EXERCISES (10) well-formed exercises per unit.
@@ -278,7 +274,7 @@ export function AutomaticityScreen({
     grammarUnits.find((unit) => unit.level === selectedLevel) ??
     defaultGrammar;
   const topic = grammar.title;
-  const key = lessonKey(grammar);
+  const key = lessonKey(grammar.title);
   const exercises = lessonExercises(grammar);
   const modelText = lessonModel(grammar);
   const plan = state.dailyPlans[todayKey()] ?? { completed: [], answers: {} };
@@ -340,7 +336,9 @@ export function AutomaticityScreen({
   );
   const situation = transferSituation(grammar, priorTransferAttempts);
   const [activeStep, setActiveStep] = React.useState<number>(
-    focusedStep ?? [0, 1, 2].find((step) => !plan.completed.includes(step)) ?? 0,
+    focusedStep ??
+      [0, 1, 2].find((step) => !dailyPlanCompletion(plan, key)[step]) ??
+      0,
   );
   const [recording, setRecording] = React.useState(false);
   const [seconds, setSeconds] = React.useState(0);
@@ -395,11 +393,7 @@ export function AutomaticityScreen({
     [],
   );
 
-  const completion = [
-    plan.answers[`${key}:practice`] === "done",
-    plan.answers[`${key}:writing`] === "done",
-    plan.answers[`${key}:speaking`] === "done",
-  ];
+  const completion = dailyPlanCompletion(plan, key);
   const progress =
     completion.filter(Boolean).length * 33 +
     (completion.every(Boolean) ? 1 : 0);

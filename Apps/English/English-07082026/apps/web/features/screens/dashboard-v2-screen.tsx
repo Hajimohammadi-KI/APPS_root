@@ -19,7 +19,13 @@ import {
 import * as React from "react";
 import { grammarUnits, type CefrLevel } from "@grammar/content";
 import { PlacementCheck } from "@/features/components/placement-check";
-import { CEFR_ORDER, currentDailyPlan, useAppStore } from "@/features/store/app-store";
+import {
+  CEFR_ORDER,
+  currentDailyPlan,
+  dailyPlanCompletion,
+  lessonKey,
+  useAppStore,
+} from "@/features/store/app-store";
 import { calculateStreak, dateKey } from "@/lib/streak";
 
 const VERIFIED_CELEBRATION_KEY = "grammar-automaticity:verified-celebrated";
@@ -74,7 +80,12 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
     const practiced = levelUnits.filter((unit) => state.mastery[unit.title]?.status !== "new").length;
     const finished = levelUnits.filter((unit) => ["stable", "automatic"].includes(state.mastery[unit.title]?.status ?? "new")).length;
     const progress = levelUnits.length ? Math.round((finished / levelUnits.length) * 100) : 0;
-    const todayProgress = Math.round((new Set(plan.completed).size / 3) * 100);
+    const todaySteps = state.todayGrammar
+      ? dailyPlanCompletion(plan, lessonKey(state.todayGrammar.title))
+      : ([false, false, false] as const);
+    const todayProgress = Math.round(
+      (todaySteps.filter(Boolean).length / 3) * 100,
+    );
     const week = Array.from({ length: 7 }, (_, index) => state.activity[dateKey(6 - index)] ?? 0);
     const chartPoints = week.map((value, index) => {
       const x = 8 + index * 15.3;
@@ -88,7 +99,15 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
       ? Math.min(100, Math.round(state.sessions.reduce((total, session) => total + Math.min(100, session.seconds), 0) / state.sessions.length))
       : 0;
     return { levelUnits, practiced, finished, progress, todayProgress, week, chartPoints, streak, dueReviews, automatic, speakingAverage };
-  }, [level, state.mastery, plan.completed, state.activity, state.reviews, state.sessions]);
+  }, [
+    level,
+    state.mastery,
+    state.todayGrammar,
+    plan.answers,
+    state.activity,
+    state.reviews,
+    state.sessions,
+  ]);
   const handlePlacementAccept = (nextLevel: CefrLevel) => {
     mutate((draft) => {
       draft.learner.selfDeclaredLevel = nextLevel;

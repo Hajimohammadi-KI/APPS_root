@@ -40,6 +40,33 @@ function lessonKey(title: string) {
   return `automatik:${title.toLocaleLowerCase("de-DE").replace(/[^a-z0-9äöüß]+/g, "-")}`;
 }
 
+// German's mastery model (packages/domain/src/mastery.ts) defines a
+// "transfer" MasteryMode and requires scores.transfer >= 75 to ever reach
+// "automatic" status -- but nothing in this Mission ever recorded a
+// transfer-mode attempt, so that score stayed permanently at 0 and
+// "automatic" was structurally unreachable regardless of how well a learner
+// did elsewhere. This mirrors the fix already applied to the English app's
+// equivalent Mission flow. Four fixed situations rotate by how many prior
+// transfer attempts this topic already has, so repeated practice of the
+// same grammar point keeps landing on a different framing instead of
+// reproducing a memorized answer to the same prompt every time.
+const TRANSFER_SITUATIONS = [
+  "Eine Freundin, die nicht dabei war, fragt, was passiert ist. Erkläre es ihr, ohne den Hintergrund vorauszusetzen.",
+  "Du schreibst einer neuen Kollegin zum ersten Mal darüber. Gib ihr die Kurzfassung.",
+  "Jemand, den du gerade erst kennengelernt hast, fragt im Gespräch danach. Antworte natürlich, so wie du es laut sagen würdest.",
+  "Schreibe eine kurze Notiz für jemanden, der dich vertritt und die wichtigsten Fakten schnell braucht.",
+] as const;
+
+function transferSituation(title: string, priorTransferAttempts: number) {
+  let hash = 0;
+  for (let index = 0; index < title.length; index += 1) {
+    hash = (hash * 31 + title.charCodeAt(index)) >>> 0;
+  }
+  const startOffset = hash % TRANSFER_SITUATIONS.length;
+  const index = (startOffset + priorTransferAttempts) % TRANSFER_SITUATIONS.length;
+  return TRANSFER_SITUATIONS[index];
+}
+
 const shadowingStages = [
   "Nur zuhören",
   "Zuhören und Text mitlesen",
@@ -168,14 +195,20 @@ export function AutomaticityLab({
     grammarUnits[0]!;
   const TOPIC = grammar.title;
   const KEY = lessonKey(TOPIC);
-  const exercises = grammar.exercises.slice(0, 3).map((exercise) => ({
+  // exercise-completion.ts guarantees at least MINIMUM_CONTROLLED_EXERCISES
+  // (6) well-formed exercises per unit; use all of them rather than an
+  // arbitrary first-3 subset -- more controlled repetition before free
+  // production.
+  const exercises = grammar.exercises.slice(0, 6).map((exercise) => ({
     prompt: exercise[0] ?? "Bearbeite die Aufgabe.",
     expected: exercise[1] ?? grammar.testAnswer,
   }));
   const modelText = grammar.examples.join(" ");
   const today = new Date().toISOString().slice(0, 10);
   const plan = state.dailyPlans[today] ?? { completed: [], answers: {} };
-  const [answers, setAnswers] = useState(["", "", ""]);
+  const [answers, setAnswers] = useState<string[]>(() =>
+    exercises.map(() => ""),
+  );
   const [checkedAnswers, setCheckedAnswers] = useState<readonly boolean[]>([]);
   const [journal, setJournal] = useState("");
   const [transcript, setTranscript] = useState("");
@@ -183,6 +216,14 @@ export function AutomaticityLab({
     useState<AutomatikAnalysis | null>(null);
   const [speechAnalysis, setSpeechAnalysis] =
     useState<AutomatikAnalysis | null>(null);
+  const [transferAttempt, setTransferAttempt] = useState("");
+  const [transferAnalysis, setTransferAnalysis] =
+    useState<AutomatikAnalysis | null>(null);
+  const [transferChecking, setTransferChecking] = useState(false);
+  const priorTransferAttempts = state.attempts.filter(
+    (attempt) => attempt.topic === TOPIC && attempt.mode === "transfer",
+  ).length;
+  const situation = transferSituation(TOPIC, priorTransferAttempts);
   const [recording, setRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [message, setMessage] = useState(
@@ -305,6 +346,7 @@ export function AutomaticityLab({
         result.targetHit &&
         sentenceCount >= minimumSentences,
       issues,
+      online: result.online,
     };
   }
 
@@ -322,7 +364,12 @@ export function AutomaticityLab({
       inputText: answers.join("\n"),
       correctedText: exercises.map((item) => item.expected).join("\n"),
       targetHit: results.every(Boolean),
-      verified: false,
+      // practiceAnswerMatches is a deterministic exact-match check against a
+      // known-correct answer -- not self-rated, not a network call, not
+      // fabricated. That's a legitimate verification basis in its own
+      // right, distinct from (and not requiring) the online provider used
+      // for writing/speaking.
+      verified: results.every(Boolean),
       accuracyScore: score,
     });
     if (results.every(Boolean)) {
@@ -368,7 +415,7 @@ export function AutomaticityLab({
       inputText: journal,
       correctedText: journal,
       targetHit: analysis.targetHit,
-      verified: false,
+      verified: analysis.online && analysis.targetHit,
       accuracyScore: analysis.score,
     });
     saveDetectedErrors(analysis, journal);
@@ -379,6 +426,28 @@ export function AutomaticityLab({
         ? "Tagebuch gespeichert. Du hast die Zielstruktur selbst produziert."
         : `Entwurf gespeichert. Nutze die Hinweise und verwende „${TOPIC}“ in vollständigen eigenen Sätzen.`,
     );
+  }
+
+  async function saveTransfer() {
+    setTransferChecking(true);
+    try {
+      const analysis = await analyzeLessonOutput(transferAttempt, 2);
+      setTransferAnalysis(analysis);
+      recordAttempt({
+        topic: TOPIC,
+        mode: "transfer",
+        inputText: transferAttempt,
+        correctedText: transferAttempt,
+        targetHit: analysis.targetHit,
+        verified: analysis.online && analysis.targetHit,
+        accuracyScore: analysis.score,
+      });
+      saveDetectedErrors(analysis, transferAttempt);
+      if (analysis.targetHit) setDailyAnswer(`${KEY}:transfer`, "done");
+      markActivity(1);
+    } finally {
+      setTransferChecking(false);
+    }
   }
 
   async function startRecording() {
@@ -515,9 +584,17 @@ export function AutomaticityLab({
       inputText: transcript,
       correctedText: transcript,
       targetHit: speakingReady,
-      verified: false,
+      // evidenceBlock above already required real audio, full shadowing,
+      // and minimum duration before this point is ever reached -- the only
+      // remaining condition for mastery credit is that the transcript was
+      // actually checked online and passed.
+      verified: analysis.online && speakingReady,
       accuracyScore: analysis.score,
       fluencyScore,
+      // Feeds calculateMasteryStatus's median-latency gate
+      // (AUTOMATICITY_LATENCY_THRESHOLD_MS) -- previously never passed here,
+      // so that gate could never be satisfied by Mission speaking attempts.
+      latencyMs: seconds * 1_000,
     });
     saveDetectedErrors(analysis, transcript);
 
@@ -729,13 +806,14 @@ export function AutomaticityLab({
                 <span className="text-sm font-bold">{item.prompt}</span>
                 <input
                   className="min-h-11 w-full rounded-xl border bg-background px-3"
-                  onChange={(event) =>
-                    setAnswers((rows) =>
-                      rows.map((row, rowIndex) =>
-                        rowIndex === index ? event.target.value : row,
-                      ),
-                    )
-                  }
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    setAnswers((rows) => {
+                      const next = [...rows];
+                      next[index] = value;
+                      return next;
+                    });
+                  }}
                   value={answers[index]}
                 />
                 {checkedAnswers.length ? (
@@ -866,6 +944,28 @@ export function AutomaticityLab({
               Sprechen analysieren und speichern
             </Button>
             {speechAnalysis ? <Feedback analysis={speechAnalysis} /> : null}
+
+            <div className="mt-2 space-y-3 rounded-2xl border border-violet-200 bg-violet-50/60 p-4">
+              <div>
+                <p className="text-sm font-bold text-violet-950">
+                  Übertragung: eine neue Situation
+                </p>
+                <p className="text-sm text-muted-foreground">{situation}</p>
+              </div>
+              <Textarea
+                aria-label="Übertragungsantwort"
+                onChange={(event) => setTransferAttempt(event.target.value)}
+                placeholder="Reagiere auf die Situation oben und verwende dabei die heutige Struktur."
+                value={transferAttempt}
+              />
+              <Button
+                disabled={!transferAttempt.trim() || transferChecking}
+                onClick={() => void saveTransfer()}
+              >
+                {transferChecking ? "Wird geprüft …" : "Übertragung prüfen"}
+              </Button>
+              {transferAnalysis ? <Feedback analysis={transferAnalysis} /> : null}
+            </div>
           </CardContent>
         </Card>
       ) : null}
@@ -886,7 +986,9 @@ export function AutomaticityLab({
                 value={
                   checkedAnswers.length
                     ? Math.round(
-                        (checkedAnswers.filter(Boolean).length / 3) * 100,
+                        (checkedAnswers.filter(Boolean).length /
+                          checkedAnswers.length) *
+                          100,
                       )
                     : (verifiedMastery?.scores.recognition ?? 0)
                 }

@@ -25,6 +25,10 @@ export interface AutomaticityAnalysis {
 	// attempt must never count toward mastery just because the task was
 	// completed or the learner marked it done.
 	masteryEligible: boolean;
+	// Mirrors Evaluation.online -- surfaced separately from masteryEligible
+	// so callers can record *why* an attempt wasn't verified (no provider
+	// reachable vs. provider reachable but the response failed).
+	online: boolean;
 }
 
 const IRREGULAR_PARTICIPLES = [
@@ -163,6 +167,7 @@ export function analyzePresentPerfect(text: string): AutomaticityAnalysis {
 		// call -- unlike recognition mode's exact-match, it can misfire, so it
 		// does not count as a verified assessment.
 		masteryEligible: false,
+		online: false,
 	};
 }
 

@@ -46,6 +46,17 @@ function requireDefaultGrammar() {
 }
 
 const defaultGrammar = requireDefaultGrammar();
+// Tracks packages/content's own version so recorded evidence stays
+// traceable to the exact rules/exercises that produced it if content
+// changes later. Not a real Task/Rubric version (packages/evidence-domain
+// defines that concept but nothing in this runtime calls it yet) -- this is
+// what's honestly available today.
+const EVIDENCE_CONTENT_VERSION = "27.2.0";
+// A speaking attempt needs at least this much actual decoded speech (not
+// silence/pauses) before its language-correctness check is allowed to count
+// as verified speaking evidence -- otherwise a two-second "yes" with a long
+// typed transcript could satisfy the same bar as genuine spontaneous speech.
+const MIN_ACTIVE_SPEECH_SECONDS_FOR_VERIFIED = 20;
 const presentPerfectModel =
   "I have worked on an important project this week. I have already solved two difficult problems. My supervisor has given me useful feedback. I have never felt so prepared to explain my work.";
 
@@ -78,7 +89,12 @@ function lessonExercises(grammar: GrammarUnit) {
   if (grammar.title.toLocaleLowerCase("en") === "present perfect") {
     return presentPerfectExercises;
   }
-  return grammar.exercises.slice(0, 3).map(([prompt, expected]) => ({
+  // curriculum.ts guarantees at least MINIMUM_CONTROLLED_EXERCISES (6)
+  // well-formed exercises per unit; use all of them rather than an
+  // arbitrary first-3 subset -- more controlled repetition before moving to
+  // free production, per the same skill-acquisition logic that motivates
+  // controlled practice existing as a distinct first step at all.
+  return grammar.exercises.slice(0, 6).map(([prompt, expected]) => ({
     prompt,
     expected,
   }));
@@ -100,12 +116,22 @@ const TRANSFER_SITUATIONS = [
   "Write a brief note explaining this to someone covering for you, who needs the key facts quickly.",
 ] as const;
 
-function transferSituation(grammar: GrammarUnit) {
+function transferSituation(grammar: GrammarUnit, priorTransferAttempts: number) {
+  // A fixed hash-of-title selection means every Transfer attempt for a given
+  // topic gets the exact same prompt forever -- after the first encounter
+  // that's no longer transfer to a new situation, it's reproducing a
+  // memorized answer. Rotate through all situations before repeating any,
+  // keyed off how many transfer attempts this topic already has, so
+  // repeated practice of the same grammar point keeps landing on a
+  // genuinely different framing each time (contract §8.3's "sufficiently
+  // new situation").
   let hash = 0;
   for (let index = 0; index < grammar.title.length; index += 1) {
     hash = (hash * 31 + grammar.title.charCodeAt(index)) >>> 0;
   }
-  return TRANSFER_SITUATIONS[hash % TRANSFER_SITUATIONS.length];
+  const startOffset = hash % TRANSFER_SITUATIONS.length;
+  const index = (startOffset + priorTransferAttempts) % TRANSFER_SITUATIONS.length;
+  return TRANSFER_SITUATIONS[index];
 }
 
 function lessonModel(grammar: GrammarUnit) {
@@ -239,7 +265,9 @@ export function AutomaticityScreen({
   const exercises = lessonExercises(grammar);
   const modelText = lessonModel(grammar);
   const plan = state.dailyPlans[todayKey()] ?? { completed: [], answers: {} };
-  const [answers, setAnswers] = React.useState(["", "", ""]);
+  const [answers, setAnswers] = React.useState<string[]>(() =>
+    exercises.map(() => ""),
+  );
   const [checkedAnswers, setCheckedAnswers] = React.useState<boolean[]>([]);
   const [journal, setJournal] = React.useState("");
   const [transcript, setTranscript] = React.useState("");
@@ -251,7 +279,10 @@ export function AutomaticityScreen({
   const [transferAnalysis, setTransferAnalysis] =
     React.useState<AutomaticityAnalysis | null>(null);
   const [transferChecking, setTransferChecking] = React.useState(false);
-  const situation = transferSituation(grammar);
+  const priorTransferAttempts = state.attempts.filter(
+    (attempt) => attempt.grammarTitle === topic && attempt.mode === "transfer",
+  ).length;
+  const situation = transferSituation(grammar, priorTransferAttempts);
   const [activeStep, setActiveStep] = React.useState<number>(
     focusedStep ?? [0, 1, 2].find((step) => !plan.completed.includes(step)) ?? 0,
   );
@@ -351,6 +382,8 @@ export function AutomaticityScreen({
       // for writing/speaking, so it can set verified on the same footing:
       // true only when the check itself passed.
       verified: results.every(Boolean),
+      assessedBy: "offline",
+      contentVersion: EVIDENCE_CONTENT_VERSION,
     });
     if (results.every(Boolean)) {
       writePlan(`${key}:practice`, "done");
@@ -486,6 +519,7 @@ export function AutomaticityScreen({
       targetHit: evaluation.pass,
       issues,
       masteryEligible: evaluation.masteryEligible,
+      online: evaluation.online,
     };
   }
 
@@ -504,6 +538,8 @@ export function AutomaticityScreen({
       latencyMs: null,
       passed: analysis.targetHit,
       verified: analysis.masteryEligible,
+      assessedBy: analysis.online ? "online" : "offline",
+      contentVersion: EVIDENCE_CONTENT_VERSION,
     });
     addIssuesToErrorWorkshop(analysis, journal);
     if (analysis.targetHit) writePlan(`${key}:writing`, "done");
@@ -537,6 +573,8 @@ export function AutomaticityScreen({
         latencyMs: null,
         passed: analysis.targetHit,
         verified: analysis.masteryEligible,
+        assessedBy: analysis.online ? "online" : "offline",
+        contentVersion: EVIDENCE_CONTENT_VERSION,
       });
       addIssuesToErrorWorkshop(analysis, transferAttempt);
       if (analysis.targetHit) writePlan(`${key}:transfer`, "done");
@@ -653,22 +691,37 @@ export function AutomaticityScreen({
     const fluencyScore = audioFluency
       ? scoreFromActiveSpeech(analysis.wordCount, audioFluency.activeSpeechSeconds)
       : 0;
+    // A transcript can be typed, edited, or produced with no microphone
+    // ever used -- evaluateResponse only ever sees text, so masteryEligible
+    // alone proves the *language* was correct, never that it was actually
+    // spoken. Speaking mastery specifically must additionally require real
+    // decoded audio with a non-trivial amount of actual speech in it, not
+    // just that the (possibly audio-free) transcript passed a text check.
+    const hasValidAudioEvidence =
+      Boolean(audioFluency) &&
+      audioFluency!.activeSpeechSeconds >= MIN_ACTIVE_SPEECH_SECONDS_FOR_VERIFIED;
     recordAttempt({
       grammarTitle: topic,
       mode: "speaking",
       inputText: transcript,
       correctedText: transcript,
-      targetHit: analysis.targetHit && seconds >= 45,
+      targetHit: analysis.targetHit && seconds >= 45 && hasValidAudioEvidence,
       accuracyScore: analysis.score,
       fluencyScore,
       latencyMs: null,
-      passed: analysis.targetHit && seconds >= 45,
-      verified: analysis.masteryEligible,
+      passed: analysis.targetHit && seconds >= 45 && hasValidAudioEvidence,
+      verified: analysis.masteryEligible && hasValidAudioEvidence,
       audioId,
       rawTranscript: rawTranscriptRef.current || transcript,
+      assessedBy: analysis.online ? "online" : "offline",
+      contentVersion: EVIDENCE_CONTENT_VERSION,
     });
     addIssuesToErrorWorkshop(analysis, transcript);
-    if (analysis.targetHit && (seconds >= 45 || !audioRef.current)) {
+    // Completing the step still only needs a real, sufficiently long
+    // recording (not the stricter language-mastery bar above) -- but it may
+    // never be satisfied by typing with no microphone use at all, which the
+    // previous `|| !audioRef.current` bypass allowed.
+    if (analysis.targetHit && seconds >= 45 && Boolean(audioRef.current)) {
       writePlan(`${key}:speaking`, "done");
     }
     if (willSaveAudio && audioRef.current && audioId) {
@@ -854,13 +907,14 @@ export function AutomaticityScreen({
               <span className="text-sm font-bold">{item.prompt}</span>
               <input
                 className="min-h-11 w-full rounded-xl border bg-background px-3"
-                onChange={(event) =>
-                  setAnswers((rows) =>
-                    rows.map((row, rowIndex) =>
-                      rowIndex === index ? event.target.value : row,
-                    ),
-                  )
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setAnswers((rows) => {
+                    const next = [...rows];
+                    next[index] = value;
+                    return next;
+                  });
+                }}
                 value={answers[index]}
               />
               {checkedAnswers.length ? (
@@ -1008,7 +1062,9 @@ export function AutomaticityScreen({
               value={
                 checkedAnswers.length
                   ? Math.round(
-                      (checkedAnswers.filter(Boolean).length / 3) * 100,
+                      (checkedAnswers.filter(Boolean).length /
+                        checkedAnswers.length) *
+                        100,
                     )
                   : (verifiedMastery?.recognitionScore ?? 0)
               }

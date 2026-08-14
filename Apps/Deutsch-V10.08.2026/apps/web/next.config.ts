@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
-        { source: "/heute", destination: "/replacements/de/heute.html" },
         {
           source: "/grammatik",
           destination: "/replacements/de/grammatik.html",

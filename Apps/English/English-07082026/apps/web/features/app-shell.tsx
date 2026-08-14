@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import dynamic from "next/dynamic";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
 	BookOpenText,
 	BrainCircuit,
@@ -27,55 +28,9 @@ import { AppUpdateNotice } from "@/features/components/app-update-notice";
 import { ApiConnectionStatus } from "@/features/components/api-connection-status";
 import { InstallAppControl } from "@/features/components/install-app-control";
 import { NeuroReader } from "@/features/components/neuro-reader";
-import { DashboardV2Screen } from "@/features/screens/dashboard-v2-screen";
 import { useAppStore } from "@/features/store/app-store";
 import { UserGuideButton } from "@/features/user-guide";
-
-const AutomaticityScreen = dynamic(() =>
-	import("@/features/screens/automaticity-screen").then(
-		(module) => module.AutomaticityScreen,
-	),
-);
-const ResourcesScreen = dynamic(() =>
-	import("@/features/screens/resources-screen").then(
-		(module) => module.ResourcesScreen,
-	),
-);
-const IntegratedSkillsScreen = dynamic(() =>
-	import("@/features/screens/integrated-skills-screen").then(
-		(module) => module.IntegratedSkillsScreen,
-	),
-);
-const ErrorsScreen = dynamic(() =>
-	import("@/features/screens/errors-screen").then(
-		(module) => module.ErrorsScreen,
-	),
-);
-const AudioScreen = dynamic(() =>
-	import("@/features/screens/audio-screen").then(
-		(module) => module.AudioScreen,
-	),
-);
-const SettingsScreen = dynamic(() =>
-	import("@/features/screens/settings-screen").then(
-		(module) => module.SettingsScreen,
-	),
-);
-
-type ScreenId =
-	| "home"
-	| "studio"
-	| "daily"
-	| "progress"
-	| "grammar"
-	| "integrated-skills"
-	| "resources"
-	| "errors"
-	| "library"
-	| "notebook"
-	| "flashcards"
-	| "settings"
-	| "teacher";
+import { SCREEN_PATHS, useAppNavigate, type ScreenId } from "@/lib/app-navigate";
 
 interface NavigationItem {
 	id: ScreenId;
@@ -200,7 +155,9 @@ const navigationGroups: NavigationGroup[] = [
 		caption: "Errors and recordings",
 		icon: Clock3,
 		items: navigation.filter((item) =>
-			["errors", "notebook", "flashcards"].includes(item.id),
+			["progress", "errors", "library", "notebook", "flashcards"].includes(
+				item.id,
+			),
 		),
 	},
 	{
@@ -219,71 +176,30 @@ const defaultOpenGroups: Record<NavigationGroupId, boolean> = {
 	system: true,
 };
 
-function isScreenId(value: string | null): value is ScreenId {
-	return navigation.some((item) => item.id === value);
+function currentNavItem(pathname: string): NavigationItem {
+	return (
+		navigation.find((item) =>
+			item.id === "home"
+				? pathname === "/"
+				: pathname.startsWith(SCREEN_PATHS[item.id]),
+		) ?? homeNavigation
+	);
 }
 
-// "settings" is intentionally not listed here: it renders in place (like
-// progress/resources/errors/library/integrated-skills below) instead of
-// doing a full-page navigation. It used to point at "/settings", a route
-// that only 307-redirected to an external settings service that isn't part
-// of this app — so the "Open ADHD and dyslexia settings" button silently
-// left the app instead of opening working accessibility controls.
-const replacementRoutes: Partial<Record<ScreenId, string>> = {
-	daily: "/daily",
-	studio: "/studio",
-	grammar: "/grammar",
-	notebook: "/notebook",
-	flashcards: "/flashcards",
-	teacher: "/teacher",
-};
-
-export function AppShell() {
+export function AppShell({ children }: { children: React.ReactNode }) {
 	const { state, mutate } = useAppStore();
-	const [screen, setScreen] = React.useState<ScreenId>("home");
+	const navigate = useAppNavigate();
+	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = React.useState(false);
 	const [openGroups, setOpenGroups] =
 		React.useState<Record<NavigationGroupId, boolean>>(defaultOpenGroups);
 	const sidebarRef = React.useRef<HTMLElement>(null);
-	const current =
-		navigation.find((item) => item.id === screen) ?? homeNavigation;
+	const current = currentNavItem(pathname);
 	const CurrentIcon = current.icon;
 
 	React.useEffect(() => {
-		const restoreScreen = () => {
-			const url = new URL(window.location.href);
-			const requestedTarget = url.searchParams.get("screen");
-			const target =
-				requestedTarget === "automaticity" ? "daily" : requestedTarget;
-			if (isScreenId(target) && replacementRoutes[target]) {
-				window.location.replace(replacementRoutes[target]);
-				return;
-			}
-			if (isScreenId(target)) {
-				if (requestedTarget !== target) {
-					url.searchParams.set("screen", target);
-					window.history.replaceState({ screen: target }, "", url);
-				}
-				setScreen(target);
-			} else {
-				if (target) {
-					url.searchParams.delete("screen");
-					window.history.replaceState({ screen: "home" }, "", url);
-				}
-				setScreen("home");
-			}
-			setMenuOpen(false);
-		};
-		restoreScreen();
-		window.addEventListener("popstate", restoreScreen);
-		return () => {
-			window.removeEventListener("popstate", restoreScreen);
-		};
-	}, []);
-
-	React.useEffect(() => {
 		const group = navigationGroups.find((candidate) =>
-			candidate.items.some((item) => item.id === screen),
+			candidate.items.some((item) => item.id === current.id),
 		);
 		if (!group) return;
 		setOpenGroups((currentGroups) =>
@@ -291,7 +207,11 @@ export function AppShell() {
 				? currentGroups
 				: { ...currentGroups, [group.id]: true },
 		);
-	}, [screen]);
+	}, [current.id]);
+
+	React.useEffect(() => {
+		setMenuOpen(false);
+	}, [pathname]);
 
 	React.useEffect(() => {
 		if (!menuOpen) return;
@@ -341,35 +261,8 @@ export function AppShell() {
 		[menuOpen],
 	);
 
-	const navigate = React.useCallback(
-		(target: string, params: Record<string, string | null> = {}) => {
-			const canonicalTarget = target === "automaticity" ? "daily" : target;
-			if (!isScreenId(canonicalTarget)) return;
-			const replacementRoute = replacementRoutes[canonicalTarget];
-			if (replacementRoute) {
-				window.location.assign(replacementRoute);
-				return;
-			}
-			const url = new URL(window.location.href);
-			if (canonicalTarget === "home") url.searchParams.delete("screen");
-			else url.searchParams.set("screen", canonicalTarget);
-			Object.entries(params).forEach(([key, value]) => {
-				if (value === null) url.searchParams.delete(key);
-				else url.searchParams.set(key, value);
-			});
-			window.history.pushState({ screen: canonicalTarget }, "", url);
-			setScreen(canonicalTarget);
-			setMenuOpen(false);
-			const reduceMotion = window.matchMedia(
-				"(prefers-reduced-motion: reduce)",
-			).matches;
-			window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
-		},
-		[],
-	);
-
 	return (
-		<div className="app-shell" data-screen={screen}>
+		<div className="app-shell" data-screen={current.id}>
 			<a className="skip-link" href="#main-content">
 				Skip to main content
 			</a>
@@ -399,7 +292,7 @@ export function AppShell() {
 						const expanded = openGroups[group.id];
 						const GroupIcon = group.icon;
 						const groupIsActive = group.items.some(
-							(item) => item.id === screen,
+							(item) => item.id === current.id,
 						);
 						return (
 							<section
@@ -434,28 +327,15 @@ export function AppShell() {
 										{group.items.map((item) => {
 											const Icon = item.icon;
 											return (
-												<a
+												<Link
 													className="nav-button"
-													data-active={item.id === screen}
-												href={replacementRoutes[item.id] ?? (item.id === "home" ? "/" : `/?screen=${item.id}`)}
+													data-active={item.id === current.id}
+													href={SCREEN_PATHS[item.id]}
 													key={item.id}
-													onClick={(event) => {
-														if (
-															event.button !== 0 ||
-															event.metaKey ||
-															event.ctrlKey ||
-															event.shiftKey ||
-															event.altKey
-														) {
-															return;
-														}
-														event.preventDefault();
-														navigate(item.id);
-													}}
 												>
 													<Icon aria-hidden className="size-4.5" />
 													{item.label}
-												</a>
+												</Link>
 											);
 										})}
 									</div>
@@ -512,16 +392,8 @@ export function AppShell() {
 						<InstallAppControl />
 					</div>
 				</header>
-				<div className="app-content" data-screen={screen}>
-					{screen === "home" ? <DashboardV2Screen navigate={navigate} /> : null}
-					{screen === "progress" ? <AutomaticityScreen /> : null}
-					{screen === "integrated-skills" ? (
-						<IntegratedSkillsScreen navigate={navigate} />
-					) : null}
-					{screen === "resources" ? <ResourcesScreen /> : null}
-					{screen === "errors" ? <ErrorsScreen /> : null}
-					{screen === "library" ? <AudioScreen /> : null}
-					{screen === "settings" ? <SettingsScreen /> : null}
+				<div className="app-content" data-screen={current.id}>
+					{children}
 				</div>
 				<AppUpdateNotice />
 			</main>

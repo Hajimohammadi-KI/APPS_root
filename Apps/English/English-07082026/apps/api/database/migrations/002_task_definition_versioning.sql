@@ -269,8 +269,8 @@ begin
   if not found then
     raise exception 'Task version %/% not found', p_task_id, p_task_version;
   end if;
-  if v_task.lifecycle_state not in ('approved', 'scheduled') then
-    raise exception 'Only approved or scheduled tasks can be published; current state: %',
+  if v_task.lifecycle_state not in ('approved', 'scheduled', 'deprecated') then
+    raise exception 'Only approved, scheduled, or deprecated (reversal) tasks can be published; current state: %',
       v_task.lifecycle_state;
   end if;
   if v_task.definition = '{}'::jsonb or not (v_task.definition ? 'prompt') then
@@ -447,6 +447,24 @@ begin
     raise exception 'Actor id and display name are required';
   end if;
 
+  -- p_actor_id/p_actor_role are caller-supplied and otherwise unverifiable --
+  -- a caller could pass actor_role='release_manager' to satisfy the
+  -- requires_approval check below with no real authorization behind it.
+  -- Close that hole by requiring the calling connection to have already
+  -- authenticated and recorded the verified identity as Postgres session
+  -- variables (e.g. via `select set_config('app.current_actor_id', $1,
+  -- true)` / `app.current_actor_role` issued by the API right after auth,
+  -- within the same transaction). Fail closed if that hasn't happened, and
+  -- reject any mismatch between the claimed and session-verified actor.
+  if current_setting('app.current_actor_id', true) is null
+     or current_setting('app.current_actor_role', true) is null then
+    raise exception 'No authenticated actor identity set on this session (app.current_actor_id / app.current_actor_role)';
+  end if;
+  if current_setting('app.current_actor_id', true) <> p_actor_id
+     or current_setting('app.current_actor_role', true) <> p_actor_role then
+    raise exception 'Claimed actor (%/%) does not match the session-verified actor', p_actor_id, p_actor_role;
+  end if;
+
   select * into v_task
   from task_versions
   where task_id = p_task_id and task_version = p_task_version
@@ -583,10 +601,46 @@ begin
 end
 $$;
 
--- Direct table writes are not an application API. A deployment-specific role
--- should receive SELECT plus EXECUTE on transition_task_version, never UPDATE.
-revoke update, delete on task_lifecycle_events from public;
-revoke update, delete on task_versions from public;
+-- Direct table writes are not an application API. PostgreSQL grants EXECUTE
+-- on new functions to PUBLIC by default (and INSERT/UPDATE/DELETE on new
+-- tables to their owner only, but not from other roles unless granted) --
+-- revoke explicitly here rather than relying on that default, since a
+-- SECURITY DEFINER function with PUBLIC execute lets any connected role act
+-- with the function owner's privileges. The only sanctioned write path is
+-- transition_task_version(); everything else must be read-only or nothing.
+revoke insert, update, delete on task_lifecycle_events from public;
+revoke insert, update, delete on task_versions from public;
+revoke execute on function transition_task_version(
+  uuid, text, task_lifecycle_state, text, text, text, text, bigint,
+  text, text, uuid, text, timestamptz, text, text
+) from public;
+
+do $$
+begin
+  if not exists (select 1 from pg_roles where rolname = 'task_lifecycle_service') then
+    create role task_lifecycle_service nologin;
+  end if;
+end
+$$;
+
+comment on role task_lifecycle_service is
+  'Role the API server authenticates as (or SET ROLEs into) to call transition_task_version. Grant this role, never PUBLIC, and never let application users connect directly as it.';
+
+grant execute on function transition_task_version(
+  uuid, text, task_lifecycle_state, text, text, text, text, bigint,
+  text, text, uuid, text, timestamptz, text, text
+) to task_lifecycle_service;
+grant select on task_versions, task_lifecycle_events to task_lifecycle_service;
+
+-- No row-level-security policy is added here: neither table has a
+-- tenant/owner column to key a policy on (this product has no multi-tenant
+-- or multi-user model yet), so an RLS policy today could only be USING
+-- (true) -- a no-op that would look like protection without being any.
+-- The real boundary right now is role-based: PUBLIC has no table privileges
+-- and no function EXECUTE; only task_lifecycle_service can act, and only
+-- through the audited, state-machine-checked function above. Add a real
+-- tenant_id/owner_id column and a matching policy if/when this becomes
+-- multi-user.
 
 create table if not exists task_state_monitoring_thresholds (
   lifecycle_state task_lifecycle_state primary key,

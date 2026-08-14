@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { AppStoreProvider } from "@/features/store/app-store";
+import { AppShell } from "@/features/app-shell";
 import { ContextualHoverHelp } from "@/features/components/contextual-hover-help";
 import { GlobalReadingRuler } from "@/features/components/global-reading-ruler";
 import { DeepLSelectionTranslator } from "@/features/components/deepl-selection-translator";
@@ -53,7 +54,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AppStoreProvider>
-          {children}
+          <AppShell>{children}</AppShell>
           <GlobalReadingRuler />
           <ContextualHoverHelp />
           <DeepLSelectionTranslator />

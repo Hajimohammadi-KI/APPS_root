@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { ResourcesScreen } from "@/features/screens/resources-screen";
 
 export default function ResourcesPage() {
-	redirect("/?screen=resources");
+	return <ResourcesScreen />;
 }

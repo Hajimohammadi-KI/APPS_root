@@ -15,6 +15,13 @@ export interface AutomatikAnalysis {
   readonly score: number;
   readonly targetHit: boolean;
   readonly issues: readonly AutomatikIssue[];
+  // Mirrors EvaluationResponse.online (@grammar/contracts): true only when a
+  // real online provider actually evaluated this response, as opposed to
+  // the offline fallback/local heuristic. Combined with targetHit at the
+  // call site, this is what recordAttempt's `verified` flag must be set
+  // from -- practice completing or looking right locally must never by
+  // itself progress mastery.
+  readonly online: boolean;
 }
 
 function sentences(text: string): readonly string[] {
@@ -99,6 +106,10 @@ export function analyzeWeilClause(text: string): AutomatikAnalysis {
     score,
     targetHit: sentenceCount >= 6 && targetUses >= 4 && issues.length === 0,
     issues,
+    // A local regex heuristic (word-order/comma pattern matching), not a
+    // real online provider call -- it can misfire, so it must never count
+    // as a verified assessment.
+    online: false,
   };
 }
 

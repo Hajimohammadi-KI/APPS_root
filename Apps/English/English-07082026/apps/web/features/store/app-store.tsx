@@ -97,6 +97,17 @@ export interface Attempt {
 	// overwrites the other.
 	audioId?: string;
 	rawTranscript?: string;
+	// Provenance for the `verified` claim: which content package produced the
+	// grammar/exercises being assessed (packages/content's version, so old
+	// evidence stays traceable to the rules that graded it if content
+	// changes later), and whether a real online provider was actually
+	// consulted or this fell back to a local heuristic. This is a stand-in
+	// for the task/rubric/provider versioning that packages/evidence-domain
+	// defines -- that package isn't wired into any runtime attempt-recording
+	// path yet, so this records what's honestly available today rather than
+	// a task/rubric version number nothing here actually assigns.
+	contentVersion?: string;
+	assessedBy?: "online" | "offline";
 }
 
 export interface ErrorItem {
@@ -126,6 +137,13 @@ export interface ReviewItem {
 	stabilityScore: number;
 	mode: "mixed" | "repair" | "production" | "timed";
 	status: "pending" | "done" | "rescheduled";
+	// Incremented each time successStreak reaches
+	// RECALL_MASTERY_STREAK_THRESHOLD. Distinct from `status === "done"`
+	// (legacy: retired the item from the queue permanently after one
+	// streak) -- a milestone keeps the item cycling at the longest interval
+	// indefinitely, so long-term retention keeps getting re-checked instead
+	// of being assumed forever from one streak completed months ago.
+	masteryMilestonesReached?: number;
 }
 
 export interface TopicMastery {
@@ -648,13 +666,10 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 	const attempts = draft.attempts.filter(
 		(attempt) => attempt.grammarTitle === grammarTitle,
 	);
+	const verifiedFor = (mode: AttemptMode) =>
+		attempts.filter((attempt) => attempt.mode === mode && attempt.verified === true);
 	const scoreFor = (mode: AttemptMode) =>
-		average(
-			attempts
-				.filter((attempt) => attempt.mode === mode && attempt.verified === true)
-				.slice(-5)
-				.map((attempt) => attempt.accuracyScore),
-		);
+		average(verifiedFor(mode).slice(-5).map((attempt) => attempt.accuracyScore));
 
 	current.recognitionScore = scoreFor("recognition");
 	current.writingScore = scoreFor("writing");
@@ -673,12 +688,29 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 			error.repairStatus !== "fixed" &&
 			error.errorClass !== "spelling",
 	).length;
-	current.successfulReviews = draft.reviews.filter(
+	const grammarTopicReviews = draft.reviews.filter(
 		(review) =>
-			review.sourceType === "grammar_topic" &&
-			review.sourceId === grammarTitle &&
-			review.status === "done",
-	).length;
+			review.sourceType === "grammar_topic" && review.sourceId === grammarTitle,
+	);
+	current.successfulReviews = grammarTopicReviews.reduce(
+		(sum, review) =>
+			sum +
+			// masteryMilestonesReached (added once retesting-after-mastery was
+			// wired in) is the real count; `status === "done"` is a fallback for
+			// review rows persisted before that change, so existing progress
+			// isn't silently zeroed out.
+			(review.masteryMilestonesReached ?? (review.status === "done" ? 1 : 0)),
+		0,
+	);
+	// True if any grammar_topic review that has previously earned a mastery
+	// milestone is currently mid-climb (streak reset below the threshold) --
+	// i.e. a maintenance check was missed or failed since mastery was last
+	// demonstrated. Automaticity claims should not survive that unnoticed.
+	const hasLapsedRetention = grammarTopicReviews.some(
+		(review) =>
+			(review.masteryMilestonesReached ?? 0) > 0 &&
+			review.successStreak < RECALL_MASTERY_STREAK_THRESHOLD,
+	);
 	current.nextReviewAt =
 		draft.reviews
 			.filter(
@@ -696,6 +728,18 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 		current.transferScore,
 	]);
 
+	// A single verified attempt can average to a passing score just as well
+	// as five can -- scoreFor()'s average doesn't distinguish "one lucky
+	// attempt" from "five consistent ones". Automaticity is a claim about
+	// consistency under repetition, so require a minimum sample size per
+	// skill in addition to the score threshold before it can be claimed.
+	const MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC = 3;
+	const hasEnoughAttempts =
+		verifiedFor("recognition").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC &&
+		verifiedFor("writing").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC &&
+		verifiedFor("speaking").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC &&
+		verifiedFor("transfer").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC;
+
 	if (
 		current.recognitionScore >= 85 &&
 		current.writingScore >= 80 &&
@@ -703,7 +747,9 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 		current.repairScore >= 80 &&
 		current.transferScore >= 75 &&
 		current.successfulReviews >= 2 &&
-		current.activeErrorCount <= 1
+		current.activeErrorCount <= 1 &&
+		hasEnoughAttempts &&
+		!hasLapsedRetention
 	) {
 		current.status = "automatic";
 	} else if (
@@ -1180,11 +1226,22 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 				const review = draft.reviews.find((item) => item.id === reviewId);
 				if (!review) return;
 				if (wasCorrect) {
-					review.successStreak += 1;
 					review.stabilityScore = Math.min(100, review.stabilityScore + 15);
 					if (review.successStreak >= RECALL_MASTERY_STREAK_THRESHOLD) {
-						review.status = "done";
+						// Already at the mastery streak: this is a long-interval
+						// maintenance check, not a climb. Record the milestone again
+						// and keep cycling at the longest interval rather than
+						// retiring the item -- retention has to keep being
+						// demonstrated, not just proven once.
+						review.masteryMilestonesReached = (review.masteryMilestonesReached ?? 0) + 1;
+						const maxInterval = RECALL_INTERVAL_STEPS_DAYS[RECALL_INTERVAL_STEPS_DAYS.length - 1] ?? FIRST_RECALL_INTERVAL_DAYS;
+						review.dueAt = Date.now() + maxInterval * 86_400_000;
+						review.status = "pending";
 						return;
+					}
+					review.successStreak += 1;
+					if (review.successStreak >= RECALL_MASTERY_STREAK_THRESHOLD) {
+						review.masteryMilestonesReached = (review.masteryMilestonesReached ?? 0) + 1;
 					}
 					const stepIndex = RECALL_INTERVAL_STEPS_DAYS.indexOf(review.intervalDays);
 					const clampedIndex = Math.min(

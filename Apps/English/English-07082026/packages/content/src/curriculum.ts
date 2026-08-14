@@ -90,14 +90,13 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
       `Write the standard reference answer for “${unit.title}”.`,
       unit.testAnswer,
     ],
-    ...unit.examples.map(
-      (example, index): GrammarExercise => [
-        index === 0
-          ? `Type the model sentence: ${example}`
-          : `Type another model sentence: ${example}`,
-        example,
-      ],
-    ),
+    // Deliberately NOT including a "Type the model sentence: <example>"
+    // candidate here anymore: that prompt printed the expected answer
+    // verbatim inside itself, so completing it was copy-typing, not
+    // recall -- it inflated the exercise count without adding genuine
+    // retrieval practice. Removing it lowers the achieved count for
+    // some units below MINIMUM_CONTROLLED_EXERCISES; that is honest
+    // volume, not a regression to hide.
   ];
   const candidates = candidatePool.filter((candidate) =>
     isWellFormedExercise(candidate, unit),

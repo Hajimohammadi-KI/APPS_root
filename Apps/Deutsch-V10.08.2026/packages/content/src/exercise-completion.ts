@@ -168,14 +168,10 @@ export function completeControlledExercises(
       `Schreibe die Standard-Referenzantwort für „${unit.title}“.`,
       unit.testAnswer,
     ],
-    ...unit.examples.map(
-      (example, index): GrammarExercise => [
-        index === 0
-          ? `Tippe den Beispielsatz: ${example}`
-          : `Tippe einen weiteren Beispielsatz: ${example}`,
-        cleanSentence(example),
-      ],
-    ),
+    // Deliberately not including a "Tippe den Beispielsatz: <example>"
+    // candidate anymore -- it printed the expected answer verbatim
+    // inside the prompt, so completing it was copy-typing, not recall.
+    // Matches the same fix applied to English's curriculum.ts.
   ];
   const prompts = new Set(existing.map(([prompt]) => prompt));
 

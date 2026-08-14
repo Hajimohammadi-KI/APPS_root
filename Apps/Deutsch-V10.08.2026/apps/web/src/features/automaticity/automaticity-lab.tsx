@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import {
   BookOpenCheck,
   Check,
@@ -803,7 +804,20 @@ export function AutomaticityLab({
                 </strong>
                 <p className="text-sm text-muted-foreground">{grammar.rule}</p>
               </div>
-              <Badge>{progress}% erledigt</Badge>
+              <div className="flex items-center gap-2">
+                <Button
+                  render={
+                    <Link
+                      href={`/studio?from=daily&level=${encodeURIComponent(selectedLevel)}&activity=2&return=/heute`}
+                    />
+                  }
+                  size="sm"
+                  variant="outline"
+                >
+                  Im Gesprächsstudio üben
+                </Button>
+                <Badge>{progress}% erledigt</Badge>
+              </div>
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-white ring-1 ring-violet-200">
               <div

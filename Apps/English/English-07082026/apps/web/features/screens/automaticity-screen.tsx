@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import {
   BookOpenCheck,
   Check,
@@ -867,9 +868,18 @@ export function AutomaticityScreen({
                 {grammar.level} · {grammar.rule}
               </p>
             </div>
-            <Badge variant={progress === 100 ? "success" : "default"}>
-              {progress}% complete
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Button asChild size="sm" variant="outline">
+                <Link
+                  href={`/studio?from=daily&level=${encodeURIComponent(grammar.level)}&activity=2`}
+                >
+                  Practice in Speaking Studio
+                </Link>
+              </Button>
+              <Badge variant={progress === 100 ? "success" : "default"}>
+                {progress}% complete
+              </Badge>
+            </div>
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-white ring-1 ring-violet-200">
             <div

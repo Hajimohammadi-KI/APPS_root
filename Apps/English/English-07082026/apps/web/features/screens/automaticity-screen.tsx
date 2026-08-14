@@ -34,6 +34,7 @@ import {
   analyzePresentPerfect,
   evaluatePracticeAnswer,
   type AutomaticityAnalysis,
+  type AutomaticityIssue,
 } from "@/lib/automaticity-analysis";
 import { evaluateResponse } from "@/lib/assessment";
 import { putAudio } from "@/lib/audio-db";
@@ -216,6 +217,26 @@ function Axis({ label, value }: { label: string; value: number }) {
   );
 }
 
+// Turns the "why" a correction was made into something to actually go do,
+// not just read. Every issue code gets a distinct follow-up action instead
+// of a generic "practice more" -- the corrective step this feedback used to
+// be missing entirely (was: one-line message + a bare original -> corrected
+// diff, with no explicit "what do I do about it" step).
+function correctiveExerciseFor(issue: AutomaticityIssue): string {
+  switch (issue.code) {
+    case "auxiliary_agreement":
+      return `Say the corrected form aloud three times, then write one new sentence with the same subject: "${issue.corrected}"`;
+    case "missing_target":
+      return `Rewrite this sentence so it clearly uses the target pattern: "${issue.corrected}"`;
+    case "unfinished_sentence":
+      return "Read your sentence aloud and add the missing end punctuation before saving again.";
+    case "spelling_error":
+      return `Spell "${issue.corrected}" aloud, letter by letter, then retype it from memory.`;
+    case "language_error":
+      return `Compare your sentence with the corrected form and say out loud why it changed: "${issue.corrected}"`;
+  }
+}
+
 function Feedback({ analysis }: { analysis: AutomaticityAnalysis }) {
   return (
     <div className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50 p-4">
@@ -234,16 +255,32 @@ function Feedback({ analysis }: { analysis: AutomaticityAnalysis }) {
         </div>
       </div>
       {analysis.issues.length ? (
-        <ul className="space-y-2 text-sm">
+        <ul className="space-y-3 text-sm">
           {analysis.issues.map((issue) => (
             <li
-              className="rounded-xl bg-white p-3"
+              className="space-y-1.5 rounded-xl bg-white p-3"
               key={`${issue.code}-${issue.original}`}
             >
-              <strong className="text-red-800">{issue.message}</strong>
-              <span className="mt-1 block text-muted-foreground">
-                {issue.original} → {issue.corrected}
-              </span>
+              <p>
+                <span className="mr-1 font-bold text-red-800">Where:</span>
+                {issue.original}
+              </p>
+              <p>
+                <span className="mr-1 font-bold text-red-800">Why:</span>
+                {issue.message}
+              </p>
+              <p>
+                <span className="mr-1 font-bold text-violet-900">
+                  Correct form:
+                </span>
+                {issue.corrected}
+              </p>
+              <p className="text-muted-foreground">
+                <span className="mr-1 font-bold text-violet-900">
+                  Practice this:
+                </span>
+                {correctiveExerciseFor(issue)}
+              </p>
             </li>
           ))}
         </ul>

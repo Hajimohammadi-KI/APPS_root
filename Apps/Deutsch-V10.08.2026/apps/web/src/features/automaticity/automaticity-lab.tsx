@@ -30,6 +30,7 @@ import {
   analyzeWeilClause,
   practiceAnswerMatches,
   type AutomatikAnalysis,
+  type AutomatikIssue,
 } from "@/features/automaticity/automaticity-analysis";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import { requestEvaluation } from "@/lib/evaluation-client";
@@ -151,6 +152,25 @@ function Axis({ label, value }: Readonly<{ label: string; value: number }>) {
   );
 }
 
+// Verwandelt das "Warum" einer Korrektur in eine konkrete nächste Handlung,
+// statt nur einen Satz zu lesen. Jeder Fehlercode bekommt eine eigene
+// Übungsanweisung -- genau der fehlende Korrekturschritt, den es vorher
+// nicht gab (nur eine Zeile Nachricht + ein bloßes original -> corrected).
+function correctiveExerciseFor(issue: AutomatikIssue): string {
+  switch (issue.code) {
+    case "word_order":
+      return `Sprich die korrigierte Wortstellung dreimal laut, dann schreibe einen neuen Satz mit demselben Muster: „${issue.corrected}"`;
+    case "missing_comma":
+      return `Lies den Satz laut mit einer Pause an der Kommastelle, dann speichere die korrigierte Form: „${issue.corrected}"`;
+    case "missing_target": {
+      const target = issue.corrected;
+      return `Schreibe den Satz so um, dass die Zielstruktur eindeutig vorkommt: „${target}"`;
+    }
+    case "unfinished_sentence":
+      return "Lies deinen Satz laut vor und ergänze das fehlende Satzzeichen, bevor du erneut speicherst.";
+  }
+}
+
 function Feedback({ analysis }: Readonly<{ analysis: AutomatikAnalysis }>) {
   return (
     <div className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50 p-4">
@@ -168,16 +188,32 @@ function Feedback({ analysis }: Readonly<{ analysis: AutomatikAnalysis }>) {
         </div>
       </div>
       {analysis.issues.length ? (
-        <ul className="space-y-2 text-sm">
+        <ul className="space-y-3 text-sm">
           {analysis.issues.map((issue) => (
             <li
-              className="rounded-xl bg-white p-3"
+              className="space-y-1.5 rounded-xl bg-white p-3"
               key={`${issue.code}-${issue.original}`}
             >
-              <strong className="text-red-800">{issue.message}</strong>
-              <span className="mt-1 block text-muted-foreground">
-                {issue.original} → {issue.corrected}
-              </span>
+              <p>
+                <span className="mr-1 font-bold text-red-800">Wo:</span>
+                {issue.original}
+              </p>
+              <p>
+                <span className="mr-1 font-bold text-red-800">Warum:</span>
+                {issue.message}
+              </p>
+              <p>
+                <span className="mr-1 font-bold text-violet-900">
+                  Korrekte Form:
+                </span>
+                {issue.corrected}
+              </p>
+              <p className="text-muted-foreground">
+                <span className="mr-1 font-bold text-violet-900">
+                  Übe das:
+                </span>
+                {correctiveExerciseFor(issue)}
+              </p>
             </li>
           ))}
         </ul>

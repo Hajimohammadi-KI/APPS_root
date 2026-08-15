@@ -35,6 +35,11 @@ import {
 } from "@/features/automaticity/automaticity-analysis";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
+import {
+  analyzeAudioFluency,
+  scoreFromActiveSpeech,
+  type AudioFluencyAnalysis,
+} from "@/lib/audio-fluency";
 import { requestEvaluation } from "@/lib/evaluation-client";
 import { API_BASE_URL } from "@/lib/api-config";
 import { speakingEvidenceBlock } from "./speaking-evidence";
@@ -318,6 +323,8 @@ export function AutomaticityLab({
     useState<AutomatikAnalysis | null>(null);
   const [speechAnalysis, setSpeechAnalysis] =
     useState<AutomatikAnalysis | null>(null);
+  const [audioFluencyResult, setAudioFluencyResult] =
+    useState<AudioFluencyAnalysis | null>(null);
   const [transferAttempt, setTransferAttempt] = useState("");
   const [transferAnalysis, setTransferAnalysis] =
     useState<AutomatikAnalysis | null>(null);
@@ -700,10 +707,16 @@ export function AutomaticityLab({
     const analysis = await analyzeLessonOutput(transcript, 2);
     setSpeechAnalysis(analysis);
     setDailyAnswer(`${KEY}:transcript`, transcript);
-    const fluencyScore = Math.min(
-      100,
-      Math.round((analysis.wordCount / Math.max(1, seconds) / 2) * 100),
-    );
+    // Real, audio-derived fluency (active-speech time from amplitude, not
+    // a wordCount/seconds text proxy which counts recording time
+    // including pauses as if it were speaking time).
+    const audioFluency = audioRef.current
+      ? await analyzeAudioFluency(audioRef.current)
+      : null;
+    setAudioFluencyResult(audioFluency);
+    const fluencyScore = audioFluency
+      ? scoreFromActiveSpeech(analysis.wordCount, audioFluency.activeSpeechSeconds)
+      : Math.min(100, Math.round((analysis.wordCount / Math.max(1, seconds) / 2) * 100));
     // analysis.targetHit already requires result.practiceReady, which is
     // spelling-accommodated (see evaluation-client.ts): purely-spelling
     // slips don't block it unless spellingAffectsMastery is enabled.
@@ -1105,6 +1118,45 @@ export function AutomaticityLab({
               Sprechen analysieren und speichern
             </Button>
             {speechAnalysis ? <Feedback analysis={speechAnalysis} /> : null}
+            {audioFluencyResult ? (
+              <div className="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-violet-200 bg-violet-50 p-3 text-sm sm:grid-cols-4">
+                <div>
+                  <strong className="block text-lg">
+                    {audioFluencyResult.activeSpeechSeconds.toFixed(1)}s
+                  </strong>
+                  aktive Sprechzeit
+                </div>
+                <div>
+                  <strong className="block text-lg">{audioFluencyResult.pauseCount}</strong>
+                  Pause(n)
+                </div>
+                <div>
+                  <strong className="block text-lg">
+                    {audioFluencyResult.medianPitchHz
+                      ? `${Math.round(audioFluencyResult.medianPitchHz)} Hz`
+                      : "—"}
+                  </strong>
+                  typische Tonhöhe
+                </div>
+                <div>
+                  <strong className="block text-lg">
+                    {audioFluencyResult.pitchVarietySemitones !== null
+                      ? audioFluencyResult.pitchVarietySemitones < 1.5
+                        ? "Monoton"
+                        : audioFluencyResult.pitchVarietySemitones < 3.5
+                          ? "Etwas Variation"
+                          : "Abwechslungsreich"
+                      : "—"}
+                  </strong>
+                  Intonation
+                </div>
+                <p className="col-span-2 text-xs text-muted-foreground sm:col-span-4">
+                  Die Tonhöhe wird direkt aus der Aufnahme geschätzt (kein
+                  externer Dienst) -- ein grobes Intonationssignal, keine
+                  phonembasierte Aussprachebewertung.
+                </p>
+              </div>
+            ) : null}
 
             <div className="mt-2 space-y-3 rounded-2xl border border-violet-200 bg-violet-50/60 p-4">
               <div>

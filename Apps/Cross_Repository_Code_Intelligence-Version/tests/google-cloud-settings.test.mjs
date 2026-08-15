@@ -33,6 +33,20 @@ test("keeps Google Cloud metadata without exposing technical setup to learners",
   assert.match(provider, /Mit Google verbinden/);
   assert.match(provider, /\/api\/google\/auth/);
   assert.match(provider, /returnTo: "\/settings"/);
-  assert.doesNotMatch(provider, /Google Client-ID|Google Client-Secret|googleSetup\./);
   assert.match(provider, /niemals dein Google-Passwort/);
+});
+
+// A later session added a guided in-app setup wizard so the app operator
+// (not every learner) can configure Google OAuth credentials without
+// external tooling -- deliberately, per an explicit request, not a
+// regression of the test above. The technical fields now do exist, but
+// stay gated behind a collapsed-by-default toggle, which is what actually
+// keeps a learner from being confronted with them unasked.
+test("gates the Google Cloud setup wizard behind a collapsed, opt-in toggle", () => {
+  assert.match(provider, /showGoogleSetup/);
+  assert.match(provider, /useState\(false\)/);
+  assert.match(provider, /Google-Zugangsdaten jetzt einrichten/);
+  assert.match(provider, /showGoogleSetup && <div className="google-setup-steps">/);
+  assert.match(provider, /Google Client-ID/);
+  assert.match(provider, /Google Client-Secret/);
 });

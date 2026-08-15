@@ -8,6 +8,7 @@ const appLauncher = await readFile(new URL("../STARTEN-WINDOWS.bat", import.meta
 const localSupervisor = await readFile(new URL("../scripts/start-local-app.ps1", import.meta.url), "utf8");
 const uninstallLauncher = await readFile(new URL("../DEINSTALLIEREN-WINDOWS.bat", import.meta.url), "utf8");
 const localEnvGenerator = await readFile(new URL("../scripts/generate-local-env.mjs", import.meta.url), "utf8");
+const runWebScript = await readFile(new URL("../scripts/wsl/run-web.sh", import.meta.url), "utf8");
 
 test("Windows setup exposes install, update, repair, and uninstall", () => {
   for (const action of ["Install", "Update", "Repair", "Uninstall"]) {
@@ -143,11 +144,28 @@ test("Windows launcher supervises compiled web and API without development watch
   assert.doesNotMatch(appLauncher, /dev:all/);
   assert.match(localSupervisor, /\$MaxAttempts = 3/);
   assert.match(localSupervisor, /@\("run", "--cwd", "apps\/api", "start"\)/);
-  assert.match(localSupervisor, /@\("run", "start"\)/);
   assert.match(localSupervisor, /http:\/\/127\.0\.0\.1:4312\/api\/state/);
   assert.match(localSupervisor, /http:\/\/127\.0\.0\.1:4313\/v1\/health/);
   assert.match(localSupervisor, /function Stop-ProcessTree/);
   assert.match(localSupervisor, /runtime-startup\.log/);
+});
+
+// The web process does not run natively on Windows (workerd crashes on
+// this machine, see run-web.sh's own comment) -- it launches through WSL
+// instead, via run-web.sh, and this test suite never actually covered
+// that indirection: the previous version of the test above still
+// asserted a literal `bun run start` PowerShell array that predates the
+// WSL-relay architecture and doesn't appear anywhere in the current
+// launch path, so it was failing for the right reason (a real
+// architecture change) but with the wrong fix (there is no `bun run
+// start` to find -- the equivalent command now lives inside run-web.sh
+// as `wrangler dev`, invoked over WSL, not PowerShell).
+test("Windows launcher starts the web process inside WSL via run-web.sh", () => {
+  assert.match(localSupervisor, /wsl\.exe/);
+  assert.match(localSupervisor, /run-web\.sh/);
+  assert.match(localSupervisor, /ConvertTo-WslPath/);
+  assert.match(runWebScript, /wrangler dev/);
+  assert.match(runWebScript, /tcp-relay\.mjs/);
 });
 
 test("Windows setup creates desktop and Start menu shortcuts with an icon", async () => {

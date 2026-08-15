@@ -159,6 +159,21 @@ export interface SessionRecord {
 
 export type FlashcardSource = "lesson" | "pdf" | "highlight" | "conversation" | "manual";
 export type FlashcardGrade = "again" | "hard" | "good";
+// Recognition ("which of these is the right word for this meaning?" --
+// multiple choice) and production ("write the word for this meaning" --
+// open recall) are genuinely different skills; a learner can recognize a
+// word long before they can produce it unprompted. Each card tracks them
+// as two independent Leitner schedules instead of one blended one.
+export type FlashcardMode = "recognition" | "production";
+
+export interface FlashcardScheduleState {
+  /** Completed-review count for getReviewProgressAfterResult's stage math. */
+  readonly stage: number;
+  readonly dueAt: number;
+  readonly successStreak: number;
+  readonly lapses: number;
+  readonly lastGrade: FlashcardGrade | null;
+}
 
 export interface FlashcardRecord {
   readonly id: string;
@@ -170,12 +185,8 @@ export interface FlashcardRecord {
   readonly lesson?: string;
   readonly originalSentence?: string;
   readonly createdAt: string;
-  /** Completed-review count for getReviewProgressAfterResult's stage math. */
-  readonly stage: number;
-  readonly dueAt: number;
-  readonly successStreak: number;
-  readonly lapses: number;
-  readonly lastGrade: FlashcardGrade | null;
+  readonly recognition: FlashcardScheduleState;
+  readonly production: FlashcardScheduleState;
 }
 
 export interface UserAttempt {
@@ -479,7 +490,32 @@ function normalizeAttempts(value: unknown): readonly UserAttempt[] {
 const FLASHCARD_SOURCE_SET = new Set<FlashcardSource>(["lesson", "pdf", "highlight", "conversation", "manual"]);
 const FLASHCARD_GRADE_SET = new Set<FlashcardGrade>(["again", "hard", "good"]);
 
-function normalizeFlashcards(value: unknown): readonly FlashcardRecord[] {
+function normalizeFlashcardScheduleState(value: unknown): FlashcardScheduleState {
+  const row = isRecord(value) ? value : {};
+  return {
+    stage:
+      typeof row.stage === "number" && Number.isFinite(row.stage)
+        ? Math.max(0, Math.floor(row.stage))
+        : 0,
+    dueAt:
+      typeof row.dueAt === "number" && Number.isFinite(row.dueAt)
+        ? row.dueAt
+        : Date.now(),
+    successStreak:
+      typeof row.successStreak === "number" && Number.isFinite(row.successStreak)
+        ? Math.max(0, Math.floor(row.successStreak))
+        : 0,
+    lapses:
+      typeof row.lapses === "number" && Number.isFinite(row.lapses)
+        ? Math.max(0, Math.floor(row.lapses))
+        : 0,
+    lastGrade: isStringInSet(row.lastGrade, FLASHCARD_GRADE_SET)
+      ? (row.lastGrade as FlashcardGrade)
+      : null,
+  };
+}
+
+export function normalizeFlashcards(value: unknown): readonly FlashcardRecord[] {
   if (!Array.isArray(value)) {
     return [];
   }
@@ -487,6 +523,11 @@ function normalizeFlashcards(value: unknown): readonly FlashcardRecord[] {
     if (!isRecord(row) || !isString(row.front) || !isString(row.back)) {
       return [];
     }
+    // Cards saved before recognition/production were split only have the
+    // old flat schedule fields -- treat that saved progress as production
+    // history (that's what free-recall grading actually was) and start
+    // recognition fresh, rather than discarding real review history.
+    const hasSplitSchedule = isRecord(row.production) || isRecord(row.recognition);
     return [
       {
         id: isString(row.id) ? row.id : `legacy-flashcard-${index}`,
@@ -502,25 +543,10 @@ function normalizeFlashcards(value: unknown): readonly FlashcardRecord[] {
           ? { originalSentence: row.originalSentence }
           : {}),
         createdAt: isString(row.createdAt) ? row.createdAt : new Date(0).toISOString(),
-        stage:
-          typeof row.stage === "number" && Number.isFinite(row.stage)
-            ? Math.max(0, Math.floor(row.stage))
-            : 0,
-        dueAt:
-          typeof row.dueAt === "number" && Number.isFinite(row.dueAt)
-            ? row.dueAt
-            : Date.now(),
-        successStreak:
-          typeof row.successStreak === "number" && Number.isFinite(row.successStreak)
-            ? Math.max(0, Math.floor(row.successStreak))
-            : 0,
-        lapses:
-          typeof row.lapses === "number" && Number.isFinite(row.lapses)
-            ? Math.max(0, Math.floor(row.lapses))
-            : 0,
-        lastGrade: isStringInSet(row.lastGrade, FLASHCARD_GRADE_SET)
-          ? (row.lastGrade as FlashcardGrade)
-          : null,
+        recognition: normalizeFlashcardScheduleState(row.recognition),
+        production: hasSplitSchedule
+          ? normalizeFlashcardScheduleState(row.production)
+          : normalizeFlashcardScheduleState(row),
       },
     ];
   });

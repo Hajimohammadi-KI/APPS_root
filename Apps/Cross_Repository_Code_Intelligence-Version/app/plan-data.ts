@@ -4,6 +4,19 @@ export type SourceDefinition = {
   href?: string;
   driveName?: string;
   priority: "core" | "important" | "support" | "optional" | "course";
+  // How this source is actually meant to be used when the thesis text gets
+  // written, per the three-bucket strategy explained by a friend already
+  // writing a thesis: most sources are never "improved on" -- they are read
+  // once for background, or named in Related Work as prior art without a
+  // direct-contribution claim. Undefined means "not a literature source for
+  // Related Work sorting" (e.g. the expose, the frozen corpus, technical docs,
+  // or NLP-course-only material never entering the thesis' own citation pool).
+  //   "cite"          - work this thesis directly improves on / builds on
+  //                      ("I extend X's approach"); expect only 1-2 of these.
+  //   "background"    - read once for context/understanding, rarely cited.
+  //   "related-work"  - named in Related Work as prior work in the area,
+  //                      without a direct-contribution claim.
+  thesisRole?: "cite" | "background" | "related-work";
 };
 
 export type DaySpec = {
@@ -118,6 +131,7 @@ export const sources: Record<string, SourceDefinition> = {
     driveName:
       "01_★★★★★_CORE_R01_Hevner_2004_Design_Science_in_Information_Systems.pdf",
     priority: "core",
+    thesisRole: "cite",
   },
   nagy: {
     id: "nagy",
@@ -126,6 +140,7 @@ export const sources: Record<string, SourceDefinition> = {
     driveName:
       "04_★★★★★_CORE_R06_Nagy_2015_Where_Was_This_SQL_Query_Executed.pdf",
     priority: "core",
+    thesisRole: "cite",
   },
   shatnawi: {
     id: "shatnawi",
@@ -134,6 +149,7 @@ export const sources: Record<string, SourceDefinition> = {
     driveName:
       "05_★★★★★_CORE_R04_Shatnawi_2019_Static_Analysis_of_Multilanguage_Systems.pdf",
     priority: "core",
+    thesisRole: "background",
   },
   yamaguchi: {
     id: "yamaguchi",
@@ -141,6 +157,7 @@ export const sources: Record<string, SourceDefinition> = {
     href: "https://drive.google.com/file/d/1SGWMjZA8Im9fXsuZxr6KnKdgijDH4o8r/view",
     driveName: "07_★★★★★_CORE_R02_Yamaguchi_2014_Code_Property_Graphs.pdf",
     priority: "core",
+    thesisRole: "background",
   },
   logiclens: {
     id: "logiclens",
@@ -149,6 +166,7 @@ export const sources: Record<string, SourceDefinition> = {
     driveName:
       "03_★★★★★_CORE_R09_Usai_2026_LogicLens_Multi_Repository_Semantic_Code_Graph.pdf",
     priority: "core",
+    thesisRole: "related-work",
   },
   codefuse: {
     id: "codefuse",
@@ -157,6 +175,7 @@ export const sources: Record<string, SourceDefinition> = {
     driveName:
       "10_★★★★★_CORE_R05_Xie_2026_CodeFuse_Query_Large_Scale_Code_Analysis.pdf",
     priority: "core",
+    thesisRole: "related-work",
   },
   sweqa: {
     id: "sweqa",
@@ -165,12 +184,14 @@ export const sources: Record<string, SourceDefinition> = {
     driveName:
       "02_★★★★☆_IMPORTANT_R29_Peng_2026_SWE_QA_Repository_Level_Code_Questions.pdf",
     priority: "important",
+    thesisRole: "related-work",
   },
   alshemaimri: {
     id: "alshemaimri",
     label: "Alshemaimri et al. 2021: Database Code Fragments Survey",
     href: "https://onlinelibrary.wiley.com/doi/full/10.1002/eng2.12441",
     priority: "important",
+    thesisRole: "related-work",
   },
   allamanis: {
     id: "allamanis",
@@ -179,6 +200,7 @@ export const sources: Record<string, SourceDefinition> = {
     driveName:
       "06_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs.pdf",
     priority: "core",
+    thesisRole: "background",
   },
   kilt: {
     id: "kilt",
@@ -187,6 +209,7 @@ export const sources: Record<string, SourceDefinition> = {
     driveName:
       "08_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks.pdf",
     priority: "important",
+    thesisRole: "related-work",
   },
   draco: {
     id: "draco",
@@ -195,6 +218,7 @@ export const sources: Record<string, SourceDefinition> = {
     driveName:
       "09_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval.pdf",
     priority: "important",
+    thesisRole: "related-work",
   },
   graphcodebert: {
     id: "graphcodebert",
@@ -202,6 +226,7 @@ export const sources: Record<string, SourceDefinition> = {
     href: "https://arxiv.org/pdf/2009.08366",
     driveName: "11_★★☆☆☆_OPTIONAL_R44_Guo_2021_GraphCodeBERT_Data_Flow.pdf",
     priority: "optional",
+    thesisRole: "background",
   },
   roslynWorkspace: {
     id: "roslynWorkspace",
@@ -794,7 +819,7 @@ const technicalWeekSpecs: Array<{
     days: [
       d("Entwurf des Methodenkapitels", ["proposal", "hevner"], "Die Methode muss Corpus, Extractor, Goldstandard und Experiment reproduzierbar erklären.", ["Beschreibe Ein- und Ausgabe jeder Stufe", "Dokumentiere Stop-Regeln und Unsicherheit", "Versioniere die Konfigurationen"], ["11 bis 13", "21"], "Thesis / Method", "method-draft.md", "writing"),
       d("Entwurf des Ergebniskapitels", ["proposal"], "Ergebnisse werden ohne zusätzliche Interpretation und in festen Tabellen berichtet.", ["Tabelliere die RQ1-Metriken", "Tabelliere RQ2 Experiment A und B", "Ergänze Fallstudien mit Evidenzpfad"], ["14", "21"], "Thesis / Results", "results-draft.md", "writing"),
-      d("Entwurf der Diskussion", ["proposal", "logiclens"], "Die Diskussion führt zu Forschungsfragen, Related Work und Validität zurück.", ["Beantworte jede Forschungsfrage direkt", "Beschreibe Gemeinsamkeiten und Unterschiede zu verwandten Systemen", "Begrenze Scope und Generalisierung"], ["4 bis 7", "15 bis 18"], "Thesis / Discussion", "discussion-draft.md", "writing"),
+      d("Entwurf der Diskussion", ["proposal", "logiclens", "nagy", "hevner", "sweqa"], "Die Diskussion führt zu Forschungsfragen, Related Work und Validität zurück; Related Work braucht vor dem Schreiben eine sortierte Quellenliste statt loser Zitate.", ["Sortiere jede gelesene Quelle in genau einen Eimer: „zitiert als Grundlage“ (thesisRole cite — direkt ausgebaute Vorarbeit, meist nur ein bis zwei Quellen), „Hintergrundlektüre“ (thesisRole background — einmal gelesen, selten zitiert) oder „Related-Work-Erwähnung“ (thesisRole related-work — „bisherige Arbeiten haben X getan“, ohne Ausbau-Anspruch)", "Beschreibe für jede cite-Quelle in einem Satz, was diese Arbeit konkret ausbaut oder verbessert; beantworte jede Forschungsfrage direkt", "Begrenze Scope und Generalisierung anhand der related-work- und background-Quellen"], ["4 bis 7", "15 bis 18"], "Thesis / Discussion", "discussion-draft.md + source-bucket-map.md", "writing"),
       d("Replikationspaket", ["proposal", "codefuse"], "Andere Forschende müssen den Lauf reproduzieren können.", ["Führe Build- und Run-Anweisungen aus", "Prüfe Konfiguration, Hash und Output-Manifest", "Reduziere fehlende Abhängigkeiten auf null"], ["11.3", "17", "38.11"], "Release", "replication-package-v1.zip", "writing"),
       d("Demo und Präsentation", ["proposal"], "Der Wert des Artefakts muss an einem kurzen realen Pfad sichtbar werden.", ["Zeige Problem→Evidenz→Antwort", "Zeige eine korrekte Ablehnung", "Nenne Grenzen auf der Schlussfolie"], ["24", "32"], "Presentation", "demo-script-fa-de-en.md", "writing"),
       d("Finaler Reproduktionslauf", ["proposal", "danphe"], "Die Abgabe ist erst nach einem sauberen, erfolgreichen Lauf valide.", ["Führe den Lauf aus einem sauberen Checkout aus", "Dokumentiere alle Output-Hashes", "Bereite Release Tag und Changelog vor"], ["17", "20.2", "38.11"], "Release", "release-candidate-1", "writing"),

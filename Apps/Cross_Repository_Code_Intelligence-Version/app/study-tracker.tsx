@@ -2073,6 +2073,9 @@ export default function StudyTracker({
             <a href="/nlp-lab" {...internalLinkProps("/nlp-lab")}>
               <Icon name="pulse" /> NLP Retrieval Lab
             </a>
+            <a href="/projekt-fahrplan" {...internalLinkProps("/projekt-fahrplan")}>
+              <Icon name="flag" /> Projekt-Fahrplan
+            </a>
             <button
               type="button"
               className={focusActive?.status ?? ""}

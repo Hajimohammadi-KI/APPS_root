@@ -40,7 +40,11 @@ import {
 } from "@/lib/automaticity-analysis";
 import { evaluateResponse } from "@/lib/assessment";
 import { putAudio } from "@/lib/audio-db";
-import { analyzeAudioFluency, scoreFromActiveSpeech } from "@/lib/audio-fluency";
+import {
+  analyzeAudioFluency,
+  scoreFromActiveSpeech,
+  type AudioFluencyAnalysis,
+} from "@/lib/audio-fluency";
 import { makeId, todayKey } from "@/lib/utils";
 import { DueReviews } from "@/features/components/due-reviews";
 
@@ -324,6 +328,8 @@ export function AutomaticityScreen({
     React.useState<AutomaticityAnalysis | null>(null);
   const [speechAnalysis, setSpeechAnalysis] =
     React.useState<AutomaticityAnalysis | null>(null);
+  const [audioFluencyResult, setAudioFluencyResult] =
+    React.useState<AudioFluencyAnalysis | null>(null);
   const [transferAttempt, setTransferAttempt] = React.useState("");
   const [transferAnalysis, setTransferAnalysis] =
     React.useState<AutomaticityAnalysis | null>(null);
@@ -773,6 +779,7 @@ export function AutomaticityScreen({
     const audioFluency = audioRef.current
       ? await analyzeAudioFluency(audioRef.current)
       : null;
+    setAudioFluencyResult(audioFluency);
     const fluencyScore = audioFluency
       ? scoreFromActiveSpeech(analysis.wordCount, audioFluency.activeSpeechSeconds)
       : 0;
@@ -1133,6 +1140,45 @@ export function AutomaticityScreen({
           />
           <Button onClick={saveSpeaking}>Analyse and save speaking</Button>
           {speechAnalysis ? <Feedback analysis={speechAnalysis} /> : null}
+          {audioFluencyResult ? (
+            <div className="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-violet-200 bg-violet-50 p-3 text-sm sm:grid-cols-4">
+              <div>
+                <strong className="block text-lg">
+                  {audioFluencyResult.activeSpeechSeconds.toFixed(1)}s
+                </strong>
+                active speech
+              </div>
+              <div>
+                <strong className="block text-lg">{audioFluencyResult.pauseCount}</strong>
+                pause(s)
+              </div>
+              <div>
+                <strong className="block text-lg">
+                  {audioFluencyResult.medianPitchHz
+                    ? `${Math.round(audioFluencyResult.medianPitchHz)} Hz`
+                    : "—"}
+                </strong>
+                typical pitch
+              </div>
+              <div>
+                <strong className="block text-lg">
+                  {audioFluencyResult.pitchVarietySemitones !== null
+                    ? audioFluencyResult.pitchVarietySemitones < 1.5
+                      ? "Monotone"
+                      : audioFluencyResult.pitchVarietySemitones < 3.5
+                        ? "Some variety"
+                        : "Varied"
+                    : "—"}
+                </strong>
+                intonation
+              </div>
+              <p className="col-span-2 text-xs text-muted-foreground sm:col-span-4">
+                Pitch is estimated from the raw recording (no external
+                service) -- a rough intonation signal, not phoneme-level
+                pronunciation scoring.
+              </p>
+            </div>
+          ) : null}
 
           <div className="mt-2 space-y-3 rounded-2xl border border-violet-200 bg-violet-50/60 p-4">
             <div>

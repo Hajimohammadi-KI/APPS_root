@@ -40,11 +40,11 @@ import {
   type CefrLevel,
   type ShadowingStage,
 } from "@grammar/domain";
+import { Feedback } from "@/features/automaticity/automaticity-lab";
 import {
-  Feedback,
+  practiceAnswerMatches,
   type AutomatikAnalysis,
-} from "@/features/automaticity/automaticity-lab";
-import { practiceAnswerMatches } from "@/features/automaticity/automaticity-analysis";
+} from "@/features/automaticity/automaticity-analysis";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/components/human-audio-player";
 import {

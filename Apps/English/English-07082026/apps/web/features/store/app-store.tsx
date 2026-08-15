@@ -169,6 +169,27 @@ export interface TopicMastery {
 
 export type FlashcardSource = "lesson" | "pdf" | "highlight" | "conversation" | "manual";
 export type FlashcardGrade = "again" | "hard" | "good";
+// Recognition ("which of these is the right word for this meaning?" --
+// multiple choice) and production ("write the word for this meaning" --
+// open recall) are genuinely different skills; a learner can recognize a
+// word long before they can produce it unprompted. Each card now tracks
+// them as two independent Leitner schedules instead of one blended one.
+export type FlashcardMode = "recognition" | "production";
+
+export interface FlashcardScheduleState {
+	// Index into RECALL_INTERVAL_STEPS_DAYS -- the same Leitner ladder the
+	// grammar review queue already uses, reused here rather than inventing a
+	// second scheduling algorithm.
+	stage: number;
+	dueAt: number;
+	successStreak: number;
+	lapses: number;
+	lastGrade: FlashcardGrade | null;
+}
+
+function newFlashcardScheduleState(): FlashcardScheduleState {
+	return { stage: 0, dueAt: Date.now(), successStreak: 0, lapses: 0, lastGrade: null };
+}
 
 export interface FlashcardItem {
 	id: string;
@@ -180,14 +201,8 @@ export interface FlashcardItem {
 	lesson?: string;
 	originalSentence?: string;
 	createdAt: string;
-	// Index into RECALL_INTERVAL_STEPS_DAYS -- the same Leitner ladder the
-	// grammar review queue already uses, reused here rather than inventing a
-	// second scheduling algorithm.
-	stage: number;
-	dueAt: number;
-	successStreak: number;
-	lapses: number;
-	lastGrade: FlashcardGrade | null;
+	recognition: FlashcardScheduleState;
+	production: FlashcardScheduleState;
 }
 
 export interface Session {
@@ -565,9 +580,60 @@ export function normalizeAppState(value: unknown): AppState {
 			: {},
 		reviews: recordArray<ReviewItem>(value.reviews),
 		sessions: recordArray<Session>(value.sessions),
-		flashcards: recordArray<FlashcardItem>(value.flashcards),
+		flashcards: normalizeFlashcards(value.flashcards),
 		todayGrammar,
 	};
+}
+
+function normalizeScheduleState(value: unknown): FlashcardScheduleState {
+	const source = isRecord(value) ? value : {};
+	const validGrades: FlashcardGrade[] = ["again", "hard", "good"];
+	return {
+		stage: typeof source.stage === "number" ? source.stage : 0,
+		dueAt: typeof source.dueAt === "number" ? source.dueAt : Date.now(),
+		successStreak:
+			typeof source.successStreak === "number" ? source.successStreak : 0,
+		lapses: typeof source.lapses === "number" ? source.lapses : 0,
+		lastGrade: validGrades.includes(source.lastGrade as FlashcardGrade)
+			? (source.lastGrade as FlashcardGrade)
+			: null,
+	};
+}
+
+export function normalizeFlashcards(value: unknown): FlashcardItem[] {
+	return recordArray<Record<string, unknown>>(value).flatMap((raw) => {
+		const front = typeof raw.front === "string" ? raw.front : "";
+		const back = typeof raw.back === "string" ? raw.back : "";
+		if (!front || !back) return [];
+		// Cards saved before recognition/production were split only have the
+		// old flat schedule fields -- treat that saved progress as production
+		// history (that's what free-recall grading actually was) and start
+		// recognition fresh, rather than discarding real review history.
+		const hasSplitSchedule = isRecord(raw.production) || isRecord(raw.recognition);
+		return [
+			{
+				id: typeof raw.id === "string" ? raw.id : makeId("flashcard"),
+				front,
+				back,
+				source: (["lesson", "pdf", "highlight", "conversation", "manual"] as const).includes(
+					raw.source as FlashcardSource,
+				)
+					? (raw.source as FlashcardSource)
+					: "manual",
+				sourceLabel: typeof raw.sourceLabel === "string" ? raw.sourceLabel : undefined,
+				level: isCefrLevel(raw.level) ? raw.level : null,
+				lesson: typeof raw.lesson === "string" ? raw.lesson : undefined,
+				originalSentence:
+					typeof raw.originalSentence === "string" ? raw.originalSentence : undefined,
+				createdAt:
+					typeof raw.createdAt === "string" ? raw.createdAt : new Date().toISOString(),
+				recognition: normalizeScheduleState(raw.recognition),
+				production: hasSplitSchedule
+					? normalizeScheduleState(raw.production)
+					: normalizeScheduleState(raw),
+			},
+		];
+	});
 }
 
 function isCefrLevel(value: unknown): value is CefrLevel {
@@ -1096,7 +1162,7 @@ interface StoreValue {
 		lesson?: string;
 		originalSentence?: string;
 	}) => FlashcardItem | null;
-	gradeFlashcard: (cardId: string, grade: FlashcardGrade) => void;
+	gradeFlashcard: (cardId: string, mode: FlashcardMode, grade: FlashcardGrade) => void;
 	deleteFlashcard: (cardId: string) => void;
 }
 
@@ -1439,11 +1505,8 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 					lesson: card.lesson,
 					originalSentence: card.originalSentence,
 					createdAt: new Date().toISOString(),
-					stage: 0,
-					dueAt: Date.now(),
-					successStreak: 0,
-					lapses: 0,
-					lastGrade: null,
+					recognition: newFlashcardScheduleState(),
+					production: newFlashcardScheduleState(),
 				};
 				draft.flashcards.push(entry);
 				created = entry;
@@ -1454,31 +1517,32 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 	);
 
 	const gradeFlashcard = React.useCallback(
-		(cardId: string, grade: FlashcardGrade) => {
+		(cardId: string, mode: FlashcardMode, grade: FlashcardGrade) => {
 			mutate((draft) => {
 				const card = draft.flashcards.find((item) => item.id === cardId);
 				if (!card) return;
-				card.lastGrade = grade;
+				const schedule = card[mode];
+				schedule.lastGrade = grade;
 				if (grade === "again") {
 					// Short relearn step, not the full ladder reset -- the card
 					// comes back within the same session instead of tomorrow.
-					card.stage = 0;
-					card.successStreak = 0;
-					card.lapses += 1;
-					card.dueAt = Date.now() + 10 * 60_000;
+					schedule.stage = 0;
+					schedule.successStreak = 0;
+					schedule.lapses += 1;
+					schedule.dueAt = Date.now() + 10 * 60_000;
 					return;
 				}
 				if (grade === "hard") {
 					// Same stage, shorter-than-normal interval: still due sooner
 					// than a "good" answer, but doesn't reset progress like "again".
-					const interval = RECALL_INTERVAL_STEPS_DAYS[card.stage] ?? FIRST_RECALL_INTERVAL_DAYS;
-					card.dueAt = Date.now() + Math.max(1, Math.round(interval / 2)) * 86_400_000;
+					const interval = RECALL_INTERVAL_STEPS_DAYS[schedule.stage] ?? FIRST_RECALL_INTERVAL_DAYS;
+					schedule.dueAt = Date.now() + Math.max(1, Math.round(interval / 2)) * 86_400_000;
 					return;
 				}
-				card.successStreak += 1;
-				card.stage = Math.min(card.stage + 1, RECALL_INTERVAL_STEPS_DAYS.length - 1);
-				const interval = RECALL_INTERVAL_STEPS_DAYS[card.stage] ?? FIRST_RECALL_INTERVAL_DAYS;
-				card.dueAt = Date.now() + interval * 86_400_000;
+				schedule.successStreak += 1;
+				schedule.stage = Math.min(schedule.stage + 1, RECALL_INTERVAL_STEPS_DAYS.length - 1);
+				const interval = RECALL_INTERVAL_STEPS_DAYS[schedule.stage] ?? FIRST_RECALL_INTERVAL_DAYS;
+				schedule.dueAt = Date.now() + interval * 86_400_000;
 			});
 		},
 		[mutate],

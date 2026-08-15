@@ -9,7 +9,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useAppStore, type FlashcardGrade } from "@/features/store/app-store";
+import {
+	useAppStore,
+	type FlashcardItem,
+	type FlashcardMode,
+} from "@/features/store/app-store";
+
+interface DueItem {
+	card: FlashcardItem;
+	mode: FlashcardMode;
+}
+
+function normalize(value: string) {
+	return value.trim().toLocaleLowerCase();
+}
+
+// Recognition (pick the right front from a few options) needs real
+// distractors -- below this many total cards there aren't enough other
+// fronts to build a fair multiple-choice question, so only production
+// (typed recall) is tested until the deck grows.
+const MIN_CARDS_FOR_RECOGNITION = 4;
 
 export default function FlashcardsPage() {
 	const { state, addFlashcard, gradeFlashcard, deleteFlashcard, setTodayGrammar } = useAppStore();
@@ -17,6 +36,8 @@ export default function FlashcardsPage() {
 	const [back, setBack] = React.useState("");
 	const [originalSentence, setOriginalSentence] = React.useState("");
 	const [revealed, setRevealed] = React.useState(false);
+	const [productionAnswer, setProductionAnswer] = React.useState("");
+	const [productionResult, setProductionResult] = React.useState<"correct" | "incorrect" | null>(null);
 	// A forgotten card ("Again") previously just went back into the queue
 	// with no way to actually practice the pattern it came from -- when the
 	// card was added from a grammar lesson, offer a direct link to work
@@ -24,12 +45,31 @@ export default function FlashcardsPage() {
 	const [correctiveLesson, setCorrectiveLesson] = React.useState<string | null>(null);
 
 	const now = Date.now();
-	const dueCards = React.useMemo(
-		() => state.flashcards.filter((card) => card.dueAt <= now).sort((a, b) => a.dueAt - b.dueAt),
+	const canTestRecognition = state.flashcards.length >= MIN_CARDS_FOR_RECOGNITION;
+	const dueItems = React.useMemo(() => {
+		const items: DueItem[] = [];
+		for (const card of state.flashcards) {
+			if (canTestRecognition && card.recognition.dueAt <= now) {
+				items.push({ card, mode: "recognition" });
+			}
+			if (card.production.dueAt <= now) items.push({ card, mode: "production" });
+		}
+		return items.sort((a, b) => a.card[a.mode].dueAt - b.card[b.mode].dueAt);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[state.flashcards],
-	);
-	const activeCard = dueCards[0] ?? null;
+	}, [state.flashcards, canTestRecognition]);
+	const activeItem = dueItems[0] ?? null;
+
+	const recognitionChoices = React.useMemo(() => {
+		if (!activeItem || activeItem.mode !== "recognition") return [];
+		const distractors = state.flashcards
+			.filter((card) => card.id !== activeItem.card.id)
+			.map((card) => card.front)
+			.filter((value, index, all) => all.indexOf(value) === index)
+			.sort(() => Math.random() - 0.5)
+			.slice(0, 3);
+		return [...distractors, activeItem.card.front].sort(() => Math.random() - 0.5);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeItem?.card.id, activeItem?.mode]);
 
 	function submitNewCard(event: React.FormEvent) {
 		event.preventDefault();
@@ -45,11 +85,36 @@ export default function FlashcardsPage() {
 		setOriginalSentence("");
 	}
 
-	function grade(cardGrade: FlashcardGrade) {
-		if (!activeCard) return;
-		gradeFlashcard(activeCard.id, cardGrade);
-		setCorrectiveLesson(cardGrade === "again" ? (activeCard.lesson ?? null) : null);
+	function afterGrade(cardGrade: "again" | "hard" | "good") {
+		if (!activeItem) return;
+		setCorrectiveLesson(
+			cardGrade === "again" ? (activeItem.card.lesson ?? null) : null,
+		);
 		setRevealed(false);
+		setProductionAnswer("");
+		setProductionResult(null);
+	}
+
+	function chooseRecognition(choice: string) {
+		if (!activeItem) return;
+		const correct = choice === activeItem.card.front;
+		gradeFlashcard(activeItem.card.id, "recognition", correct ? "good" : "again");
+		afterGrade(correct ? "good" : "again");
+	}
+
+	function checkProduction() {
+		if (!activeItem) return;
+		const correct = normalize(productionAnswer) === normalize(activeItem.card.front);
+		setProductionResult(correct ? "correct" : "incorrect");
+		if (!correct) {
+			gradeFlashcard(activeItem.card.id, "production", "again");
+		}
+	}
+
+	function gradeProductionDifficulty(cardGrade: "hard" | "good") {
+		if (!activeItem) return;
+		gradeFlashcard(activeItem.card.id, "production", cardGrade);
+		afterGrade(cardGrade);
 	}
 
 	function practiceCorrectiveLesson() {
@@ -61,12 +126,14 @@ export default function FlashcardsPage() {
 	return (
 		<div className="page-stack">
 			<div className="page-heading">
-				<Badge>{state.flashcards.length} cards · {dueCards.length} due now</Badge>
+				<Badge>{state.flashcards.length} cards · {dueItems.length} due now</Badge>
 				<h1>Vocabulary &amp; Flashcards</h1>
 				<p>
-					Real spaced repetition: grading a card Again/Hard/Good changes when
-					it comes back, the same interval ladder the grammar review queue
-					uses. Cards stay on this device.
+					Recognition (multiple choice) and production (typed recall) are
+					tracked as two separate schedules per card -- recognizing a word
+					and producing it unprompted are different skills. Grading is
+					checked automatically, not self-reported. Cards stay on this
+					device.
 				</p>
 			</div>
 
@@ -74,8 +141,9 @@ export default function FlashcardsPage() {
 				<CardHeader>
 					<CardTitle>Review</CardTitle>
 					<CardDescription>
-						Recall the answer before revealing it -- that's the whole point of
-						a delayed test.
+						{activeItem?.mode === "recognition"
+							? "Pick the word that matches this meaning."
+							: "Type the word from memory before checking."}
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
@@ -90,43 +158,88 @@ export default function FlashcardsPage() {
 							</Button>
 						</div>
 					) : null}
-					{!activeCard ? (
+					{!activeItem ? (
 						<p className="text-sm text-muted-foreground">
 							Nothing due right now. New or graded cards reappear here when
 							they're due.
+							{!canTestRecognition ? (
+								<>
+									{" "}
+									Add {MIN_CARDS_FOR_RECOGNITION - state.flashcards.length} more
+									card(s) to unlock multiple-choice recognition testing.
+								</>
+							) : null}
 						</p>
+					) : activeItem.mode === "recognition" ? (
+						<div className="space-y-4 rounded-lg border p-4">
+							<Badge variant="secondary">Recognition</Badge>
+							<div>
+								<p className="text-xs font-bold uppercase text-muted-foreground">Meaning</p>
+								<p className="text-lg font-bold">{activeItem.card.back}</p>
+							</div>
+							<div className="grid gap-2 sm:grid-cols-2">
+								{recognitionChoices.map((choice) => (
+									<Button
+										key={choice}
+										onClick={() => chooseRecognition(choice)}
+										variant="outline"
+									>
+										{choice}
+									</Button>
+								))}
+							</div>
+						</div>
 					) : (
 						<div className="space-y-4 rounded-lg border p-4">
+							<Badge variant="secondary">Production</Badge>
 							<div>
-								<p className="text-xs font-bold uppercase text-muted-foreground">Front</p>
-								<p className="text-lg font-bold">{activeCard.front}</p>
+								<p className="text-xs font-bold uppercase text-muted-foreground">Meaning</p>
+								<p className="text-lg font-bold">{activeItem.card.back}</p>
 							</div>
-							{revealed ? (
+							{productionResult === null ? (
+								<>
+									<Input
+										aria-label="Typed answer"
+										onChange={(event) => setProductionAnswer(event.target.value)}
+										onKeyDown={(event) => event.key === "Enter" && checkProduction()}
+										placeholder="Write it from memory"
+										value={productionAnswer}
+									/>
+									<Button disabled={!productionAnswer.trim()} onClick={checkProduction}>
+										Check
+									</Button>
+								</>
+							) : (
 								<>
 									<div>
-										<p className="text-xs font-bold uppercase text-muted-foreground">Back</p>
-										<p className="text-lg">{activeCard.back}</p>
+										<p className="text-xs font-bold uppercase text-muted-foreground">
+											{productionResult === "correct" ? "Correct" : "Correct answer"}
+										</p>
+										<p className="text-lg">{activeItem.card.front}</p>
 									</div>
-									{activeCard.originalSentence ? (
+									{activeItem.card.originalSentence ? (
 										<div>
 											<p className="text-xs font-bold uppercase text-muted-foreground">
 												Original sentence
 											</p>
-											<p className="text-sm italic">{activeCard.originalSentence}</p>
+											<p className="text-sm italic">{activeItem.card.originalSentence}</p>
 										</div>
 									) : null}
-									<div className="flex flex-wrap gap-2">
-										<Button onClick={() => grade("again")} variant="outline">
-											Again
+									{productionResult === "correct" ? (
+										<div className="flex flex-wrap gap-2">
+											<Button onClick={() => gradeProductionDifficulty("hard")} variant="outline">
+												Correct, but hard
+											</Button>
+											<Button onClick={() => gradeProductionDifficulty("good")}>
+												Correct and easy
+											</Button>
+										</div>
+									) : (
+										<Button onClick={() => afterGrade("again")} variant="outline">
+											Next
 										</Button>
-										<Button onClick={() => grade("hard")} variant="outline">
-											Hard
-										</Button>
-										<Button onClick={() => grade("good")}>Good</Button>
-									</div>
+									)}
 								</>
-							) : (
-								<Button onClick={() => setRevealed(true)}>Show answer</Button>
 							)}
 						</div>
 					)}
@@ -179,7 +292,7 @@ export default function FlashcardsPage() {
 					) : (
 						<ul className="space-y-2">
 							{state.flashcards
-								.toSorted((a, b) => a.dueAt - b.dueAt)
+								.toSorted((a, b) => a.production.dueAt - b.production.dueAt)
 								.map((card) => (
 									<li className="flex items-center justify-between gap-3 rounded-lg border p-3" key={card.id}>
 										<div>
@@ -187,7 +300,9 @@ export default function FlashcardsPage() {
 												{card.front} <span className="font-normal text-muted-foreground">→ {card.back}</span>
 											</p>
 											<p className="text-xs text-muted-foreground">
-												Due {new Date(card.dueAt).toLocaleDateString()} · {card.lapses} lapse(s)
+												Recognition due {new Date(card.recognition.dueAt).toLocaleDateString()} ·
+												Production due {new Date(card.production.dueAt).toLocaleDateString()} ·{" "}
+												{card.recognition.lapses + card.production.lapses} lapse(s)
 												{card.source !== "manual" ? ` · from ${card.source}` : ""}
 											</p>
 										</div>

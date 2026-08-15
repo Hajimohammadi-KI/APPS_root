@@ -985,8 +985,8 @@ export function AutomaticityScreen({
         <CardHeader>
           <CardTitle>{stepOffset + 1}. Lesson and controlled practice</CardTitle>
           <CardDescription>
-            Recognition is only the first part. Every item leads to your own
-            output.
+            Controlled practice is only the first part. Every item leads to
+            your own output.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
@@ -1220,7 +1220,7 @@ export function AutomaticityScreen({
           </CardHeader>
           <CardContent className="space-y-4">
             <Axis
-              label="Recognition practice"
+              label="Controlled practice"
               value={
                 checkedAnswers.length
                   ? Math.round(

@@ -28,6 +28,12 @@
 .home-v2-celebrate strong { font-size: 14px; letter-spacing: -.01em; }
 .home-v2-celebrate span { color: var(--v2-muted); font-size: 12px; line-height: 1.5; }
 .home-v2-celebrate > button { display: grid; flex-shrink: 0; width: 30px; height: 30px; place-items: center; border: 0; border-radius: 10px; background: rgba(255,255,255,.6); color: var(--v2-ink); cursor: pointer; }
+.home-v2-notice { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; border: 1px solid rgba(217,166,66,.4); border-radius: 20px; background: rgba(247,199,90,.14); padding: 16px 18px; }
+.home-v2-notice-icon { display: grid; flex-shrink: 0; width: 40px; height: 40px; place-items: center; border-radius: 12px; background: rgba(217,166,66,.9); color: white; }
+.home-v2-notice > div { flex: 1; display: grid; gap: 6px; }
+.home-v2-notice strong { font-size: 14px; letter-spacing: -.01em; }
+.home-v2-notice p { margin: 0; color: var(--v2-muted); font-size: 12px; line-height: 1.5; }
+.home-v2-notice > div > button { justify-self: start; border: 0; border-radius: 10px; background: rgba(217,166,66,.9); color: white; font-size: 12px; font-weight: 700; padding: 7px 12px; cursor: pointer; }
 .home-v2-verified { display: flex; align-items: flex-start; gap: 12px; margin-top: 16px; border-radius: 16px; padding: 14px; }
 .home-v2-verified.is-verified { border: 1px solid rgba(122,196,140,.4); background: rgba(122,196,140,.1); }
 .home-v2-verified.is-pending { border: 1px dashed var(--v2-line); background: rgba(119,114,134,.06); }

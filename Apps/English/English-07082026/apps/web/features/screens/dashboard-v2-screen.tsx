@@ -139,6 +139,25 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
         </div>
       </header>
 
+      {!state.settings.onlineFeedback ? (
+        <div className="home-v2-notice" role="status">
+          <span className="home-v2-notice-icon"><ShieldCheck aria-hidden /></span>
+          <div>
+            <strong>Practice is saved, but mastery isn't advancing yet</strong>
+            <p>
+              Online feedback is off, so writing, speaking, transfer, and
+              repair attempts are never independently confirmed -- and
+              unconfirmed attempts can't count toward verified mastery or a
+              verified CEFR level, no matter how many you complete. Turn on
+              online feedback in Settings to start earning real progress.
+            </p>
+            <button onClick={() => navigate("settings")} type="button">
+              Open Settings
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       {celebrateLevel ? (
         <div aria-live="polite" className="home-v2-celebrate" role="status">
           <span className="home-v2-celebrate-icon"><Award aria-hidden /></span>

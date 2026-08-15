@@ -7,8 +7,16 @@ import {
   type TopicMastery,
 } from "@/features/store/app-store";
 
+// Labeled "Controlled" rather than "Recognize" -- despite the underlying
+// field/AttemptMode still being named recognitionScore/"recognition"
+// (renaming that touches mastery.ts, app-store.tsx, and every
+// deriveVerifiedLevel call site), what actually feeds this score is
+// checkPractice()'s controlled transformation/completion exercises, which
+// require producing the answer, not discriminating it from distractors --
+// there is no multiple-choice/recognition task anywhere in this pipeline.
+// Calling it "Recognize" claimed a skill dimension the app never tests.
 const dimensions: Array<[keyof TopicMastery, string]> = [
-  ["recognitionScore", "Recognize"],
+  ["recognitionScore", "Controlled"],
   ["writingScore", "Writing"],
   ["speakingScore", "Speaking"],
   ["repairScore", "Repair"],

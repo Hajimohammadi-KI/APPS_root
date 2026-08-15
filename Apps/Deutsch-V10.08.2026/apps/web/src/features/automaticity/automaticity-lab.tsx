@@ -554,7 +554,13 @@ export function AutomaticityLab({
       inputText: journal,
       correctedText: journal,
       targetHit: analysis.targetHit,
-      verified: analysis.online && analysis.targetHit,
+      // verified means "the online evaluator actually ran," not "and it
+      // passed" -- recordVerifiedMasteryAttempt discards the whole attempt
+      // when verified is false, so gating this on targetHit too silently
+      // threw away every genuinely-checked failure instead of letting it
+      // pull the score down like recordMasteryAttempt's capped-score logic
+      // (targetHit false -> score capped at 59) already does correctly.
+      verified: analysis.online,
       accuracyScore: analysis.score,
       ...(latencyMs === undefined ? {} : { latencyMs }),
     });
@@ -579,7 +585,10 @@ export function AutomaticityLab({
         inputText: transferAttempt,
         correctedText: transferAttempt,
         targetHit: analysis.targetHit,
-        verified: analysis.online && analysis.targetHit,
+        // See saveWriting's comment -- verified must track "the online
+        // check ran," not "and passed," or every genuinely-checked
+        // failure gets silently discarded instead of scored.
+        verified: analysis.online,
         accuracyScore: analysis.score,
       });
       saveDetectedErrors(analysis, transferAttempt);
@@ -731,10 +740,12 @@ export function AutomaticityLab({
       correctedText: transcript,
       targetHit: speakingReady,
       // evidenceBlock above already required real audio, full shadowing,
-      // and minimum duration before this point is ever reached -- the only
-      // remaining condition for mastery credit is that the transcript was
-      // actually checked online and passed.
-      verified: analysis.online && speakingReady,
+      // and minimum duration before this point is ever reached. verified
+      // must track "the online check ran" (see saveWriting's comment),
+      // not "and passed" -- gating it on speakingReady too silently
+      // discarded every genuinely-checked failed speaking attempt instead
+      // of letting recordMasteryAttempt's capped-score logic score it.
+      verified: analysis.online,
       accuracyScore: analysis.score,
       fluencyScore,
       // Feeds calculateMasteryStatus's median-latency gate

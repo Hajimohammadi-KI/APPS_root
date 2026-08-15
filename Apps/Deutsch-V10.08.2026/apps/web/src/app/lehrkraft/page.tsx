@@ -14,6 +14,7 @@ import {
   HumanAudioPlayer,
   HumanAudioRecorder,
 } from "@/components/human-audio-player";
+import { TeacherFlashcardPanel } from "@/features/components/teacher-flashcard-panel";
 import {
   deleteTeacherContent,
   listTeacherContent,
@@ -182,6 +183,7 @@ export default function LehrkraftPage() {
             <Save /> Inhalt speichern
           </button>
         </section>
+        <TeacherFlashcardPanel />
         <section className="teacher-library">
           <div className="teacher-library-heading">
             <div>

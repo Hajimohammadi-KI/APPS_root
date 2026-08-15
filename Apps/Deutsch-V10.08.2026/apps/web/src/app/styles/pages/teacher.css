@@ -57,6 +57,9 @@
 .teacher-library {
   padding: clamp(1rem, 2vw, 2rem);
 }
+.teacher-flashcards-panel {
+  grid-column: 1 / -1;
+}
 .teacher-page label {
   display: grid;
   gap: 0.45rem;

@@ -123,7 +123,7 @@ export function TeacherFlashcardPanel() {
 	);
 
 	return (
-		<section className="teacher-editor" aria-label="Flashcard authoring">
+		<section className="teacher-editor teacher-flashcards-panel" aria-label="Flashcard authoring">
 			<h2>Add flashcards</h2>
 			<p className="text-sm text-muted-foreground">
 				No JSON or code needed -- add cards one at a time with an optional

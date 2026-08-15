@@ -9,7 +9,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
+import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import type { FlashcardMode, FlashcardRecord } from "@grammar/domain";
+
+// Same contextKey convention Teacher Mode's Vokabelkarten-Panel writes to
+// (teacher-flashcard-panel.tsx) -- a real human recording, when a teacher
+// has added one, takes priority over the synthetic fallback.
+async function speakFlashcardFront(card: FlashcardRecord) {
+  const played = await playTeacherAudioByContextKey(`flashcard-${card.id}`).catch(
+    () => false,
+  );
+  if (played) return;
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(card.front);
+  utterance.lang = "de-DE";
+  window.speechSynthesis.speak(utterance);
+}
 
 interface DueItem {
   card: FlashcardRecord;
@@ -216,7 +232,16 @@ export default function VokabelkartenPage() {
                     <p className="text-xs font-bold uppercase text-muted-foreground">
                       {productionResult === "correct" ? "Richtig" : "Richtige Antwort"}
                     </p>
-                    <p className="text-lg">{activeItem.card.front}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-lg">{activeItem.card.front}</p>
+                      <Button
+                        onClick={() => void speakFlashcardFront(activeItem.card)}
+                        size="sm"
+                        variant="outline"
+                      >
+                        Anhören
+                      </Button>
+                    </div>
                   </div>
                   {activeItem.card.originalSentence ? (
                     <div>

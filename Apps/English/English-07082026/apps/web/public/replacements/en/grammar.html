@@ -705,6 +705,11 @@
           repairBox.classList.remove('show');
           completeCurrent();
           finishDailyActivity();
+        } else if (isOpenProduction) {
+          feedback.textContent = `Not yet. Write at least four words that form a complete sentence using ${progress.activeTopic}.`;
+          repairBox.classList.remove('show');
+          answer.focus();
+          lastMistake=`${task.prompt} — ${answer.value || '(no answer)'}`;
         } else {
           const correct = task.answer.replace(/^./, c => c.toUpperCase()) + '.';
           feedback.textContent = `Not yet. The correct answer is: ${correct} Read it, then type it yourself below.`;

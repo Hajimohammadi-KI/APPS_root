@@ -1193,6 +1193,30 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 		if (hydrated) persistAppState(state);
 	}, [hydrated, state]);
 
+	// Two open tabs each hold independent in-memory state and both write to
+	// the same localStorage key with no reconciliation -- whichever tab's
+	// effect fires last silently overwrote the other's attempts/mastery/
+	// flashcards/reviews with no warning. `storage` only fires in *other*
+	// tabs (never the one that wrote), so adopting the incoming value here
+	// can't create a write-back loop; it just keeps this tab caught up
+	// instead of going on to clobber the other tab's data on its own next
+	// save.
+	React.useEffect(() => {
+		if (!hydrated) return;
+		function onStorage(event: StorageEvent) {
+			if (event.key !== STORAGE_KEY || !event.newValue) return;
+			try {
+				mutationVersion.current += 1;
+				setState(normalizeAppState(JSON.parse(event.newValue)));
+			} catch {
+				// Malformed data from another tab is not this tab's problem to
+				// recover from -- keep the current in-memory state as-is.
+			}
+		}
+		window.addEventListener("storage", onStorage);
+		return () => window.removeEventListener("storage", onStorage);
+	}, [hydrated]);
+
 	React.useEffect(() => {
 		const root = document.documentElement;
 		root.dataset.readingProfile = state.settings.readingProfile;

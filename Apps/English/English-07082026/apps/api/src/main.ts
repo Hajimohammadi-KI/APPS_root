@@ -22,7 +22,12 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       ...origins,
-      /^https:\/\/[a-z0-9-]+\.vercel\.app$/i,
+      // Scoped to this project's own Vercel deployments (production +
+      // preview URLs, which Vercel names "<project>-<hash-or-branch>.
+      // vercel.app") -- the previous /^https:\/\/[a-z0-9-]+\.vercel\.app$/
+      // trusted literally any Vercel-hosted site, letting any other
+      // project's page read this API's responses cross-origin.
+      /^https:\/\/english-grammar-automaticity-pwa(-[a-z0-9-]+)?\.vercel\.app$/i,
     ],
     methods: ["GET", "POST", "OPTIONS"],
   });
@@ -30,7 +35,12 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   const port = Number(process.env.PORT ?? 4201);
-  await app.listen(port, "0.0.0.0");
+  // Loopback-only: this runs as a local grading helper on the user's own
+  // machine (bun dist/main.js via the desktop installer), not a
+  // containerized/cloud deployment that would need 0.0.0.0 to be routable
+  // -- binding all interfaces needlessly exposed it to every other device
+  // on the same network.
+  await app.listen(port, "127.0.0.1");
 }
 
 void bootstrap();

@@ -14,6 +14,8 @@ import {
   integratedSkillsLevels,
   ensureSixExercises,
   repairMislabeledResourceLinks,
+  deriveFormulaicSequences,
+  attachFormulaicSequences,
 } from "./index";
 import { repairGrammarUnitLinks } from "./resource-links";
 
@@ -207,7 +209,8 @@ describe("legacy content parity", () => {
       legacyGrammarUnits
         .map(ensureSixExercises)
         .map(repairGrammarUnitLinks)
-        .map(repairMislabeledResourceLinks),
+        .map(repairMislabeledResourceLinks)
+        .map(attachFormulaicSequences),
     );
   });
 
@@ -429,6 +432,28 @@ describe("legacy content parity", () => {
       );
       for (const requiredLabel of requiredLabels) {
         expect(labels, title).toContain(requiredLabel);
+      }
+    }
+  });
+
+  test("gives every grammar unit a non-empty, verified-content formulaic sequence pool", () => {
+    for (const unit of grammarUnits) {
+      expect(unit.formulaicSequences, unit.title).toBeDefined();
+      expect(unit.formulaicSequences!.length, unit.title).toBeGreaterThan(0);
+      expect(new Set(unit.formulaicSequences), unit.title).toEqual(
+        new Set(deriveFormulaicSequences(unit)),
+      );
+      for (const sequence of unit.formulaicSequences!) {
+        const wordCount = sequence.trim().split(/\s+/).length;
+        expect(wordCount, `${unit.title}: "${sequence}"`).toBeGreaterThanOrEqual(2);
+        expect(wordCount, `${unit.title}: "${sequence}"`).toBeLessThanOrEqual(6);
+        // Every chunk must be traceable back to this unit's own verified
+        // examples -- never a fabricated phrase.
+        const joinedExamples = unit.examples.join(" ").toLowerCase();
+        expect(
+          joinedExamples.includes(sequence.toLowerCase()),
+          `${unit.title}: "${sequence}" not found in its examples`,
+        ).toBe(true);
       }
     }
   });

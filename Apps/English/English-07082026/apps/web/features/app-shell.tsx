@@ -22,6 +22,7 @@ import {
 	Shuffle,
 	Languages,
 	GraduationCap,
+	Timer,
 	X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -67,6 +68,12 @@ const navigation: NavigationItem[] = [
 		label: "Conversation Studio",
 		subtitle: "Speak, correct, and repeat",
 		icon: MessagesSquare,
+	},
+	{
+		id: "automatization",
+		label: "Automatization Trainer",
+		subtitle: "Retrieval, shadowing, and formulaic drills",
+		icon: Timer,
 	},
 	{
 		id: "grammar",
@@ -147,7 +154,9 @@ const navigationGroups: NavigationGroup[] = [
 		caption: "Practice and speak today",
 		icon: Clock3,
 		items: navigation.filter((item) =>
-			["home", "daily", "practice", "studio"].includes(item.id),
+			["home", "daily", "practice", "studio", "automatization"].includes(
+				item.id,
+			),
 		),
 	},
 	{

@@ -54,6 +54,24 @@ export {
   type VerifiableMasteryAttempt,
 } from "./mastery";
 export {
+  AUTOMATIZATION_MATRIX_COLUMNS,
+  AUTOMATIZATION_MATRIX_WEEKS,
+  AUTOMATIZATION_MODULES,
+  SHADOWING_STAGES,
+  automatizationModuleLabels,
+  buildAutomatizationTopic,
+  computeAutomatizationMatrix,
+  parseAutomatizationTopic,
+  shadowingStageLabels,
+  type AutomatizationMatrixCell,
+  type AutomatizationMatrixColumn,
+  type AutomatizationMatrixColumnKey,
+  type AutomatizationMatrixRow,
+  type AutomatizationModule,
+  type ParsedAutomatizationTopic,
+  type ShadowingStage,
+} from "./automatization";
+export {
   CEFR_LEVELS,
   ERROR_CLASSES,
   LEGACY_STORAGE_KEY,

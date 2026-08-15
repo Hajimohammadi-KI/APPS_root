@@ -8,6 +8,8 @@ export {
   legacyGrammarUnits,
   ensureSixExercises,
   repairMislabeledResourceLinks,
+  deriveFormulaicSequences,
+  attachFormulaicSequences,
 } from "./curriculum";
 export { onlineResources as legacyOnlineResources } from "./generated/resources";
 export const onlineResources = legacyOnlineResources.map(repairOnlineResource);

@@ -160,10 +160,71 @@ function repairMislabeledResourceLinks(unit: GrammarUnit): GrammarUnit {
   return { ...unit, links: override };
 }
 
+// Splits each verified example sentence on clause boundaries (commas and a
+// small set of connective words) rather than fabricating new text, so every
+// candidate chunk is a substring of content that already passed the same
+// review as the rest of the unit. Kept to 2-6 words: long enough to be a
+// genuine multi-word formulaic sequence (not a single word), short enough to
+// still be a fixed/semi-fixed chunk rather than a whole sentence.
+const CLAUSE_SPLIT =
+  /,| and | but | because | so | when | if | that | while | before | after /i;
+const MAX_FORMULAIC_SEQUENCES_PER_UNIT = 6;
+const MIN_CHUNK_WORDS = 2;
+const MAX_CHUNK_WORDS = 6;
+
+export function deriveFormulaicSequences(unit: GrammarUnit): string[] {
+  const candidates: string[] = [];
+  const seen = new Set<string>();
+
+  function addCandidate(raw: string) {
+    const trimmed = raw.trim().replace(/^[-–—]\s*/, "").replace(/[.?!]+$/, "").trim();
+    if (!trimmed) return;
+    const wordCount = trimmed.split(/\s+/).length;
+    if (wordCount < MIN_CHUNK_WORDS || wordCount > MAX_CHUNK_WORDS) return;
+    const key = trimmed.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    candidates.push(trimmed);
+  }
+
+  for (const example of unit.examples) {
+    for (const clause of example.split(CLAUSE_SPLIT)) {
+      addCandidate(clause);
+    }
+  }
+
+  // Some units' examples are a single sentence with no comma/connective to
+  // split on, so clause-splitting alone can leave the pool empty -- either
+  // because the whole example is one clause under MIN_CHUNK_WORDS, or
+  // (verified-content-only) too long over MAX_CHUNK_WORDS to pass
+  // addCandidate as-is. Falling back to the first MAX_CHUNK_WORDS words of
+  // the example (still a verbatim substring of verified content, never
+  // fabricated) keeps every unit with at least some formulaic-sequence pool.
+  if (candidates.length === 0) {
+    for (const example of unit.examples) {
+      const trimmed = example.trim().replace(/[.?!]+$/, "");
+      if (!trimmed) continue;
+      const words = trimmed.split(/\s+/);
+      addCandidate(
+        words.length > MAX_CHUNK_WORDS
+          ? words.slice(0, MAX_CHUNK_WORDS).join(" ")
+          : trimmed,
+      );
+    }
+  }
+
+  return candidates.slice(0, MAX_FORMULAIC_SEQUENCES_PER_UNIT);
+}
+
+function attachFormulaicSequences(unit: GrammarUnit): GrammarUnit {
+  return { ...unit, formulaicSequences: deriveFormulaicSequences(unit) };
+}
+
 export {
   legacyGrammarUnits,
   ensureSixExercises,
   repairMislabeledResourceLinks,
+  attachFormulaicSequences,
 };
 export const grammarUnits: GrammarUnit[] = [
   ...legacyGrammarUnits,
@@ -171,4 +232,5 @@ export const grammarUnits: GrammarUnit[] = [
 ]
   .map(ensureSixExercises)
   .map(repairGrammarUnitLinks)
-  .map(repairMislabeledResourceLinks);
+  .map(repairMislabeledResourceLinks)
+  .map(attachFormulaicSequences);

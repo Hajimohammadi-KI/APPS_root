@@ -19,6 +19,7 @@ import {
 	type EvidenceSummary,
 	type PlacementMode,
 } from "@/lib/learner-profile";
+import type { CheckpointAnswer } from "@/lib/automatization";
 
 export type MasteryStatus =
 	| "new"
@@ -32,7 +33,14 @@ export type AttemptMode =
 	| "speaking"
 	| "repair"
 	| "transfer"
-	| "timed";
+	| "timed"
+	// Automatization Trainer modes -- distinct from the modes above (which
+	// belong to the Grammar Lab / Automaticity Mission flow) so
+	// recalculateMastery's per-mode scoring for those modes is unaffected.
+	// Aggregated separately by lib/automatization.ts's 4-week tracking matrix.
+	| "auto_retrieval"
+	| "auto_shadowing"
+	| "auto_formulaic";
 export type ErrorClass =
 	| "word_order"
 	| "case"
@@ -60,6 +68,18 @@ export interface Settings {
 	movementBreaks: boolean;
 	ttsRate: number;
 	spellingAffectsMastery: boolean;
+	// Automatization Trainer parameters (deliberate-practice exercise
+	// planner). Target CEFR level intentionally is NOT duplicated here --
+	// it reads from/writes to learner.selfDeclaredLevel, the one existing
+	// proficiency-level field every other screen already uses.
+	automatizationDailyMinutes: 5 | 10 | 15 | 20;
+	automatizationSkillFocus: "speaking" | "writing";
+	// One specific word/phrase the learner is deliberately targeting today,
+	// instead of trying to correct everything at once. Empty string means
+	// "not set" -- the UI falls back to auto-picking the learner's own
+	// lowest-accuracy formulaic sequence (lib/automatization.ts's
+	// pickAutoPronunciationTarget) rather than leaving the field blank.
+	automatizationPronunciationTarget: string;
 }
 
 export interface LearnerPreferences {
@@ -109,6 +129,11 @@ export interface Attempt {
 	// a task/rubric version number nothing here actually assigns.
 	contentVersion?: string;
 	assessedBy?: "online" | "offline";
+	// auto_shadowing attempts only: which of the 5 shadowing stages
+	// (1=listen for meaning ... 5=free retelling) this attempt records, so
+	// progression through the full sequence -- not just "shadowing done" as
+	// one blob -- is visible in the automatization tracking matrix.
+	stage?: number;
 }
 
 export interface ErrorItem {
@@ -216,6 +241,23 @@ export interface Session {
 	targetUses: number;
 }
 
+// A self-report, not app-graded: after every CHECKPOINT_SESSION_INTERVAL
+// distinct automatization practice days, the learner records a short recap
+// and answers exactly 3 fixed yes/no/partial questions about it. See
+// lib/automatization.ts's shouldPromptCheckpoint/summarizeCheckpoints.
+export interface AutomatizationCheckpoint {
+	id: string;
+	createdAt: string;
+	recapNote: string;
+	// Optional -- set only if the learner actually recorded the ~45s recap
+	// via the existing HumanAudioRecorder + putAudio() audio store, the same
+	// infrastructure the Automaticity Mission's speaking step already uses.
+	audioId?: string;
+	completeSentences: CheckpointAnswer;
+	pausesBetweenSentences: CheckpointAnswer;
+	confidentKeyTerms: CheckpointAnswer;
+}
+
 export interface DailyPlan {
 	completed: number[];
 	answers: Record<string, string>;
@@ -261,6 +303,7 @@ export interface AppState {
 	sessions: Session[];
 	flashcards: FlashcardItem[];
 	todayGrammar: { title: string; level: string; date: string } | null;
+	automatizationCheckpoints: AutomatizationCheckpoint[];
 }
 
 const STORAGE_KEY = "grammar-automaticity:v27";
@@ -305,6 +348,9 @@ export const DEFAULT_STATE: AppState = {
 		movementBreaks: true,
 		ttsRate: 0.9,
 		spellingAffectsMastery: false,
+		automatizationDailyMinutes: 10,
+		automatizationSkillFocus: "speaking",
+		automatizationPronunciationTarget: "",
 	},
 	learner: {
 		displayName: "",
@@ -343,6 +389,7 @@ export const DEFAULT_STATE: AppState = {
 	sessions: [],
 	flashcards: [],
 	todayGrammar: null,
+	automatizationCheckpoints: [],
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -478,6 +525,22 @@ export function normalizeAppState(value: unknown): AppState {
 				typeof settings.spellingAffectsMastery === "boolean"
 					? settings.spellingAffectsMastery
 					: fallback.settings.spellingAffectsMastery,
+			automatizationDailyMinutes:
+				settings.automatizationDailyMinutes === 5 ||
+				settings.automatizationDailyMinutes === 10 ||
+				settings.automatizationDailyMinutes === 15 ||
+				settings.automatizationDailyMinutes === 20
+					? settings.automatizationDailyMinutes
+					: fallback.settings.automatizationDailyMinutes,
+			automatizationSkillFocus:
+				settings.automatizationSkillFocus === "speaking" ||
+				settings.automatizationSkillFocus === "writing"
+					? settings.automatizationSkillFocus
+					: fallback.settings.automatizationSkillFocus,
+			automatizationPronunciationTarget:
+				typeof settings.automatizationPronunciationTarget === "string"
+					? settings.automatizationPronunciationTarget.trim().slice(0, 120)
+					: fallback.settings.automatizationPronunciationTarget,
 		},
 		learner: {
 			displayName:
@@ -582,6 +645,9 @@ export function normalizeAppState(value: unknown): AppState {
 		sessions: recordArray<Session>(value.sessions),
 		flashcards: normalizeFlashcards(value.flashcards),
 		todayGrammar,
+		automatizationCheckpoints: recordArray<AutomatizationCheckpoint>(
+			value.automatizationCheckpoints,
+		),
 	};
 }
 
@@ -1379,6 +1445,9 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 				if (draft.errors.length > 500) draft.errors = draft.errors.slice(-500);
 				if (draft.reviews.length > 1_000) draft.reviews = draft.reviews.slice(-1_000);
 				if (draft.sessions.length > 500) draft.sessions = draft.sessions.slice(-500);
+				if (draft.automatizationCheckpoints.length > 200) {
+					draft.automatizationCheckpoints = draft.automatizationCheckpoints.slice(-200);
+				}
 			}),
 		);
 		// Persistence happens once, in the `useEffect([hydrated, state])`

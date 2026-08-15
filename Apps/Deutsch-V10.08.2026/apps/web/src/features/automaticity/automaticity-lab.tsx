@@ -193,7 +193,13 @@ function correctiveExerciseFor(issue: AutomatikIssue): string {
   }
 }
 
-function Feedback({ analysis }: Readonly<{ analysis: AutomatikAnalysis }>) {
+// Exported so the Automatisierungstrainer (features/automatization-trainer)
+// can reuse the exact same immediate-feedback presentation for its free
+// retelling stage instead of re-implementing this per the "reuse existing
+// patterns" requirement.
+export function Feedback({
+  analysis,
+}: Readonly<{ analysis: AutomatikAnalysis }>) {
   return (
     <div className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50 p-4">
       <div className="grid grid-cols-3 gap-2 text-center text-sm">

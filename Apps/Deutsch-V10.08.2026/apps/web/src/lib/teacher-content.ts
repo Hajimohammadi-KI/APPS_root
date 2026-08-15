@@ -132,6 +132,10 @@ export async function findTeacherContentByContextKey(
 
 export async function playTeacherAudioByContextKey(
   contextKey: string,
+  // Optional playback rate (e.g. 0.75 for slow shadowing in the
+  // Automatisierungstrainer). Defaults to normal speed so every existing
+  // caller keeps its current behaviour unchanged.
+  rate = 1,
 ): Promise<boolean> {
   const item = await findTeacherContentByContextKey(contextKey);
   if (!item) return false;
@@ -139,6 +143,7 @@ export async function playTeacherAudioByContextKey(
   if (!blob) return false;
   const url = URL.createObjectURL(blob);
   const audio = new Audio(url);
+  audio.playbackRate = rate;
   audio.addEventListener("ended", () => URL.revokeObjectURL(url), {
     once: true,
   });

@@ -14,7 +14,7 @@
     "build": "bun run --cwd apps/api build && bun run --cwd apps/web build && bun scripts/prepare-standalone.mjs",
     "check": "bun run typecheck && bun run test && bun run test:installer && bun run lint",
     "typecheck": "bun run --cwd packages/content typecheck && bun run --cwd packages/evidence-domain typecheck && bun run --cwd apps/api typecheck && bun run --cwd apps/web typecheck",
-    "test": "bun test packages/content/src/content.test.ts packages/evidence-domain/src/task-versioning.test.ts packages/evidence-domain/src/upcasting.test.ts scripts/task-lifecycle-sql.test.ts apps/web/lib/assessment.test.ts apps/web/lib/automaticity-analysis.test.ts apps/web/lib/adaptive-daily-plan.test.ts apps/web/lib/pdf-reader-link.test.ts apps/web/lib/deepl-integration.test.ts && bun run --cwd apps/api test",
+    "test": "bun test packages/content/src/content.test.ts packages/evidence-domain/src/task-versioning.test.ts packages/evidence-domain/src/upcasting.test.ts scripts/task-lifecycle-sql.test.ts apps/web/lib/assessment.test.ts apps/web/lib/automaticity-analysis.test.ts apps/web/lib/adaptive-daily-plan.test.ts apps/web/lib/pdf-reader-link.test.ts apps/web/lib/deepl-integration.test.ts apps/web/lib/automatization.test.ts && bun run --cwd apps/api test",
     "test:e2e": "playwright test",
     "test:installer": "bun test scripts/windows-installer.test.ts",
     "legacy:preview": "bun scripts/serve-legacy.ts",

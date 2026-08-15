@@ -10,6 +10,7 @@ export const SCREEN_PATHS = {
 	home: "/",
 	daily: "/daily",
 	practice: "/practice",
+	automatization: "/automatization",
 	studio: "/studio",
 	progress: "/progress",
 	grammar: "/grammar",

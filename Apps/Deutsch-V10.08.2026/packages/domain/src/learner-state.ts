@@ -25,6 +25,13 @@ export interface LearnerSettings {
   readonly movementBreaks: boolean;
   readonly ttsRate: number;
   readonly spellingAffectsMastery: boolean;
+  /**
+   * Skill focus for the Automatisierungstrainer (retrieval/shadowing/
+   * formulaic-sequence practice). Kept on the shared settings object rather
+   * than a parallel trainer-only store, same as dailyStudyMinutes already
+   * doubles as that trainer's practice-duration parameter.
+   */
+  readonly automatizationFocus: "speaking" | "writing" | "both";
 }
 
 export const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
@@ -246,6 +253,7 @@ const DEFAULT_SETTINGS: LearnerSettings = {
   movementBreaks: true,
   ttsRate: 0.9,
   spellingAffectsMastery: false,
+  automatizationFocus: "both",
 };
 
 const DEFAULT_LEARNER_PROFILE: LearnerProfilePreferences = {
@@ -787,6 +795,12 @@ export function normalizeLearnerState(value: unknown): LearnerState {
         typeof settings.spellingAffectsMastery === "boolean"
           ? settings.spellingAffectsMastery
           : DEFAULT_SETTINGS.spellingAffectsMastery,
+      automatizationFocus:
+        settings.automatizationFocus === "speaking" ||
+        settings.automatizationFocus === "writing" ||
+        settings.automatizationFocus === "both"
+          ? settings.automatizationFocus
+          : DEFAULT_SETTINGS.automatizationFocus,
     },
     learner: {
       displayName: isString(learner.displayName)

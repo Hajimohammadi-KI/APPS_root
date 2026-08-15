@@ -824,7 +824,7 @@ export function AutomaticityLab({
                 <Button
                   render={
                     <Link
-                      href={`/studio?from=daily&level=${encodeURIComponent(selectedLevel)}&activity=2&return=/heute`}
+                      href={`/studio?from=daily&level=${encodeURIComponent(selectedLevel)}&grammar=${encodeURIComponent(TOPIC)}&activity=2&return=/heute`}
                     />
                   }
                   size="sm"

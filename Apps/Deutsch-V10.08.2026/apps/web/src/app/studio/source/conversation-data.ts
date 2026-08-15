@@ -1,4 +1,4 @@
-import { speakingTopics as curriculumTopics } from "@grammar/content";
+import { grammarUnits, speakingTopics as curriculumTopics } from "@grammar/content";
 
 export type StudioLanguage = "de";
 export type CefrLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
@@ -13,32 +13,56 @@ export interface ConversationTopic {
   readonly topic: string;
   readonly task: string;
   readonly goal: string;
+  // Real link into the grammar catalog, not just the shared CEFR level --
+  // speakingTopics.targetGrammar in the raw data is literally just the
+  // level string, no reference to a specific grammar point. Assigned
+  // deterministically by rotating through that level's 24 grammarUnits in
+  // catalog order, so every conversation topic points at a genuine,
+  // existing unit (never invented) and the 24 units at a level get even
+  // coverage across that level's ~13 topics.
+  readonly relatedGrammar: string | null;
 }
 
 const levels = new Set<CefrLevel>(["A1", "A2", "B1", "B2", "C1", "C2"]);
 
-export const conversationTopics: readonly ConversationTopic[] =
-  curriculumTopics.map((topic, index) => {
-    const normalizedLevel = topic.level === "B2-C1" ? "B2" : topic.level;
+export const conversationTopics: readonly ConversationTopic[] = (() => {
+  const seenPerLevel = new Map<CefrLevel, number>();
+  return curriculumTopics.map((topic, index) => {
+    const normalizedLevel = (
+      topic.level === "B2-C1" ? "B2" : topic.level
+    ) as CefrLevel;
 
-    if (!levels.has(normalizedLevel as CefrLevel)) {
+    if (!levels.has(normalizedLevel)) {
       throw new Error(
         `Nicht unterstütztes GER-Niveau im Gesprächskatalog: ${topic.level}`,
       );
     }
 
+    const levelUnits = grammarUnits.filter(
+      (unit) => unit.level === normalizedLevel,
+    );
+    const seq = seenPerLevel.get(normalizedLevel) ?? 0;
+    seenPerLevel.set(normalizedLevel, seq + 1);
+    const relatedUnit = levelUnits.length
+      ? levelUnits[seq % levelUnits.length]
+      : undefined;
+
     return {
       id: `de-${normalizedLevel.toLowerCase()}-${String(index + 1).padStart(3, "0")}`,
       language: "de",
       path: "Komplettes Deutsch",
-      level: normalizedLevel as CefrLevel,
+      level: normalizedLevel,
       skill: topic.skill,
       category: topic.category,
       topic: topic.topic,
       task: topic.task,
-      goal: `Bewältige diese Kann-Aufgabe auf Niveau ${normalizedLevel} selbstständig und verwende die Zielsprache korrekt: ${topic.targetGrammar}.`,
+      relatedGrammar: relatedUnit?.title ?? null,
+      goal: relatedUnit
+        ? `Bewältige diese Kann-Aufgabe auf Niveau ${normalizedLevel} selbstständig und verwende dabei „${relatedUnit.title}“ korrekt.`
+        : `Bewältige diese Kann-Aufgabe auf Niveau ${normalizedLevel} selbstständig und verwende die Zielsprache korrekt: ${topic.targetGrammar}.`,
     };
   });
+})();
 
 export const speechLocale: Readonly<Record<StudioLanguage, string>> = {
   de: "de-DE",

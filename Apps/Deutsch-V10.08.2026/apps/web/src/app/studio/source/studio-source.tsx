@@ -160,10 +160,21 @@ export default function Home() {
     const activity = Number(params.get("activity"));
     const requestedLevel = params.get("level");
     const requestedTopic = params.get("topic")?.toLowerCase();
+    // The real, specific grammar unit the learner was just working on in
+    // Daily Practice -- conversationTopics.relatedGrammar is a genuine
+    // reference into grammarUnits (not just the shared CEFR level), so
+    // when it's present the deep link can hand back a topic that's
+    // actually paired with that exact unit, not merely "same level."
+    const requestedGrammar = params.get("grammar");
     setDailyActivity(Number.isFinite(activity) ? activity : 2);
     setDailyReturn(params.get("return") || "/heute");
     if (requestedLevel) setLevel(requestedLevel);
     const matching =
+      (requestedGrammar
+        ? conversationTopics.find(
+            (topic) => topic.relatedGrammar === requestedGrammar,
+          )
+        : undefined) ??
       conversationTopics.find(
         (topic) =>
           (!requestedLevel || topic.level === requestedLevel) &&
@@ -194,9 +205,13 @@ export default function Home() {
     const currentLevel =
       learnerState.learningLevel ?? learnerState.learner.selfDeclaredLevel;
     if (!currentLevel) return;
-    const matching = conversationTopics.find(
-      (topic) => topic.level === currentLevel,
-    );
+    const currentGrammarTitle = learnerState.todayGrammar?.title;
+    const matching =
+      (currentGrammarTitle &&
+        conversationTopics.find(
+          (topic) => topic.relatedGrammar === currentGrammarTitle,
+        )) ||
+      conversationTopics.find((topic) => topic.level === currentLevel);
     if (matching) {
       setLevel(currentLevel);
       setTopicId(matching.id);
@@ -821,6 +836,9 @@ export default function Home() {
                 <h2>{selected.topic}</h2>
                 <span>
                   {selected.level} · {selected.category}
+                  {selected.relatedGrammar
+                    ? ` · Zielgrammatik: ${selected.relatedGrammar}`
+                    : ""}
                 </span>
               </div>
               <div className="coach-stage">

@@ -14,6 +14,22 @@ import {
 	type FlashcardItem,
 	type FlashcardMode,
 } from "@/features/store/app-store";
+import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
+
+// Same contextKey convention Teacher Mode's flashcard panel writes to
+// (teacher-flashcard-panel.tsx) -- a real human recording, when a teacher
+// has added one, takes priority over the synthetic fallback.
+async function speakFlashcardFront(card: FlashcardItem) {
+	const played = await playTeacherAudioByContextKey(`flashcard-${card.id}`).catch(
+		() => false,
+	);
+	if (played) return;
+	if (!("speechSynthesis" in window)) return;
+	window.speechSynthesis.cancel();
+	const utterance = new SpeechSynthesisUtterance(card.front);
+	utterance.lang = "en-US";
+	window.speechSynthesis.speak(utterance);
+}
 
 interface DueItem {
 	card: FlashcardItem;
@@ -215,7 +231,16 @@ export default function FlashcardsPage() {
 										<p className="text-xs font-bold uppercase text-muted-foreground">
 											{productionResult === "correct" ? "Correct" : "Correct answer"}
 										</p>
-										<p className="text-lg">{activeItem.card.front}</p>
+										<div className="flex items-center gap-2">
+											<p className="text-lg">{activeItem.card.front}</p>
+											<Button
+												onClick={() => void speakFlashcardFront(activeItem.card)}
+												size="sm"
+												variant="outline"
+											>
+												Listen
+											</Button>
+										</div>
 									</div>
 									{activeItem.card.originalSentence ? (
 										<div>

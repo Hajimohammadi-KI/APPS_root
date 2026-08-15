@@ -3,6 +3,7 @@
 import * as React from "react";
 import { ArrowLeft, FileAudio, Pencil, Plus, Save, Trash2, Upload } from "lucide-react";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/features/components/human-audio-player";
+import { TeacherFlashcardPanel } from "@/features/components/teacher-flashcard-panel";
 import { deleteTeacherContent, listTeacherContent, saveTeacherContent, type TeacherContentItem, type TeacherContentKind } from "@/lib/teacher-content";
 
 const empty = (): TeacherContentItem => ({ id: crypto.randomUUID(), kind: "example", level: "A1", title: "", body: "", contextKey: "", updatedAt: new Date().toISOString() });
@@ -46,6 +47,7 @@ export default function TeacherPage() {
         {message ? <p className="teacher-message" role="status">{message}</p> : null}
         <button className="teacher-primary-button" onClick={() => void save()} type="button"><Save aria-hidden /> Save content</button>
       </section>
+      <TeacherFlashcardPanel />
       <section className="teacher-library"><div className="teacher-library-heading"><div><span className="teacher-kicker">LIBRARY</span><h2>Managed content</h2></div><button className="teacher-secondary-button" onClick={() => { setDraft(empty()); setAudio(null); }} type="button"><Plus aria-hidden /> New</button></div>
         {items.length ? <div className="teacher-items">{items.map((item) => <article key={item.id}><div className="teacher-item-meta"><span>{item.level}</span><span>{item.kind}</span><code>{item.contextKey}</code></div><h3>{item.title}</h3><p>{item.body}</p><HumanAudioPlayer compact contentId={item.id} /><div className="teacher-item-actions"><button onClick={() => { setDraft(item); setAudio(null); window.scrollTo({ top: 0, behavior: "smooth" }); }} type="button"><Pencil aria-hidden /> Edit</button><button className="danger" onClick={async () => { await deleteTeacherContent(item.id); if (draft.id === item.id) setDraft(empty()); await refresh(); }} type="button"><Trash2 aria-hidden /> Delete</button></div></article>)}</div> : <div className="teacher-empty"><FileAudio aria-hidden /><h3>No teacher content yet</h3><p>Add the first item and attach a real human recording.</p></div>}
       </section>

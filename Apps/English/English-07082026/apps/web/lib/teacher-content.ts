@@ -1,4 +1,4 @@
-export type TeacherContentKind = "verb" | "example" | "exercise" | "conversation";
+export type TeacherContentKind = "verb" | "example" | "exercise" | "conversation" | "flashcard";
 
 export interface TeacherContentItem {
   id: string;

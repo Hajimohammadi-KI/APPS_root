@@ -11,6 +11,7 @@ import {
 import {
   allDays,
   defaultSettings,
+  migrateLegacyId,
   nlpCourseSessions,
   planMeta,
   planWeeks,
@@ -968,8 +969,22 @@ export default function StudyTracker({
           exposePromise,
         ]);
         if (!active) return;
-        setCompleted(new Set(state.completedIds ?? []));
-        setNotes(state.notes ?? {});
+        // Data saved under the pre-stable-id scheme (day/task/item id ==
+        // the date-derived string) would otherwise be silently invisible
+        // now that ids are stable across schedule recalculations -- remap
+        // on read so existing completions/notes/attachments stay intact
+        // instead of only working for data saved from now on.
+        setCompleted(
+          new Set((state.completedIds ?? []).map((id) => migrateLegacyId(id))),
+        );
+        setNotes(
+          Object.fromEntries(
+            Object.entries(state.notes ?? {}).map(([dayId, note]) => [
+              migrateLegacyId(dayId),
+              note,
+            ]),
+          ),
+        );
         let nextSettings = safeSettings(state.settings);
         if (planning) {
           nextSettings = safeSettings({
@@ -993,7 +1008,8 @@ export default function StudyTracker({
         if (!DEVICE_ONLY_STORAGE && attachmentList.length) {
           const grouped: Record<string, AttachmentMeta[]> = {};
           for (const attachment of attachmentList) {
-            (grouped[attachment.dayId] ??= []).push(attachment);
+            const dayId = migrateLegacyId(attachment.dayId);
+            (grouped[dayId] ??= []).push(attachment);
           }
           setAttachments(grouped);
         }

@@ -1006,10 +1006,18 @@ export const planWeeks: PlanWeek[] = scheduledWeekSpecs.map((week, weekIndex) =>
       ] as [string, string, string],
     ];
     const taskTitles = ["1. Finden und verstehen", "2. Mit dem Projekt verbinden", "3. Ergebnis erstellen"];
+    // Stable, date-independent id: earlier this session the plan's start
+    // date was recalculated to today, which shifted every day's computed
+    // date -- and until now day/task/item ids were literally that date
+    // string, so the recalculation silently orphaned every completed/
+    // notes/attachments entry keyed under the old dates. w<N>-d<N> only
+    // changes if the day's actual position in the schedule changes, not
+    // when the calendar dates it falls on shift.
+    const stableId = `w${weekIndex + 1}-d${dayIndex + 1}`;
 
     return {
       ...spec,
-      id: date,
+      id: stableId,
       date,
       week: weekIndex + 1,
       phase: week.phase,
@@ -1017,11 +1025,11 @@ export const planWeeks: PlanWeek[] = scheduledWeekSpecs.map((week, weekIndex) =>
       weekTitle: week.title,
       taskMinutes,
       tasks: taskTitles.map((title, taskIndex) => ({
-        id: `${date}-task-${taskIndex + 1}`,
+        id: `${stableId}-task-${taskIndex + 1}`,
         title,
         minutes: taskMinutes[taskIndex],
         items: taskItems[taskIndex].map((label, itemIndex) => ({
-          id: `${date}-t${taskIndex + 1}-i${itemIndex + 1}`,
+          id: `${stableId}-t${taskIndex + 1}-i${itemIndex + 1}`,
           label,
         })),
       })),
@@ -1042,6 +1050,34 @@ export const allDays = planWeeks.flatMap((week) => week.days);
 export const allTaskItems = allDays.flatMap((day) =>
   day.tasks.flatMap((task) => task.items),
 );
+
+// Read-side compatibility map from the old date-based ids (day.id used to
+// equal day.date) to the new stable ids, so completed/notes/attachments
+// already stored under a date-based id from before this fix stay
+// readable instead of silently vanishing. Built from the *current*
+// schedule, so it is only valid for data saved under this exact schedule
+// generation -- not a general-purpose id history across every past
+// recalculation, which cannot be reconstructed without knowing what
+// those past schedules were.
+export const LEGACY_ID_MIGRATION: ReadonlyMap<string, string> = new Map(
+  allDays.flatMap((day) => {
+    const entries: [string, string][] = [[day.date, day.id]];
+    for (const [taskIndex, task] of day.tasks.entries()) {
+      entries.push([`${day.date}-task-${taskIndex + 1}`, task.id]);
+      for (const [itemIndex, item] of task.items.entries()) {
+        entries.push([
+          `${day.date}-t${taskIndex + 1}-i${itemIndex + 1}`,
+          item.id,
+        ]);
+      }
+    }
+    return entries;
+  }),
+);
+
+export function migrateLegacyId(id: string): string {
+  return LEGACY_ID_MIGRATION.get(id) ?? id;
+}
 
 // Plan versioning: when the professor changes the project's direction and
 // the plan itself has to change, this is the record of *that it changed,

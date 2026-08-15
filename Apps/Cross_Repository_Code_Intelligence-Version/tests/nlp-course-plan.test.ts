@@ -35,8 +35,8 @@ describe("NLP Retrieval Lab live course", () => {
 
   test("keeps the fixed Berlin and Iran class times", () => {
     for (const session of nlpCourseSessions) {
-      expect(session.berlinTime).toBe("17:00–19:00");
-      expect(session.iranTime).toBe("18:30–20:30");
+      expect(session.berlinTime).toBe("17:30–19:30");
+      expect(session.iranTime).toBe("19:00–21:00");
     }
   });
 

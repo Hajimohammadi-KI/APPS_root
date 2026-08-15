@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { EvaluationResult } from "@/features/components/evaluation-result";
 import { recalculateMastery, useAppStore } from "@/features/store/app-store";
 import { evaluateResponse, type Evaluation } from "@/lib/assessment";
+import { practiceAnswerMatches } from "@/lib/automaticity-analysis";
 import { speak } from "@/lib/speech";
 import { requiredFirst } from "@/lib/utils";
 
@@ -52,6 +53,7 @@ export function ErrorsScreen() {
   const [repair, setRepair] = React.useState("");
   const [checks, setChecks] = React.useState([false, false]);
   const [evaluation, setEvaluation] = React.useState<Evaluation | null>(null);
+  const [copyDetected, setCopyDetected] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const errors = state.errors
     .filter((error) => filter === "all" || error.repairStatus !== "fixed")
@@ -261,6 +263,19 @@ export function ErrorsScreen() {
                       );
                       setLoading(false);
                       setEvaluation(result);
+                      // A repair that just repeats the reference correction
+                      // verbatim (the exact text "Listen and repeat" plays
+                      // back) proves nothing about new-context production --
+                      // the Mission's checkPractice() already rejects this
+                      // same pattern via extractPromptReference; repair
+                      // evidence needs the same guard.
+                      const isVerbatimCopy = practiceAnswerMatches(
+                        repair,
+                        selected.correctedText,
+                      );
+                      setCopyDetected(isVerbatimCopy);
+                      const genuineNewContext =
+                        !isVerbatimCopy && checks.every(Boolean);
                       recordAttempt({
                         grammarTitle: selected.grammarTitle,
                         mode: "repair",
@@ -270,10 +285,16 @@ export function ErrorsScreen() {
                         accuracyScore: result.accuracyScore,
                         fluencyScore: 0,
                         latencyMs: null,
-                        passed: result.masteryEligible && checks.every(Boolean),
-                        verified: result.masteryEligible,
+                        passed: result.masteryEligible && genuineNewContext,
+                        // verified must require the same genuine-new-context
+                        // evidence as `passed` -- previously this was set
+                        // from result.masteryEligible alone, so a verbatim
+                        // copy of the shown answer with both checkboxes left
+                        // unchecked still counted toward repairScore and the
+                        // strict "automatic" gate.
+                        verified: result.masteryEligible && genuineNewContext,
                       });
-                      if (result.pass && checks.every(Boolean)) {
+                      if (result.pass && genuineNewContext) {
                         mutate((draft) => {
                           const error = draft.errors.find(
                             (item) => item.id === selected.id,
@@ -297,6 +318,7 @@ export function ErrorsScreen() {
                     onClick={() => {
                       setRepair("");
                       setEvaluation(null);
+                      setCopyDetected(false);
                     }}
                     variant="outline"
                   >
@@ -307,7 +329,12 @@ export function ErrorsScreen() {
                 {evaluation ? (
                   <EvaluationResult evaluation={evaluation} />
                 ) : null}
-                {evaluation?.pass && !checks.every(Boolean) ? (
+                {copyDetected ? (
+                  <p className="blocking-notice mt-3">
+                    That's the same sentence "Listen and repeat" just played --
+                    write your own new sentence to count as repair evidence.
+                  </p>
+                ) : evaluation?.pass && !checks.every(Boolean) ? (
                   <p className="blocking-notice mt-3">
                     The sentence is correct, but both repair confirmations are
                     still required.

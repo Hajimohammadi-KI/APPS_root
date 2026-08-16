@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import { CEFR_ORDER } from "@/features/store/app-store";
 import { pdfReaderHrefForResource } from "@/lib/pdf-reader-link";
 
 export function ResourcesScreen() {
@@ -94,69 +95,84 @@ export function ResourcesScreen() {
 					</div>
 				</CardContent>
 			</Card>
-			<Accordion className="grid gap-3" type="multiple">
-				{rows.map((resource, index) => {
-					const readerHref = pdfReaderHrefForResource({
-						sourceUrl: resource.url,
-						name: resource.title,
-						focus: `${resource.skill}: ${resource.title}`,
-						context: `English ${resource.level} · ${resource.provider}`,
-					});
-					const openHref = readerHref || resource.url;
+			<Accordion defaultValue={[level !== "All" ? level : "A1"]} type="multiple">
+				{CEFR_ORDER.map((cefrLevel) => {
+					const levelRows = rows.filter((resource) => resource.level === cefrLevel);
+					if (levelRows.length === 0) return null;
 					return (
-						<AccordionItem
-						className="resource-card overflow-hidden rounded-2xl border bg-card shadow-sm transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] data-[state=open]:border-primary/35 data-[state=open]:shadow-md"
-						key={`${resource.provider}-${resource.level}-${resource.skill}-${resource.title}-${index}`}
-						value={`resource-${resource.provider}-${resource.level}-${resource.skill}-${index}`}
-					>
-						<AccordionTrigger className="min-h-20 gap-4 px-4 py-4 text-left hover:no-underline sm:px-5">
-							<span className="min-w-0 flex-1">
-								<span className="block text-base font-extrabold leading-6 text-foreground sm:text-lg">
-									{resource.title}
-								</span>
-								<span className="mt-2 flex flex-wrap gap-2">
-									<Badge
-										className="pointer-events-none"
-										variant={
-											resource.provider === "Test-English"
-												? "default"
-												: "warning"
-										}
-									>
-										{resource.provider}
-									</Badge>
-									<Badge className="pointer-events-none" variant="secondary">
-										{resource.level}
-									</Badge>
-									<Badge className="pointer-events-none" variant="success">
-										{resource.skill}
-									</Badge>
-								</span>
-							</span>
-						</AccordionTrigger>
-						<AccordionContent className="border-t bg-muted/25 px-4 py-4 sm:px-5">
-							<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-								<p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-									{readerHref
-										? "This exact PDF opens in the shared reader. A normal click uses this page; right-click can open a new tab or window."
-										: "Open the verified page for this exact level and skill in a new browser tab."}
-								</p>
-								<Badge className="w-fit shrink-0" variant="secondary">
-									Verified direct link
-								</Badge>
-							</div>
-							<Button asChild className="mt-4 w-full sm:w-auto">
-								<a
-									href={openHref}
-									rel={readerHref ? undefined : "noreferrer"}
-									target={readerHref ? undefined : "_blank"}
-									title={readerHref ? "Normal click: open here. Right-click: open in a new tab or window." : undefined}
-								>
-									{readerHref ? "Open exact PDF" : "Open exact resource"}
-									<ExternalLink aria-hidden className="size-4" />
-								</a>
-							</Button>
-						</AccordionContent>
+						<AccordionItem key={cefrLevel} value={cefrLevel}>
+							<AccordionTrigger className="text-sm font-bold text-muted-foreground">
+								{cefrLevel} · {levelRows.length} resources
+							</AccordionTrigger>
+							<AccordionContent>
+								<Accordion className="grid gap-3" type="multiple">
+									{levelRows.map((resource, index) => {
+										const readerHref = pdfReaderHrefForResource({
+											sourceUrl: resource.url,
+											name: resource.title,
+											focus: `${resource.skill}: ${resource.title}`,
+											context: `English ${resource.level} · ${resource.provider}`,
+										});
+										const openHref = readerHref || resource.url;
+										return (
+											<AccordionItem
+											className="resource-card overflow-hidden rounded-2xl border bg-card shadow-sm transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] data-[state=open]:border-primary/35 data-[state=open]:shadow-md"
+											key={`${resource.provider}-${resource.level}-${resource.skill}-${resource.title}-${index}`}
+											value={`resource-${resource.provider}-${resource.level}-${resource.skill}-${index}`}
+										>
+											<AccordionTrigger className="min-h-20 gap-4 px-4 py-4 text-left hover:no-underline sm:px-5">
+												<span className="min-w-0 flex-1">
+													<span className="block text-base font-extrabold leading-6 text-foreground sm:text-lg">
+														{resource.title}
+													</span>
+													<span className="mt-2 flex flex-wrap gap-2">
+														<Badge
+															className="pointer-events-none"
+															variant={
+																resource.provider === "Test-English"
+																	? "default"
+																	: "warning"
+															}
+														>
+															{resource.provider}
+														</Badge>
+														<Badge className="pointer-events-none" variant="secondary">
+															{resource.level}
+														</Badge>
+														<Badge className="pointer-events-none" variant="success">
+															{resource.skill}
+														</Badge>
+													</span>
+												</span>
+											</AccordionTrigger>
+											<AccordionContent className="border-t bg-muted/25 px-4 py-4 sm:px-5">
+												<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+													<p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+														{readerHref
+															? "This exact PDF opens in the shared reader. A normal click uses this page; right-click can open a new tab or window."
+															: "Open the verified page for this exact level and skill in a new browser tab."}
+													</p>
+													<Badge className="w-fit shrink-0" variant="secondary">
+														Verified direct link
+													</Badge>
+												</div>
+												<Button asChild className="mt-4 w-full sm:w-auto">
+													<a
+														href={openHref}
+														rel={readerHref ? undefined : "noreferrer"}
+														target={readerHref ? undefined : "_blank"}
+														title={readerHref ? "Normal click: open here. Right-click: open in a new tab or window." : undefined}
+													>
+														{readerHref ? "Open exact PDF" : "Open exact resource"}
+														<ExternalLink aria-hidden className="size-4" />
+													</a>
+												</Button>
+											</AccordionContent>
+											</AccordionItem>
+										);
+									})}
+								</Accordion>
+							</AccordionContent>
 						</AccordionItem>
 					);
 				})}

@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Select } from "@/components/ui/select";
+import { AccordionSelect } from "@/components/ui/accordion-select";
 
 type GermanCase = "Nominativ" | "Akkusativ" | "Dativ" | "Genitiv";
 // Six real steps, not four: find the word that governs the case, name the
@@ -641,17 +641,17 @@ export function CaseAutomaticityTrainer() {
               Signal kehrt in einem neuen Satz zurück.
             </CardDescription>
           </div>
-          <label className="grid gap-1 text-xs font-bold">
-            Übungszeit heute
-            <Select
-              onChange={(event) => setSessionGoal(Number(event.target.value))}
-              value={sessionGoal}
-            >
-              <option value={4}>5 Minuten · 4 Sätze</option>
-              <option value={8}>10 Minuten · 8 Sätze</option>
-              <option value={12}>15 Minuten · 12 Sätze</option>
-            </Select>
-          </label>
+          <AccordionSelect
+            className="min-w-52"
+            label="Übungszeit heute"
+            onChange={(next) => setSessionGoal(Number(next))}
+            options={[
+              { value: "4", label: "5 Minuten · 4 Sätze" },
+              { value: "8", label: "10 Minuten · 8 Sätze" },
+              { value: "12", label: "15 Minuten · 12 Sätze" },
+            ]}
+            value={String(sessionGoal)}
+          />
         </div>
       </CardHeader>
       <CardContent className="space-y-4 pt-5">

@@ -23,7 +23,16 @@ html[data-reading-profile="dyslexia"] :where(p, li, dd) {
   text-align: start;
 }
 
-html[data-reading-profile="dyslexia"] :where(input, textarea, select) {
+/* .accordion-select-* are the AccordionSelect hook classes: the component
+   replaced native selects, so it has to keep the same enlarged reading size. */
+html[data-reading-profile="dyslexia"]
+  :where(
+    input,
+    textarea,
+    select,
+    .accordion-select-value,
+    .accordion-select-option
+  ) {
   font-size: max(1rem, 16px);
 }
 

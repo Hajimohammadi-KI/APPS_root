@@ -14,7 +14,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Select } from "@/components/ui/select";
+import {
+  AccordionSelect,
+  AccordionSelectGroup,
+} from "@/components/ui/accordion-select";
 import {
   LEARNING_RESOURCES,
   RESOURCE_AREAS,
@@ -126,48 +129,39 @@ export function ResourceHub() {
       </Card>
 
       <Card>
-        <CardContent className="grid gap-3 lg:grid-cols-3">
-          <label className="grid gap-1.5 text-sm font-medium">
-            Lernbereich
-            <Select
+        <CardContent>
+          <AccordionSelectGroup className="grid gap-3 lg:grid-cols-3">
+            <AccordionSelect
               className="rounded-lg"
+              label="Lernbereich"
               value={area}
-              onChange={(event) => changeArea(event.target.value)}
-            >
-              <option>{allOption}</option>
-              {RESOURCE_AREAS.map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </Select>
-          </label>
-          <label className="grid gap-1.5 text-sm font-medium">
-            Niveau
-            <Select
+              options={[allOption, ...RESOURCE_AREAS].map((item) => ({
+                value: item,
+                label: item,
+              }))}
+              onChange={(next) => changeArea(next)}
+            />
+            <AccordionSelect
               className="rounded-lg"
+              label="Niveau"
               value={level}
-              onChange={(event) => {
-                setLevel(event.target.value);
+              options={[allOption, ...RESOURCE_LEVELS].map((item) => ({
+                value: item,
+                label: item,
+              }))}
+              onChange={(next) => {
+                setLevel(next);
                 setTopic(allOption);
               }}
-            >
-              <option>{allOption}</option>
-              {RESOURCE_LEVELS.map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </Select>
-          </label>
-          <label className="grid gap-1.5 text-sm font-medium">
-            Thema
-            <Select
+            />
+            <AccordionSelect
               className="rounded-lg"
+              label="Thema"
               value={topic}
-              onChange={(event) => setTopic(event.target.value)}
-            >
-              {topics.map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </Select>
-          </label>
+              options={topics.map((item) => ({ value: item, label: item }))}
+              onChange={(next) => setTopic(next)}
+            />
+          </AccordionSelectGroup>
         </CardContent>
       </Card>
 

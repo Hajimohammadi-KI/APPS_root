@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Mic, Plus, Upload } from "lucide-react";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/components/human-audio-player";
-import { Select } from "@/components/ui/select";
+import { AccordionSelect } from "@/components/ui/accordion-select";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import {
   listTeacherContent,
@@ -147,17 +147,12 @@ export function TeacherFlashcardPanel() {
         Originalsatz (optional)
         <input onChange={(event) => setSentence(event.target.value)} value={sentence} />
       </label>
-      <label>
-        GER-Niveau
-        <Select
-          onChange={(event) => setLevel(event.target.value as (typeof LEVELS)[number])}
-          value={level}
-        >
-          {LEVELS.map((cefrLevel) => (
-            <option key={cefrLevel}>{cefrLevel}</option>
-          ))}
-        </Select>
-      </label>
+      <AccordionSelect
+        label="GER-Niveau"
+        onChange={(next) => setLevel(next as (typeof LEVELS)[number])}
+        options={LEVELS.map((cefrLevel) => ({ value: cefrLevel, label: cefrLevel }))}
+        value={level}
+      />
       <button
         className="teacher-primary-button"
         disabled={!front.trim() || !back.trim()}

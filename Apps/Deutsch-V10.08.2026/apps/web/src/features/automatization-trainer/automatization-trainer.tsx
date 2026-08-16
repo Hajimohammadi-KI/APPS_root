@@ -26,6 +26,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
+import {
+  AccordionSelect,
+  AccordionSelectGroup,
+} from "@/components/ui/accordion-select";
 import { Textarea } from "@/components/ui/textarea";
 import { grammarUnits } from "@grammar/content";
 import {
@@ -514,62 +518,51 @@ export function AutomatizationTrainer() {
             kein zweiter, getrennter Speicher.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-3">
-          <label className="block space-y-1.5 text-sm">
-            <span className="font-bold">Zielstufe (CEFR)</span>
-            <Select
-              onChange={(event) =>
+        <CardContent>
+          <AccordionSelectGroup className="grid gap-4 sm:grid-cols-3">
+            <AccordionSelect
+              label="Zielstufe (CEFR)"
+              onChange={(next) =>
                 updateLearnerProfile({
-                  selfDeclaredLevel: event.target.value as CefrLevel,
+                  selfDeclaredLevel: next as CefrLevel,
                 })
               }
+              options={CEFR_LEVELS.map((level) => ({
+                value: level,
+                label: level,
+              }))}
               value={targetLevel}
-            >
-              {CEFR_LEVELS.map((level) => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
-            </Select>
-          </label>
-          <label className="block space-y-1.5 text-sm">
-            <span className="font-bold">Tägliche Übungsdauer</span>
-            <Select
-              onChange={(event) =>
+            />
+            <AccordionSelect
+              label="Tägliche Übungsdauer"
+              onChange={(next) =>
                 updateSettings({
-                  dailyStudyMinutes: Number(event.target.value) as
-                    | 15
-                    | 30
-                    | 45
-                    | 60,
+                  dailyStudyMinutes: Number(next) as 15 | 30 | 45 | 60,
                 })
               }
-              value={dailyMinutes}
-            >
-              <option value={15}>15 Minuten</option>
-              <option value={30}>30 Minuten</option>
-              <option value={45}>45 Minuten</option>
-              <option value={60}>60 Minuten</option>
-            </Select>
-          </label>
-          <label className="block space-y-1.5 text-sm">
-            <span className="font-bold">Schwerpunkt</span>
-            <Select
-              onChange={(event) =>
+              options={[
+                { value: "15", label: "15 Minuten" },
+                { value: "30", label: "30 Minuten" },
+                { value: "45", label: "45 Minuten" },
+                { value: "60", label: "60 Minuten" },
+              ]}
+              value={String(dailyMinutes)}
+            />
+            <AccordionSelect
+              label="Schwerpunkt"
+              onChange={(next) =>
                 updateSettings({
-                  automatizationFocus: event.target.value as
-                    | "speaking"
-                    | "writing"
-                    | "both",
+                  automatizationFocus: next as "speaking" | "writing" | "both",
                 })
               }
+              options={[
+                { value: "both", label: "Sprechen und Schreiben" },
+                { value: "speaking", label: "Vor allem Sprechen" },
+                { value: "writing", label: "Vor allem Schreiben" },
+              ]}
               value={focus}
-            >
-              <option value="both">Sprechen und Schreiben</option>
-              <option value="speaking">Vor allem Sprechen</option>
-              <option value="writing">Vor allem Schreiben</option>
-            </Select>
-          </label>
+            />
+          </AccordionSelectGroup>
         </CardContent>
       </Card>
 
@@ -737,20 +730,16 @@ export function AutomatizationTrainer() {
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block space-y-1.5 text-sm">
-                <span className="font-bold">Textvorlage</span>
-                <Select
-                  disabled={useCustomText}
-                  onChange={(event) => setPassageId(event.target.value)}
-                  value={passageId}
-                >
-                  {passages.map((passage) => (
-                    <option key={passage.id} value={passage.id}>
-                      {passage.title} · {passage.level}
-                    </option>
-                  ))}
-                </Select>
-              </label>
+              <AccordionSelect
+                disabled={useCustomText}
+                label="Textvorlage"
+                onChange={(next) => setPassageId(next)}
+                options={passages.map((passage) => ({
+                  value: passage.id,
+                  label: `${passage.title} · ${passage.level}`,
+                }))}
+                value={passageId}
+              />
               <label className="flex items-end gap-2 text-sm">
                 <input
                   checked={useCustomText}

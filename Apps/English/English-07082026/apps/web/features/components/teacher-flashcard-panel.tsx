@@ -4,7 +4,7 @@ import * as React from "react";
 import { Mic, Plus, Upload } from "lucide-react";
 import type { CefrLevel } from "@grammar/content";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/features/components/human-audio-player";
-import { Select } from "@/components/ui/select";
+import { AccordionSelect } from "@/components/ui/accordion-select";
 import { useAppStore, type FlashcardItem } from "@/features/store/app-store";
 import {
 	listTeacherContent,
@@ -145,14 +145,12 @@ export function TeacherFlashcardPanel() {
 				Original sentence (optional)
 				<input onChange={(event) => setSentence(event.target.value)} value={sentence} />
 			</label>
-			<label>
-				CEFR level
-				<Select onChange={(event) => setLevel(event.target.value as CefrLevel)} value={level}>
-					{LEVELS.map((cefrLevel) => (
-						<option key={cefrLevel}>{cefrLevel}</option>
-					))}
-				</Select>
-			</label>
+			<AccordionSelect
+				label="CEFR level"
+				onChange={(next) => setLevel(next as CefrLevel)}
+				options={LEVELS.map((cefrLevel) => ({ value: cefrLevel, label: cefrLevel }))}
+				value={level}
+			/>
 			<button
 				className="teacher-primary-button"
 				disabled={!front.trim() || !back.trim()}

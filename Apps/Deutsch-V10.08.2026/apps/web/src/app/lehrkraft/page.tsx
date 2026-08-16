@@ -15,7 +15,10 @@ import {
   HumanAudioRecorder,
 } from "@/components/human-audio-player";
 import { TeacherFlashcardPanel } from "@/features/components/teacher-flashcard-panel";
-import { Select } from "@/components/ui/select";
+import {
+  AccordionSelect,
+  AccordionSelectGroup,
+} from "@/components/ui/accordion-select";
 import {
   deleteTeacherContent,
   listTeacherContent,
@@ -88,41 +91,38 @@ export default function LehrkraftPage() {
               ? "Inhalt bearbeiten"
               : "Inhalt hinzufügen"}
           </h2>
-          <div className="teacher-grid">
-            <label>
-              Inhaltstyp
-              <Select
-                value={draft.kind}
-                onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    kind: e.target.value as TeacherContentKind,
-                  })
-                }
-              >
-                <option value="verb">Verb</option>
-                <option value="example">Beispiel</option>
-                <option value="exercise">Übung</option>
-                <option value="conversation">Gespräch</option>
-              </Select>
-            </label>
-            <label>
-              GER-Niveau
-              <Select
-                value={draft.level}
-                onChange={(e) =>
-                  setDraft({
-                    ...draft,
-                    level: e.target.value as TeacherContentItem["level"],
-                  })
-                }
-              >
-                {["A1", "A2", "B1", "B2", "C1", "C2"].map((level) => (
-                  <option key={level}>{level}</option>
-                ))}
-              </Select>
-            </label>
-          </div>
+          <AccordionSelectGroup className="teacher-grid">
+            <AccordionSelect
+              label="Inhaltstyp"
+              value={draft.kind}
+              options={[
+                { value: "verb", label: "Verb" },
+                { value: "example", label: "Beispiel" },
+                { value: "exercise", label: "Übung" },
+                { value: "conversation", label: "Gespräch" },
+              ]}
+              onChange={(next) =>
+                setDraft({
+                  ...draft,
+                  kind: next as TeacherContentKind,
+                })
+              }
+            />
+            <AccordionSelect
+              label="GER-Niveau"
+              value={draft.level}
+              options={["A1", "A2", "B1", "B2", "C1", "C2"].map((level) => ({
+                value: level,
+                label: level,
+              }))}
+              onChange={(next) =>
+                setDraft({
+                  ...draft,
+                  level: next as TeacherContentItem["level"],
+                })
+              }
+            />
+          </AccordionSelectGroup>
           <label>
             Titel
             <input

@@ -4,10 +4,19 @@ import * as React from "react";
 import { ArrowLeft, FileAudio, Pencil, Plus, Save, Trash2, Upload } from "lucide-react";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/features/components/human-audio-player";
 import { TeacherFlashcardPanel } from "@/features/components/teacher-flashcard-panel";
-import { Select } from "@/components/ui/select";
+import { AccordionSelect, AccordionSelectGroup } from "@/components/ui/accordion-select";
 import { deleteTeacherContent, listTeacherContent, saveTeacherContent, type TeacherContentItem, type TeacherContentKind } from "@/lib/teacher-content";
 
 const empty = (): TeacherContentItem => ({ id: crypto.randomUUID(), kind: "example", level: "A1", title: "", body: "", contextKey: "", updatedAt: new Date().toISOString() });
+
+const KIND_OPTIONS = [
+  { value: "verb", label: "Verb" },
+  { value: "example", label: "Example" },
+  { value: "exercise", label: "Exercise" },
+  { value: "conversation", label: "Conversation" },
+] as const;
+
+const LEVEL_OPTIONS = ["A1", "A2", "B1", "B2", "C1", "C2"].map((level) => ({ value: level, label: level }));
 
 export default function TeacherPage() {
   const [items, setItems] = React.useState<TeacherContentItem[]>([]);
@@ -37,10 +46,10 @@ export default function TeacherPage() {
     <div className="teacher-layout">
       <section className="teacher-editor" aria-label="Content editor">
         <h2>{items.some((item) => item.id === draft.id) ? "Edit content" : "Add content"}</h2>
-        <div className="teacher-grid">
-          <label>Content type<Select value={draft.kind} onChange={(e) => setDraft({ ...draft, kind: e.target.value as TeacherContentKind })}><option value="verb">Verb</option><option value="example">Example</option><option value="exercise">Exercise</option><option value="conversation">Conversation</option></Select></label>
-          <label>CEFR level<Select value={draft.level} onChange={(e) => setDraft({ ...draft, level: e.target.value as TeacherContentItem["level"] })}>{["A1","A2","B1","B2","C1","C2"].map((level) => <option key={level}>{level}</option>)}</Select></label>
-        </div>
+        <AccordionSelectGroup className="teacher-grid">
+          <AccordionSelect label="Content type" onChange={(next) => setDraft({ ...draft, kind: next as TeacherContentKind })} options={KIND_OPTIONS} value={draft.kind} />
+          <AccordionSelect label="CEFR level" onChange={(next) => setDraft({ ...draft, level: next as TeacherContentItem["level"] })} options={LEVEL_OPTIONS} value={draft.level} />
+        </AccordionSelectGroup>
         <label>Title<input value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} placeholder="e.g. Present perfect – life experience" /></label>
         <label>Content key<input value={draft.contextKey} onChange={(e) => setDraft({ ...draft, contextKey: e.target.value })} placeholder="e.g. grammar.present-perfect.example.1" /><small>Use this stable key wherever the audio and edited content should appear.</small></label>
         <label>Text<textarea rows={6} value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })} /></label>

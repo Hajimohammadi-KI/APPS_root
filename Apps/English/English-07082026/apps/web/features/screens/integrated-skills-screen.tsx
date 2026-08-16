@@ -38,7 +38,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Select } from "@/components/ui/select";
+import { AccordionSelect } from "@/components/ui/accordion-select";
 import { Textarea } from "@/components/ui/textarea";
 import { ScreenHeading } from "@/features/components/screen-heading";
 import { useAppStore } from "@/features/store/app-store";
@@ -545,24 +545,16 @@ export function IntegratedSkillsScreen({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          <label
-            className="block space-y-2 text-base font-bold"
-            htmlFor="integrated-unit"
-          >
-            Unit
-            <Select
-              className="min-h-12 text-base"
-              id="integrated-unit"
-              onChange={(event) => chooseUnit(event.target.value)}
-              value={unit.id}
-            >
-              {level.units.map((candidate) => (
-                <option key={candidate.id} value={candidate.id}>
-                  {candidate.number}. {candidate.title}
-                </option>
-              ))}
-            </Select>
-          </label>
+          <AccordionSelect
+            id="integrated-unit"
+            label="Unit"
+            onChange={(next) => chooseUnit(next)}
+            options={level.units.map((candidate) => ({
+              value: candidate.id,
+              label: `${candidate.number}. ${candidate.title}`,
+            }))}
+            value={unit.id}
+          />
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {INTEGRATED_SKILLS.map((candidate) => {
               const meta = skillMeta[candidate];

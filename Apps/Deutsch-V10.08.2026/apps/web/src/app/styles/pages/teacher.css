@@ -82,6 +82,57 @@
   font-weight: 400;
   color: #6d6475;
 }
+/* Accordion pickers reuse the field styling of the inputs they replaced
+   (12px radius, #d9cfea border, white ground) plus the label rhythm that
+   `.teacher-page label` used to provide. */
+.teacher-page .accordion-select {
+  width: 100%;
+  min-width: 0;
+  margin: 0.8rem 0;
+  border: 1px solid #d9cfea;
+  border-radius: 12px;
+  background: #fff;
+}
+.teacher-page .accordion-select-trigger {
+  padding: 0.8rem;
+  color: inherit;
+  font: inherit;
+}
+.teacher-page .accordion-select-trigger:hover {
+  background: #faf7ff;
+}
+.teacher-page .accordion-select-trigger:focus-visible {
+  outline: 3px solid rgba(117, 70, 183, 0.25);
+  outline-offset: 2px;
+}
+.teacher-page .accordion-select-label {
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: #6d6475;
+}
+.teacher-page .accordion-select-value {
+  font-weight: 600;
+}
+.teacher-page .accordion-select-panel {
+  border-top: 1px solid #d9cfea;
+  padding: 0.4rem;
+}
+.teacher-page .accordion-select-option {
+  border-radius: 9px;
+  font: inherit;
+}
+.teacher-page .accordion-select-option:hover {
+  background: #f4eefb;
+}
+.teacher-page .accordion-select-option[aria-selected="true"] {
+  background: #f0e6fb;
+  color: #7546b7;
+  font-weight: 750;
+}
+.teacher-page .accordion-select-option:focus-visible {
+  outline: 3px solid rgba(117, 70, 183, 0.25);
+  outline-offset: 2px;
+}
 .teacher-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

@@ -3,8 +3,8 @@
 import * as React from "react";
 import { CheckCircle2, ClipboardCheck } from "lucide-react";
 import type { CefrLevel } from "@grammar/content";
+import { AccordionSelect } from "@/components/ui/accordion-select";
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
 
 interface PlacementQuestion {
   id: string;
@@ -125,29 +125,28 @@ export function PlacementCheck({
       </p>
       <div className="mt-4 grid gap-4">
         {QUESTIONS.map((question, index) => (
-          <label className="grid gap-1.5 text-sm" key={question.id}>
-            <span>
-              {index + 1}. {question.prompt}
-            </span>
-            <Select
-              aria-label={`Answer for question ${index + 1}`}
-              onChange={(event) => {
-                setAnswers((current) => ({
-                  ...current,
-                  [question.id]: event.target.value,
-                }));
-                setResult(null);
-              }}
-              value={answers[question.id] ?? ""}
-            >
-              <option value="">Choose an answer</option>
-              {question.options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </Select>
-          </label>
+          <AccordionSelect
+            // The question itself is the field name here, so it keeps the
+            // readable body-text size instead of the compact field-label size.
+            className="[&_.accordion-select-label]:text-sm [&_.accordion-select-label]:text-foreground"
+            key={question.id}
+            label={`${index + 1}. ${question.prompt}`}
+            onChange={(next) => {
+              setAnswers((current) => ({
+                ...current,
+                [question.id]: next,
+              }));
+              setResult(null);
+            }}
+            options={[
+              { value: "", label: "Choose an answer" },
+              ...question.options.map((option) => ({
+                value: option,
+                label: option,
+              })),
+            ]}
+            value={answers[question.id] ?? ""}
+          />
         ))}
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-2">

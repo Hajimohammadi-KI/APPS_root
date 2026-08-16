@@ -10,7 +10,10 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import {
+  AccordionSelect,
+  AccordionSelectGroup,
+} from "@/components/ui/accordion-select";
 import {
   LearningAccordion,
   type LearningAccordionTone,
@@ -95,38 +98,40 @@ export function TopicCatalog() {
       </div>
 
       <Card>
-        <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <CatalogSelect
-            label="Lernpfad"
-            value={track}
-            values={tracks}
-            onChange={setTrack}
-          />
-          <CatalogSelect
-            label="Niveau"
-            value={level}
-            values={levels}
-            onChange={setLevel}
-          />
-          <CatalogSelect
-            label="Themenbereich"
-            value={category}
-            values={categories}
-            onChange={setCategory}
-          />
-          <label className="grid gap-1.5 text-sm font-medium">
-            Suche
-            <span className="relative">
-              <Search className="pointer-events-none absolute top-2.5 left-3 size-4 text-muted-foreground" />
-              <Input
-                type="search"
-                className="pl-9"
-                placeholder="Thema oder Aufgabe"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-            </span>
-          </label>
+        <CardContent>
+          <AccordionSelectGroup className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <CatalogSelect
+              label="Lernpfad"
+              value={track}
+              values={tracks}
+              onChange={setTrack}
+            />
+            <CatalogSelect
+              label="Niveau"
+              value={level}
+              values={levels}
+              onChange={setLevel}
+            />
+            <CatalogSelect
+              label="Themenbereich"
+              value={category}
+              values={categories}
+              onChange={setCategory}
+            />
+            <label className="grid gap-1.5 text-sm font-medium">
+              Suche
+              <span className="relative">
+                <Search className="pointer-events-none absolute top-2.5 left-3 size-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  className="pl-9"
+                  placeholder="Thema oder Aufgabe"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+              </span>
+            </label>
+          </AccordionSelectGroup>
         </CardContent>
       </Card>
 
@@ -251,17 +256,12 @@ function CatalogSelect({
   onChange: (value: string) => void;
 }>) {
   return (
-    <label className="grid min-w-0 gap-1.5 text-sm font-medium">
-      {label}
-      <Select
-        className="h-9 min-w-0 rounded-lg"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        {values.map((item) => (
-          <option key={item}>{item}</option>
-        ))}
-      </Select>
-    </label>
+    <AccordionSelect
+      className="min-w-0 rounded-lg"
+      label={label}
+      value={value}
+      options={values.map((item) => ({ value: item, label: item }))}
+      onChange={(next) => onChange(next)}
+    />
   );
 }

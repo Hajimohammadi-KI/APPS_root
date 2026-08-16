@@ -52,5 +52,5 @@ footer{grid-template-columns:auto minmax(0,1fr) auto minmax(270px,320px);align-i
 .conversation-filter-grid .accordion-select-panel{border-top:1px solid #ddd2ec;background:#fff;padding:6px}
 .conversation-filter-grid .accordion-select-option{border-radius:9px;font-size:14px;color:#171331}
 .conversation-filter-grid .accordion-select-option:hover{background:#f3edff}
-.conversation-filter-grid .accordion-select-option[aria-checked="true"]{background:#efe7ff;color:#5a2fb8;font-weight:800}
+.conversation-filter-grid .accordion-select-option[aria-selected="true"]{background:#efe7ff;color:#5a2fb8;font-weight:800}
 .conversation-filter-grid .accordion-select-option:focus-visible{box-shadow:0 0 0 3px rgba(116,68,218,.18)}

@@ -13,8 +13,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
+import { AccordionSelect } from "@/components/ui/accordion-select";
 import { Textarea } from "@/components/ui/textarea";
 import { EvaluationResult } from "@/features/components/evaluation-result";
 import { recalculateMastery, useAppStore } from "@/features/store/app-store";
@@ -87,18 +86,17 @@ export function ErrorsScreen() {
 
       <Card>
         <CardContent className="pt-5">
-          <div className="max-w-xs field-stack">
-            <Label htmlFor="error-filter">Show errors</Label>
-            <Select
-              id="error-filter"
-              name="error-filter"
-              onChange={(event) => setFilter(event.target.value)}
-              value={filter}
-            >
-              <option value="active">Active repair tasks</option>
-              <option value="all">All saved errors</option>
-            </Select>
-          </div>
+          <AccordionSelect
+            className="max-w-xs"
+            id="error-filter"
+            label="Show errors"
+            onChange={(next) => setFilter(next)}
+            options={[
+              { value: "active", label: "Active repair tasks" },
+              { value: "all", label: "All saved errors" },
+            ]}
+            value={filter}
+          />
         </CardContent>
       </Card>
 

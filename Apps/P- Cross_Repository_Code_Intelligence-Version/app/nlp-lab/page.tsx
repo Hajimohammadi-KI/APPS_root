@@ -34,8 +34,8 @@ export default function NlpLabPage() {
         <aside className="nlp-lab-time" aria-label="Kurszeit">
           <strong>17. Aug. – 7. Sept. 2026</strong>
           <span>Sa · Mo · Mi</span>
-          <span>Berlin 17:30–19:30</span>
-          <span>Iran 19:00–21:00</span>
+          <span>Berlin 18:00–20:00</span>
+          <span>Iran 19:30–21:30</span>
           <a href={literatureFolder} rel="noreferrer" target="_blank">
             Kursordner in Google Drive öffnen ↗
           </a>

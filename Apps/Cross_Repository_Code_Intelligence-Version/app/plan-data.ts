@@ -129,7 +129,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Hevner et al. 2004: Design Science in IS Research",
     href: "https://drive.google.com/file/d/1HSYD3dBut18RlbXnO_ufdlT8lHXkg0am/view",
     driveName:
-      "01_★★★★★_CORE_R01_Hevner_2004_Design_Science_in_Information_Systems.pdf",
+      "01_DEEP_Read-Framework-Guidelines-Eval_★★★★★_CORE_R01_Hevner_2004_Design_Science_in_Information_Systems__DEEP_Read-Framework-Guidelines-Evaluation.pdf",
     priority: "core",
     thesisRole: "cite",
   },
@@ -138,7 +138,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Nagy et al. 2015: Where Was This SQL Query Executed?",
     href: "https://drive.google.com/file/d/1wCjThO0mfOJXrYpWZUUgJEX5ohs0wDOc/view",
     driveName:
-      "04_★★★★★_CORE_R06_Nagy_2015_Where_Was_This_SQL_Query_Executed.pdf",
+      "04_DEEP_Read-StaticSQL-Method-Eval_★★★★★_CORE_R06_Nagy_2015_Where_Was_This_SQL_Query_Executed__DEEP_Read-StaticSQL-Method-Evaluation.pdf",
     priority: "core",
     thesisRole: "cite",
   },
@@ -147,7 +147,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Shatnawi et al. 2019: Static Analysis of Multilanguage Systems",
     href: "https://drive.google.com/file/d/14rdyqlM40QBIXIb0KtrvKBFAMTQ6KYRO/view",
     driveName:
-      "05_★★★★★_CORE_R04_Shatnawi_2019_Static_Analysis_of_Multilanguage_Systems.pdf",
+      "05_DEEP_Read-Multilang-Method-Limits_★★★★★_CORE_R04_Shatnawi_2019_Static_Analysis_of_Multilanguage_Systems__DEEP_Read-Multilanguage-Method-Limitations.pdf",
     priority: "core",
     thesisRole: "background",
   },
@@ -165,7 +165,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Usai et al. 2026: LogicLens",
     href: "https://drive.google.com/file/d/1_yzTxjxahfnOH-Q_ZaehvmHN6xxi-3QE/view",
     driveName:
-      "03_★★★★★_CORE_R09_Usai_2026_LogicLens_Multi_Repository_Semantic_Code_Graph.pdf",
+      "03_DEEP_Read-MultiRepo-Graph-Eval_★★★★★_CORE_R09_Usai_2026_LogicLens_Multi_Repository_Semantic_Code_Graph__DEEP_Read-MultiRepository-Graph-Evaluation.pdf",
     priority: "core",
     thesisRole: "related-work",
   },

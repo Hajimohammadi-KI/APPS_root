@@ -59,8 +59,8 @@ export type PlanWeek = {
 export type NlpCourseSession = {
   number: number;
   date: string;
-  berlinTime: "17:30–19:30";
-  iranTime: "19:00–21:00";
+  berlinTime: "18:00–20:00";
+  iranTime: "19:30–21:30";
   title: string;
   topics: string[];
   projectQuestion: string;
@@ -421,8 +421,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 1,
     date: "2026-08-17",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "Preprocessing and code-aware tokenization",
     topics: ["Preprocessing", "Tokenization", "camelCase", "snake_case"],
     projectQuestion: "Which code tokens must remain searchable without destroying source evidence?",
@@ -435,8 +435,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 2,
     date: "2026-08-19",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "Bag of Words, TF-IDF, and cosine ranking",
     topics: ["Bag of Words", "TF-IDF", "Vector space", "Cosine similarity"],
     projectQuestion: "What is the simplest reproducible Flat baseline for RQ2?",
@@ -449,8 +449,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 3,
     date: "2026-08-22",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "Word embeddings and the experiment boundary",
     topics: ["Word2Vec", "GloVe", "FastText", "Keras Embedding"],
     projectQuestion: "Can subword semantics improve code retrieval enough to justify added cost?",
@@ -463,8 +463,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 4,
     date: "2026-08-24",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "RNN and vanishing gradients",
     topics: ["RNN", "Hidden state", "Vanishing gradient"],
     projectQuestion: "Why is sequence memory not equivalent to a repository evidence path?",
@@ -477,8 +477,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 5,
     date: "2026-08-26",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "LSTM and GRU architecture comparison",
     topics: ["LSTM", "GRU", "Gates", "Sequence state"],
     projectQuestion: "What evidence would be required before a recurrent model enters the project?",
@@ -491,8 +491,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 6,
     date: "2026-08-29",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "Sentiment pipeline and Seq2Seq contracts",
     topics: ["LSTM sentiment project", "Seq2Seq", "Encoder", "Decoder"],
     projectQuestion: "How can a natural-language question become a constrained JSON QuestionContract?",
@@ -505,8 +505,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 7,
     date: "2026-08-31",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "Self-attention and evidence",
     topics: ["Self-Attention", "Multi-Head Attention", "Q/K/V"],
     projectQuestion: "Where does attention help retrieval, and why can it never certify evidence?",
@@ -519,8 +519,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 8,
     date: "2026-09-02",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "Positional encoding, encoder, and decoder",
     topics: ["Positional Encoding", "Encoder", "Decoder", "Transformer flow"],
     projectQuestion: "How does Transformer flow differ from explicit graph traversal and provenance?",
@@ -533,8 +533,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 9,
     date: "2026-09-05",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "BERT, GPT, and role-safe prompting",
     topics: ["BERT", "GPT", "Prompt Engineering", "Developer/Architect/QA roles"],
     projectQuestion: "How can optional neural retrieval and answer wording remain role-aware and grounded?",
@@ -547,8 +547,8 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 10,
     date: "2026-09-07",
-    berlinTime: "17:30–19:30",
-    iranTime: "19:00–21:00",
+    berlinTime: "18:00–20:00",
+    iranTime: "19:30–21:30",
     title: "PEFT, RAG, and evaluation boundary",
     topics: ["LoRA", "QLoRA", "RAG", "ROUGE", "BLEU"],
     projectQuestion: "Which parts belong in the thesis core, optional experiments, and future work?",

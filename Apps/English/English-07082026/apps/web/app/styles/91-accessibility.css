@@ -201,3 +201,19 @@ html[data-low-stimulation="true"] :where(.card, [class*="shadow"]) {
   }
 }
 
+
+/* Animated expand for accordion-select panels. Uses a grid-rows trick so the
+   panel animates from its real content height without hardcoding one. */
+@keyframes accordion-select-reveal {
+  from { grid-template-rows: 0fr; opacity: 0; }
+  to { grid-template-rows: 1fr; opacity: 1; }
+}
+.accordion-select-reveal {
+  display: grid;
+  grid-template-rows: 1fr;
+  animation: accordion-select-reveal 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.accordion-select-reveal > * { min-height: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .accordion-select-reveal { animation: none; }
+}

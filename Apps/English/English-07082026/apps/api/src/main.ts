@@ -22,6 +22,13 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       ...origins,
+      // Any loopback origin, on any port. This API binds to 127.0.0.1 and
+      // exists only as a local grading helper, so a loopback Origin can
+      // only come from a dev server the user is running themselves (the
+      // repo is checked out in several copies on different ports). A
+      // malicious public page cannot forge one: its Origin would be its
+      // own https:// host, which still fails this test.
+      /^http:\/\/(127\.0\.0\.1|localhost):\d+$/,
       // Scoped to this project's own Vercel deployments (production +
       // preview URLs, which Vercel names "<project>-<hash-or-branch>.
       // vercel.app") -- the previous /^https:\/\/[a-z0-9-]+\.vercel\.app$/

@@ -16,7 +16,15 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api/v1');
   app.enableCors({
-    origin: origins,
+    origin: [
+      ...origins,
+      // Any loopback origin, on any port -- the repo is checked out in
+      // several copies served on different local ports. Safe because a
+      // malicious public page's Origin is its own https:// host, which
+      // still fails this test; only locally-run servers produce loopback
+      // origins.
+      /^http:\/\/(127\.0\.0\.1|localhost):\d+$/,
+    ],
     credentials: true,
   });
   app.enableShutdownHooks();

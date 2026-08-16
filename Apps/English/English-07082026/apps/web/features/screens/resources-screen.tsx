@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ExternalLink, Search } from "lucide-react";
+import { ExternalLink, RotateCcw, Search } from "lucide-react";
 import { onlineResources } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,7 @@ export function ResourcesScreen() {
 	const [search, setSearch] = React.useState("");
 	const skills = ["All", ...new Set(onlineResources.map((item) => item.skill))];
 	const levels = ["All", ...new Set(onlineResources.map((item) => item.level))];
+	const filtersActive = skill !== "All" || level !== "All" || search.trim() !== "";
 	const rows = onlineResources.filter(
 		(item) =>
 			(skill === "All" || item.skill === skill) &&
@@ -84,6 +85,26 @@ export function ResourcesScreen() {
 							value={level}
 						/>
 					</AccordionSelectGroup>
+					{filtersActive ? (
+						<div className="mt-3 flex items-center gap-3">
+							<Button
+								onClick={() => {
+									setSearch("");
+									setSkill("All");
+									setLevel("All");
+								}}
+								size="sm"
+								type="button"
+								variant="outline"
+							>
+								<RotateCcw aria-hidden className="size-4" />
+								Reset filters
+							</Button>
+							<span className="text-sm text-muted-foreground">
+								Showing {rows.length} of {onlineResources.length}
+							</span>
+						</div>
+					) : null}
 				</CardContent>
 			</Card>
 			<Accordion defaultValue={[level !== "All" ? level : "A1"]} type="multiple">

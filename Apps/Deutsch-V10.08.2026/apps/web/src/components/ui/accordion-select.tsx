@@ -60,6 +60,7 @@ export function AccordionSelect({
 	id,
 	className,
 	disabled,
+	searchThreshold = 8,
 }: {
 	label: string;
 	value: string;
@@ -68,6 +69,12 @@ export function AccordionSelect({
 	id?: string;
 	className?: string;
 	disabled?: boolean;
+	/**
+	 * Option count at which a filter box appears above the list. Short lists
+	 * stay a plain readable list; long ones (e.g. ~79 conversation topics)
+	 * become searchable, which scanning alone cannot handle.
+	 */
+	searchThreshold?: number;
 }) {
 	const group = React.useContext(GroupContext);
 	const generatedId = React.useId();
@@ -91,8 +98,23 @@ export function AccordionSelect({
 		[fieldId, group],
 	);
 
+	const [query, setQuery] = React.useState("");
+	const searchable = options.length >= searchThreshold;
+	const visibleOptions = React.useMemo(() => {
+		if (!searchable || !query.trim()) return options;
+		const needle = query.trim().toLowerCase();
+		return options.filter((option) =>
+			option.label.toLowerCase().includes(needle),
+		);
+	}, [options, query, searchable]);
+
+	// Selection is tracked against the full list so the collapsed summary stays
+	// correct even while the visible list is filtered.
 	const selectedIndex = options.findIndex((option) => option.value === value);
 	const selectedLabel = options[selectedIndex]?.label ?? value;
+	const visibleSelectedIndex = visibleOptions.findIndex(
+		(option) => option.value === value,
+	);
 
 	// Single-select listbox keys: arrows move focus and selection follows it,
 	// Home/End jump to the ends, Escape closes and returns focus to the trigger.
@@ -100,7 +122,7 @@ export function AccordionSelect({
 		event: React.KeyboardEvent<HTMLButtonElement>,
 		index: number,
 	) => {
-		const last = options.length - 1;
+		const last = visibleOptions.length - 1;
 		let nextIndex: number;
 		switch (event.key) {
 			case "ArrowDown":
@@ -126,7 +148,7 @@ export function AccordionSelect({
 				return;
 		}
 		event.preventDefault();
-		const nextOption = options[nextIndex];
+		const nextOption = visibleOptions[nextIndex];
 		if (!nextOption) return;
 		onChange(nextOption.value);
 		optionRefs.current[nextIndex]?.focus();
@@ -166,16 +188,37 @@ export function AccordionSelect({
 				/>
 			</button>
 			{open ? (
-				<div
-					aria-labelledby={triggerId}
-					className="accordion-select-panel grid gap-1 border-t border-input p-2"
-					id={panelId}
-					role="listbox"
-				>
-					{options.map((option, index) => {
-						const selected = option.value === value;
-						// Roving tabindex: one stop for the whole group.
-						const tabbable = selected || (selectedIndex === -1 && index === 0);
+				<div className="accordion-select-reveal border-t border-input">
+					{searchable ? (
+						<div className="p-2 pb-0">
+							<input
+								aria-label={`Filter ${label} options`}
+								className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
+								onChange={(event) => setQuery(event.target.value)}
+								placeholder={`Search ${options.length} options…`}
+								type="search"
+								value={query}
+							/>
+						</div>
+					) : null}
+					<div
+						aria-labelledby={triggerId}
+						className="accordion-select-panel grid max-h-72 gap-1 overflow-y-auto p-2"
+						id={panelId}
+						role="listbox"
+					>
+						{visibleOptions.length === 0 ? (
+							<p className="px-3 py-2 text-sm text-muted-foreground">
+								No option matches “{query}”.
+							</p>
+						) : null}
+						{visibleOptions.map((option, index) => {
+							const selected = option.value === value;
+							// Roving tabindex: one stop for the whole group. When the
+							// selection is filtered out of view, the first visible option
+							// takes the stop so the list stays keyboard-reachable.
+							const tabbable =
+								selected || (visibleSelectedIndex === -1 && index === 0);
 						return (
 							<button
 								aria-selected={selected}
@@ -203,10 +246,11 @@ export function AccordionSelect({
 										selected ? "opacity-100" : "opacity-0",
 									)}
 								/>
-								<span className="min-w-0 flex-1 truncate">{option.label}</span>
-							</button>
-						);
-					})}
+									<span className="min-w-0 flex-1 truncate">{option.label}</span>
+								</button>
+							);
+						})}
+					</div>
 				</div>
 			) : null}
 		</div>

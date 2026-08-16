@@ -1,0 +1,14 @@
+{
+  "version": "27.2.0",
+  "publishedAt": "2026-08-14",
+  "changes": [
+    "Task Definition versioning and lifecycle monitoring: source-only foundation work landed in this release (SQL schema, domain package, deterministic upcasting logic). Not yet wired into the running API or installer -- no learner-facing behavior changed.",
+    "Daily Training and Automaticity Mission now appear as one Today’s Practice route",
+    "An original visual conversation coach with clearer speaking states",
+    "Integrated Skills speaking lessons now open with the correct lesson context",
+    "Original listening scripts have normal-speed and slow playback",
+    "App updates wait for the learner's permission",
+    "Responsive layouts and current learning pages are included in the Windows installer",
+    "The installer closes automatically and opens the updated application"
+  ]
+}

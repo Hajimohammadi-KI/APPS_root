@@ -1,0 +1,41 @@
+{
+  "name": "api",
+  "version": "10.8.2026",
+  "description": "DeutschFlow HTTP API",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "bun scripts/check-port.mjs && bun --watch src/main.ts",
+    "build": "node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+    "start": "bun scripts/check-port.mjs && bun dist/main.js",
+    "lint": "biome lint src test",
+    "typecheck": "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.json",
+    "test": "bun test",
+    "test:integration": "bun test test"
+  },
+  "dependencies": {
+    "@grammar/content": "workspace:*",
+    "@grammar/contracts": "workspace:*",
+    "@grammar/domain": "workspace:*",
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/platform-express": "^11.0.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@typescript/native": "npm:typescript@7.0.2",
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.18.0",
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@nestjs/testing": "^11.0.1",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "globals": "^17.0.0",
+    "typescript": "7.0.2",
+    "typescript-eslint": "^8.20.0"
+  }
+}

@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <link rel="icon" href="/icons/icon-192.png" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Deutsch Automaticity — Grammatik-Labor A1–C2</title>
+  <link rel="stylesheet" href="grammatik.css" />
+</head>
+<body>
+  <!-- Inline SVG symbol library -->
+  <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22V5.5Z"/><path d="M21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h4.5A3.5 3.5 0 0 1 21 22V5.5Z"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3 1.4-4A7 7 0 0 1 3 12a7 7 0 0 1 7-7h5a6 6 0 0 1 6 6v4Z"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v10a2 2 0 0 1-2 2H3V6Z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 14a7 7 0 0 0 0-4l2-1-2-4-2 1a7 7 0 0 0-3-2V2h-4v2a7 7 0 0 0-3 2L5 5 3 9l2 1a7 7 0 0 0 0 4l-2 1 2 4 2-1a7 7 0 0 0 3 2v2h4v-2a7 7 0 0 0 3-2l2 1 2-4-2-1Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8L3 5Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M8 14a7 7 0 1 1 8 0c-1 .8-1 2-1 2H9s0-1.2-1-2Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9a4 4 0 0 1 0 6m2-9a8 8 0 0 1 0 12"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 1 1 3.8 2.1c-1 .6-1.5 1.1-1.5 2.4M12 17.5h.01"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 18v3h16v-3"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M4 5h16v16H4zM8 2v6m8-6v6M4 10h16"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.5 3 6 6.5 1-4.7 4.6 1.1 6.5L12 17.5l-5.9 3.1 1.1-6.5-4.7-4.6 6.5-1 3-6Z"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10m4 0h2M4 12h3m4 0h9M4 18h8m4 0h4"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></symbol>
+    <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="6" height="7" rx="2"/><rect x="16" y="14" width="6" height="7" rx="2"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M12 12 8 9"/><circle cx="12" cy="12" r="9"/><path d="M12 3v2m9 7h-2M5 12H3m2.6-6.4 1.4 1.4m11.4-1.4-1.4 1.4"/></symbol>
+    <symbol id="i-captions" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M7 12h2m2 0h2m2 0h2M7 15h6"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></symbol>
+  </svg>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Hauptnavigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 36 36"><circle cx="18" cy="20" r="11"/><circle cx="14" cy="18" r="1.2"/><circle cx="22" cy="18" r="1.2"/><path d="M14 23c2.6 2 5.4 2 8 0M13 8l-2-5m12 5 2-5M10 13l-5-2m21 2 5-2"/><circle cx="11" cy="3" r="1.5"/><circle cx="25" cy="3" r="1.5"/></svg>
+        </div>
+        <div><h1>Deutsch-Automatik</h1><p>Messbares tägliches Sprachtraining</p></div>
+      </div>
+      <div class="sidebar-rule"></div>
+
+      <nav>
+        <section class="nav-group" aria-labelledby="daily-nav">
+          <h2 class="nav-title" id="daily-nav">Tägliches Training</h2>
+          <button class="nav-link" data-nav="Heute üben und sprechen"><svg class="icon"><use href="#i-home"/></svg>Heute üben und sprechen</button>
+          <button class="nav-link" data-nav="Heutiges Training"><svg class="icon"><use href="#i-clock"/></svg>Heutiges Training</button>
+          <button class="nav-link" data-nav="Konversationsstudio"><svg class="icon"><use href="#i-chat"/></svg>Konversationsstudio</button>
+        </section>
+        <section class="nav-group" aria-labelledby="paths-nav">
+          <h2 class="nav-title" id="paths-nav">Lernwege</h2>
+          <button class="nav-link" data-nav="Grammatik und Deutsch lernen"><svg class="icon"><use href="#i-settings"/></svg>Grammatik und Deutsch lernen <span class="chevron">⌃</span></button>
+          <button class="nav-link active" data-nav="Grammatik-Labor" aria-current="page"><svg class="icon"><use href="#i-book"/></svg>Grammatik-Labor</button>
+          <button class="nav-link" data-nav="Lernressourcen"><svg class="icon"><use href="#i-folder"/></svg>Lernressourcen</button>
+          <button class="nav-link" data-nav="Integrierte Fertigkeiten"><svg class="icon"><use href="#i-book"/></svg>Integrierte Fertigkeiten</button>
+        </section>
+        <section class="nav-group" aria-labelledby="evidence-nav">
+          <h2 class="nav-title" id="evidence-nav">Lernnachweise</h2>
+          <button class="nav-link" data-nav="Fehler und Aufnahmen"><svg class="icon"><use href="#i-clock"/></svg>Fehler und Aufnahmen <span class="chevron">⌄</span></button>
+        </section>
+        <section class="nav-group" aria-labelledby="settings-nav">
+          <h2 class="nav-title" id="settings-nav">App und Einstellungen</h2>
+          <button class="nav-link" data-nav="Speicher und persönliche Optionen"><svg class="icon"><use href="#i-settings"/></svg>Speicher und persönliche Optionen <span class="chevron">⌄</span></button>
+        </section>
+      </nav>
+
+      <div class="mascot-scene" role="img" aria-label="Friendly purple study mascot beside books and a plant">
+        <svg viewBox="0 0 292 255" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bodyG" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8268d8"/><stop offset="1" stop-color="#4d329c"/></linearGradient></defs>
+          <path d="M-10 150C22 118 48 127 68 147c-7-49 12-79 41-85 21-4 40 10 47 33 14-34 43-48 66-36 28 15 27 55 8 91 35-25 70-10 75 25v80H-10Z" fill="#eee9fb"/>
+          <path d="M0 218c25-25 37-48 38-71 18 21 24 46 19 75" fill="#9a82dc" opacity=".7"/>
+          <path d="M8 216c-1-24-7-37-18-52 20 5 30 20 30 49" fill="#6a50be"/>
+          <rect x="16" y="224" width="57" height="8" rx="2" fill="#ec7547"/><rect x="22" y="216" width="52" height="8" rx="2" fill="#f5bd46"/><rect x="29" y="208" width="43" height="8" rx="2" fill="#fff" stroke="#7959c5"/>
+          <ellipse cx="136" cy="204" rx="61" ry="19" fill="#cfc4ec"/>
+          <path d="M91 177c0-50 17-89 45-89s46 39 46 89c0 38-16 57-46 57s-45-19-45-57Z" fill="url(#bodyG)"/>
+          <path d="M110 110c7-17 45-22 55 3 9 24-4 53-29 53-28 0-36-32-26-56Z" fill="#a995e6"/>
+          <circle cx="124" cy="132" r="4" fill="#15183e"/><circle cx="151" cy="132" r="4" fill="#15183e"/><circle cx="123" cy="131" r="1" fill="#fff"/><circle cx="150" cy="131" r="1" fill="#fff"/><path d="M126 145c8 7 16 7 23 0" fill="none" stroke="#281d5e" stroke-width="2" stroke-linecap="round"/>
+          <path d="M121 92 117 75m34 17 4-18" stroke="#5b3dae" stroke-width="4" stroke-linecap="round"/><circle cx="116" cy="73" r="6" fill="#7659cc"/><circle cx="156" cy="72" r="6" fill="#7659cc"/>
+          <path d="M93 189c-21 4-26 17-23 29 13-6 24-7 36-4m75-25c21 4 27 15 25 26-12-4-23-4-36 0" fill="#664bb7"/>
+          <rect x="173" y="208" width="59" height="8" rx="2" fill="#26315f"/><path d="M180 204h46l-4-25h-38Z" fill="#fff" stroke="#7561b6"/><path d="M202 180v27" stroke="#d0c5ef"/><path d="m204 182 7-15 5 16" fill="#f08c38"/><rect x="208" y="166" width="5" height="20" rx="2" fill="#ed9e3d"/>
+        </svg>
+      </div>
+    </aside>
+    <button class="drawer-scrim" id="scrim" aria-label="Navigation schließen"></button>
+
+    <div class="shell">
+      <header class="topbar">
+        <div class="page-id">
+          <button class="ghost-btn mobile-menu" id="menuBtn" aria-controls="sidebar" aria-expanded="false" aria-label="Navigation öffnen"><svg class="icon"><use href="#i-menu"/></svg></button>
+          <div class="page-icon"><svg class="icon"><use href="#i-book"/></svg></div>
+          <div><h2>Grammatik-Labor</h2><p><span id="unitCount">144</span> vollständige Einheiten von A1 bis C2</p></div>
+        </div>
+        <div class="header-actions" aria-label="Application controls">
+          <div class="pill hide-mobile"><span class="status-dot"></span><span class="online-label">App-Dienst online</span></div>
+          <button class="pill hide-tablet" id="rulerBtn" aria-pressed="false"><svg class="icon"><use href="#i-sliders"/></svg>Leselineal</button>
+          <button class="pill hide-mobile" data-action="help"><svg class="icon"><use href="#i-help"/></svg>Hilfe</button>
+          <button class="primary-btn" data-action="install"><svg class="icon"><use href="#i-download"/></svg><span class="button-text">App installieren</span></button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="catalog" aria-label="Grammar topic browser">
+          <div class="catalog-tools">
+            <label class="search-box"><span class="sr-only">Themen suchen</span><input id="topicSearch" type="search" placeholder="Themen suchen ..." autocomplete="off"/><svg class="icon"><use href="#i-search"/></svg></label>
+            <button class="filter-btn" data-action="filter" aria-label="Filter grammar topics"><svg class="icon"><use href="#i-filter"/></svg></button>
+          </div>
+          <div class="level-list" id="levelList" aria-live="polite"></div>
+        </aside>
+
+        <section class="content" aria-labelledby="lessonTitle">
+          <div class="lesson-head">
+            <div class="crumbs"><span class="badge">A1</span><span class="foundations">Grundlagen</span><span>•</span><strong id="lessonTitle">Verb sein: bin/ist/sind</strong></div>
+            <button class="use-btn" data-action="use-today"><svg class="icon" style="vertical-align:middle;margin-right:6px"><use href="#i-calendar"/></svg>Heute verwenden</button>
+          </div>
+
+          <div class="lesson-stack">
+            <section class="learning-controls" aria-label="Lernunterstützung einstellen">
+              <details class="learning-control">
+                <summary><span>Tägliche Lernzeit</span><span id="timeSummary">15 Minuten</span></summary>
+                <div class="learning-control-body" id="timeChoices"></div>
+              </details>
+              <details class="learning-control">
+                <summary><span>Erklärungssprache (HONOVR)</span><span id="languageSummary">Deutsch</span></summary>
+                <div class="learning-control-body" id="languageChoices"></div>
+              </details>
+            </section>
+            <section class="honovr-guide" id="honovrGuide" dir="ltr" aria-live="polite"></section>
+            <article class="goal-card">
+              <div class="goal-star"><svg class="icon"><use href="#i-star"/></svg></div>
+              <div><p class="eyebrow">Lernziel</p><strong id="canDoGoal">Ich kann Personen, Orte, Gefühle und Situationen mit sein beschreiben.</strong></div>
+            </article>
+
+            <!-- Lektion und kontrollierte Übung -- mirrors the real live-app
+                 AutomaticityLab component (apps/web/src/features/automaticity/automaticity-lab.tsx):
+                 a numbered head, a side-by-side "Regel und Form" / "Typischer Fehler"
+                 pair, and a round of transform/complete exercises. -->
+            <section class="lesson-practice" aria-labelledby="practiceTitle">
+              <div class="lesson-practice-head">
+                <span class="number">1</span>
+                <div>
+                  <h3 id="practiceTitle">Lektion und kontrollierte Übung</h3>
+                  <p class="lesson-practice-rule" id="lessonRuleText">Aktiviere die Form zuerst richtig, bevor du sie automatisierst.</p>
+                </div>
+                <button class="audio-btn" id="audioBtn" aria-label="Aufgaben vorlesen"><svg class="icon"><use href="#i-volume"/></svg></button>
+              </div>
+
+              <div class="rule-pair">
+                <div class="rule-pair-card rule-pair-card--rule">
+                  <strong>Regel und Form</strong>
+                  <p id="ruleFormText">sein: ich bin · du bist · er/sie/es ist · wir sind · ihr seid · sie/Sie sind. Wähle die Form nach Person und Zahl.</p>
+                </div>
+                <div class="rule-pair-card rule-pair-card--mistake">
+                  <strong>Typischer Fehler</strong>
+                  <p id="commonErrorText">Prüfe Form, Satzstellung und Bezug, bevor du deine Antwort speicherst.</p>
+                </div>
+              </div>
+
+              <div class="practice-round" id="practiceRound"></div>
+
+              <div class="exercise-actions">
+                <button class="ghost-btn" id="previousBtn">← Zurück</button>
+                <button class="primary-btn" id="checkBtn"><svg class="icon"><use href="#i-check"/></svg>Antworten prüfen</button>
+                <span class="round-count" id="roundCount" hidden></span>
+              </div>
+              <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+            </section>
+
+            <!-- Fünfstufiges Shadowing -- same 5 stages/labels already
+                 established in automatization-trainer.tsx
+                 (packages/domain/src/automatization.ts: shadowingStageLabels),
+                 so this is the same design, not a competing one. -->
+            <section class="shadow-block" aria-labelledby="shadowTitle">
+              <div class="lesson-practice-head">
+                <span class="number">2</span>
+                <div>
+                  <h3 id="shadowTitle">Fünfstufiges Shadowing und freies Sprechen</h3>
+                  <p class="lesson-practice-rule">Höre den Rhythmus, sprich mit und übertrage die Struktur danach ohne Ablesen in deine eigene Situation.</p>
+                </div>
+              </div>
+              <div class="shadow-model">
+                <p id="shadowModelText">Ich bin heute müde, aber ich bin bereit für die Übung.</p>
+                <button class="primary-btn shadow-play-btn" id="shadowPlayBtn"><svg class="icon"><use href="#i-volume"/></svg>Modell abspielen</button>
+              </div>
+              <div class="shadow-stage-grid" id="shadowStageGrid"></div>
+              <p class="shadow-note">Für einen vollständigen Nachweis brauchst du alle fünf Stufen und danach mindestens 30–45 Sekunden freie Sprache ohne Vorlage.</p>
+            </section>
+
+            <div class="accordion-list">
+              <details class="accordion"><summary><span class="number">3</span><span>▦</span>Ausführliches Muster <span class="chevron">⌄</span></summary><div class="accordion-content" id="ruleBody"></div></details>
+              <details class="accordion"><summary><span class="number">4</span><span>♧</span>Beispiele und Kontrast <span class="chevron">⌄</span></summary><div class="accordion-content" id="examplesContent">Vergleiche passende Beispiele und achte auf die Funktion der Form im Satz.</div></details>
+              <details class="accordion"><summary><span class="number">5</span><span>⇄</span>Lernweg <span class="chevron">⌄</span></summary><div class="accordion-content">Rufe die Regel ab, korrigiere ein Beispiel, sprich es laut und verwende es danach in einem persönlichen Satz.</div></details>
+              <details class="accordion"><summary><span class="number">6</span><span>▤</span>Ressourcen und Zusatzübungen <span class="chevron">⌄</span></summary><div class="accordion-content">Bilde fünf Aussagesätze und verwandle jeden Satz in eine Verneinung und eine Frage.</div></details>
+              <details class="accordion"><summary><span class="number">7</span><span>✧</span>Optionale KI-Erklärung <span class="chevron">⌄</span></summary><div class="accordion-content">Bitte erst nach einem eigenen Abrufversuch um eine weitere Erklärung.</div></details>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="reading-ruler" id="readingRuler" aria-hidden="true"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="dailyCompleteDialog" style="max-width:560px;width:calc(100% - 32px);border:1px solid #d8c8eb;border-radius:24px;padding:28px;box-shadow:0 24px 80px #24153855">
+    <h2>Die heutige Grammatikübung ist abgeschlossen.</h2><p>Dein Ergebnis und deine Fehler wurden im heutigen Training gespeichert.</p>
+    <div style="display:grid;gap:10px"><button class="primary-btn" id="dailyReturnBtn">OK · Zum heutigen Training</button><button class="ghost-btn" id="dailyRepeatBtn">Noch einmal üben</button><button class="ghost-btn" id="dailyMistakesBtn">Meine Fehler ansehen</button></div>
+  </dialog>
+
+  <script src="/replacements/de/grammar-catalog.js"></script>
+  <script src="/replacements/de/grammar-runtime.js"></script>
+  <script>
+    if (!window.GERMAN_GRAMMAR_RUNTIME) (() => {
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+      const toast = $('#toast');
+      const params = new URLSearchParams(location.search);
+      const dailyContext = params.get('from') === 'daily' ? { activity:Number(params.get('activity')||1), level:params.get('level')||'A1', topic:params.get('topic')||'', returnTo:params.get('return')||'/heute' } : null;
+      const dailySessionKey='deutsch-automaticity:daily-session:v1';
+      let toastTimer;
+      const notify = (message) => {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+      };
+
+      // Accessible mobile drawer.
+      const sidebar = $('#sidebar');
+      const menuBtn = $('#menuBtn');
+      const scrim = $('#scrim');
+      const setDrawer = (open) => {
+        sidebar.classList.toggle('open', open);
+        scrim.classList.toggle('show', open);
+        menuBtn.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      };
+      menuBtn.addEventListener('click', () => setDrawer(!sidebar.classList.contains('open')));
+      scrim.addEventListener('click', () => setDrawer(false));
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setDrawer(false); });
+
+      // Topic search and selection.
+      const search = $('#topicSearch');
+      search.addEventListener('input', () => {
+        const value = search.value.trim().toLowerCase();
+        $$('.topic').forEach(topic => { topic.hidden = !topic.textContent.toLowerCase().includes(value); });
+        $$('.level').forEach(level => {
+          const hasVisible = $$('.topic', level).some(topic => !topic.hidden);
+          level.hidden = value && !hasVisible;
+          if (value && hasVisible) level.open = true;
+        });
+      });
+      $$('.topic').forEach(topic => topic.addEventListener('click', () => {
+        $$('.topic').forEach(item => item.classList.remove('active'));
+        topic.classList.add('active');
+        const name = topic.textContent.trim();
+        $('#lessonTitle').textContent = name;
+        notify(`${name} selected. Lesson content preview updated.`);
+      }));
+
+      // Local navigation feedback instead of dead links.
+      $$('.nav-link').forEach(link => link.addEventListener('click', () => {
+        if (link.dataset.nav === 'Grammatik-Labor') return;
+        notify(`${link.dataset.nav} is available in the full application.`);
+        if (window.innerWidth <= 820) setDrawer(false);
+      }));
+
+      // Recall task behavior.
+      const requestedTopic=dailyContext?.topic.trim();
+      const escapeHtml=value=>String(value).replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+      const applyDailyLessonContent=topic=>{
+        const safeTopic=escapeHtml(topic);
+        $('#canDoGoal').textContent=`Ich kann ${topic} in eigenen, verständlichen Sätzen richtig verwenden.`;
+        $('#lessonRuleText').textContent=`Aktiviere ${topic} zuerst richtig, bevor du es automatisierst.`;
+        $('#ruleFormText').textContent=`${topic}: wähle die Form nach Bedeutung, Bezug und Satzstellung, bevor du antwortest.`;
+        const mistakeText=`Typischer Fehler: ${topic} wird nach Klang gewählt, ohne Bezug, Fall oder Satzfunktion zu prüfen. Bestimme zuerst die Funktion und kontrolliere danach die Form.`;
+        $('#commonErrorText').textContent=mistakeText;
+        $('#ruleBody').innerHTML=`<p class="rule-intro">Bestimme zuerst, welche Aufgabe <strong>${safeTopic}</strong> im Satz erfüllt. Wähle danach die passende Form und prüfe die Satzstellung.</p><div class="pattern-grid"><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">1</span>Bedeutung</div><div class="formula">Was möchte ich ausdrücken?</div><p>Verstehe zuerst die Aussage, bevor du eine Form auswählst.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">2</span>Muster</div><div class="formula">Bedeutung + passende Form + richtige Satzstellung</div><p>Bilde einen vollständigen deutschen Satz.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">3</span>Vergleich</div><div class="formula">Person, Zahl und Fall vergleichen</div><p>Prüfe, worauf sich die Form bezieht.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">4</span>Eigener Satz</div><div class="formula">eine wahre Situation aus deinem Leben</div><p>Verwende ${safeTopic} ohne ein Beispiel abzuschreiben.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">5</span>Übertragung</div><div class="formula">neue Situation, gleiche Regel</div><p>Sprich oder schreibe den Satz noch einmal in einem anderen Zusammenhang.</p></article></div>`;
+        $('#examplesContent').textContent=`Vergleiche zwei Sätze mit ${topic}. Achte darauf, wie sich Bedeutung, Form und Satzstellung verändern.`;
+        $('#shadowModelText').textContent=`Heute übe ich ${topic}. Ich wiederhole die Struktur, bis sie automatisch kommt.`;
+        if(topic.toLowerCase().includes('personalpronomen')){
+          $('#canDoGoal').textContent='Ich kann mit Personalpronomen klar auf Personen und Dinge verweisen.';
+          $('#lessonRuleText').textContent='Bestimme zuerst die Satzfunktion, dann das passende Personalpronomen.';
+          $('#ruleFormText').textContent='Personalpronomen ersetzen ein Nomen: ich, du, er/sie/es, wir, ihr, sie/Sie (Nominativ) – wähle die Form nach Person, Zahl und Fall.';
+          $('#commonErrorText').textContent='Typischer Fehler: Nominativ, Akkusativ und Dativ werden verwechselt. Frage zuerst: Wer? Wen oder was? Wem?';
+          $('#ruleBody').innerHTML='<p class="rule-intro">Personalpronomen ersetzen ein Nomen. Wähle die Form nach Person, Zahl und Satzfunktion.</p><div class="pattern-grid"><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">1</span>Nominativ</div><div class="formula">ich · du · er/sie/es · wir · ihr · sie/Sie</div><p><strong>Frage:</strong> Wer handelt?</p><p><strong>Beispiel:</strong> Fatemeh lernt. → Sie lernt.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">2</span>Akkusativ</div><div class="formula">mich · dich · ihn/sie/es · uns · euch · sie/Sie</div><p><strong>Frage:</strong> Wen oder was?</p><p><strong>Beispiel:</strong> Ich sehe den Lehrer. → Ich sehe ihn.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">3</span>Dativ</div><div class="formula">mir · dir · ihm/ihr/ihm · uns · euch · ihnen/Ihnen</div><p><strong>Frage:</strong> Wem?</p><p><strong>Beispiel:</strong> Ich helfe der Frau. → Ich helfe ihr.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">4</span>Bezug</div><div class="formula">Nomen zuerst, Pronomen danach</div><p>Der Bezug muss eindeutig bleiben.</p><p><strong>Beispiel:</strong> Der Kurs beginnt. Er dauert eine Stunde.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">5</span>Übertragung</div><div class="formula">neue Person + neue Situation</div><p>Bilde einen eigenen Satz und ersetze danach das Nomen durch ein Pronomen.</p></article></div>';
+          $('#examplesContent').textContent='Vergleiche: „Der Mann wartet. Er ist ruhig.“ – „Ich sehe den Mann. Ich sehe ihn.“ – „Ich helfe dem Mann. Ich helfe ihm.“';
+          $('#shadowModelText').textContent='Der Kurs beginnt gleich. Er dauert eine Stunde, und ich helfe ihm danach mit den Notizen.';
+        }
+      };
+      if(requestedTopic){$('#lessonTitle').textContent=requestedTopic;applyDailyLessonContent(requestedTopic);}
+      $('#ruleBody').innerHTML=$('#ruleBody').innerHTML||'<p class="rule-intro">sein ist unregelmäßig. Bestimme zuerst Person und Zahl, dann wähle die passende Form.</p><div class="pattern-grid"><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">1</span>ich</div><div class="formula">ich bin</div><p>1. Person Singular.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">2</span>du</div><div class="formula">du bist</div><p>2. Person Singular.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">3</span>er/sie/es</div><div class="formula">er/sie/es ist</div><p>3. Person Singular.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">4</span>wir/sie/Sie</div><div class="formula">wir/sie/Sie sind</div><p>Plural und Höflichkeitsform.</p></article><article class="pattern-card"><div class="pattern-title"><span class="mini-icon">5</span>ihr</div><div class="formula">ihr seid</div><p>2. Person Plural.</p></article></div>';
+
+      // Lektion und kontrollierte Übung: a round of exercises rendered
+      // together, checked together, and each revealing a labelled model
+      // answer after checking -- mirrors AutomaticityLab's roundExercises
+      // map (apps/web/src/features/automaticity/automaticity-lab.tsx).
+      const tasks = requestedTopic ? [
+        { prompt:`Schreibe einen richtigen deutschen Satz mit ${requestedTopic}.`, answer:null, hint:`Verwende ${requestedTopic} in einem vollständigen Satz aus deinem eigenen Leben.` },
+        { prompt:`Schreibe eine zweite, andere Situation mit ${requestedTopic}.`, answer:null, hint:'Ändere Person, Ort oder Zeit.' },
+        { prompt:`Formuliere mit ${requestedTopic} eine Frage.`, answer:null, hint:'Achte auf Verbposition und Satzzeichen.' }
+      ] : [
+        { prompt:'Ergänze: Ich ___ heute müde.', answer:'bin', hint:'Bei ich steht bin.' },
+        { prompt:'Ergänze: Meine Notizen ___ auf dem Tisch.', answer:'sind', hint:'Notizen ist Plural.' },
+        { prompt:'Verneine: Sie ist müde.', answer:'sie ist nicht müde', hint:'Setze nicht nach ist.' }
+      ];
+      let lastMistake='';
+      const feedback = $('#feedback');
+      const round = $('#practiceRound');
+      const normalize = text => text.toLowerCase().trim().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+
+      // task.answer !== null -> exact-match controlled recall (has one
+      // correct form to reveal as the model answer). task.answer === null
+      // -> open production, graded the same way practiceAnswerMatches
+      // treats an unset expected answer: a real attempt of at least four
+      // words, with no single "correct" string to reveal.
+      const isCorrect = (task, value) => task.answer ? normalize(value) === task.answer : normalize(value).split(/\s+/).filter(Boolean).length >= 4;
+
+      round.innerHTML = tasks.map((task, index) => `
+        <label class="practice-item">
+          <span class="practice-prompt">${index + 1}. ${escapeHtml(task.prompt)}</span>
+          <input class="practice-input" id="practice-input-${index}" autocomplete="off" placeholder="Deutsche Antwort eingeben"/>
+          <button type="button" class="practice-hint-toggle" data-hint-for="${index}">Hinweis anzeigen</button>
+          <span class="practice-hint" id="practice-hint-${index}">${escapeHtml(task.hint)}</span>
+          <span class="practice-result" id="practice-result-${index}"></span>
+        </label>
+      `).join('');
+
+      $$('.practice-hint-toggle', round).forEach(button => button.addEventListener('click', () => {
+        $(`#practice-hint-${button.dataset.hintFor}`).classList.toggle('show');
+      }));
+
+      $('#checkBtn').addEventListener('click', () => {
+        let allCorrect = true;
+        tasks.forEach((task, index) => {
+          const input = $(`#practice-input-${index}`);
+          const result = $(`#practice-result-${index}`);
+          const correct = isCorrect(task, input.value);
+          if (!correct) { allCorrect = false; lastMistake = input.value.trim(); }
+          result.className = 'practice-result show ' + (correct ? 'correct' : 'wrong');
+          result.textContent = correct
+            ? 'Richtig'
+            : task.answer
+              ? `Modell: ${task.answer.replace(/^./, character => character.toUpperCase())}`
+              : 'Schreibe bitte einen vollständigen Satz mit mindestens vier Wörtern.';
+        });
+        feedback.className = 'feedback show ' + (allCorrect ? 'good' : 'bad');
+        feedback.textContent = allCorrect
+          ? 'Kontrollierte Übung geschafft. Vergleiche die Modellantworten noch einmal, bevor du weitermachst.'
+          : 'Vergleiche die Modellantworten und korrigiere die markierten Sätze.';
+        if (allCorrect && dailyContext) finishDailyActivity();
+      });
+
+      const finishDailyActivity=()=>{const session=JSON.parse(localStorage.getItem(dailySessionKey)||'{}');const completed=[...new Set([...(session.completedActivities||[]),dailyContext.activity])];const mistakes=lastMistake?[...(session.mistakes||[]),{activity:dailyContext.activity,topic:requestedTopic||$('#lessonTitle').textContent,answer:lastMistake}]:session.mistakes||[];localStorage.setItem(dailySessionKey,JSON.stringify({...session,currentActivity:dailyContext.activity,completedActivities:completed,mistakes,updatedAt:new Date().toISOString()}));$('#dailyCompleteDialog').showModal();};
+      $('#previousBtn').addEventListener('click',()=>{if(dailyContext)location.href=dailyContext.returnTo;else history.back();});
+      $('#dailyReturnBtn').addEventListener('click',()=>location.href=dailyContext?.returnTo||'/heute');
+      $('#dailyRepeatBtn').addEventListener('click',()=>{$('#dailyCompleteDialog').close();lastMistake='';$$('.practice-input',round).forEach(input=>input.value='');$$('.practice-result',round).forEach(result=>{result.className='practice-result';result.textContent='';});$$('.practice-hint',round).forEach(hint=>hint.classList.remove('show'));feedback.className='feedback';});
+      $('#dailyMistakesBtn').addEventListener('click',()=>{$('#dailyCompleteDialog').close();feedback.className='feedback show bad';feedback.textContent=lastMistake?`Deine letzte fehlerhafte Antwort: ${lastMistake}`:'In dieser Übung wurde kein Fehler gespeichert.';});
+      round.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); $('#checkBtn').click(); } });
+
+      // Browser speech synthesis is optional and degrades gracefully.
+      $('#audioBtn').addEventListener('click', () => {
+        if ('speechSynthesis' in window) {
+          speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(tasks.map(task => task.prompt).join('. '));
+          utterance.lang = 'de-DE';
+          speechSynthesis.speak(utterance);
+        } else notify('Text-to-speech is not available in this browser.');
+      });
+
+      // Fünfstufiges Shadowing -- same 5 stages/labels as
+      // automatization-trainer.tsx's shadowingStageLabels
+      // (packages/domain/src/automatization.ts), toggled done/undone the
+      // same way AutomaticityLab's own shadowing block does.
+      const shadowStages = [
+        { icon: 'i-headphones', label: 'Hören für den Sinn' },
+        { icon: 'i-gauge', label: 'Langsames Shadowing' },
+        { icon: 'i-captions', label: 'Präzises Shadowing' },
+        { icon: 'i-timer', label: 'Verzögertes Shadowing' },
+        { icon: 'i-mic', label: 'Freies Nacherzählen' },
+      ];
+      const shadowGrid = $('#shadowStageGrid');
+      const shadowDone = new Set();
+      const renderShadowStages = () => {
+        shadowGrid.innerHTML = shadowStages.map((stage, index) => `
+          <button type="button" class="shadow-stage-btn${shadowDone.has(index) ? ' done' : ''}" data-stage="${index}">
+            <span class="stage-number">Stufe ${index + 1}</span>
+            <svg class="icon"><use href="#${shadowDone.has(index) ? 'i-check' : stage.icon}"/></svg>
+            ${escapeHtml(stage.label)}
+          </button>
+        `).join('');
+        $$('.shadow-stage-btn', shadowGrid).forEach(button => button.addEventListener('click', () => {
+          const index = Number(button.dataset.stage);
+          if (shadowDone.has(index)) shadowDone.delete(index); else shadowDone.add(index);
+          renderShadowStages();
+          if (shadowDone.size === shadowStages.length) notify('Alle fünf Shadowing-Stufen abgeschlossen.');
+        }));
+      };
+      renderShadowStages();
+      $('#shadowPlayBtn').addEventListener('click', () => {
+        if ('speechSynthesis' in window) {
+          speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance($('#shadowModelText').textContent);
+          utterance.lang = 'de-DE';
+          utterance.rate = 0.84;
+          speechSynthesis.speak(utterance);
+        } else notify('Text-to-speech is not available in this browser.');
+      });
+
+      // Leselineal and meaningful button feedback.
+      const rulerBtn = $('#rulerBtn');
+      const ruler = $('#readingRuler');
+      rulerBtn.addEventListener('click', () => {
+        const active = !ruler.classList.contains('show');
+        ruler.classList.toggle('show', active);
+        rulerBtn.setAttribute('aria-pressed', String(active));
+        notify(active ? 'Leselineal enabled.' : 'Leselineal disabled.');
+      });
+      ruler.addEventListener('mousemove', event => { ruler.style.top = `${Math.max(0, event.clientY - 26)}px`; });
+      $('[data-action="use-today"]').addEventListener('click', event => {
+        event.currentTarget.innerHTML = '<svg class="icon" style="vertical-align:middle;margin-right:6px"><use href="#i-check"/></svg>Added today';
+        notify('This grammar lesson was added to today’s practice plan.');
+      });
+      $('[data-action="install"]').addEventListener('click', () => notify('Install is available when this page is served as a configured web app.'));
+      $('[data-action="help"]').addEventListener('click', () => notify('Tip: select a topic, answer the recall task, then open the supporting sections.'));
+      $('[data-action="filter"]').addEventListener('click', () => notify('All CEFR levels are currently visible.'));
+    })();
+  </script>
+<script>const navMap={'Heute üben und sprechen':'/','Heutiges Training':'/heute','Konversationsstudio':'/studio','Grammatik und Deutsch lernen':'/grammatik','Lernressourcen':'/ressourcen','Integrierte Fertigkeiten':'/integrierte-fertigkeiten','Fehler und Aufnahmen':'/fehler','Speicher und persönliche Optionen':'/einstellungen'};document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{const u=navMap[b.dataset.nav];if(u)location.href=u}));</script></body>
+</html>

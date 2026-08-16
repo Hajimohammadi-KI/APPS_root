@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/*
+ * Visual entry point only.
+ * Edit page-specific styles in ./styles/pages and shared visual rules in ./styles.
+ * Keep the import order: later files intentionally refine earlier rules.
+ */
+@import "./styles/00-foundation.css";
+@import "./styles/01-legal-pages.css";
+@import "./styles/02-app-shell.css";
+
+@import "./styles/pages/dashboard.css";
+@import "./styles/pages/dashboard-v2.css";
+@import "./styles/pages/conversation-studio.css";
+@import "./styles/pages/grammar.css";
+@import "./styles/pages/daily-practice.css";
+@import "./styles/pages/resources.css";
+@import "./styles/pages/settings.css";
+@import "./styles/pages/learning-evidence.css";
+@import "./styles/pages/teacher.css";
+
+@import "./styles/components/install-dialog.css";
+@import "./styles/90-responsive.css";
+@import "./styles/91-accessibility.css";
+@import "./styles/99-visual-refresh-overrides.css";

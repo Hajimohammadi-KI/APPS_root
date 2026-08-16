@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DeutschFlow ist offline</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background: #f5fbff;
+        color: #102a56;
+      }
+
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        place-items: center;
+      }
+
+      main {
+        width: min(32rem, calc(100% - 3rem));
+        border: 1px solid #cde7f8;
+        border-radius: 1.5rem;
+        background: white;
+        padding: 2rem;
+        box-shadow: 0 1.5rem 4rem rgb(16 42 86 / 12%);
+        text-align: center;
+      }
+
+      .icon {
+        display: grid;
+        width: 4rem;
+        height: 4rem;
+        margin: 0 auto;
+        border-radius: 1.25rem;
+        place-items: center;
+        background: #e0f2fe;
+        color: #1760df;
+        font-size: 2rem;
+      }
+
+      h1 {
+        margin: 1.25rem 0 0;
+        font-size: 1.75rem;
+      }
+
+      p {
+        margin: 0.75rem 0 0;
+        color: #52647c;
+        line-height: 1.7;
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        justify-content: center;
+      }
+
+      button {
+        border: 0;
+        border-radius: 0.875rem;
+        background: #1760df;
+        padding: 0.8rem 1.2rem;
+        color: white;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button.secondary {
+        background: transparent;
+        border: 1px solid #1760df;
+        color: #1760df;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="icon" aria-hidden="true">↻</div>
+      <h1 id="heading">Die lokale App ist gerade nicht erreichbar.</h1>
+      <p id="detail">
+        DeutschFlow konnte diese Seite nicht laden. Bitte versuche es erneut;
+        falls das Problem bestehen bleibt, starte die App über
+        STARTEN-WINDOWS.bat neu.
+      </p>
+      <div class="actions">
+        <button type="button" class="secondary" onclick="window.history.back()">
+          ← Zurück
+        </button>
+        <button type="button" onclick="location.reload()">Erneut versuchen</button>
+      </div>
+    </main>
+    <script>
+      // did-fail-load in main.cjs passes ?reason=companion when the failed
+      // navigation was to one of this suite's other local apps (Tracker,
+      // PDF Reader, Settings) rather than a real problem with DeutschFlow
+      // itself -- most often because that app just isn't running yet.
+      if (new URLSearchParams(location.search).get("reason") === "companion") {
+        document.getElementById("heading").textContent =
+          "Eine verbundene App läuft gerade nicht.";
+        document.getElementById("detail").textContent =
+          "Diese Funktion öffnet eine der anderen lokalen Lern-Apps (Tracker, PDF Reader oder Einstellungen), " +
+          "die gerade nicht läuft. Starte sie über ihre eigene Verknüpfung oder über die Starter-App, " +
+          "und versuche es danach erneut.";
+      }
+    </script>
+  </body>
+</html>

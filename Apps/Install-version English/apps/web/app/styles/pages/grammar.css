@@ -1,0 +1,51 @@
+.grammar-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.grammar-list {
+  display: grid;
+  max-height: calc(100vh - 260px);
+  gap: 7px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.grammar-button {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: white;
+  padding: 11px;
+  text-align: left;
+  transition:
+    transform 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.grammar-button:active {
+  transform: scale(0.98);
+}
+
+.grammar-button:hover,
+.grammar-button[data-active="true"] {
+  border-color: rgba(21, 94, 239, 0.45);
+  background: #edf4ff;
+}
+
+.practice-card {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #fff, #fbfdff);
+  padding: 17px;
+}
+
+.practice-prompt {
+  margin: 10px 0 16px;
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 850;
+  line-height: 1.4;
+}
+

@@ -1,0 +1,17 @@
+.resourceFilters{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin:14px 0}
+.resourceGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.learningCard{border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff;box-shadow:0 5px 16px rgba(20,40,70,.06)}
+.learningCard h3{margin:0 0 5px}.learningMeta{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}
+.providerBadge,.levelBadge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.75rem;font-weight:900}
+.providerBadge.testenglish{background:#e9f2ff;color:#174a9e}.providerBadge.britishcouncil{background:#f4eaff;color:#64279a}
+.levelBadge{background:#eef8ef;color:#17622a}.resourceOpen{display:block;text-align:center;margin-top:10px}
+.resourceNotice{background:#fff8dc;border:1px solid #f0d981;border-radius:13px;padding:11px;margin:10px 0}
+@media(max-width:700px){.resourceFilters{grid-template-columns:1fr}}
+.evaluationSummary{margin-top:12px;padding:14px;border:1px solid #cbd5e1;border-left-width:5px;border-radius:12px;background:#fff;line-height:1.6}
+.evaluationPass{border-left-color:#15803d;background:#f0fdf4}.evaluationFail{border-left-color:#b91c1c;background:#fff7f7}
+.evaluationSummary h4{margin:0 0 10px}.evaluationSummary h5{margin:12px 0 5px}
+.evaluationChecks{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:6px;margin:8px 0 12px}
+.evaluationChecks>div{padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.8);border:1px solid #e2e8f0}
+.blockingNotice{padding:9px 11px;border-radius:8px;background:#fee2e2;color:#7f1d1d}
+.evaluationLinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.evaluationLinks .resourceLink{display:inline-block;padding:7px 10px;border-radius:8px;background:#eff6ff;color:#1d4ed8;text-decoration:none;font-weight:700}

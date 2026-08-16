@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import {
   LearningAccordion,
   type LearningAccordionTone,
@@ -252,15 +253,15 @@ function CatalogSelect({
   return (
     <label className="grid min-w-0 gap-1.5 text-sm font-medium">
       {label}
-      <select
-        className="h-9 min-w-0 rounded-lg border bg-background px-3"
+      <Select
+        className="h-9 min-w-0 rounded-lg"
         value={value}
         onChange={(event) => onChange(event.target.value)}
       >
         {values.map((item) => (
           <option key={item}>{item}</option>
         ))}
-      </select>
+      </Select>
     </label>
   );
 }

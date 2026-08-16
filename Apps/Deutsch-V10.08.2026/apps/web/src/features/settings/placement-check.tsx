@@ -6,6 +6,7 @@ import { CheckCircle2, ClipboardCheck } from "lucide-react";
 import type { CefrLevel } from "@grammar/domain";
 
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 
 interface PlacementQuestion {
   readonly id: string;
@@ -132,9 +133,9 @@ export function PlacementCheck({
             <span>
               {index + 1}. {question.prompt}
             </span>
-            <select
+            <Select
               aria-label={`Antwort auf Frage ${index + 1}`}
-              className="h-10 min-w-0 rounded-lg border bg-background px-3"
+              className="h-10 min-w-0 rounded-lg"
               onChange={(event) => {
                 setAnswers((current) => ({
                   ...current,
@@ -150,7 +151,7 @@ export function PlacementCheck({
                   {option}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
         ))}
       </div>

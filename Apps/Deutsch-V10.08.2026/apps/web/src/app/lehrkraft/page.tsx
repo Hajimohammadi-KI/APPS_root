@@ -15,6 +15,7 @@ import {
   HumanAudioRecorder,
 } from "@/components/human-audio-player";
 import { TeacherFlashcardPanel } from "@/features/components/teacher-flashcard-panel";
+import { Select } from "@/components/ui/select";
 import {
   deleteTeacherContent,
   listTeacherContent,
@@ -90,7 +91,7 @@ export default function LehrkraftPage() {
           <div className="teacher-grid">
             <label>
               Inhaltstyp
-              <select
+              <Select
                 value={draft.kind}
                 onChange={(e) =>
                   setDraft({
@@ -103,11 +104,11 @@ export default function LehrkraftPage() {
                 <option value="example">Beispiel</option>
                 <option value="exercise">Übung</option>
                 <option value="conversation">Gespräch</option>
-              </select>
+              </Select>
             </label>
             <label>
               GER-Niveau
-              <select
+              <Select
                 value={draft.level}
                 onChange={(e) =>
                   setDraft({
@@ -119,7 +120,7 @@ export default function LehrkraftPage() {
                 {["A1", "A2", "B1", "B2", "C1", "C2"].map((level) => (
                   <option key={level}>{level}</option>
                 ))}
-              </select>
+              </Select>
             </label>
           </div>
           <label>

@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Select } from "@/components/ui/select";
 
 type GermanCase = "Nominativ" | "Akkusativ" | "Dativ" | "Genitiv";
 // Six real steps, not four: find the word that governs the case, name the
@@ -642,15 +643,14 @@ export function CaseAutomaticityTrainer() {
           </div>
           <label className="grid gap-1 text-xs font-bold">
             Übungszeit heute
-            <select
-              className="h-10 rounded-xl border bg-background px-3 text-sm"
+            <Select
               onChange={(event) => setSessionGoal(Number(event.target.value))}
               value={sessionGoal}
             >
               <option value={4}>5 Minuten · 4 Sätze</option>
               <option value={8}>10 Minuten · 8 Sätze</option>
               <option value={12}>15 Minuten · 12 Sätze</option>
-            </select>
+            </Select>
           </label>
         </div>
       </CardHeader>

@@ -13,6 +13,7 @@ import {
   type StoredEvaluationIssue,
 } from "./conversation-storage";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
+import { Select } from "@/components/ui/select";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
 const nav = [
@@ -719,7 +720,7 @@ export default function Home() {
             <input type="hidden" value={path} readOnly />
             <label>
               <span>{text.labels[1]}</span>
-              <select
+              <Select
                 disabled={recordingState !== "idle"}
                 value={levels.includes(level) ? level : allLabel}
                 onChange={(event) => {
@@ -733,11 +734,11 @@ export default function Home() {
                 {levels.map((item) => (
                   <option key={item}>{item}</option>
                 ))}
-              </select>
+              </Select>
             </label>
             <label>
               <span>{text.labels[2]}</span>
-              <select
+              <Select
                 disabled={recordingState !== "idle"}
                 value={skills.includes(skill) ? skill : allLabel}
                 onChange={(event) => {
@@ -750,11 +751,11 @@ export default function Home() {
                 {skills.map((item) => (
                   <option key={item}>{item}</option>
                 ))}
-              </select>
+              </Select>
             </label>
             <label>
               <span>{text.labels[3]}</span>
-              <select
+              <Select
                 disabled={recordingState !== "idle"}
                 value={categories.includes(category) ? category : allLabel}
                 onChange={(event) => {
@@ -766,11 +767,11 @@ export default function Home() {
                 {categories.map((item) => (
                   <option key={item}>{item}</option>
                 ))}
-              </select>
+              </Select>
             </label>
             <label>
               <span>{text.labels[4]}</span>
-              <select
+              <Select
                 disabled={recordingState !== "idle"}
                 value={selected.id}
                 onChange={(event) => {
@@ -783,7 +784,7 @@ export default function Home() {
                     {topic.topic}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
           </div>
         </section>

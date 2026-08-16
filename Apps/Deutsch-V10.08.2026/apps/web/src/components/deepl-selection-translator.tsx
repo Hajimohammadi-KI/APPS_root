@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Languages, X } from "lucide-react";
 import { translateWithGoogle } from "@/lib/desktop-deepl";
+import { Select } from "@/components/ui/select";
 
 const targets = {
   EN: "Englisch",
@@ -113,8 +114,8 @@ export function DeepLSelectionTranslator() {
           </p>
           <label className="mt-3 grid gap-1 text-sm font-semibold">
             Zielsprache
-            <select
-              className="h-10 rounded-lg border border-violet-300 bg-white px-3"
+            <Select
+              className="rounded-lg border-violet-300 bg-white"
               value={target}
               onChange={(event) =>
                 setTarget(event.target.value as keyof typeof targets)
@@ -125,7 +126,7 @@ export function DeepLSelectionTranslator() {
                   {label}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
           <button
             type="button"

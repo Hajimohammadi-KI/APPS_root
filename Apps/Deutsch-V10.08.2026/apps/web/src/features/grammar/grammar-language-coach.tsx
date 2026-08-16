@@ -15,6 +15,7 @@ import type { GrammarUnit } from "@grammar/content";
 
 import { Button } from "@/components/ui/button";
 import { LearningAccordion } from "@/components/learning-accordion";
+import { Select } from "@/components/ui/select";
 
 import {
   grammarCoachFor,
@@ -187,16 +188,16 @@ export function GrammarLanguageCoach({
               <Languages className="size-4" />
               {ui.language}
             </span>
-            <select
+            <Select
               aria-label={ui.language}
-              className="h-10 min-w-40 rounded-lg border bg-background px-3 text-sm"
+              className="min-w-40 rounded-lg"
               onChange={(event) => changeLanguage(event.target.value)}
               value={supportLanguage}
             >
               <option value="de">Deutsch</option>
               <option value="en">English</option>
               <option value="fa">فارسی</option>
-            </select>
+            </Select>
           </label>
         </div>
 

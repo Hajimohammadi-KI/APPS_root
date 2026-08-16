@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Select } from "@/components/ui/select";
 import {
   LEARNING_RESOURCES,
   RESOURCE_AREAS,
@@ -128,8 +129,8 @@ export function ResourceHub() {
         <CardContent className="grid gap-3 lg:grid-cols-3">
           <label className="grid gap-1.5 text-sm font-medium">
             Lernbereich
-            <select
-              className="h-11 rounded-lg border bg-background px-3"
+            <Select
+              className="rounded-lg"
               value={area}
               onChange={(event) => changeArea(event.target.value)}
             >
@@ -137,12 +138,12 @@ export function ResourceHub() {
               {RESOURCE_AREAS.map((item) => (
                 <option key={item}>{item}</option>
               ))}
-            </select>
+            </Select>
           </label>
           <label className="grid gap-1.5 text-sm font-medium">
             Niveau
-            <select
-              className="h-11 rounded-lg border bg-background px-3"
+            <Select
+              className="rounded-lg"
               value={level}
               onChange={(event) => {
                 setLevel(event.target.value);
@@ -153,19 +154,19 @@ export function ResourceHub() {
               {RESOURCE_LEVELS.map((item) => (
                 <option key={item}>{item}</option>
               ))}
-            </select>
+            </Select>
           </label>
           <label className="grid gap-1.5 text-sm font-medium">
             Thema
-            <select
-              className="h-11 rounded-lg border bg-background px-3"
+            <Select
+              className="rounded-lg"
               value={topic}
               onChange={(event) => setTopic(event.target.value)}
             >
               {topics.map((item) => (
                 <option key={item}>{item}</option>
               ))}
-            </select>
+            </Select>
           </label>
         </CardContent>
       </Card>

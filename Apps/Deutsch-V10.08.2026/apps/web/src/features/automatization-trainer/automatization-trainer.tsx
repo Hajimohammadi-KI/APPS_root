@@ -25,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { grammarUnits } from "@grammar/content";
 import {
@@ -516,8 +517,7 @@ export function AutomatizationTrainer() {
         <CardContent className="grid gap-4 sm:grid-cols-3">
           <label className="block space-y-1.5 text-sm">
             <span className="font-bold">Zielstufe (CEFR)</span>
-            <select
-              className="min-h-11 w-full rounded-xl border bg-background px-3"
+            <Select
               onChange={(event) =>
                 updateLearnerProfile({
                   selfDeclaredLevel: event.target.value as CefrLevel,
@@ -530,12 +530,11 @@ export function AutomatizationTrainer() {
                   {level}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
           <label className="block space-y-1.5 text-sm">
             <span className="font-bold">Tägliche Übungsdauer</span>
-            <select
-              className="min-h-11 w-full rounded-xl border bg-background px-3"
+            <Select
               onChange={(event) =>
                 updateSettings({
                   dailyStudyMinutes: Number(event.target.value) as
@@ -551,12 +550,11 @@ export function AutomatizationTrainer() {
               <option value={30}>30 Minuten</option>
               <option value={45}>45 Minuten</option>
               <option value={60}>60 Minuten</option>
-            </select>
+            </Select>
           </label>
           <label className="block space-y-1.5 text-sm">
             <span className="font-bold">Schwerpunkt</span>
-            <select
-              className="min-h-11 w-full rounded-xl border bg-background px-3"
+            <Select
               onChange={(event) =>
                 updateSettings({
                   automatizationFocus: event.target.value as
@@ -570,7 +568,7 @@ export function AutomatizationTrainer() {
               <option value="both">Sprechen und Schreiben</option>
               <option value="speaking">Vor allem Sprechen</option>
               <option value="writing">Vor allem Schreiben</option>
-            </select>
+            </Select>
           </label>
         </CardContent>
       </Card>
@@ -741,8 +739,7 @@ export function AutomatizationTrainer() {
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block space-y-1.5 text-sm">
                 <span className="font-bold">Textvorlage</span>
-                <select
-                  className="min-h-11 w-full rounded-xl border bg-background px-3"
+                <Select
                   disabled={useCustomText}
                   onChange={(event) => setPassageId(event.target.value)}
                   value={passageId}
@@ -752,7 +749,7 @@ export function AutomatizationTrainer() {
                       {passage.title} · {passage.level}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
               <label className="flex items-end gap-2 text-sm">
                 <input
@@ -851,8 +848,8 @@ export function AutomatizationTrainer() {
                 </p>
                 <label className="flex items-center gap-2 text-sm">
                   <span>Geschwindigkeit</span>
-                  <select
-                    className="min-h-9 rounded-xl border bg-background px-2"
+                  <Select
+                    className="min-h-9 px-2"
                     onChange={(event) =>
                       setSlowRate(Number(event.target.value) as 0.75 | 0.85)
                     }
@@ -860,7 +857,7 @@ export function AutomatizationTrainer() {
                   >
                     <option value={0.75}>0,75x</option>
                     <option value={0.85}>0,85x</option>
-                  </select>
+                  </Select>
                 </label>
                 <Button
                   disabled={!activeText}

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Mic, Plus, Upload } from "lucide-react";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/components/human-audio-player";
+import { Select } from "@/components/ui/select";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import {
   listTeacherContent,
@@ -148,14 +149,14 @@ export function TeacherFlashcardPanel() {
       </label>
       <label>
         GER-Niveau
-        <select
+        <Select
           onChange={(event) => setLevel(event.target.value as (typeof LEVELS)[number])}
           value={level}
         >
           {LEVELS.map((cefrLevel) => (
             <option key={cefrLevel}>{cefrLevel}</option>
           ))}
-        </select>
+        </Select>
       </label>
       <button
         className="teacher-primary-button"

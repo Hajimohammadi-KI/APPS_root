@@ -860,6 +860,12 @@ const technicalWeekSpecs: Array<{
 type ScheduledWeekSpec = (typeof technicalWeekSpecs)[number] & {
   startDate?: string;
   technicalIndex?: number;
+  // Explicit per-day ISO dates, one per entry in `days`. Used instead of the
+  // startDate-derived 6-consecutive-working-day window for weeks that must
+  // interleave with the live NLP course's fixed class calendar (Aug 17 - Sep
+  // 7, Mon/Wed/Sat) -- those days are covered by nlpCourseSessions, not this
+  // plan, so this week's day-tasks land only on the free days in between.
+  dates?: string[];
 };
 
 const designWeekSpecs: ScheduledWeekSpec[] = [
@@ -867,8 +873,8 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phase: "Design 1: Problem und Anforderungen",
     phaseId: "design-requirements",
     title: "Problem, Stakeholder und vertretbarer Scope",
-    goal: "Vor dem Coding werden Problem, Nutzende, Anforderungen und Projektgrenzen präzise und testbar.",
-    startDate: "2026-08-14",
+    goal: "Vor dem Coding werden Problem, Nutzende, Anforderungen und Projektgrenzen präzise und testbar. Läuft parallel zum Live-NLP-Kurs (17. Aug – 7. Sept) -- diese Woche belegt nur die kursfreien Tage, nicht Montag/Mittwoch/Samstag.",
+    dates: ["2026-08-18", "2026-08-20", "2026-08-21", "2026-08-23", "2026-08-25", "2026-08-27"],
     days: [
       d("Problemstellung und Projektwert", ["proposal", "hevner"], "Ohne präzises Problem zerfallen Architektur und Implementierung in unverbundene Funktionen.", ["Formuliere das Kernproblem der Cross-Repository-Analyse in einem Satz", "Kläre den Unterschied zwischen Evidenz und Textähnlichkeit", "Beschreibe den Artefaktwert für drei Rollen getrennt"], ["1", "6", "7"], "Design / Problem Framing", "problem-statement-v1.md"),
       d("Stakeholder und Personas", ["proposal", "sweqa"], "Developer, Architect und QA benötigen unterschiedliche Fragen und Evidenzstufen.", ["Extrahiere das Ziel jeder Persona", "Bestimme die Entscheidung, die jede Rolle mit der Antwort trifft", "Dokumentiere Informationen, die einer Rolle nicht gezeigt werden dürfen"], ["1.6", "25", "26"], "Design / Stakeholders", "stakeholders-and-personas.md"),
@@ -882,8 +888,8 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phase: "Design 2: Systemarchitektur",
     phaseId: "design-architecture",
     title: "C4, Datenfluss und Modulgrenzen",
-    goal: "Systemstruktur von Context bis Component sowie Modulverträge werden vor der Implementierung fixiert.",
-    startDate: "2026-08-21",
+    goal: "Systemstruktur von Context bis Component sowie Modulverträge werden vor der Implementierung fixiert. Läuft weiterhin parallel zum Live-NLP-Kurs -- nur kursfreie Tage.",
+    dates: ["2026-08-28", "2026-08-30", "2026-09-01", "2026-09-03", "2026-09-04", "2026-09-06"],
     days: [
       d("System Context Diagram", ["c4", "proposal"], "Das Diagramm zeigt die Beziehungen zu Nutzenden, GitHub/lokalen Repositories, Neo4j und LLM.", ["Bestimme externe Personen und Softwaresysteme", "Definiere Vertrauen und Eigentum jeder Boundary", "Entferne Technologiedetails aus dem Context"], ["1.6", "3", "9"], "Architecture / C4", "c4-context.dsl"),
       d("Container Diagram", ["c4", "arc42"], "Container trennen Ausführung, Speicherung und Benutzeroberfläche.", ["Grenze CLI/API, Extractor, Graph Store und UI ab", "Beschreibe Protokoll und übertragene Daten jeder Beziehung", "Definiere jeden Container als stateful oder stateless"], ["3", "10", "38.2"], "Architecture / C4", "c4-containers.dsl"),
@@ -897,8 +903,8 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phase: "Design 3: Domänen- und Evidenzmodell",
     phaseId: "design-evidence-model",
     title: "Gemeinsame Sprache, Program Graph und Provenance",
-    goal: "Entitäten, Beziehungen, Evidenz und Unsicherheitsstatus werden schriftlich und in JSON-Beispielen fixiert.",
-    startDate: "2026-08-28",
+    goal: "Entitäten, Beziehungen, Evidenz und Unsicherheitsstatus werden schriftlich und in JSON-Beispielen fixiert. Beginnt am ersten Tag nach dem letzten NLP-Kurstermin (7. September); ab hier läuft der Plan wieder auf normalem Wochentakt.",
+    startDate: "2026-09-08",
     days: [
       d("Domänenglossar", ["proposal", "allamanis"], "Gemeinsame Begriffe verhindern Bedeutungsunterschiede zwischen Text, Code und Graph.", ["Definiere Fact, Evidence, Claim und Path getrennt", "Präzisiere Repository, Project, File, Type und Method", "Operationalisiere READ, WRITE und Persistence"], ["2", "3.2", "3.3"], "Domain Model", "domain-glossary.md"),
       d("Node Types des Program Graph", ["allamanis", "yamaguchi"], "Nodes sollen Projektfragen dienen und nicht den gesamten AST kopieren.", ["Liste Nodes von Repository bis Table", "Bestimme notwendige Identität und Properties jedes Nodes", "Entferne Nodes ohne Nutzen für die Forschungsfragen"], ["3.3", "10.3"], "Graph Model", "node-catalog-v1.yaml"),
@@ -913,7 +919,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-evaluation",
     title: "Goldstandard, RQ1/RQ2 und Teststrategie",
     goal: "Vor dem Bau des Artefakts wird die Messung von Erfolg und Scheitern vollständig definiert.",
-    startDate: "2026-09-04",
+    startDate: "2026-09-15",
     days: [
       d("Akzeptanzkriterien des Gesamtsystems", ["proposal", "hevner"], "Die Definition of Done muss von Evidenz und Forschungsfragen abhängen, nicht vom guten Eindruck einer Demo.", ["Extrahiere die Erfolgskriterien des Artefakts", "Trenne verpflichtende und sekundäre Metriken", "Markiere Schwellenwerte, die Betreuungsgenehmigung benötigen"], ["16", "17", "20"], "Evaluation / Acceptance", "system-acceptance-criteria.md"),
       d("Annotationsprotokoll entwerfen", ["proposal", "sweqa"], "Der Goldstandard ist nur mit stabiler Annotationseinheit und Anleitung valide.", ["Definiere die Einheiten Method, Table und Relation", "Definiere Positive, Negative und Hard Negative", "Beschreibe Disagreement- und Zweitprüfungsprozess"], ["12", "13.3", "29.4"], "Evaluation / Gold", "annotation-guideline-v1.md"),
@@ -928,7 +934,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-delivery-plan",
     title: "Corpus, Repository-Struktur und technisches Backlog",
     goal: "Das Design wird in einen versionierten, planbaren und eindeutigen Umsetzungsplan überführt.",
-    startDate: "2026-09-11",
+    startDate: "2026-09-22",
     days: [
       d("Corpus Manifest und Freeze Plan", ["danphe", "proposal"], "Eine feste Eingabe ist Voraussetzung für reproduzierbare Ergebnisse.", ["Dokumentiere den festen Danphe-Commit", "Bestimme Solutions und Projects im Scope", "Dokumentiere Lizenz, Build und Ausschlüsse"], ["9.2 bis 9.3", "11.3"], "Delivery / Corpus", "corpus-manifest-v1.yaml"),
       d("Repository- und Ordnerstruktur", ["arc42", "proposal"], "Die Dateistruktur muss Architekturgrenzen und Testzyklus widerspiegeln.", ["Entwirf src, tests, corpus, gold und reports", "Ordne jedem Ordner ein verantwortliches Modul zu", "Trenne generierte Ausgabe vom Quellcode"], ["10", "11", "17"], "Delivery / Repository", "repository-layout.md"),
@@ -942,11 +948,11 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phase: "Design 6: Finalisierung",
     phaseId: "design-freeze",
     title: "Traceability, Baseline und Oktober-Bereitschaft",
-    goal: "Bis 19. September wird das Design versioniert; danach sind nur kontrollierte Änderungen erlaubt.",
-    startDate: "2026-09-18",
+    goal: "Bis 30. September wird das Design versioniert; danach sind nur kontrollierte Änderungen erlaubt. (Verschoben von ursprünglich 19. September, weil Design 1-2 durch den Live-NLP-Kurs auf kursfreie Tage verteilt wurden.)",
+    startDate: "2026-09-29",
     days: [
       d("Vollständige Traceability Matrix", ["proposal", "hevner"], "Keine Anforderung, kein Modul, kein Test und keine Forschungsfrage darf unverbunden bleiben.", ["Verbinde Requirement→Component", "Verbinde Component→Test/Metric", "Verbinde Metric→RQ/Thesis Section"], ["7", "16", "21"], "Design / Traceability", "traceability-matrix.csv"),
-      d("Design Freeze und Readiness Gate", ["proposal", "adr", "arc42"], "Der 19. September beendet das Design; die Ergebnisse müssen für den unabhängigen Start am 11. Oktober ausreichen.", ["Schließe alle Design-Checklisten", "Versioniere ADRs und erlaubte offene Punkte", "Bereite den ersten technischen Oktobertag und seine Eingaben vor"], ["16", "20", "37"], "Design / Baseline", "design-baseline-2026-09-19.zip"),
+      d("Design Freeze und Readiness Gate", ["proposal", "adr", "arc42"], "Der 30. September beendet das Design; die Ergebnisse müssen für den unabhängigen Start am 11. Oktober ausreichen (nur noch 11 statt ursprünglich rund 21 Puffertage -- bei Bedarf den 11. Oktober selbst verschieben).", ["Schließe alle Design-Checklisten", "Versioniere ADRs und erlaubte offene Punkte", "Bereite den ersten technischen Oktobertag und seine Eingaben vor"], ["16", "20", "37"], "Design / Baseline", "design-baseline-2026-09-30.zip"),
     ],
   },
 ];
@@ -997,16 +1003,21 @@ function addUtcDays(date: Date, days: number) {
 }
 
 export const planWeeks: PlanWeek[] = scheduledWeekSpecs.map((week, weekIndex) => {
-  const weekStart = week.startDate
-    ? new Date(`${week.startDate}T12:00:00Z`)
-    : addUtcDays(
-        new Date("2026-10-11T12:00:00Z"),
-        (week.technicalIndex ?? 0) * 7,
-      );
-  const dates: Date[] = [];
-  for (let offset = 0; offset < 7; offset += 1) {
-    const candidate = addUtcDays(weekStart, offset);
-    if (candidate.getUTCDay() !== 0) dates.push(candidate);
+  let dates: Date[];
+  if (week.dates) {
+    dates = week.dates.map((iso) => new Date(`${iso}T12:00:00Z`));
+  } else {
+    const weekStart = week.startDate
+      ? new Date(`${week.startDate}T12:00:00Z`)
+      : addUtcDays(
+          new Date("2026-10-11T12:00:00Z"),
+          (week.technicalIndex ?? 0) * 7,
+        );
+    dates = [];
+    for (let offset = 0; offset < 7; offset += 1) {
+      const candidate = addUtcDays(weekStart, offset);
+      if (candidate.getUTCDay() !== 0) dates.push(candidate);
+    }
   }
 
   const days = week.days.map((spec, dayIndex) => {
@@ -1143,8 +1154,8 @@ export const PLAN_VERSION =
 
 export const planMeta = {
   start: "2026-08-14",
-  designEnd: "2026-09-19",
-  restStart: "2026-09-20",
+  designEnd: "2026-09-30",
+  restStart: "2026-10-01",
   restEnd: "2026-10-10",
   technicalStart: "2026-10-11",
   end: allDays[allDays.length - 1]?.date ?? "2027-02-10",

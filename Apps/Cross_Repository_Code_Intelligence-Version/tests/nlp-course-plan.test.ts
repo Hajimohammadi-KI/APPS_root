@@ -6,6 +6,7 @@ import {
 } from "../app/plan-data";
 
 const expectedDates = [
+  "2026-08-17",
   "2026-08-19",
   "2026-08-22",
   "2026-08-24",
@@ -15,7 +16,6 @@ const expectedDates = [
   "2026-09-02",
   "2026-09-05",
   "2026-09-07",
-  "2026-09-09",
 ];
 
 describe("NLP Retrieval Lab live course", () => {
@@ -56,8 +56,8 @@ describe("NLP Retrieval Lab live course", () => {
   });
 
   test("keeps neural training outside the required thesis core", () => {
-    expect(nlpLabDefinition.courseStart).toBe("2026-08-19");
-    expect(nlpLabDefinition.courseEnd).toBe("2026-09-09");
+    expect(nlpLabDefinition.courseStart).toBe("2026-08-17");
+    expect(nlpLabDefinition.courseEnd).toBe("2026-09-07");
     expect(nlpLabDefinition.surgeryDate).toBe("2026-09-10");
     expect(nlpLabDefinition.deferred.join(" ")).toContain("fine-tuning");
     expect(nlpLabDefinition.integrationContract.boundary).toContain("verifier");

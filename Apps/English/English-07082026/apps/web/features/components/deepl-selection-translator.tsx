@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Languages, X } from "lucide-react";
+import { Select } from "@/components/ui/select";
 import { translateWithGoogle } from "@/lib/desktop-deepl";
 
 const targets = { DE: "German", EN: "English", FA: "Persian" } as const;
@@ -55,7 +56,7 @@ export function DeepLSelectionTranslator() {
       {open ? <section aria-label="Google translation" className="fixed bottom-5 right-5 z-[95] w-[min(390px,calc(100vw-2rem))] rounded-2xl border-2 border-violet-600 bg-white p-4 text-slate-950 shadow-2xl">
         <div className="flex items-center gap-2"><Languages className="size-5 text-violet-700" /><strong>Translate with Google</strong><button type="button" className="ml-auto rounded-lg p-2 hover:bg-violet-50" aria-label="Close translation" onClick={() => { setOpen(false); setPosition(null); }}><X className="size-4" /></button></div>
         <p className="mt-3 max-h-24 overflow-auto rounded-xl bg-violet-50 p-3 text-sm leading-6">{selection}</p>
-        <label className="mt-3 grid gap-1 text-sm font-semibold">Target language<select className="h-10 rounded-lg border border-violet-300 bg-white px-3" value={target} onChange={(event) => setTarget(event.target.value as keyof typeof targets)}>{Object.entries(targets).map(([code, label]) => <option key={code} value={code}>{label}</option>)}</select></label>
+        <label className="mt-3 grid gap-1 text-sm font-semibold">Target language<Select value={target} onChange={(event) => setTarget(event.target.value as keyof typeof targets)}>{Object.entries(targets).map(([code, label]) => <option key={code} value={code}>{label}</option>)}</Select></label>
         <button type="button" className="mt-3 min-h-11 w-full rounded-xl bg-violet-700 px-4 font-bold text-white disabled:opacity-60" disabled={busy} onClick={() => void translate()}>{busy ? "Translating…" : "Translate"}</button>
         {translation ? <div className="mt-3 rounded-xl border border-violet-300 p-3"><strong className="text-sm">Translation</strong><p className="mt-1 whitespace-pre-wrap leading-6">{translation}</p></div> : null}
         {message ? <p className="mt-3 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm leading-6" role="alert">{message}</p> : null}

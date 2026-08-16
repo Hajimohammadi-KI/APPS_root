@@ -4,6 +4,7 @@ import * as React from "react";
 import { Mic, Plus, Upload } from "lucide-react";
 import type { CefrLevel } from "@grammar/content";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/features/components/human-audio-player";
+import { Select } from "@/components/ui/select";
 import { useAppStore, type FlashcardItem } from "@/features/store/app-store";
 import {
 	listTeacherContent,
@@ -146,11 +147,11 @@ export function TeacherFlashcardPanel() {
 			</label>
 			<label>
 				CEFR level
-				<select onChange={(event) => setLevel(event.target.value as CefrLevel)} value={level}>
+				<Select onChange={(event) => setLevel(event.target.value as CefrLevel)} value={level}>
 					{LEVELS.map((cefrLevel) => (
 						<option key={cefrLevel}>{cefrLevel}</option>
 					))}
-				</select>
+				</Select>
 			</label>
 			<button
 				className="teacher-primary-button"

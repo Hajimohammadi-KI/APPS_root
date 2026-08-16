@@ -32,7 +32,7 @@ export default function NlpLabPage() {
           </p>
         </div>
         <aside className="nlp-lab-time" aria-label="Kurszeit">
-          <strong>19. Aug. – 9. Sept. 2026</strong>
+          <strong>17. Aug. – 7. Sept. 2026</strong>
           <span>Sa · Mo · Mi</span>
           <span>Berlin 17:30–19:30</span>
           <span>Iran 19:00–21:00</span>

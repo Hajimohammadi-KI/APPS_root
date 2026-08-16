@@ -155,7 +155,8 @@ export const sources: Record<string, SourceDefinition> = {
     id: "yamaguchi",
     label: "Yamaguchi et al. 2014: Code Property Graphs",
     href: "https://drive.google.com/file/d/1SGWMjZA8Im9fXsuZxr6KnKdgijDH4o8r/view",
-    driveName: "07_★★★★★_CORE_R02_Yamaguchi_2014_Code_Property_Graphs.pdf",
+    driveName:
+      "07_DEEP_Read-CPG-Model-Construction_★★★★★_CORE_R02_Yamaguchi_2014_Code_Property_Graphs__DEEP_Read-CPG-Model-Graph-Construction.pdf",
     priority: "core",
     thesisRole: "background",
   },
@@ -182,7 +183,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Peng et al. 2026: SWE-QA",
     href: "https://drive.google.com/file/d/15eGjHmpQ_YDfCnJBy535PoKQ-TEyWtpj/view",
     driveName:
-      "02_★★★★☆_IMPORTANT_R29_Peng_2026_SWE_QA_Repository_Level_Code_Questions.pdf",
+      "02_DEEP_Read-Dataset-Metrics-Threats_★★★★☆_IMPORTANT_R29_Peng_2026_SWE_QA_Repository_Level_Code_Questions__DEEP_Read-Dataset-Metrics-Threats.pdf",
     priority: "important",
     thesisRole: "related-work",
   },
@@ -198,7 +199,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Allamanis et al. 2018: Learning to Represent Programs with Graphs",
     href: "https://arxiv.org/pdf/1711.00740",
     driveName:
-      "06_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs.pdf",
+      "06_TARGET_Read-Data-Metrics-Threats_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "core",
     thesisRole: "background",
   },
@@ -207,7 +208,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Petroni et al. 2021: KILT",
     href: "https://arxiv.org/pdf/2009.02252",
     driveName:
-      "08_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks.pdf",
+      "08_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
     thesisRole: "related-work",
   },
@@ -216,7 +217,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Cheng et al. 2024: DraCo",
     href: "https://arxiv.org/pdf/2405.19782",
     driveName:
-      "09_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval.pdf",
+      "09_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
     thesisRole: "related-work",
   },
@@ -224,7 +225,8 @@ export const sources: Record<string, SourceDefinition> = {
     id: "graphcodebert",
     label: "Guo et al. 2021: GraphCodeBERT",
     href: "https://arxiv.org/pdf/2009.08366",
-    driveName: "11_★★☆☆☆_OPTIONAL_R44_Guo_2021_GraphCodeBERT_Data_Flow.pdf",
+    driveName:
+      "11_TARGET_Read-Data-Metrics-Threats_★★☆☆☆_Guo_2021_GraphCodeBERT_Data_Flow__RELATED_Read-Abstract-Method-Conclusion.pdf",
     priority: "optional",
     thesisRole: "background",
   },
@@ -377,8 +379,8 @@ export const sources: Record<string, SourceDefinition> = {
 export const nlpLabDefinition = {
   name: "NLP Retrieval Lab",
   route: "/nlp-lab",
-  courseStart: "2026-08-19",
-  courseEnd: "2026-09-09",
+  courseStart: "2026-08-17",
+  courseEnd: "2026-09-07",
   surgeryDate: "2026-09-10",
   problem:
     "Given a natural-language question about one or more C# repositories, produce reproducible top-k code candidates and an answerability decision whose claims reference verifiable Evidence IDs.",
@@ -418,7 +420,7 @@ export const nlpLabDefinition = {
 export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 1,
-    date: "2026-08-19",
+    date: "2026-08-17",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "Preprocessing and code-aware tokenization",
@@ -432,7 +434,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
   {
     number: 2,
-    date: "2026-08-22",
+    date: "2026-08-19",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "Bag of Words, TF-IDF, and cosine ranking",
@@ -446,7 +448,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
   {
     number: 3,
-    date: "2026-08-24",
+    date: "2026-08-22",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "Word embeddings and the experiment boundary",
@@ -460,7 +462,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
   {
     number: 4,
-    date: "2026-08-26",
+    date: "2026-08-24",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "RNN and vanishing gradients",
@@ -474,7 +476,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
   {
     number: 5,
-    date: "2026-08-29",
+    date: "2026-08-26",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "LSTM and GRU architecture comparison",
@@ -488,7 +490,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
   {
     number: 6,
-    date: "2026-08-31",
+    date: "2026-08-29",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "Sentiment pipeline and Seq2Seq contracts",
@@ -502,7 +504,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
   {
     number: 7,
-    date: "2026-09-02",
+    date: "2026-08-31",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "Self-attention and evidence",
@@ -516,7 +518,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
   {
     number: 8,
-    date: "2026-09-05",
+    date: "2026-09-02",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "Positional encoding, encoder, and decoder",
@@ -530,7 +532,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
   {
     number: 9,
-    date: "2026-09-07",
+    date: "2026-09-05",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "BERT, GPT, and role-safe prompting",
@@ -544,7 +546,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
   {
     number: 10,
-    date: "2026-09-09",
+    date: "2026-09-07",
     berlinTime: "17:30–19:30",
     iranTime: "19:00–21:00",
     title: "PEFT, RAG, and evaluation boundary",

@@ -14,7 +14,10 @@ import {
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
+import {
+	AccordionSelect,
+	AccordionSelectGroup,
+} from "@/components/ui/accordion-select";
 import { CEFR_ORDER } from "@/features/store/app-store";
 import { pdfReaderHrefForResource } from "@/lib/pdf-reader-link";
 
@@ -49,7 +52,7 @@ export function ResourcesScreen() {
 			</div>
 			<Card>
 				<CardContent className="pt-5">
-					<div className="grid gap-3 md:grid-cols-3">
+					<AccordionSelectGroup className="grid items-start gap-3 md:grid-cols-3">
 						<div className="field-stack">
 							<Label htmlFor="resource-search">Search resources</Label>
 							<span className="relative">
@@ -66,33 +69,21 @@ export function ResourcesScreen() {
 								/>
 							</span>
 						</div>
-						<div className="field-stack">
-							<Label htmlFor="resource-skill">Skill</Label>
-							<Select
-								id="resource-skill"
-								name="resource-skill"
-								onChange={(event) => setSkill(event.target.value)}
-								value={skill}
-							>
-								{skills.map((item) => (
-									<option key={item}>{item}</option>
-								))}
-							</Select>
-						</div>
-						<div className="field-stack">
-							<Label htmlFor="resource-level">Level</Label>
-							<Select
-								id="resource-level"
-								name="resource-level"
-								onChange={(event) => setLevel(event.target.value)}
-								value={level}
-							>
-								{levels.map((item) => (
-									<option key={item}>{item}</option>
-								))}
-							</Select>
-						</div>
-					</div>
+						<AccordionSelect
+							id="resource-skill"
+							label="Skill"
+							onChange={setSkill}
+							options={skills.map((item) => ({ value: item, label: item }))}
+							value={skill}
+						/>
+						<AccordionSelect
+							id="resource-level"
+							label="Level"
+							onChange={setLevel}
+							options={levels.map((item) => ({ value: item, label: item }))}
+							value={level}
+						/>
+					</AccordionSelectGroup>
 				</CardContent>
 			</Card>
 			<Accordion defaultValue={[level !== "All" ? level : "A1"]} type="multiple">

@@ -36,3 +36,21 @@ footer{grid-template-columns:auto minmax(0,1fr) auto minmax(270px,320px);align-i
 .mode:focus-visible,.steps button:focus-visible,.record-controls button:focus-visible,.flow-actions button:focus-visible,.improve-actions button:focus-visible{outline:3px solid rgba(116,68,218,.25);outline-offset:2px}
 @media(max-width:1180px){.conversation-filter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:760px){.conversation-filter{margin:12px;padding:16px}.conversation-filter-grid{grid-template-columns:1fr}.conversation-filter-grid select{height:46px}}
+
+/* Accordion-style filter controls: same visual language as the select
+   controls they replaced (13px radius, #faf7ff field, violet focus ring),
+   so the Studio keeps its own design system rather than inheriting the
+   app-wide Tailwind token look. */
+.conversation-filter-grid .accordion-select{min-width:0;border:1px solid #ddd2ec;border-radius:13px;background-color:#faf7ff;transition:border-color .18s ease,box-shadow .18s ease}
+.conversation-filter-grid .accordion-select:hover{border-color:#bca8db}
+.conversation-filter-grid .accordion-select:has(.accordion-select-trigger:focus-visible){border-color:#7444da;box-shadow:0 0 0 4px rgba(116,68,218,.13)}
+.conversation-filter-grid .accordion-select-trigger{min-height:48px;padding:0 13px;background:transparent;color:#171331}
+.conversation-filter-grid .accordion-select-trigger:hover{background:transparent}
+.conversation-filter-grid .accordion-select-trigger:disabled{cursor:not-allowed;opacity:.58}
+.conversation-filter-grid .accordion-select-label{color:var(--ink);font-size:11px;font-weight:800}
+.conversation-filter-grid .accordion-select-value{font-size:14px;font-weight:500;color:#171331}
+.conversation-filter-grid .accordion-select-panel{border-top:1px solid #ddd2ec;background:#fff;padding:6px}
+.conversation-filter-grid .accordion-select-option{border-radius:9px;font-size:14px;color:#171331}
+.conversation-filter-grid .accordion-select-option:hover{background:#f3edff}
+.conversation-filter-grid .accordion-select-option[aria-checked="true"]{background:#efe7ff;color:#5a2fb8;font-weight:800}
+.conversation-filter-grid .accordion-select-option:focus-visible{box-shadow:0 0 0 3px rgba(116,68,218,.18)}

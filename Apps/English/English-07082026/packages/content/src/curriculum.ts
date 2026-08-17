@@ -1,6 +1,9 @@
 import { A1_AUTHORED, type AuthoredExample, type AuthoredUnit } from "./authored/a1";
 import { A2_AUTHORED } from "./authored/a2";
 import { B1_AUTHORED } from "./authored/b1";
+import { B2_AUTHORED } from "./authored/b2";
+import { C1_AUTHORED } from "./authored/c1";
+import { C2_AUTHORED } from "./authored/c2";
 import { cefrSupplementalUnits } from "./cefr-supplement";
 import { grammarUnits as legacyGrammarUnits } from "./generated/grammar";
 import { repairGrammarUnitLinks } from "./resource-links";
@@ -92,6 +95,32 @@ function isWellFormedExercise(
   ) {
     return false;
   }
+  // A correction task that shows a full sentence must be keyed to a full
+  // sentence. 24 items were keyed to a fragment of one -- "Correct the
+  // sentence: The train left before we had arrived." answered by "had left.",
+  // or worst of all "Correct the sentence: planning, to analyse, and reports"
+  // answered by "parallel forms.", which is a description of the fix rather
+  // than the fix. The lenient grader rescues a learner who writes the whole
+  // sentence, but the model shown back to them is still a fragment, so the
+  // feedback teaches the wrong thing. Every affected unit is authored and
+  // still clears the depth gate without these.
+  //
+  // Corrections that legitimately shorten a sentence are unaffected: the rule
+  // only fires when the source is a real sentence (4+ words) AND the key is at
+  // most half its length. "You open the door." -> "Open the door." stays.
+  const correctionSource = prompt.match(
+    /^(?:Correct the sentence|Transform|Complete)\s*:\s*(.+)$/i,
+  )?.[1];
+  if (correctionSource) {
+    const sourceWords = correctionSource.trim().split(/\s+/).filter(Boolean);
+    const keyWords = answer.trim().split(/\s+/).filter(Boolean);
+    if (
+      sourceWords.length >= 4 &&
+      keyWords.length <= Math.ceil(sourceWords.length / 2)
+    ) {
+      return false;
+    }
+  }
   // A "Correct the sentence" exercise only makes sense when `commonError`
   // actually stores a "wrong → correct" pair to correct. When it's just a
   // category label, the prompt has no real wrong sentence in it at all, so
@@ -145,6 +174,9 @@ const AUTHORED_BY_LEVEL: Readonly<
   A1: A1_AUTHORED,
   A2: A2_AUTHORED,
   B1: B1_AUTHORED,
+  B2: B2_AUTHORED,
+  C1: C1_AUTHORED,
+  C2: C2_AUTHORED,
 };
 
 function authoredFor(unit: GrammarUnit) {

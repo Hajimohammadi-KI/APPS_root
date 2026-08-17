@@ -124,3 +124,32 @@ describe("Grammar Lab controlled-answer grading", () => {
 		).toBe(false);
 	});
 });
+
+// The repair family asks the learner to produce a whole sentence but does not
+// begin with Transform/Complete/Correct, so it used to fall outside
+// OPEN_PRODUCTION_PROMPT and was graded by exact match against the one stored
+// key. Where that key is a bare corrected form ("two children"), a learner who
+// followed the instruction and wrote a full sentence was marked wrong.
+describe("repair prompts get open-production grading", () => {
+	const fragmentKeyRepair = {
+		prompt:
+			"Repair this common error for “Plural nouns” and write the full corrected sentence.",
+		expected: "two children",
+	};
+
+	it("accepts the stored corrected form itself", () => {
+		expect(evaluatePracticeAnswer("two children", fragmentKeyRepair)).toBe(true);
+	});
+
+	it("accepts the full sentence the prompt actually asks for", () => {
+		expect(
+			evaluatePracticeAnswer("I have two children.", fragmentKeyRepair),
+		).toBe(true);
+	});
+
+	it("still rejects an answer missing the target form", () => {
+		expect(
+			evaluatePracticeAnswer("I have two childs.", fragmentKeyRepair),
+		).toBe(false);
+	});
+});

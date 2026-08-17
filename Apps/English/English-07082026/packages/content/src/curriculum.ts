@@ -149,8 +149,18 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
           ],
         ] as GrammarExercise[])
       : []),
+    // Ask for exactly what the stored key actually is. `repairTest` is a full
+    // sentence for most units but a bare corrected form for others ("two
+    // children", "easier", "any time."). A single prompt that always promised
+    // "the full corrected sentence" contradicted the key on 50 items, and a
+    // learner who obeyed it was marked wrong. Filtering those out was the
+    // first fix and it was too blunt -- it deleted usable retrieval items
+    // rather than correcting their wording. Matching the prompt to the key
+    // keeps the practice and removes the contradiction.
     [
-      `Repair this common error for “${unit.title}” and write the full corrected sentence.`,
+      unit.repairTest.trim().split(/\s+/).length >= 3
+        ? `Repair this common error for “${unit.title}” and write the full corrected sentence.`
+        : `Write the corrected form for “${unit.title}”.`,
       unit.repairTest,
     ],
     [
@@ -176,7 +186,18 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
     isWellFormedExercise(candidate, unit),
   );
 
-  const exercises = [...wellFormed];
+  // Dedupe the unit's OWN exercises by answer too, not just the appended
+  // candidates. At least one unit ("Prepositions of time: at, in, on") ships
+  // two authored exercises with the same expected string, so filtering only
+  // the candidates still left a duplicate retrieval target in the stored pool.
+  const exercises: GrammarExercise[] = [];
+  const seenAnswers = new Set<string>();
+  for (const exercise of wellFormed) {
+    const key = normalizeForContainment(exercise[1]);
+    if (seenAnswers.has(key)) continue;
+    seenAnswers.add(key);
+    exercises.push(exercise);
+  }
   const prompts = new Set(exercises.map((exercise) => exercise[0]));
   // Dedupe by ANSWER as well as by prompt. Several candidates point at the
   // same expected string (both rule prompts expect `recallTest`, which is

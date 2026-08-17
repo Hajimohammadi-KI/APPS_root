@@ -84,7 +84,13 @@ describe("legacy content extraction", () => {
           ...unit.explanation.specialCases,
         ].every((detail) => detail.trim().length >= 20),
       ).toBe(true);
-      expect(unit.exercises.length).toBeGreaterThanOrEqual(5);
+      // Von 5 auf MINIMUM_CONTROLLED_EXERCISES (2) gesenkt, nachdem die
+      // Abtippaufgaben entfernt und die Kandidaten nach Antwort dedupliziert
+      // wurden. Einheiten wie „Trennbare Verben“ enthalten insgesamt nur zwei
+      // verschiedene Zeichenketten -- ein Beispielsatz und die Regel -- und
+      // können ehrlich nicht mehr hergeben. Die Zahl steigt durch Autorieren,
+      // nicht durch Absenken dieser Zusicherung.
+      expect(unit.exercises.length, unit.title).toBeGreaterThanOrEqual(2);
       expect(
         unit.exercises.every(
           (exercise) =>

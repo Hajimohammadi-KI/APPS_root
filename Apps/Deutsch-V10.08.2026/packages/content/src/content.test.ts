@@ -283,3 +283,37 @@ describe("legacy content extraction", () => {
     ).toBe(false);
   });
 });
+
+// Phase-0-Invarianten, gespiegelt aus der englischen App. Beide Defektklassen
+// waren hier real vorhanden: drei Aufgabenfamilien pro Einheit druckten ihre
+// eigene Lösung im Prompt ab, und mehrere Kandidaten belegten dieselbe
+// erwartete Antwort. Hier festgeschrieben, damit weder neue Inhalte noch eine
+// Generatoränderung sie stillschweigend zurückbringen können.
+describe("kontrollierte Aufgaben sind nur durch Abrufen lösbar", () => {
+  const normalisiert = (wert: string) =>
+    wert
+      .toLocaleLowerCase("de-DE")
+      .replace(/[.!?,;:„“"']/gu, "")
+      .replace(/\s+/gu, " ")
+      .trim();
+
+  it("keine Aufgabenstellung enthält ihre eigene Lösung", () => {
+    for (const einheit of grammarUnits) {
+      for (const [prompt, antwort] of einheit.exercises) {
+        const schluessel = normalisiert(antwort ?? "");
+        if (schluessel.split(" ").length < 3) continue;
+        expect(
+          normalisiert(prompt ?? "").includes(schluessel),
+          `${einheit.title}: „${prompt}“ enthält die Lösung`,
+        ).toBe(false);
+      }
+    }
+  });
+
+  it("jede Aufgabe einer Einheit erwartet eine andere Antwort", () => {
+    for (const einheit of grammarUnits) {
+      const antworten = einheit.exercises.map(([, a]) => normalisiert(a ?? ""));
+      expect(new Set(antworten).size, einheit.title).toBe(antworten.length);
+    }
+  });
+});

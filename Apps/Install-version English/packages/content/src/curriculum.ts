@@ -3,15 +3,15 @@ import { grammarUnits as legacyGrammarUnits } from "./generated/grammar";
 import { repairGrammarUnitLinks } from "./resource-links";
 import type { GrammarExercise, GrammarResource, GrammarUnit } from "./types";
 
-// Raised from 6 -- the original candidate pool below only had enough
-// distinct, safe prompts to reach ~6-7 per unit regardless of this
-// constant. The expanded pool (more prompts per already-verified field,
-// plus one per example sentence) realistically reaches ~10-12 for most
-// units. This is still short of the "hundreds of repetitions" skill
-// acquisition research calls for -- it is what can be generated safely
-// from content that already exists per unit without fabricating new
-// example sentences (which would risk introducing bad grammar).
-const MINIMUM_CONTROLLED_EXERCISES = 10;
+// How many items to aim for, not a guarantee. Measured against the shipped
+// content after the copy-typing and self-contradicting items were filtered
+// out: units land between 3 and 10 (3 for 3 units, 4 for 2, 5 for 12, 6 for
+// 45, 7 for 22, 10 for 28). The earlier note here claimed "~10-12 for most
+// units"; that was only true while items that printed their own answer still
+// counted. Far short of the many distributed repetitions skill-acquisition
+// research calls for -- and the gap closes by AUTHORING content, never by
+// re-admitting items a learner can solve by copying.
+const TARGET_CONTROLLED_EXERCISES = 10;
 
 // Some legacy units were generated from a `commonError` that was only a
 // category label (e.g. "Unclear pronoun reference.", "Using slang in a
@@ -28,12 +28,50 @@ const MINIMUM_CONTROLLED_EXERCISES = 10;
 // to learners as if they were a real correction task.
 const FRAGMENT_ANSWER_PATTERN = /\.\.\.\s*$|^\s*(?:vs|\/)\s+/i;
 const CORRECT_THE_SENTENCE_PROMPT = /^Correct the sentence:\s*/i;
+// Prompts that explicitly promise the learner a whole sentence. When the
+// stored key is a bare fragment ("two children", "easier", "any time."), a
+// learner who obeys the instruction and writes the full sentence is marked
+// WRONG -- the instruction and the answer key contradict each other. Measured
+// across the shipped content: 50 items. This prompt does not begin with
+// Transform/Complete/Correct, so evaluatePracticeAnswer's lenient path never
+// applied to it either; it was pure exact match against the fragment.
+const FULL_SENTENCE_PROMPT = /write the full corrected sentence/i;
+
+function normalizeForContainment(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[.!?,;:"'’“”]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// An exercise whose prompt already prints its expected answer tests typing,
+// not retrieval. The generator stopped ADDING such candidates, but the units'
+// own authored exercises were never filtered -- 110 items shipped this way
+// ("Type the model sentence: I am a student." -> "I am a student."). German's
+// exercise-completion.ts already applies this rule; English did not.
+function promptContainsAnswer(prompt: string, expected: string): boolean {
+  const answer = normalizeForContainment(expected);
+  // Below a real clause, an incidental word overlap is not a copying signal.
+  if (answer.split(" ").length < 3) return false;
+  return normalizeForContainment(prompt).includes(answer);
+}
 
 function isWellFormedExercise(
   [prompt, answer]: GrammarExercise,
   unit: GrammarUnit,
 ): boolean {
   if (!answer.trim() || FRAGMENT_ANSWER_PATTERN.test(answer.trim())) {
+    return false;
+  }
+  if (promptContainsAnswer(prompt, answer)) return false;
+  // A promise of a full sentence paired with a fragment key is unanswerable
+  // as written. Two words is the floor for "a sentence" here (e.g. "I agree."
+  // is legitimate; "easier" is not).
+  if (
+    FULL_SENTENCE_PROMPT.test(prompt) &&
+    answer.trim().split(/\s+/).length < 3
+  ) {
     return false;
   }
   // A "Correct the sentence" exercise only makes sense when `commonError`
@@ -131,7 +169,7 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
     // verbatim inside itself, so completing it was copy-typing, not
     // recall -- it inflated the exercise count without adding genuine
     // retrieval practice. Removing it lowers the achieved count for
-    // some units below MINIMUM_CONTROLLED_EXERCISES; that is honest
+    // some units below TARGET_CONTROLLED_EXERCISES; that is honest
     // volume, not a regression to hide.
   ];
   const candidates = candidatePool.filter((candidate) =>
@@ -140,11 +178,23 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
 
   const exercises = [...wellFormed];
   const prompts = new Set(exercises.map((exercise) => exercise[0]));
+  // Dedupe by ANSWER as well as by prompt. Several candidates point at the
+  // same expected string (both rule prompts expect `recallTest`, which is
+  // identical to `rule` in all 112 units). Admitting both spent two of the
+  // unit's slots on one retrieval target; skipping the duplicate lets a
+  // candidate with a genuinely new answer take the slot instead. The round
+  // picker already deduped at display time -- doing it here means the saved
+  // pool is honest too, not just what happens to be shown.
+  const answers = new Set(
+    exercises.map((exercise) => normalizeForContainment(exercise[1])),
+  );
   for (const candidate of candidates) {
-    if (exercises.length >= MINIMUM_CONTROLLED_EXERCISES) break;
+    if (exercises.length >= TARGET_CONTROLLED_EXERCISES) break;
     if (prompts.has(candidate[0])) continue;
+    if (answers.has(normalizeForContainment(candidate[1]))) continue;
     exercises.push(candidate);
     prompts.add(candidate[0]);
+    answers.add(normalizeForContainment(candidate[1]));
   }
 
   return {

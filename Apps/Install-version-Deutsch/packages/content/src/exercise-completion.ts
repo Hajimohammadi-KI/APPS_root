@@ -176,7 +176,19 @@ export function completeControlledExercises(
     // in allen dreien stand die Lösung wörtlich im Prompt. Das ist genau der
     // Fehler, der in der englischen curriculum.ts schon behoben ist; hier
     // wurde er nur bei einem einzigen Kandidaten behoben statt generell.
-    .filter(([prompt, expected]) => !promptContainsAnswer(prompt, expected));
+    .filter(([prompt, expected]) => !promptContainsAnswer(prompt, expected))
+    // Auch die eigenen Aufgaben der Einheit nach Antwort deduplizieren, nicht
+    // nur die angehängten Kandidaten. „Imperativ mit du, ihr und Sie“ liefert
+    // fünf Aufgaben mit nur drei verschiedenen Lösungen -- zwei Plätze gingen
+    // für bereits vorhandene Abrufziele drauf.
+    .filter((exercise, index, alle) => {
+      const schluessel = normalizeForContainment(exercise[1]);
+      return (
+        alle.findIndex(
+          (anderer) => normalizeForContainment(anderer[1]) === schluessel,
+        ) === index
+      );
+    });
 
   if (existing.length >= TARGET_CONTROLLED_EXERCISES) {
     return existing;

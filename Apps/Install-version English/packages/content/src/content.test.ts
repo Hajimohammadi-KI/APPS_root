@@ -571,3 +571,48 @@ describe("legacy content parity", () => {
     expect(publicCurriculum).not.toContain("official speaking task");
   });
 });
+
+// Phase 0 invariants. These are the two defect classes the content audit
+// found in the shipped catalog (110 and 50 items respectively). They are
+// asserted here so neither can return silently through new content or a
+// change to the generator.
+describe("controlled exercises are solvable only by retrieval", () => {
+  const normalize = (value: string) =>
+    value
+      .toLowerCase()
+      .replace(/[.!?,;:"'’“”]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  test("no prompt prints its own expected answer", () => {
+    for (const unit of grammarUnits) {
+      for (const [prompt, answer] of unit.exercises) {
+        const key = normalize(answer);
+        if (key.split(" ").length < 3) continue;
+        expect(
+          normalize(prompt).includes(key),
+          `${unit.title}: "${prompt}" contains its own answer`,
+        ).toBe(false);
+      }
+    }
+  });
+
+  test("no prompt promises a full sentence while storing a fragment", () => {
+    for (const unit of grammarUnits) {
+      for (const [prompt, answer] of unit.exercises) {
+        if (!/write the full corrected sentence/i.test(prompt)) continue;
+        expect(
+          answer.trim().split(/\s+/).length,
+          `${unit.title}: "${prompt}" keys the fragment "${answer}"`,
+        ).toBeGreaterThanOrEqual(3);
+      }
+    }
+  });
+
+  test("every stored exercise in a unit expects a distinct answer", () => {
+    for (const unit of grammarUnits) {
+      const answers = unit.exercises.map(([, answer]) => normalize(answer));
+      expect(new Set(answers).size, unit.title).toBe(answers.length);
+    }
+  });
+});

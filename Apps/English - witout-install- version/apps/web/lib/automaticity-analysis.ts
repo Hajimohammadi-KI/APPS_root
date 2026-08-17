@@ -200,7 +200,15 @@ const PRACTICE_STOPWORDS = new Set([
 // project since May" are both correct). Exercises that ask the learner to
 // reproduce or fill in one specific model sentence do not — exact match
 // stays authoritative there.
-const OPEN_PRODUCTION_PROMPT = /^(?:Transform|Complete|Correct the sentence)\s*:/i;
+// "Repair this common error ... and write the full corrected sentence." asks
+// the learner to produce a whole sentence in their own words, but it does not
+// start with Transform/Complete/Correct, so it fell outside this pattern and
+// was graded by exact match against the one stored key. That is the same
+// promise-vs-grading mismatch already fixed elsewhere: the instruction invites
+// production, the grader accepted only one string. It is admitted here so the
+// marker-word + overlap check applies to it too.
+const OPEN_PRODUCTION_PROMPT =
+	/^(?:Transform|Complete|Correct the sentence)\s*:|^Repair this common error\b/i;
 
 function expandContractions(text: string): string {
 	return text

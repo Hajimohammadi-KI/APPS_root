@@ -51,7 +51,6 @@ export default function FlashcardsPage() {
 	const [front, setFront] = React.useState("");
 	const [back, setBack] = React.useState("");
 	const [originalSentence, setOriginalSentence] = React.useState("");
-	const [revealed, setRevealed] = React.useState(false);
 	const [productionAnswer, setProductionAnswer] = React.useState("");
 	const [productionResult, setProductionResult] = React.useState<"correct" | "incorrect" | null>(null);
 	// A forgotten card ("Again") previously just went back into the queue
@@ -106,7 +105,10 @@ export default function FlashcardsPage() {
 		setCorrectiveLesson(
 			cardGrade === "again" ? (activeItem.card.lesson ?? null) : null,
 		);
-		setRevealed(false);
+		// The answer's visibility is driven by productionResult (null = not yet
+		// answered), so resetting that is what actually re-hides it between
+		// cards. A separate `revealed` state used to live here but was only ever
+		// written, never read, so it reset nothing.
 		setProductionAnswer("");
 		setProductionResult(null);
 	}

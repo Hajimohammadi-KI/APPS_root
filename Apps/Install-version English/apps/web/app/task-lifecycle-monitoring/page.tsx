@@ -1,6 +1,7 @@
 "use client";
 
-import * as React from "react";
+// No React import: this file never references the React namespace, and Next's
+// automatic JSX runtime does not require it for JSX.
 import { AlertTriangle, ArrowLeft, Database, Eye, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {

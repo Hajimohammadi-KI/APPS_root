@@ -813,7 +813,7 @@ export function AutomaticityScreen({
     // recording (not the stricter language-mastery bar above) -- but it may
     // never be satisfied by typing with no microphone use at all, which the
     // previous `|| !audioRef.current` bypass allowed.
-    if (analysis.targetHit && seconds >= 45 && Boolean(audioRef.current)) {
+    if (analysis.targetHit && seconds >= 45 && audioRef.current) {
       writePlan(`${key}:speaking`, "done");
     }
     if (willSaveAudio && audioRef.current && audioId) {

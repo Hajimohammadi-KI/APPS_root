@@ -65,7 +65,7 @@
   // disconnected legacy key ("grammar-automaticity:v27") that this static
   // page used to read from, which is why the level here never reflected or
   // affected the real app.
-  (function () {
+  (() => {
     const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
     const PROFILE_KEY = 'study-suite:learner-profile:v1';
     const select = document.getElementById('level-select');
@@ -105,7 +105,7 @@
         localStorage.setItem(PROFILE_KEY, JSON.stringify(stored));
       } catch {}
     }
-    window.applyDetectedLevel = function (level) {
+    window.applyDetectedLevel = (level) => {
       detectedLevel = level;
       if (select) select.value = level;
       const topic = document.getElementById('mission-topic');

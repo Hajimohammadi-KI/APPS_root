@@ -4,7 +4,7 @@ import * as React from "react";
 import { Mic, Plus, Upload } from "lucide-react";
 import type { CefrLevel } from "@grammar/content";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/features/components/human-audio-player";
-import { AccordionSelect } from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { useAppStore, type FlashcardItem } from "@/features/store/app-store";
 import {
 	listTeacherContent,
@@ -145,7 +145,9 @@ export function TeacherFlashcardPanel() {
 				Original sentence (optional)
 				<input onChange={(event) => setSentence(event.target.value)} value={sentence} />
 			</label>
-			<AccordionSelect
+			{/* CEFR picker uses the shared SelectMenu so card authoring matches every other
+			    selection control in the app. */}
+			<SelectMenu
 				label="CEFR level"
 				onChange={(next) => setLevel(next as CefrLevel)}
 				options={LEVELS.map((cefrLevel) => ({ value: cefrLevel, label: cefrLevel }))}

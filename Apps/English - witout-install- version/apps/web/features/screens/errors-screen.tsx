@@ -13,7 +13,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { AccordionSelect } from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { EvaluationResult } from "@/features/components/evaluation-result";
 import { recalculateMastery, useAppStore } from "@/features/store/app-store";
@@ -86,7 +86,10 @@ export function ErrorsScreen() {
 
       <Card>
         <CardContent className="pt-5">
-          <AccordionSelect
+          {/* Error filter uses the shared SelectMenu; the dropdown floats over the error
+              list instead of pushing it down, so the list position stays stable while
+              switching filters. */}
+          <SelectMenu
             className="max-w-xs"
             id="error-filter"
             label="Show errors"

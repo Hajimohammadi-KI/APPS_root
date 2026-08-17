@@ -41,6 +41,22 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Dedicated palette for the one shared SelectMenu control. Kept separate
+     from the app tokens above on purpose: the selection control has a fixed
+     specified design (off-white ground, pale lavender menu, navy text,
+     purple only for selection/focus) that must look identical on every
+     screen, including pages that override the global palette with their own
+     scoped CSS. */
+  --color-select-surface: #ffffff;
+  --color-select-line: #e4e1ee;
+  --color-select-ink: #1c2033;
+  --color-select-ink-soft: #4d5470;
+  --color-select-muted: #7b8199;
+  --color-select-accent: #6d4aa8;
+  --color-select-accent-ink: #4e3080;
+  --color-select-selected: #f0eafa;
+  --color-select-hover: #f4f2f9;
 }
 
 :root {

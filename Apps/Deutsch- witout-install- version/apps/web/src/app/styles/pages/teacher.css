@@ -85,53 +85,37 @@
 /* Accordion pickers reuse the field styling of the inputs they replaced
    (12px radius, #d9cfea border, white ground) plus the label rhythm that
    `.teacher-page label` used to provide. */
-.teacher-page .accordion-select {
+/* Teacher-page selection controls: size and spacing only. The old colour and
+   `font: inherit` overrides were dropped on purpose -- SelectMenu carries one
+   fixed palette and type scale that must read the same on every screen -- but
+   the page's field metrics (full width, 0.8rem gutter, 12px radius, 0.8rem
+   vertical rhythm) are kept so the editor form keeps its density. */
+.teacher-page .select-menu {
   width: 100%;
   min-width: 0;
   margin: 0.8rem 0;
-  border: 1px solid #d9cfea;
-  border-radius: 12px;
-  background: #fff;
 }
-.teacher-page .accordion-select-trigger {
+.teacher-page .select-menu-trigger {
   padding: 0.8rem;
-  color: inherit;
-  font: inherit;
+  border-radius: 12px;
 }
-.teacher-page .accordion-select-trigger:hover {
-  background: #faf7ff;
-}
-.teacher-page .accordion-select-trigger:focus-visible {
-  outline: 3px solid rgba(117, 70, 183, 0.25);
-  outline-offset: 2px;
-}
-.teacher-page .accordion-select-label {
-  font-size: 0.78rem;
-  font-weight: 750;
-  color: #6d6475;
-}
-.teacher-page .accordion-select-value {
-  font-weight: 600;
-}
-.teacher-page .accordion-select-panel {
-  border-top: 1px solid #d9cfea;
+.teacher-page .select-menu-panel {
   padding: 0.4rem;
+  border-radius: 12px;
 }
-.teacher-page .accordion-select-option {
+.teacher-page .select-menu-option {
   border-radius: 9px;
-  font: inherit;
 }
-.teacher-page .accordion-select-option:hover {
-  background: #f4eefb;
+/* The page-wide `.teacher-page button svg` sizing must not reach into the
+   shared control: the chevron and the checkmark are part of SelectMenu's own
+   geometry, so restore the sizes the component specifies. */
+.teacher-page .select-menu-trigger svg {
+  width: 1rem;
+  height: 1rem;
 }
-.teacher-page .accordion-select-option[aria-selected="true"] {
-  background: #f0e6fb;
-  color: #7546b7;
-  font-weight: 750;
-}
-.teacher-page .accordion-select-option:focus-visible {
-  outline: 3px solid rgba(117, 70, 183, 0.25);
-  outline-offset: 2px;
+.teacher-page .select-menu-option svg {
+  width: 0.875rem;
+  height: 0.875rem;
 }
 .teacher-grid {
   display: grid;

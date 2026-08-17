@@ -13,10 +13,7 @@ import {
   type StoredEvaluationIssue,
 } from "./conversation-storage";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
-import {
-  AccordionSelect,
-  AccordionSelectGroup,
-} from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
 const nav = [
@@ -719,9 +716,12 @@ export default function Home() {
           aria-labelledby="filter-heading"
         >
           <h2 id="filter-heading">{text.filterTitle}</h2>
-          <AccordionSelectGroup className="conversation-filter-grid">
+          <div className="conversation-filter-grid">
             <input type="hidden" value={path} readOnly />
-            <AccordionSelect
+            {/* Studio-Filter nutzen die gemeinsame SelectMenu: Das schwebende Dropdown
+                haelt diese Filterzeile kompakt, waehrend das fruehere Inline-Akkordeon das
+                Uebungspanel darunter beim Oeffnen nach unten geschoben hat. */}
+            <SelectMenu
               disabled={recordingState !== "idle"}
               label={text.labels[1]}
               value={levels.includes(level) ? level : allLabel}
@@ -734,7 +734,7 @@ export default function Home() {
                 resetSession();
               }}
             />
-            <AccordionSelect
+            <SelectMenu
               disabled={recordingState !== "idle"}
               label={text.labels[2]}
               value={skills.includes(skill) ? skill : allLabel}
@@ -746,7 +746,7 @@ export default function Home() {
                 resetSession();
               }}
             />
-            <AccordionSelect
+            <SelectMenu
               disabled={recordingState !== "idle"}
               label={text.labels[3]}
               value={categories.includes(category) ? category : allLabel}
@@ -757,7 +757,7 @@ export default function Home() {
                 resetSession();
               }}
             />
-            <AccordionSelect
+            <SelectMenu
               disabled={recordingState !== "idle"}
               label={text.labels[4]}
               value={selected.id}
@@ -770,7 +770,7 @@ export default function Home() {
                 resetSession();
               }}
             />
-          </AccordionSelectGroup>
+          </div>
         </section>
 
         <section className="mode-cards" aria-label="Practice mode">

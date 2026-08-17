@@ -25,11 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Select } from "@/components/ui/select";
-import {
-  AccordionSelect,
-  AccordionSelectGroup,
-} from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { grammarUnits } from "@grammar/content";
 import {
@@ -519,8 +515,11 @@ export function AutomatizationTrainer() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AccordionSelectGroup className="grid gap-4 sm:grid-cols-3">
-            <AccordionSelect
+          <div className="grid gap-4 sm:grid-cols-3">
+            {/* Trainingsparameter nutzen die gemeinsame SelectMenu. Auch die
+                Geschwindigkeitsauswahl konnte migrieren: Das Dropdown schwebt ueber dem
+                Inhalt, statt die Abspielzeile wie das Inline-Akkordeon aufzubrechen. */}
+            <SelectMenu
               label="Zielstufe (CEFR)"
               onChange={(next) =>
                 updateLearnerProfile({
@@ -533,7 +532,7 @@ export function AutomatizationTrainer() {
               }))}
               value={targetLevel}
             />
-            <AccordionSelect
+            <SelectMenu
               label="Tägliche Übungsdauer"
               onChange={(next) =>
                 updateSettings({
@@ -548,7 +547,7 @@ export function AutomatizationTrainer() {
               ]}
               value={String(dailyMinutes)}
             />
-            <AccordionSelect
+            <SelectMenu
               label="Schwerpunkt"
               onChange={(next) =>
                 updateSettings({
@@ -562,7 +561,7 @@ export function AutomatizationTrainer() {
               ]}
               value={focus}
             />
-          </AccordionSelectGroup>
+          </div>
         </CardContent>
       </Card>
 
@@ -730,7 +729,7 @@ export function AutomatizationTrainer() {
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="grid gap-3 sm:grid-cols-2">
-              <AccordionSelect
+              <SelectMenu
                 disabled={useCustomText}
                 label="Textvorlage"
                 onChange={(next) => setPassageId(next)}
@@ -835,19 +834,18 @@ export function AutomatizationTrainer() {
                   fast gleichzeitig mit. Wenn du 2–3 Wörter verpasst, mach
                   einfach weiter — nicht neu anfangen.
                 </p>
-                <label className="flex items-center gap-2 text-sm">
-                  <span>Geschwindigkeit</span>
-                  <Select
-                    className="min-h-9 px-2"
-                    onChange={(event) =>
-                      setSlowRate(Number(event.target.value) as 0.75 | 0.85)
-                    }
-                    value={slowRate}
-                  >
-                    <option value={0.75}>0,75x</option>
-                    <option value={0.85}>0,85x</option>
-                  </Select>
-                </label>
+                <SelectMenu
+                  className="w-44"
+                  label="Geschwindigkeit"
+                  onChange={(next) =>
+                    setSlowRate(Number(next) as 0.75 | 0.85)
+                  }
+                  options={[
+                    { value: "0.75", label: "0,75x" },
+                    { value: "0.85", label: "0,85x" },
+                  ]}
+                  value={String(slowRate)}
+                />
                 <Button
                   disabled={!activeText}
                   onClick={() => void speakAtRate(activeText, slowRate, activeContextKey)}

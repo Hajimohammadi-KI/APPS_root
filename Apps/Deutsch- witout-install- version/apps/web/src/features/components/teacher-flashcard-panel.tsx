@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Mic, Plus, Upload } from "lucide-react";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/components/human-audio-player";
-import { AccordionSelect } from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import {
   listTeacherContent,
@@ -147,7 +147,9 @@ export function TeacherFlashcardPanel() {
         Originalsatz (optional)
         <input onChange={(event) => setSentence(event.target.value)} value={sentence} />
       </label>
-      <AccordionSelect
+      {/* Niveau-Auswahl nutzt die gemeinsame SelectMenu, damit das Anlegen von Karten
+          zum selben Auswahlmuster gehoert wie der Rest der App. */}
+      <SelectMenu
         label="GER-Niveau"
         onChange={(next) => setLevel(next as (typeof LEVELS)[number])}
         options={LEVELS.map((cefrLevel) => ({ value: cefrLevel, label: cefrLevel }))}

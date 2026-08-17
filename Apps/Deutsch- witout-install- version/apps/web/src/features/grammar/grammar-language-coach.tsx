@@ -15,7 +15,7 @@ import type { GrammarUnit } from "@grammar/content";
 
 import { Button } from "@/components/ui/button";
 import { LearningAccordion } from "@/components/learning-accordion";
-import { Select } from "@/components/ui/select";
+import { SelectMenu } from "@/components/ui/select-menu";
 
 import {
   grammarCoachFor,
@@ -183,22 +183,30 @@ export function GrammarLanguageCoach({
             </p>
             <p className="mt-1 leading-7">{coach.goal}</p>
           </div>
-          <label className="grid gap-1 text-start text-sm font-medium">
-            <span className="flex items-center gap-1.5">
-              <Languages className="size-4" />
-              {ui.language}
-            </span>
-            <Select
-              aria-label={ui.language}
-              className="min-w-40 rounded-lg"
-              onChange={(event) => changeLanguage(event.target.value)}
-              value={supportLanguage}
-            >
-              <option value="de">Deutsch</option>
-              <option value="en">English</option>
-              <option value="fa">فارسی</option>
-            </Select>
-          </label>
+          {/* Last control to move onto the shared SelectMenu. It needed two
+              component changes first: `label` now accepts a ReactNode so the
+              Languages icon survives, and the trigger/options use logical
+              `text-start` instead of `text-left` so Persian stays
+              right-aligned inside the dir="rtl" wrapper above. `ariaLabel`
+              supplies a plain-text accessible name because the visible label
+              is a node. */}
+          <SelectMenu
+            ariaLabel={ui.language}
+            className="min-w-40"
+            label={
+              <span className="flex items-center gap-1.5">
+                <Languages className="size-4" />
+                {ui.language}
+              </span>
+            }
+            onChange={(next) => changeLanguage(next)}
+            options={[
+              { value: "de", label: "Deutsch" },
+              { value: "en", label: "English" },
+              { value: "fa", label: "فارسی" },
+            ]}
+            value={supportLanguage}
+          />
         </div>
 
         <ol aria-label={ui.aria} className="grid gap-2 sm:grid-cols-5">

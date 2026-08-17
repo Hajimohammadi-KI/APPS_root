@@ -38,7 +38,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { AccordionSelect } from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { ScreenHeading } from "@/features/components/screen-heading";
 import { useAppStore } from "@/features/store/app-store";
@@ -545,7 +545,9 @@ export function IntegratedSkillsScreen({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          <AccordionSelect
+          {/* Unit picker uses the shared SelectMenu, the single selection pattern used
+              across both apps. */}
+          <SelectMenu
             id="integrated-unit"
             label="Unit"
             onChange={(next) => chooseUnit(next)}

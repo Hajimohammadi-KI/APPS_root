@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { AccordionSelect } from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 
 type GermanCase = "Nominativ" | "Akkusativ" | "Dativ" | "Genitiv";
 // Six real steps, not four: find the word that governs the case, name the
@@ -641,7 +641,9 @@ export function CaseAutomaticityTrainer() {
               Signal kehrt in einem neuen Satz zurück.
             </CardDescription>
           </div>
-          <AccordionSelect
+          {/* Uebungszeit nutzt die gemeinsame SelectMenu; String()/Number()-Bruecke bleibt
+              unveraendert, nur das Bedienelement wurde ersetzt. */}
+          <SelectMenu
             className="min-w-52"
             label="Übungszeit heute"
             onChange={(next) => setSessionGoal(Number(next))}

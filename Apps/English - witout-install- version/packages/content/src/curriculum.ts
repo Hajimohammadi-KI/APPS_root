@@ -58,34 +58,70 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
   // always complete, well-formed sentences (never derived from the
   // fragmentary `examples` entries that caused the bug above), so every
   // fixed candidate below is safe filler even for units whose original
-  // exercises were entirely broken. Several fields get a second, distinct
-  // prompt phrasing rather than a second field, since asking the same
-  // verified-correct answer a different way is still genuine additional
-  // retrieval practice without risking new, unverified sentences.
+  // exercises were entirely broken.
+  //
+  // Each field now contributes exactly ONE candidate. Previously three
+  // fields each had a second prompt phrasing pointing at the same expected
+  // answer, on the theory that re-asking it differently was extra retrieval
+  // practice. Two of those pairs were actively harmful and are removed:
+  //
+  //   - "Apply X in a new sentence of your own" and "Explain the rule in
+  //     your own words" promised open production but were graded by exact
+  //     match against `transferTest`/`rule` (see evaluatePracticeAnswer:
+  //     only Transform/Complete/Correct prompts get lenient grading). A
+  //     learner writing a genuine sentence was marked WRONG; the only
+  //     passing answer was typing the reference string verbatim. That
+  //     trains string memorisation and silently inflates mastery.
+  //   - "Explain"/"Teach the rule" test metalinguistic (declarative)
+  //     knowledge -- explaining grammar -- which is the opposite of the
+  //     automaticity this app exists to build. Real open production is
+  //     already handled by the writing/transfer tasks and the
+  //     Automatization Trainer, which grade against the online evaluator
+  //     instead of a fixed string.
+  //
+  // Every remaining prompt states plainly that it wants the reference
+  // answer, so what is asked matches what is graded.
+  // 84 of 112 units carry the boilerplate transferTest "In a new situation,
+  // I can use <title> accurately." Asking a learner to reproduce that teaches
+  // nothing about the grammar -- the only variable part is the unit title
+  // they were just shown -- so the transfer candidate is skipped whenever the
+  // field is still that placeholder rather than a real model sentence.
+  const TRANSFER_PLACEHOLDER =
+    /^In a new situation, I can use .+ accurately\.$/i;
+  const hasRealTransferModel =
+    typeof unit.transferTest === "string" &&
+    !TRANSFER_PLACEHOLDER.test(unit.transferTest.trim());
+
   const candidatePool: GrammarExercise[] = [
     [`State the rule for “${unit.title}” from memory.`, unit.recallTest],
+    // Second retrieval of the same verified sentence under a different
+    // prompt. Kept deliberately: re-retrieving a known-correct sentence is
+    // legitimate spaced retrieval practice for automaticity. What was
+    // removed above is different -- prompts that ASKED for the learner's own
+    // wording while grading against a fixed string.
     [
       `Recall the rule for “${unit.title}” without looking it up.`,
       unit.recallTest,
     ],
-    [
-      `Write the transfer model for “${unit.title}” accurately.`,
-      unit.transferTest,
-    ],
-    [
-      `Apply “${unit.title}” correctly in a new sentence of your own.`,
-      unit.transferTest,
-    ],
+    ...(hasRealTransferModel
+      ? ([
+          [
+            `Write the transfer model for “${unit.title}” accurately.`,
+            unit.transferTest,
+          ],
+        ] as GrammarExercise[])
+      : []),
     [
       `Repair this common error for “${unit.title}” and write the full corrected sentence.`,
       unit.repairTest,
     ],
-    [`Explain the rule for “${unit.title}” in your own words.`, unit.rule],
-    [`Teach “${unit.title}” to a classmate in one sentence.`, unit.rule],
     [
       `Name the common error learners make with “${unit.title}”.`,
       unit.commonError,
     ],
+    // Also kept even when it restates repairTest (true for 36 units): same
+    // reasoning as the recall pair above -- a second retrieval of a real,
+    // verified sentence is practice, not padding.
     [
       `Write the standard reference answer for “${unit.title}”.`,
       unit.testAnswer,

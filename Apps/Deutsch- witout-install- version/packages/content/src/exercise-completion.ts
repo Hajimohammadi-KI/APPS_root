@@ -155,15 +155,27 @@ export function completeControlledExercises(
       correctedSentence,
     ],
     [`Nenne die Regel für „${unit.title}“ auswendig.`, unit.recallTest],
+    // Zweiter Abruf derselben geprüften Antwort unter anderer Formulierung.
+    // Bewusst behalten: einen bekannt korrekten Satz erneut abzurufen ist
+    // echtes verteiltes Abrufen. Entfernt wurden dagegen die beiden
+    // folgenden Aufgaben (siehe unten), weil sie etwas anderes versprachen,
+    // als sie bewerteten.
     [
       `Rufe die Regel für „${unit.title}“ ab, ohne nachzusehen.`,
       unit.recallTest,
     ],
-    [`Erkläre die Regel für „${unit.title}“ mit eigenen Worten.`, unit.rule],
-    [
-      `Trage „${unit.title}“ einem Mitlernenden in einem Satz vor.`,
-      unit.rule,
-    ],
+    // ENTFERNT: „Erkläre die Regel ... mit eigenen Worten.“ und „Trage ...
+    // einem Mitlernenden in einem Satz vor.“ -- beide erwarteten `unit.rule`
+    // wortwörtlich. practiceAnswerMatches vergleicht exakt (nach
+    // Normalisierung) und kennt -- anders als die englische App -- gar keinen
+    // Pfad für offene Produktion. Wer die Regel also wirklich „mit eigenen
+    // Worten“ formulierte, wurde als FALSCH gewertet; bestehen konnte man nur
+    // durch wortwörtliches Abtippen. Das trainiert Auswendiglernen von
+    // Zeichenketten und treibt den Mastery-Wert künstlich hoch.
+    // Zusätzlich prüfen beide Aufgaben metasprachliches Wissen ÜBER Grammatik
+    // statt der Sprachverwendung, auf die diese App zielt. Echte freie
+    // Produktion findet in Schreib-/Transferaufgaben und im
+    // Automatisierungstrainer statt, die gegen den Online-Evaluator prüfen.
     [
       `Schreibe die Standard-Referenzantwort für „${unit.title}“.`,
       unit.testAnswer,

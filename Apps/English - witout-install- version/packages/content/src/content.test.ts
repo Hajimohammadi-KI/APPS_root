@@ -245,7 +245,12 @@ describe("legacy content parity", () => {
     expect(register!.exercises.map(([, answer]) => answer)).not.toContain(
       "vs What do you mean?",
     );
-    expect(cohesion!.exercises.length).toBeGreaterThanOrEqual(6);
+    // "Advanced cohesion" is one of the five units whose source fields are
+    // still sentence stems ("This limitation...") rather than complete
+    // sentences, so the generator can only build three well-formed exercises
+    // for it. See THIN_SOURCE_CONTENT_UNITS below for the full list and why
+    // the floor is asserted separately for those units.
+    expect(cohesion!.exercises.length).toBeGreaterThanOrEqual(3);
     expect(register!.exercises.length).toBeGreaterThanOrEqual(6);
   });
 
@@ -337,9 +342,28 @@ describe("legacy content parity", () => {
     }
   });
 
+  // These five C1/C2 units still carry sentence STEMS in testAnswer/repairTest
+  // ("The study has demonstrated...", "This limitation...") instead of complete
+  // sentences, so isWellFormedExercise correctly rejects them and the generator
+  // can only produce 3-4 exercises. They are listed explicitly rather than
+  // lowering the floor for all 112 units: the gap is real, it is content that
+  // needs authoring, and naming the units keeps it visible instead of hidden
+  // behind filler. Previously it WAS hidden -- the generator padded every unit
+  // to 10 with prompts whose expected answer was the rule text verbatim.
+  const THIN_SOURCE_CONTENT_UNITS = new Set([
+    "Advanced tense-aspect choices",
+    "Advanced cohesion",
+    "Style shifting",
+    "Editing for naturalness",
+    "Genre-specific grammar",
+  ]);
+
   test("provides at least six exercises and both resource roles per unit", () => {
     for (const unit of grammarUnits) {
-      expect(unit.exercises.length).toBeGreaterThanOrEqual(6);
+      expect(
+        unit.exercises.length,
+        unit.title,
+      ).toBeGreaterThanOrEqual(THIN_SOURCE_CONTENT_UNITS.has(unit.title) ? 3 : 6);
       expect(unit.links.some((link) => link[3] === "explanation")).toBe(true);
       expect(unit.links.some((link) => link[3] === "exercise")).toBe(true);
     }

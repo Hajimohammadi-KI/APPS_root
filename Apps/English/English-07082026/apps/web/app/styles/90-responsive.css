@@ -25,9 +25,17 @@ body {
   max-width: 100%;
 }
 
+/* break-word, NOT anywhere. Both break a word too long for its line, but
+   `anywhere` also lets the element's min-content width collapse to a single
+   character, so any flex/grid item containing text can shrink to ~1ch and
+   render its label vertically ("R e c o r d"). `break-word` keeps min-content
+   at the longest word, so a control stays at least as wide as its label while
+   still wrapping gracefully. This rule covers almost every text element in the
+   app, so `anywhere` here made that failure possible on any page whose
+   container got narrow. */
 :where(.app-content, .learning-card, .daily-overview-main)
   :where(h1, h2, h3, h4, p, span, strong, a, button, label) {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 @media (max-width: 1040px) {
@@ -184,7 +192,7 @@ body {
     padding: 10px 6px;
     grid-template-columns: auto minmax(0, 1fr);
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   .steps button span {

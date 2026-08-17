@@ -205,6 +205,11 @@ function currentNavItem(pathname: string): NavigationItem {
 	);
 }
 
+// Pages that render their own full layout. Keep this list tiny: every entry is
+// a page that opts out of the shared navigation, so it must provide its own way
+// back into the app.
+const STANDALONE_CHROME_ROUTES = ["/studio"] as const;
+
 export function AppShell({ children }: { children: React.ReactNode }) {
 	const { state, mutate } = useAppStore();
 	const navigate = useAppNavigate();
@@ -279,6 +284,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 		},
 		[menuOpen],
 	);
+
+	// Routes that ship their own complete chrome (own sidebar, own topbar, own
+	// stylesheet). Wrapping them in AppShell rendered TWO sidebars and TWO
+	// headers stacked on top of each other, and the doubled-up navigation ate
+	// so much horizontal space that the real content was squeezed into a
+	// narrow column -- which is what forced button labels to wrap one letter
+	// per line. Such a page renders on its own.
+	if (STANDALONE_CHROME_ROUTES.some((route) => pathname.startsWith(route))) {
+		return <>{children}</>;
+	}
 
 	return (
 		<div className="app-shell" data-screen={current.id}>

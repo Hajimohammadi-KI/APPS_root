@@ -252,6 +252,9 @@ function CatalogSelect({
   values: readonly string[];
   onChange: (value: string) => void;
 }>) {
+  // Katalogfilter nutzen die gemeinsame SelectMenu ueber diesen lokalen
+  // CatalogSelect-Helfer, damit alle drei Filter dasselbe Muster teilen und
+  // eine Aenderung am Bedienelement nur an einer Stelle noetig ist.
   return (
     <SelectMenu
       className="min-w-0 rounded-lg"

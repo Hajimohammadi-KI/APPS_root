@@ -147,6 +147,8 @@ export function TeacherFlashcardPanel() {
         Originalsatz (optional)
         <input onChange={(event) => setSentence(event.target.value)} value={sentence} />
       </label>
+      {/* Niveau-Auswahl nutzt die gemeinsame SelectMenu, damit das Anlegen von Karten
+          zum selben Auswahlmuster gehoert wie der Rest der App. */}
       <SelectMenu
         label="GER-Niveau"
         onChange={(next) => setLevel(next as (typeof LEVELS)[number])}

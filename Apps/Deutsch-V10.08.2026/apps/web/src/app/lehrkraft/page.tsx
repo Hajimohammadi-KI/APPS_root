@@ -89,6 +89,8 @@ export default function LehrkraftPage() {
               : "Inhalt hinzufügen"}
           </h2>
           <div className="teacher-grid">
+            {/* Autoren-Auswahl nutzt die gemeinsame SelectMenu, damit die Lehrkraft-Werkzeuge
+                genauso aussehen und funktionieren wie die Filter fuer Lernende. */}
             <SelectMenu
               label="Inhaltstyp"
               value={draft.kind}

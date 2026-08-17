@@ -14,10 +14,7 @@ import {
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-	AccordionSelect,
-	AccordionSelectGroup,
-} from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { CEFR_ORDER } from "@/features/store/app-store";
 import { pdfReaderHrefForResource } from "@/lib/pdf-reader-link";
 
@@ -53,7 +50,7 @@ export function ResourcesScreen() {
 			</div>
 			<Card>
 				<CardContent className="pt-5">
-					<AccordionSelectGroup className="grid items-start gap-3 md:grid-cols-3">
+					<div className="grid items-start gap-3 md:grid-cols-3">
 						<div className="field-stack">
 							<Label htmlFor="resource-search">Search resources</Label>
 							<span className="relative">
@@ -70,21 +67,23 @@ export function ResourcesScreen() {
 								/>
 							</span>
 						</div>
-						<AccordionSelect
+						{/* Resource filters use the shared SelectMenu; the dropdown floats above the
+						    results list so filtering never reflows the results underneath it. */}
+						<SelectMenu
 							id="resource-skill"
 							label="Skill"
 							onChange={setSkill}
 							options={skills.map((item) => ({ value: item, label: item }))}
 							value={skill}
 						/>
-						<AccordionSelect
+						<SelectMenu
 							id="resource-level"
 							label="Level"
 							onChange={setLevel}
 							options={levels.map((item) => ({ value: item, label: item }))}
 							value={level}
 						/>
-					</AccordionSelectGroup>
+					</div>
 					{filtersActive ? (
 						<div className="mt-3 flex items-center gap-3">
 							<Button

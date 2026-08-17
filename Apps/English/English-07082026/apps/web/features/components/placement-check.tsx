@@ -3,7 +3,7 @@
 import * as React from "react";
 import { CheckCircle2, ClipboardCheck } from "lucide-react";
 import type { CefrLevel } from "@grammar/content";
-import { AccordionSelect } from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { Button } from "@/components/ui/button";
 
 interface PlacementQuestion {
@@ -124,11 +124,17 @@ export function PlacementCheck({
         mastery.
       </p>
       <div className="mt-4 grid gap-4">
+        {/* Quiz answers use the shared SelectMenu. Safe here only because the
+            component allows just one open menu app-wide: with the old inline
+            accordion, answering 12 questions left 12 panels expanded and
+            shifted every later question down the page. */}
         {QUESTIONS.map((question, index) => (
-          <AccordionSelect
+          <SelectMenu
             // The question itself is the field name here, so it keeps the
             // readable body-text size instead of the compact field-label size.
-            className="[&_.accordion-select-label]:text-sm [&_.accordion-select-label]:text-foreground"
+            // leading-normal comes with it: the component's tight 1rem label
+            // leading is sized for one short word, and these prompts wrap.
+            className="[&_.select-menu-label]:text-sm [&_.select-menu-label]:leading-normal [&_.select-menu-label]:text-foreground"
             key={question.id}
             label={`${index + 1}. ${question.prompt}`}
             onChange={(next) => {

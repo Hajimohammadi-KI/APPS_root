@@ -128,6 +128,8 @@ export function ResourceHub() {
       <Card>
         <CardContent>
           <div className="grid gap-3 lg:grid-cols-3">
+            {/* Ressourcenfilter nutzen die gemeinsame SelectMenu; das Dropdown schwebt ueber
+                der Trefferliste, sodass Filtern die Liste darunter nicht verschiebt. */}
             <SelectMenu
               className="rounded-lg"
               label="Lernbereich"

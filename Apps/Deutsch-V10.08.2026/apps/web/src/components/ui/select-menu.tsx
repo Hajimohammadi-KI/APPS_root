@@ -30,8 +30,12 @@ export function SelectMenu({
   className,
   disabled,
   placeholder = "Auswählen…",
+  ariaLabel,
 }: {
-  label: string;
+  // ReactNode rather than string so a caller can put an icon beside the
+  // label text (the language switcher does). When a node is passed, give
+  // `ariaLabel` too so the control still has a plain-text accessible name.
+  label: React.ReactNode;
   value: string;
   options: readonly SelectMenuOption[];
   onChange: (value: string) => void;
@@ -39,6 +43,7 @@ export function SelectMenu({
   className?: string;
   disabled?: boolean;
   placeholder?: string;
+  ariaLabel?: string;
 }) {
   const generatedId = React.useId();
   const fieldId = id ?? generatedId;
@@ -167,7 +172,8 @@ export function SelectMenu({
         aria-controls={open ? panelId : undefined}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="select-menu-trigger flex w-full items-center gap-3 rounded-[14px] border border-select-line bg-select-surface px-3.5 py-2 text-left outline-none transition-colors hover:border-select-accent/40 focus-visible:border-select-accent focus-visible:ring-4 focus-visible:ring-select-accent/15 disabled:cursor-not-allowed disabled:opacity-60"
+        aria-label={ariaLabel}
+        className="select-menu-trigger flex w-full items-center gap-3 rounded-[14px] border border-select-line bg-select-surface px-3.5 py-2 text-start outline-none transition-colors hover:border-select-accent/40 focus-visible:border-select-accent focus-visible:ring-4 focus-visible:ring-select-accent/15 disabled:cursor-not-allowed disabled:opacity-60"
         disabled={disabled}
         id={triggerId}
         onClick={() => (open ? close() : openMenu())}
@@ -212,7 +218,7 @@ export function SelectMenu({
               <button
                 aria-selected={isSelected}
                 className={cn(
-                  "select-menu-option flex w-full items-center gap-2 rounded-[9px] px-2.5 py-2 text-left text-sm outline-none transition-colors",
+                  "select-menu-option flex w-full items-center gap-2 rounded-[9px] px-2.5 py-2 text-start text-sm outline-none transition-colors",
                   isSelected
                     ? "bg-select-selected font-bold text-select-accent-ink"
                     : "text-select-ink-soft hover:bg-select-hover",

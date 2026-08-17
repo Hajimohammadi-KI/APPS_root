@@ -718,6 +718,9 @@ export default function Home() {
           <h2 id="filter-heading">{text.filterTitle}</h2>
           <div className="conversation-filter-grid">
             <input type="hidden" value={path} readOnly />
+            {/* Studio-Filter nutzen die gemeinsame SelectMenu: Das schwebende Dropdown
+                haelt diese Filterzeile kompakt, waehrend das fruehere Inline-Akkordeon das
+                Uebungspanel darunter beim Oeffnen nach unten geschoben hat. */}
             <SelectMenu
               disabled={recordingState !== "idle"}
               label={text.labels[1]}

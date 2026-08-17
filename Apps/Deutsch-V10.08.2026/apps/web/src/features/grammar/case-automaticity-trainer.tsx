@@ -641,6 +641,8 @@ export function CaseAutomaticityTrainer() {
               Signal kehrt in einem neuen Satz zurück.
             </CardDescription>
           </div>
+          {/* Uebungszeit nutzt die gemeinsame SelectMenu; String()/Number()-Bruecke bleibt
+              unveraendert, nur das Bedienelement wurde ersetzt. */}
           <SelectMenu
             className="min-w-52"
             label="Übungszeit heute"

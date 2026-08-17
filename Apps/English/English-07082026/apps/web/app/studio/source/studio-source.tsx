@@ -12,10 +12,7 @@ import {
   saveConversationSession,
   type StoredEvaluationIssue,
 } from "./conversation-storage";
-import {
-  AccordionSelect,
-  AccordionSelectGroup,
-} from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 
 const nav = ["Daily Practice", "Lessons", "Speaking Studio", "Review", "Progress", "Vocabulary", "Notebook"];
@@ -464,37 +461,40 @@ export default function Home() {
 
         <section className="conversation-filter" aria-labelledby="filter-heading">
           <h2 id="filter-heading">{text.filterTitle}</h2>
-          <AccordionSelectGroup className="conversation-filter-grid">
+          <div className="conversation-filter-grid">
             <input type="hidden" value={path} readOnly />
-            <AccordionSelect
+            {/* Studio filters use the shared SelectMenu: a floating dropdown keeps this
+                4-across filter row compact, where the previous inline accordion pushed the
+                whole practice panel down whenever a filter was opened. */}
+            <SelectMenu
               disabled={recordingState !== "idle"}
               label={text.labels[1]}
               onChange={(next) => { setLevel(next); setSkill(allLabel); setCategory(allLabel); setTopicId(""); resetSession(); }}
               options={levels.map((item) => ({ value: item, label: item }))}
               value={levels.includes(level) ? level : allLabel}
             />
-            <AccordionSelect
+            <SelectMenu
               disabled={recordingState !== "idle"}
               label={text.labels[2]}
               onChange={(next) => { setSkill(next); setCategory(allLabel); setTopicId(""); resetSession(); }}
               options={skills.map((item) => ({ value: item, label: item }))}
               value={skills.includes(skill) ? skill : allLabel}
             />
-            <AccordionSelect
+            <SelectMenu
               disabled={recordingState !== "idle"}
               label={text.labels[3]}
               onChange={(next) => { setCategory(next); setTopicId(""); resetSession(); }}
               options={categories.map((item) => ({ value: item, label: item }))}
               value={categories.includes(category) ? category : allLabel}
             />
-            <AccordionSelect
+            <SelectMenu
               disabled={recordingState !== "idle"}
               label={text.labels[4]}
               onChange={(next) => { setTopicId(next); resetSession(); }}
               options={filteredTopics.map((topic) => ({ value: topic.id, label: topic.topic }))}
               value={selected.id}
             />
-          </AccordionSelectGroup>
+          </div>
         </section>
 
         <section className="mode-cards" aria-label="Practice mode">

@@ -4,7 +4,7 @@ import * as React from "react";
 import { ArrowLeft, FileAudio, Pencil, Plus, Save, Trash2, Upload } from "lucide-react";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/features/components/human-audio-player";
 import { TeacherFlashcardPanel } from "@/features/components/teacher-flashcard-panel";
-import { AccordionSelect, AccordionSelectGroup } from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { deleteTeacherContent, listTeacherContent, saveTeacherContent, type TeacherContentItem, type TeacherContentKind } from "@/lib/teacher-content";
 
 const empty = (): TeacherContentItem => ({ id: crypto.randomUUID(), kind: "example", level: "A1", title: "", body: "", contextKey: "", updatedAt: new Date().toISOString() });
@@ -46,10 +46,13 @@ export default function TeacherPage() {
     <div className="teacher-layout">
       <section className="teacher-editor" aria-label="Content editor">
         <h2>{items.some((item) => item.id === draft.id) ? "Edit content" : "Add content"}</h2>
-        <AccordionSelectGroup className="teacher-grid">
-          <AccordionSelect label="Content type" onChange={(next) => setDraft({ ...draft, kind: next as TeacherContentKind })} options={KIND_OPTIONS} value={draft.kind} />
-          <AccordionSelect label="CEFR level" onChange={(next) => setDraft({ ...draft, level: next as TeacherContentItem["level"] })} options={LEVEL_OPTIONS} value={draft.level} />
-        </AccordionSelectGroup>
+        <div className="teacher-grid">
+          {/* Authoring pickers use the shared SelectMenu so teacher tools look and
+              behave exactly like the learner-facing filters -- one selection pattern in
+              the whole app rather than a second one here. */}
+          <SelectMenu label="Content type" onChange={(next) => setDraft({ ...draft, kind: next as TeacherContentKind })} options={KIND_OPTIONS} value={draft.kind} />
+          <SelectMenu label="CEFR level" onChange={(next) => setDraft({ ...draft, level: next as TeacherContentItem["level"] })} options={LEVEL_OPTIONS} value={draft.level} />
+        </div>
         <label>Title<input value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} placeholder="e.g. Present perfect – life experience" /></label>
         <label>Content key<input value={draft.contextKey} onChange={(e) => setDraft({ ...draft, contextKey: e.target.value })} placeholder="e.g. grammar.present-perfect.example.1" /><small>Use this stable key wherever the audio and edited content should appear.</small></label>
         <label>Text<textarea rows={6} value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })} /></label>

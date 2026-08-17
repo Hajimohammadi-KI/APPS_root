@@ -133,6 +133,9 @@ export function PlacementCheck({
             <span>
               {index + 1}. {question.prompt}
             </span>
+            {/* Quizantworten nutzen die gemeinsame SelectMenu. Nur moeglich, weil app-weit
+                immer nur ein Menue offen sein kann: Beim frueheren Inline-Akkordeon blieben
+                12 Panels offen und verschoben jede spaetere Frage. */}
             <SelectMenu
               className="min-w-0"
               label={`Antwort auf Frage ${index + 1}`}

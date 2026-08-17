@@ -516,6 +516,9 @@ export function AutomatizationTrainer() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-3">
+            {/* Trainingsparameter nutzen die gemeinsame SelectMenu. Auch die
+                Geschwindigkeitsauswahl konnte migrieren: Das Dropdown schwebt ueber dem
+                Inhalt, statt die Abspielzeile wie das Inline-Akkordeon aufzubrechen. */}
             <SelectMenu
               label="Zielstufe (CEFR)"
               onChange={(next) =>

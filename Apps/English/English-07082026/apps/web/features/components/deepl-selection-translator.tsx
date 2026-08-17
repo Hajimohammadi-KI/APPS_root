@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Languages, X } from "lucide-react";
-import { AccordionSelect } from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { translateWithGoogle } from "@/lib/desktop-deepl";
 
 const targets = { DE: "German", EN: "English", FA: "Persian" } as const;
@@ -56,7 +56,7 @@ export function DeepLSelectionTranslator() {
       {open ? <section aria-label="Google translation" className="fixed bottom-5 right-5 z-[95] max-h-[calc(100vh-2.5rem)] w-[min(390px,calc(100vw-2rem))] overflow-y-auto rounded-2xl border-2 border-violet-600 bg-white p-4 text-slate-950 shadow-2xl">
         <div className="flex items-center gap-2"><Languages className="size-5 text-violet-700" /><strong>Translate with Google</strong><button type="button" className="ml-auto rounded-lg p-2 hover:bg-violet-50" aria-label="Close translation" onClick={() => { setOpen(false); setPosition(null); }}><X className="size-4" /></button></div>
         <p className="mt-3 max-h-24 overflow-auto rounded-xl bg-violet-50 p-3 text-sm leading-6">{selection}</p>
-        <AccordionSelect className="mt-3 border-violet-300 bg-white" label="Target language" onChange={(next) => setTarget(next as keyof typeof targets)} options={Object.entries(targets).map(([code, label]) => ({ value: code, label }))} value={target} />
+        <SelectMenu className="mt-3" label="Target language" onChange={(next) => setTarget(next as keyof typeof targets)} options={Object.entries(targets).map(([code, label]) => ({ value: code, label }))} value={target} />
         <button type="button" className="mt-3 min-h-11 w-full rounded-xl bg-violet-700 px-4 font-bold text-white disabled:opacity-60" disabled={busy} onClick={() => void translate()}>{busy ? "Translating…" : "Translate"}</button>
         {translation ? <div className="mt-3 rounded-xl border border-violet-300 p-3"><strong className="text-sm">Translation</strong><p className="mt-1 whitespace-pre-wrap leading-6">{translation}</p></div> : null}
         {message ? <p className="mt-3 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm leading-6" role="alert">{message}</p> : null}

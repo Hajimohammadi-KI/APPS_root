@@ -127,3 +127,74 @@ export function practiceAnswerMatches(
 ): boolean {
   return normalizePracticeAnswer(value) === normalizePracticeAnswer(expected);
 }
+
+// Nur die „Korrigiere ...“-Familie verlangt echte eigene Produktion: die
+// lernende Person schreibt den reparierten Satz selbst. Cloze
+// („Setze die fehlende Form ein“), Satzstellung („Ordne die Satzteile“) und
+// die Regel-/Referenzabfragen haben dagegen genau eine richtige Zeichenkette
+// und werden weiterhin exakt geprüft.
+const OFFENE_PRODUKTION = /^Korrigiere den Satz/i;
+
+const PRAXIS_STOPPWOERTER = new Set([
+  "der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem",
+  "einer", "eines", "und", "oder", "aber", "ich", "du", "er", "sie", "es",
+  "wir", "ihr", "mich", "dich", "sich", "uns", "euch", "mein", "dein", "sein",
+  "unser", "in", "an", "auf", "zu", "mit", "von", "bei", "nach", "für", "ist",
+  "sind", "war", "waren", "bin", "bist", "seid", "hat", "habe", "hast",
+  "haben", "nicht", "sehr", "nur", "schon", "auch", "noch",
+]);
+
+function bedeutungsWoerter(text: string): Set<string> {
+  return new Set(
+    normalizePracticeAnswer(text)
+      .replace(/[.,;:!?„“"']/gu, "")
+      .split(/\s+/u)
+      .filter((wort) => wort.length > 2 && !PRAXIS_STOPPWOERTER.has(wort)),
+  );
+}
+
+function promptSatz(prompt: string): string {
+  return prompt.split(":").slice(1).join(":").trim();
+}
+
+/**
+ * Bewertet eine kontrollierte Übungsantwort, ohne wortwörtliche Wiedergabe
+ * der einen gespeicherten Musterantwort zu verlangen. Eine exakte
+ * (normalisierte) Übereinstimmung wird immer akzeptiert. Bei offenen
+ * Produktionsaufgaben zählt eine Antwort zusätzlich, wenn sie (a) die
+ * Zielformen enthält, die den Mustersatz vom fehlerhaften Prompt-Satz
+ * unterscheiden, und (b) inhaltlich hinreichend überlappt.
+ *
+ * Bis hierher kannte die deutsche App -- anders als die englische -- gar
+ * keinen Pfad für offene Produktion: `practiceAnswerMatches` verglich exakt.
+ * Wer einen korrekten deutschen Satz schrieb, der von der gespeicherten
+ * Zeichenkette abwich, wurde als falsch gewertet.
+ */
+export function evaluatePracticeAnswer(
+  answer: string,
+  exercise: { prompt: string; expected: string },
+): boolean {
+  if (practiceAnswerMatches(answer, exercise.expected)) return true;
+
+  const eingabe = answer.trim();
+  if (!eingabe) return false;
+  if (!OFFENE_PRODUKTION.test(exercise.prompt.trim())) return false;
+
+  // Den fehlerhaften Satz unverändert abzuschreiben ist keine Korrektur.
+  const referenz = promptSatz(exercise.prompt);
+  if (referenz && practiceAnswerMatches(eingabe, referenz)) return false;
+
+  const erwartet = bedeutungsWoerter(exercise.expected);
+  const referenzWoerter = bedeutungsWoerter(referenz);
+  const marker = [...erwartet].filter((wort) => !referenzWoerter.has(wort));
+  // Unterscheidet nichts den Mustersatz vom Prompt-Satz, wird der volle
+  // Wortbestand verlangt -- die Prüfung darf nie zu „alles zählt“ verfallen.
+  const verlangt = marker.length > 0 ? marker : [...erwartet];
+  if (verlangt.length === 0) return false;
+
+  const gegeben = bedeutungsWoerter(eingabe);
+  if (!verlangt.every((wort) => gegeben.has(wort))) return false;
+
+  const treffer = [...erwartet].filter((wort) => gegeben.has(wort)).length;
+  return erwartet.size ? treffer / erwartet.size >= 0.5 : false;
+}

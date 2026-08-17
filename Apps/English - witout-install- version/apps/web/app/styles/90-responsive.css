@@ -427,13 +427,15 @@ body {
   *,
   *::before,
   *::after {
-    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion preferences must override component transitions */
+    /* !important is deliberate and required here: a user asking the OS to
+       reduce motion must win over every component-level transition and
+       animation, including ones declared later or more specifically. The four
+       linter-suppression comments that used to sit above these lines were
+       themselves flagged as unused -- noImportantStyles does not fire on this
+       file -- so they were removed rather than left as decoration. */
     scroll-behavior: auto !important;
-    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion preferences must override component transitions */
     transition-duration: 0.01ms !important;
-    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion preferences must override component animations */
     animation-duration: 0.01ms !important;
-    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion preferences must override repeating animations */
     animation-iteration-count: 1 !important;
   }
 }

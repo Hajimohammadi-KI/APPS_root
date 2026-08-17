@@ -75,7 +75,7 @@ export default function FlashcardsPage() {
 	const activeItem = dueItems[0] ?? null;
 
 	const recognitionChoices = React.useMemo(() => {
-		if (!activeItem || activeItem.mode !== "recognition") return [];
+		if (activeItem?.mode !== "recognition") return [];
 		const distractors = state.flashcards
 			.filter((card) => card.id !== activeItem.card.id)
 			.map((card) => card.front)

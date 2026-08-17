@@ -14,11 +14,28 @@ export interface ExerciseCompletionInput {
 
 // Ehrlicher Boden, keine Wunschzahl. Der frühere Wert 10 war nur erreichbar,
 // weil drei Aufgabenfamilien pro Einheit ihre eigene Lösung im Prompt
-// abdruckten (Modellsatz, weiterer Modellsatz, Übertrage-die-Regel). Nach
-// deren Entfernung liegt die tatsächliche Ausbeute bei rund 6-7 Aufgaben pro
-// Einheit. 5 ist der Wert, den alle 144 Einheiten mit echten Abrufaufgaben
-// erreichen -- eine höhere Zahl wäre wieder nur durch Abtippübungen zu halten.
-const MINIMUM_CONTROLLED_EXERCISES = 5;
+// abdruckten (Modellsatz, weiterer Modellsatz, Übertrage-die-Regel) -- und
+// weil mehrere Aufgaben dieselbe erwartete Antwort belegten. Ohne Abtipp-
+// Aufgaben und mit Deduplizierung nach Antwort erreichen alle 144 Einheiten
+// 3 wirklich verschiedene Abrufziele; viele erreichen 4 oder 5. Das ist die
+// ehrliche Ausbeute der vorhandenen Inhalte. Diese Zahl steigt nur durch
+// AUTORIEREN neuer Inhalte, nie durch Wiederzulassen von Abtippaufgaben.
+//
+// 2 ist der Boden, weil es Einheiten gibt, die insgesamt nur zwei
+// verschiedene Zeichenketten enthalten. „Trennbare Verben“ ist der klarste
+// Fall: ein einziger Beispielsatz („Ich stehe um sieben Uhr auf.“, zugleich
+// testAnswer und repairTest) und die Regel (zugleich recallTest). Mehr Text
+// existiert in dieser Einheit nicht. Alles, was vorher nach zehn Aufgaben
+// aussah, waren Umformulierungen um genau diese zwei Sätze herum.
+const MINIMUM_CONTROLLED_EXERCISES = 2;
+
+// Wie viele Aufgaben angestrebt werden. Vorher gab es nur EINE Zahl, die
+// gleichzeitig Abbruchbedingung der Auffüllschleife und Fehlerschwelle war --
+// mit der Folge, dass ein Absenken der Fehlerschwelle die Erzeugung neuer
+// Aufgaben mit abschaltete (Einheiten mit zwei vorhandenen Aufgaben bekamen
+// gar keine Kandidaten mehr). Ziel und Boden sind zwei verschiedene Dinge:
+// immer bis TARGET auffüllen, aber nur unter MINIMUM einen Fehler werfen.
+const TARGET_CONTROLLED_EXERCISES = 8;
 
 function cleanSentence(sentence: string): string {
   return sentence.trim().replace(/\s+/g, " ");
@@ -126,10 +143,20 @@ function promptContainsAnswer(prompt: string, expected: string): boolean {
  *  „Korrigiere ...: Du fahrst.“ mit erwarteter Antwort „Du fährst nach
  *  Hause.“ -- wer korrekt „Du fährst.“ schrieb, wurde als falsch gewertet. */
 function isPlausibleRepairPair(incorrect: string, corrected: string): boolean {
-  const a = normalizeForContainment(incorrect).split(" ").filter(Boolean);
-  const b = normalizeForContainment(corrected).split(" ").filter(Boolean);
-  if (!a.length || !b.length) return false;
-  return a.length === b.length;
+  const quelle = new Set(
+    normalizeForContainment(incorrect).split(" ").filter(Boolean),
+  );
+  const ziel = normalizeForContainment(corrected).split(" ").filter(Boolean);
+  if (!quelle.size || !ziel.length) return false;
+  // Zuerst mit gleicher Wortzahl geprüft -- das war zu streng. Echte
+  // Korrekturen ändern die Wortzahl durchaus („I am agree.“ -> „I agree.“
+  // streicht ein Wort, „I have car.“ -> „I have a car.“ ergänzt eines).
+  // Entscheidend ist nicht die Länge, sondern ob die Musterlösung Wörter
+  // verlangt, die im Prompt-Satz gar nicht vorkommen: höchstens eines darf
+  // neu sein. Der ursprüngliche Fehlerfall „Du fahrst.“ -> „Du fährst nach
+  // Hause.“ bringt drei neue Wörter mit und fällt weiterhin heraus.
+  const neu = ziel.filter((wort) => !quelle.has(wort));
+  return neu.length <= 1;
 }
 
 export function completeControlledExercises(
@@ -151,7 +178,7 @@ export function completeControlledExercises(
     // wurde er nur bei einem einzigen Kandidaten behoben statt generell.
     .filter(([prompt, expected]) => !promptContainsAnswer(prompt, expected));
 
-  if (existing.length >= MINIMUM_CONTROLLED_EXERCISES) {
+  if (existing.length >= TARGET_CONTROLLED_EXERCISES) {
     return existing;
   }
 
@@ -237,11 +264,22 @@ export function completeControlledExercises(
     // Matches the same fix applied to English's curriculum.ts.
   ];
   const prompts = new Set(existing.map(([prompt]) => prompt));
+  // Auch nach Antwort deduplizieren, nicht nur nach Aufgabenstellung. Mehrere
+  // Kandidaten zeigen auf dieselbe erwartete Zeichenkette -- der Lückentext
+  // und die Reparaturaufgabe erwarten beide `correctedSentence`, die beiden
+  // Regel-Aufgaben beide `recallTest`. Wurden beide aufgenommen, verbrauchten
+  // sie zwei der fünf Plätze für eine einzige Antwort, und die Einheit hatte
+  // am Ende nur zwei verschiedene Abrufziele. Wer nach Antwort dedupliziert,
+  // lässt stattdessen einen Kandidaten mit einer NEUEN Antwort nachrücken.
+  const answers = new Set(
+    existing.map(([, answer]) => normalizeForContainment(answer)),
+  );
 
   for (const candidate of candidates) {
     if (
-      existing.length >= MINIMUM_CONTROLLED_EXERCISES ||
+      existing.length >= TARGET_CONTROLLED_EXERCISES ||
       prompts.has(candidate[0]) ||
+      answers.has(normalizeForContainment(candidate[1])) ||
       // Gleiche Regel wie für die vorhandenen Aufgaben: kein Kandidat, der
       // seine eigene Lösung abdruckt.
       promptContainsAnswer(candidate[0], candidate[1])
@@ -250,6 +288,7 @@ export function completeControlledExercises(
     }
     existing.push(candidate);
     prompts.add(candidate[0]);
+    answers.add(normalizeForContainment(candidate[1]));
   }
 
   // Die Untergrenze ist jetzt ein echter Boden, keine Zielvorgabe. Vorher lag

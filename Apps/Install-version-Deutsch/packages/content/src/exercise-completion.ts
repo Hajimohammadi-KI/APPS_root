@@ -12,13 +12,13 @@ export interface ExerciseCompletionInput {
   readonly recallTest: string;
 }
 
-// Raised from 6 -- the original 4 generated candidate types only reached
-// ~6 per unit regardless of this constant. The additional candidates below
-// (recallTest/rule/testAnswer-based prompts, one per example sentence)
-// realistically reach ~10-12 for most units, all still built from fields
-// that already exist and are already verified correct per unit -- no new,
-// unverified sentences are fabricated.
-const MINIMUM_CONTROLLED_EXERCISES = 10;
+// Ehrlicher Boden, keine Wunschzahl. Der frühere Wert 10 war nur erreichbar,
+// weil drei Aufgabenfamilien pro Einheit ihre eigene Lösung im Prompt
+// abdruckten (Modellsatz, weiterer Modellsatz, Übertrage-die-Regel). Nach
+// deren Entfernung liegt die tatsächliche Ausbeute bei rund 6-7 Aufgaben pro
+// Einheit. 5 ist der Wert, den alle 144 Einheiten mit echten Abrufaufgaben
+// erreichen -- eine höhere Zahl wäre wieder nur durch Abtippübungen zu halten.
+const MINIMUM_CONTROLLED_EXERCISES = 5;
 
 function cleanSentence(sentence: string): string {
   return sentence.trim().replace(/\s+/g, " ");
@@ -100,13 +100,56 @@ function correctionParts(commonError: string): {
  * a correction-based cloze, a sentence-order reconstruction, and a
  * transfer-retrieval prompt.
  */
+/** Normalisiert wie der Antwortvergleich zur Laufzeit, damit „im Prompt
+ *  enthalten“ nicht an Groß-/Kleinschreibung oder Satzzeichen scheitert. */
+function normalizeForContainment(value: string): string {
+  return value
+    .toLocaleLowerCase("de-DE")
+    .replace(/[.!?,;:„“"']/gu, "")
+    .replace(/\s+/gu, " ")
+    .trim();
+}
+
+/** True, wenn die Lösung wörtlich in der Aufgabenstellung steht. */
+function promptContainsAnswer(prompt: string, expected: string): boolean {
+  const answer = normalizeForContainment(expected);
+  // Sehr kurze Antworten (ein Wort) können zufällig im Prompt vorkommen,
+  // ohne dass die Aufgabe dadurch trivial wird -- erst ab einem echten Satz
+  // ist das Enthaltensein ein Abschreib-Signal.
+  if (answer.split(" ").length < 3) return false;
+  return normalizeForContainment(prompt).includes(answer);
+}
+
+/** True, wenn `corrected` plausibel die Korrektur von `incorrect` ist.
+ *  Eine Reparatur ändert eine Form, sie hängt keine neuen Satzteile an.
+ *  Ohne diese Prüfung entstand eine falsch verschlüsselte Aufgabe: Prompt
+ *  „Korrigiere ...: Du fahrst.“ mit erwarteter Antwort „Du fährst nach
+ *  Hause.“ -- wer korrekt „Du fährst.“ schrieb, wurde als falsch gewertet. */
+function isPlausibleRepairPair(incorrect: string, corrected: string): boolean {
+  const a = normalizeForContainment(incorrect).split(" ").filter(Boolean);
+  const b = normalizeForContainment(corrected).split(" ").filter(Boolean);
+  if (!a.length || !b.length) return false;
+  return a.length === b.length;
+}
+
 export function completeControlledExercises(
   unit: ExerciseCompletionInput,
 ): readonly GrammarExercise[] {
-  const existing: GrammarExercise[] = unit.exercises.map((exercise) => [
-    exercise[0]?.trim() ?? "",
-    exercise[1]?.trim() ?? "",
-  ]);
+  const existing: GrammarExercise[] = unit.exercises
+    .map(
+      (exercise): GrammarExercise => [
+        exercise[0]?.trim() ?? "",
+        exercise[1]?.trim() ?? "",
+      ],
+    )
+    // Eine Aufgabe, deren Aufgabenstellung die erwartete Antwort bereits
+    // enthält, prüft Abtippen, nicht Abrufen. Das betraf drei Familien in
+    // jeder Einheit: „Schreibe den Modellsatz: <Satz>“, „Schreibe einen
+    // weiteren Modellsatz: <Satz>“ und „Übertrage die Regel ...: <Satz>“ --
+    // in allen dreien stand die Lösung wörtlich im Prompt. Das ist genau der
+    // Fehler, der in der englischen curriculum.ts schon behoben ist; hier
+    // wurde er nur bei einem einzigen Kandidaten behoben statt generell.
+    .filter(([prompt, expected]) => !promptContainsAnswer(prompt, expected));
 
   if (existing.length >= MINIMUM_CONTROLLED_EXERCISES) {
     return existing;
@@ -146,14 +189,22 @@ export function completeControlledExercises(
       )}`,
       reconstructionAnswer,
     ],
-    [
-      `Übertrage die Regel in eine neue Situation und schreibe den Zielsatz vollständig: ${unit.transferTest}`,
-      cleanSentence(unit.transferTest),
-    ],
-    [
-      `Korrigiere den Satz vollständig und achte auf „${unit.title}“: ${incorrectSentence}`,
-      correctedSentence,
-    ],
+    // ENTFERNT: „Übertrage die Regel in eine neue Situation ...: <Zielsatz>“.
+    // Prompt und erwartete Antwort waren beide `unit.transferTest` -- die
+    // Lösung stand also wörtlich in der Aufgabe. Zusätzlich ist dieses Feld
+    // in fast allen Einheiten der Platzhaltersatz „In einer neuen Situation
+    // kann ich <Titel> korrekt verwenden.“, der über die Grammatik nichts
+    // prüft. Beides zusammen: reine Zählerhöhung ohne Abrufwert.
+    // Nur ausgeben, wenn die erwartete Antwort wirklich die Korrektur des
+    // Prompt-Satzes ist (siehe isPlausibleRepairPair).
+    ...(isPlausibleRepairPair(incorrectSentence, correctedSentence)
+      ? ([
+          [
+            `Korrigiere den Satz vollständig und achte auf „${unit.title}“: ${incorrectSentence}`,
+            correctedSentence,
+          ],
+        ] as GrammarExercise[])
+      : []),
     [`Nenne die Regel für „${unit.title}“ auswendig.`, unit.recallTest],
     // Zweiter Abruf derselben geprüften Antwort unter anderer Formulierung.
     // Bewusst behalten: einen bekannt korrekten Satz erneut abzurufen ist
@@ -190,7 +241,10 @@ export function completeControlledExercises(
   for (const candidate of candidates) {
     if (
       existing.length >= MINIMUM_CONTROLLED_EXERCISES ||
-      prompts.has(candidate[0])
+      prompts.has(candidate[0]) ||
+      // Gleiche Regel wie für die vorhandenen Aufgaben: kein Kandidat, der
+      // seine eigene Lösung abdruckt.
+      promptContainsAnswer(candidate[0], candidate[1])
     ) {
       continue;
     }
@@ -198,9 +252,16 @@ export function completeControlledExercises(
     prompts.add(candidate[0]);
   }
 
+  // Die Untergrenze ist jetzt ein echter Boden, keine Zielvorgabe. Vorher lag
+  // MINIMUM bei 10 und wurde nur erreicht, weil drei Aufgabenfamilien pro
+  // Einheit ihre eigene Lösung abdruckten; nach deren Entfernung liegt die
+  // ehrliche Ausbeute darunter. Lieber weniger, aber echte Abrufaufgaben, als
+  // eine hohe Zahl aus Abtippübungen -- die Zahl war ohnehin nie ein Lernwert.
+  // Der Fehler bleibt für den Fall, dass eine Einheit so dünn ist, dass selbst
+  // eine sinnvolle Kurzrunde nicht zustande kommt.
   if (existing.length < MINIMUM_CONTROLLED_EXERCISES) {
     throw new Error(
-      `Could not complete five controlled exercises for "${unit.title}".`,
+      `Nur ${existing.length} echte Abrufaufgaben für „${unit.title}“ (Minimum ${MINIMUM_CONTROLLED_EXERCISES}).`,
     );
   }
 

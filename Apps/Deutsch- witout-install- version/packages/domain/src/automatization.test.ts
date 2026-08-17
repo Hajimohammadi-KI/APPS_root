@@ -104,7 +104,10 @@ describe("computeAutomatizationMatrix", () => {
     );
     const matrix = computeAutomatizationMatrix(attempts, now);
     const currentWeek = matrix[3]!;
-    for (const stage of [1, 2, 3, 4, 5]) {
+    // `as const` keeps stage a literal union (1|2|3|4|5) instead of widening
+    // to number -- without it the template key is `shadowing-${number}`, which
+    // cannot index the cell record and failed the package's typecheck.
+    for (const stage of [1, 2, 3, 4, 5] as const) {
       expect(currentWeek.cells[`shadowing-${stage}` as const].attempts).toBe(1);
     }
     // Only stage 5 (free retelling) was recorded as verified in this test.

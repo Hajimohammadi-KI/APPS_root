@@ -65,6 +65,23 @@ export function SelectMenu({
 
 	const close = React.useCallback(() => setOpen(false), []);
 
+	// Close when focus leaves the whole control -- this covers tabbing away and
+	// programmatic focus moves, which a blur handler on the trigger alone would
+	// miss. Attached as a native `focusout` listener rather than React's onBlur
+	// on the wrapper: onBlur on a plain <div> is an event handler on a static,
+	// role-less element, which is both an accessibility smell and a lint error
+	// (a11y/noStaticElementInteractions). `focusout` bubbles exactly like
+	// React's onBlur, so the behaviour is unchanged.
+	React.useEffect(() => {
+		const wrapper = wrapperRef.current;
+		if (!wrapper) return;
+		const onFocusOut = (event: FocusEvent) => {
+			if (!wrapper.contains(event.relatedTarget as Node | null)) close();
+		};
+		wrapper.addEventListener("focusout", onFocusOut);
+		return () => wrapper.removeEventListener("focusout", onFocusOut);
+	}, [close]);
+
 	// Register/unregister this menu's closer so a newly opened menu can close it.
 	React.useEffect(() => {
 		if (!open) return;
@@ -158,16 +175,7 @@ export function SelectMenu({
 	}
 
 	return (
-		<div
-			className={cn("select-menu relative", className)}
-			// Closing on focus leaving the whole control covers tabbing away and
-			// programmatic focus moves, which a blur handler on the trigger alone
-			// would miss.
-			onBlur={(event) => {
-				if (!event.currentTarget.contains(event.relatedTarget as Node)) close();
-			}}
-			ref={wrapperRef}
-		>
+		<div className={cn("select-menu relative", className)} ref={wrapperRef}>
 			<button
 				aria-controls={open ? panelId : undefined}
 				aria-expanded={open}

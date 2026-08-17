@@ -20,7 +20,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { practiceAnswerMatches } from "@/features/automaticity/automaticity-analysis";
+import { evaluatePracticeAnswer } from "@/features/automaticity/automaticity-analysis";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
 // Interleaved practice: every other controlled-practice surface in this app
@@ -96,7 +96,13 @@ export default function GemischtesTrainingPage() {
 
   function checkAnswer() {
     if (!current) return;
-    const isCorrect = practiceAnswerMatches(answer, current.expected);
+    // Gleiche Bewertung wie im Grammatik-Labor: „Korrigiere den Satz ...“ ist
+    // offene Produktion und darf nicht am Vergleich mit genau einer
+    // gespeicherten Zeichenkette scheitern.
+    const isCorrect = evaluatePracticeAnswer(answer, {
+      prompt: current.prompt,
+      expected: current.expected,
+    });
     setCorrect(isCorrect);
     recordAttempt({
       topic: current.grammarTitle,

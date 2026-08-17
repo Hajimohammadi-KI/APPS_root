@@ -1,3 +1,4 @@
+import { A1_AUTHORED, type AuthoredExample } from "./authored/a1";
 import { cefrSupplementalUnits } from "./cefr-supplement";
 import { grammarUnits as legacyGrammarUnits } from "./generated/grammar";
 import { repairGrammarUnitLinks } from "./resource-links";
@@ -11,7 +12,12 @@ import type { GrammarExercise, GrammarResource, GrammarUnit } from "./types";
 // counted. Far short of the many distributed repetitions skill-acquisition
 // research calls for -- and the gap closes by AUTHORING content, never by
 // re-admitting items a learner can solve by copying.
-const TARGET_CONTROLLED_EXERCISES = 10;
+// Raised 10 -> 12 with the Phase 1 A1 authoring. The old value was a ceiling
+// A1 immediately hit once eight authored sentences each became a cloze item,
+// so it was truncating real practice. Units without authored depth are
+// unaffected: they run out of distinct answers long before this number and
+// land wherever their content honestly allows (2-7 today).
+const TARGET_CONTROLLED_EXERCISES = 12;
 
 // Some legacy units were generated from a `commonError` that was only a
 // category label (e.g. "Unclear pronoun reference.", "Using slang in a
@@ -87,7 +93,60 @@ function isWellFormedExercise(
   return true;
 }
 
-function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
+// Builds one cloze item per authored sentence. The prompt uses the
+// "Complete:" prefix deliberately -- that is one of the forms
+// evaluatePracticeAnswer treats as open production, so a learner who writes a
+// correct variant is not failed by an exact-string comparison.
+//
+// One item per sentence, not several. A second exercise about the same
+// sentence (word-order reconstruction, say) would expect that same sentence
+// as its answer, and the Phase 0 invariant -- every exercise in a unit
+// expects a distinct answer -- would drop it. Depth therefore comes from
+// authoring MORE sentences, which is the honest lever, rather than from
+// generating more prompts around the same few.
+function clozeFromAuthored(
+  example: AuthoredExample,
+  unitTitle: string,
+): GrammarExercise | null {
+  const { sentence, target } = example;
+  // Whole-word match only. A plain string replace blanked the first substring
+  // occurrence, so target "is" in "My sister is a nurse." produced
+  // "My s___ter is a nurse." -- a prompt that mangles one word and leaves the
+  // actual target on screen. The lookarounds also let multi-word targets
+  // ("have got", "There is", "next to") match as a unit.
+  const escaped = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(`(?<![\\w’])${escaped}(?![\\w’])`);
+  if (!pattern.test(sentence)) {
+    // A target that does not occur as a whole word would blank out nothing and
+    // ship a prompt identical to its own answer. Skip rather than guess.
+    return null;
+  }
+  const blanked = sentence.replace(pattern, "___");
+  return [`Complete: ${blanked}`, sentence] as GrammarExercise;
+}
+
+function authoredFor(unit: GrammarUnit) {
+  return unit.level === "A1" ? A1_AUTHORED[unit.title] : undefined;
+}
+
+/** Merges authored depth onto a generated unit before exercises are built. */
+function withAuthoredContent(unit: GrammarUnit): GrammarUnit {
+  const authored = authoredFor(unit);
+  if (!authored) return unit;
+  return {
+    ...unit,
+    // Authored sentences replace the 1-3 migrated ones. They are a superset in
+    // practice: the originals were kept as the first entries when authoring.
+    examples: authored.examples.map((example) => example.sentence),
+    transferTest: authored.transfer,
+  };
+}
+
+function ensureSixExercises(inputUnit: GrammarUnit): GrammarUnit {
+  // Applied here rather than as another .map() in the pipeline so that the
+  // legacy-parity test, which recomputes the pipeline itself, keeps comparing
+  // like with like.
+  const unit = withAuthoredContent(inputUnit);
   const wellFormed = unit.exercises.filter((exercise) =>
     isWellFormedExercise(exercise, unit),
   );
@@ -182,8 +241,18 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
     // some units below TARGET_CONTROLLED_EXERCISES; that is honest
     // volume, not a regression to hide.
   ];
-  const candidates = candidatePool.filter((candidate) =>
-    isWellFormedExercise(candidate, unit),
+  // Authored cloze items come FIRST. They test producing the pattern in a
+  // real sentence, which is what this app is for; the generic candidates below
+  // mostly re-ask for the rule text or the single reference answer. When a
+  // unit has authored depth, the generic ones should be filling the tail of
+  // the pool, not competing for the head of it.
+  const authored = authoredFor(unit);
+  const authoredCandidates = (authored?.examples ?? [])
+    .map((example) => clozeFromAuthored(example, unit.title))
+    .filter((candidate): candidate is GrammarExercise => candidate !== null);
+
+  const candidates = [...authoredCandidates, ...candidatePool].filter(
+    (candidate) => isWellFormedExercise(candidate, unit),
   );
 
   // Dedupe the unit's OWN exercises by answer too, not just the appended

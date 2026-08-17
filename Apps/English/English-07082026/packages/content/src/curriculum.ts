@@ -1,4 +1,6 @@
-import { A1_AUTHORED, type AuthoredExample } from "./authored/a1";
+import { A1_AUTHORED, type AuthoredExample, type AuthoredUnit } from "./authored/a1";
+import { A2_AUTHORED } from "./authored/a2";
+import { B1_AUTHORED } from "./authored/b1";
 import { cefrSupplementalUnits } from "./cefr-supplement";
 import { grammarUnits as legacyGrammarUnits } from "./generated/grammar";
 import { repairGrammarUnitLinks } from "./resource-links";
@@ -42,6 +44,9 @@ const CORRECT_THE_SENTENCE_PROMPT = /^Correct the sentence:\s*/i;
 // Transform/Complete/Correct, so evaluatePracticeAnswer's lenient path never
 // applied to it either; it was pure exact match against the fragment.
 const FULL_SENTENCE_PROMPT = /write the full corrected sentence/i;
+// A gap with a letter immediately touching it means the blank was cut out of
+// the middle of a word rather than replacing one.
+const MANGLED_BLANK_PATTERN = /[A-Za-z’]_+|_+[A-Za-z’]/;
 
 function normalizeForContainment(value: string): string {
   return value
@@ -71,6 +76,13 @@ function isWellFormedExercise(
     return false;
   }
   if (promptContainsAnswer(prompt, answer)) return false;
+  // A blank must stand where a WHOLE word was. The migrated catalog contains
+  // items whose gap was cut out of the middle of a word -- "Complete the
+  // sentence: I am _____terested in photography." blanked the "in" inside
+  // "interested", which mangles the sentence and leaves the real target
+  // ("interested in") visible anyway. Found by the same whole-word check the
+  // authored cloze generator uses, applied here to the catalog at large.
+  if (MANGLED_BLANK_PATTERN.test(prompt)) return false;
   // A promise of a full sentence paired with a fragment key is unanswerable
   // as written. Two words is the floor for "a sentence" here (e.g. "I agree."
   // is legitimate; "easier" is not).
@@ -125,8 +137,18 @@ function clozeFromAuthored(
   return [`Complete: ${blanked}`, sentence] as GrammarExercise;
 }
 
+// Levels whose depth has been authored so far. Adding a level is adding one
+// entry here plus its data file -- nothing else in the pipeline changes.
+const AUTHORED_BY_LEVEL: Readonly<
+  Record<string, Readonly<Record<string, AuthoredUnit>>>
+> = {
+  A1: A1_AUTHORED,
+  A2: A2_AUTHORED,
+  B1: B1_AUTHORED,
+};
+
 function authoredFor(unit: GrammarUnit) {
-  return unit.level === "A1" ? A1_AUTHORED[unit.title] : undefined;
+  return AUTHORED_BY_LEVEL[unit.level]?.[unit.title];
 }
 
 /** Merges authored depth onto a generated unit before exercises are built. */

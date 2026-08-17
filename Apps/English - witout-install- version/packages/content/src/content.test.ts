@@ -616,3 +616,54 @@ describe("controlled exercises are solvable only by retrieval", () => {
     }
   });
 });
+
+// Phase 1 gate for the A1 authoring pilot. These assert the depth the pilot
+// was supposed to deliver and the correctness of the generated cloze items.
+describe("A1 authoring pilot", () => {
+  const a1 = grammarUnits.filter((unit) => unit.level === "A1");
+
+  test("covers every A1 unit", () => {
+    expect(a1.length).toBe(16);
+    for (const unit of a1) {
+      expect(unit.examples.length, unit.title).toBeGreaterThanOrEqual(8);
+    }
+  });
+
+  test("reaches at least 11 distinct retrieval targets per unit", () => {
+    for (const unit of a1) {
+      const answers = new Set(
+        unit.exercises.map(([, answer]) => answer.trim().toLowerCase()),
+      );
+      expect(answers.size, unit.title).toBeGreaterThanOrEqual(11);
+    }
+  });
+
+  test("no A1 unit still carries the boilerplate transfer sentence", () => {
+    for (const unit of a1) {
+      expect(unit.transferTest, unit.title).not.toMatch(
+        /^In a new situation, I can use .+ accurately\.$/i,
+      );
+    }
+  });
+
+  // A plain substring replace blanked "is" inside "sister", producing
+  // "My s___ter is a nurse." -- the prompt mangled one word and left the real
+  // target visible. A blank must always stand where a whole word was.
+  test("every generated blank replaces a whole word", () => {
+    for (const unit of a1) {
+      for (const [prompt] of unit.exercises) {
+        if (!prompt.includes("___")) continue;
+        expect(prompt, unit.title).not.toMatch(/[A-Za-z’]___|___[A-Za-z’]/);
+      }
+    }
+  });
+
+  test("no cloze prompt gives away its own answer", () => {
+    for (const unit of a1) {
+      for (const [prompt, answer] of unit.exercises) {
+        if (!prompt.startsWith("Complete:")) continue;
+        expect(prompt.includes(answer), `${unit.title}: ${prompt}`).toBe(false);
+      }
+    }
+  });
+});

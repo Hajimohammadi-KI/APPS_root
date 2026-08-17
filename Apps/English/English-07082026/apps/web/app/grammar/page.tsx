@@ -131,7 +131,17 @@ export default function GrammarPage() {
 					) : null}
 				</CardContent>
 			</Card>
-			<AutomaticityScreen focusedStep={focusedStep} />
+			{/* `embedded` drops the Mission's own hero, its Due-reviews list and
+			    its unit summary strip. On this page all three were duplicates:
+			    the hero added a SECOND <h1> ("Automaticity Mission") under
+			    "Grammar Lab" plus a second start button, and the strip repeated
+			    the level and rule that "Choose a unit" already shows, along with
+			    a "Practice in Speaking Studio" link that jumped away before the
+			    learner had begun. That was five competing start controls on one
+			    page. What remains is one route: choose a unit, then the step bar,
+			    then the work. The position bar, step cards and result message are
+			    no longer gated on this flag, so embedding keeps the wayfinding. */}
+			<AutomaticityScreen embedded focusedStep={focusedStep} />
 		</div>
 	);
 }

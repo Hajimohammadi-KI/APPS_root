@@ -912,14 +912,7 @@ export function AutomaticityScreen({
         >
           <Play className="size-4" /> Start evidence practice
         </Button>
-      </div> : focusedStep === undefined ? (
-        <Card className="border-violet-300 bg-violet-50/70">
-          <CardHeader>
-            <CardTitle>Steps {stepOffset + 1}–{stepOffset + 3} · Build usable evidence</CardTitle>
-            <CardDescription>Finish controlled practice, connected writing, and recorded free speaking. Each result is analysed and saved.</CardDescription>
-          </CardHeader>
-        </Card>
-      ) : null}
+      </div> : null}
 
       {!embedded ? <DueReviews /> : null}
 
@@ -951,12 +944,6 @@ export function AutomaticityScreen({
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p
-            aria-live="polite"
-            className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-violet-950"
-          >
-            {message}
-          </p>
         </CardContent>
       </Card> : null}
 
@@ -965,7 +952,23 @@ export function AutomaticityScreen({
           where you are, or when the unit is finished. The bar below states the
           position in words, and each card is labelled Done / Start here / Next
           so the page reads as an ordered path rather than three options. */}
-      {!embedded ? (
+      {/* The feedback line used to live inside the non-embedded mission strip,
+          so any page embedding this screen silently lost every result message
+          -- including "the rule was visible, this counts as study". It is the
+          learner's only confirmation that an action landed, so it renders in
+          both modes now. */}
+      <p
+        aria-live="polite"
+        className="rounded-xl border border-violet-200 bg-white px-4 py-3 text-sm font-bold text-violet-950"
+      >
+        {message}
+      </p>
+
+      {/* Position bar and the three step cards below are deliberately NOT
+          gated on `embedded`. They are the route through the unit, so a page
+          that embeds this screen (Grammar Lab) needs them most -- that page
+          drops the duplicate hero and unit strip instead. */}
+      {(
         <div className="rounded-2xl border border-violet-200 bg-white px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <strong className="text-sm">
@@ -994,9 +997,9 @@ export function AutomaticityScreen({
             ))}
           </div>
         </div>
-      ) : null}
+      )}
 
-      {!embedded ? <div className="grid gap-4 lg:grid-cols-3">
+      {<div className="grid gap-4 lg:grid-cols-3">
         {[
           [
             BookOpenCheck,
@@ -1070,7 +1073,7 @@ export function AutomaticityScreen({
             </Card></button>
           );
         })}
-      </div> : null}
+      </div>}
 
       {/* Collapsed by default rather than deleted. Its three cards are fixed
           explanatory text -- identical on every unit and every visit -- so

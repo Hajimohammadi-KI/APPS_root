@@ -28,6 +28,7 @@ import { grammarUnits } from "@grammar/content";
 import { saveAudio } from "@/features/audio/audio-repository";
 import {
   analyzeWeilClause,
+  evaluatePracticeAnswer,
   practiceAnswerMatches,
   type AutomatikAnalysis,
   type AutomatikIssue,
@@ -74,11 +75,14 @@ export function transferSituation(title: string, priorTransferAttempts: number) 
   return TRANSFER_SITUATIONS[index];
 }
 
-// The full pool a topic can draw rounds from -- exercise-completion.ts
-// guarantees at least MINIMUM_CONTROLLED_EXERCISES (10) well-formed
-// exercises per unit. Each Mission round only shows ROUND_SIZE of them, so
-// a learner can repeat controlled practice on the same topic several times
-// without seeing an identical round, instead of a one-shot fixed set.
+// Obergrenze einer Runde, keine Zusage. exercise-completion.ts garantiert
+// seit der Entfernung der Abtipp-Aufgaben nur noch
+// MINIMUM_CONTROLLED_EXERCISES (5) pro Einheit, und nach dedupeByAnswer
+// bleiben davon je nach Einheit 2-5 verschiedene Antworten übrig. Eine Runde
+// ist also oft kürzer als dieser Wert -- das ist die ehrliche Ausbeute der
+// vorhandenen Inhalte und keine Regression. Der frühere Kommentar versprach
+// hier 10 Aufgaben pro Einheit; diese Zahl kam nur zustande, weil drei
+// Aufgabenfamilien ihre eigene Lösung im Prompt abdruckten.
 const ROUND_SIZE = 6;
 
 function shuffled<T>(items: readonly T[]): T[] {
@@ -525,8 +529,16 @@ export function AutomaticityLab({
     // geöffnet) macht die Runde zur Übung mit offenem Buch. Als ein Merker
     // geführt, damit erfasster Versuch und Rückmeldung immer übereinstimmen.
     const openBook = lessonOpen || peeked;
+    // evaluatePracticeAnswer statt practiceAnswerMatches: bei „Korrigiere den
+    // Satz ...“ schreibt die lernende Person den reparierten Satz selbst, und
+    // ein korrekter Satz, der von der gespeicherten Zeichenkette abweicht,
+    // wurde bisher als falsch gewertet. Alle anderen Aufgabentypen prüft die
+    // Funktion weiterhin exakt.
     const results = answers.map((answer, index) =>
-      practiceAnswerMatches(answer, roundExercises[index]?.expected ?? ""),
+      evaluatePracticeAnswer(answer, {
+        prompt: roundExercises[index]?.prompt ?? "",
+        expected: roundExercises[index]?.expected ?? "",
+      }),
     );
     setCheckedAnswers(results);
     const score = Math.round(

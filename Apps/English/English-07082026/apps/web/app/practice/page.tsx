@@ -43,11 +43,12 @@ interface QueueItem {
 
 function shuffled<T>(items: readonly T[]): T[] {
   const copy = [...items];
+  // Destructuring swap avoids the non-null assertions the index form needed.
+  // Both indices are always in range here (index counts down from length-1,
+  // swapIndex is floored into [0, index]), so no assertion was buying safety.
   for (let index = copy.length - 1; index > 0; index -= 1) {
     const swapIndex = Math.floor(Math.random() * (index + 1));
-    const temp = copy[index]!;
-    copy[index] = copy[swapIndex]!;
-    copy[swapIndex] = temp;
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]] as [T, T];
   }
   return copy;
 }

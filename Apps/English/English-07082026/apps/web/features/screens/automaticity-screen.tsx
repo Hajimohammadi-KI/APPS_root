@@ -88,11 +88,13 @@ const presentPerfectExercises = [
 ] as const;
 
 
-// The full pool a topic can draw rounds from -- curriculum.ts guarantees at
-// least MINIMUM_CONTROLLED_EXERCISES (10) well-formed exercises per unit.
-// Each Mission round only shows ROUND_SIZE of them (see pickRound below),
-// so a learner can repeat controlled practice on the same topic multiple
-// times without seeing an identical round, instead of a one-shot fixed set.
+// Upper bound on a round, not a promise. curriculum.ts does NOT reach 10
+// exercises for most units -- measured against the current content: 66 of
+// 112 units carry 8 and 28 carry 10, but after dedupeByAnswer only 4
+// distinct answers remain for 49 units and 3 or fewer for 20 more. So a
+// round is frequently shorter than this value. That is the honest yield of
+// the existing content, not a regression; the fix is authoring, not a
+// bigger constant.
 const ROUND_SIZE = 6;
 
 function shuffled<T>(items: readonly T[]): T[] {

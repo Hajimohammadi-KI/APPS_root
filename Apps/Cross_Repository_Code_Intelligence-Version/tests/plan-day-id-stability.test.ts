@@ -10,7 +10,14 @@ describe("plan day/task/item id stability", () => {
   test("ids are stable, date-independent, and unique", () => {
     const ids = new Set<string>();
     for (const day of allDays) {
-      expect(day.id).not.toBe(day.date);
+      // Written as an equality check rather than `expect(...).not.toBe(...)`
+      // because tsconfig scopes "types" to @cloudflare/workers-types only (this
+      // deploys to Workers) and bun's test types are not installed, so the
+      // `.not` chain resolves to an untyped function and fails typecheck. This
+      // is the single `.not` usage in the suite; adding bun types purely for it
+      // risks clashing with the Workers globals. Same assertion, same failure
+      // message intent: the id must not simply be the date.
+      expect(day.id === day.date).toBe(false);
       expect(day.id).toMatch(/^w\d+-d\d+$/);
       expect(ids.has(day.id)).toBe(false);
       ids.add(day.id);

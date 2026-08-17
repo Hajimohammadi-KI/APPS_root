@@ -951,15 +951,23 @@ export function AutomaticityScreen({
         })}
       </div> : null}
 
+      {/* Collapsed by default rather than deleted. Its three cards are fixed
+          explanatory text -- identical on every unit and every visit -- so
+          leaving them expanded pushed the actual exercises below the fold on
+          each load. The message itself matters (it is what stops "completed"
+          being read as "mastered"), so it stays one click away instead of
+          being removed. */}
       {!embedded ? <Card className="border-violet-200">
-        <CardHeader>
-          <CardTitle>Mission quality gate</CardTitle>
-          <CardDescription>
-            Completed does not automatically mean mastered. Automaticity needs
-            three separate kinds of evidence.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-3">
+        <CardHeader className="pb-0">
+          <details>
+            <summary className="cursor-pointer list-none">
+              <CardTitle className="inline">Mission quality gate</CardTitle>
+              <CardDescription className="mt-1">
+                Completed does not automatically mean mastered. Automaticity
+                needs three separate kinds of evidence. (Click to expand.)
+              </CardDescription>
+            </summary>
+            <div className="mt-3 grid gap-3 sm:grid-cols-3">
           <div className="rounded-2xl bg-violet-50 p-4 text-sm">
             <strong>Accurate</strong>
             <p className="mt-1 text-muted-foreground">
@@ -978,7 +986,9 @@ export function AutomaticityScreen({
               Recall the same form again in a later review.
             </p>
           </div>
-        </CardContent>
+            </div>
+          </details>
+        </CardHeader>
       </Card> : null}
 
       {(focusedStep ?? activeStep) === 0 ? <Card id={`daily-activity-${stepOffset + 1}`}>
@@ -1209,7 +1219,13 @@ export function AutomaticityScreen({
         </CardContent>
       </Card> : null}
 
-      {focusedStep === undefined ? <div className="grid gap-4 lg:grid-cols-2">
+      {/* Single column since "My grammar pattern plan" was removed from beside
+          this card. That panel claimed "Generated from today's journal and
+          speaking errors" but rendered three hardcoded list items that never
+          changed for any learner, unit or error history -- it advertised
+          personalisation the code did not do. Transparent mastery stays: it is
+          computed from real checked answers and analyses. */}
+      {focusedStep === undefined ? <div className="grid gap-4">
         <Card>
           <CardHeader>
             <CardTitle>Transparent mastery</CardTitle>
@@ -1249,49 +1265,6 @@ export function AutomaticityScreen({
                 Verified mastery: {verifiedMastery?.automaticityScore ?? 0}%
               </Badge>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>My grammar pattern plan</CardTitle>
-            <CardDescription>
-              Generated from today’s journal and speaking errors.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ol className="space-y-3 text-sm">
-              <li className="rounded-xl bg-violet-50 p-3">
-                <b>1. Repair:</b> correct five similar sentences.
-              </li>
-              <li className="rounded-xl bg-violet-50 p-3">
-                <b>2. Transfer:</b> create five new examples from your life.
-              </li>
-              <li className="rounded-xl bg-violet-50 p-3">
-                <b>3. Automate:</b> repeat one shadowing passage and retell it.
-              </li>
-            </ol>
-            <Button
-              className="mt-4"
-              onClick={() => {
-                setCheckedAnswers([]);
-                setJournalAnalysis(null);
-                setSpeechAnalysis(null);
-                setMessage(
-                  "Review reset. Your saved evidence remains available.",
-                );
-              }}
-              variant="outline"
-            >
-              <RotateCcw className="size-4" /> Start another review
-            </Button>
-            {(journalAnalysis?.issues.length ?? 0) +
-              (speechAnalysis?.issues.length ?? 0) >
-            0 ? (
-              <p className="mt-3 flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-sm">
-                <CircleAlert className="mt-0.5 size-4 shrink-0" /> Detected
-                errors were also added to Error Workshop for spaced repair.
-              </p>
-            ) : null}
           </CardContent>
         </Card>
       </div> : null}

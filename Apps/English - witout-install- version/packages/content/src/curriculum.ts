@@ -1,4 +1,9 @@
-import { A1_AUTHORED, type AuthoredExample } from "./authored/a1";
+import { A1_AUTHORED, type AuthoredExample, type AuthoredUnit } from "./authored/a1";
+import { A2_AUTHORED } from "./authored/a2";
+import { B1_AUTHORED } from "./authored/b1";
+import { B2_AUTHORED } from "./authored/b2";
+import { C1_AUTHORED } from "./authored/c1";
+import { C2_AUTHORED } from "./authored/c2";
 import { cefrSupplementalUnits } from "./cefr-supplement";
 import { grammarUnits as legacyGrammarUnits } from "./generated/grammar";
 import { repairGrammarUnitLinks } from "./resource-links";
@@ -42,6 +47,9 @@ const CORRECT_THE_SENTENCE_PROMPT = /^Correct the sentence:\s*/i;
 // Transform/Complete/Correct, so evaluatePracticeAnswer's lenient path never
 // applied to it either; it was pure exact match against the fragment.
 const FULL_SENTENCE_PROMPT = /write the full corrected sentence/i;
+// A gap with a letter immediately touching it means the blank was cut out of
+// the middle of a word rather than replacing one.
+const MANGLED_BLANK_PATTERN = /[A-Za-z’]_+|_+[A-Za-z’]/;
 
 function normalizeForContainment(value: string): string {
   return value
@@ -71,6 +79,13 @@ function isWellFormedExercise(
     return false;
   }
   if (promptContainsAnswer(prompt, answer)) return false;
+  // A blank must stand where a WHOLE word was. The migrated catalog contains
+  // items whose gap was cut out of the middle of a word -- "Complete the
+  // sentence: I am _____terested in photography." blanked the "in" inside
+  // "interested", which mangles the sentence and leaves the real target
+  // ("interested in") visible anyway. Found by the same whole-word check the
+  // authored cloze generator uses, applied here to the catalog at large.
+  if (MANGLED_BLANK_PATTERN.test(prompt)) return false;
   // A promise of a full sentence paired with a fragment key is unanswerable
   // as written. Two words is the floor for "a sentence" here (e.g. "I agree."
   // is legitimate; "easier" is not).
@@ -79,6 +94,32 @@ function isWellFormedExercise(
     answer.trim().split(/\s+/).length < 3
   ) {
     return false;
+  }
+  // A correction task that shows a full sentence must be keyed to a full
+  // sentence. 24 items were keyed to a fragment of one -- "Correct the
+  // sentence: The train left before we had arrived." answered by "had left.",
+  // or worst of all "Correct the sentence: planning, to analyse, and reports"
+  // answered by "parallel forms.", which is a description of the fix rather
+  // than the fix. The lenient grader rescues a learner who writes the whole
+  // sentence, but the model shown back to them is still a fragment, so the
+  // feedback teaches the wrong thing. Every affected unit is authored and
+  // still clears the depth gate without these.
+  //
+  // Corrections that legitimately shorten a sentence are unaffected: the rule
+  // only fires when the source is a real sentence (4+ words) AND the key is at
+  // most half its length. "You open the door." -> "Open the door." stays.
+  const correctionSource = prompt.match(
+    /^(?:Correct the sentence|Transform|Complete)\s*:\s*(.+)$/i,
+  )?.[1];
+  if (correctionSource) {
+    const sourceWords = correctionSource.trim().split(/\s+/).filter(Boolean);
+    const keyWords = answer.trim().split(/\s+/).filter(Boolean);
+    if (
+      sourceWords.length >= 4 &&
+      keyWords.length <= Math.ceil(sourceWords.length / 2)
+    ) {
+      return false;
+    }
   }
   // A "Correct the sentence" exercise only makes sense when `commonError`
   // actually stores a "wrong → correct" pair to correct. When it's just a
@@ -125,8 +166,21 @@ function clozeFromAuthored(
   return [`Complete: ${blanked}`, sentence] as GrammarExercise;
 }
 
+// Levels whose depth has been authored so far. Adding a level is adding one
+// entry here plus its data file -- nothing else in the pipeline changes.
+const AUTHORED_BY_LEVEL: Readonly<
+  Record<string, Readonly<Record<string, AuthoredUnit>>>
+> = {
+  A1: A1_AUTHORED,
+  A2: A2_AUTHORED,
+  B1: B1_AUTHORED,
+  B2: B2_AUTHORED,
+  C1: C1_AUTHORED,
+  C2: C2_AUTHORED,
+};
+
 function authoredFor(unit: GrammarUnit) {
-  return unit.level === "A1" ? A1_AUTHORED[unit.title] : undefined;
+  return AUTHORED_BY_LEVEL[unit.level]?.[unit.title];
 }
 
 /** Merges authored depth onto a generated unit before exercises are built. */

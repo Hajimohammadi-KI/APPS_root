@@ -15,11 +15,17 @@ const CEFR_ORDER: readonly CefrLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
 // prop (undefined = the full Mission with its overview cards), so these modes
 // are real navigation rather than labels: choosing one sets the unit AND the
 // step in a single gesture.
+//
+// No "Shadowing and free speaking" entry here. Grammar Lab covers the rule
+// and controlled/written practice; the speaking step now opens Speaking
+// Studio instead of rendering inline (see the step-3 card in
+// AutomaticityScreen), so Grammar Lab's own mode picker should not offer a
+// way to land on it directly either -- both entry points into that step
+// should agree on where it lives.
 const PRACTICE_MODES: readonly { value: string; label: string; step: number | undefined }[] = [
 	{ value: "full", label: "Full Automaticity Mission", step: undefined },
 	{ value: "controlled", label: "Lesson and controlled practice", step: 0 },
 	{ value: "writing", label: "Daily writing", step: 1 },
-	{ value: "speaking", label: "Shadowing and free speaking", step: 2 },
 ];
 
 export default function GrammarPage() {

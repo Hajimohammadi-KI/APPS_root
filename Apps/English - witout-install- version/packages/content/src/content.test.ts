@@ -617,20 +617,25 @@ describe("controlled exercises are solvable only by retrieval", () => {
   });
 });
 
-// Phase 1 gate for the A1 authoring pilot. These assert the depth the pilot
-// was supposed to deliver and the correctness of the generated cloze items.
-describe("A1 authoring pilot", () => {
-  const a1 = grammarUnits.filter((unit) => unit.level === "A1");
+// Phase 1 gate. Asserts the depth each authored level was supposed to deliver
+// and the correctness of the generated cloze items. Adding a level means adding
+// it to AUTHORED_LEVELS and updating the unit count -- the assertions hold as
+// written, so a half-authored level fails here rather than shipping quietly.
+describe("authored levels", () => {
+  const AUTHORED_LEVELS = ["A1", "A2", "B1"];
+  const authored = grammarUnits.filter((unit) =>
+    AUTHORED_LEVELS.includes(unit.level),
+  );
 
-  test("covers every A1 unit", () => {
-    expect(a1.length).toBe(16);
-    for (const unit of a1) {
+  test("covers every unit of every authored level", () => {
+    expect(authored.length).toBe(60);
+    for (const unit of authored) {
       expect(unit.examples.length, unit.title).toBeGreaterThanOrEqual(8);
     }
   });
 
   test("reaches at least 11 distinct retrieval targets per unit", () => {
-    for (const unit of a1) {
+    for (const unit of authored) {
       const answers = new Set(
         unit.exercises.map(([, answer]) => answer.trim().toLowerCase()),
       );
@@ -638,8 +643,8 @@ describe("A1 authoring pilot", () => {
     }
   });
 
-  test("no A1 unit still carries the boilerplate transfer sentence", () => {
-    for (const unit of a1) {
+  test("no authored unit still carries the boilerplate transfer sentence", () => {
+    for (const unit of authored) {
       expect(unit.transferTest, unit.title).not.toMatch(
         /^In a new situation, I can use .+ accurately\.$/i,
       );
@@ -650,7 +655,7 @@ describe("A1 authoring pilot", () => {
   // "My s___ter is a nurse." -- the prompt mangled one word and left the real
   // target visible. A blank must always stand where a whole word was.
   test("every generated blank replaces a whole word", () => {
-    for (const unit of a1) {
+    for (const unit of authored) {
       for (const [prompt] of unit.exercises) {
         if (!prompt.includes("___")) continue;
         expect(prompt, unit.title).not.toMatch(/[A-Za-z’]___|___[A-Za-z’]/);
@@ -659,11 +664,24 @@ describe("A1 authoring pilot", () => {
   });
 
   test("no cloze prompt gives away its own answer", () => {
-    for (const unit of a1) {
+    for (const unit of authored) {
       for (const [prompt, answer] of unit.exercises) {
         if (!prompt.startsWith("Complete:")) continue;
         expect(prompt.includes(answer), `${unit.title}: ${prompt}`).toBe(false);
       }
     }
   });
+});
+
+// Catalog-wide, not only the authored levels. The migrated content shipped
+// "Complete the sentence: I am _____terested in photography." -- the gap was
+// cut out of the middle of "interested", which mangles the sentence and leaves
+// the real target visible. isWellFormedExercise now filters these; this holds
+// the line for every level, including the ones still to be authored.
+test("no exercise anywhere ships a blank cut out of a word", () => {
+  for (const unit of grammarUnits) {
+    for (const [prompt] of unit.exercises) {
+      expect(prompt, unit.title).not.toMatch(/[A-Za-z’]_+|_+[A-Za-z’]/);
+    }
+  }
 });

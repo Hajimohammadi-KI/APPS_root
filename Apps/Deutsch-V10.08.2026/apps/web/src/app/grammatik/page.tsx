@@ -100,7 +100,13 @@ export default function GrammatikPage() {
           unit={selectedUnit}
         />
       ) : null}
-      <AutomaticityLab />
+      {/* `embedded` drops the Mission's own hero, its unit-summary strip and
+          the quality-gate card -- all duplicates here, since this page
+          already shows a heading and the unit picker above. Also stops the
+          speaking step from opening its recorder UI inline (see the step-3
+          card inside AutomaticityLab); it links to /studio instead. Matches
+          the same fix applied to English's Grammar Lab. */}
+      <AutomaticityLab embedded />
     </div>
   );
 }

@@ -2,69 +2,67 @@
 
 import * as React from "react";
 import { grammarUnits, type CefrLevel } from "@grammar/content";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { AutomaticityScreen } from "@/features/screens/automaticity-screen";
 import { useAppStore } from "@/features/store/app-store";
 
 const CEFR_ORDER: readonly CefrLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 // The Mission renders one step at a time and already accepts a `focusedStep`
-// prop (undefined = the full Mission with its overview cards). Exposing those
-// steps as rows here means picking a unit and a practice mode is one gesture
-// instead of "select unit, scroll, then hunt for the right step".
-const PRACTICE_MODES: readonly {
-	readonly label: string;
-	readonly detail: string;
-	readonly step: number | undefined;
-}[] = [
-	{
-		label: "Full Automaticity Mission",
-		detail: "All steps in order, with the progress overview",
-		step: undefined,
-	},
-	{
-		label: "Lesson and controlled practice",
-		detail: "Rule, examples, and exact-match exercises",
-		step: 0,
-	},
-	{
-		label: "Daily writing",
-		detail: "Produce sentences of your own, checked online",
-		step: 1,
-	},
-	{
-		label: "Five-stage shadowing and free speaking",
-		detail: "Listen, shadow, delay, then retell without the audio",
-		step: 2,
-	},
+// prop (undefined = the full Mission with its overview cards), so these modes
+// are real navigation rather than labels: choosing one sets the unit AND the
+// step in a single gesture.
+const PRACTICE_MODES: readonly { value: string; label: string; step: number | undefined }[] = [
+	{ value: "full", label: "Full Automaticity Mission", step: undefined },
+	{ value: "controlled", label: "Lesson and controlled practice", step: 0 },
+	{ value: "writing", label: "Daily writing", step: 1 },
+	{ value: "speaking", label: "Shadowing and free speaking", step: 2 },
 ];
 
 export default function GrammarPage() {
 	const { state, setTodayGrammar } = useAppStore();
 	const selectedTitle = state.todayGrammar?.title;
-	const selectedLevel = grammarUnits.find(
-		(unit) => unit.title === selectedTitle,
-	)?.level;
 
-	// Which Mission step to show after a practice mode is chosen. Undefined
-	// keeps the Mission's normal full view, so choosing "Full Automaticity
-	// Mission" is a real way back out of a single-step view.
+	// Level is local UI state for browsing the list; it starts on the level of
+	// whatever unit is already today's topic so the page opens where the
+	// learner left off rather than always at A1.
+	const [level, setLevel] = React.useState<CefrLevel>(
+		() =>
+			grammarUnits.find((unit) => unit.title === selectedTitle)?.level ?? "A1",
+	);
+	const [mode, setMode] = React.useState("full");
+
+	const unitsForLevel = React.useMemo(
+		() => grammarUnits.filter((unit) => unit.level === level),
+		[level],
+	);
+
+	// Keep the unit selection valid whenever the level changes.
+	const [unitTitle, setUnitTitle] = React.useState<string>(
+		() =>
+			grammarUnits.find((unit) => unit.title === selectedTitle)?.title ??
+			grammarUnits.find((unit) => unit.level === "A1")?.title ??
+			"",
+	);
+	React.useEffect(() => {
+		if (!unitsForLevel.some((unit) => unit.title === unitTitle)) {
+			setUnitTitle(unitsForLevel[0]?.title ?? "");
+		}
+	}, [unitTitle, unitsForLevel]);
+
+	const activeUnit = grammarUnits.find((unit) => unit.title === unitTitle);
+	const activeMode = PRACTICE_MODES.find((entry) => entry.value === mode);
 	const [focusedStep, setFocusedStep] = React.useState<number | undefined>(
 		undefined,
 	);
 
-	function startPractice(unitTitle: string, step: number | undefined) {
-		const unit = grammarUnits.find((candidate) => candidate.title === unitTitle);
-		if (!unit) return;
-		setTodayGrammar(unit);
-		setFocusedStep(step);
+	function startPractice() {
+		if (!activeUnit) return;
+		setTodayGrammar(activeUnit);
+		setFocusedStep(activeMode?.step);
 		document.getElementById("mission")?.scrollIntoView({ behavior: "smooth" });
 	}
 
@@ -79,90 +77,58 @@ export default function GrammarPage() {
 				<CardHeader>
 					<CardTitle>Choose a unit</CardTitle>
 					<CardDescription>
-						Open a level, then a unit, then the practice mode you want. Its
-						evidence is checked the same way as any other Mission -- exact-match
-						controlled practice, online-verified writing and speaking, and
-						transfer.
+						Selecting a unit sets it as today's practice topic. Its evidence is
+						checked the same way as any other Mission -- exact-match controlled
+						practice, online-verified writing and speaking, and transfer.
 					</CardDescription>
 				</CardHeader>
 				<CardContent data-testid="grammar-topic-list">
-					{/* type="single" so only one CEFR level is open at a time; the
-					    previous "multiple" let every level stay open, which is what
-					    made this list overwhelming. `collapsible` allows closing the
-					    last open one. */}
-					<Accordion
-						collapsible
-						defaultValue={selectedLevel ?? "A1"}
-						type="single"
-					>
-						{CEFR_ORDER.map((level) => {
-							const units = grammarUnits.filter((unit) => unit.level === level);
-							if (units.length === 0) return null;
-							return (
-								<AccordionItem key={level} value={level}>
-									<AccordionTrigger className="text-sm font-bold">
-										{level} · {units.length} units
-									</AccordionTrigger>
-									<AccordionContent>
-										{/* Nested single-open accordion: one unit per full-width
-										    row on its own line, replacing the wrapped pill chips
-										    that made units hard to scan. */}
-										<Accordion collapsible type="single">
-											{units.map((unit) => {
-												const isSelected = selectedTitle === unit.title;
-												return (
-													<AccordionItem
-														className="border-b last:border-b-0"
-														key={unit.title}
-														value={unit.title}
-													>
-														<AccordionTrigger
-															className={`w-full px-1 text-left text-sm font-semibold ${
-																isSelected ? "text-primary" : ""
-															}`}
-														>
-															<span className="flex min-w-0 flex-1 items-center gap-2">
-																<span className="min-w-0 flex-1 truncate">
-																	{unit.title}
-																</span>
-																{isSelected ? (
-																	<Badge variant="secondary">Today</Badge>
-																) : null}
-															</span>
-														</AccordionTrigger>
-														<AccordionContent>
-															<p className="px-1 pb-2 text-xs text-muted-foreground">
-																{unit.rule}
-															</p>
-															<div className="grid gap-1">
-																{PRACTICE_MODES.map((mode) => (
-																	<button
-																		className="flex w-full flex-col items-start gap-0.5 rounded-lg border px-3 py-2 text-left transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10"
-																		key={mode.label}
-																		onClick={() =>
-																			startPractice(unit.title, mode.step)
-																		}
-																		type="button"
-																	>
-																		<span className="text-sm font-bold">
-																			{mode.label}
-																		</span>
-																		<span className="text-xs text-muted-foreground">
-																			{mode.detail}
-																		</span>
-																	</button>
-																))}
-															</div>
-														</AccordionContent>
-													</AccordionItem>
-												);
-											})}
-										</Accordion>
-									</AccordionContent>
-								</AccordionItem>
-							);
-						})}
-					</Accordion>
+					<div className="grid gap-3 md:grid-cols-3">
+						<SelectMenu
+							id="grammar-level"
+							label="CEFR Level"
+							onChange={(next) => setLevel(next as CefrLevel)}
+							options={CEFR_ORDER.map((entry) => ({
+								value: entry,
+								label: `${entry} · ${
+									grammarUnits.filter((unit) => unit.level === entry).length
+								} units`,
+							}))}
+							value={level}
+						/>
+						<SelectMenu
+							id="grammar-unit"
+							label="Unit"
+							onChange={setUnitTitle}
+							options={unitsForLevel.map((unit) => ({
+								value: unit.title,
+								label: unit.title,
+							}))}
+							value={unitTitle}
+						/>
+						<SelectMenu
+							id="grammar-mode"
+							label="Practice Mode"
+							onChange={setMode}
+							options={PRACTICE_MODES.map(({ value, label }) => ({
+								value,
+								label,
+							}))}
+							value={mode}
+						/>
+					</div>
+					{activeUnit ? (
+						<div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+							<p className="max-w-2xl text-sm text-muted-foreground">
+								{activeUnit.rule}
+							</p>
+							<Button className="shrink-0" onClick={startPractice} type="button">
+								{selectedTitle === activeUnit.title
+									? "Go to this Mission"
+									: "Start this unit"}
+							</Button>
+						</div>
+					) : null}
 				</CardContent>
 			</Card>
 			<AutomaticityScreen focusedStep={focusedStep} />

@@ -41,12 +41,22 @@ test("automaticity mission saves writing evidence and restores it", async ({
   const evidence = page;
   await expect(evidence.getByText("Present perfect", { exact: true })).toBeVisible();
 
+  // Controlled practice now starts in a study phase with the rule and
+  // examples on screen -- and every expected answer is printed in them, so a
+  // round answered with them open is recorded as study, not as retrieval
+  // evidence. Hide them first: that is the path that actually earns evidence,
+  // and it is what the rest of this test depends on.
+  await evidence
+    .getByRole("button", { name: "Hide the rule and answer from memory" })
+    .click();
+  await expect(evidence.getByText("Rule hidden — answer from memory.")).toBeVisible();
+
   for (const [prompt, answer] of Object.entries(PRESENT_PERFECT_ANSWERS)) {
     await evidence.getByLabel(prompt).fill(answer);
   }
   await evidence.getByRole("button", { name: "Check answers" }).click();
   await expect(
-    evidence.getByText("Controlled practice complete."),
+    evidence.getByText("Controlled practice complete, answered from memory."),
   ).toBeVisible();
 
   // The Mission shows one step at a time; it starts on step 1 (controlled

@@ -106,8 +106,34 @@ function shuffled<T>(items: readonly T[]): T[] {
   return copy;
 }
 
-function pickRound<T>(pool: readonly T[], size: number): T[] {
-  return shuffled(pool).slice(0, Math.min(size, pool.length));
+// One round must never ask for the same answer twice. Several units carry two
+// prompts that point at an identical expected string -- "Verb be: am/is/are"
+// has both "State the rule ... from memory" and "Recall the rule ... without
+// looking it up" (both expect the unit's `rule` verbatim, because `recallTest`
+// IS `rule` for that unit), plus "Repair this common error ..." and "Correct
+// the sentence: I am agree." (both expect "I agree."). Drawing them into the
+// same round produced a 6-item round holding only 3 distinct answers, so the
+// score partly measured typing one string twice. The pool deliberately keeps
+// both phrasings -- re-retrieving a verified sentence in a LATER round is real
+// spaced practice -- but a single round now takes at most one prompt per
+// expected answer.
+function dedupeByAnswer<T extends { expected: string }>(pool: readonly T[]): T[] {
+  const seen = new Set<string>();
+  const unique: T[] = [];
+  for (const item of pool) {
+    const answerKey = item.expected.trim().toLocaleLowerCase("en");
+    if (seen.has(answerKey)) continue;
+    seen.add(answerKey);
+    unique.push(item);
+  }
+  return unique;
+}
+
+function pickRound<T extends { expected: string }>(
+  pool: readonly T[],
+  size: number,
+): T[] {
+  return dedupeByAnswer(shuffled(pool)).slice(0, size);
 }
 
 function lessonExercises(grammar: GrammarUnit) {
@@ -294,12 +320,25 @@ export function AutomaticityScreen({
   // (caught by an actual e2e run, not typecheck/unit tests).
   const [roundExercises, setRoundExercises] = React.useState<
     ReturnType<typeof lessonExercises>
-  >(() => exercises.slice(0, ROUND_SIZE));
+    // Deduped here too (not only in pickRound) so the very first, deliberately
+    // unshuffled round is subject to the same one-answer-per-round rule.
+  >(() => dedupeByAnswer(exercises).slice(0, ROUND_SIZE));
   const [answers, setAnswers] = React.useState<string[]>(() =>
     roundExercises.map(() => ""),
   );
   const [checkedAnswers, setCheckedAnswers] = React.useState<boolean[]>([]);
   const [practiceRounds, setPracticeRounds] = React.useState(0);
+  // Retrieval practice only measures retrieval when the answer is NOT on
+  // screen. Every expected answer in this step is drawn from the unit's own
+  // rule/examples/commonError -- precisely the text the lesson panel prints
+  // directly above the inputs. With that panel open, "State the rule from
+  // memory" is a copy-typing task and the 100% it produces is evidence of
+  // nothing. The lesson stays (it IS the teaching, and the learner asked to
+  // keep it); it simply closes while answering. A round answered with the
+  // rule visible is still practice, but it is recorded as study rather than
+  // as verified retrieval evidence, so mastery cannot be inflated by copying.
+  const [lessonOpen, setLessonOpen] = React.useState(true);
+  const [peeked, setPeeked] = React.useState(false);
   // Re-shuffles into a genuine random round on mount (client-only, so it
   // never runs during SSR/hydration), and again any time `key` changes --
   // `key` is derived from the grammar topic, so this also resets the round
@@ -320,6 +359,11 @@ export function AutomaticityScreen({
     setAnswers(freshRound.map(() => ""));
     setCheckedAnswers([]);
     setPracticeRounds(0);
+    // A new topic starts in the study phase again: the learner has not seen
+    // this unit's rule yet, so opening on a hidden lesson would be a test
+    // before any teaching.
+    setLessonOpen(true);
+    setPeeked(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `exercises` is derived from `grammar`, which `key` already uniquely identifies; re-running per `exercises` identity would refire every render
   }, [key]);
   const [journal, setJournal] = React.useState("");
@@ -424,6 +468,10 @@ export function AutomaticityScreen({
   }
 
   function checkPractice() {
+    // The rule being on screen (either never hidden, or reopened mid-round)
+    // makes this round open-book. Tracked as one flag so the recorded attempt
+    // and the learner-facing message always agree about which it was.
+    const openBook = lessonOpen || peeked;
     const results = answers.map((answer, index) =>
       evaluatePracticeAnswer(answer, {
         prompt: roundExercises[index]?.prompt ?? "",
@@ -449,15 +497,20 @@ export function AutomaticityScreen({
       // not self-rated, not a network call, not fabricated. It's a distinct
       // and legitimate verification basis from the online-provider one used
       // for writing/speaking, so it can set verified on the same footing:
-      // true only when the check itself passed.
-      verified: results.every(Boolean),
+      // true only when the check itself passed -- AND only when the answer
+      // was not readable on screen at the time. An open-book round is real
+      // practice but it is not retrieval evidence, so it must not raise
+      // mastery.
+      verified: results.every(Boolean) && !openBook,
       assessedBy: "offline",
       contentVersion: EVIDENCE_CONTENT_VERSION,
     });
     if (results.every(Boolean)) {
       writePlan(`${key}:practice`, "done");
       setMessage(
-        "Controlled practice complete. Now produce your own language.",
+        openBook
+          ? "All correct, but the rule was visible -- this counts as study, not recall. Hide it and run one more round to earn evidence."
+          : "Controlled practice complete, answered from memory. Now produce your own language.",
       );
     } else {
       setMessage("Review the model answers and correct the highlighted items.");
@@ -475,7 +528,11 @@ export function AutomaticityScreen({
     setAnswers(nextRound.map(() => ""));
     setCheckedAnswers([]);
     setPracticeRounds((count) => count + 1);
-    setMessage("New round ready. The step stays complete either way.");
+    // A fresh round gets a fresh closed-book chance: the peek that spoiled the
+    // previous round should not permanently disqualify every later one.
+    setLessonOpen(false);
+    setPeeked(false);
+    setMessage("New round ready, rule hidden. The step stays complete either way.");
   }
 
   function addIssuesToErrorWorkshop(
@@ -1064,19 +1121,54 @@ export function AutomaticityScreen({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="grid gap-3 md:grid-cols-2">
-            <div className="rounded-2xl bg-violet-50 p-4">
-              <strong>Rule and form</strong>
-              <p className="mt-2">{grammar.rule}</p>
+          {/* Study phase: the lesson is open and the learner is told plainly
+              that hiding it is what turns the exercises below into recall.
+              Recall phase: a compact bar replaces it, with an honest way back
+              that is recorded rather than silently forgiven. */}
+          {lessonOpen ? (
+            <div className="space-y-3">
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-2xl bg-violet-50 p-4">
+                  <strong>Rule and form</strong>
+                  <p className="mt-2">{grammar.rule}</p>
+                </div>
+                <div className="rounded-2xl bg-amber-50 p-4">
+                  <strong>Examples and contrast</strong>
+                  <p className="mt-2">{grammar.examples.join(" · ")}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Avoid: {grammar.commonError}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-violet-200 bg-white p-3">
+                <Button onClick={() => setLessonOpen(false)} type="button">
+                  Hide the rule and answer from memory
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Every answer below is written in these two boxes. Copying
+                  them is study, not recall, so only a hidden-rule round counts
+                  as evidence.
+                </span>
+              </div>
             </div>
-            <div className="rounded-2xl bg-amber-50 p-4">
-              <strong>Examples and contrast</strong>
-              <p className="mt-2">{grammar.examples.join(" · ")}</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Avoid: {grammar.commonError}
-              </p>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet-200 bg-violet-50 p-3">
+              <span className="text-sm font-bold text-violet-900">
+                Rule hidden — answer from memory.
+              </span>
+              <Button
+                onClick={() => {
+                  setLessonOpen(true);
+                  setPeeked(true);
+                }}
+                size="sm"
+                type="button"
+                variant="outline"
+              >
+                Show the rule again
+              </Button>
             </div>
-          </div>
+          )}
           {roundExercises.map((item, index) => (
             <label className="block space-y-2" key={item.prompt}>
               <span className="text-sm font-bold">{item.prompt}</span>
@@ -1119,6 +1211,13 @@ export function AutomaticityScreen({
                 {practiceRounds + 1} rounds this session
               </Badge>
             ) : null}
+            {/* State the evidence consequence BEFORE the learner commits,
+                not only in the message afterwards. */}
+            <Badge variant={lessonOpen || peeked ? "warning" : "success"}>
+              {lessonOpen || peeked
+                ? "Open book — counts as study"
+                : "From memory — counts as evidence"}
+            </Badge>
           </div>
         </CardContent>
       </Card> : null}

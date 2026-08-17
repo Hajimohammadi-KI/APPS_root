@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   BookOpenCheck,
   Check,
-  CircleAlert,
   Headphones,
   Mic,
   PenLine,
@@ -93,8 +92,33 @@ function shuffled<T>(items: readonly T[]): T[] {
   return copy;
 }
 
-function pickRound<T>(pool: readonly T[], size: number): T[] {
-  return shuffled(pool).slice(0, Math.min(size, pool.length));
+// Eine Runde darf nie zweimal nach derselben Antwort fragen. Mehrere Einheiten
+// führen zwei Aufgabenstellungen, die auf dieselbe erwartete Zeichenkette
+// zeigen (etwa „Regel aus dem Gedächtnis nennen“ und „Regel ohne Nachschlagen
+// abrufen“ -- beide erwarten die Regel wörtlich). Beide in dieselbe Runde zu
+// ziehen ergab eine 6-Aufgaben-Runde mit nur 3 verschiedenen Antworten, sodass
+// die Punktzahl teilweise das doppelte Tippen einer Zeichenkette maß. Der Pool
+// behält beide Formulierungen -- ein erneuter Abruf in einer SPÄTEREN Runde ist
+// echtes verteiltes Üben -- nur die Dopplung innerhalb einer Runde entfällt.
+function dedupeByAnswer<T extends { expected: string }>(
+  pool: readonly T[],
+): T[] {
+  const seen = new Set<string>();
+  const unique: T[] = [];
+  for (const item of pool) {
+    const answerKey = item.expected.trim().toLocaleLowerCase("de");
+    if (seen.has(answerKey)) continue;
+    seen.add(answerKey);
+    unique.push(item);
+  }
+  return unique;
+}
+
+function pickRound<T extends { expected: string }>(
+  pool: readonly T[],
+  size: number,
+): T[] {
+  return dedupeByAnswer(shuffled(pool)).slice(0, size);
 }
 
 const shadowingStages = [
@@ -293,14 +317,27 @@ export function AutomaticityLab({
   // runs independently during SSR and the initial client render and would
   // otherwise produce two different rounds, a real hydration mismatch
   // (caught by an actual e2e run, not typecheck/unit tests).
+  // Auch hier dedupliziert (nicht nur in pickRound), damit die allererste,
+  // bewusst ungemischte Runde derselben Regel „eine Antwort pro Runde“ folgt.
   const [roundExercises, setRoundExercises] = useState(() =>
-    exercises.slice(0, ROUND_SIZE),
+    dedupeByAnswer(exercises).slice(0, ROUND_SIZE),
   );
   const [answers, setAnswers] = useState<string[]>(() =>
     roundExercises.map(() => ""),
   );
   const [checkedAnswers, setCheckedAnswers] = useState<readonly boolean[]>([]);
   const [practiceRounds, setPracticeRounds] = useState(0);
+  // Abrufübung misst nur dann Abruf, wenn die Antwort NICHT auf dem Bildschirm
+  // steht. Jede erwartete Antwort dieses Schritts stammt aus Regel, Beispielen
+  // oder typischem Fehler der Einheit -- genau dem Text, den die Lektionsfelder
+  // direkt über den Eingabefeldern anzeigen. Mit offenen Feldern ist „Regel aus
+  // dem Gedächtnis nennen“ eine Abschreibaufgabe, und die daraus entstehenden
+  // 100 % belegen nichts. Die Lektion bleibt (sie IST die Vermittlung); sie
+  // wird beim Antworten nur geschlossen. Eine Runde mit sichtbarer Regel bleibt
+  // echte Übung, wird aber als Lernen statt als bestätigter Abrufnachweis
+  // erfasst, damit Beherrschung nicht durch Abschreiben steigen kann.
+  const [lessonOpen, setLessonOpen] = useState(true);
+  const [peeked, setPeeked] = useState(false);
   // Re-shuffles into a genuine random round on mount (client-only, so it
   // never runs during SSR/hydration), and again any time KEY changes -- KEY
   // is derived from the grammar topic, so this also resets the round
@@ -321,6 +358,11 @@ export function AutomaticityLab({
     setAnswers(freshRound.map(() => ""));
     setCheckedAnswers([]);
     setPracticeRounds(0);
+    // Ein neues Thema beginnt wieder in der Lernphase: die Regel dieser Einheit
+    // wurde noch nicht gesehen, ein geschlossener Start wäre eine Prüfung vor
+    // jeder Vermittlung.
+    setLessonOpen(true);
+    setPeeked(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `exercises` is derived from `grammar`, which KEY already uniquely identifies; re-running per `exercises` identity would refire every render
   }, [KEY]);
   const [journal, setJournal] = useState("");
@@ -479,6 +521,10 @@ export function AutomaticityLab({
   }
 
   function checkPractice() {
+    // Sichtbare Regel (nie geschlossen oder mitten in der Runde wieder
+    // geöffnet) macht die Runde zur Übung mit offenem Buch. Als ein Merker
+    // geführt, damit erfasster Versuch und Rückmeldung immer übereinstimmen.
+    const openBook = lessonOpen || peeked;
     const results = answers.map((answer, index) =>
       practiceAnswerMatches(answer, roundExercises[index]?.expected ?? ""),
     );
@@ -496,14 +542,18 @@ export function AutomaticityLab({
       // known-correct answer -- not self-rated, not a network call, not
       // fabricated. That's a legitimate verification basis in its own
       // right, distinct from (and not requiring) the online provider used
-      // for writing/speaking.
-      verified: results.every(Boolean),
+      // for writing/speaking -- aber nur, wenn die Antwort zum Zeitpunkt der
+      // Prüfung nicht ablesbar war. Eine Runde mit offenem Buch ist echte
+      // Übung, aber kein Abrufnachweis, und darf die Beherrschung nicht heben.
+      verified: results.every(Boolean) && !openBook,
       accuracyScore: score,
     });
     if (results.every(Boolean)) {
       setDailyAnswer(`${KEY}:practice`, "done");
       setMessage(
-        "Kontrollierte Übung geschafft. Jetzt produzierst du eigene Sprache.",
+        openBook
+          ? "Alles richtig, aber die Regel war sichtbar -- das zählt als Lernen, nicht als Abruf. Blende sie aus und mache eine weitere Runde für den Nachweis."
+          : "Kontrollierte Übung geschafft, aus dem Gedächtnis beantwortet. Jetzt produzierst du eigene Sprache.",
       );
     } else {
       setMessage(
@@ -523,7 +573,14 @@ export function AutomaticityLab({
     setAnswers(nextRound.map(() => ""));
     setCheckedAnswers([]);
     setPracticeRounds((count) => count + 1);
-    setMessage("Neue Runde bereit. Der Schritt bleibt trotzdem abgeschlossen.");
+    // Eine neue Runde bekommt eine neue Chance mit geschlossenem Buch: der
+    // Blick in die Regel während der vorherigen Runde soll nicht jede spätere
+    // dauerhaft entwerten.
+    setLessonOpen(false);
+    setPeeked(false);
+    setMessage(
+      "Neue Runde bereit, Regel ausgeblendet. Der Schritt bleibt trotzdem abgeschlossen.",
+    );
   }
 
   function saveDetectedErrors(analysis: AutomatikAnalysis, sourceText: string) {
@@ -964,19 +1021,57 @@ export function AutomaticityLab({
         <Card>
           <CardHeader>
             <CardTitle>Lektion und kontrollierte Übung</CardTitle>
-            <CardDescription>{grammar.rule}</CardDescription>
+            {/* Die Regel stand bisher auch hier in der Beschreibung, also
+                außerhalb der ausblendbaren Felder -- sie muss mit ausgeblendet
+                werden, sonst bleibt die Antwort trotzdem lesbar. */}
+            {lessonOpen ? <CardDescription>{grammar.rule}</CardDescription> : null}
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="grid gap-3 md:grid-cols-2">
-              <div className="rounded-2xl bg-violet-50 p-4">
-                <strong>Regel und Form</strong>
-                <p className="mt-2">{grammar.examples[0]}</p>
+            {/* Lernphase: Lektion offen, mit klarem Hinweis, dass erst das
+                Ausblenden aus den Aufgaben unten echten Abruf macht.
+                Abrufphase: eine schmale Leiste ersetzt sie, mit einem ehrlichen
+                Rückweg, der erfasst statt stillschweigend verziehen wird. */}
+            {lessonOpen ? (
+              <div className="space-y-3">
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div className="rounded-2xl bg-violet-50 p-4">
+                    <strong>Regel und Form</strong>
+                    <p className="mt-2">{grammar.examples[0]}</p>
+                  </div>
+                  <div className="rounded-2xl bg-amber-50 p-4">
+                    <strong>Typischer Fehler</strong>
+                    <p className="mt-2">{grammar.commonError}</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-violet-200 bg-white p-3">
+                  <Button onClick={() => setLessonOpen(false)} type="button">
+                    Regel ausblenden und aus dem Gedächtnis antworten
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Jede Antwort unten steht in diesen Feldern. Abschreiben ist
+                    Lernen, kein Abruf -- nur eine Runde mit ausgeblendeter
+                    Regel zählt als Nachweis.
+                  </span>
+                </div>
               </div>
-              <div className="rounded-2xl bg-amber-50 p-4">
-                <strong>Typischer Fehler</strong>
-                <p className="mt-2">{grammar.commonError}</p>
+            ) : (
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet-200 bg-violet-50 p-3">
+                <span className="text-sm font-bold text-violet-900">
+                  Regel ausgeblendet — antworte aus dem Gedächtnis.
+                </span>
+                <Button
+                  onClick={() => {
+                    setLessonOpen(true);
+                    setPeeked(true);
+                  }}
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                >
+                  Regel wieder anzeigen
+                </Button>
               </div>
-            </div>
+            )}
             {roundExercises.map((item, index) => (
               <label className="block space-y-2" key={item.prompt}>
                 <span className="text-sm font-bold">{item.prompt}</span>
@@ -1017,6 +1112,13 @@ export function AutomaticityLab({
               {practiceRounds > 0 ? (
                 <Badge>{practiceRounds + 1} Runden in dieser Sitzung</Badge>
               ) : null}
+              {/* Die Nachweis-Folge VOR der Abgabe benennen, nicht erst in der
+                  Rückmeldung danach. */}
+              <Badge variant={lessonOpen || peeked ? "outline" : "default"}>
+                {lessonOpen || peeked
+                  ? "Offenes Buch — zählt als Lernen"
+                  : "Aus dem Gedächtnis — zählt als Nachweis"}
+              </Badge>
             </div>
           </CardContent>
         </Card>
@@ -1200,8 +1302,16 @@ export function AutomaticityLab({
         </Card>
       ) : null}
 
+      {/* Einspaltig, seit „Mein Grammatik-Musterplan“ neben dieser Karte
+          entfernt wurde. Diese Karte behauptete „Aus den heutigen Schreib- und
+          Sprechfehlern erzeugt“, zeigte aber drei fest einprogrammierte
+          Listenpunkte, die für jede lernende Person, jede Einheit und jede
+          Fehlerhistorie identisch blieben -- sie warb mit Personalisierung,
+          die es nie gab. Ihr „Neue Wiederholung“-Knopf ist nicht verloren:
+          practiceAgain() neben „Antworten prüfen“ startet eine echte neue
+          Runde, statt nur Anzeigen zurückzusetzen. */}
       {focusedStep === undefined ? (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-4">
           <Card>
             <CardHeader>
               <CardTitle>Transparente Beherrschung</CardTitle>
@@ -1242,52 +1352,6 @@ export function AutomaticityLab({
                   {verifiedMastery?.scores.automaticity ?? 0}%
                 </Badge>
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Mein Grammatik-Musterplan</CardTitle>
-              <CardDescription>
-                Aus den heutigen Schreib- und Sprechfehlern erzeugt.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ol className="space-y-3 text-sm">
-                <li className="rounded-xl bg-violet-50 p-3">
-                  <b>1. Reparieren:</b> fünf ähnliche Sätze korrigieren.
-                </li>
-                <li className="rounded-xl bg-violet-50 p-3">
-                  <b>2. Übertragen:</b> fünf neue eigene Sätze mit „{TOPIC}“
-                  bilden.
-                </li>
-                <li className="rounded-xl bg-violet-50 p-3">
-                  <b>3. Automatisieren:</b> einmal shadowen und frei
-                  nacherzählen.
-                </li>
-              </ol>
-              <Button
-                className="mt-4"
-                onClick={() => {
-                  setCheckedAnswers([]);
-                  setJournalAnalysis(null);
-                  setSpeechAnalysis(null);
-                  setMessage(
-                    "Neue Wiederholung gestartet. Gespeicherte Nachweise bleiben erhalten.",
-                  );
-                }}
-                variant="outline"
-              >
-                <RotateCcw /> Neue Wiederholung
-              </Button>
-              {(journalAnalysis?.issues.length ?? 0) +
-                (speechAnalysis?.issues.length ?? 0) >
-              0 ? (
-                <p className="mt-3 flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-sm">
-                  <CircleAlert className="mt-0.5 size-4 shrink-0" /> Erkannte
-                  Fehler wurden zusätzlich im Fehlermotor für die verteilte
-                  Reparatur gespeichert.
-                </p>
-              ) : null}
             </CardContent>
           </Card>
         </div>

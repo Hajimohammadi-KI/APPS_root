@@ -10,10 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  AccordionSelect,
-  AccordionSelectGroup,
-} from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import {
   LearningAccordion,
   type LearningAccordionTone,
@@ -99,7 +96,7 @@ export function TopicCatalog() {
 
       <Card>
         <CardContent>
-          <AccordionSelectGroup className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <CatalogSelect
               label="Lernpfad"
               value={track}
@@ -131,7 +128,7 @@ export function TopicCatalog() {
                 />
               </span>
             </label>
-          </AccordionSelectGroup>
+          </div>
         </CardContent>
       </Card>
 
@@ -256,7 +253,7 @@ function CatalogSelect({
   onChange: (value: string) => void;
 }>) {
   return (
-    <AccordionSelect
+    <SelectMenu
       className="min-w-0 rounded-lg"
       label={label}
       value={value}

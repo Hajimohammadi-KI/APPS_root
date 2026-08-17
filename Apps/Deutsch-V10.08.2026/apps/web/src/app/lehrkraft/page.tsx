@@ -15,10 +15,7 @@ import {
   HumanAudioRecorder,
 } from "@/components/human-audio-player";
 import { TeacherFlashcardPanel } from "@/features/components/teacher-flashcard-panel";
-import {
-  AccordionSelect,
-  AccordionSelectGroup,
-} from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import {
   deleteTeacherContent,
   listTeacherContent,
@@ -91,8 +88,8 @@ export default function LehrkraftPage() {
               ? "Inhalt bearbeiten"
               : "Inhalt hinzufügen"}
           </h2>
-          <AccordionSelectGroup className="teacher-grid">
-            <AccordionSelect
+          <div className="teacher-grid">
+            <SelectMenu
               label="Inhaltstyp"
               value={draft.kind}
               options={[
@@ -108,7 +105,7 @@ export default function LehrkraftPage() {
                 })
               }
             />
-            <AccordionSelect
+            <SelectMenu
               label="GER-Niveau"
               value={draft.level}
               options={["A1", "A2", "B1", "B2", "C1", "C2"].map((level) => ({
@@ -122,7 +119,7 @@ export default function LehrkraftPage() {
                 })
               }
             />
-          </AccordionSelectGroup>
+          </div>
           <label>
             Titel
             <input

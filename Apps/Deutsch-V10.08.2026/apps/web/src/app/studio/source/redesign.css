@@ -628,73 +628,28 @@ footer {
   .conversation-filter-grid select {
     height: 46px;
   }
-  .conversation-filter-grid .accordion-select-trigger {
+  .conversation-filter-grid .select-menu-trigger {
     min-height: 46px;
   }
 }
 
-/* Accordion-style filter controls: same visual language as the select
-   controls they replaced (13px radius, #faf7ff field, violet focus ring),
-   so the Studio keeps its own design system rather than inheriting the
-   app-wide Tailwind token look. */
-.conversation-filter-grid .accordion-select {
+/* Studio filter controls: size and spacing only. The Studio's old colour
+   overrides here were dropped on purpose -- SelectMenu carries one fixed
+   palette that must read the same on every screen -- but the Studio's
+   denser field metrics (48px field, 13px radius, 13px gutter) are kept so
+   the filter row does not change height. */
+.conversation-filter-grid .select-menu {
   min-width: 0;
-  border: 1px solid #ddd2ec;
-  border-radius: 13px;
-  background-color: #faf7ff;
-  transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
 }
-.conversation-filter-grid .accordion-select:hover {
-  border-color: #bca8db;
-}
-.conversation-filter-grid
-  .accordion-select:has(.accordion-select-trigger:focus-visible) {
-  border-color: #7444da;
-  box-shadow: 0 0 0 4px rgba(116, 68, 218, 0.13);
-}
-.conversation-filter-grid .accordion-select-trigger {
+.conversation-filter-grid .select-menu-trigger {
   min-height: 48px;
   padding: 0 13px;
-  background: transparent;
-  color: #171331;
+  border-radius: 13px;
 }
-.conversation-filter-grid .accordion-select-trigger:hover {
-  background: transparent;
-}
-.conversation-filter-grid .accordion-select-trigger:disabled {
-  cursor: not-allowed;
-  opacity: 0.58;
-}
-.conversation-filter-grid .accordion-select-label {
-  color: var(--ink);
-  font-size: 11px;
-  font-weight: 800;
-}
-.conversation-filter-grid .accordion-select-value {
-  font-size: 14px;
-  font-weight: 500;
-  color: #171331;
-}
-.conversation-filter-grid .accordion-select-panel {
-  border-top: 1px solid #ddd2ec;
-  background: #fff;
+.conversation-filter-grid .select-menu-panel {
   padding: 6px;
+  border-radius: 13px;
 }
-.conversation-filter-grid .accordion-select-option {
+.conversation-filter-grid .select-menu-option {
   border-radius: 9px;
-  font-size: 14px;
-  color: #171331;
-}
-.conversation-filter-grid .accordion-select-option:hover {
-  background: #f3edff;
-}
-.conversation-filter-grid .accordion-select-option[aria-selected="true"] {
-  background: #efe7ff;
-  color: #5a2fb8;
-  font-weight: 800;
-}
-.conversation-filter-grid .accordion-select-option:focus-visible {
-  box-shadow: 0 0 0 3px rgba(116, 68, 218, 0.18);
 }

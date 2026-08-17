@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Mic, Plus, Upload } from "lucide-react";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/components/human-audio-player";
-import { AccordionSelect } from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import {
   listTeacherContent,
@@ -147,7 +147,7 @@ export function TeacherFlashcardPanel() {
         Originalsatz (optional)
         <input onChange={(event) => setSentence(event.target.value)} value={sentence} />
       </label>
-      <AccordionSelect
+      <SelectMenu
         label="GER-Niveau"
         onChange={(next) => setLevel(next as (typeof LEVELS)[number])}
         options={LEVELS.map((cefrLevel) => ({ value: cefrLevel, label: cefrLevel }))}

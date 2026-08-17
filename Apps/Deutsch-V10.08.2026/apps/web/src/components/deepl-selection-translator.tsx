@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Languages, X } from "lucide-react";
 import { translateWithGoogle } from "@/lib/desktop-deepl";
-import { Select } from "@/components/ui/select";
+import { SelectMenu } from "@/components/ui/select-menu";
 
 const targets = {
   EN: "Englisch",
@@ -112,22 +112,16 @@ export function DeepLSelectionTranslator() {
           <p className="mt-3 max-h-24 overflow-auto rounded-xl bg-violet-50 p-3 text-sm leading-6">
             {selection}
           </p>
-          <label className="mt-3 grid gap-1 text-sm font-semibold">
-            Zielsprache
-            <Select
-              className="rounded-lg border-violet-300 bg-white"
-              value={target}
-              onChange={(event) =>
-                setTarget(event.target.value as keyof typeof targets)
-              }
-            >
-              {Object.entries(targets).map(([code, label]) => (
-                <option key={code} value={code}>
-                  {label}
-                </option>
-              ))}
-            </Select>
-          </label>
+          <SelectMenu
+            className="mt-3"
+            label="Zielsprache"
+            value={target}
+            onChange={(next) => setTarget(next as keyof typeof targets)}
+            options={Object.entries(targets).map(([code, label]) => ({
+              value: code,
+              label,
+            }))}
+          />
           <button
             type="button"
             className="mt-3 min-h-11 w-full rounded-xl bg-violet-700 px-4 font-bold text-white disabled:opacity-60"

@@ -6,7 +6,7 @@ import { CheckCircle2, ClipboardCheck } from "lucide-react";
 import type { CefrLevel } from "@grammar/domain";
 
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
+import { SelectMenu } from "@/components/ui/select-menu";
 
 interface PlacementQuestion {
   readonly id: string;
@@ -126,33 +126,31 @@ export function PlacementCheck({
       </p>
       <div className="mt-4 grid gap-4">
         {QUESTIONS.map((question, index) => (
-          <label
+          <div
             className="grid min-w-0 gap-1.5 text-sm font-medium"
             key={question.id}
           >
             <span>
               {index + 1}. {question.prompt}
             </span>
-            <Select
-              aria-label={`Antwort auf Frage ${index + 1}`}
-              className="h-10 min-w-0 rounded-lg"
-              onChange={(event) => {
+            <SelectMenu
+              className="min-w-0"
+              label={`Antwort auf Frage ${index + 1}`}
+              onChange={(next) => {
                 setAnswers((current) => ({
                   ...current,
-                  [question.id]: event.target.value,
+                  [question.id]: next,
                 }));
                 setResult(null);
               }}
+              options={question.options.map((option) => ({
+                value: option,
+                label: option,
+              }))}
+              placeholder="Antwort wählen"
               value={answers[question.id] ?? ""}
-            >
-              <option value="">Antwort wählen</option>
-              {question.options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </Select>
-          </label>
+            />
+          </div>
         ))}
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-2">

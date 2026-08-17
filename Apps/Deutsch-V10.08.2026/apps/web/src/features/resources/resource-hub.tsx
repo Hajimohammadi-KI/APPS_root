@@ -14,10 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  AccordionSelect,
-  AccordionSelectGroup,
-} from "@/components/ui/accordion-select";
+import { SelectMenu } from "@/components/ui/select-menu";
 import {
   LEARNING_RESOURCES,
   RESOURCE_AREAS,
@@ -130,8 +127,8 @@ export function ResourceHub() {
 
       <Card>
         <CardContent>
-          <AccordionSelectGroup className="grid gap-3 lg:grid-cols-3">
-            <AccordionSelect
+          <div className="grid gap-3 lg:grid-cols-3">
+            <SelectMenu
               className="rounded-lg"
               label="Lernbereich"
               value={area}
@@ -141,7 +138,7 @@ export function ResourceHub() {
               }))}
               onChange={(next) => changeArea(next)}
             />
-            <AccordionSelect
+            <SelectMenu
               className="rounded-lg"
               label="Niveau"
               value={level}
@@ -154,14 +151,14 @@ export function ResourceHub() {
                 setTopic(allOption);
               }}
             />
-            <AccordionSelect
+            <SelectMenu
               className="rounded-lg"
               label="Thema"
               value={topic}
               options={topics.map((item) => ({ value: item, label: item }))}
               onChange={(next) => setTopic(next)}
             />
-          </AccordionSelectGroup>
+          </div>
         </CardContent>
       </Card>
 

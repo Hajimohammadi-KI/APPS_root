@@ -903,6 +903,42 @@ export function AutomaticityScreen({
         </CardContent>
       </Card> : null}
 
+      {/* Arriving here from Today's Practice previously gave no sense of a
+          route: three equal-looking cards, nothing marking where to begin,
+          where you are, or when the unit is finished. The bar below states the
+          position in words, and each card is labelled Done / Start here / Next
+          so the page reads as an ordered path rather than three options. */}
+      {!embedded ? (
+        <div className="rounded-2xl border border-violet-200 bg-white px-4 py-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <strong className="text-sm">
+              Step {Math.min(activeStep + 1, 3)} of 3 ·{" "}
+              {["Activate & use accurately", "Automate & write", "Speak freely & transfer"][activeStep] ?? ""}
+            </strong>
+            <span className="text-sm text-muted-foreground">
+              {completion.filter(Boolean).length} of 3 finished
+              {completion.every(Boolean)
+                ? " · unit complete, evidence saved"
+                : " · finish all three to complete this unit"}
+            </span>
+          </div>
+          <div className="mt-2 flex gap-1" aria-hidden>
+            {completion.map((done, index) => (
+              <span
+                className={`h-1.5 flex-1 rounded-full ${
+                  done
+                    ? "bg-violet-700"
+                    : index === activeStep
+                      ? "bg-violet-400"
+                      : "bg-violet-100"
+                }`}
+                key={`progress-${index}`}
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       {!embedded ? <div className="grid gap-4 lg:grid-cols-3">
         {[
           [
@@ -925,16 +961,44 @@ export function AutomaticityScreen({
           ],
         ].map(([Icon, title, detail, done]) => {
           const StepIcon = Icon as typeof BookOpenCheck;
+          const stepIndex = Number(String(title).slice(0, 1)) - 1;
+          const isCurrent = activeStep === stepIndex;
+          // "Start here" only on the current step when nothing is finished yet,
+          // so exactly one card ever claims to be the entry point.
+          const roleLabel = done
+            ? "Done"
+            : isCurrent
+              ? completion.some(Boolean)
+                ? "You are here"
+                : "Start here"
+              : "Next";
           return (
             <button
-              aria-pressed={activeStep === Number(String(title).slice(0, 1)) - 1}
+              aria-pressed={isCurrent}
               className="text-left"
               key={String(title)}
-              onClick={() => setActiveStep(Number(String(title).slice(0, 1)) - 1)}
+              onClick={() => setActiveStep(stepIndex)}
               type="button"
             ><Card
-              className={done ? "border-violet-500" : ""}
+              className={
+                done
+                  ? "border-violet-500"
+                  : isCurrent
+                    ? "border-violet-600 ring-2 ring-violet-300"
+                    : ""
+              }
             >
+              <span
+                className={`ml-5 mt-3 inline-block rounded-full px-2 py-0.5 text-[11px] font-bold ${
+                  done
+                    ? "bg-violet-100 text-violet-800"
+                    : isCurrent
+                      ? "bg-violet-700 text-white"
+                      : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {roleLabel}
+              </span>
               <CardContent className="flex gap-3 pt-5">
                 <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-100 text-violet-800">
                   {done ? <Check /> : <StepIcon />}

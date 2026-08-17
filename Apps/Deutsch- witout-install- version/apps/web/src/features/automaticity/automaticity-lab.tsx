@@ -29,7 +29,6 @@ import { saveAudio } from "@/features/audio/audio-repository";
 import {
   analyzeWeilClause,
   evaluatePracticeAnswer,
-  practiceAnswerMatches,
   type AutomatikAnalysis,
   type AutomatikIssue,
 } from "@/features/automaticity/automaticity-analysis";
@@ -397,10 +396,18 @@ export function AutomaticityLab({
   const [message, setMessage] = useState(
     `Bereit für deinen ${missionMinutes}-Minuten-Nachweis.`,
   );
+  // Im Grammatik-Labor (embedded) wird Schritt 2 (Sprechen) nie automatisch
+  // ausgewählt -- er lebt jetzt im Gesprächsstudio, nicht mehr eingebettet
+  // hier. Ohne diese Ausnahme würde diese Initialisierung, sobald Schritt 0
+  // und 1 erledigt sind, standardmäßig auf Schritt 2 springen und die volle
+  // Aufnahme-Oberfläche zeigen, obwohl nichts in der Grammatik-Labor-Oberfläche
+  // mehr dorthin verlinkt.
   const [activeStep, setActiveStep] = useState<number>(
     focusedStep ??
-      [0, 1, 2].find((step) => !plan.completed.includes(step)) ??
-      0,
+      (embedded ? [0, 1] : [0, 1, 2]).find(
+        (step) => !plan.completed.includes(step),
+      ) ??
+      (embedded ? 1 : 0),
   );
   const recorderRef = useRef<MediaRecorder | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
@@ -874,21 +881,22 @@ export function AutomaticityLab({
   }
   return (
     <div className="space-y-5">
-      {!focusedStep && focusedStep !== 0 ? (
+      {/* Vollständig auf !embedded gesperrt statt nur die Überschrift zu
+          ändern -- vorher zeigte das Grammatik-Labor dieselbe große
+          Überschrift und denselben "Nachweis starten"-Knopf wie die volle
+          Mission, obendrüber der Seite "Grammatik-Labor" selbst. Zwei
+          Überschriften und zwei Startknöpfe auf einer Seite, genau das
+          Problem, das in der englischen App unter "one route instead of five
+          competing starts" behoben wurde. */}
+      {!embedded && !focusedStep && focusedStep !== 0 ? (
         <section className="flex flex-col gap-4 overflow-hidden rounded-3xl border border-violet-200 bg-violet-50 p-5 shadow-sm sm:p-7 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <Badge className="mb-3 bg-violet-700 text-white">
               Heute · {missionMinutes} Minuten
             </Badge>
-            {embedded ? (
-              <h2 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
-                Vertiefender Nachweis
-              </h2>
-            ) : (
-              <h1 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
-                Automatik-Mission
-              </h1>
-            )}
+            <h1 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+              Automatik-Mission
+            </h1>
             <p className="mt-2 max-w-3xl text-muted-foreground">
               Aktivieren, korrekt anwenden, laut automatisieren und frei
               übertragen. Die Mission endet mit einem gespeicherten Nachweis,
@@ -909,7 +917,7 @@ export function AutomaticityLab({
         </section>
       ) : null}
 
-      {focusedStep === undefined ? (
+      {!embedded && focusedStep === undefined ? (
         <Card className="border-violet-200 bg-violet-50/70" id="mission">
           <CardContent className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -920,17 +928,6 @@ export function AutomaticityLab({
                 <p className="text-sm text-muted-foreground">{grammar.rule}</p>
               </div>
               <div className="flex items-center gap-2">
-                <Button
-                  render={
-                    <Link
-                      href={`/studio?from=daily&level=${encodeURIComponent(selectedLevel)}&grammar=${encodeURIComponent(TOPIC)}&activity=2&return=/heute`}
-                    />
-                  }
-                  size="sm"
-                  variant="outline"
-                >
-                  Im Gesprächsstudio üben
-                </Button>
                 <Badge>{progress}% erledigt</Badge>
               </div>
             </div>
@@ -940,64 +937,171 @@ export function AutomaticityLab({
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p
-              aria-live="polite"
-              className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-violet-950"
-            >
-              {message}
-            </p>
           </CardContent>
         </Card>
       ) : null}
 
-      {focusedStep === undefined ? (
-        <div className="grid gap-4 lg:grid-cols-3">
-          {[
+      {/* Nachricht lebte vorher nur in der oben gesperrten Karte -- eine Seite,
+          die diese Komponente einbettet, hätte damit jede Rückmeldung
+          verloren. Läuft jetzt in beiden Modi immer mit. */}
+      <p
+        aria-live="polite"
+        className="rounded-xl border border-violet-200 bg-white px-4 py-3 text-sm font-bold text-violet-950"
+      >
+        {message}
+      </p>
+
+      {/* Positionsleiste und die drei Schrittkarten sind absichtlich NICHT auf
+          embedded gesperrt. Sie sind der Weg durch die Einheit -- gerade eine
+          Seite, die diese Komponente einbettet (Grammatik-Labor), braucht sie
+          am meisten. Diese Seite lässt stattdessen die doppelte Überschrift
+          und die Themenleiste weg. */}
+      <div className="rounded-2xl border border-violet-200 bg-white px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <strong className="text-sm">
+            Schritt {Math.min(activeStep + 1, 3)} von 3 ·{" "}
             {
-              icon: BookOpenCheck,
-              title: "1. Aktivieren & korrekt anwenden",
-              detail: "3 Min. · drei kontrollierte Umformungen",
-              done: completion[0],
-            },
-            {
-              icon: PenLine,
-              title: "2. Automatisieren & schreiben",
-              detail: "4 Min. · sechs Sätze mit vier Zielstrukturen",
-              done: completion[1],
-            },
-            {
-              icon: Mic,
-              title: "3. Frei sprechen & übertragen",
-              detail: "5 Min. · Shadowing und 60 Sekunden ohne Vorlage",
-              done: completion[2],
-            },
-          ].map((step, index) => (
+              [
+                "Aktivieren & korrekt anwenden",
+                "Automatisieren & schreiben",
+                "Frei sprechen & übertragen",
+              ][activeStep] ?? ""
+            }
+          </strong>
+          <span className="text-sm text-muted-foreground">
+            {completion.filter(Boolean).length} von 3 erledigt
+            {completion.every(Boolean)
+              ? " · Einheit abgeschlossen, Nachweis gespeichert"
+              : " · alle drei erledigen, um die Einheit abzuschließen"}
+          </span>
+        </div>
+        <div className="mt-2 flex gap-1" aria-hidden>
+          {completion.map((done, index) => (
+            <span
+              className={`h-1.5 flex-1 rounded-full ${
+                done
+                  ? "bg-violet-700"
+                  : index === activeStep
+                    ? "bg-violet-400"
+                    : "bg-violet-100"
+              }`}
+              key={`progress-${index}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        {[
+          {
+            icon: BookOpenCheck,
+            title: "1. Aktivieren & korrekt anwenden",
+            detail: "3 Min. · drei kontrollierte Umformungen",
+            done: completion[0],
+          },
+          {
+            icon: PenLine,
+            title: "2. Automatisieren & schreiben",
+            detail: "4 Min. · sechs Sätze mit vier Zielstrukturen",
+            done: completion[1],
+          },
+          {
+            icon: Mic,
+            title: "3. Frei sprechen & übertragen",
+            detail: "5 Min. · Shadowing und 60 Sekunden ohne Vorlage",
+            done: completion[2],
+          },
+        ].map((step, index) => {
+          const isCurrent = activeStep === index;
+          // "Beginne hier" nur auf dem aktuellen Schritt, solange noch nichts
+          // erledigt ist, damit immer genau eine Karte als Einstieg gilt.
+          const roleLabel = step.done
+            ? "Erledigt"
+            : isCurrent
+              ? completion.some(Boolean)
+                ? "Du bist hier"
+                : "Beginne hier"
+              : "Als Nächstes";
+          // Im Grammatik-Labor (embedded) öffnet der Sprechschritt nicht mehr
+          // eingebettet -- er führt ins Gesprächsstudio. Das Grammatik-Labor
+          // ist für Regel sowie kontrollierte und schriftliche Übung; Aufnahme
+          // und Shadowing gehören ins Studio, das bereits eine eigene
+          // Aufnahme-Oberfläche und Themenauswahl hat. Die volle,
+          // nicht eingebettete Automatik-Mission (außerhalb des Grammatik-
+          // Labors) bleibt unverändert und behält Schritt 3 eingebettet, da
+          // diese Seite die vollständige Tagesmission ist, keine
+          // Grammatik-Nachschlageseite.
+          const opensStudio = embedded && index === 2;
+          const cardBody = (
+            <Card
+              className={
+                step.done
+                  ? "border-violet-500"
+                  : isCurrent
+                    ? "border-violet-600 ring-2 ring-violet-300"
+                    : ""
+              }
+            >
+              <span
+                className={`ml-5 mt-3 inline-block rounded-full px-2 py-0.5 text-[11px] font-bold ${
+                  step.done
+                    ? "bg-violet-100 text-violet-800"
+                    : isCurrent
+                      ? "bg-violet-700 text-white"
+                      : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {opensStudio ? "Öffnet das Gesprächsstudio" : roleLabel}
+              </span>
+              <CardContent className="flex gap-3 pt-5">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-100 text-violet-800">
+                  {step.done ? <Check /> : <step.icon />}
+                </span>
+                <div>
+                  <strong>{step.title}</strong>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {opensStudio
+                      ? // Absichtlich nicht "für diese Einheit" -- das Studio
+                        // sucht anhand von Niveau und Thema in seinem eigenen,
+                        // allgemeinen Gesprächskatalog und speichert keinen
+                        // Nachweis gegen diese konkrete Grammatik-Einheit. Der
+                        // Shadowing-und-Übertragen-Schritt dieser Einheit wird
+                        // weiterhin über die vollständige Automatik-Mission
+                        // abgeschlossen; diese Karte verhindert nur, dass die
+                        // Aufnahme-Oberfläche auch im Grammatik-Labor läuft.
+                        `Aufnahme und Shadowing für ${selectedLevel} laufen im Gesprächsstudio.`
+                      : step.detail}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          );
+          if (opensStudio) {
+            return (
+              <Link
+                className="text-left"
+                href={`/studio?from=grammatik&level=${encodeURIComponent(selectedLevel)}&grammar=${encodeURIComponent(TOPIC)}`}
+                key={step.title}
+              >
+                {cardBody}
+              </Link>
+            );
+          }
+          return (
             <button
-              aria-pressed={activeStep === index}
+              aria-pressed={isCurrent}
               className="text-left"
               key={step.title}
               onClick={() => setActiveStep(index)}
               type="button"
             >
-              <Card className={step.done ? "border-violet-500" : ""}>
-                <CardContent className="flex gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-100 text-violet-800">
-                    {step.done ? <Check /> : <step.icon />}
-                  </span>
-                  <div>
-                    <strong>{step.title}</strong>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {step.detail}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              {cardBody}
             </button>
-          ))}
-        </div>
-      ) : null}
+          );
+        })}
+      </div>
 
-      {focusedStep === undefined ? (
+      {!embedded ? (
         <Card className="border-violet-200">
           <CardHeader>
             <CardTitle>Qualitätsgrenze der Mission</CardTitle>
@@ -1165,7 +1269,13 @@ export function AutomaticityLab({
         </Card>
       ) : null}
 
-      {(focusedStep ?? activeStep) === 2 ? (
+      {/* Zusätzlich auf !embedded gesperrt. Das Grammatik-Labor hat keinen
+          UI-Pfad mehr, der activeStep auf 2 setzt (siehe die Initialisierung
+          oben und den Link-ins-Studio-Zweig der Schritt-3-Karte) -- das hier
+          ist zusätzliche Absicherung, falls ein künftiger Codepfad diesen
+          Zustand doch wieder erreichbar macht: die Aufnahme-Oberfläche darf
+          im Grammatik-Labor trotzdem nie erscheinen. */}
+      {!embedded && (focusedStep ?? activeStep) === 2 ? (
         <Card>
           <CardHeader>
             <CardTitle>Fünfstufiges Shadowing und freies Sprechen</CardTitle>

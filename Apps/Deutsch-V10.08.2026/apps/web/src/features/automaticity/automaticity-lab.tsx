@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   BookOpenCheck,
   Check,
+  Clock,
   Headphones,
   Mic,
   PenLine,
@@ -25,6 +26,11 @@ import {
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { grammarUnits } from "@grammar/content";
+import {
+  createEmptyMasteryRecord,
+  nextPracticeStage,
+  PRACTICE_STAGE_TARGET_ACCURACY,
+} from "@grammar/domain";
 import { saveAudio } from "@/features/audio/audio-repository";
 import {
   analyzeWeilClause,
@@ -83,6 +89,23 @@ export function transferSituation(title: string, priorTransferAttempts: number) 
 // hier 10 Aufgaben pro Einheit; diese Zahl kam nur zustande, weil drei
 // Aufgabenfamilien ihre eigene Lösung im Prompt abdruckten.
 const ROUND_SIZE = 6;
+
+// UI-facing half of the timed-practice model -- the scoring/transition rule
+// itself (nextPracticeStage, PRACTICE_STAGE_TARGET_ACCURACY) lives in
+// @grammar/domain so it is shared, testable logic rather than duplicated
+// per screen. The per-item second budgets are a presentation choice (which
+// exact midpoint of the spec's 8-10s / 3-5s bands to show), so they stay
+// local like English's equivalent constants in automaticity-screen.tsx.
+const STAGE_SECONDS_PER_ITEM: Readonly<Record<1 | 2 | 3, number | null>> = {
+  1: null,
+  2: 9,
+  3: 4,
+};
+const STAGE_LABEL: Readonly<Record<1 | 2 | 3, string>> = {
+  1: "Stufe 1 · unbegrenzte Zeit",
+  2: "Stufe 2 · leichtes Zeitlimit",
+  3: "Stufe 3 · Echtzeit-Produktion",
+};
 
 function shuffled<T>(items: readonly T[]): T[] {
   const copy = [...items];
@@ -298,6 +321,7 @@ export function AutomaticityLab({
     recordAttempt,
     markActivity,
     scheduleReview,
+    setMastery,
   } = useLearnerState();
   const missionMinutes = state.settings.dailyStudyMinutes;
   const selectedLevel =
@@ -330,6 +354,50 @@ export function AutomaticityLab({
   );
   const [checkedAnswers, setCheckedAnswers] = useState<readonly boolean[]>([]);
   const [practiceRounds, setPracticeRounds] = useState(0);
+  const practiceStage = state.mastery[TOPIC]?.practiceStage ?? 1;
+  const stageSecondsPerItem = STAGE_SECONDS_PER_ITEM[practiceStage];
+  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(
+    null,
+  );
+  // Immer aktuell gehalten (jedes Rendern), damit der Timeout-Effekt unten
+  // die neueste checkPractice-Closure aufruft (mit dem aktuellen `answers`)
+  // statt einer veralteten aus dem Rendern, in dem der Countdown-Effekt
+  // ursprünglich lief -- das übliche Stale-Closure-Problem bei setInterval
+  // in einer Funktionskomponente.
+  const checkPracticeRef = useRef<() => void>(() => {});
+  // Zeitanker für die aktuell angezeigte Runde -- wird bei jeder neuen Runde
+  // zurückgesetzt und in checkPractice() gelesen, damit ein kontrollierter
+  // Übungsversuch endlich eine echte latencyMs trägt statt gar keine.
+  const roundStartRef = useRef<number | null>(null);
+
+  // (Re-)startet den Runden-Countdown und den Zeitanker bei jeder neuen Runde
+  // (roundExercises bekommt eine neue Identität durch practiceAgain() oder
+  // Themenwechsel) oder Stufenwechsel, und stoppt den Countdown, sobald die
+  // Runde geprüft wurde.
+  useEffect(() => {
+    roundStartRef.current = Date.now();
+    if (stageSecondsPerItem === null || checkedAnswers.length > 0) {
+      setSecondsRemaining(null);
+      return;
+    }
+    setSecondsRemaining(stageSecondsPerItem * roundExercises.length);
+    const interval = setInterval(() => {
+      setSecondsRemaining((value) =>
+        value === null ? null : Math.max(0, value - 1),
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- checkedAnswers.length wird nur für den 0/ungleich-0-Übergang gelesen, nicht für seinen Wert
+  }, [roundExercises, stageSecondsPerItem, checkedAnswers.length]);
+
+  // Sendet die Runde automatisch ab, wenn das Zeitbudget abläuft, damit
+  // „ohne lange Zögerlichkeit“ tatsächlich durchgesetzt wird statt nur
+  // angezeigt.
+  useEffect(() => {
+    if (secondsRemaining === 0 && checkedAnswers.length === 0) {
+      checkPracticeRef.current();
+    }
+  }, [secondsRemaining, checkedAnswers.length]);
   // Abrufübung misst nur dann Abruf, wenn die Antwort NICHT auf dem Bildschirm
   // steht. Jede erwartete Antwort dieses Schritts stammt aus Regel, Beispielen
   // oder typischem Fehler der Einheit -- genau dem Text, den die Lektionsfelder
@@ -536,6 +604,14 @@ export function AutomaticityLab({
     // geöffnet) macht die Runde zur Übung mit offenem Buch. Als ein Merker
     // geführt, damit erfasster Versuch und Rückmeldung immer übereinstimmen.
     const openBook = lessonOpen || peeked;
+    // secondsRemaining ist sowohl beim automatischen Absenden durch den
+    // Timeout-Effekt als auch im Moment eines manuellen Klicks bei genau 0
+    // gleich 0 -- in beiden Fällen wurde das gesamte Zeitbudget der Runde
+    // verbraucht, und genau das bedeutet hier „Zeit abgelaufen“.
+    const timedOut = stageSecondsPerItem !== null && secondsRemaining === 0;
+    const latencyMs = roundStartRef.current
+      ? Date.now() - roundStartRef.current
+      : undefined;
     // evaluatePracticeAnswer statt practiceAnswerMatches: bei „Korrigiere den
     // Satz ...“ schreibt die lernende Person den reparierten Satz selbst, und
     // ein korrekter Satz, der von der gespeicherten Zeichenkette abweicht,
@@ -551,6 +627,10 @@ export function AutomaticityLab({
     const score = Math.round(
       (results.filter(Boolean).length / roundExercises.length) * 100,
     );
+
+    const stageTarget = PRACTICE_STAGE_TARGET_ACCURACY[practiceStage];
+    const nextStage = nextPracticeStage(practiceStage, score, openBook);
+
     recordAttempt({
       topic: TOPIC,
       mode: "recognition",
@@ -566,21 +646,44 @@ export function AutomaticityLab({
       // Übung, aber kein Abrufnachweis, und darf die Beherrschung nicht heben.
       verified: results.every(Boolean) && !openBook,
       accuracyScore: score,
+      ...(latencyMs === undefined ? {} : { latencyMs }),
     });
+
+    if (nextStage !== practiceStage) {
+      const current = state.mastery[TOPIC] ?? createEmptyMasteryRecord();
+      setMastery(TOPIC, { ...current, practiceStage: nextStage });
+    }
+
+    const stageNote =
+      openBook || nextStage === practiceStage
+        ? ""
+        : nextStage > practiceStage
+          ? ` Stufe ${practiceStage} bestanden mit ${score}% (Ziel ${stageTarget}%) -- weiter zu Stufe ${nextStage}.`
+          : ` Genauigkeit auf ${score}% gefallen bei Stufe ${practiceStage} -- zurück zu Stufe ${nextStage} für mehr Übung.`;
+    const timeoutNote =
+      timedOut && !results.every(Boolean) ? "Zeit abgelaufen. " : "";
+
     if (results.every(Boolean)) {
       setDailyAnswer(`${KEY}:practice`, "done");
       setMessage(
-        openBook
+        (openBook
           ? "Alles richtig, aber die Regel war sichtbar -- das zählt als Lernen, nicht als Abruf. Blende sie aus und mache eine weitere Runde für den Nachweis."
-          : "Kontrollierte Übung geschafft, aus dem Gedächtnis beantwortet. Jetzt produzierst du eigene Sprache.",
+          : "Kontrollierte Übung geschafft, aus dem Gedächtnis beantwortet. Jetzt produzierst du eigene Sprache.") +
+          stageNote,
       );
     } else {
       setMessage(
-        "Vergleiche die Modellantworten und korrigiere die markierten Sätze.",
+        timeoutNote +
+          "Vergleiche die Modellantworten und korrigiere die markierten Sätze." +
+          stageNote,
       );
     }
     markActivity(1);
   }
+
+  useEffect(() => {
+    checkPracticeRef.current = checkPractice;
+  });
 
   // Repetition without repeating the same round: draws a fresh shuffled
   // subset from the full exercise pool (up to 10 items per topic since the
@@ -1235,6 +1338,12 @@ export function AutomaticityLab({
                   ? "Offenes Buch — zählt als Lernen"
                   : "Aus dem Gedächtnis — zählt als Nachweis"}
               </Badge>
+              <Badge variant="secondary">{STAGE_LABEL[practiceStage]}</Badge>
+              {secondsRemaining !== null ? (
+                <Badge variant={secondsRemaining <= 5 ? "outline" : "secondary"}>
+                  <Clock className="size-3" /> {secondsRemaining}s übrig
+                </Badge>
+              ) : null}
             </div>
           </CardContent>
         </Card>

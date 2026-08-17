@@ -190,6 +190,13 @@ export interface TopicMastery {
 	// exist. Automaticity is a speed claim, not just an accuracy one -- see
 	// WRITING_LATENCY_THRESHOLD_MS below.
 	medianWritingLatencyMs: number | null;
+	// Three-stage timed-practice model for controlled practice (Grammar Lab
+	// step 1): 1 = untimed accuracy, 2 = light timing (~8-10s/item),
+	// 3 = real-time production (~3-5s/item). Advances on a closed-book round
+	// that clears the stage's accuracy target; drops back a stage on a clear
+	// accuracy collapse. Persisted per topic so it survives across sessions --
+	// see checkPractice() in automaticity-screen.tsx for the transition logic.
+	practiceStage: 1 | 2 | 3;
 }
 
 export type FlashcardSource = "lesson" | "pdf" | "highlight" | "conversation" | "manual";
@@ -816,6 +823,7 @@ export function emptyMastery(grammarTitle: string): TopicMastery {
 		lastSuccessAt: null,
 		nextReviewAt: null,
 		medianWritingLatencyMs: null,
+		practiceStage: 1,
 	};
 }
 

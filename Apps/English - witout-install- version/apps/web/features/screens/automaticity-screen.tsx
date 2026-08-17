@@ -392,10 +392,17 @@ export function AutomaticityScreen({
     [state.attempts, topic],
   );
   const situation = transferSituation(grammar, priorTransferAttempts);
+  // On Grammar Lab (embedded), step 2 (speaking) is never auto-selected --
+  // it now lives in Speaking Studio, not inline here. Without this, once
+  // steps 0 and 1 were both complete for a unit, this initializer would land
+  // on step 2 by default and show the full recorder UI anyway, even though
+  // nothing in the Grammar Lab UI links to it anymore.
   const [activeStep, setActiveStep] = React.useState<number>(
     focusedStep ??
-      [0, 1, 2].find((step) => !dailyPlanCompletion(plan, key)[step]) ??
-      0,
+      (embedded ? [0, 1] : [0, 1, 2]).find(
+        (step) => !dailyPlanCompletion(plan, key)[step],
+      ) ??
+      (embedded ? 1 : 0),
   );
   const [recording, setRecording] = React.useState(false);
   const [seconds, setSeconds] = React.useState(0);
@@ -1034,14 +1041,17 @@ export function AutomaticityScreen({
                 ? "You are here"
                 : "Start here"
               : "Next";
-          return (
-            <button
-              aria-pressed={isCurrent}
-              className="text-left"
-              key={String(title)}
-              onClick={() => setActiveStep(stepIndex)}
-              type="button"
-            ><Card
+          // On Grammar Lab (embedded) the speaking step no longer opens
+          // inline -- it navigates to Speaking Studio instead. Grammar Lab is
+          // for the rule and controlled/written practice; recording and
+          // shadowing belong in the Studio, which already has its own
+          // dedicated recorder UI and topic picker. The full, non-embedded
+          // Automaticity Mission (used outside Grammar Lab) is unaffected and
+          // keeps step 3 inline, since that page IS the complete daily
+          // mission rather than a grammar-reference page.
+          const opensStudio = embedded && stepIndex === 2;
+          const cardBody = (
+            <Card
               className={
                 done
                   ? "border-violet-500"
@@ -1059,7 +1069,7 @@ export function AutomaticityScreen({
                       : "bg-muted text-muted-foreground"
                 }`}
               >
-                {roleLabel}
+                {opensStudio ? "Opens Speaking Studio" : roleLabel}
               </span>
               <CardContent className="flex gap-3 pt-5">
                 <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-100 text-violet-800">
@@ -1068,11 +1078,43 @@ export function AutomaticityScreen({
                 <div>
                   <strong>{String(title)}</strong>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {String(detail)}
+                    {opensStudio
+                      ? // Deliberately not "for this unit" -- Studio matches by
+                        // level and topic keyword against its own general
+                        // conversation catalog, it does not record evidence
+                        // against this specific grammar unit's mission. The
+                        // shadowing-and-transfer step tied to this unit still
+                        // completes through the full Automaticity Mission; this
+                        // card only stops that recorder UI from also living
+                        // inside Grammar Lab.
+                        `Recording and shadowing practice for ${grammar.level} is in Speaking Studio.`
+                      : String(detail)}
                   </p>
                 </div>
               </CardContent>
-            </Card></button>
+            </Card>
+          );
+          if (opensStudio) {
+            return (
+              <Link
+                className="text-left"
+                href={`/studio?from=grammar&level=${encodeURIComponent(grammar.level)}&topic=${encodeURIComponent(topic)}`}
+                key={String(title)}
+              >
+                {cardBody}
+              </Link>
+            );
+          }
+          return (
+            <button
+              aria-pressed={isCurrent}
+              className="text-left"
+              key={String(title)}
+              onClick={() => setActiveStep(stepIndex)}
+              type="button"
+            >
+              {cardBody}
+            </button>
           );
         })}
       </div>}
@@ -1254,7 +1296,13 @@ export function AutomaticityScreen({
         </CardContent>
       </Card> : null}
 
-      {(focusedStep ?? activeStep) === 2 ? <Card id={`daily-activity-${stepOffset + 3}`}>
+      {/* Guarded on !embedded as well as the step index. Grammar Lab no
+          longer has any UI path that sets activeStep to 2 (see the
+          initializer above and the step-3 card's Link-to-Studio branch), so
+          this is defense in depth: even if some future change reintroduced a
+          way to reach step 2 while embedded, it must not render the recorder
+          UI inside Grammar Lab. */}
+      {!embedded && (focusedStep ?? activeStep) === 2 ? <Card id={`daily-activity-${stepOffset + 3}`}>
         <CardHeader>
           <CardTitle>{stepOffset + 3}. Five-stage shadowing and free speaking</CardTitle>
           <CardDescription>

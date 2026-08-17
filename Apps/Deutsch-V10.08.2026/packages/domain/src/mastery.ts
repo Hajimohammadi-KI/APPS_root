@@ -58,6 +58,16 @@ export interface MasteryRecord {
   readonly controlled: boolean;
   readonly free: boolean;
   readonly spoken?: boolean;
+  /**
+   * Three-stage timed-practice model for controlled practice (Grammatik-
+   * Labor step 1): 1 = untimed accuracy, 2 = light timing (~8-10s/item),
+   * 3 = real-time production (~3-5s/item). Set directly via setMastery() in
+   * automaticity-lab.tsx's checkPractice() after each round -- independent
+   * of recordVerifiedMasteryAttempt's verified-only gate, since a stage
+   * regression must be able to fire on an unverified (wrong-answer) round
+   * too. Mirrors English's TopicMastery.practiceStage.
+   */
+  readonly practiceStage: 1 | 2 | 3;
 }
 
 export interface MasteryAttempt {
@@ -69,6 +79,50 @@ export interface MasteryAttempt {
 }
 
 export const AUTOMATICITY_LATENCY_THRESHOLD_MS = 8_000;
+
+// Three-stage timed-practice model. Stage 1 is untimed (target >=90%
+// accuracy). Stage 2 gives a light per-item time budget (~8-10s/item; the
+// roadmap's number, 9s used as the midpoint by the UI) at >=85%. Stage 3
+// gives a real-time budget (~3-5s/item; 4s midpoint); the roadmap states this
+// stage's bar as "accurate responses without long hesitation" rather than a
+// number -- 85% is reused here as the nearest defensible reading, called out
+// explicitly rather than silently assumed. Mirrors English's
+// STAGE_TARGET_ACCURACY / STAGE_REGRESSION_MARGIN in automaticity-screen.tsx.
+export const PRACTICE_STAGE_TARGET_ACCURACY: Readonly<
+  Record<1 | 2 | 3, number>
+> = {
+  1: 90,
+  2: 85,
+  3: 85,
+};
+// A regression needs to be a clear collapse, not routine variance between
+// rounds -- 20 points below target is the line.
+export const PRACTICE_STAGE_REGRESSION_MARGIN = 20;
+
+/**
+ * Pure stage-transition rule for the timed-practice model. An open-book
+ * round (rule visible) is real practice but not retrieval evidence -- see
+ * `verified` at the recordAttempt call site in automaticity-lab.tsx -- so it
+ * must never move the timing gate either way.
+ */
+export function nextPracticeStage(
+  currentStage: 1 | 2 | 3,
+  scorePercent: number,
+  openBook: boolean,
+): 1 | 2 | 3 {
+  if (openBook) return currentStage;
+  const target = PRACTICE_STAGE_TARGET_ACCURACY[currentStage];
+  if (scorePercent >= target && currentStage < 3) {
+    return (currentStage + 1) as 1 | 2 | 3;
+  }
+  if (
+    scorePercent < target - PRACTICE_STAGE_REGRESSION_MARGIN &&
+    currentStage > 1
+  ) {
+    return (currentStage - 1) as 1 | 2 | 3;
+  }
+  return currentStage;
+}
 
 const SCORE_THRESHOLDS = {
   recognition: 85,
@@ -211,6 +265,7 @@ export function createEmptyMasteryRecord(): MasteryRecord {
     attemptCounts: EMPTY_MASTERY_ATTEMPT_COUNTS,
     controlled: false,
     free: false,
+    practiceStage: 1,
   };
 }
 

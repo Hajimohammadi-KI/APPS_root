@@ -132,7 +132,7 @@ test("shows the learner's current level and starts today's practice from the das
 
   await expect(page).toHaveURL(/\/daily$/);
   await expect(
-    page.getByRole("heading", { name: "Today's 15-minute learning mission" }),
+    page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
   ).toBeVisible();
 });
 
@@ -160,8 +160,12 @@ test("opens every legacy product surface", async ({ page }) => {
   //   real React page, and that file's own hand-rolled sidebar has no
   //   "Product navigation" aria label at all (confirmed absent from the
   //   file). Grammar Lab used to have the same problem before an earlier
-  //   rewrite gave it a real page; daily.html is the one place that gap
-  //   still exists, disclosed here rather than routed around silently.
+  //   rewrite gave it a real page. "Today's Practice" (/daily) used to be
+  //   the one other place this gap existed -- a next.config.ts rewrite to
+  //   a static daily.html mockup with no shared nav of its own -- fixed by
+  //   removing the rewrite; /daily now renders the same real Mission
+  //   component /progress does, inside the normal AppShell, so it no
+  //   longer needs the standalone-chrome workaround below.
   const surfaces = [
     ["Grammar Lab", "Learning Paths", "Grammar Lab"],
     ["Learning Resources", "Learning Paths", "Online Learning Resources"],
@@ -169,8 +173,8 @@ test("opens every legacy product surface", async ({ page }) => {
     ["Audio Library", "Learning Evidence", "Audio Library"],
     ["Settings", "App and Settings", "Settings"],
     ["Home", "Daily Practice", "Good morning, Learner"],
+    ["Today’s Practice", "Daily Practice", "Automaticity Mission"],
     ["Conversation Studio", "Daily Practice", "Speaking Studio"],
-    ["Today’s Practice", "Daily Practice", "Today's 15-minute learning mission"],
   ] as const;
 
   for (const [button, group, heading] of surfaces) {
@@ -178,12 +182,12 @@ test("opens every legacy product surface", async ({ page }) => {
     await expect(
       page.getByRole("heading", { level: 1, name: heading }),
     ).toBeAttached();
-    // Both trailing surfaces are standalone-chrome pages with no "Product
-    // navigation" landmark of their own (see the comment above) -- once on
-    // either one, the next iteration's openNavigationLink call can never
-    // resolve unless something first returns to a page that has the shared
-    // nav back.
-    if (button === "Conversation Studio" || button === "Today’s Practice") {
+    // Conversation Studio is a standalone-chrome page with no "Product
+    // navigation" landmark of its own (see the comment above) -- it must
+    // stay last, and once on it the next iteration's openNavigationLink
+    // call can never resolve unless something first returns to a page
+    // that has the shared nav back.
+    if (button === "Conversation Studio") {
       await page.goto("/");
     }
   }
@@ -277,7 +281,7 @@ test("is usable through the compact mobile navigation", async ({ page }) => {
   });
   await navigation.getByRole("link", { name: "Today’s Practice" }).click();
   await expect(
-    page.getByRole("heading", { name: "Today's 15-minute learning mission" }),
+    page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
   ).toBeVisible();
   await expect(navigation).not.toBeVisible();
 

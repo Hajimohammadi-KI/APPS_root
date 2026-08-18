@@ -260,6 +260,48 @@ export function advanceDailyGrammar(
   };
 }
 
+// Extracted from the completeDailyStep callback so the exact bug found in
+// review is directly testable without rendering a component: nothing in
+// the app ever called completeDailyStep (grep confirmed zero call sites
+// outside its own definition), so plan.completed -- which Home's "heutige
+// Uebung" progress percentage reads -- could never advance past 0, no
+// matter how much of the day's practice was genuinely finished.
+export function applyCompleteDailyStep(
+  state: LearnerState,
+  stepIndex: number,
+): LearnerState {
+  const dateKey = getTodayKey();
+  const plan = getDailyPlan(state, dateKey);
+  if (
+    !canCompleteDailyStep(plan.completed, stepIndex) ||
+    plan.completed.includes(stepIndex)
+  ) {
+    return state;
+  }
+
+  const completed = [...plan.completed, stepIndex].sort(
+    (left, right) => left - right,
+  );
+  return {
+    ...state,
+    activity: {
+      ...state.activity,
+      [dateKey]: completed.length,
+    },
+    dailyPlans: {
+      ...state.dailyPlans,
+      [dateKey]: {
+        ...plan,
+        completed,
+        answers:
+          stepIndex === 0
+            ? { ...plan.answers, "planner:yesterday-recalled": "1" }
+            : plan.answers,
+      },
+    },
+  };
+}
+
 function withAutomaticVerifiedLevel(state: LearnerState): LearnerState {
   const nextVerified = state.learner.selfDeclaredLevel
     ? deriveVerifiedLevel(state)
@@ -682,38 +724,7 @@ export function LearnerStateProvider({
   }, []);
 
   const completeDailyStep = useCallback((stepIndex: number) => {
-    setState((current) => {
-      const dateKey = getTodayKey();
-      const plan = getDailyPlan(current, dateKey);
-      if (
-        !canCompleteDailyStep(plan.completed, stepIndex) ||
-        plan.completed.includes(stepIndex)
-      ) {
-        return current;
-      }
-
-      const completed = [...plan.completed, stepIndex].sort(
-        (left, right) => left - right,
-      );
-      return {
-        ...current,
-        activity: {
-          ...current.activity,
-          [dateKey]: completed.length,
-        },
-        dailyPlans: {
-          ...current.dailyPlans,
-          [dateKey]: {
-            ...plan,
-            completed,
-            answers:
-              stepIndex === 0
-                ? { ...plan.answers, "planner:yesterday-recalled": "1" }
-                : plan.answers,
-          },
-        },
-      };
-    });
+    setState((current) => applyCompleteDailyStep(current, stepIndex));
   }, []);
 
   const markActivity = useCallback((minimum: number) => {

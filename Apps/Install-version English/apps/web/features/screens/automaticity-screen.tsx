@@ -8,6 +8,7 @@ import {
   CircleAlert,
   Clock,
   Headphones,
+  LoaderCircle,
   Mic,
   PenLine,
   Play,
@@ -1641,6 +1642,9 @@ export function AutomaticityScreen({
               disabled={!transferAttempt.trim() || transferChecking}
               onClick={() => void saveTransfer()}
             >
+              {transferChecking ? (
+                <LoaderCircle className="size-4 animate-spin" />
+              ) : null}{" "}
               {transferChecking ? "Checking…" : "Check transfer"}
             </Button>
             {transferAnalysis ? <Feedback analysis={transferAnalysis} /> : null}

@@ -7,8 +7,11 @@ import {
   type MasteryRecord,
 } from "@grammar/domain";
 
+import { getDailyPlan, getTodayKey } from "@grammar/domain";
+
 import {
   advanceDailyGrammar,
+  applyCompleteDailyStep,
   CEFR_ORDER,
   pickNextGrammarUnit,
 } from "./learner-state-provider";
@@ -91,5 +94,46 @@ describe("daily grammar auto-progression (German)", () => {
     const mastery: Record<string, MasteryRecord> = {};
     for (const unit of grammarUnits) mastery[unit.title] = automaticMastery();
     expect(pickNextGrammarUnit({ ...state, mastery })).toBeNull();
+  });
+});
+
+describe("applyCompleteDailyStep", () => {
+  // Regression coverage for a real bug: completeDailyStep -- the only
+  // function that ever writes to plan.completed, which Home's "heutige
+  // Uebung" progress percentage reads -- had zero call sites anywhere in
+  // automaticity-lab.tsx. A learner could finish all three real Mission
+  // steps and Home would still show 0% forever.
+  it("records the first completed step and updates today's activity count", () => {
+    const state = baseState("A1");
+    const next = applyCompleteDailyStep(state, 0);
+    const plan = getDailyPlan(next, getTodayKey());
+    expect(plan.completed).toEqual([0]);
+    expect(next.activity[getTodayKey()]).toBe(1);
+  });
+
+  it("accumulates completed steps in order, matching Home's completed.length / 3 progress calculation", () => {
+    let state = baseState("A1");
+    state = applyCompleteDailyStep(state, 0);
+    state = applyCompleteDailyStep(state, 1);
+    state = applyCompleteDailyStep(state, 2);
+    const plan = getDailyPlan(state, getTodayKey());
+    expect(plan.completed).toEqual([0, 1, 2]);
+  });
+
+  it("does not record a later step out of order (matches canCompleteDailyStep's sequential gate)", () => {
+    const state = baseState("A1");
+    // Step 2 requires 0 and 1 to already be complete -- neither is here.
+    const next = applyCompleteDailyStep(state, 2);
+    const plan = getDailyPlan(next, getTodayKey());
+    expect(plan.completed).toEqual([]);
+  });
+
+  it("is idempotent -- completing the same step twice does not double-count it", () => {
+    let state = baseState("A1");
+    state = applyCompleteDailyStep(state, 0);
+    state = applyCompleteDailyStep(state, 0);
+    const plan = getDailyPlan(state, getTodayKey());
+    expect(plan.completed).toEqual([0]);
+    expect(state.activity[getTodayKey()]).toBe(1);
   });
 });

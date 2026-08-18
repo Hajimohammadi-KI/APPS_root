@@ -322,6 +322,7 @@ export function AutomaticityLab({
     addSession,
     recordAttempt,
     markActivity,
+    completeDailyStep,
     scheduleReview,
     setMastery,
   } = useLearnerState();
@@ -676,6 +677,14 @@ export function AutomaticityLab({
 
     if (results.every(Boolean)) {
       setDailyAnswer(`${KEY}:practice`, "done");
+      // Home's "heutige Übung" progress reads plan.completed, which only
+      // completeDailyStep ever writes to -- setDailyAnswer alone (an
+      // unrelated per-topic draft store) never touched it, so a learner
+      // could finish this step here and see 0% on Home forever. Same
+      // completion semantics as the message below: open-book still counts
+      // as finishing the step (it's work done, not a mastery claim --
+      // mastery stays gated on `verified` in recordAttempt, untouched here).
+      completeDailyStep(0);
       setMessage(
         (openBook
           ? "Alles richtig, aber die Regel war sichtbar -- das zählt als Lernen, nicht als Abruf. Blende sie aus und mache eine weitere Runde für den Nachweis."
@@ -762,7 +771,10 @@ export function AutomaticityLab({
       ...(latencyMs === undefined ? {} : { latencyMs }),
     });
     saveDetectedErrors(analysis, journal);
-    if (analysis.targetHit) setDailyAnswer(`${KEY}:writing`, "done");
+    if (analysis.targetHit) {
+      setDailyAnswer(`${KEY}:writing`, "done");
+      completeDailyStep(1);
+    }
     markActivity(1);
     setMessage(
       analysis.targetHit
@@ -794,7 +806,15 @@ export function AutomaticityLab({
         ...(latencyMs === undefined ? {} : { latencyMs }),
       });
       saveDetectedErrors(analysis, transferAttempt);
-      if (analysis.targetHit) setDailyAnswer(`${KEY}:transfer`, "done");
+      if (analysis.targetHit) {
+        setDailyAnswer(`${KEY}:transfer`, "done");
+        // Step 2's card covers shadowing *and* free transfer together, so
+        // either sub-part reaching real evidence completes the step --
+        // completeDailyStep is idempotent (guards on plan.completed already
+        // containing the index), so calling it from both this and
+        // saveSpeaking() below can't double-count.
+        completeDailyStep(2);
+      }
       markActivity(1);
     } finally {
       setTransferChecking(false);
@@ -996,6 +1016,7 @@ export function AutomaticityLab({
       latencyMs: seconds * 1_000,
     });
     setDailyAnswer(`${KEY}:speaking`, "done");
+    completeDailyStep(2);
     scheduleReview(TOPIC, transcript, transcript, {
       sourceType: "grammar_topic",
       sourceId: TOPIC,

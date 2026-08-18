@@ -44,6 +44,19 @@ export interface MasteryRecord {
   readonly activeCriticalErrors: number;
   readonly responseLatenciesMs: readonly number[];
   /**
+   * Same rolling-last-10 shape as responseLatenciesMs, but only ever
+   * receives writing/transfer latencies -- composing an original sentence
+   * realistically takes far longer than the ~8s recall speed
+   * responseLatenciesMs gates on. Before this field existed, saveWriting's
+   * latencyMs was pushed into responseLatenciesMs itself: a single verified
+   * writing attempt (routinely 30-90s to compose) could push the pooled
+   * median above AUTOMATICITY_LATENCY_THRESHOLD_MS and silently block
+   * "automatic" status on recognition/speaking speed alone. See
+   * WRITING_LATENCY_THRESHOLD_MS below; mirrors English's
+   * medianWritingLatencyMs / WRITING_LATENCY_THRESHOLD_MS in app-store.tsx.
+   */
+  readonly writingLatenciesMs: readonly number[];
+  /**
    * How many verified attempts have been recorded per mode. Gates
    * "automatic"/"stable" status so a single lucky attempt cannot reach
    * them -- mirrors English's MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC.
@@ -79,6 +92,12 @@ export interface MasteryAttempt {
 }
 
 export const AUTOMATICITY_LATENCY_THRESHOLD_MS = 8_000;
+
+// Deliberately more generous than the recall-speed threshold above --
+// composing several original sentences is not a quick-recall task. Mirrors
+// English's WRITING_LATENCY_THRESHOLD_MS (app-store.tsx) exactly, so the
+// same real-world writing pace is required in both apps.
+export const WRITING_LATENCY_THRESHOLD_MS = 90_000;
 
 // Three-stage timed-practice model. Stage 1 is untimed (target >=90%
 // accuracy). Stage 2 gives a light per-item time budget (~8-10s/item; the
@@ -190,8 +209,16 @@ export function calculateMasteryStatus(
   activeCriticalErrors: number,
   responseLatenciesMs: readonly number[],
   attemptCounts: MasteryAttemptCounts = EMPTY_MASTERY_ATTEMPT_COUNTS,
+  writingLatenciesMs: readonly number[] = [],
 ): MasteryStatus {
   const latency = median(responseLatenciesMs);
+  // No measured writing/transfer latency yet (writingLatenciesMs empty)
+  // must not default to "fast enough" -- a topic that has never had a timed
+  // writing attempt has not demonstrated writing speed, the same policy
+  // English's hasFastEnoughWriting already applies.
+  const writingLatency = median(writingLatenciesMs);
+  const hasFastEnoughWriting =
+    writingLatency !== null && writingLatency <= WRITING_LATENCY_THRESHOLD_MS;
   const allAutomaticThresholdsMet =
     scores.recognition >= SCORE_THRESHOLDS.recognition &&
     scores.writing >= SCORE_THRESHOLDS.writing &&
@@ -211,7 +238,8 @@ export function calculateMasteryStatus(
     successfulReviews >= 2 &&
     activeCriticalErrors === 0 &&
     latency !== null &&
-    latency <= AUTOMATICITY_LATENCY_THRESHOLD_MS
+    latency <= AUTOMATICITY_LATENCY_THRESHOLD_MS &&
+    hasFastEnoughWriting
   ) {
     return "automatic";
   }
@@ -262,6 +290,7 @@ export function createEmptyMasteryRecord(): MasteryRecord {
     successfulReviews: 0,
     activeCriticalErrors: 0,
     responseLatenciesMs: [],
+    writingLatenciesMs: [],
     attemptCounts: EMPTY_MASTERY_ATTEMPT_COUNTS,
     controlled: false,
     free: false,
@@ -291,6 +320,7 @@ function refreshMasteryRecord(
       record.activeCriticalErrors,
       record.responseLatenciesMs,
       record.attemptCounts,
+      record.writingLatenciesMs,
     ),
   };
 }
@@ -310,13 +340,25 @@ export function recordMasteryAttempt(
     previousScore === 0
       ? attemptedScore
       : clampScore(previousScore * 0.6 + attemptedScore * 0.4);
-  const latencies =
+  // Writing/transfer latency goes into its own pool (writingLatenciesMs,
+  // gated at WRITING_LATENCY_THRESHOLD_MS) instead of the fast-recall pool
+  // below -- composing a sentence and recalling a form are different speed
+  // claims, and mixing them let one slow writing attempt block "automatic"
+  // on recognition/speaking speed alone.
+  const isWritingLatency =
+    attempt.mode === "writing" || attempt.mode === "transfer";
+  const roundedLatency =
     attempt.latencyMs === undefined
+      ? undefined
+      : Math.max(0, Math.round(attempt.latencyMs));
+  const latencies =
+    roundedLatency === undefined || isWritingLatency
       ? record.responseLatenciesMs
-      : [
-          ...record.responseLatenciesMs,
-          Math.max(0, Math.round(attempt.latencyMs)),
-        ].slice(-10);
+      : [...record.responseLatenciesMs, roundedLatency].slice(-10);
+  const writingLatencies =
+    roundedLatency === undefined || !isWritingLatency
+      ? record.writingLatenciesMs
+      : [...record.writingLatenciesMs, roundedLatency].slice(-10);
 
   return refreshMasteryRecord({
     ...record,
@@ -335,6 +377,7 @@ export function recordMasteryAttempt(
       [attempt.mode]: (record.attemptCounts[attempt.mode] ?? 0) + 1,
     },
     responseLatenciesMs: latencies,
+    writingLatenciesMs: writingLatencies,
     controlled:
       record.controlled ||
       (attempt.mode === "recognition" && attempt.targetHit),

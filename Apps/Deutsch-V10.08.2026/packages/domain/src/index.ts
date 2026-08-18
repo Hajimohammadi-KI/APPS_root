@@ -39,6 +39,7 @@ export {
   MASTERY_STATUSES,
   PRACTICE_STAGE_REGRESSION_MARGIN,
   PRACTICE_STAGE_TARGET_ACCURACY,
+  WRITING_LATENCY_THRESHOLD_MS,
   calculateAutomaticityScore,
   calculateMasteryStatus,
   createEmptyMasteryRecord,

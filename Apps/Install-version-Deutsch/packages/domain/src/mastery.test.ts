@@ -46,6 +46,12 @@ describe("mastery gates", () => {
           accuracyScore: 100,
           targetHit: true,
           ...(mode === "recognition" ? { latencyMs: 4_000 } : {}),
+          // writing/transfer latency is gated separately (WRITING_LATENCY_THRESHOLD_MS,
+          // 90s) from recognition/speaking recall speed -- both must be
+          // demonstrated fast before "automatic" is reachable.
+          ...(mode === "writing" || mode === "transfer"
+            ? { latencyMs: 30_000 }
+            : {}),
         });
       }
     }
@@ -54,6 +60,42 @@ describe("mastery gates", () => {
 
     record = recordMasteryReview(record, true);
     expect(record.status).toBe("automatic");
+  });
+
+  it("does not grant automatic status when writing/transfer are accurate but slow", () => {
+    // Regression test for the bug this pass fixed: before writingLatenciesMs
+    // existed, a slow writing attempt's latencyMs polluted the same pooled
+    // array as fast recognition/speaking recall, so this exact scenario
+    // (accurate but slow composition) could still block automatic for the
+    // wrong reason, or -- worse, once folded into one 8s-threshold median --
+    // make automatic nearly unreachable for any topic with real writing
+    // practice at all.
+    let record = createEmptyMasteryRecord();
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      for (const mode of [
+        "recognition",
+        "writing",
+        "speaking",
+        "repair",
+        "transfer",
+      ] as const) {
+        record = recordMasteryAttempt(record, {
+          mode,
+          accuracyScore: 100,
+          targetHit: true,
+          ...(mode === "recognition" ? { latencyMs: 4_000 } : {}),
+          // Well past WRITING_LATENCY_THRESHOLD_MS (90s) -- accurate, slow.
+          ...(mode === "writing" || mode === "transfer"
+            ? { latencyMs: 180_000 }
+            : {}),
+        });
+      }
+    }
+    record = recordMasteryReview(record, true);
+    record = recordMasteryReview(record, true);
+
+    expect(record.status).not.toBe("automatic");
+    expect(record.status).toBe("stable");
   });
 
   it("downgrades review evidence after a failed delayed review", () => {
@@ -162,6 +204,9 @@ describe("recordVerifiedMasteryAttempt", () => {
           targetHit: true,
           verified: true,
           ...(mode === "recognition" ? { latencyMs: 4_000 } : {}),
+          ...(mode === "writing" || mode === "transfer"
+            ? { latencyMs: 30_000 }
+            : {}),
         });
       }
     }

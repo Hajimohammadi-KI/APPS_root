@@ -486,12 +486,13 @@ export function AutomaticityLab({
   const [hasAudioBlob, setHasAudioBlob] = useState(false);
   const startedAtRef = useRef(0);
   const restoredRef = useRef(false);
-  // Timestamp of the first keystroke in the writing Textarea, cleared after
-  // save -- feeds AUTOMATICITY_LATENCY_THRESHOLD_MS in
-  // packages/domain/src/mastery.ts, which already gates "automatic" status
-  // on median response latency but never received a writing latency
-  // before (only saveSpeaking passed latencyMs).
+  // Timestamp of the first keystroke in the writing/transfer Textareas,
+  // cleared after save -- feeds writingLatenciesMs / WRITING_LATENCY_THRESHOLD_MS
+  // in packages/domain/src/mastery.ts (a separate, more generous gate than
+  // AUTOMATICITY_LATENCY_THRESHOLD_MS, which is for recognition/speaking
+  // recall speed, not composing a sentence).
   const journalStartRef = useRef<number | null>(null);
+  const transferStartRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!hydrated || restoredRef.current) return;
@@ -764,6 +765,10 @@ export function AutomaticityLab({
     try {
       const analysis = await analyzeLessonOutput(transferAttempt, 2);
       setTransferAnalysis(analysis);
+      const latencyMs = transferStartRef.current
+        ? Date.now() - transferStartRef.current
+        : undefined;
+      transferStartRef.current = null;
       recordAttempt({
         topic: TOPIC,
         mode: "transfer",
@@ -775,6 +780,7 @@ export function AutomaticityLab({
         // failure gets silently discarded instead of scored.
         verified: analysis.online,
         accuracyScore: analysis.score,
+        ...(latencyMs === undefined ? {} : { latencyMs }),
       });
       saveDetectedErrors(analysis, transferAttempt);
       if (analysis.targetHit) setDailyAnswer(`${KEY}:transfer`, "done");
@@ -1517,7 +1523,12 @@ export function AutomaticityLab({
               </div>
               <Textarea
                 aria-label="Übertragungsantwort"
-                onChange={(event) => setTransferAttempt(event.target.value)}
+                onChange={(event) => {
+                  if (transferStartRef.current === null) {
+                    transferStartRef.current = Date.now();
+                  }
+                  setTransferAttempt(event.target.value);
+                }}
                 placeholder="Reagiere auf die Situation oben und verwende dabei die heutige Struktur."
                 value={transferAttempt}
               />

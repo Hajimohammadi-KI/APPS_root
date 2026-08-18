@@ -15,7 +15,7 @@
 // earlier version of this component used exactly that anti-pattern.
 
 import * as React from "react";
-import { RotateCcw, Sparkles } from "lucide-react";
+import { LoaderCircle, RotateCcw, Sparkles } from "lucide-react";
 import { grammarUnits } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -142,7 +142,12 @@ export function DueReviews() {
         />
         {!result ? (
           <Button onClick={() => void checkRecall()} disabled={!attempt.trim() || checking}>
-            <Sparkles className="size-4" /> {checking ? "Checking…" : "Check my recall"}
+            {checking ? (
+              <LoaderCircle className="size-4 animate-spin" />
+            ) : (
+              <Sparkles className="size-4" />
+            )}{" "}
+            {checking ? "Checking…" : "Check my recall"}
           </Button>
         ) : (
           <div className="space-y-3">

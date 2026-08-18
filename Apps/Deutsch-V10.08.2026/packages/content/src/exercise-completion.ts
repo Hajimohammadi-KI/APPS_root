@@ -21,13 +21,15 @@ export interface ExerciseCompletionInput {
 // ehrliche Ausbeute der vorhandenen Inhalte. Diese Zahl steigt nur durch
 // AUTORIEREN neuer Inhalte, nie durch Wiederzulassen von Abtippaufgaben.
 //
-// 2 ist der Boden, weil es Einheiten gibt, die insgesamt nur zwei
-// verschiedene Zeichenketten enthalten. „Trennbare Verben“ ist der klarste
-// Fall: ein einziger Beispielsatz („Ich stehe um sieben Uhr auf.“, zugleich
-// testAnswer und repairTest) und die Regel (zugleich recallTest). Mehr Text
-// existiert in dieser Einheit nicht. Alles, was vorher nach zehn Aufgaben
-// aussah, waren Umformulierungen um genau diese zwei Sätze herum.
-const MINIMUM_CONTROLLED_EXERCISES = 2;
+// Von 2 auf 8 angehoben, nachdem alle 144 Einheiten autoriert wurden
+// (packages/content/src/authored/{a1..c2}.ts): jede liefert genau 8 echte,
+// geprüfte Lückensätze mit unterschiedlicher Antwort (siehe measure-tmp-
+// Audit: 0 Duplikate, 0 Wortgrenzen-Fehler über alle 1152 Sätze). Der alte
+// Boden von 2 war die ehrliche Grenze VOR der Autorierung, als „Trennbare
+// Verben“ insgesamt nur zwei verschiedene Zeichenketten im Quelltext hatte.
+// Diese Einheit selbst ist jetzt genauso vertieft wie jede andere -- der neue
+// Boden ist also wieder eine echte Garantie, kein Kompromiss.
+const MINIMUM_CONTROLLED_EXERCISES = 8;
 
 // Wie viele Aufgaben angestrebt werden. Vorher gab es nur EINE Zahl, die
 // gleichzeitig Abbruchbedingung der Auffüllschleife und Fehlerschwelle war --
@@ -35,7 +37,20 @@ const MINIMUM_CONTROLLED_EXERCISES = 2;
 // Aufgaben mit abschaltete (Einheiten mit zwei vorhandenen Aufgaben bekamen
 // gar keine Kandidaten mehr). Ziel und Boden sind zwei verschiedene Dinge:
 // immer bis TARGET auffüllen, aber nur unter MINIMUM einen Fehler werfen.
-const TARGET_CONTROLLED_EXERCISES = 8;
+//
+// Von 8 auf 12 angehoben, nachdem alle 144 Einheiten mit je 8 autorierten
+// Lückensätzen vertieft wurden (packages/content/src/authored/{a1..c2}.ts,
+// eingemischt in index.ts vor diesem Aufruf). Bei 8 löste der frühe Ausstieg
+// (siehe unten, "existing.length >= TARGET") sofort aus, sobald die 8
+// autorierten Sätze da waren -- keiner der Generator-Kandidaten (Regel,
+// Referenzantwort, Reparatur) kam noch zum Zug, obwohl sie echte, zusätzliche
+// Abrufziele sind. Getestet auch mit 16: das Ergebnis blieb identisch (Median
+// 10 pro Einheit), weil der Generator-Pool selbst nach Dedupe nur noch 1-2
+// wirklich neue Antworten pro Einheit liefert -- 12 ist also kein künstlich
+// niedriger Deckel, sondern der Punkt, an dem der Pool erschöpft ist.
+// Spiegelt English's TARGET_CONTROLLED_EXERCISES (10 -> 12 aus demselben
+// Grund, siehe curriculum.ts dort).
+const TARGET_CONTROLLED_EXERCISES = 12;
 
 function cleanSentence(sentence: string): string {
   return sentence.trim().replace(/\s+/g, " ");
@@ -159,6 +174,27 @@ function isPlausibleRepairPair(incorrect: string, corrected: string): boolean {
   return neu.length <= 1;
 }
 
+/** Erkennt „Korrigiere den Satz: <Satz>“-Aufgaben aus dem eingefrorenen
+ *  Altbestand (grammar.json / grammar-supplement.ts), deren Musterantwort nur
+ *  ein Fragment des versprochenen ganzen Satzes ist -- z. B. Prompt
+ *  „Korrigiere den Satz: Ich sehe der Mann.“ mit Antwort „den Mann.“ statt
+ *  „Ich sehe den Mann.“. Wer korrekterweise den GANZEN Satz eintippt, wird
+ *  dann als falsch gewertet. Genau derselbe Fehlerklasse, die in der
+ *  englischen curriculum.ts bereits behoben ist (24 Fälle dort); hier waren
+ *  es 28 über den ganzen Katalog (siehe content.test.ts). isPlausibleRepairPair
+ *  oben schützt nur neu ERZEUGTE Kandidaten -- dieser Filter schützt die
+ *  bereits vorhandenen unit.exercises-Einträge. */
+function isFragmentKeyedCorrection(prompt: string, expected: string): boolean {
+  const source = prompt.match(
+    /^Korrigiere den Satz(?: vollständig und achte auf „[^"]+")?:\s*(.+)$/u,
+  )?.[1];
+  if (!source) return false;
+  const sourceWords = source.trim().split(/\s+/u).filter(Boolean);
+  if (sourceWords.length < 4) return false;
+  const answerWords = expected.trim().split(/\s+/u).filter(Boolean);
+  return answerWords.length <= Math.ceil(sourceWords.length / 2);
+}
+
 export function completeControlledExercises(
   unit: ExerciseCompletionInput,
 ): readonly GrammarExercise[] {
@@ -177,6 +213,12 @@ export function completeControlledExercises(
     // Fehler, der in der englischen curriculum.ts schon behoben ist; hier
     // wurde er nur bei einem einzigen Kandidaten behoben statt generell.
     .filter(([prompt, expected]) => !promptContainsAnswer(prompt, expected))
+    // Ein „Korrigiere den ganzen Satz“-Prompt aus dem Altbestand, dessen
+    // Musterantwort nur ein Bruchstück des Satzes ist (siehe
+    // isFragmentKeyedCorrection oben). 28 Fälle katalogweit gefunden.
+    .filter(
+      ([prompt, expected]) => !isFragmentKeyedCorrection(prompt, expected),
+    )
     // Auch die eigenen Aufgaben der Einheit nach Antwort deduplizieren, nicht
     // nur die angehängten Kandidaten. „Imperativ mit du, ihr und Sie“ liefert
     // fünf Aufgaben mit nur drei verschiedenen Lösungen -- zwei Plätze gingen

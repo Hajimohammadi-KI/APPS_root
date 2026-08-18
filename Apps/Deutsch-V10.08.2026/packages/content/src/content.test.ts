@@ -1,6 +1,7 @@
 import { describe, expect, it } from "bun:test";
 
 import {
+  AUTHORED_BY_LEVEL,
   FERTIGKEITEN,
   cefrCurriculum,
   catalogSummary,
@@ -314,6 +315,115 @@ describe("kontrollierte Aufgaben sind nur durch Abrufen lösbar", () => {
     for (const einheit of grammarUnits) {
       const antworten = einheit.exercises.map(([, a]) => normalisiert(a ?? ""));
       expect(new Set(antworten).size, einheit.title).toBe(antworten.length);
+    }
+  });
+
+  // Kein Prompt darf den ganzen Satz versprechen und einen Fragment als
+  // Antwort speichern -- das englische Pendant fand 24 solcher Fälle
+  // (content.test.ts dort, "no correction task is keyed to a fragment").
+  // isPlausibleRepairPair in exercise-completion.ts verhindert das für neu
+  // generierte Kandidaten; dieser Test hält die Garantie auch für die
+  // vorhandenen Aufgaben und für zukünftige Inhalte fest.
+  it("kein Korrektur-Prompt ist mit einem Fragment des eigenen Satzes verschlüsselt", () => {
+    const woerter = (wert: string) => wert.trim().split(/\s+/u).filter(Boolean);
+    for (const einheit of grammarUnits) {
+      for (const [prompt, antwort] of einheit.exercises) {
+        const quelle = (prompt ?? "").match(
+          /^Korrigiere den Satz(?: vollständig und achte auf „[^“]+“)?:\s*(.+)$/u,
+        )?.[1];
+        if (!quelle) continue;
+        const quellWoerter = woerter(quelle);
+        if (quellWoerter.length < 4) continue;
+        expect(
+          woerter(antwort ?? "").length,
+          `${einheit.title}: „${prompt}“ verschlüsselt mit „${antwort}“`,
+        ).toBeGreaterThan(Math.ceil(quellWoerter.length / 2));
+      }
+    }
+  });
+
+  // Kein generierter Lückensatz darf mitten in einem Wort geschnitten sein
+  // (Katalogweit, nicht nur für die autorierten Niveaus -- derselbe Fehler
+  // wurde im Alt-Katalog der englischen App gefunden).
+  it("keine Lücke zerschneidet ein Wort", () => {
+    for (const einheit of grammarUnits) {
+      for (const [prompt] of einheit.exercises) {
+        expect(prompt, einheit.title).not.toMatch(
+          /[A-Za-zäöüßÄÖÜ]_+|_+[A-Za-zäöüßÄÖÜ]/u,
+        );
+      }
+    }
+  });
+});
+
+// Phase-1-Autorierungs-Gate. Die abgedeckten Niveaus werden aus
+// AUTHORED_BY_LEVEL abgeleitet statt in einer zweiten, von Hand gepflegten
+// Liste wiederholt -- genau eine hartkodierte Liste ließ English's Gate nach
+// der B2/C1/C2-Autorierung eine ganze Weile stillschweigend ungeprüft
+// (siehe Kommentar bei AUTHORED_BY_LEVEL in index.ts). Ein Niveau, das
+// autoriert, aber hier nicht erfasst wird, kann mit dieser Konstruktion
+// nicht mehr vorkommen.
+describe("autorierte Niveaus", () => {
+  const autorierteNiveaus = Object.keys(AUTHORED_BY_LEVEL);
+  const autorierteEinheiten = grammarUnits.filter((einheit) =>
+    autorierteNiveaus.includes(einheit.level),
+  );
+  const normalisiert = (wert: string) =>
+    wert
+      .toLocaleLowerCase("de-DE")
+      .replace(/[.!?,;:„“"']/gu, "")
+      .replace(/\s+/gu, " ")
+      .trim();
+
+  it("deckt alle sechs Niveaus und alle 144 Einheiten ab", () => {
+    expect(autorierteNiveaus.sort()).toEqual(["A1", "A2", "B1", "B2", "C1", "C2"]);
+    expect(autorierteEinheiten.length).toBe(144);
+    for (const einheit of autorierteEinheiten) {
+      expect(einheit.examples.length, einheit.title).toBeGreaterThanOrEqual(8);
+    }
+  });
+
+  it("erreicht mindestens 9 verschiedene Abrufziele pro Einheit", () => {
+    for (const einheit of autorierteEinheiten) {
+      const antworten = new Set(
+        einheit.exercises.map(([, a]) => normalisiert(a ?? "")),
+      );
+      expect(antworten.size, einheit.title).toBeGreaterThanOrEqual(9);
+    }
+  });
+
+  it("keine autorierte Einheit trägt noch den Platzhalter-Transfersatz", () => {
+    for (const einheit of autorierteEinheiten) {
+      expect(einheit.transferTest, einheit.title).not.toMatch(
+        /^In einer neuen Situation kann ich .+ korrekt verwenden\.$/u,
+      );
+    }
+  });
+
+  // Derselbe Fehler wie in der englischen App: ein einfacher String-Replace
+  // ersetzt bei einem Zielwort, das mehrfach im Satz vorkommt, immer nur das
+  // ERSTE Vorkommen -- nicht zwingend das gemeinte. Hier direkt gegen die
+  // fertigen Aufgaben geprüft, nicht nur gegen die Autorierungsquelle.
+  it("jede generierte Lücke ersetzt ein ganzes, eindeutiges Wort", () => {
+    for (const einheit of autorierteEinheiten) {
+      for (const [prompt] of einheit.exercises) {
+        if (!prompt?.startsWith("Ergänze: ")) continue;
+        expect(prompt, einheit.title).not.toMatch(
+          /[A-Za-zäöüßÄÖÜ]___|___[A-Za-zäöüßÄÖÜ]/u,
+        );
+      }
+    }
+  });
+
+  it("kein Ergänze-Prompt verrät seine eigene Antwort", () => {
+    for (const einheit of autorierteEinheiten) {
+      for (const [prompt, antwort] of einheit.exercises) {
+        if (!prompt?.startsWith("Ergänze: ")) continue;
+        expect(
+          prompt.includes(antwort ?? ""),
+          `${einheit.title}: „${prompt}“`,
+        ).toBe(false);
+      }
     }
   });
 });

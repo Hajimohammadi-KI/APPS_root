@@ -34,6 +34,12 @@ import {
 } from "./explanations";
 import { repairGermanGrammarLinks } from "./resource-links";
 import { supplementalGrammarUnits } from "./grammar-supplement";
+import { A1_AUTHORED, type AuthoredUnit } from "./authored/a1";
+import { A2_AUTHORED } from "./authored/a2";
+import { B1_AUTHORED } from "./authored/b1";
+import { B2_AUTHORED } from "./authored/b2";
+import { C1_AUTHORED } from "./authored/c1";
+import { C2_AUTHORED } from "./authored/c2";
 export {
   FERTIGKEITEN,
   cefrCurriculum,
@@ -168,8 +174,90 @@ type LegacyGrammarUnit = Omit<GrammarUnit, "explanation">;
 const legacyGrammarUnits =
   grammarData as unknown as readonly LegacyGrammarUnit[];
 
+// Autorierte Vertiefung pro Niveau. Ein Eintrag hier ist eine Datei plus
+// diese eine Zeile -- nichts sonst in der Pipeline ändert sich. Spiegelt
+// English's AUTHORED_BY_LEVEL (packages/content/src/curriculum.ts dort).
+// Exportiert (nicht nur intern verwendet), damit content.test.ts die
+// tatsächlich autorierten Niveaus direkt daraus ableiten kann, statt sie in
+// einer zweiten, von Hand gepflegten Liste zu wiederholen. Genau eine
+// hartkodierte Liste war die Ursache, warum English's Gate B2/C1/C2 nach der
+// Autorierung eine ganze Weile stillschweigend ungeprüft ließ -- die Liste
+// dort wurde beim Hinzufügen neuer Niveaus schlicht vergessen zu aktualisieren.
+export const AUTHORED_BY_LEVEL: Readonly<
+  Record<string, Readonly<Record<string, AuthoredUnit>>>
+> = {
+  A1: A1_AUTHORED,
+  A2: A2_AUTHORED,
+  B1: B1_AUTHORED,
+  B2: B2_AUTHORED,
+  C1: C1_AUTHORED,
+  C2: C2_AUTHORED,
+};
+
+/**
+ * Baut aus einem autorierten Satz eine Lückenaufgabe: "Ergänze: Ich ___ Deutsch."
+ * Nur ganze Wörter/Wortgruppen werden maskiert -- ein einfacher String-Replace
+ * hätte "is" auch mitten in "Sister" ersetzt (derselbe Fehler wurde in der
+ * englischen App gefunden und dort mit denselben Lookarounds behoben, siehe
+ * clozeFromAuthored in English-07082026/packages/content/src/curriculum.ts).
+ * Das Präfix "Ergänze: " ist bewusst: es ist der Marker, an dem German's
+ * evaluatePracticeAnswer offene Produktion statt exaktem Vergleich zulässt
+ * (Ergänze/Korrigiere den Satz vollständig), also wird eine korrekte
+ * Umformulierung nicht durch einen reinen Zeichenkettenvergleich abgelehnt.
+ */
+function clozeFromAuthored(sentence: string, target: string): [string, string] | null {
+  const escaped = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(`(?<![\\wäöüßÄÖÜ])${escaped}(?![\\wäöüßÄÖÜ])`, "u");
+  if (!pattern.test(sentence)) {
+    // Zielwort kommt nicht als ganzes Wort im Satz vor -- überspringen statt
+    // zu raten, sonst entsteht eine Lücke, die nichts maskiert.
+    return null;
+  }
+  const blanked = sentence.replace(pattern, "___");
+  return [`Ergänze: ${blanked}`, sentence];
+}
+
+/**
+ * Mischt autorierte Beispielsätze und einen echten Transfersatz in eine
+ * Einheit ein, BEVOR completeControlledExercises() läuft -- diese Funktion
+ * liest examples/testAnswer/repairTest/recallTest/commonError, also muss die
+ * Vertiefung vorher da sein. Ohne Eintrag bleibt die Einheit unverändert
+ * (kein Fehler -- anders als beim explanation-Lookup oben, das absichtlich
+ * wirft: eine fehlende Erklärung ist ein Content-Fehler, ein fehlender
+ * Autorierungs-Eintrag ist nur "noch nicht vertieft").
+ *
+ * Die generierten Lückensätze werden VORN an unit.exercises gestellt, nicht
+ * nur als examples mitgegeben -- completeControlledExercises() liest examples
+ * nur für einen einzigen Rekonstruktions-Kandidaten (reorderedParts), nicht
+ * für eigene Lückenaufgaben pro Satz. Vorn eingefügt gewinnen sie außerdem die
+ * spätere Deduplizierung nach Antwort (zuerst gesehen bleibt), falls ein
+ * migrierter Alt-Satz zufällig dieselbe Antwort erwartet.
+ */
+function withAuthoredContent<
+  T extends {
+    level: string;
+    title: string;
+    examples: readonly string[];
+    exercises: readonly (readonly string[])[];
+    transferTest: string;
+  },
+>(unit: T): T {
+  const authored = AUTHORED_BY_LEVEL[unit.level]?.[unit.title];
+  if (!authored) return unit;
+  const clozes = authored.examples
+    .map((example) => clozeFromAuthored(example.sentence, example.target))
+    .filter((exercise): exercise is [string, string] => exercise !== null);
+  return {
+    ...unit,
+    examples: authored.examples.map((example) => example.sentence),
+    exercises: [...clozes, ...unit.exercises],
+    transferTest: authored.transfer,
+  };
+}
+
 export const grammarUnits: readonly GrammarUnit[] = [
-  ...legacyGrammarUnits.map((unit) => {
+  ...legacyGrammarUnits.map((rawUnit) => {
+    const unit = withAuthoredContent(rawUnit);
     const explanation =
       grammarExplanations[unit.title as keyof typeof grammarExplanations];
 
@@ -183,10 +271,13 @@ export const grammarUnits: readonly GrammarUnit[] = [
       explanation,
     });
   }),
-  ...supplementalGrammarUnits.map((unit) => ({
-    ...unit,
-    exercises: completeControlledExercises(unit),
-  })),
+  ...supplementalGrammarUnits.map((rawUnit) => {
+    const unit = withAuthoredContent(rawUnit);
+    return {
+      ...unit,
+      exercises: completeControlledExercises(unit),
+    };
+  }),
 ];
 
 export const catalogSummary = {

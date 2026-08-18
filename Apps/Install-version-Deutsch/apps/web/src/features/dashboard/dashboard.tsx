@@ -11,6 +11,7 @@ import {
   Flame,
   MessageCircle,
   Pencil,
+  RotateCcw,
   Search,
   ShieldCheck,
   Sparkles,
@@ -272,6 +273,28 @@ export function Dashboard() {
           >
             <X aria-hidden="true" />
           </button>
+        </div>
+      ) : null}
+
+      {dueReviews > 0 ? (
+        <div className="home-v2-due" role="status">
+          <span className="home-v2-due-icon">
+            <RotateCcw aria-hidden="true" />
+          </span>
+          <div>
+            <strong>
+              {dueReviews} Wiederholung{dueReviews === 1 ? "" : "en"} heute
+              fällig
+            </strong>
+            <p>
+              Verteiltes Abrufen ist der Grund, warum bereits Gelerntes nicht
+              wieder verblasst — erledige diese, bevor du etwas Neues
+              beginnst.
+            </p>
+          </div>
+          <Link href="/wiederholungen">
+            Wiederholungen starten <ChevronRight aria-hidden="true" />
+          </Link>
         </div>
       ) : null}
 

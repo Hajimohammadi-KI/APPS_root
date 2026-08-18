@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Flame,
   MessageCircle,
+  RotateCcw,
   Search,
   ShieldCheck,
   Sparkles,
@@ -175,6 +176,22 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
             type="button"
           >
             <X aria-hidden />
+          </button>
+        </div>
+      ) : null}
+
+      {dueReviews > 0 ? (
+        <div className="home-v2-due" role="status">
+          <span className="home-v2-due-icon"><RotateCcw aria-hidden /></span>
+          <div>
+            <strong>{dueReviews} review{dueReviews === 1 ? "" : "s"} due today</strong>
+            <p>
+              Spaced recall is how grammar you already learned stays learned — clear
+              these before starting anything new.
+            </p>
+          </div>
+          <button type="button" onClick={() => navigate("daily")}>
+            Start reviews <ChevronRight aria-hidden />
           </button>
         </div>
       ) : null}

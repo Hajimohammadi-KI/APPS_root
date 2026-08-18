@@ -74,10 +74,27 @@ test("automaticity mission saves writing evidence and restores it", async ({
     .click();
   await expect(evidence.getByText("Rule hidden — answer from memory.")).toBeVisible();
 
-  for (const [prompt, answer] of Object.entries(PRESENT_PERFECT_ANSWERS)) {
-    await evidence.getByLabel(prompt).fill(answer);
+  // Only one exercise renders at a time now (fixed a real "6 competing
+  // inputs at once" cognitive-load bug), in a shuffled order -- so this
+  // reads whichever prompt is currently visible rather than assuming
+  // position, fills its answer, then advances via Next (or Check answers
+  // on the last one).
+  const prompts = Object.keys(PRESENT_PERFECT_ANSWERS);
+  for (let step = 0; step < prompts.length; step += 1) {
+    let activePrompt: string | null = null;
+    for (const prompt of prompts) {
+      if (await evidence.getByLabel(prompt).isVisible()) {
+        activePrompt = prompt;
+        break;
+      }
+    }
+    if (!activePrompt) throw new Error("No known present-perfect prompt is visible.");
+    await evidence.getByLabel(activePrompt).fill(PRESENT_PERFECT_ANSWERS[activePrompt]!);
+    const isLast = step === prompts.length - 1;
+    await evidence
+      .getByRole("button", { name: isLast ? "Check answers" : "Next", exact: true })
+      .click();
   }
-  await evidence.getByRole("button", { name: "Check answers" }).click();
   await expect(
     evidence.getByText("Controlled practice complete, answered from memory."),
   ).toBeVisible();

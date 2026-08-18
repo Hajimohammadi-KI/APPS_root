@@ -693,7 +693,8 @@ export function CaseAutomaticityTrainer() {
             <section className="rounded-2xl border bg-background p-4 sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-xs font-extrabold tracking-[0.12em] text-violet-800 uppercase">
-                  Schritt {stageNumber} von {STAGE_ORDER.length} · {stageLabel(stage)}
+                  Schritt {stageNumber} von {STAGE_ORDER.length} ·{" "}
+                  {stageLabel(stage)}
                 </p>
                 <Badge variant="outline">
                   Satz {sessionDone + 1} von {sessionGoal}
@@ -800,11 +801,17 @@ export function CaseAutomaticityTrainer() {
 
             <aside className="space-y-3">
               <div className="rounded-2xl border border-violet-200 bg-violet-50 p-4">
-                <strong className="text-violet-950">Entscheidungsweg (6 Schritte)</strong>
+                <strong className="text-violet-950">
+                  Entscheidungsweg (6 Schritte)
+                </strong>
                 <ol className="mt-3 grid gap-2 text-sm leading-6 text-violet-950">
                   {STAGE_ORDER.map((step, index) => (
                     <li
-                      className={step === stage ? "font-extrabold text-violet-700" : undefined}
+                      className={
+                        step === stage
+                          ? "font-extrabold text-violet-700"
+                          : undefined
+                      }
                       key={step}
                     >
                       {index + 1}. {stageLabel(step)}

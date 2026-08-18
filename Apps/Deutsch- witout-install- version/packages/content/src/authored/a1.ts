@@ -88,7 +88,8 @@ export const A1_AUTHORED: Readonly<Record<string, AuthoredUnit>> = {
       { sentence: "Er hilft mir gern.", target: "hilft" },
       { sentence: "Du gibst mir das Buch.", target: "gibst" },
     ],
-    transfer: "Meine Tochter liest jeden Abend ein Buch und schläft dann schnell ein.",
+    transfer:
+      "Meine Tochter liest jeden Abend ein Buch und schläft dann schnell ein.",
   },
 
   "W-Fragen": {
@@ -231,7 +232,8 @@ export const A1_AUTHORED: Readonly<Record<string, AuthoredUnit>> = {
       { sentence: "Das Bild hängt an der Wand.", target: "an" },
       { sentence: "Meine Tasche steht neben dem Bett.", target: "neben" },
     ],
-    transfer: "Die Apotheke liegt neben der Post, zwischen dem Café und der Bank.",
+    transfer:
+      "Die Apotheke liegt neben der Post, zwischen dem Café und der Bank.",
   },
 
   "Imperativ mit du, ihr und Sie": {
@@ -253,7 +255,10 @@ export const A1_AUTHORED: Readonly<Record<string, AuthoredUnit>> = {
 
   "Satzklammer im einfachen Hauptsatz": {
     examples: [
-      { sentence: "Ich stehe jeden Morgen um sieben Uhr auf.", target: "stehe" },
+      {
+        sentence: "Ich stehe jeden Morgen um sieben Uhr auf.",
+        target: "stehe",
+      },
       { sentence: "Sie hat gestern lange gearbeitet.", target: "hat" },
       { sentence: "Wir werden morgen früh abfahren.", target: "werden" },
       { sentence: "Er räumt sein Zimmer jeden Samstag auf.", target: "räumt" },
@@ -262,7 +267,8 @@ export const A1_AUTHORED: Readonly<Record<string, AuthoredUnit>> = {
       { sentence: "Wir machen heute Abend die Tür zu.", target: "machen" },
       { sentence: "Er hat den Brief noch nicht geschrieben.", target: "hat" },
     ],
-    transfer: "Ich habe heute Morgen lange geschlafen und bin spät aufgestanden.",
+    transfer:
+      "Ich habe heute Morgen lange geschlafen und bin spät aufgestanden.",
   },
 
   "Uhrzeit, Datum und Reihenfolge": {
@@ -276,12 +282,16 @@ export const A1_AUTHORED: Readonly<Record<string, AuthoredUnit>> = {
       { sentence: "Danach rufe ich meine Mutter an.", target: "Danach" },
       { sentence: "Am Freitag habe ich frei.", target: "Am Freitag" },
     ],
-    transfer: "Am Samstag stehe ich spät auf, zuerst frühstücke ich, danach gehe ich einkaufen.",
+    transfer:
+      "Am Samstag stehe ich spät auf, zuerst frühstücke ich, danach gehe ich einkaufen.",
   },
 
   "Temporale Präpositionen am, um und im": {
     examples: [
-      { sentence: "Am Freitag lerne ich um acht Uhr im Augustkurs.", target: "Am" },
+      {
+        sentence: "Am Freitag lerne ich um acht Uhr im Augustkurs.",
+        target: "Am",
+      },
       { sentence: "Um sieben Uhr stehe ich auf.", target: "Um" },
       { sentence: "Im Sommer fahre ich nach Italien.", target: "Im" },
       { sentence: "Am Montag habe ich einen Termin.", target: "Am" },
@@ -309,12 +319,18 @@ export const A1_AUTHORED: Readonly<Record<string, AuthoredUnit>> = {
 
   "es gibt mit Akkusativ": {
     examples: [
-      { sentence: "In meiner Straße gibt es einen Supermarkt.", target: "einen Supermarkt" },
+      {
+        sentence: "In meiner Straße gibt es einen Supermarkt.",
+        target: "einen Supermarkt",
+      },
       { sentence: "Hier gibt es eine Apotheke.", target: "eine Apotheke" },
       { sentence: "Es gibt keinen Parkplatz.", target: "keinen Parkplatz" },
       { sentence: "Gibt es hier einen Bahnhof?", target: "einen Bahnhof" },
       { sentence: "In der Stadt gibt es viele Cafés.", target: "viele Cafés" },
-      { sentence: "Es gibt heute keinen Unterricht.", target: "keinen Unterricht" },
+      {
+        sentence: "Es gibt heute keinen Unterricht.",
+        target: "keinen Unterricht",
+      },
       { sentence: "Gibt es einen Bus zum Flughafen?", target: "einen Bus" },
       { sentence: "In dem Park gibt es einen See.", target: "einen See" },
     ],
@@ -323,12 +339,18 @@ export const A1_AUTHORED: Readonly<Record<string, AuthoredUnit>> = {
 
   "man für allgemeine Aussagen": {
     examples: [
-      { sentence: "In Deutschland trinkt man viel Kaffee.", target: "trinkt man" },
+      {
+        sentence: "In Deutschland trinkt man viel Kaffee.",
+        target: "trinkt man",
+      },
       { sentence: "Hier spricht man Deutsch.", target: "spricht man" },
       { sentence: "Man isst hier viel Brot.", target: "Man isst" },
       { sentence: "Man kann hier gut parken.", target: "Man kann" },
       { sentence: "Im Winter trägt man eine Jacke.", target: "trägt man" },
-      { sentence: "Man lernt Sprachen am besten mit Übung.", target: "Man lernt" },
+      {
+        sentence: "Man lernt Sprachen am besten mit Übung.",
+        target: "Man lernt",
+      },
       { sentence: "Hier darf man nicht rauchen.", target: "darf man" },
       { sentence: "Man sieht das Museum von hier.", target: "Man sieht" },
     ],
@@ -337,21 +359,37 @@ export const A1_AUTHORED: Readonly<Record<string, AuthoredUnit>> = {
 
   "und, aber, denn und oder": {
     examples: [
-      { sentence: "Ich lerne Deutsch, denn ich lebe in Berlin.", target: "denn" },
+      {
+        sentence: "Ich lerne Deutsch, denn ich lebe in Berlin.",
+        target: "denn",
+      },
       { sentence: "Ich koche, und du deckst den Tisch.", target: "und" },
       { sentence: "Er ist müde, aber er arbeitet weiter.", target: "aber" },
       { sentence: "Willst du Tee oder Kaffee?", target: "oder" },
-      { sentence: "Sie lernt viel, denn die Prüfung ist bald.", target: "denn" },
-      { sentence: "Wir bleiben zu Hause, aber wir lesen ein Buch.", target: "aber" },
-      { sentence: "Ich rufe an, oder ich schreibe eine E-Mail.", target: "oder" },
+      {
+        sentence: "Sie lernt viel, denn die Prüfung ist bald.",
+        target: "denn",
+      },
+      {
+        sentence: "Wir bleiben zu Hause, aber wir lesen ein Buch.",
+        target: "aber",
+      },
+      {
+        sentence: "Ich rufe an, oder ich schreibe eine E-Mail.",
+        target: "oder",
+      },
       { sentence: "Er kocht, und sie räumt auf.", target: "und" },
     ],
-    transfer: "Ich bin müde, aber ich gehe noch spazieren, denn die Luft ist frisch.",
+    transfer:
+      "Ich bin müde, aber ich gehe noch spazieren, denn die Luft ist frisch.",
   },
 
   "Mengenwörter viel, wenig und genug": {
     examples: [
-      { sentence: "Ich habe wenig Zeit, aber viele Aufgaben.", target: "wenig Zeit" },
+      {
+        sentence: "Ich habe wenig Zeit, aber viele Aufgaben.",
+        target: "wenig Zeit",
+      },
       // Zielwort auf das Mengenwort verkürzt: "Wir haben genug Brot." und
       // "Wir haben viele Fragen." maskierten sonst beide zu "Wir haben ___.",
       // ebenso "Sie hat viel Geld." / "Sie hat viele Bücher.".
@@ -377,6 +415,7 @@ export const A1_AUTHORED: Readonly<Record<string, AuthoredUnit>> = {
       { sentence: "Ich rufe euch später an.", target: "euch" },
       { sentence: "Kennst du sie schon?", target: "sie" },
     ],
-    transfer: "Ich habe den Brief gestern geschrieben und ihn dir dann geschickt.",
+    transfer:
+      "Ich habe den Brief gestern geschrieben und ihn dir dann geschickt.",
   },
 };

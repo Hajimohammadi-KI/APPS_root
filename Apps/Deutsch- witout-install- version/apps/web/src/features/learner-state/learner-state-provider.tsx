@@ -232,9 +232,7 @@ export function advanceDailyGrammar(
 
   if (verifiedLevel === level) {
     const nextLevel =
-      CEFR_ORDER[
-        CEFR_ORDER.indexOf(level as (typeof CEFR_ORDER)[number]) + 1
-      ];
+      CEFR_ORDER[CEFR_ORDER.indexOf(level as (typeof CEFR_ORDER)[number]) + 1];
     if (nextLevel && grammarUnits.some((unit) => unit.level === nextLevel)) {
       level = nextLevel;
     }
@@ -791,23 +789,25 @@ export function LearnerStateProvider({
         errors: nextErrors.slice(-500),
         reviews: reviewExists
           ? current.reviews
-          : ([
-              ...current.reviews,
-              {
-                id: createId("review"),
-                due: now + DAY_IN_MILLISECONDS,
-                stage: 0,
-                topic: error.topic,
-                original: error.original,
-                corrected: error.corrected,
-                mastered: false,
-                sourceType: "error_item",
-                sourceId: errorId,
-                successStreak: 0,
-                stabilityScore: 0,
-                reviewMode: "repair",
-              },
-            ] satisfies ReviewRecord[]).slice(-1_000),
+          : (
+              [
+                ...current.reviews,
+                {
+                  id: createId("review"),
+                  due: now + DAY_IN_MILLISECONDS,
+                  stage: 0,
+                  topic: error.topic,
+                  original: error.original,
+                  corrected: error.corrected,
+                  mastered: false,
+                  sourceType: "error_item",
+                  sourceId: errorId,
+                  successStreak: 0,
+                  stabilityScore: 0,
+                  reviewMode: "repair",
+                },
+              ] satisfies ReviewRecord[]
+            ).slice(-1_000),
         mastery: {
           ...current.mastery,
           [error.topic]: setMasteryCriticalErrors(
@@ -855,8 +855,10 @@ export function LearnerStateProvider({
         // card -- keep the queue meaningful, not padded.
         const duplicate = current.flashcards.find(
           (existing) =>
-            existing.front.trim().toLocaleLowerCase() === front.toLocaleLowerCase() &&
-            existing.back.trim().toLocaleLowerCase() === back.toLocaleLowerCase(),
+            existing.front.trim().toLocaleLowerCase() ===
+              front.toLocaleLowerCase() &&
+            existing.back.trim().toLocaleLowerCase() ===
+              back.toLocaleLowerCase(),
         );
         if (duplicate) {
           created = duplicate;
@@ -877,7 +879,9 @@ export function LearnerStateProvider({
           ...(card.sourceLabel ? { sourceLabel: card.sourceLabel } : {}),
           level: card.level ?? null,
           ...(card.lesson ? { lesson: card.lesson } : {}),
-          ...(card.originalSentence ? { originalSentence: card.originalSentence } : {}),
+          ...(card.originalSentence
+            ? { originalSentence: card.originalSentence }
+            : {}),
           createdAt: new Date().toISOString(),
           recognition: freshSchedule(),
           production: freshSchedule(),
@@ -920,7 +924,8 @@ export function LearnerStateProvider({
             new Date(),
             grade === "hard" ? "hard" : "good",
           );
-          const maxInterval = REVIEW_INTERVAL_DAYS[REVIEW_INTERVAL_DAYS.length - 1] ?? 30;
+          const maxInterval =
+            REVIEW_INTERVAL_DAYS[REVIEW_INTERVAL_DAYS.length - 1] ?? 30;
           return {
             ...card,
             [mode]: {

@@ -19,7 +19,9 @@ function attempt(overrides: Partial<UserAttempt>): UserAttempt {
     targetHit: overrides.targetHit ?? true,
     verified: overrides.verified ?? true,
     accuracyScore: overrides.accuracyScore ?? 100,
-    ...(overrides.latencyMs === undefined ? {} : { latencyMs: overrides.latencyMs }),
+    ...(overrides.latencyMs === undefined
+      ? {}
+      : { latencyMs: overrides.latencyMs }),
   };
 }
 
@@ -44,7 +46,11 @@ describe("automatization topic encoding", () => {
   });
 
   it("sanitizes colons inside the item id so parsing stays unambiguous", () => {
-    const topic = buildAutomatizationTopic("formulaic", "es:kommt:darauf:an", undefined);
+    const topic = buildAutomatizationTopic(
+      "formulaic",
+      "es:kommt:darauf:an",
+      undefined,
+    );
     expect(parseAutomatizationTopic(topic)?.itemId).toBe("es-kommt-darauf-an");
   });
 
@@ -68,7 +74,9 @@ describe("automatization topic encoding", () => {
 
   it("returns null for topics outside the Automatisierung namespace", () => {
     expect(parseAutomatizationTopic("Akkusativ")).toBeNull();
-    expect(parseAutomatizationTopic("Automatisierung:unknown-module:x")).toBeNull();
+    expect(
+      parseAutomatizationTopic("Automatisierung:unknown-module:x"),
+    ).toBeNull();
   });
 });
 
@@ -96,7 +104,11 @@ describe("computeAutomatizationMatrix", () => {
     const attempts = [1, 2, 3, 4, 5].map((stage) =>
       attempt({
         id: `shadow-${stage}`,
-        topic: buildAutomatizationTopic("shadowing", "alltag-kaffee", stage as 1 | 2 | 3 | 4 | 5),
+        topic: buildAutomatizationTopic(
+          "shadowing",
+          "alltag-kaffee",
+          stage as 1 | 2 | 3 | 4 | 5,
+        ),
         date: now.toISOString(),
         verified: stage === 5,
         latencyMs: 3_000,
@@ -133,9 +145,7 @@ describe("computeAutomatizationMatrix", () => {
 
   it("ignores attempts from unrelated (non-Automatisierungstrainer) topics", () => {
     const now = new Date("2026-08-15T12:00:00.000Z");
-    const attempts = [
-      attempt({ topic: "Akkusativ", date: now.toISOString() }),
-    ];
+    const attempts = [attempt({ topic: "Akkusativ", date: now.toISOString() })];
     const matrix = computeAutomatizationMatrix(attempts, now);
     const totals = matrix.flatMap((row) =>
       Object.values(row.cells).map((cell) => cell.attempts),

@@ -199,12 +199,10 @@ export function completeControlledExercises(
   unit: ExerciseCompletionInput,
 ): readonly GrammarExercise[] {
   const existing: GrammarExercise[] = unit.exercises
-    .map(
-      (exercise): GrammarExercise => [
-        exercise[0]?.trim() ?? "",
-        exercise[1]?.trim() ?? "",
-      ],
-    )
+    .map((exercise): GrammarExercise => [
+      exercise[0]?.trim() ?? "",
+      exercise[1]?.trim() ?? "",
+    ])
     // Eine Aufgabe, deren Aufgabenstellung die erwartete Antwort bereits
     // enthält, prüft Abtippen, nicht Abrufen. Das betraf drei Familien in
     // jeder Einheit: „Schreibe den Modellsatz: <Satz>“, „Schreibe einen

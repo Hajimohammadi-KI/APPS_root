@@ -5,7 +5,13 @@ import Link from "next/link";
 import { grammarUnits } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
@@ -16,9 +22,9 @@ import type { FlashcardMode, FlashcardRecord } from "@grammar/domain";
 // (teacher-flashcard-panel.tsx) -- a real human recording, when a teacher
 // has added one, takes priority over the synthetic fallback.
 async function speakFlashcardFront(card: FlashcardRecord) {
-  const played = await playTeacherAudioByContextKey(`flashcard-${card.id}`).catch(
-    () => false,
-  );
+  const played = await playTeacherAudioByContextKey(
+    `flashcard-${card.id}`,
+  ).catch(() => false);
   if (played) return;
   if (!("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
@@ -43,13 +49,20 @@ function normalize(value: string) {
 const MIN_CARDS_FOR_RECOGNITION = 4;
 
 export default function VokabelkartenPage() {
-  const { state, addFlashcard, gradeFlashcard, deleteFlashcard, setTodayGrammar } =
-    useLearnerState();
+  const {
+    state,
+    addFlashcard,
+    gradeFlashcard,
+    deleteFlashcard,
+    setTodayGrammar,
+  } = useLearnerState();
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
   const [originalSentence, setOriginalSentence] = useState("");
   const [productionAnswer, setProductionAnswer] = useState("");
-  const [productionResult, setProductionResult] = useState<"correct" | "incorrect" | null>(null);
+  const [productionResult, setProductionResult] = useState<
+    "correct" | "incorrect" | null
+  >(null);
   // A forgotten card ("Nochmal") previously just went back into the queue
   // with no way to actually practice the pattern it came from -- when the
   // card was added from a grammar lesson, offer a direct link to work
@@ -57,14 +70,16 @@ export default function VokabelkartenPage() {
   const [correctiveLesson, setCorrectiveLesson] = useState<string | null>(null);
 
   const now = Date.now();
-  const canTestRecognition = state.flashcards.length >= MIN_CARDS_FOR_RECOGNITION;
+  const canTestRecognition =
+    state.flashcards.length >= MIN_CARDS_FOR_RECOGNITION;
   const dueItems = useMemo(() => {
     const items: DueItem[] = [];
     for (const card of state.flashcards) {
       if (canTestRecognition && card.recognition.dueAt <= now) {
         items.push({ card, mode: "recognition" });
       }
-      if (card.production.dueAt <= now) items.push({ card, mode: "production" });
+      if (card.production.dueAt <= now)
+        items.push({ card, mode: "production" });
     }
     return items.sort((a, b) => a.card[a.mode].dueAt - b.card[b.mode].dueAt);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,7 +94,9 @@ export default function VokabelkartenPage() {
       .filter((value, index, all) => all.indexOf(value) === index)
       .sort(() => Math.random() - 0.5)
       .slice(0, 3);
-    return [...distractors, activeItem.card.front].sort(() => Math.random() - 0.5);
+    return [...distractors, activeItem.card.front].sort(
+      () => Math.random() - 0.5,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeItem?.card.id, activeItem?.mode]);
 
@@ -90,7 +107,9 @@ export default function VokabelkartenPage() {
       front,
       back,
       source: "manual",
-      ...(originalSentence.trim() ? { originalSentence: originalSentence.trim() } : {}),
+      ...(originalSentence.trim()
+        ? { originalSentence: originalSentence.trim() }
+        : {}),
     });
     setFront("");
     setBack("");
@@ -99,7 +118,9 @@ export default function VokabelkartenPage() {
 
   function afterGrade(cardGrade: "again" | "hard" | "good") {
     if (!activeItem) return;
-    setCorrectiveLesson(cardGrade === "again" ? (activeItem.card.lesson ?? null) : null);
+    setCorrectiveLesson(
+      cardGrade === "again" ? (activeItem.card.lesson ?? null) : null,
+    );
     setProductionAnswer("");
     setProductionResult(null);
   }
@@ -107,13 +128,18 @@ export default function VokabelkartenPage() {
   function chooseRecognition(choice: string) {
     if (!activeItem) return;
     const correct = choice === activeItem.card.front;
-    gradeFlashcard(activeItem.card.id, "recognition", correct ? "good" : "again");
+    gradeFlashcard(
+      activeItem.card.id,
+      "recognition",
+      correct ? "good" : "again",
+    );
     afterGrade(correct ? "good" : "again");
   }
 
   function checkProduction() {
     if (!activeItem) return;
-    const correct = normalize(productionAnswer) === normalize(activeItem.card.front);
+    const correct =
+      normalize(productionAnswer) === normalize(activeItem.card.front);
     setProductionResult(correct ? "correct" : "incorrect");
     if (!correct) {
       gradeFlashcard(activeItem.card.id, "production", "again");
@@ -128,7 +154,9 @@ export default function VokabelkartenPage() {
 
   function practiceCorrectiveLesson() {
     if (!correctiveLesson) return;
-    const unit = grammarUnits.find((candidate) => candidate.title === correctiveLesson);
+    const unit = grammarUnits.find(
+      (candidate) => candidate.title === correctiveLesson,
+    );
     if (unit) setTodayGrammar(unit.title, unit.level);
   }
 
@@ -181,7 +209,8 @@ export default function VokabelkartenPage() {
               {!canTestRecognition ? (
                 <>
                   {" "}
-                  Füge {MIN_CARDS_FOR_RECOGNITION - state.flashcards.length}{" "}
+                  Füge {MIN_CARDS_FOR_RECOGNITION -
+                    state.flashcards.length}{" "}
                   weitere Karte(n) hinzu, um Multiple-Choice-Erkennung
                   freizuschalten.
                 </>
@@ -191,7 +220,9 @@ export default function VokabelkartenPage() {
             <div className="space-y-4 rounded-lg border p-4">
               <Badge variant="secondary">Erkennen</Badge>
               <div>
-                <p className="text-xs font-bold uppercase text-muted-foreground">Bedeutung</p>
+                <p className="text-xs font-bold uppercase text-muted-foreground">
+                  Bedeutung
+                </p>
                 <p className="text-lg font-bold">{activeItem.card.back}</p>
               </div>
               <div className="grid gap-2 sm:grid-cols-2">
@@ -210,19 +241,28 @@ export default function VokabelkartenPage() {
             <div className="space-y-4 rounded-lg border p-4">
               <Badge variant="secondary">Produzieren</Badge>
               <div>
-                <p className="text-xs font-bold uppercase text-muted-foreground">Bedeutung</p>
+                <p className="text-xs font-bold uppercase text-muted-foreground">
+                  Bedeutung
+                </p>
                 <p className="text-lg font-bold">{activeItem.card.back}</p>
               </div>
               {productionResult === null ? (
                 <>
                   <Input
                     aria-label="Getippte Antwort"
-                    onChange={(event) => setProductionAnswer(event.target.value)}
-                    onKeyDown={(event) => event.key === "Enter" && checkProduction()}
+                    onChange={(event) =>
+                      setProductionAnswer(event.target.value)
+                    }
+                    onKeyDown={(event) =>
+                      event.key === "Enter" && checkProduction()
+                    }
                     placeholder="Schreibe es aus dem Gedächtnis"
                     value={productionAnswer}
                   />
-                  <Button disabled={!productionAnswer.trim()} onClick={checkProduction}>
+                  <Button
+                    disabled={!productionAnswer.trim()}
+                    onClick={checkProduction}
+                  >
                     Prüfen
                   </Button>
                 </>
@@ -230,12 +270,16 @@ export default function VokabelkartenPage() {
                 <>
                   <div>
                     <p className="text-xs font-bold uppercase text-muted-foreground">
-                      {productionResult === "correct" ? "Richtig" : "Richtige Antwort"}
+                      {productionResult === "correct"
+                        ? "Richtig"
+                        : "Richtige Antwort"}
                     </p>
                     <div className="flex items-center gap-2">
                       <p className="text-lg">{activeItem.card.front}</p>
                       <Button
-                        onClick={() => void speakFlashcardFront(activeItem.card)}
+                        onClick={() =>
+                          void speakFlashcardFront(activeItem.card)
+                        }
                         size="sm"
                         variant="outline"
                       >
@@ -248,12 +292,17 @@ export default function VokabelkartenPage() {
                       <p className="text-xs font-bold uppercase text-muted-foreground">
                         Originalsatz
                       </p>
-                      <p className="text-sm italic">{activeItem.card.originalSentence}</p>
+                      <p className="text-sm italic">
+                        {activeItem.card.originalSentence}
+                      </p>
                     </div>
                   ) : null}
                   {productionResult === "correct" ? (
                     <div className="flex flex-wrap gap-2">
-                      <Button onClick={() => gradeProductionDifficulty("hard")} variant="outline">
+                      <Button
+                        onClick={() => gradeProductionDifficulty("hard")}
+                        variant="outline"
+                      >
                         Richtig, aber schwer
                       </Button>
                       <Button onClick={() => gradeProductionDifficulty("good")}>
@@ -261,7 +310,10 @@ export default function VokabelkartenPage() {
                       </Button>
                     </div>
                   ) : (
-                    <Button onClick={() => afterGrade("again")} variant="outline">
+                    <Button
+                      onClick={() => afterGrade("again")}
+                      variant="outline"
+                    >
                       Weiter
                     </Button>
                   )}
@@ -283,20 +335,37 @@ export default function VokabelkartenPage() {
           <form className="space-y-3" onSubmit={submitNewCard}>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-bold" htmlFor="flashcard-front">
+                <label
+                  className="mb-1 block text-sm font-bold"
+                  htmlFor="flashcard-front"
+                >
                   Vorderseite (Wort oder Ausdruck)
                 </label>
-                <Input id="flashcard-front" onChange={(event) => setFront(event.target.value)} value={front} />
+                <Input
+                  id="flashcard-front"
+                  onChange={(event) => setFront(event.target.value)}
+                  value={front}
+                />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-bold" htmlFor="flashcard-back">
+                <label
+                  className="mb-1 block text-sm font-bold"
+                  htmlFor="flashcard-back"
+                >
                   Rückseite (Bedeutung oder Übersetzung)
                 </label>
-                <Input id="flashcard-back" onChange={(event) => setBack(event.target.value)} value={back} />
+                <Input
+                  id="flashcard-back"
+                  onChange={(event) => setBack(event.target.value)}
+                  value={back}
+                />
               </div>
             </div>
             <div>
-              <label className="mb-1 block text-sm font-bold" htmlFor="flashcard-sentence">
+              <label
+                className="mb-1 block text-sm font-bold"
+                htmlFor="flashcard-sentence"
+              >
                 Originalsatz (optional)
               </label>
               <Textarea
@@ -326,19 +395,38 @@ export default function VokabelkartenPage() {
                 .slice()
                 .sort((a, b) => a.production.dueAt - b.production.dueAt)
                 .map((card) => (
-                  <li className="flex items-center justify-between gap-3 rounded-lg border p-3" key={card.id}>
+                  <li
+                    className="flex items-center justify-between gap-3 rounded-lg border p-3"
+                    key={card.id}
+                  >
                     <div>
                       <p className="font-bold">
-                        {card.front} <span className="font-normal text-muted-foreground">→ {card.back}</span>
+                        {card.front}{" "}
+                        <span className="font-normal text-muted-foreground">
+                          → {card.back}
+                        </span>
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Erkennen fällig {new Date(card.recognition.dueAt).toLocaleDateString("de-DE")} ·
-                        Produzieren fällig {new Date(card.production.dueAt).toLocaleDateString("de-DE")} ·{" "}
-                        {card.recognition.lapses + card.production.lapses} Rückfall/Rückfälle
-                        {card.source !== "manual" ? ` · aus ${card.source}` : ""}
+                        Erkennen fällig{" "}
+                        {new Date(card.recognition.dueAt).toLocaleDateString(
+                          "de-DE",
+                        )}{" "}
+                        · Produzieren fällig{" "}
+                        {new Date(card.production.dueAt).toLocaleDateString(
+                          "de-DE",
+                        )}{" "}
+                        · {card.recognition.lapses + card.production.lapses}{" "}
+                        Rückfall/Rückfälle
+                        {card.source !== "manual"
+                          ? ` · aus ${card.source}`
+                          : ""}
                       </p>
                     </div>
-                    <Button onClick={() => deleteFlashcard(card.id)} size="sm" variant="outline">
+                    <Button
+                      onClick={() => deleteFlashcard(card.id)}
+                      size="sm"
+                      variant="outline"
+                    >
                       Löschen
                     </Button>
                   </li>

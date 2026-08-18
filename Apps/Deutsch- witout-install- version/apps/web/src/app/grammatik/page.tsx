@@ -44,10 +44,9 @@ export default function GrammatikPage() {
         <CardHeader>
           <CardTitle>Einheit wählen</CardTitle>
           <CardDescription>
-            Die Auswahl setzt das heutige Übungsthema. Der Nachweis wird
-            genauso geprüft wie bei jeder anderen Mission — exakte
-            kontrollierte Übung, online geprüftes Schreiben und Sprechen, und
-            Übertragung.
+            Die Auswahl setzt das heutige Übungsthema. Der Nachweis wird genauso
+            geprüft wie bei jeder anderen Mission — exakte kontrollierte Übung,
+            online geprüftes Schreiben und Sprechen, und Übertragung.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -96,7 +95,9 @@ export default function GrammatikPage() {
       {selectedUnit ? (
         <PrerequisiteChainPanel
           mastery={state.mastery}
-          onSelectPrerequisite={(unit) => setTodayGrammar(unit.title, unit.level)}
+          onSelectPrerequisite={(unit) =>
+            setTodayGrammar(unit.title, unit.level)
+          }
           unit={selectedUnit}
         />
       ) : null}

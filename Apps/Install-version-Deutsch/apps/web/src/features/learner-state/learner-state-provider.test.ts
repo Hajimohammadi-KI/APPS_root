@@ -1,8 +1,17 @@
 import { describe, expect, it } from "bun:test";
 import { grammarUnits } from "@grammar/content";
-import { createEmptyMasteryRecord, createInitialLearnerState, type LearnerState, type MasteryRecord } from "@grammar/domain";
+import {
+  createEmptyMasteryRecord,
+  createInitialLearnerState,
+  type LearnerState,
+  type MasteryRecord,
+} from "@grammar/domain";
 
-import { advanceDailyGrammar, CEFR_ORDER, pickNextGrammarUnit } from "./learner-state-provider";
+import {
+  advanceDailyGrammar,
+  CEFR_ORDER,
+  pickNextGrammarUnit,
+} from "./learner-state-provider";
 
 function automaticMastery(): MasteryRecord {
   return { ...createEmptyMasteryRecord(), status: "automatic" };
@@ -12,7 +21,11 @@ function baseState(level: (typeof CEFR_ORDER)[number]): LearnerState {
   const initial = createInitialLearnerState();
   return {
     ...initial,
-    learner: { ...initial.learner, selfDeclaredLevel: level, verifiedLevel: null },
+    learner: {
+      ...initial.learner,
+      selfDeclaredLevel: level,
+      verifiedLevel: null,
+    },
     learningLevel: level,
   };
 }
@@ -24,7 +37,9 @@ describe("daily grammar auto-progression (German)", () => {
     const withTopic: LearnerState = {
       ...state,
       todayGrammar: { title: firstA1!.title, level: "A1", date: "2026-01-01" },
-      mastery: { [firstA1!.title]: { ...automaticMastery(), status: "learning" } },
+      mastery: {
+        [firstA1!.title]: { ...automaticMastery(), status: "learning" },
+      },
     };
 
     const result = advanceDailyGrammar(withTopic, null);
@@ -38,7 +53,11 @@ describe("daily grammar auto-progression (German)", () => {
     expect(a1Units.length).toBeGreaterThan(1);
     const withTopic: LearnerState = {
       ...state,
-      todayGrammar: { title: a1Units[0]!.title, level: "A1", date: "2026-01-01" },
+      todayGrammar: {
+        title: a1Units[0]!.title,
+        level: "A1",
+        date: "2026-01-01",
+      },
       mastery: { [a1Units[0]!.title]: automaticMastery() },
     };
 

@@ -50,9 +50,14 @@ export function AppShell({
   // directly) and would have broken again the moment an item was inserted
   // or reordered, as happened when Mixed Practice was added.
   const practiceNavigation = allNavigation.filter((item) =>
-    ["/", "/heute", "/gemischtes-training", "/studio", "/wiederholungen", "/vokabelkarten"].includes(
-      item.href,
-    ),
+    [
+      "/",
+      "/heute",
+      "/gemischtes-training",
+      "/studio",
+      "/wiederholungen",
+      "/vokabelkarten",
+    ].includes(item.href),
   );
   const learningNavigation = allNavigation.filter((item) =>
     ["/grammatik", "/kasus-trainer", "/fertigkeiten", "/ressourcen"].includes(

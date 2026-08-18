@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Mic, Plus, Upload } from "lucide-react";
-import { HumanAudioPlayer, HumanAudioRecorder } from "@/components/human-audio-player";
+import {
+  HumanAudioPlayer,
+  HumanAudioRecorder,
+} from "@/components/human-audio-player";
 import { SelectMenu } from "@/components/ui/select-menu";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import {
@@ -41,7 +44,9 @@ export function TeacherFlashcardPanel() {
   const [lesson, setLesson] = useState("");
   const [batchText, setBatchText] = useState("");
   const [batchMessage, setBatchMessage] = useState("");
-  const [audioIndex, setAudioIndex] = useState<Map<string, TeacherContentItem>>(new Map());
+  const [audioIndex, setAudioIndex] = useState<Map<string, TeacherContentItem>>(
+    new Map(),
+  );
   const [recordingForId, setRecordingForId] = useState<string | null>(null);
   const [pendingAudio, setPendingAudio] = useState<Blob | null>(null);
   const [savingAudio, setSavingAudio] = useState(false);
@@ -79,7 +84,10 @@ export function TeacherFlashcardPanel() {
   }
 
   function addBatch() {
-    const lines = batchText.split("\n").map((line) => line.trim()).filter(Boolean);
+    const lines = batchText
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
     let added = 0;
     let skipped = 0;
     for (const line of lines) {
@@ -88,7 +96,12 @@ export function TeacherFlashcardPanel() {
         skipped += 1;
         continue;
       }
-      addFlashcard({ ...parsed, source: "lesson", level, ...(lesson ? { lesson } : {}) });
+      addFlashcard({
+        ...parsed,
+        source: "lesson",
+        level,
+        ...(lesson ? { lesson } : {}),
+      });
       added += 1;
     }
     setBatchMessage(
@@ -129,7 +142,10 @@ export function TeacherFlashcardPanel() {
   );
 
   return (
-    <section className="teacher-editor teacher-flashcards-panel" aria-label="Vokabelkarten-Autoring">
+    <section
+      className="teacher-editor teacher-flashcards-panel"
+      aria-label="Vokabelkarten-Autoring"
+    >
       <h2>Vokabelkarten hinzufügen</h2>
       <p className="text-sm text-muted-foreground">
         Kein JSON und kein Code nötig -- füge Karten einzeln mit optionaler
@@ -139,23 +155,35 @@ export function TeacherFlashcardPanel() {
       <div className="teacher-grid">
         <label>
           Vorderseite (Wort oder Ausdruck)
-          <input onChange={(event) => setFront(event.target.value)} value={front} />
+          <input
+            onChange={(event) => setFront(event.target.value)}
+            value={front}
+          />
         </label>
         <label>
           Rückseite (Bedeutung oder Übersetzung)
-          <input onChange={(event) => setBack(event.target.value)} value={back} />
+          <input
+            onChange={(event) => setBack(event.target.value)}
+            value={back}
+          />
         </label>
       </div>
       <label>
         Originalsatz (optional)
-        <input onChange={(event) => setSentence(event.target.value)} value={sentence} />
+        <input
+          onChange={(event) => setSentence(event.target.value)}
+          value={sentence}
+        />
       </label>
       {/* Niveau-Auswahl nutzt die gemeinsame SelectMenu, damit das Anlegen von Karten
           zum selben Auswahlmuster gehoert wie der Rest der App. */}
       <SelectMenu
         label="GER-Niveau"
         onChange={(next) => setLevel(next as (typeof LEVELS)[number])}
-        options={LEVELS.map((cefrLevel) => ({ value: cefrLevel, label: cefrLevel }))}
+        options={LEVELS.map((cefrLevel) => ({
+          value: cefrLevel,
+          label: cefrLevel,
+        }))}
         value={level}
       />
       {/* Optional: verknuepft die Karte mit einer echten Grammatikeinheit, damit eine
@@ -188,7 +216,9 @@ export function TeacherFlashcardPanel() {
             <Upload aria-hidden /> Audiodatei wählen
             <input
               accept="audio/*"
-              onChange={(event) => setPendingAudio(event.target.files?.[0] ?? null)}
+              onChange={(event) =>
+                setPendingAudio(event.target.files?.[0] ?? null)
+              }
               type="file"
             />
           </label>
@@ -198,12 +228,15 @@ export function TeacherFlashcardPanel() {
               className="teacher-primary-button"
               disabled={!pendingAudio || savingAudio}
               onClick={() => {
-                const card = state.flashcards.find((item) => item.id === recordingForId);
+                const card = state.flashcards.find(
+                  (item) => item.id === recordingForId,
+                );
                 if (card) void saveAudioFor(card);
               }}
               type="button"
             >
-              <Mic aria-hidden /> {savingAudio ? "Speichert…" : "Aussprache speichern"}
+              <Mic aria-hidden />{" "}
+              {savingAudio ? "Speichert…" : "Aussprache speichern"}
             </button>
             <button
               className="teacher-secondary-button"
@@ -221,10 +254,13 @@ export function TeacherFlashcardPanel() {
 
       <h3 className="mt-4">Mehrere auf einmal hinzufügen</h3>
       <label>
-        Eine Karte pro Zeile: <code>Vorderseite | Rückseite | Satz (optional)</code>
+        Eine Karte pro Zeile:{" "}
+        <code>Vorderseite | Rückseite | Satz (optional)</code>
         <textarea
           onChange={(event) => setBatchText(event.target.value)}
-          placeholder={"laufen | to run\ngegessen | Partizip von essen | Sie hat früh gegessen."}
+          placeholder={
+            "laufen | to run\ngegessen | Partizip von essen | Sie hat früh gegessen."
+          }
           rows={5}
           value={batchText}
         />
@@ -238,7 +274,9 @@ export function TeacherFlashcardPanel() {
         <Plus aria-hidden /> Alle Zeilen hinzufügen
       </button>
       {batchMessage ? (
-        <p className="teacher-message" role="status">{batchMessage}</p>
+        <p className="teacher-message" role="status">
+          {batchMessage}
+        </p>
       ) : null}
 
       {cardsWithoutAudio.length > 0 ? (
@@ -277,7 +315,9 @@ export function TeacherFlashcardPanel() {
             {state.flashcards
               .filter((card) => audioIndex.has(flashcardContextKey(card.id)))
               .map((card) => {
-                const teacherItem = audioIndex.get(flashcardContextKey(card.id))!;
+                const teacherItem = audioIndex.get(
+                  flashcardContextKey(card.id),
+                )!;
                 return (
                   <article key={card.id}>
                     <div className="teacher-item-meta">

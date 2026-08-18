@@ -22,7 +22,9 @@ export interface PrerequisiteChain {
 }
 
 const titleIncludes = (needle: string) => (unit: GrammarUnit) =>
-  unit.title.toLocaleLowerCase("de-DE").includes(needle.toLocaleLowerCase("de-DE"));
+  unit.title
+    .toLocaleLowerCase("de-DE")
+    .includes(needle.toLocaleLowerCase("de-DE"));
 
 const AKKUSATIV: PrerequisiteStep = {
   label: "Akkusativ",

@@ -170,7 +170,9 @@ async function evaluateRetelling(params: {
     targetUses: result.targetHit ? 1 : 0,
     score: result.accuracyScore,
     targetHit:
-      result.practiceReady && result.targetHit && sentenceCount >= minimumSentences,
+      result.practiceReady &&
+      result.targetHit &&
+      sentenceCount >= minimumSentences,
     issues,
     online: result.online,
   };
@@ -364,10 +366,19 @@ export function AutomatizationTrainer() {
   const activeTitle = useCustomText
     ? customTitle.trim() || "Eigener Text"
     : (selectedPassage?.title ?? "");
-  const activeText = useCustomText ? customText.trim() : (selectedPassage?.text ?? "");
-  const activeContextKey = useCustomText ? undefined : selectedPassage?.contextKey;
+  const activeText = useCustomText
+    ? customText.trim()
+    : (selectedPassage?.text ?? "");
+  const activeContextKey = useCustomText
+    ? undefined
+    : selectedPassage?.contextKey;
   const activeItemId = useCustomText
-    ? `eigen-${customTitle.trim().toLocaleLowerCase("de-DE").replace(/[^a-z0-9äöüß]+/g, "-") || "text"}`
+    ? `eigen-${
+        customTitle
+          .trim()
+          .toLocaleLowerCase("de-DE")
+          .replace(/[^a-z0-9äöüß]+/g, "-") || "text"
+      }`
     : (selectedPassage?.id ?? "unbekannt");
 
   useEffect(() => {
@@ -392,9 +403,8 @@ export function AutomatizationTrainer() {
   const [stage1Played, setStage1Played] = useState(false);
   const [preciseRepeated, setPreciseRepeated] = useState(false);
   const [retellText, setRetellText] = useState("");
-  const [retellAnalysis, setRetellAnalysis] = useState<AutomatikAnalysis | null>(
-    null,
-  );
+  const [retellAnalysis, setRetellAnalysis] =
+    useState<AutomatikAnalysis | null>(null);
   const [retellChecking, setRetellChecking] = useState(false);
   const stageStartRef = useRef(Date.now());
   useEffect(() => {
@@ -496,8 +506,8 @@ export function AutomatizationTrainer() {
           </h1>
           <p className="mt-2 max-w-3xl text-muted-foreground">
             Abrufübung statt bloßem Nachsprechen, fünfstufiges Shadowing statt
-            einer Wiederholung, feste Wendungen als Ganzes statt Wort für
-            Wort. Sofortiges Feedback, sichtbare Automatik über vier Wochen.
+            einer Wiederholung, feste Wendungen als Ganzes statt Wort für Wort.
+            Sofortiges Feedback, sichtbare Automatik über vier Wochen.
           </p>
         </div>
       </section>
@@ -506,8 +516,8 @@ export function AutomatizationTrainer() {
         <CardHeader>
           <CardTitle>Trainingsparameter</CardTitle>
           <CardDescription>
-            Nutzt dieselbe Zielstufe und Tagesdauer wie der Rest der App —
-            kein zweiter, getrennter Speicher.
+            Nutzt dieselbe Zielstufe und Tagesdauer wie der Rest der App — kein
+            zweiter, getrennter Speicher.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -602,8 +612,8 @@ export function AutomatizationTrainer() {
           <CardHeader>
             <CardTitle>Abrufübung</CardTitle>
             <CardDescription>
-              Produziere die Zielform selbst, bevor du sie siehst oder hörst
-              — reines Nachsprechen ist dafür nachweislich schwächer.
+              Produziere die Zielform selbst, bevor du sie siehst oder hörst —
+              reines Nachsprechen ist dafür nachweislich schwächer.
               {focus === "speaking"
                 ? " Sprich deine Antwort zuerst laut, bevor du sie eintippst."
                 : null}
@@ -826,16 +836,14 @@ export function AutomatizationTrainer() {
             {activeStage === 2 ? (
               <div className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50 p-5">
                 <p className="flex items-center gap-2 text-sm font-bold text-violet-950">
-                  <Gauge className="size-4" /> Langsames Shadowing — sprich
-                  fast gleichzeitig mit. Wenn du 2–3 Wörter verpasst, mach
-                  einfach weiter — nicht neu anfangen.
+                  <Gauge className="size-4" /> Langsames Shadowing — sprich fast
+                  gleichzeitig mit. Wenn du 2–3 Wörter verpasst, mach einfach
+                  weiter — nicht neu anfangen.
                 </p>
                 <SelectMenu
                   className="w-44"
                   label="Geschwindigkeit"
-                  onChange={(next) =>
-                    setSlowRate(Number(next) as 0.75 | 0.85)
-                  }
+                  onChange={(next) => setSlowRate(Number(next) as 0.75 | 0.85)}
                   options={[
                     { value: "0.75", label: "0,75x" },
                     { value: "0.85", label: "0,85x" },
@@ -844,7 +852,9 @@ export function AutomatizationTrainer() {
                 />
                 <Button
                   disabled={!activeText}
-                  onClick={() => void speakAtRate(activeText, slowRate, activeContextKey)}
+                  onClick={() =>
+                    void speakAtRate(activeText, slowRate, activeContextKey)
+                  }
                 >
                   <Volume2 /> Abspielen ({slowRate}x)
                 </Button>
@@ -857,24 +867,27 @@ export function AutomatizationTrainer() {
             {activeStage === 3 ? (
               <div className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50 p-5">
                 <p className="flex items-center gap-2 text-sm font-bold text-violet-950">
-                  <Captions className="size-4" /> Präzises Shadowing — achte
-                  auf Wortverbindungen (Verschleifung), Wortbetonung, Pausen
-                  und die Intonation am Satzende. Wiederhole den Abschnitt
-                  zweimal.
+                  <Captions className="size-4" /> Präzises Shadowing — achte auf
+                  Wortverbindungen (Verschleifung), Wortbetonung, Pausen und die
+                  Intonation am Satzende. Wiederhole den Abschnitt zweimal.
                 </p>
                 <p className="rounded-xl bg-white p-4 leading-7">
                   {activeText}
                 </p>
                 <Button
                   disabled={!activeText}
-                  onClick={() => void speakAtRate(activeText, 0.9, activeContextKey)}
+                  onClick={() =>
+                    void speakAtRate(activeText, 0.9, activeContextKey)
+                  }
                 >
                   <Volume2 /> Abspielen
                 </Button>
                 <label className="flex items-center gap-2 text-sm">
                   <input
                     checked={preciseRepeated}
-                    onChange={(event) => setPreciseRepeated(event.target.checked)}
+                    onChange={(event) =>
+                      setPreciseRepeated(event.target.checked)
+                    }
                     type="checkbox"
                   />
                   <span>Ich habe den Abschnitt zweimal wiederholt.</span>
@@ -901,7 +914,9 @@ export function AutomatizationTrainer() {
                 </p>
                 <Button
                   disabled={!activeText}
-                  onClick={() => void speakAtRate(activeText, 0.9, activeContextKey)}
+                  onClick={() =>
+                    void speakAtRate(activeText, 0.9, activeContextKey)
+                  }
                 >
                   <Volume2 /> Abspielen
                 </Button>
@@ -916,8 +931,7 @@ export function AutomatizationTrainer() {
                 <p className="flex items-center gap-2 text-sm font-bold text-violet-950">
                   <Mic className="size-4" /> Freies Nacherzählen — kein Audio
                   mehr. Erzähle den Inhalt in deinen eigenen Worten nach; das
-                  ist der eigentliche Test, ob das Muster wirklich nutzbar
-                  ist.
+                  ist der eigentliche Test, ob das Muster wirklich nutzbar ist.
                 </p>
                 <Textarea
                   aria-label="Freie Nacherzählung"
@@ -942,8 +956,8 @@ export function AutomatizationTrainer() {
         <CardHeader>
           <CardTitle>4-Wochen-Automatik-Matrix</CardTitle>
           <CardDescription>
-            Übungsart × Woche. „Automatisch“ zählt nur, wenn ein Versuch
-            geprüft war, das Ziel getroffen hat und die Antwortzeit unter der
+            Übungsart × Woche. „Automatisch“ zählt nur, wenn ein Versuch geprüft
+            war, das Ziel getroffen hat und die Antwortzeit unter der
             Automatik-Schwelle lag — derselbe Maßstab wie im übrigen
             Beherrschungsmodell.
           </CardDescription>

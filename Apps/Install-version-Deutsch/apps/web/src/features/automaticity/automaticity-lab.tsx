@@ -70,13 +70,17 @@ export const TRANSFER_SITUATIONS = [
   "Schreibe eine kurze Notiz für jemanden, der dich vertritt und die wichtigsten Fakten schnell braucht.",
 ] as const;
 
-export function transferSituation(title: string, priorTransferAttempts: number) {
+export function transferSituation(
+  title: string,
+  priorTransferAttempts: number,
+) {
   let hash = 0;
   for (let index = 0; index < title.length; index += 1) {
     hash = (hash * 31 + title.charCodeAt(index)) >>> 0;
   }
   const startOffset = hash % TRANSFER_SITUATIONS.length;
-  const index = (startOffset + priorTransferAttempts) % TRANSFER_SITUATIONS.length;
+  const index =
+    (startOffset + priorTransferAttempts) % TRANSFER_SITUATIONS.length;
   return TRANSFER_SITUATIONS[index];
 }
 
@@ -287,9 +291,7 @@ export function Feedback({
                 {issue.corrected}
               </p>
               <p className="text-muted-foreground">
-                <span className="mr-1 font-bold text-violet-900">
-                  Übe das:
-                </span>
+                <span className="mr-1 font-bold text-violet-900">Übe das:</span>
                 {correctiveExerciseFor(issue)}
               </p>
             </li>
@@ -354,11 +356,18 @@ export function AutomaticityLab({
   );
   const [checkedAnswers, setCheckedAnswers] = useState<readonly boolean[]>([]);
   const [practiceRounds, setPracticeRounds] = useState(0);
+  // Nur eine Aufgabe ist gleichzeitig aktiv/editierbar -- die Runde
+  // rendersierte vorher alle 6 gleichzeitig, genau das Muster "mehrere
+  // Aufgaben konkurrieren um Aufmerksamkeit", das die eigenen
+  // Gestaltungsprinzipien ausschliessen. checkPractice() wertet weiterhin
+  // das gesamte answers-Array auf einmal aus (aufgerufen von der letzten
+  // Aufgabe); an der Bewertung oder dem gemeinsamen Timer der Runde
+  // aendert sich nichts, nur wie viele Eingabefelder gleichzeitig sichtbar
+  // sind.
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const practiceStage = state.mastery[TOPIC]?.practiceStage ?? 1;
   const stageSecondsPerItem = STAGE_SECONDS_PER_ITEM[practiceStage];
-  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(
-    null,
-  );
+  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null);
   // Immer aktuell gehalten (jedes Rendern), damit der Timeout-Effekt unten
   // die neueste checkPractice-Closure aufruft (mit dem aktuellen `answers`)
   // statt einer veralteten aus dem Rendern, in dem der Countdown-Effekt
@@ -428,6 +437,7 @@ export function AutomaticityLab({
     setRoundExercises(freshRound);
     setAnswers(freshRound.map(() => ""));
     setCheckedAnswers([]);
+    setCurrentExerciseIndex(0);
     setPracticeRounds(0);
     // Ein neues Thema beginnt wieder in der Lernphase: die Regel dieser Einheit
     // wurde noch nicht gesehen, ein geschlossener Start wäre eine Prüfung vor
@@ -695,6 +705,7 @@ export function AutomaticityLab({
     setRoundExercises(nextRound);
     setAnswers(nextRound.map(() => ""));
     setCheckedAnswers([]);
+    setCurrentExerciseIndex(0);
     setPracticeRounds((count) => count + 1);
     // Eine neue Runde bekommt eine neue Chance mit geschlossenem Buch: der
     // Blick in die Regel während der vorherigen Runde soll nicht jede spätere
@@ -919,7 +930,10 @@ export function AutomaticityLab({
     // -- the same contract-required rule this function's own comment above
     // already states but the old fallback silently violated.
     const fluencyScore = audioFluency
-      ? scoreFromActiveSpeech(analysis.wordCount, audioFluency.activeSpeechSeconds)
+      ? scoreFromActiveSpeech(
+          analysis.wordCount,
+          audioFluency.activeSpeechSeconds,
+        )
       : 0;
     // analysis.targetHit already requires result.practiceReady, which is
     // spelling-accommodated (see evaluation-client.ts): purely-spelling
@@ -1073,13 +1087,11 @@ export function AutomaticityLab({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <strong className="text-sm">
             Schritt {Math.min(activeStep + 1, 3)} von 3 ·{" "}
-            {
-              [
-                "Aktivieren & korrekt anwenden",
-                "Automatisieren & schreiben",
-                "Frei sprechen & übertragen",
-              ][activeStep] ?? ""
-            }
+            {[
+              "Aktivieren & korrekt anwenden",
+              "Automatisieren & schreiben",
+              "Frei sprechen & übertragen",
+            ][activeStep] ?? ""}
           </strong>
           <span className="text-sm text-muted-foreground">
             {completion.filter(Boolean).length} von 3 erledigt
@@ -1253,7 +1265,9 @@ export function AutomaticityLab({
             {/* Die Regel stand bisher auch hier in der Beschreibung, also
                 außerhalb der ausblendbaren Felder -- sie muss mit ausgeblendet
                 werden, sonst bleibt die Antwort trotzdem lesbar. */}
-            {lessonOpen ? <CardDescription>{grammar.rule}</CardDescription> : null}
+            {lessonOpen ? (
+              <CardDescription>{grammar.rule}</CardDescription>
+            ) : null}
           </CardHeader>
           <CardContent className="space-y-5">
             {/* Lernphase: Lektion offen, mit klarem Hinweis, dass erst das
@@ -1301,39 +1315,86 @@ export function AutomaticityLab({
                 </Button>
               </div>
             )}
-            {roundExercises.map((item, index) => (
-              <label className="block space-y-2" key={item.prompt}>
-                <span className="text-sm font-bold">{item.prompt}</span>
-                <input
-                  className="min-h-11 w-full rounded-xl border bg-background px-3"
-                  onChange={(event) => {
-                    const value = event.target.value;
-                    setAnswers((rows) => {
-                      const next = [...rows];
-                      next[index] = value;
-                      return next;
-                    });
-                  }}
-                  value={answers[index]}
-                />
-                {checkedAnswers.length ? (
-                  <span
-                    className={
-                      checkedAnswers[index]
-                        ? "text-sm font-bold text-violet-800"
-                        : "text-sm font-bold text-red-800"
-                    }
-                  >
-                    {checkedAnswers[index]
-                      ? "Richtig"
-                      : `Modell: ${item.expected}`}
-                  </span>
-                ) : null}
-              </label>
-            ))}
+            {checkedAnswers.length === 0 && roundExercises.length > 0 ? (
+              <>
+                <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                  Aufgabe {currentExerciseIndex + 1} von {roundExercises.length}
+                </p>
+                {(() => {
+                  const item = roundExercises[currentExerciseIndex];
+                  if (!item) return null;
+                  return (
+                    <label className="block space-y-2" key={item.prompt}>
+                      <span className="text-sm font-bold">{item.prompt}</span>
+                      <input
+                        className="min-h-11 w-full rounded-xl border bg-background px-3"
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          setAnswers((rows) => {
+                            const next = [...rows];
+                            next[currentExerciseIndex] = value;
+                            return next;
+                          });
+                        }}
+                        value={answers[currentExerciseIndex] ?? ""}
+                      />
+                    </label>
+                  );
+                })()}
+                <div className="flex flex-wrap items-center gap-3">
+                  {currentExerciseIndex > 0 ? (
+                    <Button
+                      onClick={() =>
+                        setCurrentExerciseIndex((index) =>
+                          Math.max(0, index - 1),
+                        )
+                      }
+                      type="button"
+                      variant="outline"
+                    >
+                      Zurück
+                    </Button>
+                  ) : null}
+                  {currentExerciseIndex < roundExercises.length - 1 ? (
+                    <Button
+                      onClick={() =>
+                        setCurrentExerciseIndex((index) =>
+                          Math.min(roundExercises.length - 1, index + 1),
+                        )
+                      }
+                      type="button"
+                    >
+                      Weiter
+                    </Button>
+                  ) : (
+                    <Button onClick={checkPractice} type="button">
+                      Antworten prüfen
+                    </Button>
+                  )}
+                </div>
+              </>
+            ) : null}
+            {checkedAnswers.length > 0
+              ? roundExercises.map((item, index) => (
+                  <div className="block space-y-1" key={item.prompt}>
+                    <span className="text-sm font-bold">{item.prompt}</span>
+                    <span
+                      className={
+                        checkedAnswers[index]
+                          ? "block text-sm font-bold text-violet-800"
+                          : "block text-sm font-bold text-red-800"
+                      }
+                    >
+                      {checkedAnswers[index]
+                        ? "Richtig"
+                        : `Modell: ${item.expected}`}
+                    </span>
+                  </div>
+                ))
+              : null}
             <div className="flex flex-wrap items-center gap-3">
-              <Button onClick={checkPractice}>Antworten prüfen</Button>
-              {checkedAnswers.length && exercises.length > roundExercises.length ? (
+              {checkedAnswers.length &&
+              exercises.length > roundExercises.length ? (
                 <Button onClick={practiceAgain} variant="outline">
                   <RotateCcw /> Neue Runde üben
                 </Button>
@@ -1350,7 +1411,9 @@ export function AutomaticityLab({
               </Badge>
               <Badge variant="secondary">{STAGE_LABEL[practiceStage]}</Badge>
               {secondsRemaining !== null ? (
-                <Badge variant={secondsRemaining <= 5 ? "outline" : "secondary"}>
+                <Badge
+                  variant={secondsRemaining <= 5 ? "outline" : "secondary"}
+                >
                   <Clock className="size-3" /> {secondsRemaining}s übrig
                 </Badge>
               ) : null}
@@ -1487,7 +1550,9 @@ export function AutomaticityLab({
                   aktive Sprechzeit
                 </div>
                 <div>
-                  <strong className="block text-lg">{audioFluencyResult.pauseCount}</strong>
+                  <strong className="block text-lg">
+                    {audioFluencyResult.pauseCount}
+                  </strong>
                   Pause(n)
                 </div>
                 <div>
@@ -1542,7 +1607,9 @@ export function AutomaticityLab({
               >
                 {transferChecking ? "Wird geprüft …" : "Übertragung prüfen"}
               </Button>
-              {transferAnalysis ? <Feedback analysis={transferAnalysis} /> : null}
+              {transferAnalysis ? (
+                <Feedback analysis={transferAnalysis} />
+              ) : null}
             </div>
           </CardContent>
         </Card>

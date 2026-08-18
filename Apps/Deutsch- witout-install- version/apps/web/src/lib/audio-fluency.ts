@@ -111,16 +111,12 @@ export function pitchVarietyInSemitones(
   medianHz: number,
 ): number | null {
   if (pitchesHz.length < 3 || medianHz <= 0) return null;
-  const semitones = pitchesHz.map(
-    (hz) => 12 * Math.log2(hz / medianHz),
-  );
+  const semitones = pitchesHz.map((hz) => 12 * Math.log2(hz / medianHz));
   const meanSemitone =
     semitones.reduce((total, value) => total + value, 0) / semitones.length;
   const variance =
-    semitones.reduce(
-      (total, value) => total + (value - meanSemitone) ** 2,
-      0,
-    ) / semitones.length;
+    semitones.reduce((total, value) => total + (value - meanSemitone) ** 2, 0) /
+    semitones.length;
   return Math.sqrt(variance);
 }
 
@@ -213,5 +209,8 @@ export function scoreFromActiveSpeech(
 ): number {
   if (activeSpeechSeconds <= 0) return 0;
   const rate = wordCount / activeSpeechSeconds;
-  return Math.max(0, Math.min(100, Math.round((rate / TARGET_WORDS_PER_SECOND) * 100)));
+  return Math.max(
+    0,
+    Math.min(100, Math.round((rate / TARGET_WORDS_PER_SECOND) * 100)),
+  );
 }

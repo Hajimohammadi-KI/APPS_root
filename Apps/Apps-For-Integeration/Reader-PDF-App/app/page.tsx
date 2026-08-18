@@ -473,7 +473,11 @@ export default function Home() {
     };
     setMarks((current) => [next, ...current]);
     setSelectedMarkId(id);
-    showToast(nextNote ? "Kommentar gespeichert" : `${toneLabels[nextTone]} gespeichert`);
+    showToast(
+      nextNote
+        ? "Kommentar gespeichert -- unter Notizen"
+        : `${toneLabels[nextTone]} gespeichert -- unter Notizen`,
+    );
     return true;
   };
 
@@ -597,7 +601,7 @@ export default function Home() {
     }, ...current]);
     setSelectedMarkId(id);
     setNote("");
-    showToast("Notiz gespeichert");
+    showToast("Notiz gespeichert -- unter Notizen");
   };
 
   const startEditingMark = (mark: Mark) => {

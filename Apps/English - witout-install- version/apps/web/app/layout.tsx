@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { GeistSans } from "geist/font/sans";
 import { AppStoreProvider } from "@/features/store/app-store";
 import { AppShell } from "@/features/app-shell";
 import { ContextualHoverHelp } from "@/features/components/contextual-hover-help";
@@ -50,7 +51,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html className={GeistSans.variable} lang="en">
       <body>
         <AppStoreProvider>
           <AppShell>{children}</AppShell>

@@ -13,6 +13,26 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --shadow-card: 0 12px 30px rgba(25, 45, 80, 0.1);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+
+  /* Design-engineering skill's exact curves (emil-design-eng) -- extracted
+     from the ~15 places that used to hand-copy `cubic-bezier(0.23, 1, 0.32, 1)`
+     literally. ease-out: entrances/exits. ease-in-out: on-screen movement.
+     ease-drawer: iOS-style sheet/drawer motion (Ionic Framework curve). */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Radius scale, matching the German app's existing base+multiplier
+     convention so both apps share one named scale. */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 
   /* Dedicated palette for the one shared SelectMenu control. Kept separate
      from the app tokens above on purpose: the selection control has a fixed
@@ -44,6 +64,8 @@
   --muted-foreground: #655d70;
   --border: #ded4e7;
   --input: #cfc1dc;
+  /* Matches German's base radius exactly -- one shared scale, two apps. */
+  --radius: 0.875rem;
 }
 
 * {
@@ -70,15 +92,25 @@ body {
     ),
     var(--background);
   color: var(--foreground);
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  font-family: var(--font-sans);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* One real global baseline instead of the 1-2 narrow, component-scoped
+     overrides this app had before -- gentler, not zero: keep opacity/color
+     transitions that aid comprehension, drop movement. Components that need
+     a stronger reduction (e.g. a slide that must become a instant swap
+     rather than a fast fade) still declare their own more specific rule;
+     this only sets the default every other transition falls back to. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 

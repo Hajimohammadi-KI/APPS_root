@@ -484,11 +484,15 @@ export function AutomaticityScreen({
   const journalStartRef = React.useRef<number | null>(null);
   const transferStartRef = React.useRef<number | null>(null);
   const startedAtRef = React.useRef(0);
-  const restoredRef = React.useRef(false);
+  // Keyed (not boolean) so a topic change re-syncs journal/transcript to the
+  // new topic's saved draft instead of leaving the previous topic's text in
+  // state -- a once-only guard here let stale evidence from one topic bleed
+  // into the next when the screen stayed mounted across a topic change.
+  const restoredKeyRef = React.useRef<string | null>(null);
 
   React.useEffect(() => {
-    if (!hydrated || restoredRef.current) return;
-    restoredRef.current = true;
+    if (!hydrated || restoredKeyRef.current === key) return;
+    restoredKeyRef.current = key;
     setJournal(plan.answers[`${key}:journal`] ?? "");
     setTranscript(plan.answers[`${key}:transcript`] ?? "");
   }, [hydrated, key, plan.answers]);
@@ -888,6 +892,11 @@ export function AutomaticityScreen({
       streamRef.current = stream;
       chunksRef.current = [];
       audioRef.current = null;
+      // Every recording is a fresh, isolated attempt: clear the previous
+      // attempt's transcript and fluency evidence so they can't leak into
+      // (or get credited to) this one.
+      setTranscript("");
+      setAudioFluencyResult(null);
       const recorder = new MediaRecorder(stream);
       recorderRef.current = recorder;
       recorder.ondataavailable = (event) => {
@@ -910,7 +919,7 @@ export function AutomaticityScreen({
         recognition.lang = "en-US";
         recognition.continuous = true;
         recognition.interimResults = true;
-        let finalText = transcript.trim();
+        let finalText = "";
         recognition.onresult = (event) => {
           let interim = "";
           for (

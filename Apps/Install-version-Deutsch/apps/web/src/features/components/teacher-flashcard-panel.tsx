@@ -11,6 +11,7 @@ import {
   type TeacherContentItem,
 } from "@/lib/teacher-content";
 import type { FlashcardRecord } from "@grammar/domain";
+import { grammarUnits } from "@grammar/content";
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 
@@ -37,6 +38,7 @@ export function TeacherFlashcardPanel() {
   const [back, setBack] = useState("");
   const [sentence, setSentence] = useState("");
   const [level, setLevel] = useState<(typeof LEVELS)[number]>("A1");
+  const [lesson, setLesson] = useState("");
   const [batchText, setBatchText] = useState("");
   const [batchMessage, setBatchMessage] = useState("");
   const [audioIndex, setAudioIndex] = useState<Map<string, TeacherContentItem>>(new Map());
@@ -65,6 +67,7 @@ export function TeacherFlashcardPanel() {
       source: "lesson",
       level,
       ...(sentence.trim() ? { originalSentence: sentence.trim() } : {}),
+      ...(lesson ? { lesson } : {}),
     });
     setFront("");
     setBack("");
@@ -85,7 +88,7 @@ export function TeacherFlashcardPanel() {
         skipped += 1;
         continue;
       }
-      addFlashcard({ ...parsed, source: "lesson", level });
+      addFlashcard({ ...parsed, source: "lesson", level, ...(lesson ? { lesson } : {}) });
       added += 1;
     }
     setBatchMessage(
@@ -154,6 +157,20 @@ export function TeacherFlashcardPanel() {
         onChange={(next) => setLevel(next as (typeof LEVELS)[number])}
         options={LEVELS.map((cefrLevel) => ({ value: cefrLevel, label: cefrLevel }))}
         value={level}
+      />
+      {/* Optional: verknuepft die Karte mit einer echten Grammatikeinheit, damit eine
+          vergessene Karte zurueck zu ihrer Lektion fuehren kann (die Review-UI liest
+          dieses Feld bereits -- es fehlte nur ein Erzeuger dafuer). */}
+      <SelectMenu
+        label="Lektion (optional)"
+        onChange={(next) => setLesson(next)}
+        options={[
+          { value: "", label: "Keine bestimmte Lektion" },
+          ...grammarUnits
+            .filter((unit) => unit.level === level)
+            .map((unit) => ({ value: unit.title, label: unit.title })),
+        ]}
+        value={lesson}
       />
       <button
         className="teacher-primary-button"

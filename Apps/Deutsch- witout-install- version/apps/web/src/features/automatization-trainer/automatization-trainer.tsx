@@ -9,9 +9,7 @@ import {
   MessagesSquare,
   Mic,
   RotateCcw,
-  Shuffle,
   Sparkles,
-  Target,
   Timer,
   Volume2,
 } from "lucide-react";
@@ -35,7 +33,6 @@ import {
   automatizationModuleLabels,
   buildAutomatizationTopic,
   computeAutomatizationMatrix,
-  parseAutomatizationTopic,
   shadowingStageLabels,
   type AutomatizationModule,
   type CefrLevel,
@@ -47,14 +44,13 @@ import {
   type AutomatikAnalysis,
 } from "@/features/automaticity/automaticity-analysis";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
-import { HumanAudioPlayer, HumanAudioRecorder } from "@/components/human-audio-player";
+import { HumanAudioPlayer } from "@/components/human-audio-player";
 import {
   findTeacherContentByContextKey,
   playTeacherAudioByContextKey,
 } from "@/lib/teacher-content";
 import { requestEvaluation } from "@/lib/evaluation-client";
 import { API_BASE_URL } from "@/lib/api-config";
-import { saveAudio } from "@/features/audio/audio-repository";
 import {
   formulaicSequencesForLevel,
   shadowingPassagesForLevel,

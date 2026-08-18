@@ -914,9 +914,13 @@ export function AutomaticityLab({
       ? await analyzeAudioFluency(audioRef.current)
       : null;
     setAudioFluencyResult(audioFluency);
+    // No text-derived fallback: if the audio didn't decode, fluency is
+    // not_assessed (0), not a wordCount/seconds guess presented as measured
+    // -- the same contract-required rule this function's own comment above
+    // already states but the old fallback silently violated.
     const fluencyScore = audioFluency
       ? scoreFromActiveSpeech(analysis.wordCount, audioFluency.activeSpeechSeconds)
-      : Math.min(100, Math.round((analysis.wordCount / Math.max(1, seconds) / 2) * 100));
+      : 0;
     // analysis.targetHit already requires result.practiceReady, which is
     // spelling-accommodated (see evaluation-client.ts): purely-spelling
     // slips don't block it unless spellingAffectsMastery is enabled.

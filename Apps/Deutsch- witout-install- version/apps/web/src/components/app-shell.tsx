@@ -13,7 +13,6 @@ import { InstallAppButton } from "@/features/pwa/install-app-button";
 import {
   coreNavigation,
   libraryNavigation,
-  primaryNavigation,
   secondaryNavigation,
 } from "@/lib/navigation";
 import { UserGuideButton } from "@/components/user-guide";

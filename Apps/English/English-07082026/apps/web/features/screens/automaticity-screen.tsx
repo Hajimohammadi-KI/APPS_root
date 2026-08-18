@@ -36,6 +36,7 @@ import {
 } from "@/features/store/app-store";
 import {
   analyzePresentPerfect,
+  computeRestoredDraft,
   evaluatePracticeAnswer,
   type AutomaticityAnalysis,
   type AutomaticityIssue,
@@ -491,10 +492,11 @@ export function AutomaticityScreen({
   const restoredKeyRef = React.useRef<string | null>(null);
 
   React.useEffect(() => {
-    if (!hydrated || restoredKeyRef.current === key) return;
+    const draft = computeRestoredDraft(hydrated, key, restoredKeyRef.current, plan.answers);
+    if (!draft.shouldRestore) return;
     restoredKeyRef.current = key;
-    setJournal(plan.answers[`${key}:journal`] ?? "");
-    setTranscript(plan.answers[`${key}:transcript`] ?? "");
+    setJournal(draft.journal);
+    setTranscript(draft.transcript);
   }, [hydrated, key, plan.answers]);
 
   React.useEffect(() => {

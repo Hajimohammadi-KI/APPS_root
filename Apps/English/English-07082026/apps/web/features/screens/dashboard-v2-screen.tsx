@@ -23,7 +23,7 @@ import { PlacementCheck } from "@/features/components/placement-check";
 import {
   CEFR_ORDER,
   currentDailyPlan,
-  dailyPlanCompletion,
+  dailyPlanCompletionPercent,
   lessonKey,
   useAppStore,
 } from "@/features/store/app-store";
@@ -81,12 +81,13 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
     const practiced = levelUnits.filter((unit) => state.mastery[unit.title]?.status !== "new").length;
     const finished = levelUnits.filter((unit) => ["stable", "automatic"].includes(state.mastery[unit.title]?.status ?? "new")).length;
     const progress = levelUnits.length ? Math.round((finished / levelUnits.length) * 100) : 0;
-    const todaySteps = state.todayGrammar
-      ? dailyPlanCompletion(plan, lessonKey(state.todayGrammar.title))
-      : ([false, false, false] as const);
-    const todayProgress = Math.round(
-      (todaySteps.filter(Boolean).length / 3) * 100,
-    );
+    // Shares the one rounding rule with Daily Practice's own progress bar
+    // (dailyPlanCompletionPercent, app-store.tsx) -- they used to each round
+    // this same underlying data with a different formula and could disagree
+    // by 1% (66% here vs 67% there at 2-of-3 steps done).
+    const todayProgress = state.todayGrammar
+      ? dailyPlanCompletionPercent(plan, lessonKey(state.todayGrammar.title))
+      : 0;
     const week = Array.from({ length: 7 }, (_, index) => state.activity[dateKey(6 - index)] ?? 0);
     const chartPoints = week.map((value, index) => {
       const x = 8 + index * 15.3;

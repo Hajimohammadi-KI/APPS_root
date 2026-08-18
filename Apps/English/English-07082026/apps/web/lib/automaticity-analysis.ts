@@ -194,6 +194,19 @@ const PRACTICE_STOPWORDS = new Set([
 	"very", "just",
 ]);
 
+// Subject pronouns are also in PRACTICE_STOPWORDS above (they're filler for
+// most matching purposes), but stripping them entirely let a wrong-subject
+// answer hide behind an otherwise-correct sentence: an exercise whose only
+// real content word survives filtering (e.g. expected "She went home."
+// against reference "She goed home." reduces to just {went} once "she" and
+// "home" are stripped/shared) could be satisfied by a completely different
+// subject, because the subject was never compared. significantWords keeps
+// these visible specifically so a wrong subject can't hide in the noise it
+// filters everything else into.
+const SUBJECT_PRONOUNS = new Set([
+	"i", "you", "he", "she", "it", "we", "they",
+]);
+
 // Exercises whose prompt asks the learner to transform, complete, or correct
 // a given sentence genuinely have more than one valid surface form (e.g.
 // "I have worked on this project since May" and "I've worked on this
@@ -224,7 +237,11 @@ function significantWords(text: string): Set<string> {
 	return new Set(
 		words(expandContractions(text))
 			.map((word) => word.toLowerCase())
-			.filter((word) => word.length > 2 && !PRACTICE_STOPWORDS.has(word)),
+			.filter(
+				(word) =>
+					SUBJECT_PRONOUNS.has(word) ||
+					(word.length > 2 && !PRACTICE_STOPWORDS.has(word)),
+			),
 	);
 }
 
@@ -286,7 +303,16 @@ export function evaluatePracticeAnswer(
 
 	const overlap = [...expectedWords].filter((word) => answerWords.has(word)).length;
 	const overlapRatio = expectedWords.size ? overlap / expectedWords.size : 0;
-	return overlapRatio >= 0.5;
+	// 0.5 let an answer through on marker-word presence plus barely a coin
+	// flip of unrelated overlap: executed directly against real content,
+	// "She went to school yesterday." was accepted for expected "She went
+	// home." (target "Correct the sentence: She goed home.") because it hit
+	// the one marker word ("went") and, at 0.5, only needed one of {went,
+	// home} -- "went" alone was enough. 0.75 requires the answer to actually
+	// carry most of the expected sentence's real content, not just the one
+	// differentiating word, while every legitimate reworded/elaborated
+	// answer in this file's test suite still scores a full 1.0.
+	return overlapRatio >= 0.75;
 }
 
 export interface RestoredDraft {

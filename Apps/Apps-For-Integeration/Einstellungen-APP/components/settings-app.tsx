@@ -3,11 +3,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import SettingsHub from "./settings-hub";
-import { ConnectionStatus } from "./provider-setup";
+import { ConnectionStatus, ProviderState } from "./provider-setup";
 import { READING_RULER_EVENT } from "./reading-ruler";
 import { DEFAULT_WERKZEUG_SETTINGS, isTrustedOrigin, normalizeWerkzeugSettings, settingsForClient, WerkzeugSettings } from "../lib/werkzeug-settings";
 import { DEVICE_ONLY_STORAGE } from "../lib/storage-mode";
 import type { PlatformStatusResponse } from "../lib/platform-status";
+
+// This summary strip used to collapse every non-"connected" state to the same
+// "Nicht verbunden" pill -- a provider that failed its last check (wrong key,
+// expired token, unreachable) looked identical here to one nobody had set up
+// yet, even though the settings-hub cards below already distinguish them.
+// Reuses the .failed pill style already defined for the Daten/Backend pills
+// above, so this needs no new CSS.
+function platformPillClass(state: ProviderState) {
+  if (state === "connected") return "ok";
+  if (state === "not_configured" || state === "untested") return "waiting";
+  return "failed";
+}
+function platformPillLabel(state: ProviderState) {
+  if (state === "connected") return "Verbunden";
+  if (state === "not_configured" || state === "untested") return "Nicht verbunden";
+  return "Störung";
+}
 
 const EMPTY_CONNECTIONS: ConnectionStatus = {
   callbackUrl: "",
@@ -165,8 +182,8 @@ export default function SettingsApp() {
         <div className="settings-platform-items">
           <span className={`settings-platform-pill ${platform?.api.connected ? "ok" : "compat"}`}><b>Backend</b>{platform?.api.connected ? "NestJS + Bun aktiv" : "Next.js-Kompatibilitätsmodus"}</span>
           <span className={`settings-platform-pill ${platform?.database.reachable ? "ok" : "failed"}`}><b>Daten</b>{platform?.database.provider === "neon" ? "Neon" : "Lokal"}</span>
-          <span className={`settings-platform-pill ${connections.openai.state === "connected" ? "ok" : "waiting"}`}><b>OpenAI</b>{connections.openai.state === "connected" ? "Verbunden" : "Nicht verbunden"}</span>
-          <span className={`settings-platform-pill ${connections.deepl.state === "connected" ? "ok" : "waiting"}`}><b>DeepL</b>{connections.deepl.state === "connected" ? "Verbunden" : "Nicht verbunden"}</span>
+          <span className={`settings-platform-pill ${platformPillClass(connections.openai.state)}`}><b>OpenAI</b>{platformPillLabel(connections.openai.state)}</span>
+          <span className={`settings-platform-pill ${platformPillClass(connections.deepl.state)}`}><b>DeepL</b>{platformPillLabel(connections.deepl.state)}</span>
         </div>
         <div className="settings-platform-foot"><span>{platform?.api.message || "Systemstatus wird geprüft …"}</span><button type="button" onClick={() => void Promise.all([refreshPlatform(), refreshConnections()])}>Erneut prüfen</button></div>
       </section>

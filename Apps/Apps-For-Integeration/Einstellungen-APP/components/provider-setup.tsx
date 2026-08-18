@@ -26,7 +26,19 @@ const stateText: Record<ProviderState, string> = {
   error: "Prüfung fehlgeschlagen",
 };
 
-function badgeClass(state: ProviderState) { return state === "connected" ? "ready" : state === "untested" || state === "not_configured" ? "waiting" : "failed"; }
+// Five visually distinct states, not three: "waiting" (nothing set up yet) reads
+// very differently to a learner than "misconfigured" (they typed something wrong,
+// fixable by re-entering it) or "unavailable" (the service itself is down/expired/
+// out of quota, not the learner's fault). "checking" surfaces the in-flight probe
+// on the badge itself, not just a transient button-label swap.
+function badgeClass(state: ProviderState, checking = false) {
+  if (checking) return "checking";
+  if (state === "connected") return "ready";
+  if (state === "untested" || state === "not_configured") return "waiting";
+  if (state === "invalid_key") return "misconfigured";
+  return "unavailable"; // expired, quota_exhausted, unreachable, error
+}
+function badgeText(state: ProviderState, checking = false) { return checking ? "Wird geprüft …" : stateText[state]; }
 function dateLabel(value?: string | null) { return value ? new Date(value).toLocaleString("de-DE") : "Noch nicht geprüft"; }
 function ConnectedNote({ state }: { state: ProviderState }) {
   if (state !== "connected") return null;
@@ -60,7 +72,7 @@ function ApiKeyProviderCard(props: ApiKeyProviderCardProps) {
       <div className="permission-title">
         <span className="integration-icon">{props.icon}</span>
         <div><h3>{props.title}</h3><p>{props.description}</p></div>
-        <em className={badgeClass(props.state)}>{stateText[props.state]}</em>
+        <em className={badgeClass(props.state, props.busy)}>{badgeText(props.state, props.busy)}</em>
       </div>
       <form className="provider-form stacked" onSubmit={props.onSubmit}>
         <label><span>API-Schlüssel</span><input id={props.keyInputId} type="password" value={props.keyValue} onChange={(event) => props.onKeyChange(event.target.value)} placeholder={props.keyPlaceholder} autoComplete="new-password"/></label>
@@ -190,7 +202,7 @@ export default function ProviderSetup({ connections, scopes, labels, onRefresh, 
 
   return <div className="provider-setup">
     <article className="permission-card featured provider-card google-one-click-card">
-      <div className="permission-title"><span className="integration-icon">G</span><div><h3>Google Calendar &amp; Drive</h3><p>Ein Klick öffnet die offizielle Google-Anmeldung. E-Mail und Passwort werden ausschließlich bei Google eingegeben und niemals von dieser App gelesen.</p></div><em className={badgeClass(connections.google.state)}>{stateText[connections.google.state]}</em></div>
+      <div className="permission-title"><span className="integration-icon">G</span><div><h3>Google Calendar &amp; Drive</h3><p>Ein Klick öffnet die offizielle Google-Anmeldung. E-Mail und Passwort werden ausschließlich bei Google eingegeben und niemals von dieser App gelesen.</p></div><em className={badgeClass(connections.google.state, busy === "google")}>{badgeText(connections.google.state, busy === "google")}</em></div>
       <div className="provider-actions google-one-click-actions">
         <button type="button" className="primary action" disabled={!connections.google.configured || busy === "google"} onClick={connectGoogle}>{busy === "google" ? "Bitte warten …" : connections.google.connected ? "Google-Konto erneut verbinden" : "Mit Google verbinden"}</button>
         <button type="button" className="action secondary" disabled={busy === "google"} onClick={() => void onRefresh()}>Verbindung prüfen</button>

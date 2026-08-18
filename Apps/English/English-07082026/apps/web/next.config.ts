@@ -10,13 +10,6 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   transpilePackages: ["@grammar/content"],
-	async rewrites() {
-		return {
-			beforeFiles: [
-				{ source: "/daily", destination: "/replacements/en/daily.html" },
-			],
-		};
-	},
 };
 
 export default nextConfig;

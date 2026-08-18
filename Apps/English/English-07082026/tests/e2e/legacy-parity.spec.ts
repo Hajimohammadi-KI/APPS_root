@@ -169,15 +169,22 @@ test("keeps every legacy surface, catalog, and primary control available", async
   });
   await page.goto("/");
 
+  // "Today's Practice" used to land on a static daily.html mockup with a
+  // fixed, fake 7-".activity" list disconnected from the real app -- fixed
+  // by routing /daily to the same real, 3-step Mission component
+  // /progress uses. Checking against that mockup's invented step names
+  // was never real legacy parity; these are this Mission's actual step
+  // headings (automaticity-screen.tsx).
   await openNavigationLink(page, "Today’s Practice", "Daily Practice");
-  await expect(page.locator(".activity")).toHaveCount(7);
-  for (const title of [
-    "Activate & use accurately",
-    "Automate aloud",
-    "Speak freely & transfer",
-  ]) {
-    await expect(page.getByText(title, { exact: true }).first()).toBeVisible();
-  }
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
+  ).toBeVisible();
+  // Only the current step's card is in the DOM at a time (one active
+  // exercise, not several at once) -- step 1 is what's actually visible on
+  // arrival; steps 2/3 render only once the learner reaches them.
+  await expect(
+    page.getByText("1. Lesson and controlled practice", { exact: true }).first(),
+  ).toBeVisible();
   await page.goto("/");
 
   await openNavigationLink(page, "Grammar Lab", "Learning Paths");

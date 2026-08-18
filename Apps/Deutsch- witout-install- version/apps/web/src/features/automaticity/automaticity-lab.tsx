@@ -34,6 +34,7 @@ import {
 import { saveAudio } from "@/features/audio/audio-repository";
 import {
   analyzeWeilClause,
+  computeRestoredDraft,
   evaluatePracticeAnswer,
   type AutomatikAnalysis,
   type AutomatikIssue,
@@ -496,7 +497,12 @@ export function AutomaticityLab({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [hasAudioBlob, setHasAudioBlob] = useState(false);
   const startedAtRef = useRef(0);
-  const restoredRef = useRef(false);
+  // Keyed (not boolean) so a topic change re-syncs journal/transcript to the
+  // new topic's saved draft instead of leaving the previous topic's text in
+  // state -- a once-only guard here let stale evidence from one topic bleed
+  // into the next when the screen stayed mounted across a topic change (the
+  // learner's draft was attributed to the wrong grammar topic in saveWriting).
+  const restoredKeyRef = useRef<string | null>(null);
   // Timestamp of the first keystroke in the writing/transfer Textareas,
   // cleared after save -- feeds writingLatenciesMs / WRITING_LATENCY_THRESHOLD_MS
   // in packages/domain/src/mastery.ts (a separate, more generous gate than
@@ -506,11 +512,17 @@ export function AutomaticityLab({
   const transferStartRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!hydrated || restoredRef.current) return;
-    restoredRef.current = true;
-    setJournal(plan.answers[`${KEY}:journal`] ?? "");
-    setTranscript(plan.answers[`${KEY}:transcript`] ?? "");
-  }, [hydrated, plan.answers]);
+    const draft = computeRestoredDraft(
+      hydrated,
+      KEY,
+      restoredKeyRef.current,
+      plan.answers,
+    );
+    if (!draft.shouldRestore) return;
+    restoredKeyRef.current = KEY;
+    setJournal(draft.journal);
+    setTranscript(draft.transcript);
+  }, [hydrated, KEY, plan.answers]);
 
   useEffect(() => {
     if (!recording) return;
@@ -832,6 +844,11 @@ export function AutomaticityLab({
       setHasAudioBlob(false);
       setSpeechAnalysis(null);
       setTranscript("");
+      // audioFluencyResult was missing here -- stale pause/pitch numbers
+      // from the prior attempt could keep displaying while a new recording
+      // was already in progress, since it was previously only ever reset at
+      // save time (saveSpeaking()).
+      setAudioFluencyResult(null);
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       setAudioUrl(null);
       const recorder = new MediaRecorder(stream);

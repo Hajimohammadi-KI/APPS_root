@@ -203,15 +203,7 @@ const PRAXIS_STOPPWOERTER = new Set([
 // die Laengenprüfung (>2 Zeichen) ausgeschlossen. bedeutungsWoerter haelt
 // diese Pronomen deshalb sichtbar, damit eine falsche Person sich nicht im
 // Rauschen verstecken kann, das sonst alles andere herausfiltert.
-const SUBJEKTPRONOMEN = new Set([
-  "ich",
-  "du",
-  "er",
-  "sie",
-  "es",
-  "wir",
-  "ihr",
-]);
+const SUBJEKTPRONOMEN = new Set(["ich", "du", "er", "sie", "es", "wir", "ihr"]);
 
 function bedeutungsWoerter(text: string): Set<string> {
   return new Set(

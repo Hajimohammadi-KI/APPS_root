@@ -33,7 +33,9 @@ import {
   emptyMastery,
   lessonKey,
   dailyPlanCompletion,
+  dailyPlanCompletionPercent,
   transferSituation,
+  EVIDENCE_CONTENT_VERSION,
 } from "@/features/store/app-store";
 import {
   analyzePresentPerfect,
@@ -62,12 +64,11 @@ function requireDefaultGrammar() {
 }
 
 const defaultGrammar = requireDefaultGrammar();
-// Tracks packages/content's own version so recorded evidence stays
-// traceable to the exact rules/exercises that produced it if content
-// changes later. Not a real Task/Rubric version (packages/evidence-domain
-// defines that concept but nothing in this runtime calls it yet) -- this is
-// what's honestly available today.
-export const EVIDENCE_CONTENT_VERSION = "27.2.0";
+// Re-exported for existing importers (app/practice/page.tsx,
+// automatization-trainer-screen.tsx) -- the constant itself now lives in
+// app-store.tsx so due-reviews.tsx can use it without a circular import
+// (due-reviews.tsx is imported BY this file).
+export { EVIDENCE_CONTENT_VERSION };
 // A speaking attempt needs at least this much actual decoded speech (not
 // silence/pauses) before its language-correctness check is allowed to count
 // as verified speaking evidence -- otherwise a two-second "yes" with a long
@@ -534,9 +535,7 @@ export function AutomaticityScreen({
   );
 
   const completion = dailyPlanCompletion(plan, key);
-  const progress =
-    completion.filter(Boolean).length * 33 +
-    (completion.every(Boolean) ? 1 : 0);
+  const progress = dailyPlanCompletionPercent(plan, key);
   const shadowing = shadowingStages.map(
     (_, index) => plan.answers[`${key}:shadow:${index}`] === "done",
   );
@@ -907,9 +906,13 @@ export function AutomaticityScreen({
       audioRef.current = null;
       // Every recording is a fresh, isolated attempt: clear the previous
       // attempt's transcript and fluency evidence so they can't leak into
-      // (or get credited to) this one.
+      // (or get credited to) this one. speechAnalysis was missing here --
+      // its score/feedback kept rendering from the prior attempt until a
+      // new saveSpeaking() completed, even after the learner had already
+      // started recording again.
       setTranscript("");
       setAudioFluencyResult(null);
+      setSpeechAnalysis(null);
       const recorder = new MediaRecorder(stream);
       recorderRef.current = recorder;
       recorder.ondataavailable = (event) => {

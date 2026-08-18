@@ -155,6 +155,48 @@ describe("repair prompts get open-production grading", () => {
 	});
 });
 
+// Regression coverage for a confirmed, directly-executed exploit: the
+// overlap-ratio check used to accept an answer that only shared the one
+// marker word distinguishing the model answer from the prompt's source
+// sentence, ignoring the rest of the expected sentence's real content.
+describe("evaluatePracticeAnswer rejects an unrelated answer sharing only the marker word", () => {
+	it("rejects a wrong, unrelated sentence that only reuses the target verb form", () => {
+		// Real exercise content (packages/content/src/generated/grammar.ts):
+		// prompt "Correct the sentence: She goed home.", expected "She went
+		// home." -- markerWords reduces to just {went} since "home" is shared
+		// with the prompt's source sentence. This exact answer was executed
+		// against the pre-fix function and returned true.
+		const exercise = {
+			prompt: "Correct the sentence: She goed home.",
+			expected: "She went home.",
+		};
+		expect(
+			evaluatePracticeAnswer("She went to school yesterday.", exercise),
+		).toBe(false);
+	});
+
+	it("rejects a wrong subject that reuses every other content word", () => {
+		const exercise = {
+			prompt: "Complete: ___ is tired after work.",
+			expected: "She is tired after work.",
+		};
+		expect(
+			evaluatePracticeAnswer("They is tired after work.", exercise),
+		).toBe(false);
+	});
+
+	it("still accepts a genuinely correct answer for the same exercise", () => {
+		const exercise = {
+			prompt: "Correct the sentence: She goed home.",
+			expected: "She went home.",
+		};
+		expect(evaluatePracticeAnswer("She went home.", exercise)).toBe(true);
+		expect(
+			evaluatePracticeAnswer("She went home early.", exercise),
+		).toBe(true);
+	});
+});
+
 describe("computeRestoredDraft", () => {
 	// Regression coverage for a real bug: a once-only boolean guard on
 	// automaticity-screen.tsx's restore effect meant switching practice topic

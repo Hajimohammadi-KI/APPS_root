@@ -127,7 +127,9 @@ describe("computeRestoredDraft", () => {
       "a2-einheit:journal": "eigener gespeicherter entwurf des neuen themas",
     });
     expect(draft.shouldRestore).toBe(true);
-    expect(draft.journal).toBe("eigener gespeicherter entwurf des neuen themas");
+    expect(draft.journal).toBe(
+      "eigener gespeicherter entwurf des neuen themas",
+    );
   });
 
   it("setzt auf leer zurück, wenn das neue Thema noch keinen gespeicherten Entwurf hat", () => {

@@ -512,7 +512,12 @@ export function AutomaticityLab({
   const transferStartRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const draft = computeRestoredDraft(hydrated, KEY, restoredKeyRef.current, plan.answers);
+    const draft = computeRestoredDraft(
+      hydrated,
+      KEY,
+      restoredKeyRef.current,
+      plan.answers,
+    );
     if (!draft.shouldRestore) return;
     restoredKeyRef.current = KEY;
     setJournal(draft.journal);

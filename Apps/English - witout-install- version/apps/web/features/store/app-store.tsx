@@ -27,6 +27,14 @@ export type MasteryStatus =
 	| "usable"
 	| "stable"
 	| "automatic";
+// Tracks packages/content's own version so recorded evidence stays
+// traceable to the exact rules/exercises that produced it if content
+// changes later. Lives here (not in automaticity-screen.tsx, its original
+// home) because due-reviews.tsx needs it too and due-reviews.tsx is imported
+// BY automaticity-screen.tsx -- importing it back the other way would be a
+// circular dependency. Re-exported from automaticity-screen.tsx below for
+// its existing importers.
+export const EVIDENCE_CONTENT_VERSION = "27.2.0";
 export type AttemptMode =
 	| "recognition"
 	| "writing"
@@ -134,6 +142,14 @@ export interface Attempt {
 	// progression through the full sequence -- not just "shadowing done" as
 	// one blob -- is visible in the automatization tracking matrix.
 	stage?: number;
+	// True only for attempts recorded by due-reviews.tsx's delayed-review
+	// flow, as opposed to a same-session Mission/Studio step. Automaticity is
+	// supposed to require evidence that survives a delay, not just same-day
+	// bursts of activity -- recalculateMastery's "automatic" gate checks this
+	// specifically on mode:"transfer" attempts so the highest status can't be
+	// reached purely from same-session Transfer steps that were never
+	// re-tested after time actually passed.
+	fromDueReview?: boolean;
 }
 
 export interface ErrorItem {
@@ -943,6 +959,23 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 		current.medianWritingLatencyMs !== null &&
 		current.medianWritingLatencyMs <= WRITING_LATENCY_THRESHOLD_MS;
 
+	// successfulReviews and verifiedFor("transfer") used to be able to reach
+	// their thresholds independently of each other: due-reviews.tsx only ever
+	// called completeReview (which advances successfulReviews) and never
+	// recordAttempt, so no mode:"transfer" attempt could originate from an
+	// actual delayed review -- all transfer evidence came from the same-session
+	// Mission step. A learner could reach "automatic" from two same-session
+	// bursts of activity, never once having been tested on this structure
+	// after time had actually passed and in a context they hadn't just seen.
+	// Requiring at least one verified transfer attempt to be tagged
+	// fromDueReview closes that gap: due-reviews.tsx now records a real
+	// mode:"transfer" attempt at its novel-context checkpoint (see
+	// TRANSFER_CHECKPOINT_INTERVAL_DAYS there), so this can only be true once
+	// the learner has actually succeeded at a delayed, novel-context recall.
+	const hasDelayedTransferEvidence = verifiedFor("transfer").some(
+		(attempt) => attempt.fromDueReview === true,
+	);
+
 	if (
 		current.recognitionScore >= 85 &&
 		current.writingScore >= 80 &&
@@ -952,6 +985,7 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 		current.successfulReviews >= 2 &&
 		current.activeErrorCount <= 1 &&
 		hasEnoughAttempts &&
+		hasDelayedTransferEvidence &&
 		!hasLapsedRetention &&
 		hasFastEnoughWriting
 	) {
@@ -1767,4 +1801,19 @@ export function dailyPlanCompletion(
 		plan.answers[`${key}:writing`] === "done",
 		plan.answers[`${key}:speaking`] === "done",
 	];
+}
+
+// Home and Daily Practice used to each round this tuple into a percentage
+// with their own formula (Daily Practice: n*33 + a "finished" bonus point;
+// Home: Math.round((n/3)*100)) -- both fed by this exact same tuple, but
+// disagreeing at 2-of-3 steps (66% vs 67%) since they're two different
+// pieces of arithmetic over identical data. One shared function so the two
+// screens can never again show a different number for the same completion.
+export function dailyPlanCompletionPercent(
+	plan: DailyPlan,
+	key: string,
+): number {
+	const completion = dailyPlanCompletion(plan, key);
+	const stepsDone = completion.filter(Boolean).length;
+	return Math.round((stepsDone / completion.length) * 100);
 }

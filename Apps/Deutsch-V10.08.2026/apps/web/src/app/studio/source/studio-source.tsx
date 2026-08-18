@@ -15,7 +15,10 @@ import {
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import { SelectMenu } from "@/components/ui/select-menu";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
-import { analyzeAudioFluency, type AudioFluencyAnalysis } from "@/lib/audio-fluency";
+import {
+  analyzeAudioFluency,
+  type AudioFluencyAnalysis,
+} from "@/lib/audio-fluency";
 import { normalizePracticeAnswer } from "@/features/automaticity/automaticity-analysis";
 
 const nav = [
@@ -650,9 +653,9 @@ export default function Home() {
       setSavedId(id);
       setMessage(
         isUnchangedFromBaseline
-          ? (language === "de"
-              ? "Gespeichert -- aber dieser Versuch entspricht noch deinem ursprünglichen. Ändere tatsächlich etwas, damit es als Verbesserung zählt."
-              : "Saved -- but this attempt still matches your original. Change something real before it counts as an improvement.")
+          ? language === "de"
+            ? "Gespeichert -- aber dieser Versuch entspricht noch deinem ursprünglichen. Ändere tatsächlich etwas, damit es als Verbesserung zählt."
+            : "Saved -- but this attempt still matches your original. Change something real before it counts as an improvement."
           : text.saved,
       );
       finishDailyActivity();

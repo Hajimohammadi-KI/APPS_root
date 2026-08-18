@@ -195,12 +195,26 @@ const PRAXIS_STOPPWOERTER = new Set([
   "noch",
 ]);
 
+// Subjektpronomen stehen zwar auch in PRAXIS_STOPPWOERTER (fuer die meisten
+// Zwecke sind sie Fuellwoerter), aber sie vollstaendig herauszufiltern liess
+// eine falsche Person sich hinter einem sonst korrekten Satz verstecken: bei
+// "Ich bin müde." gegen den Prompt-Satz "Ich sein müde." bleibt nach dem
+// Filtern nur {müde} uebrig -- "du"/"er"/"es" sind zusaetzlich schon durch
+// die Laengenprüfung (>2 Zeichen) ausgeschlossen. bedeutungsWoerter haelt
+// diese Pronomen deshalb sichtbar, damit eine falsche Person sich nicht im
+// Rauschen verstecken kann, das sonst alles andere herausfiltert.
+const SUBJEKTPRONOMEN = new Set(["ich", "du", "er", "sie", "es", "wir", "ihr"]);
+
 function bedeutungsWoerter(text: string): Set<string> {
   return new Set(
     normalizePracticeAnswer(text)
       .replace(/[.,;:!?„“"']/gu, "")
       .split(/\s+/u)
-      .filter((wort) => wort.length > 2 && !PRAXIS_STOPPWOERTER.has(wort)),
+      .filter(
+        (wort) =>
+          SUBJEKTPRONOMEN.has(wort) ||
+          (wort.length > 2 && !PRAXIS_STOPPWOERTER.has(wort)),
+      ),
   );
 }
 
@@ -247,5 +261,42 @@ export function evaluatePracticeAnswer(
   if (!verlangt.every((wort) => gegeben.has(wort))) return false;
 
   const treffer = [...erwartet].filter((wort) => gegeben.has(wort)).length;
-  return erwartet.size ? treffer / erwartet.size >= 0.5 : false;
+  // 0.5 liess eine Antwort durch, die nur das eine Markerwort traf und
+  // ansonsten nichts mit dem erwarteten Satz zu tun hatte: direkt gegen
+  // echten Inhalt ausgefuehrt wurde "Du bist müde." fuer den erwarteten Satz
+  // "Ich bin müde." akzeptiert (Prompt: "Korrigiere den Satz: Ich sein
+  // müde."), weil "müde" allein bei 0.5 genuegte. 0.75 verlangt, dass die
+  // Antwort tatsaechlich den Grossteil des erwarteten Inhalts traegt, nicht
+  // nur das eine unterscheidende Wort -- jede legitime Umformulierung in
+  // dieser Testdatei erreicht weiterhin volle 1.0.
+  return erwartet.size ? treffer / erwartet.size >= 0.75 : false;
+}
+
+export interface RestoredDraft {
+  readonly shouldRestore: boolean;
+  readonly journal: string;
+  readonly transcript: string;
+}
+
+// Ported from the English app's fix for the identical bug: automaticity-lab.tsx
+// used a once-only boolean guard (`restoredRef`) on its draft-restore effect, so
+// it fired on first hydration and never again. Switching Grammatik-Labor topic
+// while the component stayed mounted left the *previous* topic's unsaved
+// journal/transcript sitting in state; saveWriting() then recorded that stale
+// text under the *new* topic. Keying the restore on `key` itself (instead of a
+// boolean) makes it re-run whenever the topic actually changes.
+export function computeRestoredDraft(
+  hydrated: boolean,
+  key: string,
+  lastRestoredKey: string | null,
+  answers: Record<string, string>,
+): RestoredDraft {
+  if (!hydrated || lastRestoredKey === key) {
+    return { shouldRestore: false, journal: "", transcript: "" };
+  }
+  return {
+    shouldRestore: true,
+    journal: answers[`${key}:journal`] ?? "",
+    transcript: answers[`${key}:transcript`] ?? "",
+  };
 }

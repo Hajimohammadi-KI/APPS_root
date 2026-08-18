@@ -3,6 +3,8 @@ import { describe, expect, it } from "bun:test";
 import {
   calculateStreak,
   canCompleteDailyStep,
+  createInitialLearnerState,
+  migrateLegacyLearnerState,
   normalizeLearnerState,
 } from "./learner-state";
 
@@ -116,5 +118,92 @@ describe("legacy learner state", () => {
     expect(state.errors[0]?.occurrenceCount).toBe(1);
     expect(state.mastery.Perfekt?.status).toBe("usable");
     expect(state.mastery.Perfekt?.successfulReviews).toBe(0);
+  });
+});
+
+// Regression coverage for a real gap: LearnerState had no version field and
+// no dedicated migration entry point at all (unlike English's AppState.version
+// / migrateLegacy()), so a future schema change would have had no version
+// marker to detect old-shape data by. This locks in that every state --
+// fresh, normalized from an unversioned blob, or migrated from the legacy
+// key -- carries the new version marker, and that a realistic old blob's
+// real data (attempts, reviews, mastery) survives the migration path.
+describe("state versioning and legacy-key migration", () => {
+  it("stamps version 1 on a fresh state", () => {
+    expect(createInitialLearnerState().version).toBe(1);
+  });
+
+  it("stamps version 1 even when normalizing an old, unversioned blob", () => {
+    expect(normalizeLearnerState({ settings: { minWords: 12 } }).version).toBe(
+      1,
+    );
+    expect(normalizeLearnerState(null).version).toBe(1);
+  });
+
+  it("migrates a realistic legacy (GrammarAutomaticityV11_de) blob's real data forward", () => {
+    const legacyBlob = {
+      settings: { minWords: 18, saveAudio: false },
+      learningLevel: "B1",
+      attempts: [
+        {
+          id: "legacy-attempt-1",
+          date: "2026-07-20T09:00:00.000Z",
+          topic: "Perfekt",
+          mode: "writing",
+          inputText: "Ich habe das gemacht.",
+          correctedText: "Ich habe das gemacht.",
+          targetHit: true,
+          verified: true,
+          accuracyScore: 92,
+        },
+      ],
+      reviews: [
+        {
+          id: "legacy-review-1",
+          topic: "Perfekt",
+          original: "Ich habe gegangen.",
+          corrected: "Ich bin gegangen.",
+          due: Date.now() + 86_400_000,
+          stage: 1,
+          successStreak: 1,
+          mastered: false,
+          reviewMode: "writing",
+          sourceType: "grammar_topic",
+        },
+      ],
+      mastery: {
+        Perfekt: {
+          scores: {
+            recognition: 90,
+            writing: 85,
+            speaking: 80,
+            repair: 80,
+            transfer: 75,
+          },
+          successfulReviews: 1,
+          controlled: true,
+          free: true,
+        },
+      },
+    };
+
+    const migrated = migrateLegacyLearnerState(legacyBlob);
+
+    expect(migrated.version).toBe(1);
+    expect(migrated.settings.minWords).toBe(18);
+    expect(migrated.learningLevel).toBe("B1");
+    expect(migrated.attempts).toHaveLength(1);
+    expect(migrated.attempts[0]?.topic).toBe("Perfekt");
+    expect(migrated.attempts[0]?.accuracyScore).toBe(92);
+    expect(migrated.reviews).toHaveLength(1);
+    expect(migrated.reviews[0]?.corrected).toBe("Ich bin gegangen.");
+    expect(migrated.mastery.Perfekt?.scores.writing).toBe(85);
+    expect(migrated.mastery.Perfekt?.successfulReviews).toBe(1);
+  });
+
+  it("falls back to a clean initial state for a missing/unreadable legacy blob", () => {
+    expect(migrateLegacyLearnerState(null)).toEqual(
+      createInitialLearnerState(),
+    );
   });
 });

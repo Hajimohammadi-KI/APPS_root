@@ -15,6 +15,8 @@ import {
 import { SelectMenu } from "@/components/ui/select-menu";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import { useAppStore } from "@/features/store/app-store";
+import { analyzeAudioFluency, type AudioFluencyAnalysis } from "@/lib/audio-fluency";
+import { normalizePracticeAnswer } from "@/lib/automaticity-analysis";
 
 const nav = ["Daily Practice", "Lessons", "Speaking Studio", "Review", "Progress", "Vocabulary", "Notebook"];
 const navRoutes = ["/daily", "/grammar", "/studio", "/?screen=errors", "/?screen=progress", "/flashcards", "/notebook"];
@@ -121,6 +123,8 @@ export default function Home() {
   const [hasAudioBlob, setHasAudioBlob] = useState(false);
   const [evaluation, setEvaluation] = useState<EvaluationResponse | null>(null);
   const [baseline, setBaseline] = useState<EvaluationResponse | null>(null);
+  const [audioFluencyResult, setAudioFluencyResult] =
+    useState<AudioFluencyAnalysis | null>(null);
   const [evaluating, setEvaluating] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -180,7 +184,19 @@ export default function Home() {
   const selected = filteredTopics.find((topic) => topic.id === topicId) ?? filteredTopics[0] ?? allForPath[0]!;
   const maxSeconds = practiceMode === "challenge" ? 60 : 120;
   const wordCount = transcript.trim().match(/[\p{L}\p{N}'’-]+/gu)?.length ?? 0;
-  const wordsPerMinute = seconds > 0 ? Math.round(wordCount / (seconds / 60)) : 0;
+  // seconds is wall-clock recording time (it only pauses on the explicit
+  // Pause button), so wordCount/seconds silently counts any natural in-
+  // speech silence as if it were speaking time -- inflating "fluency". Once
+  // the real amplitude-derived active-speech duration is available (set
+  // after recording stops, same lib/audio-fluency.ts analysis the Mission
+  // step already uses for this exact figure), prefer it; the wall-clock
+  // formula is a fallback only for while that analysis hasn't run yet.
+  const wordsPerMinute =
+    audioFluencyResult && audioFluencyResult.activeSpeechSeconds > 0
+      ? Math.round(wordCount / (audioFluencyResult.activeSpeechSeconds / 60))
+      : seconds > 0
+        ? Math.round(wordCount / (seconds / 60))
+        : 0;
 
   useEffect(() => {
     if (recordingState !== "recording") return;
@@ -229,6 +245,7 @@ export default function Home() {
     audioBlobRef.current = null;
     setHasAudioBlob(false);
     setAudioUrl(null);
+    setAudioFluencyResult(null);
     window.speechSynthesis?.cancel();
   }
 
@@ -327,6 +344,12 @@ export default function Home() {
           audioBlobRef.current = blob;
           setHasAudioBlob(true);
           setAudioUrl(URL.createObjectURL(blob));
+          // Real, audio-derived fluency once the blob is finalized -- same
+          // pattern the Mission step's saveSpeaking() already uses. onstop
+          // can't be declared async, so this is fire-and-forget rather than
+          // awaited; wordsPerMinute falls back to the wall-clock estimate
+          // until it resolves.
+          void analyzeAudioFluency(blob).then(setAudioFluencyResult);
         }
         stream.getTracks().forEach((track) => track.stop());
         setRecordingState("idle");
@@ -340,6 +363,7 @@ export default function Home() {
       setSavedId(null);
       setSeconds(0);
       setAudioUrl(null);
+      setAudioFluencyResult(null);
 
       if (!startSpeechRecognition("")) {
         setMessage(language === "de"
@@ -444,6 +468,18 @@ export default function Home() {
       setMessage(language === "de" ? "Für das Speichern werden Aufnahme und echte Auswertung benötigt." : "A recording and a real evaluation are required before saving.");
       return;
     }
+    // practiceImprovedVersion() sets baseline to the pre-improvement
+    // evaluation and keeps it live through the re-recording. Nothing
+    // previously checked whether the new attempt actually differed from
+    // that baseline before it was saved/labeled as an improvement -- a
+    // learner could re-record (or retype) the identical mistake and have it
+    // presented as a verified improvement. The save itself still proceeds
+    // (it's the learner's real new attempt and audio), but the message
+    // reflects reality instead of implying progress that didn't happen.
+    const isUnchangedFromBaseline =
+      baseline !== null &&
+      normalizePracticeAnswer(evaluation.corrected) ===
+        normalizePracticeAnswer(baseline.corrected);
     const id = crypto.randomUUID();
     try {
       await saveConversationSession({
@@ -462,7 +498,13 @@ export default function Home() {
         audio: audioBlobRef.current,
       });
       setSavedId(id);
-      setMessage(text.saved);
+      setMessage(
+        isUnchangedFromBaseline
+          ? (language === "de"
+              ? "Gespeichert -- aber dieser Versuch entspricht noch deinem ursprünglichen. Ändere tatsächlich etwas, um eine echte Verbesserung zu üben."
+              : "Saved -- but this attempt still matches your original. Change something real before it counts as an improvement.")
+          : text.saved,
+      );
       finishDailyActivity();
     } catch {
       setMessage(language === "de" ? "Die Sitzung konnte in diesem Browser nicht gespeichert werden." : "The session could not be saved in this browser.");

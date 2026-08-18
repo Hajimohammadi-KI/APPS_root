@@ -165,8 +165,18 @@ export function ReviewCenter() {
         ? result.targetHit
         : answer.trim().toLocaleLowerCase("de") ===
           selected.corrected.trim().toLocaleLowerCase("de");
-      const mode: MasteryMode =
-        selected.reviewMode === "repair"
+      // At a transfer checkpoint this is a real delayed, novel-context recall
+      // -- it must be recorded as mode:"transfer" (not repair/recognition/
+      // writing) and tagged fromDueReview so mastery.ts's "automatic" gate
+      // can tell it apart from same-session Grammatik-Labor transfer
+      // attempts. Before this fix, review-center.tsx never produced a
+      // mode:"transfer" attempt at all -- every transfer-checkpoint success
+      // here was mis-recorded under whichever reviewMode the item happened
+      // to have, so "automatic" status could be reached purely from
+      // same-session bursts of activity, never a real delayed transfer test.
+      const mode: MasteryMode = isTransferCheckpoint
+        ? "transfer"
+        : selected.reviewMode === "repair"
           ? "repair"
           : selected.reviewMode === "timed"
             ? "recognition"
@@ -183,6 +193,7 @@ export function ReviewCenter() {
         // "stable"/"automatic" status.
         verified: result.verified,
         accuracyScore: exact ? 100 : 40,
+        ...(isTransferCheckpoint ? { fromDueReview: true } : {}),
         ...(timedActive ? { latencyMs: (8 - secondsLeft) * 1_000 } : {}),
       });
       if (!exact) {

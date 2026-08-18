@@ -58,8 +58,55 @@ describe("mastery gates", () => {
     record = recordMasteryReview(record, true);
     expect(record.status).toBe("stable");
 
+    // "stable" doesn't require delayed-transfer evidence, but "automatic"
+    // does (see the dedicated hasDelayedTransferEvidence tests below) -- a
+    // real due-review-originated transfer success has to exist before the
+    // second delayed review can actually finish unlocking "automatic".
+    record = recordMasteryAttempt(record, {
+      mode: "transfer",
+      accuracyScore: 100,
+      targetHit: true,
+      latencyMs: 30_000,
+      fromDueReview: true,
+    });
     record = recordMasteryReview(record, true);
     expect(record.status).toBe("automatic");
+  });
+
+  it("does not grant automatic status without a delayed-review-originated transfer attempt, even with every other threshold met", () => {
+    // Regression test for the gap this pass fixed: review-center.tsx used to
+    // never tag any attempt fromDueReview (it didn't even record
+    // mode:"transfer" attempts at the transfer checkpoint at all), so
+    // attemptCounts.transfer >= 3 could be satisfied purely by same-session
+    // Grammatik-Labor transfer attempts, never by a real delayed, novel-
+    // context success.
+    let record = createEmptyMasteryRecord();
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      for (const mode of [
+        "recognition",
+        "writing",
+        "speaking",
+        "repair",
+        "transfer",
+      ] as const) {
+        record = recordMasteryAttempt(record, {
+          mode,
+          accuracyScore: 100,
+          targetHit: true,
+          ...(mode === "recognition" ? { latencyMs: 4_000 } : {}),
+          ...(mode === "writing" || mode === "transfer"
+            ? { latencyMs: 30_000 }
+            : {}),
+          // Deliberately omitted: fromDueReview.
+        });
+      }
+    }
+    record = recordMasteryReview(record, true);
+    record = recordMasteryReview(record, true);
+
+    expect(record.hasDelayedTransferEvidence).toBe(false);
+    expect(record.status).not.toBe("automatic");
+    expect(record.status).toBe("stable");
   });
 
   it("does not grant automatic status when writing/transfer are accurate but slow", () => {
@@ -210,9 +257,18 @@ describe("recordVerifiedMasteryAttempt", () => {
         });
       }
     }
+    record = recordVerifiedMasteryAttempt(record, {
+      mode: "transfer",
+      accuracyScore: 100,
+      targetHit: true,
+      verified: true,
+      latencyMs: 30_000,
+      fromDueReview: true,
+    });
     record = recordMasteryReview(record, true);
     record = recordMasteryReview(record, true);
 
+    expect(record?.hasDelayedTransferEvidence).toBe(true);
     expect(record?.status).toBe("automatic");
   });
 });

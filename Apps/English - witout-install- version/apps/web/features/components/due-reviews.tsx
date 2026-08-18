@@ -21,7 +21,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { transferSituation, useAppStore } from "@/features/store/app-store";
+import {
+  EVIDENCE_CONTENT_VERSION,
+  transferSituation,
+  useAppStore,
+} from "@/features/store/app-store";
 import { evaluateResponse, type Evaluation } from "@/lib/assessment";
 
 // Distinguishes the near-term recall check (interval 1-3 days: "can you
@@ -43,7 +47,7 @@ function grammarFor(topic: string) {
 }
 
 export function DueReviews() {
-  const { state, completeReview } = useAppStore();
+  const { state, completeReview, recordAttempt } = useAppStore();
   const dueItems = React.useMemo(
     () =>
       state.reviews
@@ -99,6 +103,31 @@ export function DueReviews() {
       );
       setResult(evaluation);
       completeReview(current.id, evaluation.masteryEligible);
+      // Previously this component only updated the review's own schedule
+      // (streak/interval) via completeReview and never called recordAttempt --
+      // no mode:"transfer" Attempt could ever originate from an actual delayed
+      // review, so recalculateMastery's "automatic" gate could be satisfied
+      // entirely from same-session Mission-step transfer attempts that were
+      // never re-tested after a delay. Recording a real attempt here (tagged
+      // fromDueReview so the gate can tell it apart from same-session
+      // evidence) closes that gap. Only the novel-context checkpoint counts as
+      // mode:"transfer" -- the near-term same-sentence recall check is
+      // "recognition" evidence, not proof of transfer to a new situation.
+      recordAttempt({
+        grammarTitle: current.topic,
+        mode: isTransferCheckpoint ? "transfer" : "recognition",
+        inputText: attempt,
+        correctedText: evaluation.corrected,
+        targetHit: evaluation.pass,
+        accuracyScore: evaluation.accuracyScore,
+        fluencyScore: 0,
+        latencyMs: null,
+        passed: evaluation.pass,
+        verified: evaluation.masteryEligible,
+        assessedBy: evaluation.online ? "online" : "offline",
+        contentVersion: EVIDENCE_CONTENT_VERSION,
+        fromDueReview: true,
+      });
     } finally {
       setChecking(false);
     }

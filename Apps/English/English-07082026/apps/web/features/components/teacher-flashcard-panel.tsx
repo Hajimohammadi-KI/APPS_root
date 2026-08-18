@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Mic, Plus, Upload } from "lucide-react";
-import type { CefrLevel } from "@grammar/content";
+import { grammarUnits, type CefrLevel } from "@grammar/content";
 import { HumanAudioPlayer, HumanAudioRecorder } from "@/features/components/human-audio-player";
 import { SelectMenu } from "@/components/ui/select-menu";
 import { useAppStore, type FlashcardItem } from "@/features/store/app-store";
@@ -35,6 +35,7 @@ export function TeacherFlashcardPanel() {
 	const [back, setBack] = React.useState("");
 	const [sentence, setSentence] = React.useState("");
 	const [level, setLevel] = React.useState<CefrLevel>("A1");
+	const [lesson, setLesson] = React.useState("");
 	const [batchText, setBatchText] = React.useState("");
 	const [batchMessage, setBatchMessage] = React.useState("");
 	const [audioIndex, setAudioIndex] = React.useState<Map<string, TeacherContentItem>>(new Map());
@@ -63,6 +64,7 @@ export function TeacherFlashcardPanel() {
 			source: "lesson",
 			level,
 			...(sentence.trim() ? { originalSentence: sentence.trim() } : {}),
+			...(lesson ? { lesson } : {}),
 		});
 		setFront("");
 		setBack("");
@@ -83,7 +85,7 @@ export function TeacherFlashcardPanel() {
 				skipped += 1;
 				continue;
 			}
-			addFlashcard({ ...parsed, source: "lesson", level });
+			addFlashcard({ ...parsed, source: "lesson", level, ...(lesson ? { lesson } : {}) });
 			added += 1;
 		}
 		setBatchMessage(
@@ -152,6 +154,20 @@ export function TeacherFlashcardPanel() {
 				onChange={(next) => setLevel(next as CefrLevel)}
 				options={LEVELS.map((cefrLevel) => ({ value: cefrLevel, label: cefrLevel }))}
 				value={level}
+			/>
+			{/* Optional: links the card to a real grammar unit so a forgotten card
+			    can point the learner back to its lesson (features/store/app-store's
+			    review UI already reads this field -- it just needs a producer). */}
+			<SelectMenu
+				label="Lesson (optional)"
+				onChange={(next) => setLesson(next)}
+				options={[
+					{ value: "", label: "No specific lesson" },
+					...grammarUnits
+						.filter((unit) => unit.level === level)
+						.map((unit) => ({ value: unit.title, label: unit.title })),
+				]}
+				value={lesson}
 			/>
 			<button
 				className="teacher-primary-button"

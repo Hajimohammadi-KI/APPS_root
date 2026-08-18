@@ -391,6 +391,14 @@ export function AutomaticityScreen({
   );
   const [checkedAnswers, setCheckedAnswers] = React.useState<boolean[]>([]);
   const [practiceRounds, setPracticeRounds] = React.useState(0);
+  // Only one exercise renders as an active, editable input at a time --
+  // the round used to render and expose all 6 simultaneously, which is
+  // exactly the "several exercises competing for attention at once"
+  // pattern the product's own design principles rule out. checkPractice()
+  // still grades the whole `answers` array at once when it's called (from
+  // the last exercise); nothing about scoring or the round's shared timer
+  // changes, only how many inputs are visible/focusable at a given moment.
+  const [currentExerciseIndex, setCurrentExerciseIndex] = React.useState(0);
   // Retrieval practice only measures retrieval when the answer is NOT on
   // screen. Every expected answer in this step is drawn from the unit's own
   // rule/examples/commonError -- precisely the text the lesson panel prints
@@ -421,6 +429,7 @@ export function AutomaticityScreen({
     setRoundExercises(freshRound);
     setAnswers(freshRound.map(() => ""));
     setCheckedAnswers([]);
+    setCurrentExerciseIndex(0);
     setPracticeRounds(0);
     // A new topic starts in the study phase again: the learner has not seen
     // this unit's rule yet, so opening on a hidden lesson would be a test
@@ -684,6 +693,7 @@ export function AutomaticityScreen({
     setRoundExercises(nextRound);
     setAnswers(nextRound.map(() => ""));
     setCheckedAnswers([]);
+    setCurrentExerciseIndex(0);
     setPracticeRounds((count) => count + 1);
     // A fresh round gets a fresh closed-book chance: the peek that spoiled the
     // previous round should not permanently disqualify every later one.
@@ -1369,38 +1379,82 @@ export function AutomaticityScreen({
               </Button>
             </div>
           )}
-          {roundExercises.map((item, index) => (
-            <label className="block space-y-2" key={item.prompt}>
-              <span className="text-sm font-bold">{item.prompt}</span>
-              <input
-                className="min-h-11 w-full rounded-xl border bg-background px-3"
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setAnswers((rows) => {
-                    const next = [...rows];
-                    next[index] = value;
-                    return next;
-                  });
-                }}
-                value={answers[index]}
-              />
-              {checkedAnswers.length ? (
-                <span
-                  className={
-                    checkedAnswers[index]
-                      ? "text-sm font-bold text-violet-800"
-                      : "text-sm font-bold text-red-800"
-                  }
-                >
-                  {checkedAnswers[index]
-                    ? "Correct"
-                    : `Model: ${item.expected}`}
-                </span>
-              ) : null}
-            </label>
-          ))}
+          {checkedAnswers.length === 0 && roundExercises.length > 0 ? (
+            <>
+              <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                Exercise {currentExerciseIndex + 1} of {roundExercises.length}
+              </p>
+              {(() => {
+                const item = roundExercises[currentExerciseIndex];
+                if (!item) return null;
+                return (
+                  <label className="block space-y-2" key={item.prompt}>
+                    <span className="text-sm font-bold">{item.prompt}</span>
+                    <input
+                      className="min-h-11 w-full rounded-xl border bg-background px-3"
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        setAnswers((rows) => {
+                          const next = [...rows];
+                          next[currentExerciseIndex] = value;
+                          return next;
+                        });
+                      }}
+                      value={answers[currentExerciseIndex] ?? ""}
+                    />
+                  </label>
+                );
+              })()}
+              <div className="flex flex-wrap items-center gap-3">
+                {currentExerciseIndex > 0 ? (
+                  <Button
+                    onClick={() =>
+                      setCurrentExerciseIndex((index) => Math.max(0, index - 1))
+                    }
+                    type="button"
+                    variant="outline"
+                  >
+                    Back
+                  </Button>
+                ) : null}
+                {currentExerciseIndex < roundExercises.length - 1 ? (
+                  <Button
+                    onClick={() =>
+                      setCurrentExerciseIndex((index) =>
+                        Math.min(roundExercises.length - 1, index + 1),
+                      )
+                    }
+                    type="button"
+                  >
+                    Next
+                  </Button>
+                ) : (
+                  <Button onClick={checkPractice} type="button">
+                    Check answers
+                  </Button>
+                )}
+              </div>
+            </>
+          ) : null}
+          {checkedAnswers.length > 0
+            ? roundExercises.map((item, index) => (
+                <div className="block space-y-1" key={item.prompt}>
+                  <span className="text-sm font-bold">{item.prompt}</span>
+                  <span
+                    className={
+                      checkedAnswers[index]
+                        ? "block text-sm font-bold text-violet-800"
+                        : "block text-sm font-bold text-red-800"
+                    }
+                  >
+                    {checkedAnswers[index]
+                      ? "Correct"
+                      : `Model: ${item.expected}`}
+                  </span>
+                </div>
+              ))
+            : null}
           <div className="flex flex-wrap items-center gap-3">
-            <Button onClick={checkPractice}>Check answers</Button>
             {checkedAnswers.length && exercises.length > roundExercises.length ? (
               <Button onClick={practiceAgain} variant="outline">
                 <RotateCcw className="size-4" /> Practice again (new round)

@@ -376,7 +376,14 @@ describe("autorierte Niveaus", () => {
       .trim();
 
   it("deckt alle sechs Niveaus und alle 144 Einheiten ab", () => {
-    expect(autorierteNiveaus.sort()).toEqual(["A1", "A2", "B1", "B2", "C1", "C2"]);
+    expect(autorierteNiveaus.sort()).toEqual([
+      "A1",
+      "A2",
+      "B1",
+      "B2",
+      "C1",
+      "C2",
+    ]);
     expect(autorierteEinheiten.length).toBe(144);
     for (const einheit of autorierteEinheiten) {
       expect(einheit.examples.length, einheit.title).toBeGreaterThanOrEqual(8);

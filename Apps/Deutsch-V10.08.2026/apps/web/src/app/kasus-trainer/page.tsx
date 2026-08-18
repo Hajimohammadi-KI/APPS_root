@@ -10,9 +10,9 @@ export default function KasusTrainerPage() {
           Kasus-Trainer
         </h1>
         <p className="mt-2 max-w-3xl text-muted-foreground">
-          Sechs Schritte statt einer Tabelle: Verb finden, Satzrolle
-          bestimmen, Kasus ableiten, Artikel und Endung bauen, laut sprechen,
-          dasselbe Muster in einem neuen Satz anwenden.
+          Sechs Schritte statt einer Tabelle: Verb finden, Satzrolle bestimmen,
+          Kasus ableiten, Artikel und Endung bauen, laut sprechen, dasselbe
+          Muster in einem neuen Satz anwenden.
         </p>
       </div>
       <CaseAutomaticityTrainer />

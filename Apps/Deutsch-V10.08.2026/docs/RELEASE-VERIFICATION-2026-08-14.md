@@ -19,21 +19,21 @@ driven by the setup manager's `--silent-install` / `--silent-update` /
 `--silent-repair` / `--silent-uninstall` CLI flags. It did not use or modify
 the learner's normal application data.
 
-| Check | Result |
-|---|---|
-| Fresh Install exit | `0` |
-| Fresh installed version | `10.8.2026` |
-| Fresh executable present | yes |
-| Data marker SHA-256 (initial) | `9611B13F90BB3A8412C3F174807BE29D9A64F513C0245C2C30C5FF6EE2BEDA7D` |
-| Update exit | `0` |
-| Executable present after Update | yes |
-| Data marker preserved after Update | yes |
-| Repair exit | `0` |
-| Executable present after Repair | yes |
-| Data marker preserved after Repair | yes |
-| Uninstall (no `--delete-data`) exit | `0` |
-| Executable removed after Uninstall | yes |
-| Data preserved after Uninstall | yes |
+| Check                               | Result                                                             |
+| ----------------------------------- | ------------------------------------------------------------------ |
+| Fresh Install exit                  | `0`                                                                |
+| Fresh installed version             | `10.8.2026`                                                        |
+| Fresh executable present            | yes                                                                |
+| Data marker SHA-256 (initial)       | `9611B13F90BB3A8412C3F174807BE29D9A64F513C0245C2C30C5FF6EE2BEDA7D` |
+| Update exit                         | `0`                                                                |
+| Executable present after Update     | yes                                                                |
+| Data marker preserved after Update  | yes                                                                |
+| Repair exit                         | `0`                                                                |
+| Executable present after Repair     | yes                                                                |
+| Data marker preserved after Repair  | yes                                                                |
+| Uninstall (no `--delete-data`) exit | `0`                                                                |
+| Executable removed after Uninstall  | yes                                                                |
+| Data preserved after Uninstall      | yes                                                                |
 
 The disposable verification installation was removed after these results
 were recorded. It contained only generated program payloads and a synthetic
@@ -63,7 +63,7 @@ an interactive desktop session before public release.
 
 `shared/GoogleOAuthPackaging.ps1` embeds `GOOGLE_CALENDAR_CLIENT_ID` /
 `GOOGLE_CALENDAR_SECRET` from the environment or `.env`, and silently embeds
-an *empty* value if unset rather than failing the build. This app directory
+an _empty_ value if unset rather than failing the build. This app directory
 has no `.env` or `.env.local` file at all, and no such variables were set in
 the shell that ran this build — so **this specific `DeutschFlow-Setup.exe`
 was built with empty Google OAuth credentials, and its Calendar/Drive

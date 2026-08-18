@@ -101,9 +101,7 @@ export function parseAutomatizationTopic(
 
 /** Matrix column keys: the three modules, with shadowing split by stage. */
 export type AutomatizationMatrixColumnKey =
-  | "retrieval"
-  | "formulaic"
-  | `shadowing-${ShadowingStage}`;
+  "retrieval" | "formulaic" | `shadowing-${ShadowingStage}`;
 
 export interface AutomatizationMatrixColumn {
   readonly key: AutomatizationMatrixColumnKey;
@@ -180,8 +178,7 @@ export function computeAutomatizationMatrix(
     // lands exactly on a week boundary -- except the outer edge, where "now"
     // itself must fall inside the current week rather than being excluded
     // by it being the boundary's own end.
-    const end =
-      weeksAgo === 0 ? nowMs + 1 : nowMs - weeksAgo * WEEK_MS;
+    const end = weeksAgo === 0 ? nowMs + 1 : nowMs - weeksAgo * WEEK_MS;
     const start = (weeksAgo === 0 ? nowMs : end) - WEEK_MS;
     const cells = Object.fromEntries(
       AUTOMATIZATION_MATRIX_COLUMNS.map((column) => [column.key, emptyCell()]),
@@ -193,7 +190,11 @@ export function computeAutomatizationMatrix(
       const columnKey = matrixColumnKeyFor(parsed);
       if (!columnKey) continue;
       const timestamp = Date.parse(attempt.date);
-      if (!Number.isFinite(timestamp) || timestamp < start || timestamp >= end) {
+      if (
+        !Number.isFinite(timestamp) ||
+        timestamp < start ||
+        timestamp >= end
+      ) {
         continue;
       }
       const cell = cells[columnKey];

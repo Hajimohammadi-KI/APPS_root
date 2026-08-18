@@ -164,7 +164,8 @@ export interface SessionRecord {
   readonly latencyMs?: number;
 }
 
-export type FlashcardSource = "lesson" | "pdf" | "highlight" | "conversation" | "manual";
+export type FlashcardSource =
+  "lesson" | "pdf" | "highlight" | "conversation" | "manual";
 export type FlashcardGrade = "again" | "hard" | "good";
 // Recognition ("which of these is the right word for this meaning?" --
 // multiple choice) and production ("write the word for this meaning" --
@@ -495,10 +496,18 @@ function normalizeAttempts(value: unknown): readonly UserAttempt[] {
   });
 }
 
-const FLASHCARD_SOURCE_SET = new Set<FlashcardSource>(["lesson", "pdf", "highlight", "conversation", "manual"]);
+const FLASHCARD_SOURCE_SET = new Set<FlashcardSource>([
+  "lesson",
+  "pdf",
+  "highlight",
+  "conversation",
+  "manual",
+]);
 const FLASHCARD_GRADE_SET = new Set<FlashcardGrade>(["again", "hard", "good"]);
 
-function normalizeFlashcardScheduleState(value: unknown): FlashcardScheduleState {
+function normalizeFlashcardScheduleState(
+  value: unknown,
+): FlashcardScheduleState {
   const row = isRecord(value) ? value : {};
   return {
     stage:
@@ -510,7 +519,8 @@ function normalizeFlashcardScheduleState(value: unknown): FlashcardScheduleState
         ? row.dueAt
         : Date.now(),
     successStreak:
-      typeof row.successStreak === "number" && Number.isFinite(row.successStreak)
+      typeof row.successStreak === "number" &&
+      Number.isFinite(row.successStreak)
         ? Math.max(0, Math.floor(row.successStreak))
         : 0,
     lapses:
@@ -523,7 +533,9 @@ function normalizeFlashcardScheduleState(value: unknown): FlashcardScheduleState
   };
 }
 
-export function normalizeFlashcards(value: unknown): readonly FlashcardRecord[] {
+export function normalizeFlashcards(
+  value: unknown,
+): readonly FlashcardRecord[] {
   if (!Array.isArray(value)) {
     return [];
   }
@@ -535,7 +547,8 @@ export function normalizeFlashcards(value: unknown): readonly FlashcardRecord[] 
     // old flat schedule fields -- treat that saved progress as production
     // history (that's what free-recall grading actually was) and start
     // recognition fresh, rather than discarding real review history.
-    const hasSplitSchedule = isRecord(row.production) || isRecord(row.recognition);
+    const hasSplitSchedule =
+      isRecord(row.production) || isRecord(row.recognition);
     return [
       {
         id: isString(row.id) ? row.id : `legacy-flashcard-${index}`,
@@ -550,7 +563,9 @@ export function normalizeFlashcards(value: unknown): readonly FlashcardRecord[] 
         ...(isString(row.originalSentence)
           ? { originalSentence: row.originalSentence }
           : {}),
-        createdAt: isString(row.createdAt) ? row.createdAt : new Date(0).toISOString(),
+        createdAt: isString(row.createdAt)
+          ? row.createdAt
+          : new Date(0).toISOString(),
         recognition: normalizeFlashcardScheduleState(row.recognition),
         production: hasSplitSchedule
           ? normalizeFlashcardScheduleState(row.production)

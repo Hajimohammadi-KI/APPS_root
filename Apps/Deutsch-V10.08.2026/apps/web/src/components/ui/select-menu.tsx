@@ -92,7 +92,9 @@ export function SelectMenu({
     if (!open) return;
     const start = selectedIndex >= 0 ? selectedIndex : 0;
     setActiveIndex(start);
-    const frame = requestAnimationFrame(() => optionRefs.current[start]?.focus());
+    const frame = requestAnimationFrame(() =>
+      optionRefs.current[start]?.focus(),
+    );
     return () => cancelAnimationFrame(frame);
   }, [open, selectedIndex]);
 
@@ -110,7 +112,11 @@ export function SelectMenu({
   }
 
   function onTriggerKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
-    if (event.key === "Enter" || event.key === " " || event.key === "ArrowDown") {
+    if (
+      event.key === "Enter" ||
+      event.key === " " ||
+      event.key === "ArrowDown"
+    ) {
       event.preventDefault();
       openMenu();
     }

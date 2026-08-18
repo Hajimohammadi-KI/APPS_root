@@ -42,8 +42,20 @@ describe("normalizeFlashcards", () => {
         front: "Hund",
         back: "dog",
         source: "manual",
-        recognition: { stage: 5, dueAt: 1, successStreak: 5, lapses: 0, lastGrade: "good" },
-        production: { stage: 1, dueAt: 2, successStreak: 1, lapses: 2, lastGrade: "again" },
+        recognition: {
+          stage: 5,
+          dueAt: 1,
+          successStreak: 5,
+          lapses: 0,
+          lastGrade: "good",
+        },
+        production: {
+          stage: 1,
+          dueAt: 2,
+          successStreak: 1,
+          lapses: 2,
+          lastGrade: "again",
+        },
       },
     ]);
     expect(card!.recognition.stage).toBe(5);

@@ -1,8 +1,16 @@
 import { describe, expect, it } from "bun:test";
 
-import { detectPitchHz, median, pitchVarietyInSemitones } from "./audio-fluency";
+import {
+  detectPitchHz,
+  median,
+  pitchVarietyInSemitones,
+} from "./audio-fluency";
 
-function sineWave(frequencyHz: number, sampleRate: number, seconds: number): Float32Array {
+function sineWave(
+  frequencyHz: number,
+  sampleRate: number,
+  seconds: number,
+): Float32Array {
   const length = Math.round(sampleRate * seconds);
   const samples = new Float32Array(length);
   for (let i = 0; i < length; i += 1) {

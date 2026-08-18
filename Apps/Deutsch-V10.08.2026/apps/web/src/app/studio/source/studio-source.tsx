@@ -566,7 +566,9 @@ export default function Home() {
         .trim();
       const card = addFlashcard({
         front: replacement,
-        back: mistake ? `Statt "${mistake}" -- ${issue.message}` : issue.message,
+        back: mistake
+          ? `Statt "${mistake}" -- ${issue.message}`
+          : issue.message,
         source: "conversation",
         level: selected.level,
         originalSentence: evaluation.corrected,

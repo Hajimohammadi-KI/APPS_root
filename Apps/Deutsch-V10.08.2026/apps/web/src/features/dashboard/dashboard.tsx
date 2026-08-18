@@ -43,7 +43,9 @@ const dayNames = ["M", "D", "M", "D", "F", "S", "S"];
 const LAST_SEEN_VERIFIED_LEVEL_KEY = "deutsch-app:last-seen-verified-level";
 
 function levelRank(level: string | null): number {
-  return level ? CEFR_LEVELS.indexOf(level as (typeof CEFR_LEVELS)[number]) : -1;
+  return level
+    ? CEFR_LEVELS.indexOf(level as (typeof CEFR_LEVELS)[number])
+    : -1;
 }
 
 export function Dashboard() {
@@ -198,7 +200,14 @@ export function Dashboard() {
       speakingAttemptCount: speakingAttempts.length,
       speakingAccuracy,
     };
-  }, [level, state.mastery, state.activity, state.reviews, state.attempts, plan.completed]);
+  }, [
+    level,
+    state.mastery,
+    state.activity,
+    state.reviews,
+    state.attempts,
+    plan.completed,
+  ]);
 
   const courses = [
     {
@@ -257,10 +266,12 @@ export function Dashboard() {
           <div className="home-v2-celebration-body">
             <Sparkles aria-hidden="true" />
             <div>
-              <strong>Du hast das Niveau {justVerifiedLevel} automatisiert!</strong>
+              <strong>
+                Du hast das Niveau {justVerifiedLevel} automatisiert!
+              </strong>
               <p>
-                Das ist kein Quiz-Ergebnis, sondern echte Automatik: alle
-                Themen in {justVerifiedLevel} beherrschst du fehlerfrei und
+                Das ist kein Quiz-Ergebnis, sondern echte Automatik: alle Themen
+                in {justVerifiedLevel} beherrschst du fehlerfrei und
                 nachweislich im Sprechen, Schreiben und freien Transfer.
               </p>
             </div>
@@ -288,8 +299,7 @@ export function Dashboard() {
             </strong>
             <p>
               Verteiltes Abrufen ist der Grund, warum bereits Gelerntes nicht
-              wieder verblasst — erledige diese, bevor du etwas Neues
-              beginnst.
+              wieder verblasst — erledige diese, bevor du etwas Neues beginnst.
             </p>
           </div>
           <Link href="/wiederholungen">
@@ -388,14 +398,14 @@ export function Dashboard() {
                       <span>
                         Automatisierung bestätigt bis{" "}
                         <strong>{verifiedLevel}</strong> — alle Themen
-                        automatisiert, ohne offene kritische Fehler, geprüft
-                        in Sprechen, Schreiben &amp; Transfer.
+                        automatisiert, ohne offene kritische Fehler, geprüft in
+                        Sprechen, Schreiben &amp; Transfer.
                       </span>
                     ) : (
                       <span>
-                        Noch kein Niveau vollständig automatisiert bestätigt
-                        — übe weiter in Sprechen, Schreiben und Transfer, um
-                        es zu erreichen.
+                        Noch kein Niveau vollständig automatisiert bestätigt —
+                        übe weiter in Sprechen, Schreiben und Transfer, um es zu
+                        erreichen.
                       </span>
                     )}
                   </p>

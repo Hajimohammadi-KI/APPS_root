@@ -184,15 +184,25 @@ html[data-low-stimulation="true"]
 /* Animated expand for accordion-select panels. grid-rows lets the panel
    animate from its real content height without hardcoding one. */
 @keyframes accordion-select-reveal {
-  from { grid-template-rows: 0fr; opacity: 0; }
-  to { grid-template-rows: 1fr; opacity: 1; }
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
 }
 .accordion-select-reveal {
   display: grid;
   grid-template-rows: 1fr;
   animation: accordion-select-reveal 180ms cubic-bezier(0.23, 1, 0.32, 1);
 }
-.accordion-select-reveal > * { min-height: 0; }
+.accordion-select-reveal > * {
+  min-height: 0;
+}
 @media (prefers-reduced-motion: reduce) {
-  .accordion-select-reveal { animation: none; }
+  .accordion-select-reveal {
+    animation: none;
+  }
 }

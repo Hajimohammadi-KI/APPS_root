@@ -205,9 +205,15 @@ export const AUTHORED_BY_LEVEL: Readonly<
  * (Ergänze/Korrigiere den Satz vollständig), also wird eine korrekte
  * Umformulierung nicht durch einen reinen Zeichenkettenvergleich abgelehnt.
  */
-function clozeFromAuthored(sentence: string, target: string): [string, string] | null {
+function clozeFromAuthored(
+  sentence: string,
+  target: string,
+): [string, string] | null {
   const escaped = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const pattern = new RegExp(`(?<![\\wäöüßÄÖÜ])${escaped}(?![\\wäöüßÄÖÜ])`, "u");
+  const pattern = new RegExp(
+    `(?<![\\wäöüßÄÖÜ])${escaped}(?![\\wäöüßÄÖÜ])`,
+    "u",
+  );
   if (!pattern.test(sentence)) {
     // Zielwort kommt nicht als ganzes Wort im Satz vor -- überspringen statt
     // zu raten, sonst entsteht eine Lücke, die nichts maskiert.

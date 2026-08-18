@@ -447,9 +447,9 @@ export function ReviewCenter() {
                     )}
                     {!report.verified && (
                       <p className="mt-1 text-muted-foreground">
-                        Diese Wiederholung wird gespeichert, zählt aber erst
-                        für deinen Automatisierungs-Fortschritt, sobald sie
-                        online bestätigt wurde.
+                        Diese Wiederholung wird gespeichert, zählt aber erst für
+                        deinen Automatisierungs-Fortschritt, sobald sie online
+                        bestätigt wurde.
                       </p>
                     )}
                   </div>

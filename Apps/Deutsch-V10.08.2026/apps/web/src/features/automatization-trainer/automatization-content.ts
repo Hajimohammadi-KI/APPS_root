@@ -45,9 +45,7 @@ export const SHADOWING_PASSAGES: readonly ShadowingPassage[] = [
     title: "Ein Wochenende in der Stadt",
     text: "Am Samstag bin ich mit Freunden in die Stadt gefahren. Wir haben zuerst einen Kaffee getrunken und sind dann durch den Markt gelaufen. Später haben wir in einem kleinen Restaurant zu Abend gegessen.",
     contextKey: "automatisierung-shadowing-wochenende",
-    variants: [
-      "Am Sonntag bin ich mit meiner Familie ins Museum gefahren.",
-    ],
+    variants: ["Am Sonntag bin ich mit meiner Familie ins Museum gefahren."],
   },
   {
     id: "arbeitsalltag",
@@ -125,7 +123,8 @@ export const FORMULAIC_SEQUENCES: readonly FormulaicSequence[] = [
     level: "A1",
     phrase: "Das macht nichts.",
     meaning: "beruhigende Antwort auf einen kleinen Fehler",
-    promptCue: "Jemand hat aus Versehen dein Glas umgestoßen. Beruhige die Person.",
+    promptCue:
+      "Jemand hat aus Versehen dein Glas umgestoßen. Beruhige die Person.",
   },
   {
     id: "a2-es-tut-mir-leid",
@@ -146,7 +145,8 @@ export const FORMULAIC_SEQUENCES: readonly FormulaicSequence[] = [
     level: "A2",
     phrase: "Auf jeden Fall.",
     meaning: "eine nachdrückliche Zustimmung",
-    promptCue: "Ein Freund fragt, ob du morgen kommst. Stimme nachdrücklich zu.",
+    promptCue:
+      "Ein Freund fragt, ob du morgen kommst. Stimme nachdrücklich zu.",
   },
   {
     id: "b1-es-kommt-darauf-an",
@@ -192,7 +192,8 @@ export const FORMULAIC_SEQUENCES: readonly FormulaicSequence[] = [
     level: "B2",
     phrase: "Nicht zuletzt deshalb …",
     meaning: "ein zusätzliches, aber wichtiges Argument einführen",
-    promptCue: "Du willst ein letztes, gewichtiges Argument zu deiner Liste hinzufügen.",
+    promptCue:
+      "Du willst ein letztes, gewichtiges Argument zu deiner Liste hinzufügen.",
   },
   {
     id: "c1-vor-diesem-hintergrund",
@@ -207,14 +208,16 @@ export const FORMULAIC_SEQUENCES: readonly FormulaicSequence[] = [
     level: "C1",
     phrase: "Es wäre verfehlt zu behaupten, dass …",
     meaning: "eine These vorsichtig, aber deutlich zurückweisen",
-    promptCue: "Du widersprichst höflich, aber bestimmt einer zu einfachen These.",
+    promptCue:
+      "Du widersprichst höflich, aber bestimmt einer zu einfachen These.",
   },
   {
     id: "c1-insofern-als",
     level: "C1",
     phrase: "Insofern, als …, lässt sich das begründen.",
     meaning: "eine präzise Begründung mit Einschränkung liefern",
-    promptCue: "Du begründest eine Aussage, willst aber eine Bedingung präzise einbauen.",
+    promptCue:
+      "Du begründest eine Aussage, willst aber eine Bedingung präzise einbauen.",
   },
   {
     id: "c2-keineswegs-von-der-hand-zu-weisen",
@@ -229,7 +232,8 @@ export const FORMULAIC_SEQUENCES: readonly FormulaicSequence[] = [
     level: "C2",
     phrase: "Das trifft mitnichten zu.",
     meaning: "eine gehobene, entschiedene Zurückweisung",
-    promptCue: "Du widersprichst einer Behauptung entschieden und in gehobenem Stil.",
+    promptCue:
+      "Du widersprichst einer Behauptung entschieden und in gehobenem Stil.",
   },
   {
     id: "c2-gleichwohl",

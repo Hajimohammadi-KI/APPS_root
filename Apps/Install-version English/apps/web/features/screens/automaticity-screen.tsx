@@ -6,6 +6,7 @@ import {
   BookOpenCheck,
   Check,
   CircleAlert,
+  Clock,
   Headphones,
   Mic,
   PenLine,
@@ -28,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   useAppStore,
   recalculateMastery,
+  emptyMastery,
   lessonKey,
   dailyPlanCompletion,
   transferSituation,
@@ -96,6 +98,64 @@ const presentPerfectExercises = [
 // the existing content, not a regression; the fix is authoring, not a
 // bigger constant.
 const ROUND_SIZE = 6;
+
+// Three-stage timed-practice model. Stage 1 is untimed (target >=90%
+// accuracy, per the spec's "10 controlled items, at least 90% accuracy").
+// Stage 2 gives a light per-item budget (spec's 8-10s band; 9s used as the
+// midpoint) at >=85%. Stage 3 gives a real-time budget (spec's 3-5s band; 4s
+// midpoint); the spec states this stage's bar as "accurate responses without
+// long hesitation" rather than a number -- 85% is reused here as the nearest
+// defensible reading, called out explicitly rather than silently assumed.
+// The budget is applied to the whole round (seconds/item * items in the
+// round) rather than timed per keystroke, since these are typed responses:
+// a single visible countdown is honest about "did you finish in the time
+// allowed" without the complexity or fragility of per-field focus tracking.
+const STAGE_SECONDS_PER_ITEM: Readonly<Record<1 | 2 | 3, number | null>> = {
+  1: null,
+  2: 9,
+  3: 4,
+};
+const STAGE_TARGET_ACCURACY: Readonly<Record<1 | 2 | 3, number>> = {
+  1: 90,
+  2: 85,
+  3: 85,
+};
+const STAGE_LABEL: Readonly<Record<1 | 2 | 3, string>> = {
+  1: "Stage 1 · untimed accuracy",
+  2: "Stage 2 · light timing",
+  3: "Stage 3 · real-time production",
+};
+// A regression needs to be a clear collapse, not routine variance between
+// rounds -- 20 points below target is the line, e.g. below 65% at Stage 2's
+// 85% target.
+const STAGE_REGRESSION_MARGIN = 20;
+
+/**
+ * Pure stage-transition rule, extracted out of checkPractice() so it can be
+ * unit-tested directly rather than only indirectly through a full component
+ * render (this codebase's tests are plain function tests, not DOM tests).
+ * An open-book round is real practice but not retrieval evidence -- see the
+ * `verified` field next to recordAttempt() in checkPractice() -- so it must
+ * never move the timing gate either way.
+ */
+export function nextPracticeStage(
+  currentStage: 1 | 2 | 3,
+  scorePercent: number,
+  openBook: boolean,
+): 1 | 2 | 3 {
+  if (openBook) return currentStage;
+  const target = STAGE_TARGET_ACCURACY[currentStage];
+  if (scorePercent >= target && currentStage < 3) {
+    return (currentStage + 1) as 1 | 2 | 3;
+  }
+  if (
+    scorePercent < target - STAGE_REGRESSION_MARGIN &&
+    currentStage > 1
+  ) {
+    return (currentStage - 1) as 1 | 2 | 3;
+  }
+  return currentStage;
+}
 
 function shuffled<T>(items: readonly T[]): T[] {
   const copy = [...items];
@@ -465,6 +525,55 @@ export function AutomaticityScreen({
     (_, index) => plan.answers[`${key}:shadow:${index}`] === "done",
   );
   const verifiedMastery = state.mastery[topic];
+  const practiceStage = verifiedMastery?.practiceStage ?? 1;
+  const stageSecondsPerItem = STAGE_SECONDS_PER_ITEM[practiceStage];
+  const [secondsRemaining, setSecondsRemaining] = React.useState<
+    number | null
+  >(null);
+  // Always points at the current render's checkPractice (defined further
+  // below, closing over the latest `answers`/`roundExercises`), refreshed
+  // every render. The timeout effect calls through this ref instead of
+  // closing over checkPractice directly, which would otherwise capture
+  // whatever `answers` looked like when the countdown effect first ran --
+  // the standard stale-closure trap with setInterval in a function
+  // component.
+  const checkPracticeRef = React.useRef<() => void>(() => {});
+  // Round-level latency anchor -- when the round currently on screen first
+  // became available to answer. Reset on every new round below, alongside
+  // the countdown; read at check time in checkPractice() so a controlled-
+  // practice attempt finally carries a real latencyMs instead of the
+  // hardcoded null it shipped with before.
+  const roundStartRef = React.useRef<number | null>(null);
+
+  // (Re)starts the round countdown and latency anchor whenever a new round
+  // begins (roundExercises gets a new identity from practiceAgain() or a
+  // topic switch) or the stage changes, and stops the countdown once the
+  // round has been checked.
+  React.useEffect(() => {
+    roundStartRef.current = Date.now();
+    if (stageSecondsPerItem === null || checkedAnswers.length > 0) {
+      setSecondsRemaining(null);
+      return;
+    }
+    setSecondsRemaining(stageSecondsPerItem * roundExercises.length);
+    const interval = setInterval(() => {
+      setSecondsRemaining((value) =>
+        value === null ? null : Math.max(0, value - 1),
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- checkedAnswers.length is read for its zero/nonzero transition (round checked vs not), not for its value; including checkedAnswers itself would restart the interval on every keystroke's derived array identity
+  }, [roundExercises, stageSecondsPerItem, checkedAnswers.length]);
+
+  // Auto-submits the round when its time budget runs out, so "no long
+  // hesitation" is actually enforced rather than just displayed. Reads
+  // through checkPracticeRef (see above) so it grades whatever the learner
+  // had typed at the moment time ran out, not an empty first-render snapshot.
+  React.useEffect(() => {
+    if (secondsRemaining === 0 && checkedAnswers.length === 0) {
+      checkPracticeRef.current();
+    }
+  }, [secondsRemaining, checkedAnswers.length]);
 
   function writePlan(key: string, value: string) {
     mutate((draft) => {
@@ -481,6 +590,13 @@ export function AutomaticityScreen({
     // makes this round open-book. Tracked as one flag so the recorded attempt
     // and the learner-facing message always agree about which it was.
     const openBook = lessonOpen || peeked;
+    // secondsRemaining is 0 both when the timeout effect auto-submitted AND
+    // for the instant after a manual click at exactly 0 -- either way, the
+    // round used its whole time budget, which is what "timed out" means here.
+    const timedOut = stageSecondsPerItem !== null && secondsRemaining === 0;
+    const latencyMs = roundStartRef.current
+      ? Date.now() - roundStartRef.current
+      : null;
     const results = answers.map((answer, index) =>
       evaluatePracticeAnswer(answer, {
         prompt: roundExercises[index]?.prompt ?? "",
@@ -491,6 +607,10 @@ export function AutomaticityScreen({
     const score = Math.round(
       (results.filter(Boolean).length / roundExercises.length) * 100,
     );
+
+    const stageTarget = STAGE_TARGET_ACCURACY[practiceStage];
+    const nextStage = nextPracticeStage(practiceStage, score, openBook);
+
     recordAttempt({
       grammarTitle: topic,
       mode: "recognition",
@@ -499,7 +619,7 @@ export function AutomaticityScreen({
       targetHit: results.every(Boolean),
       accuracyScore: score,
       fluencyScore: 0,
-      latencyMs: null,
+      latencyMs,
       passed: results.every(Boolean),
       // evaluatePracticeAnswer is a deterministic exact-match check against a
       // known-correct answer (with a narrow open-production allowance) --
@@ -514,15 +634,37 @@ export function AutomaticityScreen({
       assessedBy: "offline",
       contentVersion: EVIDENCE_CONTENT_VERSION,
     });
+
+    if (nextStage !== practiceStage) {
+      mutate((draft) => {
+        const record = draft.mastery[topic] ?? emptyMastery(topic);
+        record.practiceStage = nextStage;
+        draft.mastery[topic] = record;
+      });
+    }
+
+    const stageNote =
+      openBook || nextStage === practiceStage
+        ? ""
+        : nextStage > practiceStage
+          ? ` Stage ${practiceStage} passed at ${score}% (target ${stageTarget}%) -- advancing to Stage ${nextStage}.`
+          : ` Accuracy dropped to ${score}% under Stage ${practiceStage} timing -- back to Stage ${nextStage} for more practice.`;
+    const timeoutNote = timedOut && !results.every(Boolean) ? "Time ran out. " : "";
+
     if (results.every(Boolean)) {
       writePlan(`${key}:practice`, "done");
       setMessage(
-        openBook
+        (openBook
           ? "All correct, but the rule was visible -- this counts as study, not recall. Hide it and run one more round to earn evidence."
-          : "Controlled practice complete, answered from memory. Now produce your own language.",
+          : "Controlled practice complete, answered from memory. Now produce your own language.") +
+          stageNote,
       );
     } else {
-      setMessage("Review the model answers and correct the highlighted items.");
+      setMessage(
+        timeoutNote +
+          "Review the model answers and correct the highlighted items." +
+          stageNote,
+      );
     }
   }
 
@@ -1265,6 +1407,12 @@ export function AutomaticityScreen({
                 ? "Open book — counts as study"
                 : "From memory — counts as evidence"}
             </Badge>
+            <Badge variant="secondary">{STAGE_LABEL[practiceStage]}</Badge>
+            {secondsRemaining !== null ? (
+              <Badge variant={secondsRemaining <= 5 ? "warning" : "secondary"}>
+                <Clock className="size-3" /> {secondsRemaining}s left
+              </Badge>
+            ) : null}
           </div>
         </CardContent>
       </Card> : null}

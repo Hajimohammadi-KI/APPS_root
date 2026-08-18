@@ -25,6 +25,7 @@ function automaticMastery(title: string): TopicMastery {
 		lastSuccessAt: new Date().toISOString(),
 		nextReviewAt: null,
 		medianWritingLatencyMs: 1000,
+		practiceStage: 3,
 	};
 }
 

@@ -3,6 +3,7 @@ import { describe, expect, it } from "bun:test";
 import {
   createEmptyMasteryRecord,
   MASTERY_MODES,
+  nextPracticeStage,
   recordMasteryAttempt,
   recordMasteryReview,
   recordVerifiedMasteryAttempt,
@@ -168,5 +169,46 @@ describe("recordVerifiedMasteryAttempt", () => {
     record = recordMasteryReview(record, true);
 
     expect(record?.status).toBe("automatic");
+  });
+});
+
+// Three-stage timed-practice model (PRACTICE_STAGE_TARGET_ACCURACY /
+// PRACTICE_STAGE_REGRESSION_MARGIN in mastery.ts). Mirrors English's
+// nextPracticeStage tests in apps/web/features/screens/practice-stage.test.ts.
+describe("nextPracticeStage", () => {
+  it("advances Stage 1 to Stage 2 on a closed-book round meeting 90%", () => {
+    expect(nextPracticeStage(1, 90, false)).toBe(2);
+    expect(nextPracticeStage(1, 100, false)).toBe(2);
+  });
+
+  it("does not advance Stage 1 below its 90% target", () => {
+    expect(nextPracticeStage(1, 89, false)).toBe(1);
+  });
+
+  it("advances Stage 2 to Stage 3 on a closed-book round meeting 85%", () => {
+    expect(nextPracticeStage(2, 85, false)).toBe(3);
+  });
+
+  it("holds Stage 3 at Stage 3 even on a perfect round -- there is nowhere further to advance", () => {
+    expect(nextPracticeStage(3, 100, false)).toBe(3);
+  });
+
+  it("regresses a stage on a clear accuracy collapse (20+ points below target)", () => {
+    expect(nextPracticeStage(2, 64, false)).toBe(1);
+    expect(nextPracticeStage(3, 64, false)).toBe(2);
+  });
+
+  it("does not regress on routine variance just under target", () => {
+    expect(nextPracticeStage(2, 70, false)).toBe(2);
+  });
+
+  it("never regresses below Stage 1", () => {
+    expect(nextPracticeStage(1, 0, false)).toBe(1);
+  });
+
+  it("never moves the stage on an open-book round, regardless of score", () => {
+    expect(nextPracticeStage(1, 100, true)).toBe(1);
+    expect(nextPracticeStage(2, 0, true)).toBe(2);
+    expect(nextPracticeStage(3, 100, true)).toBe(3);
   });
 });

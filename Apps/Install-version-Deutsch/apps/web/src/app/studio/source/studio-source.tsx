@@ -109,8 +109,11 @@ function formatTime(seconds: number) {
 }
 
 export default function Home() {
-  const { state: learnerState, hydrated: learnerHydrated } =
-    useLearnerState();
+  const {
+    state: learnerState,
+    hydrated: learnerHydrated,
+    addFlashcard,
+  } = useLearnerState();
   const [path] = useState<(typeof paths)[number]>(paths[0]);
   const language: StudioLanguage = "de";
   const text = copy[language];
@@ -145,6 +148,7 @@ export default function Home() {
   const [message, setMessage] = useState<string | null>(null);
   const [showCorrections, setShowCorrections] = useState(true);
   const [attempts, setAttempts] = useState(0);
+  const [flashcardsSaved, setFlashcardsSaved] = useState<number | null>(null);
   const [dailyActivity, setDailyActivity] = useState<number | null>(null);
   const [dailyReturn, setDailyReturn] = useState("/heute");
   const [dailyComplete, setDailyComplete] = useState(false);
@@ -326,6 +330,7 @@ export default function Home() {
     setEvaluation(null);
     if (clearBaseline) setBaseline(null);
     setSavedId(null);
+    setFlashcardsSaved(null);
     setSeconds(0);
     setMessage(null);
     audioBlobRef.current = null;
@@ -423,9 +428,24 @@ export default function Home() {
         const blob = new Blob(chunksRef.current, {
           type: recorder.mimeType || "audio/webm",
         });
-        audioBlobRef.current = blob;
-        setHasAudioBlob(true);
-        setAudioUrl(URL.createObjectURL(blob));
+        // An empty/near-zero blob (mic muted, permission revoked mid-recording,
+        // no audio track data) must not be treated as a valid recording -- it
+        // would otherwise let the learner "evaluate" and save silence as if it
+        // were a real attempt.
+        if (blob.size === 0) {
+          audioBlobRef.current = null;
+          setHasAudioBlob(false);
+          setAudioUrl(null);
+          setMessage(
+            language === "de"
+              ? "Es wurde kein Ton aufgenommen. Bitte erneut versuchen."
+              : "No audio was captured. Please record again.",
+          );
+        } else {
+          audioBlobRef.current = blob;
+          setHasAudioBlob(true);
+          setAudioUrl(URL.createObjectURL(blob));
+        }
         stream.getTracks().forEach((track) => track.stop());
         setRecordingState("idle");
         setActive(2);
@@ -529,6 +549,31 @@ export default function Home() {
     } finally {
       setEvaluating(false);
     }
+  }
+
+  // Closes a real gap: FlashcardRecord.source declares "conversation" as a
+  // valid origin, but nothing in either app ever produced a card with it --
+  // corrections a learner actually made in Sprechstudio are exactly the
+  // "personal mistake" vocabulary the flashcard system is meant to capture.
+  function saveCorrectionsAsFlashcards() {
+    if (!evaluation) return;
+    let saved = 0;
+    for (const issue of evaluation.issues) {
+      const replacement = issue.replacements[0];
+      if (!replacement) continue;
+      const mistake = evaluation.original
+        .slice(issue.offset, issue.offset + issue.length)
+        .trim();
+      const card = addFlashcard({
+        front: replacement,
+        back: mistake ? `Statt "${mistake}" -- ${issue.message}` : issue.message,
+        source: "conversation",
+        level: selected.level,
+        originalSentence: evaluation.corrected,
+      });
+      if (card) saved += 1;
+    }
+    setFlashcardsSaved(saved);
   }
 
   async function practiceImprovedVersion() {
@@ -1120,6 +1165,22 @@ export default function Home() {
                           ? "LanguageTool hat keine Textfehler erkannt."
                           : "LanguageTool detected no text errors."}
                       </p>
+                    )}
+                    {evaluation.issues.length > 0 && (
+                      <div className="flow-actions">
+                        <button
+                          onClick={saveCorrectionsAsFlashcards}
+                          disabled={flashcardsSaved !== null}
+                        >
+                          {flashcardsSaved !== null
+                            ? language === "de"
+                              ? `${flashcardsSaved} Karteikarte(n) gespeichert ✓`
+                              : `${flashcardsSaved} flashcard(s) saved ✓`
+                            : language === "de"
+                              ? "Korrekturen als Karteikarten speichern"
+                              : "Save corrections as flashcards"}
+                        </button>
+                      </div>
                     )}
                     <div className="flow-actions">
                       <button onClick={() => setActive(3)}>Back</button>

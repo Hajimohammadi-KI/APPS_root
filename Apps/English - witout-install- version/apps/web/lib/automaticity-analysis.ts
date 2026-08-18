@@ -288,3 +288,32 @@ export function evaluatePracticeAnswer(
 	const overlapRatio = expectedWords.size ? overlap / expectedWords.size : 0;
 	return overlapRatio >= 0.5;
 }
+
+export interface RestoredDraft {
+	shouldRestore: boolean;
+	journal: string;
+	transcript: string;
+}
+
+// Extracted from automaticity-screen.tsx's restore effect so the exact bug
+// found in review is directly testable: a once-only boolean guard on this
+// effect meant it fired on first hydration and never again, so switching
+// practice topic while the screen stayed mounted left the previous topic's
+// draft journal/transcript in state instead of loading (or clearing to) the
+// new topic's own saved answer. The fix is keyed on `key` itself, not a
+// boolean, so it re-restores whenever the topic actually changes.
+export function computeRestoredDraft(
+	hydrated: boolean,
+	key: string,
+	lastRestoredKey: string | null,
+	answers: Record<string, string>,
+): RestoredDraft {
+	if (!hydrated || lastRestoredKey === key) {
+		return { shouldRestore: false, journal: "", transcript: "" };
+	}
+	return {
+		shouldRestore: true,
+		journal: answers[`${key}:journal`] ?? "",
+		transcript: answers[`${key}:transcript`] ?? "",
+	};
+}

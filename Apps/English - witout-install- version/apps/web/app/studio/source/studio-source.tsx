@@ -14,6 +14,7 @@ import {
 } from "./conversation-storage";
 import { SelectMenu } from "@/components/ui/select-menu";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
+import { useAppStore } from "@/features/store/app-store";
 
 const nav = ["Daily Practice", "Lessons", "Speaking Studio", "Review", "Progress", "Vocabulary", "Notebook"];
 const navRoutes = ["/daily", "/grammar", "/studio", "/?screen=errors", "/?screen=progress", "/flashcards", "/notebook"];
@@ -99,6 +100,7 @@ function currentStudioLanguage(): StudioLanguage {
 }
 
 export default function Home() {
+  const { addFlashcard } = useAppStore();
   const [path, setPath] = useState<(typeof paths)[number]>(paths[0]);
   const language = currentStudioLanguage();
   const text = copy[language];
@@ -124,6 +126,7 @@ export default function Home() {
   const [message, setMessage] = useState<string | null>(null);
   const [showCorrections, setShowCorrections] = useState(true);
   const [attempts, setAttempts] = useState(0);
+  const [flashcardsSaved, setFlashcardsSaved] = useState<number | null>(null);
   const [dailyActivity, setDailyActivity] = useState<number | null>(null);
   const [dailyReturn, setDailyReturn] = useState("/daily");
   const [dailyComplete, setDailyComplete] = useState(false);
@@ -220,6 +223,7 @@ export default function Home() {
     setEvaluation(null);
     if (clearBaseline) setBaseline(null);
     setSavedId(null);
+    setFlashcardsSaved(null);
     setSeconds(0);
     setMessage(null);
     audioBlobRef.current = null;
@@ -306,9 +310,24 @@ export default function Home() {
       };
       recorder.onstop = () => {
         const blob = new Blob(chunksRef.current, { type: recorder.mimeType || "audio/webm" });
-        audioBlobRef.current = blob;
-        setHasAudioBlob(true);
-        setAudioUrl(URL.createObjectURL(blob));
+        // An empty/near-zero blob (mic muted, permission revoked mid-recording,
+        // no audio track data) must not be treated as a valid recording -- it
+        // would otherwise let the learner "evaluate" and save silence as if it
+        // were a real attempt.
+        if (blob.size === 0) {
+          audioBlobRef.current = null;
+          setHasAudioBlob(false);
+          setAudioUrl(null);
+          setMessage(
+            language === "de"
+              ? "Es wurde kein Ton aufgenommen. Bitte erneut versuchen."
+              : "No audio was captured. Please record again.",
+          );
+        } else {
+          audioBlobRef.current = blob;
+          setHasAudioBlob(true);
+          setAudioUrl(URL.createObjectURL(blob));
+        }
         stream.getTracks().forEach((track) => track.stop());
         setRecordingState("idle");
         setActive(2);
@@ -389,6 +408,29 @@ export default function Home() {
     } finally {
       setEvaluating(false);
     }
+  }
+
+  // Closes a real gap: FlashcardItem.source declares "conversation" as a
+  // valid origin, but nothing in either app ever produced a card with it --
+  // corrections a learner actually made in Speaking Studio are exactly the
+  // "personal mistake" vocabulary the flashcard system is meant to capture.
+  function saveCorrectionsAsFlashcards() {
+    if (!evaluation) return;
+    let saved = 0;
+    for (const issue of evaluation.issues) {
+      const replacement = issue.replacements[0];
+      if (!replacement) continue;
+      const mistake = evaluation.original.slice(issue.offset, issue.offset + issue.length).trim();
+      const card = addFlashcard({
+        front: replacement,
+        back: mistake ? `Instead of "${mistake}" -- ${issue.message}` : issue.message,
+        source: "conversation",
+        level: selected.level,
+        originalSentence: evaluation.corrected,
+      });
+      if (card) saved += 1;
+    }
+    setFlashcardsSaved(saved);
   }
 
   async function practiceImprovedVersion() {
@@ -544,7 +586,7 @@ export default function Home() {
 
             {active === 3 && <section className="flow-panel review-panel"><div className="flow-title"><span>▧</span><div><small>STEP 4 · {stepLabels[3]}</small><h3>{language === "de" ? "Prüfe deine Antwort" : "Review your answer"}</h3></div></div>{evaluation ? <><div className="review-grid"><article><small>AUDIO</small>{audioUrl && <audio src={audioUrl} controls />}</article><article><small>TRANSCRIPT</small><p>{evaluation.original}</p></article><article><small>MEASURED</small><p><b>{wordCount}</b> words · <b>{formatTime(seconds)}</b> · <b>{wordsPerMinute}</b> WPM</p></article></div><div className="flow-actions"><button onClick={() => setActive(1)}>Try again</button><button className="primary" onClick={() => setActive(4)}>Corrections →</button></div></> : <div className="flow-empty">{language === "de" ? "Noch keine echte Auswertung vorhanden." : "No verified evaluation yet."}</div>}</section>}
 
-            {active === 4 && <section className="flow-panel correct-panel"><div className="flow-title"><span>✓</span><div><small>STEP 5 · {stepLabels[4]}</small><h3>{language === "de" ? "Korrekturen verstehen" : "Understand the correction"}</h3></div></div>{evaluation ? <><div className="correction-grid"><article><small>{language === "de" ? "DEINE VERSION" : "YOU SAID"}</small><p>{evaluation.original}</p></article><article><small>{language === "de" ? "KORRIGIERTE VERSION" : "CORRECTED VERSION"}</small><p>{evaluation.corrected}</p></article></div>{evaluation.issues.length > 0 ? <ul className="issue-list">{evaluation.issues.map((issue, index) => <li key={`${issue.ruleId}-${issue.offset}-${index}`}><b>{issue.category}</b> — {issue.message}{issue.replacements[0] ? ` → ${issue.replacements[0]}` : ""}</li>)}</ul> : <p className="flow-note">{language === "de" ? "LanguageTool hat keine Textfehler erkannt." : "LanguageTool detected no text errors."}</p>}<div className="flow-actions"><button onClick={() => setActive(3)}>Back</button><button className="primary" onClick={() => setActive(5)}>Improve →</button></div></> : <div className="flow-empty">{text.providerUnavailable}</div>}</section>}
+            {active === 4 && <section className="flow-panel correct-panel"><div className="flow-title"><span>✓</span><div><small>STEP 5 · {stepLabels[4]}</small><h3>{language === "de" ? "Korrekturen verstehen" : "Understand the correction"}</h3></div></div>{evaluation ? <><div className="correction-grid"><article><small>{language === "de" ? "DEINE VERSION" : "YOU SAID"}</small><p>{evaluation.original}</p></article><article><small>{language === "de" ? "KORRIGIERTE VERSION" : "CORRECTED VERSION"}</small><p>{evaluation.corrected}</p></article></div>{evaluation.issues.length > 0 ? <><ul className="issue-list">{evaluation.issues.map((issue, index) => <li key={`${issue.ruleId}-${issue.offset}-${index}`}><b>{issue.category}</b> — {issue.message}{issue.replacements[0] ? ` → ${issue.replacements[0]}` : ""}</li>)}</ul><div className="flow-actions"><button onClick={saveCorrectionsAsFlashcards} disabled={flashcardsSaved !== null}>{flashcardsSaved !== null ? (language === "de" ? `${flashcardsSaved} Karteikarte(n) gespeichert ✓` : `${flashcardsSaved} flashcard(s) saved ✓`) : (language === "de" ? "Korrekturen als Karteikarten speichern" : "Save corrections as flashcards")}</button></div></> : <p className="flow-note">{language === "de" ? "LanguageTool hat keine Textfehler erkannt." : "LanguageTool detected no text errors."}</p>}<div className="flow-actions"><button onClick={() => setActive(3)}>Back</button><button className="primary" onClick={() => setActive(5)}>Improve →</button></div></> : <div className="flow-empty">{text.providerUnavailable}</div>}</section>}
 
             {active === 5 && <section className="improve-panel"><div className="improve-heading"><span>↗</span><div><p>STEP 6 · {stepLabels[5]}</p><h3>{language === "de" ? "Die korrigierte Version erneut produzieren" : "Produce the corrected version again"}</h3></div></div>{evaluation ? <><div className="improve-compare"><article><small>{baseline ? "FIRST ATTEMPT" : "ORIGINAL"}</small><p>{baseline?.original ?? evaluation.original}</p></article><article className="better"><small>{baseline ? "NEW VERIFIED ATTEMPT" : "LANGUAGETOOL CORRECTION"}</small><p>{evaluation.corrected}</p></article></div><div className="speaking-tip"><b>{language === "de" ? "Ehrliche Grenze" : "Honest limit"}</b><p>{text.pronunciation}</p></div><div className="improve-actions"><button onClick={() => speak(evaluation.corrected)}>▶ Hear model</button><button className="primary" onClick={() => void practiceImprovedVersion()}>♩ {language === "de" ? "Neue Aufnahme" : "Record improved attempt"}</button></div></> : <div className="improve-empty"><p>{language === "de" ? "Nimm zuerst eine Antwort auf und werte sie aus." : "Record and evaluate an answer first."}</p></div>}</section>}
 

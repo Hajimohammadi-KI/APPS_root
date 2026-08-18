@@ -2,6 +2,7 @@ import { describe, expect, it } from "bun:test";
 
 import {
 	analyzePresentPerfect,
+	computeRestoredDraft,
 	countPresentPerfectUses,
 	evaluatePracticeAnswer,
 	practiceAnswerMatches,
@@ -151,5 +152,58 @@ describe("repair prompts get open-production grading", () => {
 		expect(
 			evaluatePracticeAnswer("I have two childs.", fragmentKeyRepair),
 		).toBe(false);
+	});
+});
+
+describe("computeRestoredDraft", () => {
+	// Regression coverage for a real bug: a once-only boolean guard on
+	// automaticity-screen.tsx's restore effect meant switching practice topic
+	// while the screen stayed mounted never re-synced journal/transcript to
+	// the new topic -- the previous topic's draft text stayed in state.
+	it("does not restore before hydration", () => {
+		const draft = computeRestoredDraft(false, "a1-unit", null, {
+			"a1-unit:journal": "saved journal",
+		});
+		expect(draft.shouldRestore).toBe(false);
+	});
+
+	it("restores the saved draft for a topic on first hydration", () => {
+		const draft = computeRestoredDraft(true, "a1-unit", null, {
+			"a1-unit:journal": "saved journal",
+			"a1-unit:transcript": "saved transcript",
+		});
+		expect(draft).toEqual({
+			shouldRestore: true,
+			journal: "saved journal",
+			transcript: "saved transcript",
+		});
+	});
+
+	it("does not re-restore the same topic on every render", () => {
+		const draft = computeRestoredDraft(true, "a1-unit", "a1-unit", {
+			"a1-unit:journal": "saved journal",
+		});
+		expect(draft.shouldRestore).toBe(false);
+	});
+
+	it("re-syncs to a new topic's own draft when the topic changes", () => {
+		// This is the exact case the boolean-guard version got wrong: it would
+		// have returned shouldRestore: false here because *a* restore had
+		// already happened once, leaving "a1-unit"'s leftover text visible
+		// under the new "a2-unit" topic.
+		const draft = computeRestoredDraft(true, "a2-unit", "a1-unit", {
+			"a1-unit:journal": "leftover from the previous topic",
+			"a2-unit:journal": "the new topic's own saved journal",
+		});
+		expect(draft.shouldRestore).toBe(true);
+		expect(draft.journal).toBe("the new topic's own saved journal");
+	});
+
+	it("clears to empty when the new topic has no saved draft yet", () => {
+		const draft = computeRestoredDraft(true, "a2-unit", "a1-unit", {
+			"a1-unit:journal": "leftover from the previous topic",
+			"a1-unit:transcript": "leftover transcript",
+		});
+		expect(draft).toEqual({ shouldRestore: true, journal: "", transcript: "" });
 	});
 });

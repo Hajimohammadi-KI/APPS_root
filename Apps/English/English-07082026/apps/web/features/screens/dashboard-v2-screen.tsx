@@ -271,7 +271,6 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
           <section className="home-v2-courses" aria-labelledby="courses-title">
             <div className="home-v2-card-head"><div><p>Start learning today</p><h2 id="courses-title">Select a course</h2></div><button aria-label="Open learning resources" type="button" onClick={() => navigate("resources")}><ArrowUpRight /></button></div>
             <div className="home-v2-course-list">
-              <button className="home-v2-primary" type="button" onClick={() => navigate("daily")}>Continue today’s practice <ChevronRight /></button>
               {courses.map(({ title, detail, tone, screen, icon: Icon }) => (
                 <button className={`home-v2-course home-v2-course-${tone}`} key={title} type="button" onClick={() => navigate(screen)}>
                   <span className="home-v2-course-icon"><Icon /></span>

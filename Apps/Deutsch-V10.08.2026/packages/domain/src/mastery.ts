@@ -65,6 +65,22 @@ export interface MasteryRecord {
   readonly completedAt?: number;
   readonly lastSuccessAt?: number;
   /**
+   * True once at least one verified mode:"transfer" attempt has been
+   * recorded from the delayed-review flow (review-center.tsx's
+   * TRANSFER_CHECKPOINT_STAGE), as opposed to only the same-session
+   * Grammatik-Labor transfer step. Before this field existed,
+   * "automatic" status only required attemptCounts.transfer >= 3 with no
+   * check on *where* those attempts came from -- review-center.tsx never
+   * tagged its transfer-checkpoint attempts with mode:"transfer" at all
+   * (see the mode computation in checkReview(), fixed alongside this
+   * field), so a learner could reach "automatic" from same-session bursts
+   * of activity alone, never having demonstrated the pattern again after a
+   * real delay in a genuinely new context. Monotonic like controlled/free/
+   * spoken -- once real delayed-transfer evidence exists it is never
+   * un-earned by later attempts.
+   */
+  readonly hasDelayedTransferEvidence: boolean;
+  /**
    * Legacy compatibility flags. They remain readable during the v20.8
    * migration but never grant the new `automatic` status by themselves.
    */
@@ -89,6 +105,10 @@ export interface MasteryAttempt {
   readonly targetHit: boolean;
   readonly latencyMs?: number;
   readonly createdAt?: number;
+  /** True only for a mode:"transfer" attempt recorded by the delayed-review
+   * flow (review-center.tsx) rather than a same-session Mission step. Feeds
+   * MasteryRecord.hasDelayedTransferEvidence. */
+  readonly fromDueReview?: boolean;
 }
 
 export const AUTOMATICITY_LATENCY_THRESHOLD_MS = 8_000;
@@ -210,6 +230,7 @@ export function calculateMasteryStatus(
   responseLatenciesMs: readonly number[],
   attemptCounts: MasteryAttemptCounts = EMPTY_MASTERY_ATTEMPT_COUNTS,
   writingLatenciesMs: readonly number[] = [],
+  hasDelayedTransferEvidence = false,
 ): MasteryStatus {
   const latency = median(responseLatenciesMs);
   // No measured writing/transfer latency yet (writingLatenciesMs empty)
@@ -239,7 +260,8 @@ export function calculateMasteryStatus(
     activeCriticalErrors === 0 &&
     latency !== null &&
     latency <= AUTOMATICITY_LATENCY_THRESHOLD_MS &&
-    hasFastEnoughWriting
+    hasFastEnoughWriting &&
+    hasDelayedTransferEvidence
   ) {
     return "automatic";
   }
@@ -295,6 +317,7 @@ export function createEmptyMasteryRecord(): MasteryRecord {
     controlled: false,
     free: false,
     practiceStage: 1,
+    hasDelayedTransferEvidence: false,
   };
 }
 
@@ -321,6 +344,7 @@ function refreshMasteryRecord(
       record.responseLatenciesMs,
       record.attemptCounts,
       record.writingLatenciesMs,
+      record.hasDelayedTransferEvidence,
     ),
   };
 }
@@ -385,6 +409,11 @@ export function recordMasteryAttempt(
       record.free ||
       (attempt.mode === "writing" && attempt.targetHit) ||
       (attempt.mode === "transfer" && attempt.targetHit),
+    hasDelayedTransferEvidence:
+      record.hasDelayedTransferEvidence ||
+      (attempt.mode === "transfer" &&
+        attempt.targetHit &&
+        attempt.fromDueReview === true),
     ...(record.spoken || attempt.mode === "speaking"
       ? { spoken: record.spoken || attempt.targetHit }
       : {}),

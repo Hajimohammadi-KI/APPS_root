@@ -9,7 +9,21 @@ import {
   type MasteryScores,
 } from "./mastery";
 
+// Also used, unrelated to persisted JSON state, as the IndexedDB database
+// name for saved audio blobs (apps/web/src/features/audio/audio-repository.ts)
+// -- do not repurpose this constant's value even though the localStorage
+// blob it originally named has moved to CURRENT_STORAGE_KEY below, or every
+// existing recording would be silently orphaned in a database name nothing
+// opens anymore.
 export const LEGACY_STORAGE_KEY = "GrammarAutomaticityV11_de";
+// English's AppState has a version field (currently 27) plus a real
+// migrateLegacy() reading a distinct old key -- LearnerState had neither
+// until now, so an old-shape blob had no version marker to detect it by and
+// no intentional migration path, only ad hoc per-field normalization.
+// CURRENT_STORAGE_KEY is the new, versioned, live localStorage key;
+// LEGACY_STORAGE_KEY (above) becomes a read-only fallback, exactly
+// mirroring English's STORAGE_KEY/LEGACY_KEY split.
+export const CURRENT_STORAGE_KEY = "GrammarAutomaticityV12_de";
 
 export interface LearnerSettings {
   readonly dailyStudyMinutes: 15 | 30 | 45 | 60;
@@ -211,6 +225,10 @@ export interface UserAttempt {
   readonly fluencyScore?: number;
   readonly latencyMs?: number;
   readonly audioPath?: string;
+  /** True only for a mode:"transfer" attempt recorded by the delayed-review
+   * flow (review-center.tsx) rather than a same-session Mission step. Feeds
+   * MasteryRecord.hasDelayedTransferEvidence -- see mastery.ts. */
+  readonly fromDueReview?: boolean;
 }
 
 export interface DailyPlanRecord {
@@ -225,6 +243,12 @@ export interface TodayGrammarRecord {
 }
 
 export interface LearnerState {
+  // Literal, hand-bumped pin (mirrors English's AppState.version) -- a
+  // future schema change bumps this and gives normalizeLearnerState/
+  // migrateLegacyLearnerState something real to check, instead of old-shape
+  // data only being caught implicitly by per-field coercion happening to
+  // produce sane defaults.
+  readonly version: 1;
   readonly settings: LearnerSettings;
   readonly learner: LearnerProfilePreferences;
   readonly outcomes: OutcomeEvidence;
@@ -724,6 +748,7 @@ function normalizeDailyPlans(
 
 export function createInitialLearnerState(): LearnerState {
   return {
+    version: 1,
     settings: DEFAULT_SETTINGS,
     learner: DEFAULT_LEARNER_PROFILE,
     outcomes: DEFAULT_OUTCOME_EVIDENCE,
@@ -899,6 +924,22 @@ export function normalizeLearnerState(value: unknown): LearnerState {
           }
         : null,
   };
+}
+
+// Distinct entry point for importing a GrammarAutomaticityV11_de blob (the
+// pre-versioning key) forward into the new CURRENT_STORAGE_KEY shape, called
+// from the provider's hydration effect only when the new key is absent or
+// unreadable. Today this delegates straight to normalizeLearnerState because
+// the v1 shape hasn't actually diverged from the legacy shape yet -- this
+// pass only adds the version marker and the key split, it doesn't restructure
+// any field. The point of a separate, named function (rather than just
+// calling normalizeLearnerState on the legacy key directly) is to give the
+// *next* real schema change a real place to add legacy-specific field
+// mapping, instead of that change having nowhere to put migration logic and
+// reaching for ad hoc per-field coercion again -- the exact gap this fix
+// closes.
+export function migrateLegacyLearnerState(value: unknown): LearnerState {
+  return normalizeLearnerState(value);
 }
 
 export function getTodayKey(date = new Date()): string {

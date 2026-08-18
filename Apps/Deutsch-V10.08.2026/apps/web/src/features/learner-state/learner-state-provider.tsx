@@ -12,12 +12,14 @@ import {
 import {
   canCompleteDailyStep,
   createInitialLearnerState,
+  CURRENT_STORAGE_KEY,
   getDailyPlan,
   getNextReviewDate,
   getReviewProgressAfterResult,
   REVIEW_INTERVAL_DAYS,
   getTodayKey,
   LEGACY_STORAGE_KEY,
+  migrateLegacyLearnerState,
   normalizeLearnerState,
   recordMasteryReview,
   recordVerifiedMasteryAttempt,
@@ -462,8 +464,22 @@ export function LearnerStateProvider({
   useEffect(() => {
     let nextState: LearnerState;
     try {
-      const stored = localStorage.getItem(LEGACY_STORAGE_KEY);
-      nextState = normalizeLearnerState(stored ? JSON.parse(stored) : null);
+      // Try the current, versioned key first (mirrors English's
+      // STORAGE_KEY-first / migrateLegacy-fallback split in app-store.tsx).
+      // Only when it's absent or unreadable does this fall back to the old
+      // pre-versioning key -- once migrated, CURRENT_STORAGE_KEY is what
+      // gets written going forward (see the persist effect below), so a
+      // learner who has already been through this once never touches
+      // LEGACY_STORAGE_KEY again.
+      const stored = localStorage.getItem(CURRENT_STORAGE_KEY);
+      if (stored) {
+        nextState = normalizeLearnerState(JSON.parse(stored));
+      } else {
+        const legacyStored = localStorage.getItem(LEGACY_STORAGE_KEY);
+        nextState = migrateLegacyLearnerState(
+          legacyStored ? JSON.parse(legacyStored) : null,
+        );
+      }
     } catch {
       nextState = createInitialLearnerState();
     }
@@ -476,7 +492,7 @@ export function LearnerStateProvider({
 
   useEffect(() => {
     if (hydrated) {
-      localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(CURRENT_STORAGE_KEY, JSON.stringify(state));
     }
   }, [hydrated, state]);
 
@@ -624,7 +640,7 @@ export function LearnerStateProvider({
 
   useEffect(() => {
     function syncFromAnotherTab(event: StorageEvent) {
-      if (event.key !== LEGACY_STORAGE_KEY || !event.newValue) {
+      if (event.key !== CURRENT_STORAGE_KEY || !event.newValue) {
         return;
       }
       try {
@@ -982,6 +998,7 @@ export function LearnerStateProvider({
             accuracyScore: attempt.accuracyScore,
             targetHit: attempt.targetHit,
             verified: attempt.verified === true,
+            fromDueReview: attempt.fromDueReview === true,
             ...(attempt.latencyMs === undefined
               ? {}
               : { latencyMs: attempt.latencyMs }),

@@ -77,6 +77,7 @@ export {
 } from "./automatization";
 export {
   CEFR_LEVELS,
+  CURRENT_STORAGE_KEY,
   ERROR_CLASSES,
   LEGACY_STORAGE_KEY,
   PLACEMENT_MODES,
@@ -90,6 +91,7 @@ export {
   errorClassLabels,
   getDailyPlan,
   getTodayKey,
+  migrateLegacyLearnerState,
   normalizeFlashcards,
   normalizeLearnerState,
   repairStatusLabels,

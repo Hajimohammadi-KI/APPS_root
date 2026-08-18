@@ -15,6 +15,8 @@ import {
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import { SelectMenu } from "@/components/ui/select-menu";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
+import { analyzeAudioFluency, type AudioFluencyAnalysis } from "@/lib/audio-fluency";
+import { normalizePracticeAnswer } from "@/features/automaticity/automaticity-analysis";
 
 const nav = [
   "Tägliches Training",
@@ -143,6 +145,8 @@ export default function Home() {
   const [hasAudioBlob, setHasAudioBlob] = useState(false);
   const [evaluation, setEvaluation] = useState<EvaluationResponse | null>(null);
   const [baseline, setBaseline] = useState<EvaluationResponse | null>(null);
+  const [audioFluencyResult, setAudioFluencyResult] =
+    useState<AudioFluencyAnalysis | null>(null);
   const [evaluating, setEvaluating] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -282,8 +286,20 @@ export default function Home() {
     allForPath[0]!;
   const maxSeconds = practiceMode === "challenge" ? 60 : 120;
   const wordCount = transcript.trim().match(/[\p{L}\p{N}'’-]+/gu)?.length ?? 0;
+  // seconds ist reine Aufnahme-Wandzeit (pausiert nur bei explizitem
+  // Pause-Klick), also zaehlt wordCount/seconds jede natuerliche Sprechpause
+  // stillschweigend als Sprechzeit mit -- das taeuscht "Fluessigkeit" vor.
+  // Sobald die echte, amplitudenbasierte Sprechzeit vorliegt (nach dem Stop
+  // gesetzt, dieselbe lib/audio-fluency.ts-Analyse, die die Mission fuer
+  // genau diese Kennzahl schon verwendet), wird sie bevorzugt; die
+  // Wandzeit-Formel ist nur ein Fallback, solange diese Analyse noch nicht
+  // fertig ist.
   const wordsPerMinute =
-    seconds > 0 ? Math.round(wordCount / (seconds / 60)) : 0;
+    audioFluencyResult && audioFluencyResult.activeSpeechSeconds > 0
+      ? Math.round(wordCount / (audioFluencyResult.activeSpeechSeconds / 60))
+      : seconds > 0
+        ? Math.round(wordCount / (seconds / 60))
+        : 0;
 
   useEffect(() => {
     if (recordingState !== "recording") return;
@@ -336,6 +352,7 @@ export default function Home() {
     audioBlobRef.current = null;
     setHasAudioBlob(false);
     setAudioUrl(null);
+    setAudioFluencyResult(null);
     window.speechSynthesis?.cancel();
   }
 
@@ -445,6 +462,12 @@ export default function Home() {
           audioBlobRef.current = blob;
           setHasAudioBlob(true);
           setAudioUrl(URL.createObjectURL(blob));
+          // Echte, audiobasierte Fluessigkeit sobald der Blob fertig ist --
+          // dasselbe Muster wie saveSpeaking() der Mission. onstop kann nicht
+          // async sein, deshalb hier fire-and-forget statt await;
+          // wordsPerMinute faellt bis zur Aufloesung auf die Wandzeit-
+          // Schaetzung zurueck.
+          void analyzeAudioFluency(blob).then(setAudioFluencyResult);
         }
         stream.getTracks().forEach((track) => track.stop());
         setRecordingState("idle");
@@ -458,6 +481,7 @@ export default function Home() {
       setSavedId(null);
       setSeconds(0);
       setAudioUrl(null);
+      setAudioFluencyResult(null);
 
       if (!startSpeechRecognition("")) {
         setMessage(
@@ -593,6 +617,19 @@ export default function Home() {
       );
       return;
     }
+    // practiceImprovedVersion() setzt baseline auf die Auswertung vor der
+    // Verbesserung und behaelt sie waehrend der erneuten Aufnahme. Bisher
+    // wurde nie geprueft, ob sich der neue Versuch tatsaechlich von dieser
+    // Baseline unterscheidet, bevor er als Verbesserung gespeichert/
+    // dargestellt wurde -- ein Lernender konnte denselben Fehler erneut
+    // aufnehmen oder eintippen und ihn als bestaetigte Verbesserung
+    // angezeigt bekommen. Das Speichern selbst laeuft weiter (es ist der
+    // echte neue Versuch samt Audio), aber die Meldung spiegelt die
+    // Realitaet statt einen nicht stattgefundenen Fortschritt vorzutaeuschen.
+    const isUnchangedFromBaseline =
+      baseline !== null &&
+      normalizePracticeAnswer(evaluation.corrected) ===
+        normalizePracticeAnswer(baseline.corrected);
     const id = crypto.randomUUID();
     try {
       await saveConversationSession({
@@ -611,7 +648,13 @@ export default function Home() {
         audio: audioBlobRef.current,
       });
       setSavedId(id);
-      setMessage(text.saved);
+      setMessage(
+        isUnchangedFromBaseline
+          ? (language === "de"
+              ? "Gespeichert -- aber dieser Versuch entspricht noch deinem ursprünglichen. Ändere tatsächlich etwas, damit es als Verbesserung zählt."
+              : "Saved -- but this attempt still matches your original. Change something real before it counts as an improvement.")
+          : text.saved,
+      );
       finishDailyActivity();
     } catch {
       setMessage(

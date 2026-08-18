@@ -36,6 +36,18 @@ export function SettingsScreen() {
   const { settings } = state;
   const [exportStatus, setExportStatus] = React.useState("");
   const [exporting, setExporting] = React.useState(false);
+  // supportsBackupDirectoryPicker() reads a browser API (File System Access)
+  // that doesn't exist during SSR -- calling it directly in JSX rendered
+  // "false" on the server and (on browsers that support it) "true" on the
+  // client, a real hydration mismatch caught by the e2e suite. Deferring the
+  // real value to an effect (client-only, post-mount) mirrors the same
+  // pattern install-app-control.tsx already uses for the same API.
+  const [folderPickerSupported, setFolderPickerSupported] =
+    React.useState(false);
+
+  React.useEffect(() => {
+    setFolderPickerSupported(supportsBackupDirectoryPicker());
+  }, []);
 
   async function exportData() {
     setExporting(true);
@@ -303,7 +315,7 @@ export function SettingsScreen() {
               <Download aria-hidden className="size-4" />
               {exporting ? "Exporting..." : "Export data"}
             </Button>
-            {supportsBackupDirectoryPicker() ? (
+            {folderPickerSupported ? (
               <Button
                 disabled={exporting}
                 onClick={() => void selectFolderAndExport()}

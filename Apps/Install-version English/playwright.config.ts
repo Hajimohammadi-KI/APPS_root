@@ -17,7 +17,14 @@ export default defineConfig({
   use: {
     baseURL: webUrl,
     browserName: "chromium",
-    channel: "msedge",
+    // Real Microsoft Edge locally (this app targets Windows users and Edge
+    // is what's installed on the dev machine), but CI runners don't have
+    // Edge preinstalled and installing it there is a known source of CI
+    // flakiness -- CI falls back to Playwright's own bundled Chromium,
+    // which `playwright install` always provides. Mirrors German's
+    // playwright.config.ts, which never used a channel override for this
+    // exact reason.
+    ...(process.env.CI ? {} : { channel: "msedge" }),
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },

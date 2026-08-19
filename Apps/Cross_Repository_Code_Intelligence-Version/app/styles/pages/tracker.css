@@ -655,6 +655,11 @@ details[open] > summary .summary-marker {
   border-color: #d8d4f5;
 }
 
+.day-card.optional {
+  border-color: #e4c76a;
+  background: #fffdf5;
+}
+
 .day-card.done {
   border-color: #d9cbea;
   background: #fdfbff;
@@ -683,6 +688,7 @@ details[open] > summary .summary-marker {
 
 .status-chip.open { background: #f2eff5; color: var(--muted); }
 .status-chip.started { background: var(--violet-soft); color: var(--violet); }
+.status-chip.optional { background: #fff0bd; color: #654800; }
 .status-chip.done { background: var(--green-soft); color: var(--green); }
 
 .day-focus-button {

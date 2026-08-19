@@ -17,6 +17,7 @@ body { background: #f8f6fb; color: var(--nlp-ink); }
 .nlp-lab-time { display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 22px; border: 1px solid var(--nlp-line); border-radius: 20px; background: #fff; }
 .nlp-lab-time strong { font-size: 19px; }
 .nlp-lab-time span { color: var(--nlp-muted); }
+.nlp-lab-time code { overflow-wrap: anywhere; color: var(--nlp-purple-dark); font-size: 12px; }
 .nlp-lab-time a { margin-top: 8px; color: var(--nlp-purple-dark); font-weight: 800; }
 .nlp-lab-alert { margin-top: 18px; padding: 18px 22px; border: 2px solid #b98c3f; border-radius: 18px; background: #fff8e8; color: #4b3210; }
 .nlp-lab-alert p { margin: 5px 0 0; }
@@ -50,10 +51,19 @@ body { background: #f8f6fb; color: var(--nlp-ink); }
 .nlp-session-card footer { padding: 16px 22px; border-top: 1px solid var(--nlp-line); background: #fff; }
 .nlp-session-card footer p { margin: 3px 0 0; }
 .nlp-session-card code { overflow-wrap: anywhere; color: #3c2754; font-weight: 750; }
+.nlp-reading-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 0 22px 22px; }
+.nlp-reading-list article { min-width: 0; padding: 16px; border: 1px solid #e4dbea; border-radius: 14px; background: #fff; }
+.nlp-reading-list article > header { display: flex; align-items: center; gap: 8px; }
+.nlp-reading-list h4 { margin: 8px 0; }
+.nlp-reading-list p { margin: 10px 0 0; color: var(--nlp-muted); }
+.reading-mode, .reading-status { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 900; letter-spacing: .04em; }
+.reading-mode { background: var(--nlp-blue); color: #273f77; }
+.reading-mode.deep { background: #e7f5ed; color: #135934; }
+.reading-status { background: #fff1c7; color: #6b4500; }
 
 @media (max-width: 760px) {
   .nlp-lab-shell { width: min(100% - 20px, 1180px); margin-top: 10px; }
-  .nlp-lab-hero, .nlp-lab-grid, .nlp-lab-boundaries, .nlp-session-body { grid-template-columns: 1fr; }
+  .nlp-lab-hero, .nlp-lab-grid, .nlp-lab-boundaries, .nlp-session-body, .nlp-reading-list { grid-template-columns: 1fr; }
   .nlp-lab-use-cases ol { grid-template-columns: 1fr; padding-left: 22px; }
   .nlp-session-card > header { align-items: flex-start; }
 }

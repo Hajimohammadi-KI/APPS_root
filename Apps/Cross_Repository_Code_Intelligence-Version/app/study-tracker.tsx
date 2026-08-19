@@ -10,7 +10,9 @@ import {
 } from "react";
 import {
   allDays,
+  articleReadings,
   defaultSettings,
+  extractionSections,
   migrateLegacyId,
   nlpCourseSessions,
   planMeta,
@@ -25,7 +27,10 @@ import {
 } from "./plan-data";
 import {
   countCompletedItems,
+  countRequiredCompletedItems,
   estimatedLearningHours,
+  getDayStatus,
+  requiredItemTotal,
 } from "../lib/study-progress";
 import { RecallCheck } from "../components/RecallCheck";
 import { useRecallEntries } from "../lib/recall/useRecallEntries";
@@ -50,7 +55,7 @@ import {
   isDirectPdfUrl,
 } from "../lib/pdf-reader-link";
 
-type StatusFilter = "all" | "open" | "started" | "done";
+type StatusFilter = "all" | "open" | "started" | "optional" | "done";
 
 type PlanRevision = {
   id: string;
@@ -196,6 +201,9 @@ const validItemIds = new Set(
 );
 const LOCAL_STATE_KEY = "cross-repository-study-tracker:state:v2";
 const LOCAL_FOCUS_KEY = "cross-repository-study-tracker:focus:v1";
+const articleReadingsById = new Map<string, (typeof articleReadings)[number]>(
+  articleReadings.map((reading) => [reading.id, reading]),
+);
 
 const priorityMeta: Record<
   SourceDefinition["priority"],
@@ -1131,10 +1139,7 @@ export default function StudyTracker({
   }
 
   function dayStatus(day: PlannedDay): StatusFilter {
-    const count = itemCount(day);
-    if (count === 0) return "open";
-    if (count === 9) return "done";
-    return "started";
+    return getDayStatus(day, completed);
   }
 
   const phaseGroups = useMemo<PhaseGroup[]>(() => {
@@ -1200,10 +1205,17 @@ export default function StudyTracker({
       .slice(0, 12);
   }, [query, settings]);
 
-  const completedItems = completed.size;
-  const completedDays = allDays.filter((day) => itemCount(day) === 9).length;
+  const completedItems = allDays.reduce(
+    (sum, day) => sum + countRequiredCompletedItems(day, completed),
+    0,
+  );
+  const completedDays = allDays.filter(
+    (day) => requiredItemTotal(day) > 0 && itemCount(day) === requiredItemTotal(day),
+  ).length;
   const estimatedHours = estimatedLearningHours(completedItems);
-  const nextDay = allDays.find((day) => itemCount(day) < 9) ?? allDays.at(-1)!;
+  const nextDay = allDays.find(
+    (day) => requiredItemTotal(day) > 0 && itemCount(day) < requiredItemTotal(day),
+  ) ?? allDays.findLast((day) => requiredItemTotal(day) > 0) ?? allDays.at(-1)!;
   const systemTodayDay = allDays.find(
     (day) => shiftedPlanDate(day.date, settings.planStartDate) === systemToday,
   );
@@ -1245,13 +1257,15 @@ export default function StudyTracker({
     dashboardDay.tasks.findIndex((task) => task.id === currentTodayTask?.id),
   );
   const activeDailyWorkMode = DAILY_WORK_MODES[settings.dailyWorkMode];
-  const designDays = allDays.filter((day) => day.phaseId.startsWith("design-"));
+  const designDays = allDays.filter(
+    (day) => day.phaseId.startsWith("design-") && requiredItemTotal(day) > 0,
+  );
   const designCompletedItems = designDays.reduce(
     (sum, day) => sum + itemCount(day),
     0,
   );
   const designPercent = Math.round(
-    (designCompletedItems / Math.max(1, designDays.length * 9)) * 100,
+    (designCompletedItems / Math.max(1, designDays.reduce((sum, day) => sum + requiredItemTotal(day), 0))) * 100,
   );
   const nextWeekIndex = Math.max(
     0,
@@ -1259,9 +1273,15 @@ export default function StudyTracker({
   );
   const rhythmStart = Math.max(0, Math.min(nextWeekIndex, planWeeks.length - 5));
   const rhythmWeeks = planWeeks.slice(rhythmStart, rhythmStart + 5);
-  const rhythmTotalItems = rhythmWeeks.reduce((sum, week) => sum + week.days.length * 9, 0);
+  const rhythmTotalItems = rhythmWeeks.reduce(
+    (sum, week) => sum + week.days.reduce((daySum, day) => daySum + requiredItemTotal(day), 0),
+    0,
+  );
   const rhythmCompletedItems = rhythmWeeks.reduce(
-    (sum, week) => sum + week.days.reduce((daySum, day) => daySum + itemCount(day), 0),
+    (sum, week) => sum + week.days.reduce(
+      (daySum, day) => daySum + countRequiredCompletedItems(day, completed),
+      0,
+    ),
     0,
   );
   const rhythmActiveDays = rhythmWeeks.reduce(
@@ -1382,16 +1402,17 @@ export default function StudyTracker({
   const weekProgress = useMemo(
     () =>
       planWeeks.map((week) => {
-        const total = week.days.length * 9;
-        const done = week.days.reduce((sum, day) => sum + itemCount(day), 0);
+        const total = week.days.reduce((sum, day) => sum + requiredItemTotal(day), 0);
+        const done = week.days.reduce(
+          (sum, day) => sum + countRequiredCompletedItems(day, completed),
+          0,
+        );
         return {
           number: week.number,
           title: week.title,
           percent: total ? Math.round((done / total) * 100) : 0,
         };
       }),
-    // itemCount intentionally depends on current completion.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [completed],
   );
 
@@ -1918,7 +1939,9 @@ export default function StudyTracker({
 
   function exportIcs(remainingOnly = false) {
     const visibleDays = remainingOnly
-      ? allDays.filter((day) => itemCount(day) < 9)
+      ? allDays.filter(
+          (day) => requiredItemTotal(day) > 0 && itemCount(day) < requiredItemTotal(day),
+        )
       : allDays;
     const days = visibleDays.filter(
       (day) =>
@@ -1949,16 +1972,21 @@ export default function StudyTracker({
       .join("\r\n");
     const courseEvents = nlpCourseSessions
       .map((session) => {
-        const start = localIcsDate(session.date, 17 * 60 + 30);
-        const end = localIcsDate(session.date, 19 * 60 + 10);
+        const start = localIcsDate(session.date, 18 * 60);
+        const end = localIcsDate(session.date, 19 * 60 + 40);
+        const readings = session.readingIds
+          .map((id) => articleReadingsById.get(id))
+          .filter((reading) => Boolean(reading))
+          .map((reading) => `C${String(reading!.courseOrder).padStart(2, "0")}/O${String(reading!.order).padStart(2, "0")} ${sources[reading!.sourceId]?.label ?? reading!.sourceId} [${reading!.mode}]`)
+          .join("; ");
         return [
           "BEGIN:VEVENT",
           `UID:nlp-live-${session.number}-2026@study-tracker`,
           `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")}`,
           `DTSTART;TZID=Europe/Berlin:${start}`,
           `DTEND;TZID=Europe/Berlin:${end}`,
-          `SUMMARY:${escapeIcs(`NLP Live ${session.number}/10 — ${session.title}`)}`,
-          `DESCRIPTION:${escapeIcs(`Projektfrage: ${session.projectQuestion}\nUse Case: ${session.useCase}\nErgebnisse: ${session.deliverables.join(", ")}`)}`,
+          `SUMMARY:${escapeIcs(`Study Tracker · NLP ${String(session.number).padStart(2, "0")}/10 · ${session.title}`)}`,
+          `DESCRIPTION:${escapeIcs(`Artikel: ${readings}\nLesefokus: ${session.readingFocus.join("; ")}\nProjektbezug: ${session.projectConnection}\nExtraktion: ${extractionSections.join("; ")}`)}`,
           "END:VEVENT",
         ].join("\r\n");
       })
@@ -2171,7 +2199,7 @@ export default function StudyTracker({
                   <p>{todayCourseSession.berlinTime} Berlin · {todayCourseSession.projectQuestion}</p>
                 </div>
                 <a className="button primary" href="/nlp-lab" {...internalLinkProps("/nlp-lab")}>
-                  Sitzung und Projektaufgaben öffnen <Icon name="arrow" size={17} />
+                  Sitzung, Artikel und Extraktionsbogen öffnen <Icon name="arrow" size={17} />
                 </a>
               </article>
             ) : null}
@@ -2530,6 +2558,7 @@ export default function StudyTracker({
                   <option value="all">Alle Status</option>
                   <option value="open">Noch nicht begonnen</option>
                   <option value="started">In Arbeit</option>
+                  <option value="optional">Optional · kein Rückstand</option>
                   <option value="done">Abgeschlossen</option>
                 </select>
               </label>
@@ -2559,8 +2588,14 @@ export default function StudyTracker({
             <div className="phase-stack">
               {filteredGroups.map((phase) => {
                 const phaseDays = phase.weeks.flatMap((week) => week.days);
-                const phaseDone = phaseDays.reduce((sum, day) => sum + itemCount(day), 0);
-                const phaseTotal = phaseDays.length * 9;
+                const phaseDone = phaseDays.reduce(
+                  (sum, day) => sum + countRequiredCompletedItems(day, completed),
+                  0,
+                );
+                const phaseTotal = phaseDays.reduce(
+                  (sum, day) => sum + requiredItemTotal(day),
+                  0,
+                );
                 return (
                   <details className="phase-card" key={phase.id}>
                     <summary>
@@ -3241,16 +3276,13 @@ function WeekCard({
   onStartFocus: (day: PlannedDay) => void;
 }) {
   const weekDone = week.days.reduce(
-    (sum, day) =>
-      sum +
-      day.tasks.reduce(
-        (taskSum, task) =>
-          taskSum + task.items.filter((item) => completed.has(item.id)).length,
-        0,
-      ),
+    (sum, day) => sum + countRequiredCompletedItems(day, completed),
     0,
   );
-  const weekTotal = week.days.length * 9;
+  const weekTotal = week.days.reduce(
+    (sum, day) => sum + requiredItemTotal(day),
+    0,
+  );
 
   return (
     <details className="week-card">
@@ -3337,8 +3369,14 @@ function DayCard({
       sum + task.items.filter((item) => completed.has(item.id)).length,
     0,
   );
-  const state = count === 9 ? "done" : count > 0 ? "started" : "open";
-  const stateLabel = state === "done" ? "Abgeschlossen" : state === "started" ? "In Arbeit" : "Noch nicht begonnen";
+  const state = getDayStatus(day, completed);
+  const stateLabel = state === "done"
+    ? "Abgeschlossen"
+    : state === "started"
+      ? "In Arbeit"
+      : state === "optional"
+        ? "Optional · kein Rückstand"
+        : "Noch nicht begonnen";
   const effectiveDate = shiftedPlanDate(day.date, settings.planStartDate);
   const taskProgress = day.tasks.map((task) => task.items.filter((item) => completed.has(item.id)).length);
   const currentTaskIndex = taskProgress.findIndex((done) => done < 3);

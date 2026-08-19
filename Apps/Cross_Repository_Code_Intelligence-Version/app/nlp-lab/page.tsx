@@ -1,11 +1,16 @@
 import {
+  articleReadings,
+  extractionSections,
   nlpCourseSessions,
   nlpLabDefinition,
   sources,
 } from "../plan-data";
 
-const literatureFolder =
-  "https://drive.google.com/drive/folders/1t0Aphbp1CnDNdmZsTNl6genDA7LjzTOA";
+const readingFolder =
+  "D:\\Bachelor-Thesis\\02_Literature\\09_NLP_Course_2026_Reading_Order";
+const readingsById = new Map<string, (typeof articleReadings)[number]>(
+  articleReadings.map((reading) => [reading.id, reading]),
+);
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("de-DE", {
@@ -22,45 +27,43 @@ export default function NlpLabPage() {
     <main className="nlp-lab-shell">
       <header className="nlp-lab-hero">
         <div>
-          <p className="nlp-lab-eyebrow">Eigenständiges, integrierbares Projektmodul</p>
-          <h1>NLP Retrieval Lab</h1>
+          <p className="nlp-lab-eyebrow">Advanced Deep Learning · Lese- und Extraktionsplan</p>
+          <h1>NLP Literature Lab</h1>
           <p className="nlp-lab-lead">
-            Zehn Live-Sitzungen werden in überprüfbare Bausteine für Flat
-            Retrieval, Question Contracts, Grounding und RQ2-Evaluation
-            überführt. Das Lab bleibt technisch abtrennbar und liefert einen
-            versionierten JSON-Vertrag an die Cross App.
+            In zehn Sitzungen liest du gezielt die Artikel 06 bis 23 und
+            extrahierst nur das, was für RQ1, RQ2 und die Projektarchitektur
+            verwendbar ist. Technische Übungen bleiben sichtbar, sind aber bis
+            7. September optional und erzeugen keinen Rückstand.
           </p>
         </div>
         <aside className="nlp-lab-time" aria-label="Kurszeit">
           <strong>17. Aug. – 7. Sept. 2026</strong>
           <span>Sa · Mo · Mi</span>
-          <span>Berlin 18:00–20:00</span>
-          <span>Iran 19:30–21:30</span>
-          <a href={literatureFolder} rel="noreferrer" target="_blank">
-            Kursordner in Google Drive öffnen ↗
-          </a>
+          <span>Berlin 18:00–19:40</span>
+          <span>Iran 19:30–21:10</span>
+          <code>{readingFolder}</code>
         </aside>
       </header>
 
-      <section className="nlp-lab-alert" aria-labelledby="recovery-title">
-        <strong id="recovery-title">10. September: Operation und Ruhetag</strong>
+      <section className="nlp-lab-alert" aria-labelledby="course-scope-title">
+        <strong id="course-scope-title">Kursregel bis 7. September</strong>
         <p>
-          Keine Aufgabe, kein Nachholen und kein Verlust der Lernkette. Die zehnte
-          Sitzung endet am 7. September; spätere Arbeit beginnt nur entsprechend
-          der persönlichen Erholung und ärztlichen Empfehlung.
+          Pflicht ist nur Lesen und Extrahieren. Nicht erledigte technische
+          Aufgaben senken weder Fortschritt noch Lernkette und gelten nicht als
+          Rückstand.
         </p>
       </section>
 
       <section className="nlp-lab-grid" aria-label="Problem und Projektgrenze">
         <article>
-          <span>Problem</span>
-          <h2>Was das Lab lösen muss</h2>
+          <span>Ziel</span>
+          <h2>Was du aus dem Kurs mitnimmst</h2>
           <p>{nlpLabDefinition.problem}</p>
           <p>{nlpLabDefinition.projectFit}</p>
         </article>
         <article>
           <span>Vertrag</span>
-          <h2>Wie es später an die Cross App passt</h2>
+          <h2>Wie die Notizen in die Thesis passen</h2>
           <dl>
             <div><dt>Eingabe</dt><dd>{nlpLabDefinition.integrationContract.input}</dd></div>
             <div><dt>Ausgabe</dt><dd>{nlpLabDefinition.integrationContract.output}</dd></div>
@@ -71,24 +74,24 @@ export default function NlpLabPage() {
 
       <section className="nlp-lab-boundaries">
         <article>
-          <h2>Core bis zum Kursende</h2>
+          <h2>Verbindlich</h2>
           <ul>{nlpLabDefinition.core.map((item) => <li key={item}>{item}</li>)}</ul>
         </article>
         <article>
-          <h2>Nicht jetzt / Future Work</h2>
+          <h2>Optional / später</h2>
           <ul>{nlpLabDefinition.deferred.map((item) => <li key={item}>{item}</li>)}</ul>
         </article>
       </section>
 
-      <section className="nlp-lab-use-cases" aria-labelledby="use-case-title">
-        <p className="nlp-lab-eyebrow">Software Engineering</p>
-        <h2 id="use-case-title">Use Cases, die das Modul wirklich tragen</h2>
-        <ol>{nlpLabDefinition.useCases.map((useCase) => <li key={useCase}>{useCase}</li>)}</ol>
+      <section className="nlp-lab-use-cases" aria-labelledby="extraction-title">
+        <p className="nlp-lab-eyebrow">Ein einheitlicher Bogen pro Artikel</p>
+        <h2 id="extraction-title">Sechs Extraktionsfelder</h2>
+        <ol>{extractionSections.map((section) => <li key={section}>{section}</li>)}</ol>
       </section>
 
       <section className="nlp-lab-sessions" aria-labelledby="session-title">
-        <p className="nlp-lab-eyebrow">Live-Kurs → Projektarbeit</p>
-        <h2 id="session-title">Zehn Sitzungen mit greifbarem Ergebnis</h2>
+        <p className="nlp-lab-eyebrow">Live-Kurs → Thesis-Evidence</p>
+        <h2 id="session-title">Zehn Sitzungen mit klarer Lektüre</h2>
         <div className="nlp-session-list">
           {nlpCourseSessions.map((session) => (
             <article className="nlp-session-card" key={session.number}>
@@ -103,28 +106,37 @@ export default function NlpLabPage() {
               <div className="nlp-session-body">
                 <div>
                   <h4>Projektfrage</h4><p>{session.projectQuestion}</p>
-                  <h4>Use Case</h4><p>{session.useCase}</p>
+                  <h4>Anwendung</h4><p>{session.useCase}</p>
+                  <h4>Projektbezug</h4><p>{session.projectConnection}</p>
                 </div>
                 <div>
-                  <h4>Lesen</h4>
-                  <ul className="nlp-source-list">
-                    {session.sourceIds.map((sourceId) => {
-                      const source = sources[sourceId];
-                      if (!source) return null;
-                      return <li key={sourceId}>{source.href ? <a href={source.href} rel="noreferrer" target="_blank">{source.label} ↗</a> : source.label}</li>;
-                    })}
-                  </ul>
-                </div>
-                <div>
-                  <h4>Software Engineering</h4>
-                  <ul>{session.softwareEngineering.map((item) => <li key={item}>{item}</li>)}</ul>
-                </div>
-                <div>
-                  <h4>Tagesergebnisse</h4>
-                  <ul>{session.deliverables.map((item) => <li key={item}><code>{item}</code></li>)}</ul>
+                  <h4>Fokus beim Lesen</h4>
+                  <ul>{session.readingFocus.map((item) => <li key={item}>{item}</li>)}</ul>
+                  <h4>Extraktionsziel</h4><p>{session.extractionGoal}</p>
                 </div>
               </div>
-              <footer><strong>Definition of Done</strong><p>{session.definitionOfDone}</p></footer>
+              <div className="nlp-reading-list">
+                {session.readingIds.map((readingId) => {
+                  const reading = readingsById.get(readingId);
+                  if (!reading) return null;
+                  const source = sources[reading.sourceId];
+                  return (
+                    <article key={reading.id}>
+                      <header>
+                        <strong>
+                          Reihenfolge C{String(reading.courseOrder).padStart(2, "0")} · Original O{String(reading.order).padStart(2, "0")}
+                        </strong>
+                        <span className={`reading-mode ${reading.mode.toLowerCase()}`}>{reading.mode}</span>
+                        {reading.status === "in_progress" && <span className="reading-status">In Arbeit</span>}
+                      </header>
+                      <h4>{source?.label ?? reading.sourceId}</h4>
+                      <code>{reading.fileName}</code>
+                      <p>{reading.projectConnection}</p>
+                    </article>
+                  );
+                })}
+              </div>
+              <footer><strong>Nach der Sitzung festhalten</strong><p>{extractionSections.join(" · ")}</p></footer>
             </article>
           ))}
         </div>

@@ -104,21 +104,77 @@ test("dashboard exposes the current learning journey and migrates legacy state",
     .toEqual({ version: 2, errors: 1 });
 });
 
-test("grammar lab exposes all 144 CEFR units and selects an advanced topic", async ({
+test("grammar lab uses a single-open vertical unit menu and selects an advanced topic", async ({
   page,
 }) => {
   await page.goto("/grammatik");
 
-  for (const level of ["A1", "A2", "B1", "B2", "C1", "C2"]) {
-    const label = `${level} · 24 Einheiten`;
-    const trigger = page.getByRole("button", { name: label });
-    await expect(trigger).toBeVisible();
-    if ((await trigger.getAttribute("aria-expanded")) !== "true")
-      await trigger.click();
-    await expect(
-      page.getByRole("region", { name: label }).getByRole("button"),
-    ).toHaveCount(24);
-  }
+  const a1Trigger = page.getByRole("button", { name: "A1 · 24 Einheiten" });
+  const a2Trigger = page.getByRole("button", { name: "A2 · 24 Einheiten" });
+  await expect(a1Trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(a2Trigger).toHaveAttribute("aria-expanded", "false");
+
+  const a1List = page.getByRole("list", { name: "A1 Einheiten" });
+  const a1Rows = a1List.locator('[data-slot="grammar-unit-row"]');
+  await expect(a1Rows).toHaveCount(24);
+  await expect(
+    a1Trigger.locator('[data-slot="accordion-trigger-icon"]'),
+  ).toHaveCSS("rotate", "180deg");
+  const verticalLayout = await a1List.evaluate((list) => {
+    const rows = Array.from(
+      list.querySelectorAll<HTMLElement>('[data-slot="grammar-unit-row"]'),
+    );
+    const rowRects = rows.map((row) => row.getBoundingClientRect());
+    const itemRects = rows.map((row) =>
+      row.parentElement?.getBoundingClientRect(),
+    );
+    const listStyle = getComputedStyle(list);
+    return {
+      display: listStyle.display,
+      flexWrap: listStyle.flexWrap,
+      allRowsFullWidth: rows.every((row, index) => {
+        const parentWidth =
+          row.parentElement?.getBoundingClientRect().width ?? 0;
+        return Math.abs(rowRects[index]!.width - parentWidth) < 1;
+      }),
+      allItemsFullWidth: itemRects.every(
+        (rect) => rect && Math.abs(rect.width - list.clientWidth) < 1,
+      ),
+      allRowsVertical: rowRects.every(
+        (rect, index) => index === 0 || rect.top >= rowRects[index - 1]!.bottom,
+      ),
+    };
+  });
+  expect(verticalLayout).toEqual({
+    display: "block",
+    flexWrap: "nowrap",
+    allRowsFullWidth: true,
+    allItemsFullWidth: true,
+    allRowsVertical: true,
+  });
+
+  await a2Trigger.click();
+  await expect(a1Trigger).toHaveAttribute("aria-expanded", "false");
+  await expect(a2Trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(
+    a1Trigger.locator('[data-slot="accordion-trigger-icon"]'),
+  ).toHaveCSS("rotate", "none");
+  await expect(
+    a2Trigger.locator('[data-slot="accordion-trigger-icon"]'),
+  ).toHaveCSS("rotate", "180deg");
+  await expect(
+    page.getByRole("list", { name: "A2 Einheiten" }).getByRole("button"),
+  ).toHaveCount(24);
+  await a2Trigger.click();
+  await expect(a2Trigger).toHaveAttribute("aria-expanded", "false");
+
+  const c2Trigger = page.getByRole("button", { name: "C2 · 24 Einheiten" });
+  await c2Trigger.focus();
+  await c2Trigger.press("Enter");
+  await expect(c2Trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(
+    page.getByRole("list", { name: "C2 Einheiten" }).getByRole("button"),
+  ).toHaveCount(24);
 
   const advancedTopic = page.getByRole("button", {
     name: /Modalität und Evidentialität/,

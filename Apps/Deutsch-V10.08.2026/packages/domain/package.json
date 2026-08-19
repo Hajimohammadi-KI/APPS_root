@@ -1,6 +1,6 @@
 {
   "name": "@grammar/domain",
-  "version": "20.8.9",
+  "version": "20.8.10",
   "private": true,
   "type": "module",
   "exports": {

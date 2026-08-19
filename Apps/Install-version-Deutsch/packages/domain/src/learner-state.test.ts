@@ -1,6 +1,7 @@
 import { describe, expect, it } from "bun:test";
 
 import {
+  completeDailyPlanStep,
   calculateStreak,
   canCompleteDailyStep,
   createInitialLearnerState,
@@ -121,6 +122,27 @@ describe("legacy learner state", () => {
   });
 });
 
+describe("daily plan atomic updates", () => {
+  it("commits completion and its evidence in one update", () => {
+    const initial = { completed: [] as number[], answers: {} };
+    const completed = completeDailyPlanStep(initial, 0, {
+      "planner:yesterday-recalled": "1",
+    });
+
+    expect(completed).toEqual({
+      completed: [0],
+      answers: { "planner:yesterday-recalled": "1" },
+    });
+  });
+
+  it("refuses to skip a prerequisite step or duplicate a completion", () => {
+    const initial = { completed: [] as number[], answers: {} };
+    expect(completeDailyPlanStep(initial, 2)).toBe(initial);
+    const completed = completeDailyPlanStep(initial, 0);
+    expect(completeDailyPlanStep(completed, 0)).toBe(completed);
+  });
+});
+
 // Regression coverage for a real gap: LearnerState had no version field and
 // no dedicated migration entry point at all (unlike English's AppState.version
 // / migrateLegacy()), so a future schema change would have had no version
@@ -129,15 +151,15 @@ describe("legacy learner state", () => {
 // key -- carries the new version marker, and that a realistic old blob's
 // real data (attempts, reviews, mastery) survives the migration path.
 describe("state versioning and legacy-key migration", () => {
-  it("stamps version 1 on a fresh state", () => {
-    expect(createInitialLearnerState().version).toBe(1);
+  it("stamps version 2 on a fresh state", () => {
+    expect(createInitialLearnerState().version).toBe(2);
   });
 
-  it("stamps version 1 even when normalizing an old, unversioned blob", () => {
+  it("stamps version 2 even when normalizing an old, unversioned blob", () => {
     expect(normalizeLearnerState({ settings: { minWords: 12 } }).version).toBe(
-      1,
+      2,
     );
-    expect(normalizeLearnerState(null).version).toBe(1);
+    expect(normalizeLearnerState(null).version).toBe(2);
   });
 
   it("migrates a realistic legacy (GrammarAutomaticityV11_de) blob's real data forward", () => {
@@ -189,7 +211,7 @@ describe("state versioning and legacy-key migration", () => {
 
     const migrated = migrateLegacyLearnerState(legacyBlob);
 
-    expect(migrated.version).toBe(1);
+    expect(migrated.version).toBe(2);
     expect(migrated.settings.minWords).toBe(18);
     expect(migrated.learningLevel).toBe("B1");
     expect(migrated.attempts).toHaveLength(1);

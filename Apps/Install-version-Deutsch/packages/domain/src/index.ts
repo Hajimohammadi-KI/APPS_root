@@ -86,6 +86,7 @@ export {
   REVIEW_SOURCE_TYPES,
   calculateStreak,
   canCompleteDailyStep,
+  completeDailyPlanStep,
   countWords,
   createInitialLearnerState,
   errorClassLabels,

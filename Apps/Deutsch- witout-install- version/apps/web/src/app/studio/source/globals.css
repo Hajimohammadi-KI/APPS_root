@@ -514,7 +514,10 @@ footer {
 input {
   accent-color: var(--violet);
 }
-@media (max-width: 1100px) {
+/* The studio is nested inside the product shell, so the usable content width
+   is substantially smaller than the browser viewport. Collapse the evidence
+   rail before its fixed 285px column can overlap the recording controls. */
+@media (max-width: 1400px) {
   .app-shell {
     grid-template-columns: 190px minmax(0, 1fr);
   }

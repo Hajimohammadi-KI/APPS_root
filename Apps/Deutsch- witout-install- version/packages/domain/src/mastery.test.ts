@@ -216,6 +216,28 @@ describe("recordVerifiedMasteryAttempt", () => {
     expect(record?.scores.writing).toBe(90);
   });
 
+  it("keeps a trustworthy failed evaluation and lets it lower the score", () => {
+    let record = recordVerifiedMasteryAttempt(undefined, {
+      mode: "writing",
+      accuracyScore: 100,
+      targetHit: true,
+      verified: true,
+      latencyMs: 30_000,
+    });
+
+    record = recordVerifiedMasteryAttempt(record, {
+      mode: "writing",
+      accuracyScore: 100,
+      targetHit: false,
+      verified: true,
+      latencyMs: 30_000,
+    });
+
+    expect(record?.attemptCounts.writing).toBe(2);
+    expect(record?.successfulAttemptCounts.writing).toBe(1);
+    expect(record?.scores.writing).toBeLessThan(100);
+  });
+
   it("never advances status to stable or automatic from unverified attempts alone, even offline with a perfect score", () => {
     let record: ReturnType<typeof createEmptyMasteryRecord> | undefined;
 

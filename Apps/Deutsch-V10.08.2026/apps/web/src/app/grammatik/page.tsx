@@ -1,13 +1,6 @@
 "use client";
 
 import { grammarUnits } from "@grammar/content";
-import { CEFR_LEVELS } from "@grammar/domain";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -19,6 +12,7 @@ import {
 import { AutomaticityLab } from "@/features/automaticity/automaticity-lab";
 import { PrerequisiteChainPanel } from "@/features/automaticity/prerequisite-chain-panel";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
+import { GrammarUnitAccordion } from "./grammar-unit-accordion";
 
 export default function GrammatikPage() {
   const { state, setTodayGrammar } = useLearnerState();
@@ -50,46 +44,15 @@ export default function GrammatikPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Accordion
-            defaultValue={selectedUnit ? [selectedUnit.level] : ["A1"]}
-            multiple
-          >
-            {CEFR_LEVELS.map((level) => {
-              const units = grammarUnits.filter((unit) => unit.level === level);
-              if (units.length === 0) return null;
-              return (
-                <AccordionItem key={level} value={level}>
-                  <AccordionTrigger className="text-sm font-bold text-muted-foreground">
-                    {level} · {units.length} Einheiten
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex flex-wrap gap-2">
-                      {units.map((unit) => (
-                        <button
-                          aria-pressed={selectedTitle === unit.title}
-                          className={`rounded-full border px-3 py-1.5 text-left text-sm font-bold ${
-                            selectedTitle === unit.title
-                              ? "border-violet-700 bg-violet-100 text-violet-950"
-                              : "bg-background"
-                          }`}
-                          key={unit.title}
-                          onClick={() => {
-                            setTodayGrammar(unit.title, unit.level);
-                            document
-                              .getElementById("mission")
-                              ?.scrollIntoView({ behavior: "smooth" });
-                          }}
-                          type="button"
-                        >
-                          {unit.title}
-                        </button>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
+          <GrammarUnitAccordion
+            onSelect={(unit) => {
+              setTodayGrammar(unit.title, unit.level);
+              document
+                .getElementById("mission")
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+            selectedTitle={selectedTitle}
+          />
         </CardContent>
       </Card>
       {selectedUnit ? (

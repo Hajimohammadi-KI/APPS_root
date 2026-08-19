@@ -665,10 +665,12 @@ export function AutomaticityLab({
       // known-correct answer -- not self-rated, not a network call, not
       // fabricated. That's a legitimate verification basis in its own
       // right, distinct from (and not requiring) the online provider used
-      // for writing/speaking -- aber nur, wenn die Antwort zum Zeitpunkt der
+      // for writing/speaking. `verified` means trustworthy, not correct: a
+      // wrong closed-book answer must lower the score instead of disappearing
+      // -- aber nur, wenn die Antwort zum Zeitpunkt der
       // Prüfung nicht ablesbar war. Eine Runde mit offenem Buch ist echte
       // Übung, aber kein Abrufnachweis, und darf die Beherrschung nicht heben.
-      verified: results.every(Boolean) && !openBook,
+      verified: !openBook,
       accuracyScore: score,
       ...(latencyMs === undefined ? {} : { latencyMs }),
     });

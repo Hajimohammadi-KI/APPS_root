@@ -11,6 +11,7 @@ import {
 
 import {
   canCompleteDailyStep,
+  completeDailyPlanStep,
   createInitialLearnerState,
   CURRENT_STORAGE_KEY,
   getDailyPlan,
@@ -281,25 +282,20 @@ export function applyCompleteDailyStep(
     return state;
   }
 
-  const completed = [...plan.completed, stepIndex].sort(
-    (left, right) => left - right,
+  const nextPlan = completeDailyPlanStep(
+    plan,
+    stepIndex,
+    stepIndex === 0 ? { "planner:yesterday-recalled": "1" } : {},
   );
   return {
     ...state,
     activity: {
       ...state.activity,
-      [dateKey]: completed.length,
+      [dateKey]: nextPlan.completed.length,
     },
     dailyPlans: {
       ...state.dailyPlans,
-      [dateKey]: {
-        ...plan,
-        completed,
-        answers:
-          stepIndex === 0
-            ? { ...plan.answers, "planner:yesterday-recalled": "1" }
-            : plan.answers,
-      },
+      [dateKey]: nextPlan,
     },
   };
 }

@@ -3,7 +3,7 @@ setlocal EnableExtensions
 title Deutsch-Automatik - Start Current Version
 
 set "ROOT=D:\APPS_root"
-set "DEUTSCH=%ROOT%\Apps\Deutsch-V10.08.2026"
+set "DEUTSCH=%ROOT%\Apps\Install-version-Deutsch"
 set "LOGS=%DEUTSCH%\runtime-logs"
 if not exist "%LOGS%" mkdir "%LOGS%"
 

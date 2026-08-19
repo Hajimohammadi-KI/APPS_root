@@ -19,6 +19,12 @@ body {
   max-width: 100%;
 }
 
+@media (max-width: 1400px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
 :where(
   .german-app-main,
   .german-app-topbar,

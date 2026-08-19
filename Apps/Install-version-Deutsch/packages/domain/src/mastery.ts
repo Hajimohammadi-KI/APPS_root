@@ -62,6 +62,10 @@ export interface MasteryRecord {
    * them -- mirrors English's MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC.
    */
   readonly attemptCounts: MasteryAttemptCounts;
+  /** Verified attempts that also hit the target, tracked separately from
+   * attemptCounts so failed-but-trustworthy evaluations lower automaticity
+   * instead of disappearing from the evidence. */
+  readonly successfulAttemptCounts: MasteryAttemptCounts;
   readonly completedAt?: number;
   readonly lastSuccessAt?: number;
   /**
@@ -196,30 +200,71 @@ export function median(values: readonly number[]): number | null {
     : upper;
 }
 
+export interface AutomaticityEvidence {
+  readonly attemptCounts: MasteryAttemptCounts;
+  readonly successfulAttemptCounts: MasteryAttemptCounts;
+  readonly successfulReviews: number;
+  readonly activeCriticalErrors: number;
+  readonly responseLatenciesMs: readonly number[];
+  readonly writingLatenciesMs: readonly number[];
+  readonly hasDelayedTransferEvidence: boolean;
+  readonly practiceStage: 1 | 2 | 3;
+}
+
 export function calculateAutomaticityScore(
-  scores: Omit<MasteryScores, "automaticity">,
-  successfulReviews: number,
-  activeCriticalErrors: number,
-  responseLatenciesMs: readonly number[],
+  evidence: AutomaticityEvidence,
 ): number {
-  const skillScore =
-    scores.recognition * 0.15 +
-    scores.writing * 0.25 +
-    scores.speaking * 0.25 +
-    scores.repair * 0.2 +
-    scores.transfer * 0.15;
-  const reviewBonus = Math.min(10, successfulReviews * 5);
-  const latency = median(responseLatenciesMs);
-  const latencyAdjustment =
-    latency === null
-      ? 0
-      : latency <= AUTOMATICITY_LATENCY_THRESHOLD_MS
-        ? 5
-        : -5;
-  const errorPenalty = Math.min(25, activeCriticalErrors * 10);
+  const modes = ["recognition", "writing", "speaking", "transfer"] as const;
+  const independence =
+    modes.reduce(
+      (sum, mode) =>
+        sum +
+        Math.min(
+          100,
+          Math.round(
+            (evidence.attemptCounts[mode] /
+              MINIMUM_ATTEMPTS_FOR_ADVANCED_STATUS) *
+              100,
+          ),
+        ),
+      0,
+    ) / modes.length;
+  const consistency =
+    modes.reduce((sum, mode) => {
+      const attempts = evidence.attemptCounts[mode];
+      return (
+        sum +
+        (attempts === 0
+          ? 0
+          : Math.round(
+              (evidence.successfulAttemptCounts[mode] / attempts) * 100,
+            ))
+      );
+    }, 0) / modes.length;
+  const recallLatency = median(evidence.responseLatenciesMs);
+  const writingLatency = median(evidence.writingLatenciesMs);
+  const recallSpeed =
+    recallLatency !== null && recallLatency <= AUTOMATICITY_LATENCY_THRESHOLD_MS
+      ? 100
+      : 0;
+  const writingSpeed =
+    writingLatency !== null && writingLatency <= WRITING_LATENCY_THRESHOLD_MS
+      ? 100
+      : 0;
+  const stagedRecallSpeed =
+    evidence.practiceStage === 3 ? 100 : evidence.practiceStage === 2 ? 60 : 0;
+  const speed = (recallSpeed + writingSpeed + stagedRecallSpeed) / 3;
+  const delayedNovelTransfer = evidence.hasDelayedTransferEvidence ? 100 : 0;
+  const retention = Math.min(100, evidence.successfulReviews * 50);
+  const errorPenalty = Math.min(20, evidence.activeCriticalErrors * 10);
 
   return clampScore(
-    skillScore + reviewBonus + latencyAdjustment - errorPenalty,
+    independence * 0.2 +
+      consistency * 0.25 +
+      speed * 0.2 +
+      delayedNovelTransfer * 0.2 +
+      retention * 0.15 -
+      errorPenalty,
   );
 }
 
@@ -261,7 +306,8 @@ export function calculateMasteryStatus(
     latency !== null &&
     latency <= AUTOMATICITY_LATENCY_THRESHOLD_MS &&
     hasFastEnoughWriting &&
-    hasDelayedTransferEvidence
+    hasDelayedTransferEvidence &&
+    scores.automaticity >= 80
   ) {
     return "automatic";
   }
@@ -314,6 +360,7 @@ export function createEmptyMasteryRecord(): MasteryRecord {
     responseLatenciesMs: [],
     writingLatenciesMs: [],
     attemptCounts: EMPTY_MASTERY_ATTEMPT_COUNTS,
+    successfulAttemptCounts: EMPTY_MASTERY_ATTEMPT_COUNTS,
     controlled: false,
     free: false,
     practiceStage: 1,
@@ -326,12 +373,16 @@ function refreshMasteryRecord(
     readonly scores: Omit<MasteryScores, "automaticity">;
   },
 ): MasteryRecord {
-  const automaticity = calculateAutomaticityScore(
-    record.scores,
-    record.successfulReviews,
-    record.activeCriticalErrors,
-    record.responseLatenciesMs,
-  );
+  const automaticity = calculateAutomaticityScore({
+    attemptCounts: record.attemptCounts,
+    successfulAttemptCounts: record.successfulAttemptCounts,
+    successfulReviews: record.successfulReviews,
+    activeCriticalErrors: record.activeCriticalErrors,
+    responseLatenciesMs: record.responseLatenciesMs,
+    writingLatenciesMs: record.writingLatenciesMs,
+    hasDelayedTransferEvidence: record.hasDelayedTransferEvidence,
+    practiceStage: record.practiceStage,
+  });
   const scores = { ...record.scores, automaticity };
 
   return {
@@ -375,8 +426,9 @@ export function recordMasteryAttempt(
     attempt.latencyMs === undefined
       ? undefined
       : Math.max(0, Math.round(attempt.latencyMs));
+  const isRecallLatency = attempt.mode === "recognition";
   const latencies =
-    roundedLatency === undefined || isWritingLatency
+    roundedLatency === undefined || !isRecallLatency
       ? record.responseLatenciesMs
       : [...record.responseLatenciesMs, roundedLatency].slice(-10);
   const writingLatencies =
@@ -400,6 +452,13 @@ export function recordMasteryAttempt(
       ...record.attemptCounts,
       [attempt.mode]: (record.attemptCounts[attempt.mode] ?? 0) + 1,
     },
+    successfulAttemptCounts: attempt.targetHit
+      ? {
+          ...record.successfulAttemptCounts,
+          [attempt.mode]:
+            (record.successfulAttemptCounts[attempt.mode] ?? 0) + 1,
+        }
+      : record.successfulAttemptCounts,
     responseLatenciesMs: latencies,
     writingLatenciesMs: writingLatencies,
     controlled:
@@ -427,10 +486,10 @@ export function recordMasteryAttempt(
 
 export interface VerifiableMasteryAttempt extends MasteryAttempt {
   /**
-   * Whether the underlying evaluation was actually confirmed correct (e.g.
-   * the online LanguageTool check succeeded) rather than a best-effort
-   * offline fallback or self-report. Only verified attempts may progress
-   * mastery toward "stable"/"automatic" status.
+   * Whether the underlying evaluation actually ran on a trustworthy basis
+   * (e.g. the online LanguageTool check responded) rather than a best-effort
+   * offline fallback or self-report. Correctness is represented separately by
+   * targetHit, so a verified failure remains evidence and lowers the score.
    */
   readonly verified: boolean;
 }

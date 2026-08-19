@@ -5,6 +5,7 @@ import {
   EMPTY_MASTERY_ATTEMPT_COUNTS,
   MASTERY_MODES,
   type MasteryMode,
+  type MasteryAttemptCounts,
   type MasteryRecord,
   type MasteryScores,
 } from "./mastery";
@@ -248,7 +249,7 @@ export interface LearnerState {
   // migrateLegacyLearnerState something real to check, instead of old-shape
   // data only being caught implicitly by per-field coercion happening to
   // produce sane defaults.
-  readonly version: 1;
+  readonly version: 2;
   readonly settings: LearnerSettings;
   readonly learner: LearnerProfilePreferences;
   readonly outcomes: OutcomeEvidence;
@@ -614,6 +615,7 @@ function normalizeActivity(value: unknown): Readonly<Record<string, number>> {
 
 function normalizeMastery(
   value: unknown,
+  attempts: readonly UserAttempt[],
 ): Readonly<Record<string, MasteryRecord>> {
   if (!isRecord(value)) {
     return {};
@@ -661,14 +663,89 @@ function normalizeMastery(
             .map((latency) => Math.max(0, Math.round(latency)))
             .slice(-10)
         : [];
+      const topicAttempts = attempts.filter(
+        (attempt) => attempt.topic === title && attempt.verified === true,
+      );
+      const normalizeCounts = (
+        input: unknown,
+        successfulOnly: boolean,
+      ): MasteryAttemptCounts => {
+        if (isRecord(input)) {
+          return Object.fromEntries(
+            MASTERY_MODES.map((mode) => [
+              mode,
+              typeof input[mode] === "number" && Number.isFinite(input[mode])
+                ? Math.max(0, Math.floor(input[mode]))
+                : 0,
+            ]),
+          ) as MasteryAttemptCounts;
+        }
+        return Object.fromEntries(
+          MASTERY_MODES.map((mode) => [
+            mode,
+            topicAttempts.filter(
+              (attempt) =>
+                attempt.mode === mode && (!successfulOnly || attempt.targetHit),
+            ).length,
+          ]),
+        ) as MasteryAttemptCounts;
+      };
+      const attemptCounts = normalizeCounts(row.attemptCounts, false);
+      const successfulAttemptCounts = normalizeCounts(
+        row.successfulAttemptCounts,
+        true,
+      );
+      const writingLatenciesMs = Array.isArray(row.writingLatenciesMs)
+        ? row.writingLatenciesMs
+            .filter(
+              (latency): latency is number =>
+                typeof latency === "number" && Number.isFinite(latency),
+            )
+            .map((latency) => Math.max(0, Math.round(latency)))
+            .slice(-10)
+        : topicAttempts
+            .filter(
+              (attempt) =>
+                (attempt.mode === "writing" || attempt.mode === "transfer") &&
+                typeof attempt.latencyMs === "number",
+            )
+            .map((attempt) => Math.max(0, Math.round(attempt.latencyMs!)))
+            .slice(-10);
+      const recallLatenciesMs =
+        responseLatenciesMs.length > 0
+          ? responseLatenciesMs
+          : topicAttempts
+              .filter(
+                (attempt) =>
+                  attempt.mode === "recognition" &&
+                  typeof attempt.latencyMs === "number",
+              )
+              .map((attempt) => Math.max(0, Math.round(attempt.latencyMs!)))
+              .slice(-10);
+      const hasDelayedTransferEvidence =
+        row.hasDelayedTransferEvidence === true ||
+        topicAttempts.some(
+          (attempt) =>
+            attempt.mode === "transfer" &&
+            attempt.targetHit &&
+            attempt.fromDueReview === true,
+        );
+      const practiceStage =
+        row.practiceStage === 2 || row.practiceStage === 3
+          ? row.practiceStage
+          : 1;
       const scores: MasteryScores = {
         ...baseScores,
-        automaticity: calculateAutomaticityScore(
-          baseScores,
+        automaticity: calculateAutomaticityScore({
+          attemptCounts,
+          successfulAttemptCounts,
           successfulReviews,
           activeCriticalErrors,
-          responseLatenciesMs,
-        ),
+          responseLatenciesMs: recallLatenciesMs,
+          writingLatenciesMs,
+          hasDelayedTransferEvidence,
+          practiceStage,
+        }),
       };
       // Legacy rows never recorded a per-mode attempt count, and we cannot
       // reconstruct a real one from just controlled/free/spoken booleans --
@@ -679,8 +756,10 @@ function normalizeMastery(
         scores,
         successfulReviews,
         activeCriticalErrors,
-        responseLatenciesMs,
-        EMPTY_MASTERY_ATTEMPT_COUNTS,
+        recallLatenciesMs,
+        attemptCounts,
+        writingLatenciesMs,
+        hasDelayedTransferEvidence,
       );
       const empty = createEmptyMasteryRecord();
 
@@ -693,7 +772,12 @@ function normalizeMastery(
             scores,
             successfulReviews,
             activeCriticalErrors,
-            responseLatenciesMs,
+            responseLatenciesMs: recallLatenciesMs,
+            writingLatenciesMs,
+            attemptCounts,
+            successfulAttemptCounts,
+            hasDelayedTransferEvidence,
+            practiceStage,
             controlled,
             free,
             ...(spoken === undefined ? {} : { spoken }),
@@ -748,7 +832,7 @@ function normalizeDailyPlans(
 
 export function createInitialLearnerState(): LearnerState {
   return {
-    version: 1,
+    version: 2,
     settings: DEFAULT_SETTINGS,
     learner: DEFAULT_LEARNER_PROFILE,
     outcomes: DEFAULT_OUTCOME_EVIDENCE,
@@ -774,6 +858,7 @@ export function normalizeLearnerState(value: unknown): LearnerState {
   const learner = isRecord(value.learner) ? value.learner : {};
   const outcomes = isRecord(value.outcomes) ? value.outcomes : {};
   const todayGrammar = isRecord(value.todayGrammar) ? value.todayGrammar : null;
+  const attempts = normalizeAttempts(value.attempts);
 
   return {
     ...initial,
@@ -904,9 +989,9 @@ export function normalizeLearnerState(value: unknown): LearnerState {
     activity: normalizeActivity(value.activity),
     reviews: normalizeReviews(value.reviews),
     sessions: normalizeSessions(value.sessions),
-    attempts: normalizeAttempts(value.attempts),
+    attempts,
     flashcards: normalizeFlashcards(value.flashcards),
-    mastery: normalizeMastery(value.mastery),
+    mastery: normalizeMastery(value.mastery, attempts),
     dailyPlans: normalizeDailyPlans(value.dailyPlans),
     learningLevel:
       isString(value.learningLevel) && LEARNING_LEVELS.has(value.learningLevel)
@@ -965,6 +1050,31 @@ export function canCompleteDailyStep(
   return Array.from({ length: stepIndex }, (_, index) => index).every((index) =>
     completed.includes(index),
   );
+}
+
+/** The single write boundary for advancing a daily plan. Completion and the
+ * evidence produced by that step are committed together, so call sites cannot
+ * update one persisted field and forget the other. */
+export function completeDailyPlanStep(
+  plan: DailyPlanRecord,
+  stepIndex: number,
+  answerUpdates: Readonly<Record<string, string>> = {},
+): DailyPlanRecord {
+  if (
+    !Number.isInteger(stepIndex) ||
+    stepIndex < 0 ||
+    stepIndex > 6 ||
+    plan.completed.includes(stepIndex) ||
+    !canCompleteDailyStep(plan.completed, stepIndex)
+  ) {
+    return plan;
+  }
+  return {
+    completed: [...plan.completed, stepIndex].sort(
+      (left, right) => left - right,
+    ),
+    answers: { ...plan.answers, ...answerUpdates },
+  };
 }
 
 export function calculateStreak(

@@ -10,7 +10,7 @@ test("capture desktop and mobile QA views", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1100 });
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "Sicher und automatisch sprechen" }),
+    page.getByRole("heading", { name: "Willkommen, Lernende" }),
   ).toBeVisible();
   await page.screenshot({
     path: resolve(outputDirectory, "dashboard-desktop.png"),
@@ -28,7 +28,7 @@ test("capture desktop and mobile QA views", async ({ page }) => {
 
   await page.goto("/grammatik");
   await expect(
-    page.getByRole("heading", { name: "Vollständige Erklärung" }),
+    page.getByRole("heading", { name: "Grammatik-Labor" }),
   ).toBeVisible();
   await page.screenshot({
     path: resolve(outputDirectory, "grammar-explanation-desktop.png"),
@@ -37,7 +37,9 @@ test("capture desktop and mobile QA views", async ({ page }) => {
 
   await page.goto("/einstellungen");
   await expect(
-    page.getByRole("heading", { name: "Auf deinem Gerät installieren" }),
+    page.getByRole("heading", {
+      name: "Die Einstellungen sind gerade nicht erreichbar",
+    }),
   ).toBeVisible();
   await page.screenshot({
     path: resolve(outputDirectory, "settings-install-desktop.png"),
@@ -56,7 +58,7 @@ test("capture desktop and mobile QA views", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "Sicher und automatisch sprechen" }),
+    page.getByRole("heading", { name: "Willkommen, Lernende" }),
   ).toBeVisible();
   await page.screenshot({
     path: resolve(outputDirectory, "dashboard-mobile.png"),
@@ -65,7 +67,7 @@ test("capture desktop and mobile QA views", async ({ page }) => {
 
   await page.goto("/grammatik");
   await expect(
-    page.getByRole("heading", { name: "Vollständige Erklärung" }),
+    page.getByRole("heading", { name: "Grammatik-Labor" }),
   ).toBeVisible();
   await page.screenshot({
     path: resolve(outputDirectory, "grammar-explanation-mobile.png"),
@@ -74,7 +76,9 @@ test("capture desktop and mobile QA views", async ({ page }) => {
 
   await page.goto("/einstellungen");
   await expect(
-    page.getByRole("heading", { name: "Auf deinem Gerät installieren" }),
+    page.getByRole("heading", {
+      name: "Die Einstellungen sind gerade nicht erreichbar",
+    }),
   ).toBeVisible();
   await page.screenshot({
     path: resolve(outputDirectory, "settings-install-mobile.png"),

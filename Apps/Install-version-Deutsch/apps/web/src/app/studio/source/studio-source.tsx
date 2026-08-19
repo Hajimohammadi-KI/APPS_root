@@ -292,17 +292,13 @@ export default function Home() {
   // seconds ist reine Aufnahme-Wandzeit (pausiert nur bei explizitem
   // Pause-Klick), also zaehlt wordCount/seconds jede natuerliche Sprechpause
   // stillschweigend als Sprechzeit mit -- das taeuscht "Fluessigkeit" vor.
-  // Sobald die echte, amplitudenbasierte Sprechzeit vorliegt (nach dem Stop
-  // gesetzt, dieselbe lib/audio-fluency.ts-Analyse, die die Mission fuer
-  // genau diese Kennzahl schon verwendet), wird sie bevorzugt; die
-  // Wandzeit-Formel ist nur ein Fallback, solange diese Analyse noch nicht
-  // fertig ist.
+  // Die Kennzahl wird deshalb erst gezeigt, wenn die amplitudenbasierte
+  // Sprechzeit aus lib/audio-fluency.ts wirklich vorliegt. Bis dahin bleibt
+  // sie unbekannt statt durch eine Wandzeit-Schaetzung ersetzt zu werden.
   const wordsPerMinute =
     audioFluencyResult && audioFluencyResult.activeSpeechSeconds > 0
       ? Math.round(wordCount / (audioFluencyResult.activeSpeechSeconds / 60))
-      : seconds > 0
-        ? Math.round(wordCount / (seconds / 60))
-        : 0;
+      : 0;
 
   useEffect(() => {
     if (recordingState !== "recording") return;
@@ -467,9 +463,8 @@ export default function Home() {
           setAudioUrl(URL.createObjectURL(blob));
           // Echte, audiobasierte Fluessigkeit sobald der Blob fertig ist --
           // dasselbe Muster wie saveSpeaking() der Mission. onstop kann nicht
-          // async sein, deshalb hier fire-and-forget statt await;
-          // wordsPerMinute faellt bis zur Aufloesung auf die Wandzeit-
-          // Schaetzung zurueck.
+          // async sein, deshalb hier fire-and-forget statt await; bis zur
+          // Aufloesung zeigt die UI bewusst keinen WPM-Wert.
           void analyzeAudioFluency(blob).then(setAudioFluencyResult);
         }
         stream.getTracks().forEach((track) => track.stop());
@@ -1143,8 +1138,8 @@ export default function Home() {
                         <small>MEASURED</small>
                         <p>
                           <b>{wordCount}</b> words ·{" "}
-                          <b>{formatTime(seconds)}</b> · <b>{wordsPerMinute}</b>{" "}
-                          WPM
+                          <b>{formatTime(seconds)}</b> ·{" "}
+                          <b>{audioFluencyResult ? wordsPerMinute : "—"}</b> WPM
                         </p>
                       </article>
                     </div>
@@ -1363,12 +1358,16 @@ export default function Home() {
                 <div>
                   <b>Fluency</b>
                   <small>
-                    {seconds
-                      ? `${wordsPerMinute} WPM from ${formatTime(seconds)} audio`
-                      : "Waiting for recorded timing"}
+                    {audioFluencyResult
+                      ? `${wordsPerMinute} WPM from ${audioFluencyResult.activeSpeechSeconds.toFixed(1)}s active speech`
+                      : audioUrl
+                        ? "Active-speech analysis unavailable"
+                        : "Waiting for recorded audio"}
                   </small>
                 </div>
-                <strong>{seconds ? `${wordsPerMinute}` : "—"}</strong>
+                <strong>
+                  {audioFluencyResult ? `${wordsPerMinute}` : "—"}
+                </strong>
               </div>
               <div className="feedback-row f1">
                 <span>◉</span>
@@ -1427,7 +1426,7 @@ export default function Home() {
                   <span>Words</span>
                 </div>
                 <div>
-                  <b>{wordsPerMinute}</b>
+                  <b>{audioFluencyResult ? wordsPerMinute : "—"}</b>
                   <span>WPM</span>
                 </div>
               </div>

@@ -286,14 +286,17 @@ export function ErrorsScreen() {
                         accuracyScore: result.accuracyScore,
                         fluencyScore: 0,
                         latencyMs: null,
-                        passed: result.masteryEligible && genuineNewContext,
-                        // verified must require the same genuine-new-context
-                        // evidence as `passed` -- previously this was set
-                        // from result.masteryEligible alone, so a verbatim
+                        passed: result.pass && genuineNewContext,
+                        // A repair must be genuinely independent to enter the
+                        // evidence set. Within that set, `online` records
+                        // whether the evaluator really ran; correctness stays
+                        // in passed/targetHit so a checked failure lowers the
+                        // score. Previously this was set from
+                        // result.masteryEligible alone, so a verbatim
                         // copy of the shown answer with both checkboxes left
                         // unchecked still counted toward repairScore and the
                         // strict "automatic" gate.
-                        verified: result.masteryEligible && genuineNewContext,
+                        verified: result.online && genuineNewContext,
                       });
                       if (result.pass && genuineNewContext) {
                         mutate((draft) => {

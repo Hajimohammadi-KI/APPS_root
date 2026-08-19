@@ -1,36 +1,36 @@
 import { expect, test } from "@playwright/test";
 
-// Both tests below click a level-picker button (getByRole("button", { name:
-// /^A1/ })) on /heute that no longer matches the current control after the
-// SelectMenu/Accordion rollout (see application.spec.ts's top-of-file
-// comment for the full root-cause writeup). Marked test.fixme() rather than
-// guessed at blind -- needs a rewrite against the real current picker, not
-// a locator patch.
-test.fixme("Automatik-Mission speichert den Schreibnachweis dauerhaft", async ({
+test("Automatik-Mission speichert den Schreibnachweis dauerhaft", async ({
   page,
 }) => {
   await page.goto("/heute");
-  await page.getByRole("button", { name: /^A1/ }).click();
   await page
-    .getByRole("button", { name: "Öffnen: Tägliches Schreiben" })
+    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
     .click();
 
   const journal =
     "Ich übe heute, weil ich sicherer sprechen möchte. Ich schreibe Beispiele, weil ich die Regel behalten will. Ich höre zu, weil gute Aussprache wichtig ist. Ich wiederhole den Text, weil mir das Rhythmus gibt. Danach spreche ich frei. Morgen mache ich weiter.";
-  await page.getByLabel("weil-Tagebuch").fill(journal);
+  const journalField = page.getByLabel("Personalpronomen und sein-Tagebuch");
+  await journalField.fill(journal);
   await page
     .getByRole("button", { name: "Schreiben analysieren und speichern" })
     .click();
-  await expect(page.getByText("100%", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(
+      "Tagebuch gespeichert. Du hast die Zielstruktur selbst produziert.",
+    ),
+  ).toBeVisible();
 
   await page.reload();
   await page
-    .getByRole("button", { name: "Wiederholen: Tägliches Schreiben" })
+    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
     .click();
-  await expect(page.getByLabel("weil-Tagebuch")).toHaveValue(journal);
+  await expect(
+    page.getByLabel("Personalpronomen und sein-Tagebuch"),
+  ).toHaveValue(journal);
 });
 
-test.fixme("Automatik-Mission bleibt auf dem Smartphone bedienbar", async ({
+test("Automatik-Mission bleibt auf dem Smartphone bedienbar", async ({
   page,
 }) => {
   const consoleErrors: string[] = [];
@@ -41,16 +41,18 @@ test.fixme("Automatik-Mission bleibt auf dem Smartphone bedienbar", async ({
   await page.goto("/automatik");
 
   await expect(page).toHaveURL(/\/heute$/);
-  await page
-    .getByText("Vertiefender Automatik-Nachweis", { exact: true })
-    .click();
   await expect(
-    page.getByRole("heading", { name: "Vertiefender Nachweis" }),
+    page.getByRole("heading", { name: "Automatik-Mission" }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Nachweis starten" }),
   ).toBeVisible();
-  await expect(page.getByLabel("weil-Tagebuch")).toBeVisible();
+  await page
+    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
+    .click();
+  await expect(
+    page.getByLabel("Personalpronomen und sein-Tagebuch"),
+  ).toBeVisible();
   await expect(
     page.locator(
       "[data-nextjs-dialog], .vite-error-overlay, #webpack-dev-server-client-overlay",

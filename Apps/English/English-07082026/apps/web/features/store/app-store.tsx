@@ -34,7 +34,7 @@ export type MasteryStatus =
 // BY automaticity-screen.tsx -- importing it back the other way would be a
 // circular dependency. Re-exported from automaticity-screen.tsx below for
 // its existing importers.
-export const EVIDENCE_CONTENT_VERSION = "27.2.0";
+export const EVIDENCE_CONTENT_VERSION = "27.3.0";
 export type AttemptMode =
 	| "recognition"
 	| "writing"
@@ -866,6 +866,93 @@ function average(values: number[]) {
 	);
 }
 
+function evidenceScore(attempt: Attempt) {
+	return attempt.targetHit
+		? attempt.accuracyScore
+		: Math.min(attempt.accuracyScore, 59);
+}
+
+const AUTOMATICITY_EVIDENCE_MODES = [
+	"recognition",
+	"writing",
+	"speaking",
+	"transfer",
+] as const;
+
+export function calculateAutomaticityEvidenceScore(input: {
+	attempts: readonly Attempt[];
+	successfulReviews: number;
+	activeErrorCount: number;
+	practiceStage: 1 | 2 | 3;
+	hasLapsedRetention: boolean;
+}) {
+	const verifiedFor = (mode: (typeof AUTOMATICITY_EVIDENCE_MODES)[number]) =>
+		input.attempts.filter(
+			(attempt) => attempt.mode === mode && attempt.verified === true,
+		);
+	const independence = average(
+		AUTOMATICITY_EVIDENCE_MODES.map((mode) =>
+			Math.min(100, Math.round((verifiedFor(mode).length / 3) * 100)),
+		),
+	);
+	const consistency = average(
+		AUTOMATICITY_EVIDENCE_MODES.map((mode) =>
+			average(verifiedFor(mode).slice(-5).map(evidenceScore)),
+		),
+	);
+	const writingLatency = median(
+		[...verifiedFor("writing"), ...verifiedFor("transfer")]
+			.slice(-10)
+			.map((attempt) => attempt.latencyMs)
+			.filter((value): value is number => value !== null),
+	);
+	const writingSpeed =
+		writingLatency === null
+			? 0
+			: writingLatency <= WRITING_LATENCY_THRESHOLD_MS
+				? 100
+				: Math.max(
+						0,
+						Math.round(
+							100 -
+								((writingLatency - WRITING_LATENCY_THRESHOLD_MS) /
+									WRITING_LATENCY_THRESHOLD_MS) *
+									100,
+						),
+					);
+	const speakingFluency = average(
+		verifiedFor("speaking")
+			.slice(-5)
+			.map((attempt) => Math.max(0, Math.min(100, attempt.fluencyScore))),
+	);
+	const stagedRecallSpeed = input.practiceStage === 3 ? 100 : input.practiceStage === 2 ? 60 : 0;
+	const speed = average([stagedRecallSpeed, writingSpeed, speakingFluency]);
+	const delayedNovelTransfer = verifiedFor("transfer").some(
+		(attempt) => attempt.fromDueReview === true && attempt.targetHit,
+	)
+		? 100
+		: 0;
+	const retention = input.hasLapsedRetention
+		? 0
+		: Math.min(100, input.successfulReviews * 50);
+	const errorPenalty = Math.min(20, input.activeErrorCount * 10);
+
+	return Math.max(
+		0,
+		Math.min(
+			100,
+			Math.round(
+				independence * 0.2 +
+					consistency * 0.25 +
+					speed * 0.2 +
+					delayedNovelTransfer * 0.2 +
+					retention * 0.15 -
+					errorPenalty,
+			),
+		),
+	);
+}
+
 export function recalculateMastery(draft: AppState, grammarTitle: string) {
 	const current = draft.mastery[grammarTitle] ?? emptyMastery(grammarTitle);
 	const attempts = draft.attempts.filter(
@@ -874,7 +961,7 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 	const verifiedFor = (mode: AttemptMode) =>
 		attempts.filter((attempt) => attempt.mode === mode && attempt.verified === true);
 	const scoreFor = (mode: AttemptMode) =>
-		average(verifiedFor(mode).slice(-5).map((attempt) => attempt.accuracyScore));
+		average(verifiedFor(mode).slice(-5).map(evidenceScore));
 
 	current.recognitionScore = scoreFor("recognition");
 	current.writingScore = scoreFor("writing");
@@ -931,14 +1018,6 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 					review.status === "pending",
 			)
 			.toSorted((a, b) => a.dueAt - b.dueAt)[0]?.dueAt ?? null;
-	current.automaticityScore = average([
-		current.recognitionScore,
-		current.writingScore,
-		current.speakingScore,
-		current.repairScore,
-		current.transferScore,
-	]);
-
 	// A single verified attempt can average to a passing score just as well
 	// as five can -- scoreFor()'s average doesn't distinguish "one lucky
 	// attempt" from "five consistent ones". Automaticity is a claim about
@@ -973,8 +1052,15 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 	// TRANSFER_CHECKPOINT_INTERVAL_DAYS there), so this can only be true once
 	// the learner has actually succeeded at a delayed, novel-context recall.
 	const hasDelayedTransferEvidence = verifiedFor("transfer").some(
-		(attempt) => attempt.fromDueReview === true,
+		(attempt) => attempt.fromDueReview === true && attempt.targetHit,
 	);
+	current.automaticityScore = calculateAutomaticityEvidenceScore({
+		attempts,
+		successfulReviews: current.successfulReviews,
+		activeErrorCount: current.activeErrorCount,
+		practiceStage: current.practiceStage,
+		hasLapsedRetention,
+	});
 
 	if (
 		current.recognitionScore >= 85 &&
@@ -987,7 +1073,8 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 		hasEnoughAttempts &&
 		hasDelayedTransferEvidence &&
 		!hasLapsedRetention &&
-		hasFastEnoughWriting
+		hasFastEnoughWriting &&
+		current.automaticityScore >= 80
 	) {
 		current.status = "automatic";
 	} else if (

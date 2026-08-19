@@ -11,7 +11,7 @@
     "dev": "vite",
     "build": "vinext build",
     "start": "node scripts/fix-wrangler-config.mjs && wrangler dev dist/server/index.js --config dist/server/wrangler.json --persist-to .wrangler/state --ip 127.0.0.1 --port 4323",
-    "test": "bun run build && bun test tests/werkzeug-settings.test.ts tests/provider-secrets.test.ts tests/google-provider.test.ts && node --test tests/rendered-html.test.mjs",
+    "test": "bun run build && bun test tests/werkzeug-settings.test.ts tests/provider-secrets.test.ts tests/google-provider.test.ts tests/platform-status.test.ts && node --test tests/rendered-html.test.mjs",
     "validate:artifact": "bash scripts/validate-artifact.sh",
     "typecheck": "node node_modules/typescript7/lib/tsc.js --noEmit --incremental false",
     "check:duplicates": "node ../../../shared/check-duplicated-files.mjs",

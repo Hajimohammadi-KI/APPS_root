@@ -1117,15 +1117,18 @@ export function migrateLegacyId(id: string): string {
   return LEGACY_ID_MIGRATION.get(id) ?? id;
 }
 
+export function migrateLegacyIds(ids: Iterable<string>): Set<string> {
+  return new Set(Array.from(ids, migrateLegacyId));
+}
+
 // Plan versioning: when the professor changes the project's direction and
 // the plan itself has to change, this is the record of *that it changed,
 // why, when it took effect, and exactly which tasks were removed, moved to
 // a different week, or newly added* -- instead of silently overwriting the
 // previous plan with no trace of what used to be there. This does NOT
-// migrate completed/notes/attachments tied to the old day ids (PlannedDay.id
-// is the ISO date string itself, so re-dating the whole plan still changes
-// every id -- see the separate, still-open finding about that). What this
-// gives is real visibility: a changelog entry per revision, and a
+// The separate LEGACY_ID_MIGRATION above migrates completed items and notes
+// from the former date-based ids to stable schedule-position ids. What this
+// version log adds is visibility: a changelog entry per revision, and a
 // one-time "the plan changed" notice the next time the app opens after a
 // new version ships.
 export interface PlanVersionEntry {

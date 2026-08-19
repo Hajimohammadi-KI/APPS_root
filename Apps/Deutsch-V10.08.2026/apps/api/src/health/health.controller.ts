@@ -9,7 +9,7 @@ export class HealthController {
     return healthResponseSchema.parse({
       status: 'ok',
       service: 'grammar-api',
-      version: '10.8.2026',
+      version: '20.8.9',
       timestamp: new Date().toISOString(),
     });
   }

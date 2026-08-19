@@ -26,6 +26,21 @@ function platformPillLabel(state: ProviderState) {
   return "Störung";
 }
 
+function databasePillClass(platform: PlatformStatusResponse | null) {
+  if (!platform) return "waiting";
+  if (platform.database.reachable) return "ok";
+  return DEVICE_ONLY_STORAGE ? "compat" : "failed";
+}
+
+function databasePillLabel(platform: PlatformStatusResponse | null) {
+  if (!platform) return "Wird geprüft";
+  if (platform.database.provider === "neon" && platform.database.reachable) {
+    return "Neon verbunden";
+  }
+  if (DEVICE_ONLY_STORAGE) return "Gerätespeicher aktiv";
+  return "Datenbank nicht erreichbar";
+}
+
 const EMPTY_CONNECTIONS: ConnectionStatus = {
   callbackUrl: "",
   google: { configured: false, connected: false, state: "not_configured", services: {} },
@@ -181,7 +196,7 @@ export default function SettingsApp() {
         </div>
         <div className="settings-platform-items">
           <span className={`settings-platform-pill ${platform?.api.connected ? "ok" : "compat"}`}><b>Backend</b>{platform?.api.connected ? "NestJS + Bun aktiv" : "Next.js-Kompatibilitätsmodus"}</span>
-          <span className={`settings-platform-pill ${platform?.database.reachable ? "ok" : "failed"}`}><b>Daten</b>{platform?.database.provider === "neon" ? "Neon" : "Lokal"}</span>
+          <span className={`settings-platform-pill ${databasePillClass(platform)}`}><b>Daten</b>{databasePillLabel(platform)}</span>
           <span className={`settings-platform-pill ${platformPillClass(connections.openai.state)}`}><b>OpenAI</b>{platformPillLabel(connections.openai.state)}</span>
           <span className={`settings-platform-pill ${platformPillClass(connections.deepl.state)}`}><b>DeepL</b>{platformPillLabel(connections.deepl.state)}</span>
         </div>

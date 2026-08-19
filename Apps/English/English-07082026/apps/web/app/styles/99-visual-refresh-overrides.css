@@ -7,7 +7,7 @@
 }
 
 .app-sidebar {
-	width: 310px;
+	width: min(310px, calc(100vw - 20px));
 	padding: 30px 16px 0;
   border-right-color: rgba(104, 76, 131, 0.18);
   background: linear-gradient(
@@ -18,7 +18,7 @@
   box-shadow: 18px 0 44px rgba(65, 43, 84, 0.055);
 }
 
-.app-shell { grid-template-columns: 310px minmax(0, 1fr); }
+.app-shell { grid-template-columns: min(310px, calc(100vw - 20px)) minmax(0, 1fr); }
 
 .brand-mark {
 	grid-template-columns: 52px minmax(0, 1fr);

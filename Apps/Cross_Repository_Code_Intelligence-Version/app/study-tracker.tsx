@@ -855,12 +855,15 @@ export default function StudyTracker({
     // the plan changed since they last looked, so the changelog banner shows.
     const key = "cross-repo-tracker:acknowledged-plan-version";
     const stored = Number(localStorage.getItem(key));
-    if (Number.isFinite(stored) && stored > 0) {
-      setAcknowledgedPlanVersion(stored);
-    } else {
+    const acknowledged = Number.isFinite(stored) && stored > 0 ? stored : PLAN_VERSION;
+    if (!(Number.isFinite(stored) && stored > 0)) {
       localStorage.setItem(key, String(PLAN_VERSION));
-      setAcknowledgedPlanVersion(PLAN_VERSION);
     }
+    const timer = window.setTimeout(
+      () => setAcknowledgedPlanVersion(acknowledged),
+      0,
+    );
+    return () => window.clearTimeout(timer);
   }, []);
 
   const acknowledgePlanVersion = () => {

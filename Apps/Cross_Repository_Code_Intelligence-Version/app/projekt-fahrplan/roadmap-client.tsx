@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { allDays, planMeta, planWeeks, type PlannedDay, type PlanWeek } from "../plan-data";
 import { countCompletedItems, percentComplete } from "../../lib/study-progress";
 import { loadCompletedIds, toggleTaskCompletion } from "../../lib/task-completion-store";
@@ -166,9 +167,9 @@ export default function RoadmapClient() {
               <small>{planMeta.totalDays} Tage</small>
             </span>
           </div>
-          <a href="/" className="roadmap-back-link">
+          <Link href="/" className="roadmap-back-link">
             ← Zurück zum Lernplan
-          </a>
+          </Link>
         </aside>
       </header>
 

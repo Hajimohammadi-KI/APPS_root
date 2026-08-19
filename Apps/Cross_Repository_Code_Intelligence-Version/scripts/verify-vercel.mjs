@@ -6,6 +6,7 @@ import { chromium } from "playwright-core";
 const baseUrl = (process.argv[2] ?? "https://cross-repository-code-intelligence.vercel.app").replace(/\/$/, "");
 const chromePath = process.env.CHROME_PATH ?? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const verifyPersistence = process.env.VERIFY_PERSISTENCE !== "0";
+const allowLocalApiFailures = process.env.ALLOW_LOCAL_API_FAILURES === "1";
 const outputDirectory = fileURLToPath(new URL("../outputs/vercel-verification/", import.meta.url));
 
 await mkdir(outputDirectory, { recursive: true });
@@ -15,8 +16,10 @@ const checks = [];
 
 try {
   for (const profile of [
-    { name: "desktop", viewport: { width: 1440, height: 1000 } },
-    { name: "mobile", viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+    { name: "desktop-1440", viewport: { width: 1440, height: 1000 } },
+    { name: "laptop-1024", viewport: { width: 1024, height: 900 } },
+    { name: "tablet-768", viewport: { width: 768, height: 1024 }, hasTouch: true },
+    { name: "mobile-375", viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true },
   ]) {
     const context = await browser.newContext(profile);
     const page = await context.newPage();
@@ -129,10 +132,15 @@ try {
 
 const failures = checks.filter((check) =>
   ("status" in check && (check.status !== 200 || check.textLength === 0 || check.hasErrorOverlay || check.horizontalOverflow))
-  || ("pageErrors" in check && (check.pageErrors.length > 0 || check.consoleErrors.length > 0))
+  || ("pageErrors" in check && (check.pageErrors.length > 0 || (!allowLocalApiFailures && check.consoleErrors.length > 0)))
   || (check.kind === "reader-readability" && !check.passed)
   || (check.kind === "persistence" && (!check.progressPersisted || !check.focusPersisted || !check.settingPersisted)),
 );
 
-console.log(JSON.stringify({ baseUrl, checks, passed: failures.length === 0 }, null, 2));
+console.log(JSON.stringify({
+  baseUrl,
+  checks,
+  apiFailurePolicy: allowLocalApiFailures ? "reported-but-not-responsive-gating" : "gating",
+  passed: failures.length === 0,
+}, null, 2));
 if (failures.length > 0) process.exitCode = 1;

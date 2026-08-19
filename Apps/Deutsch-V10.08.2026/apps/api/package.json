@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "10.8.2026",
+  "version": "20.8.9",
   "description": "DeutschFlow HTTP API",
   "private": true,
   "type": "module",

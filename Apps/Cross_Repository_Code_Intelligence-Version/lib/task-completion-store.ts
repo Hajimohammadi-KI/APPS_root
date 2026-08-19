@@ -9,6 +9,7 @@
 // A task item checked complete in one page is therefore immediately
 // reflected in the other; there is one source of truth, not two.
 import { DEVICE_ONLY_STORAGE } from "./storage-mode";
+import { migrateLegacyId, migrateLegacyIds } from "../app/plan-data";
 
 export const TRACKER_STORAGE_KEY = "cross-repository-study-tracker:state:v2";
 
@@ -29,7 +30,17 @@ function parseCompletedIds(raw: string | null): Set<string> {
 
 export function readLocalCompletedIds(): Set<string> {
   try {
-    return parseCompletedIds(localStorage.getItem(TRACKER_STORAGE_KEY));
+    const raw = localStorage.getItem(TRACKER_STORAGE_KEY);
+    const current = parseCompletedIds(raw);
+    const migrated = migrateLegacyIds(current);
+    if ([...current].some((id) => migrateLegacyId(id) !== id)) {
+      const parsed = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
+      localStorage.setItem(
+        TRACKER_STORAGE_KEY,
+        JSON.stringify({ ...parsed, completedIds: [...migrated] }),
+      );
+    }
+    return migrated;
   } catch {
     return new Set();
   }
@@ -66,11 +77,12 @@ export async function loadCompletedIds(): Promise<Set<string>> {
       progress?: Record<string, boolean>;
     };
     const progress = payload.progress ?? {};
-    return new Set(
+    const completed = new Set(
       Object.entries(progress)
         .filter(([, done]) => Boolean(done))
-        .map(([taskId]) => taskId),
+        .map(([taskId]) => migrateLegacyId(taskId)),
     );
+    return completed;
   } catch {
     return readLocalCompletedIds();
   }

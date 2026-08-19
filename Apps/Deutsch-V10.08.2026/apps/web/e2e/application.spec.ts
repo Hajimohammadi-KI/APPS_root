@@ -1,23 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-// Most of this file's tests predate the SelectMenu/Accordion component
-// rollout ("Both apps: finish the SelectMenu rollout -- all 45 controls...
-// old components retired") and CI never actually gated on test:e2e passing
-// until tonight (the workflow ran it, but was missing the Playwright
-// browser-install step, so the step itself never executed). Several tests
-// still call `.selectOption(...)` on getByLabel("Thema")/("Niveau") --
-// Playwright's API for a native <select>, which SelectMenu (a custom
-// button+listbox, not a <select>) can never satisfy. Others target
-// selectors (#unitCount, #levelList details.level, button.topic,
-// #topicSearch, #lessonTitle) or copy ("Sicher und automatisch sprechen",
-// "Mindestwörter pro Gesprächsantwort") confirmed absent from current
-// source via direct grep. Marked test.fixme() rather than left silently
-// red or guessed at blind (no live browser was available to verify
-// rewrites against the current SelectMenu/Accordion-based UI) -- each
-// needs a real rewrite against the actual current control, not a locator
-// patch. Not fixme'd: the generic route-sweep above (checks only `main h1`
-// is visible, no stale specifics) and "private course routes redirect",
-// which already passes.
+// These journeys intentionally use roles and current learner-visible copy.
+// They gate the SelectMenu/Accordion UI rather than the retired native-select
+// and legacy iframe implementation.
 const routes = [
   "/",
   "/heute",
@@ -45,7 +30,7 @@ test("all product and compatibility routes render successfully", async ({
   }
 });
 
-test.fixme("dashboard exposes the automaticity journey, full inventory, and live state", async ({
+test("dashboard exposes the current learning journey and migrates legacy state", async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -77,21 +62,13 @@ test.fixme("dashboard exposes the automaticity journey, full inventory, and live
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: "Sicher und automatisch sprechen" }),
+    page.getByRole("heading", { name: "Willkommen, Lernende" }),
   ).toBeVisible();
   await expect(
-    page.getByAltText(
-      "Eine Lernende entwickelt sich vom Grammatiklernen über das Sprechen bis zur sicheren Präsentation",
-    ),
+    page.getByRole("heading", { name: "Dein Lernfortschritt" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Sicher und automatisch sprechen" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Vom Abruf zum sicheren Sprechen" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "In drei Schritten sicher starten" }),
+    page.getByRole("heading", { name: "Lernweg auswählen" }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Hilfe zur Benutzung öffnen" })
@@ -100,11 +77,7 @@ test.fixme("dashboard exposes the automaticity journey, full inventory, and live
     name: "So benutzt du DeutschFlow",
   });
   await expect(help).toBeVisible();
-  await expect(
-    help.getByText(
-      "Dein Fortschritt wird automatisch auf diesem Gerät gespeichert.",
-    ),
-  ).toBeVisible();
+  await expect(help.getByText(/Fortschritt.*Gerät gespeichert/i)).toBeVisible();
   await help.getByRole("button", { name: "Schließen" }).click();
   await expect(help).not.toBeVisible();
   await expect(
@@ -116,47 +89,66 @@ test.fixme("dashboard exposes the automaticity journey, full inventory, and live
   await expect(
     page.getByRole("link", { name: /Alltagsgespräche sicher meistern/i }),
   ).toHaveAttribute("href", "/studio");
-  await expect(page.getByText(/1 Fehlerdatensätze/)).toBeVisible();
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const raw = localStorage.getItem("GrammarAutomaticityV12_de");
+        if (!raw) return null;
+        const state = JSON.parse(raw) as {
+          version?: number;
+          errors?: unknown[];
+        };
+        return { version: state.version, errors: state.errors?.length ?? 0 };
+      }),
+    )
+    .toEqual({ version: 2, errors: 1 });
 });
 
-test.fixme("grammar lab exposes all 144 CEFR units and working search", async ({
+test("grammar lab exposes all 144 CEFR units and selects an advanced topic", async ({
   page,
 }) => {
   await page.goto("/grammatik");
 
-  await expect(page.locator("#unitCount")).toHaveText("144");
-  await expect(page.locator("#levelList details.level")).toHaveCount(6);
-  await expect(page.locator("#levelList button.topic")).toHaveCount(144);
-
   for (const level of ["A1", "A2", "B1", "B2", "C1", "C2"]) {
-    const group = page.locator("#levelList details.level").filter({
-      has: page.locator("summary", { hasText: `${level} · GER` }),
-    });
-    await expect(group.locator("button.topic")).toHaveCount(24);
+    const label = `${level} · 24 Einheiten`;
+    const trigger = page.getByRole("button", { name: label });
+    await expect(trigger).toBeVisible();
+    if ((await trigger.getAttribute("aria-expanded")) !== "true")
+      await trigger.click();
+    await expect(
+      page.getByRole("region", { name: label }).getByRole("button"),
+    ).toHaveCount(24);
   }
 
-  await page.locator("#topicSearch").fill("Modalität und Evidentialität");
   const advancedTopic = page.getByRole("button", {
     name: /Modalität und Evidentialität/,
   });
   await expect(advancedTopic).toBeVisible();
   await advancedTopic.click();
-  await expect(page.locator("#lessonTitle")).toHaveText(
-    "Modalität und Evidentialität",
-  );
-  await expect(page).toHaveURL(
-    /topic=Modalit%C3%A4t\+und\+Evidentialit%C3%A4t/,
+  await expect(
+    page.getByText("Modalität und Evidentialität", { exact: true }).first(),
+  ).toBeVisible();
+  await expect(advancedTopic).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    page.getByRole("link", { name: /3\. Frei sprechen & übertragen/ }),
+  ).toHaveAttribute(
+    "href",
+    /level=C2&grammar=Modalit%C3%A4t%20und%20Evidentialit%C3%A4t/,
   );
 });
 
-test.fixme("grammar catalog stays usable on a narrow mobile screen", async ({
+test("grammar catalog stays usable on a narrow mobile screen", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/grammatik");
 
-  await expect(page.locator("#levelList")).toBeVisible();
-  await expect(page.locator("#levelList details.level")).toHaveCount(6);
+  await expect(
+    page.getByRole("heading", { name: "Grammatik-Labor" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "A1 · 24 Einheiten" }),
+  ).toBeVisible();
   const dimensions = await page.locator("body").evaluate((body) => ({
     clientWidth: body.clientWidth,
     scrollWidth: body.scrollWidth,
@@ -164,29 +156,156 @@ test.fixme("grammar catalog stays usable on a narrow mobile screen", async ({
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
 });
 
-test.fixme("studio supports topic selection, sessions, and minimum-word gate", async ({
+test("studio resets stale transcript evidence when the topic changes", async ({
   page,
 }) => {
   await page.goto("/studio?topic=12");
 
-  await expect(page.getByLabel("Thema")).toBeVisible();
-  await page.getByRole("button", { name: "Sitzung starten" }).click();
-  await page.getByLabel("Dein Transkript").fill("Zu kurz");
-  const evaluateButton = page.getByRole("button", { name: "Auswerten" });
-  await expect(evaluateButton).toBeEnabled();
-  await evaluateButton.click();
-  await expect(page.getByText(/2\/12 Wörter/)).toBeVisible();
-
-  await page.getByLabel("Thema").selectOption({ index: 1 });
-  await expect(page.getByLabel("Dein Transkript")).toHaveValue("");
+  const topicMenu = page.getByRole("button", { name: /^Thema / });
+  await expect(topicMenu).toBeVisible();
+  const transcript = page.getByLabel("Dein Transkript");
+  await transcript.fill("Dieser Entwurf gehört nur zum ersten Thema.");
   await expect(
-    page.getByText(
-      "Thema geändert. Starte eine neue Sitzung vor der Aufnahme.",
-    ),
-  ).toBeVisible();
+    page.getByRole("button", { name: /Antwort auswerten/ }),
+  ).toBeEnabled();
+  await topicMenu.click();
+  await page.getByRole("option").nth(1).click();
+  await expect(page.getByLabel("Dein Transkript")).toHaveValue("");
+  await expect(page.getByText(/Keine Bewertung wird angezeigt/)).toBeVisible();
 });
 
-test.fixme("resources remain complete and the old topic route opens the studio", async ({
+test("studio records, improves, evaluates, and saves a real session flow", async ({
+  page,
+}) => {
+  await page.route("**/api/conversation/evaluate", async (route) => {
+    const { text } = route.request().postDataJSON() as { text: string };
+    const offset = text.indexOf("habe");
+    const hasIssue = offset >= 0;
+    await route.fulfill({
+      contentType: "application/json",
+      json: {
+        original: text,
+        corrected: hasIssue ? text.replace("habe", "bin") : text,
+        provider: "LanguageTool",
+        checkedAt: new Date().toISOString(),
+        issues: hasIssue
+          ? [
+              {
+                message: "Bei gehen wird das Perfekt mit sein gebildet.",
+                offset,
+                length: 4,
+                replacements: ["bin"],
+                ruleId: "PERFEKT_AUXILIARY",
+                category: "Grammatik",
+              },
+            ]
+          : [],
+      },
+    });
+  });
+  await page.addInitScript(() => {
+    class TestMediaRecorder {
+      mimeType = "audio/webm";
+      ondataavailable: ((event: BlobEvent) => void) | null = null;
+      onstop: (() => void) | null = null;
+      state: RecordingState = "inactive";
+      private stopListeners: Array<() => void> = [];
+
+      addEventListener(
+        type: string,
+        listener: EventListenerOrEventListenerObject,
+      ) {
+        if (type !== "stop") return;
+        this.stopListeners.push(() => {
+          if (typeof listener === "function") listener(new Event("stop"));
+          else listener.handleEvent(new Event("stop"));
+        });
+      }
+      pause() {
+        this.state = "paused";
+      }
+      resume() {
+        this.state = "recording";
+      }
+      start() {
+        this.state = "recording";
+      }
+      stop() {
+        this.state = "inactive";
+        this.ondataavailable?.({
+          data: new Blob(["recorded German answer"], {
+            type: this.mimeType,
+          }),
+        } as BlobEvent);
+        this.onstop?.();
+        this.stopListeners.forEach((listener) => listener());
+      }
+    }
+    Object.defineProperty(window, "MediaRecorder", {
+      configurable: true,
+      value: TestMediaRecorder,
+    });
+    Object.defineProperty(navigator, "mediaDevices", {
+      configurable: true,
+      value: {
+        getUserMedia: async () => ({
+          getTracks: () => [{ stop: () => undefined }],
+        }),
+      },
+    });
+  });
+
+  await page.goto("/studio");
+  const transcript = page.getByLabel("Dein Transkript");
+  await page.getByRole("button", { name: "Record", exact: true }).click();
+  await expect(page.getByText("Listening", { exact: true })).toBeVisible();
+  await transcript.fill(
+    "Ich habe gestern gegangen und danach Freunde besucht.",
+  );
+  await page.getByRole("button", { name: "■ Stop" }).click();
+  await expect(page.getByLabel("Recorded answer")).toBeVisible();
+  await expect(page.getByText("Höre deine echte Aufnahme")).toBeVisible();
+
+  await page.getByRole("button", { name: /Antwort auswerten/ }).click();
+  await expect(
+    page.getByText("Prüfe deine Antwort", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Corrections →" }).click();
+  await expect(
+    page.getByText("Bei gehen wird das Perfekt mit sein gebildet."),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Improve →" }).click();
+
+  await page.getByRole("button", { name: /Neue Aufnahme/ }).click();
+  await expect(transcript).toHaveValue("");
+  await transcript.fill(
+    "Ich bin gestern gegangen und habe danach Freunde besucht.",
+  );
+  await page.getByRole("button", { name: "■ Stop" }).click();
+  await page.getByRole("button", { name: /Antwort auswerten/ }).click();
+  await page.getByRole("button", { name: "Corrections →" }).click();
+  await page.getByRole("button", { name: "Improve →" }).click();
+  await expect(page.getByText("FIRST ATTEMPT", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("NEW VERIFIED ATTEMPT", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Active-speech analysis unavailable"),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: /Save practice/ }).click();
+  await page
+    .getByRole("button", { name: "✓ Save session", exact: true })
+    .click();
+  await expect(
+    page
+      .getByText("Sitzung wurde auf diesem Gerät gespeichert.", { exact: true })
+      .first(),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "✓ Saved" })).toBeDisabled();
+});
+
+test("resources remain complete and the old topic route opens the studio", async ({
   page,
 }) => {
   await page.goto("/ressourcen");
@@ -195,21 +314,26 @@ test.fixme("resources remain complete and the old topic route opens the studio",
       name: "Lernmaterial & direkte Themenlinks",
     }),
   ).toBeVisible();
-  await expect(page.getByLabel("Lernbereich")).toHaveValue("Grammatik");
-  await expect(page.getByLabel("Niveau")).toHaveValue("A1");
-  await expect(page.getByLabel("Thema")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Lernbereich Grammatik" }),
+  ).toBeVisible();
+  const levelMenu = page.getByRole("button", { name: "Niveau A1" });
+  await expect(levelMenu).toBeVisible();
+  await expect(page.getByRole("button", { name: "Thema Alle" })).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Erklärung & Übungen öffnen" }).first(),
   ).toBeVisible();
-  await page.getByLabel("Niveau").selectOption("A2");
-  await expect(page.getByLabel("Thema").locator("option")).not.toHaveCount(1);
+  await levelMenu.click();
+  await page.getByRole("option", { name: "A2", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Niveau A2" })).toBeVisible();
+  await expect(page.getByText(/genaue Themen/)).toBeVisible();
 
   await page.goto("/themen");
   await expect(page).toHaveURL(/\/studio$/);
   await expect(
     page.getByRole("heading", { name: "Gesprächsstudio" }),
   ).toBeVisible();
-  await expect(page.getByLabel("Thema")).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Thema / })).toBeVisible();
 });
 
 test("private course routes redirect to learner-facing practice", async ({
@@ -228,66 +352,51 @@ test("private course routes redirect to learner-facing practice", async ({
   ).toBeVisible();
 });
 
-test.fixme("settings persist in the legacy-compatible local state", async ({
+test("settings route reports an unavailable companion without changing learner data", async ({
   page,
 }) => {
-  await page.goto("/einstellungen");
-  await page.getByLabel("Mindestwörter pro Gesprächsantwort").fill("18");
-  await page.getByRole("button", { name: "Einstellungen speichern" }).click();
-  await expect(page.getByText("Einstellungen gespeichert.")).toBeVisible();
-
-  const storedMinWords = await page.evaluate(() => {
-    const state = JSON.parse(
-      localStorage.getItem("GrammarAutomaticityV11_de") ?? "{}",
-    ) as { settings?: { minWords?: number } };
-    return state.settings?.minWords;
-  });
-  expect(storedMinWords).toBe(18);
-});
-
-test.fixme("settings explain installation on every supported device family", async ({
-  page,
-}) => {
-  await page.goto("/einstellungen");
-
-  await expect(
-    page.getByText(
-      /Slack, Vercel, kostenpflichtige Software und separate Entwicklerwerkzeuge sind nicht nötig/,
-    ),
-  ).toBeVisible();
-  await expect(page.locator('a[href*="slack.com"]')).toHaveCount(0);
-  await expect(
-    page.getByRole("heading", { name: "Auf deinem Gerät installieren" }),
-  ).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Windows" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Android" })).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "iPhone & iPad" }),
-  ).toBeVisible();
-  await expect(
-    page
-      .getByRole("button", {
-        name: /App installieren|Windows-App installieren|Android-App installieren|App ist installiert/,
-      })
-      .first(),
-  ).toBeVisible();
-  await expect(page.getByText(/Safari öffnen/)).toBeVisible();
-  await expect(
-    page.getByText(/Windows fragt im Setup nach dem Installationsordner/),
-  ).toBeVisible();
-});
-
-test.fixme("exact v20.8 fallback remains fully loaded", async ({ page }) => {
-  await page.goto("/klassik");
-  const legacy = page.frameLocator(
-    'iframe[title="Deutsch Grammatik-Automatik v20.8"]',
+  await page.addInitScript(() =>
+    localStorage.setItem("settings-route-marker", "preserve"),
   );
+  await page.goto("/einstellungen");
   await expect(
-    legacy.getByRole("heading", { name: "Dashboard" }),
+    page.getByRole("heading", {
+      name: "Die Einstellungen sind gerade nicht erreichbar",
+    }),
   ).toBeVisible();
-  await legacy.getByRole("button", { name: /Gesprächsstudio/ }).click();
-  await expect(legacy.getByText("79 Gesprächsthemen").first()).toBeVisible();
-  await expect(legacy.getByText("84 Grammatikthemen").first()).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Erneut prüfen" }),
+  ).toHaveAttribute("href", "/einstellungen");
+  await expect(
+    page.getByText(/Lerndaten bleiben auf diesem Gerät erhalten/),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(() => localStorage.getItem("settings-route-marker")),
+  ).toBe("preserve");
+});
+
+test("settings fallback explains its verified local target and never blind-redirects", async ({
+  page,
+}) => {
+  await page.goto("/einstellungen");
+
+  await expect(page).toHaveURL(/\/einstellungen$/);
+  await page.getByText("Hilfe für die lokale Einrichtung").click();
+  await expect(
+    page.getByText(/Erwartete Adresse: http:\/\/127\.0\.0\.1:4323/),
+  ).toBeVisible();
+  await expect(page.getByText(/höchstens zwei Sekunden/)).toBeVisible();
+});
+
+test("retired v20.8 route returns to the maintained dashboard", async ({
+  page,
+}) => {
+  await page.goto("/klassik");
+  await expect(page).toHaveURL(/\/$/);
+  await expect(
+    page.getByRole("heading", { name: "Willkommen, Lernende" }),
+  ).toBeVisible();
+  await expect(page.locator("iframe")).toHaveCount(0);
 });
 
 test("production PWA installs its worker and reloads offline", async ({
@@ -338,12 +447,12 @@ test("production PWA installs its worker and reloads offline", async ({
   await context.setOffline(true);
   await page.reload({ waitUntil: "domcontentloaded" });
   await expect(
-    page.getByRole("heading", { name: "Dein Dashboard" }),
+    page.getByRole("heading", { name: "Willkommen, Lernende" }),
   ).toBeVisible();
   await context.setOffline(false);
 });
 
-test.fixme("mobile navigation opens and changes route", async ({ page }) => {
+test("mobile navigation opens and changes route", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
 
@@ -353,37 +462,81 @@ test.fixme("mobile navigation opens and changes route", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/heute$/);
   await expect(
-    page.getByRole("heading", {
-      name: "Mit welchem Niveau möchtest du starten?",
-    }),
+    page.getByRole("heading", { name: "Automatik-Mission" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: /^A1/ }).click();
-  await expect(page.getByText("Heutiges Training · 15 Minuten")).toBeVisible();
+  await expect(page.getByText("Personalpronomen und sein · A1")).toBeVisible();
 });
 
-test.fixme("daily path offers every CEFR start level", async ({ page }) => {
+test("daily path exposes all three evidence stages and keeps the selected level", async ({
+  page,
+}) => {
   await page.goto("/heute");
-
-  for (const level of ["A1", "A2", "B1", "B2", "C1", "C2"]) {
-    await expect(
-      page.getByRole("button", { name: new RegExp(`^${level}`) }),
-    ).toBeVisible();
-  }
-
-  await page.getByRole("button", { name: /^B2/ }).click();
+  await expect(page.getByText("Personalpronomen und sein · A1")).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Heutige Lernmission: 15 Minuten" }),
+    page.getByRole("button", { name: /1\. Aktivieren & korrekt anwenden/ }),
   ).toBeVisible();
-  await expect(page.locator(".daily-overview-hero h2")).toContainText("B2");
-  await expect
-    .poll(() =>
-      page.evaluate(() => {
-        const raw = localStorage.getItem("GrammarAutomaticityV11_de");
-        if (!raw) {
-          return null;
+  await expect(
+    page.getByRole("button", { name: /2\. Automatisieren & schreiben/ }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /3\. Frei sprechen & übertragen/ }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
+    .click();
+  await expect(
+    page.getByText("Grammatik-Tagebuch", { exact: true }),
+  ).toBeVisible();
+});
+
+test("vocabulary adds, recalls, reschedules, and restores a card", async ({
+  page,
+}) => {
+  await page.goto("/vokabelkarten");
+  await expect(
+    page.getByRole("heading", { name: "Vokabelkarten" }),
+  ).toBeVisible();
+  await page.getByLabel("Vorderseite (Wort oder Ausdruck)").fill("verschieben");
+  await page
+    .getByLabel("Rückseite (Bedeutung oder Übersetzung)")
+    .fill("auf einen späteren Zeitpunkt legen");
+  await page
+    .getByLabel("Originalsatz (optional)")
+    .fill("Wir müssen den Termin auf Freitag verschieben.");
+  await page.getByRole("button", { name: "Karte hinzufügen" }).click();
+
+  await expect(page.getByText("1 Karten · 1 heute fällig")).toBeVisible();
+  await expect(
+    page
+      .getByText("auf einen späteren Zeitpunkt legen", { exact: true })
+      .first(),
+  ).toBeVisible();
+  await page.getByLabel("Getippte Antwort").fill("verschieben");
+  await page.getByRole("button", { name: "Prüfen", exact: true }).click();
+  await expect(page.getByText("Richtig", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Richtig und leicht" }).click();
+  await expect(page.getByText("1 Karten · 0 heute fällig")).toBeVisible();
+
+  const scheduled = await page.evaluate(() => {
+    const raw = localStorage.getItem("GrammarAutomaticityV12_de");
+    if (!raw) return null;
+    const state = JSON.parse(raw) as {
+      flashcards?: Array<{
+        front?: string;
+        production?: { dueAt?: number; successStreak?: number };
+      }>;
+    };
+    const card = state.flashcards?.find((item) => item.front === "verschieben");
+    return card
+      ? {
+          dueInFuture: (card.production?.dueAt ?? 0) > Date.now(),
+          streak: card.production?.successStreak,
         }
-        return (JSON.parse(raw) as { learningLevel?: string }).learningLevel;
-      }),
-    )
-    .toBe("B2");
+      : null;
+  });
+  expect(scheduled).toEqual({ dueInFuture: true, streak: 1 });
+
+  await page.reload();
+  await expect(page.getByText("1 Karten · 0 heute fällig")).toBeVisible();
+  await expect(page.getByText(/verschieben.*späteren Zeitpunkt/)).toBeVisible();
 });

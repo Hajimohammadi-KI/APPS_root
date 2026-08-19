@@ -1,11 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-// "Deine heutige 15-Minuten-Lernmission" heading confirmed absent from
-// current /heute (a real failing run's page snapshot showed a different
-// heading there) -- same pre-SelectMenu/Accordion-rollout staleness as
-// application.spec.ts's tests (see its top-of-file comment). Marked
-// test.fixme() rather than guessed at blind.
-test.fixme("Startseite und aktiver Tagesweg zeigen denselben ehrlichen Lernstand", async ({
+test("Startseite und aktiver Tagesweg zeigen denselben ehrlichen Lernstand", async ({
   page,
 }) => {
   await page.goto("/");
@@ -18,10 +13,12 @@ test.fixme("Startseite und aktiver Tagesweg zeigen denselben ehrlichen Lernstand
 
   await page.goto("/heute");
   await expect(
-    page.getByRole("heading", { name: "Deine heutige 15-Minuten-Lernmission" }),
+    page.getByRole("heading", { name: "Automatik-Mission" }),
   ).toBeVisible();
-  await expect(page.getByText("sein: bin/ist/sind · A1")).toBeVisible();
-  await expect(page.getByText("0 von 7 Aktivitäten erledigt")).toBeVisible();
-  await expect(page.getByText("0% geprüfte Beherrschung")).toBeVisible();
-  await expect(page.getByText("Lokaler App-Dienst bereit")).toBeVisible();
+  await expect(page.getByText("Personalpronomen und sein · A1")).toBeVisible();
+  await expect(page.getByText(/0 von 3 erledigt/)).toBeVisible();
+  await expect(page.getByText("Bestätigte Automatik: 0%")).toBeVisible();
+  await expect(
+    page.getByText("Lokaler App-Dienst nicht erreichbar"),
+  ).toBeVisible();
 });

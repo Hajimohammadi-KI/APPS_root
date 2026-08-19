@@ -552,25 +552,10 @@ test("removes old local data left over from the retired private route", async ({
     .toEqual({ retired: null, hasPrivateState: false });
 });
 
-// The largest end-to-end scenario: enabling the optional AI grammar check,
-// getting a real-looking correction, saving it as an error, repairing that
-// error in a new sentence, and separately completing enough of a daily
-// practice session to trigger its "2/3 completed" gate. Covers the full
-// recall -> evidence -> repair loop in one pass rather than in isolation.
-//
-// FIXME: written against a text-input "Conversation answer" flow
-// (getByLabel("Conversation answer"), "Start session"/"Evaluate answer"
-// buttons) that Conversation Studio no longer has -- it's a 7-step
-// audio-recording flow now (app/studio/source/studio-source.tsx: mode card
-// -> Listen -> Record/Pause/Stop -> Evaluate -> Replay -> Review -> Correct
-// -> Improve -> Save), confirmed via an actual failing run's page snapshot.
-// The "daily gates" half also targets a retired ".daily-step" mockup
-// structure. Rewriting this accurately needs to walk the real 7-step flow
-// end to end against the existing MediaRecorder/getUserMedia mocks already
-// set up below -- real work, not a locator patch, so it's disclosed here
-// rather than guessed at blind (no live browser was available to verify a
-// rewrite against).
-test.fixme("runs saved assessment, error repair, and daily gates", async ({
+// Verifies the real Error Workshop integrity gate: copying the displayed
+// correction must not repair the item or become verified evidence, while a
+// provider-checked sentence in a genuinely new context can do both.
+test("rejects copied repair evidence and accepts a checked new context", async ({
   page,
 }) => {
   // Stand in for the real grammar-check backend: flag any sentence
@@ -617,34 +602,41 @@ test.fixme("runs saved assessment, error repair, and daily gates", async ({
     });
   });
 
-  const navigation = page.getByRole("navigation", {
-    name: "Product navigation",
+  await page.addInitScript(() => {
+    if (sessionStorage.getItem("english-e2e-repair-seeded")) return;
+    const storageKey = "grammar-automaticity:v27";
+    const current = JSON.parse(localStorage.getItem(storageKey) ?? "{}");
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        ...current,
+        settings: { ...current.settings, onlineFeedback: true },
+        errors: [
+          {
+            id: "e2e-repair-error",
+            grammarTitle: "Present simple",
+            topic: "Third-person agreement",
+            errorClass: "grammar",
+            originalText: "She don't work here.",
+            correctedText: "She doesn't work here.",
+            explanation: "Use third-person singular agreement.",
+            occurrenceCount: 1,
+            repairStatus: "new",
+            nextRepairAt: Date.now(),
+            lastSeenAt: new Date().toISOString(),
+          },
+        ],
+      }),
+    );
+    sessionStorage.setItem("english-e2e-repair-seeded", "true");
   });
+  await page.goto("/errors");
+  // The profile privacy record is the source of truth for provider access;
+  // use the real Settings control so its hydration effect cannot silently
+  // replace a test-only localStorage flag with the profile default.
   await openNavigationLink(page, "Settings", "App and Settings");
   await page.getByLabel(/Allow optional online AI/).check();
-  await openNavigationLink(page, "Conversation Studio", "Daily Practice");
-  await page.getByRole("button", { name: "Start session" }).click();
-  const answer = page.getByLabel("Conversation answer");
-  await answer.fill(
-    "I am a student. I am ready today. I am interested in research. I am tired after work. Are you a student?",
-  );
-  await page.getByRole("button", { name: "Evaluate answer" }).click();
-  await expect(
-    page.getByText(
-      "Answer evaluated and saved. Continue with the follow-up prompt.",
-    ),
-  ).toBeVisible();
-
-  await answer.fill(
-    "She don't work here. I am a student. I am ready today. I feel tired after work. Are you ready?",
-  );
-  await page.getByRole("button", { name: "Evaluate answer" }).click();
-  await expect(
-    page.getByText(
-      "Not passed yet. Improve the exact errors and evaluate again.",
-    ),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Save to error workshop" }).click();
+  await openNavigationLink(page, "Error Workshop", "Learning Evidence");
   await expect(
     page.getByRole("heading", { level: 1, name: "Error Workshop" }),
   ).toBeVisible();
@@ -652,52 +644,42 @@ test.fixme("runs saved assessment, error repair, and daily gates", async ({
     page.getByText("Use third-person singular agreement.").first(),
   ).toBeVisible();
 
-  await page
-    .getByPlaceholder(
-      "Write a new English sentence with the corrected structure in a different context.",
-    )
-    .fill("She does not work there because the office closes early.");
+  const repair = page.getByPlaceholder(
+    "Write a new English sentence with the corrected structure in a different context.",
+  );
+  await repair.fill("She doesn't work here.");
   await page.getByLabel("I repeated the corrected form out loud.").check();
   await page.getByLabel("This is a new context, not a copy.").check();
   await page.getByRole("button", { name: "Evaluate repair" }).click();
-  await expect(page.getByText("No errors in this view")).toBeVisible();
+  await expect(page.getByText(/same sentence .*Listen and repeat/)).toBeVisible();
 
-  await openNavigationLink(page, "Today’s Practice", "Daily Practice");
-  await page
-    .getByRole("button", { name: /Start today’s practice|Continue where you stopped/ })
-    .click();
-  await expect(page.locator(".daily-step").first()).toBeVisible();
-  const recallAnswers = page.getByPlaceholder("Write your sentence here.");
-  // One real sentence per recall prompt, each naturally using the target
-  // grammar/vocabulary for that item.
-  const examples = [
-    "In today's situation, my normal activity with a friend is a long conversation.",
-    "In this work situation, my real project this week is difficult.",
-    "In this social situation, my simple personal detail is my job.",
-    "In today's situation, my age is thirty when I talk with a friend.",
-    "In this work situation, my nationality is Iranian.",
-    "In this social situation, the date is Friday.",
-    "In this evening situation, I am free if my planned work is finished.",
-  ];
-  for (let index = 0; index < examples.length; index += 1) {
-    const answerField = recallAnswers.nth(index);
-    await answerField.fill(examples[index] ?? "");
-    await answerField
-      .locator("..")
-      .getByRole("button", { name: "Evaluate sentence" })
-      .click({ force: true });
-    await expect(
-      page.getByRole("heading", { name: "✓ Answer verified" }),
-    ).toHaveCount(index + 1);
-  }
-  await expect(page.getByText("2/3 completed", { exact: true })).toBeVisible();
-
-  const stored = await page.evaluate(() =>
+  let stored = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("grammar-automaticity:v27") ?? "{}"),
   );
-  expect(stored.sessions).toHaveLength(1);
-  expect(stored.dailyPlans).toBeTruthy();
+  expect(stored.errors[0].repairStatus).toBe("new");
+  expect(stored.attempts.at(-1).verified).toBe(false);
+
+  await repair.fill(
+    "She doesn't lead the meeting when the manager is available.",
+  );
+  await page.getByRole("button", { name: "Evaluate repair" }).click();
+  await expect(page.getByText("No errors in this view")).toBeVisible();
+
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const current = JSON.parse(
+          localStorage.getItem("grammar-automaticity:v27") ?? "{}",
+        );
+        return current.attempts?.at(-1)?.verified ?? false;
+      }),
+    )
+    .toBe(true);
+  stored = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("grammar-automaticity:v27") ?? "{}"),
+  );
   expect(stored.errors[0].repairStatus).toBe("fixed");
+  expect(stored.attempts.at(-1).verified).toBe(true);
 });
 
 // Unlike the "**/api/assessment" route mocked earlier in this file, this
@@ -727,6 +709,53 @@ test("connects to the Nest assessment API", async ({ request }) => {
   });
 });
 
+test("adds, recalls, reschedules, and restores a flashcard", async ({ page }) => {
+  await page.goto("/flashcards");
+  await expect(
+    page.getByRole("heading", { name: "Vocabulary & Flashcards" }),
+  ).toBeVisible();
+
+  await page.getByLabel("Front (word or phrase)").fill("defer");
+  await page.getByLabel("Back (meaning or translation)").fill("to postpone");
+  await page
+    .getByLabel("Original sentence (optional)")
+    .fill("We decided to defer the meeting until Friday.");
+  await page.getByRole("button", { name: "Add card" }).click();
+
+  await expect(page.getByText("1 cards · 1 due now")).toBeVisible();
+  await expect(page.getByText("to postpone", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("defer", { exact: true })).toHaveCount(0);
+  await page.getByLabel("Typed answer").fill("defer");
+  await page.getByRole("button", { name: "Check", exact: true }).click();
+  await expect(page.getByText("Correct", { exact: true })).toBeVisible();
+  await expect(page.getByText("defer", { exact: true }).first()).toBeVisible();
+  await page.getByRole("button", { name: "Correct and easy" }).click();
+
+  await expect(page.getByText("1 cards · 0 due now")).toBeVisible();
+  const scheduled = await page.evaluate(() => {
+    const raw = localStorage.getItem("grammar-automaticity:v27");
+    if (!raw) return null;
+    const state = JSON.parse(raw) as {
+      flashcards?: Array<{
+        front?: string;
+        production?: { dueAt?: number; successStreak?: number };
+      }>;
+    };
+    const card = state.flashcards?.find((item) => item.front === "defer");
+    return card
+      ? {
+          dueInFuture: (card.production?.dueAt ?? 0) > Date.now(),
+          streak: card.production?.successStreak,
+        }
+      : null;
+  });
+  expect(scheduled).toEqual({ dueInFuture: true, streak: 1 });
+
+  await page.reload();
+  await expect(page.getByText("1 cards · 0 due now")).toBeVisible();
+  await expect(page.getByText(/defer.*to postpone/)).toBeVisible();
+});
+
 // Real Speech Synthesis (text-to-speech) and MediaRecorder/microphone APIs
 // need actual audio hardware and OS-level permission prompts that a headless
 // Playwright browser does not have, so before the page even loads this test
@@ -745,9 +774,35 @@ test("connects to the Nest assessment API", async ({ request }) => {
 // still good and reusable; the interaction sequence after `page.goto` needs
 // a full rewrite against the real current flow, disclosed here rather than
 // guessed at blind (no live browser was available to verify a rewrite).
-test.fixme("records a speaking answer and creates a playable local recording", async ({
+test("records, improves, evaluates, and saves a speaking session", async ({
   page,
 }) => {
+  await page.route("**/api/conversation/evaluate", async (route) => {
+    const { text } = route.request().postDataJSON() as { text: string };
+    const offset = text.indexOf("don't");
+    const hasIssue = offset >= 0;
+    await route.fulfill({
+      contentType: "application/json",
+      json: {
+        original: text,
+        corrected: hasIssue ? text.replace("don't", "doesn't") : text,
+        provider: "LanguageTool",
+        checkedAt: new Date().toISOString(),
+        issues: hasIssue
+          ? [
+              {
+                message: "Use third-person singular agreement.",
+                offset,
+                length: 5,
+                replacements: ["doesn't"],
+                ruleId: "HE_VERB_AGR",
+                category: "Grammar",
+              },
+            ]
+          : [],
+      },
+    });
+  });
   await page.addInitScript(() => {
     // Fakes the browser's SpeechSynthesisUtterance, the object the app
     // constructs to describe one line of speech (its text) and attaches
@@ -858,67 +913,48 @@ test.fixme("records a speaking answer and creates a playable local recording", a
   await page.goto("/studio");
 
   await expect(
-    page.getByText("Controlled source", { exact: true }),
+    page.getByRole("heading", { level: 1, name: "Speaking Studio" }),
   ).toBeVisible();
-  await expect(page.getByText(/Topics are not downloaded live/)).toBeVisible();
-  await page
-    .getByRole("button", { name: "Microphone and speaker check" })
-    .click();
-  await page.getByRole("button", { name: "Play speaker test" }).click();
-  await expect(
-    page.getByText("Test sound played", { exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Check microphone access" }).click();
-  await expect(
-    page.getByText("Microphone allowed", { exact: true }),
-  ).toBeVisible();
+  const transcript = page.getByLabel("Your transcript");
 
-  await page.getByRole("button", { name: "Start session" }).click();
-  await expect(page.locator(".talking-coach")).toHaveAttribute(
-    "data-speaking",
-    "true",
+  await page.getByRole("button", { name: "Record", exact: true }).click();
+  await expect(page.getByText("Listening", { exact: true })).toBeVisible();
+  await transcript.fill(
+    "She don't lead the weekly meeting when her manager is available.",
   );
-  await expect(
-    page.getByText("Speaking to you", { exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Record answer" }).click();
-  // Switching learning paths mid-recording would orphan the in-progress
-  // capture, so the selector must be locked for the whole recording and
-  // freed again the instant it stops.
-  await expect(page.getByLabel("Learning path")).toBeDisabled();
-  await expect(
-    page.getByText("Listening to you", { exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Stop recording" }).click();
-  await expect(page.getByLabel("Learning path")).toBeEnabled();
+  await page.getByRole("button", { name: "■ Stop" }).click();
+  await expect(page.getByLabel("Recorded answer")).toBeVisible();
+  await expect(page.getByText("Listen to your real recording")).toBeVisible();
 
-  // Stopping the fake recorder above produced a real Blob, so the app should
-  // have built an actual playable <audio> element from it, not just a
-  // "recording complete" message.
-  await expect(page.locator("audio")).toBeVisible();
-  await page.locator("audio").dispatchEvent("play");
+  await page.getByRole("button", { name: "Evaluate my answer" }).click();
+  await expect(page.getByText("Review your answer", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Corrections →" }).click();
+  await expect(page.getByText("Use third-person singular agreement.")).toBeVisible();
+  await page.getByRole("button", { name: "Improve →" }).click();
+
+  await page.getByRole("button", { name: /Record improved attempt/ }).click();
+  await expect(transcript).toHaveValue("");
+  await transcript.fill(
+    "She doesn't lead the weekly meeting when her manager is available.",
+  );
+  await page.getByRole("button", { name: "■ Stop" }).click();
+  await page.getByRole("button", { name: "Evaluate my answer" }).click();
+  await page.getByRole("button", { name: "Corrections →" }).click();
+  await page.getByRole("button", { name: "Improve →" }).click();
+  await expect(page.getByText("FIRST ATTEMPT", { exact: true })).toBeVisible();
   await expect(
-    page.getByText("Replay your voice", { exact: true }).locator(".."),
-  ).toHaveAttribute("aria-current", "step");
+    page.getByText("NEW VERIFIED ATTEMPT", { exact: true }),
+  ).toBeVisible();
   await expect(
-    page.getByText(
-      "Recording stopped. Evaluate your answer once it is complete.",
-      { exact: true },
-    ),
+    page.getByText("Active-speech analysis unavailable", { exact: true }),
   ).toBeVisible();
 
-  // Recording a second, "improved" attempt must start from a clean text
-  // field rather than carrying over the first attempt's transcript, so the
-  // two recordings stay clearly separate.
+  await page.getByRole("button", { name: /Save practice/ }).click();
   await page
-    .getByLabel("Conversation answer")
-    .fill("This text belongs only to the first attempt.");
-  await page.getByRole("button", { name: "Record improved answer" }).click();
-  await expect(page.getByLabel("Conversation answer")).toHaveValue("");
+    .getByRole("button", { name: "✓ Save session", exact: true })
+    .click();
   await expect(
-    page
-      .getByText("Record an improved attempt", { exact: true })
-      .locator(".."),
-  ).toHaveAttribute("aria-current", "step");
-  await page.getByRole("button", { name: "Stop recording" }).click();
+    page.getByText("Session saved on this device.", { exact: true }).first(),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "✓ Saved" })).toBeDisabled();
 });

@@ -3,6 +3,7 @@ import {
   allDays,
   LEGACY_ID_MIGRATION,
   migrateLegacyId,
+  migrateLegacyIds,
   planWeeks,
 } from "../app/plan-data";
 
@@ -64,5 +65,11 @@ describe("plan day/task/item id stability", () => {
     const someDay = allDays[0]!;
     expect(migrateLegacyId(someDay.id)).toBe(someDay.id);
     expect(migrateLegacyId("not-a-real-id")).toBe("not-a-real-id");
+  });
+
+  test("migrateLegacyIds deduplicates old and current ids during write-back", () => {
+    const firstDay = allDays[0]!;
+    const migrated = migrateLegacyIds([firstDay.date, firstDay.id]);
+    expect(migrated).toEqual(new Set([firstDay.id]));
   });
 });

@@ -27,6 +27,7 @@
     "test": "bun run build && bun test tests/*.test.ts && node --test tests/*.test.mjs",
     "validate:artifact": "node --input-type=module -e \"import('./dist/server/index.js').then(m=>{if(typeof m.default?.fetch!=='function')process.exit(1)})\"",
     "verify:vercel": "node scripts/verify-vercel.mjs",
+    "verify:responsive": "node scripts/verify-local-responsive.mjs",
     "check:duplicates": "node ../../shared/check-duplicated-files.mjs",
     "lint": "node ../../shared/check-duplicated-files.mjs && eslint app components db lib packages tests --ignore-pattern dist --ignore-pattern .next",
     "typecheck": "node node_modules/typescript7/lib/tsc.js --noEmit --incremental false && bun run --cwd apps/api typecheck",

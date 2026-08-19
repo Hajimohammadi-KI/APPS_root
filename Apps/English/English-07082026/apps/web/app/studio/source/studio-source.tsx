@@ -535,6 +535,7 @@ export default function Home() {
 
   return (
     <div className="app-shell">
+      <a className="studio-skip-link" href="#main-content">Skip to main content</a>
       <aside className="sidebar">
         <div className="brand"><div className="brand-mark">{language === "de" ? "D" : "E"}</div><div><strong>{language === "de" ? <>Deutsch<br />Automaticity</> : <>English<br />Automaticity</>}</strong></div></div>
         <nav aria-label="Main navigation">
@@ -545,7 +546,7 @@ export default function Home() {
         <div className="growth"><Icon>♔</Icon><div><b>{language === "de" ? "Du automatisierst dein Deutsch." : "You’re building English automaticity."}</b><span>{language === "de" ? "Regelmäßige Produktion schafft Sicherheit." : "Consistent production creates lasting progress."}</span></div></div>
       </aside>
 
-      <main>
+      <main className="studio-main" id="main-content">
         <header>
           <div><h1>{text.title}</h1><p>{text.subtitle}</p></div>
           <div className="header-actions"><span>● <b>{language === "de" ? "Deutsch" : "English"}</b></span><span>Local-first</span><div className="profile">E</div></div>
@@ -613,10 +614,13 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="record-card">
+            <div
+              className="record-card"
+              data-recording-state={recordingState === "idle" && audioUrl ? "recorded" : recordingState}
+            >
               <div className={`mic ${recordingState === "recording" ? "recording" : ""}`} aria-hidden="true">♩</div>
               <div className="record-main">
-                <h3>{recordingState === "recording" ? text.recording : audioUrl ? text.recorded : text.record}</h3><strong>{formatTime(seconds)} / {formatTime(maxSeconds)}</strong><span className="ready">{recordingState === "paused" ? "Paused" : recordingState === "recording" ? "Listening" : text.ready}</span>
+                <h3>{recordingState === "recording" ? text.recording : audioUrl ? text.recorded : text.record}</h3><strong>{formatTime(seconds)} / {formatTime(maxSeconds)}</strong><span aria-live="polite" className="ready">{recordingState === "paused" ? "Paused" : recordingState === "recording" ? "Listening" : text.ready}</span>
                 <div className={`wave ${recordingState === "recording" ? "live" : ""}`} aria-hidden="true">{Array.from({ length: 58 }, (_, index) => <i key={index} style={{ height: `${8 + ((index * 17) % 30)}px` }} />)}</div>
                 {message && <p className="mic-error" role="status">{message}</p>}
                 {audioUrl && <audio ref={audioRef} className="audio-player" src={audioUrl} controls aria-label="Recorded answer" />}
@@ -642,11 +646,11 @@ export default function Home() {
 
             {active === 5 && <section className="improve-panel"><div className="improve-heading"><span>↗</span><div><p>STEP 6 · {stepLabels[5]}</p><h3>{language === "de" ? "Die korrigierte Version erneut produzieren" : "Produce the corrected version again"}</h3></div></div>{evaluation ? <><div className="improve-compare"><article><small>{baseline ? "FIRST ATTEMPT" : "ORIGINAL"}</small><p>{baseline?.original ?? evaluation.original}</p></article><article className="better"><small>{baseline ? "NEW VERIFIED ATTEMPT" : "LANGUAGETOOL CORRECTION"}</small><p>{evaluation.corrected}</p></article></div><div className="speaking-tip"><b>{language === "de" ? "Ehrliche Grenze" : "Honest limit"}</b><p>{text.pronunciation}</p></div><div className="improve-actions"><button onClick={() => speak(evaluation.corrected)}>▶ Hear model</button><button className="primary" onClick={() => void practiceImprovedVersion()}>♩ {language === "de" ? "Neue Aufnahme" : "Record improved attempt"}</button></div></> : <div className="improve-empty"><p>{language === "de" ? "Nimm zuerst eine Antwort auf und werte sie aus." : "Record and evaluate an answer first."}</p></div>}</section>}
 
-            {active === 6 && <section className="flow-panel save-panel"><div className="flow-title"><span>▯</span><div><small>STEP 7 · {stepLabels[6]}</small><h3>{savedId ? text.saved : language === "de" ? "Sitzung lokal speichern" : "Save the session locally"}</h3></div></div><div className="save-summary"><span><b>{wordCount}</b> words</span><span><b>{formatTime(seconds)}</b> speaking</span><span><b>{evaluation ? "LanguageTool" : "Not evaluated"}</b> result</span></div><p className="flow-note">{language === "de" ? "Audio, Transkript und Auswertung werden in IndexedDB dieses Browsers gespeichert." : "Audio, transcript, and provider evaluation are stored in this browser’s IndexedDB."}</p><div className="flow-actions"><button onClick={() => setActive(5)}>Back</button><button className="primary" disabled={Boolean(savedId) || !evaluation || !hasAudioBlob} onClick={() => void saveSession()}>✓ {savedId ? "Saved" : "Save session"}</button></div></section>}
+            {active === 6 && <section className="flow-panel save-panel"><div className={`flow-title${savedId ? " conversation-save-enter" : ""}`} key={savedId ?? "unsaved"}><span>▯</span><div><small>STEP 7 · {stepLabels[6]}</small><h3>{savedId ? text.saved : language === "de" ? "Sitzung lokal speichern" : "Save the session locally"}</h3></div></div><div className="save-summary"><span><b>{wordCount}</b> words</span><span><b>{formatTime(seconds)}</b> speaking</span><span><b>{evaluation ? "LanguageTool" : "Not evaluated"}</b> result</span></div><p className="flow-note">{language === "de" ? "Audio, Transkript und Auswertung werden in IndexedDB dieses Browsers gespeichert." : "Audio, transcript, and provider evaluation are stored in this browser’s IndexedDB."}</p><div className="flow-actions"><button onClick={() => setActive(5)}>Back</button><button className="primary" disabled={Boolean(savedId) || !evaluation || !hasAudioBlob} onClick={() => void saveSession()}>✓ {savedId ? "Saved" : "Save session"}</button></div></section>}
           </section>
 
           <aside className="evidence">
-            <section className="panel feedback"><h3>{language === "de" ? "Echte Sprechdaten" : "Real speaking evidence"}</h3>
+            <section className={`panel feedback${evaluation ? " conversation-evaluation-enter" : ""}`} key={evaluation?.checkedAt ?? "pending"}><h3>{language === "de" ? "Echte Sprechdaten" : "Real speaking evidence"}</h3>
               <div className="feedback-row f0"><span>◫</span><div><b>Fluency</b><small>{audioFluencyResult ? `${wordsPerMinute} WPM from ${audioFluencyResult.activeSpeechSeconds.toFixed(1)}s active speech` : audioUrl ? "Active-speech analysis unavailable" : "Waiting for recorded audio"}</small></div><strong>{audioFluencyResult ? `${wordsPerMinute}` : "—"}</strong></div>
               <div className="feedback-row f1"><span>◉</span><div><b>Pronunciation</b><small>{text.pronunciation}</small></div><strong>—</strong></div>
               <div className="feedback-row f2"><span>G</span><div><b>Grammar</b><small>{evaluation ? `${evaluation.issues.length} LanguageTool issue(s)` : "Not checked"}</small></div><strong>{evaluation ? evaluation.issues.length : "—"}</strong></div>

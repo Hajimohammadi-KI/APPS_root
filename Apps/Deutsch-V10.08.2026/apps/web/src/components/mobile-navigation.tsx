@@ -43,6 +43,7 @@ export function MobileNavigation() {
         <div className="flex-1 overflow-y-auto px-3 py-4">
           <AppNavigation
             items={coreNavigation}
+            label="Tägliche Praxis Navigation"
             onNavigate={() => setOpen(false)}
           />
           <details className="group mt-3">
@@ -57,6 +58,7 @@ export function MobileNavigation() {
             <div className="mt-1 ps-2">
               <AppNavigation
                 items={libraryNavigation}
+                label="Weitere Lernbereiche Navigation"
                 onNavigate={() => setOpen(false)}
               />
             </div>
@@ -64,6 +66,7 @@ export function MobileNavigation() {
           <div className="my-4 border-t" />
           <AppNavigation
             items={secondaryNavigation}
+            label="Einstellungen und Hilfe Navigation"
             onNavigate={() => setOpen(false)}
           />
         </div>

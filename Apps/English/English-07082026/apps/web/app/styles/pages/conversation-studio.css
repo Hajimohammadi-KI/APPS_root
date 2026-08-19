@@ -57,8 +57,8 @@
 }
 
 .talking-coach[data-speaking="true"] .talking-coach-mouth-layer {
-  animation: coach-mouth 240ms linear infinite;
   opacity: 1;
+  transform: translateY(0.2%) scaleY(1.02);
 }
 
 .talking-coach[data-listening="true"] .talking-coach-frame {
@@ -102,36 +102,27 @@
 }
 
 .talking-coach[data-speaking="true"] .talking-coach-sound-wave i {
-  animation: coach-wave 240ms linear infinite alternate;
+  transform: scaleY(0.75);
 }
 
 .talking-coach[data-speaking="true"] .talking-coach-sound-wave i:nth-child(2) {
-  animation-delay: 30ms;
+  transform: scaleY(1);
 }
 
 .talking-coach[data-speaking="true"] .talking-coach-sound-wave i:nth-child(3) {
-  animation-delay: 80ms;
+  transform: scaleY(0.58);
 }
 
-@keyframes coach-mouth {
-  0%,
-  100% {
-    transform: translateY(0) scaleY(1);
+@media (prefers-reduced-motion: reduce) {
+  .talking-coach-frame,
+  .talking-coach-mouth-layer,
+  .talking-coach-sound-wave {
+    transform: none !important;
   }
-  35% {
-    transform: translateY(0.4%) scaleY(1.04);
-  }
-  70% {
-    transform: translateY(-0.2%) scaleY(0.985);
-  }
-}
 
-@keyframes coach-wave {
-  from {
-    transform: scaleY(0.42);
-  }
-  to {
-    transform: scaleY(1);
+  .talking-coach-mouth-layer,
+  .talking-coach-sound-wave {
+    transition: opacity 100ms linear !important;
   }
 }
 
@@ -193,14 +184,14 @@
   font-weight: 800;
   transition:
     transform 150ms cubic-bezier(0.23, 1, 0.32, 1),
-    box-shadow 150ms ease,
     border-color 150ms ease,
     background-color 150ms ease;
 }
 
-.control-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(27, 48, 83, 0.1);
+@media (hover: hover) and (pointer: fine) {
+  .control-button:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .control-button:active {
@@ -365,15 +356,15 @@
   text-align: left;
   transition:
     transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
-    box-shadow 160ms ease,
     border-color 160ms ease,
     background-color 160ms ease;
 }
 
-.conversation-mode-card:hover {
-  transform: translateY(-2px);
-  border-color: #a78de8;
-  box-shadow: 0 14px 30px rgba(70, 42, 135, 0.11);
+@media (hover: hover) and (pointer: fine) {
+  .conversation-mode-card:hover {
+    transform: translateY(-2px);
+    border-color: #a78de8;
+  }
 }
 
 .conversation-mode-card[data-active="true"] {
@@ -442,8 +433,7 @@
   box-shadow: 0 8px 24px rgba(58, 36, 105, 0.055);
   transition:
     transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+    border-color 160ms ease;
 }
 
 .conversation-path-field:focus-within {

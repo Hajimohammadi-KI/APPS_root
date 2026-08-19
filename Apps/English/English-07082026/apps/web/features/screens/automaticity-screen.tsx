@@ -270,8 +270,10 @@ function Axis({ label, value }: { label: string; value: number }) {
       <div className="h-2.5 overflow-hidden rounded-full bg-violet-100">
         <div
           aria-hidden
-          className="h-full rounded-full bg-violet-700 transition-[width]"
-          style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+          className="h-full origin-left rounded-full bg-violet-700 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none"
+          style={{
+            transform: `scaleX(${Math.min(100, Math.max(0, value)) / 100})`,
+          }}
         />
       </div>
     </div>
@@ -1157,12 +1159,16 @@ export function AutomaticityScreen({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button asChild size="sm" variant="outline">
-                <Link
-                  href={`/studio?from=daily&level=${encodeURIComponent(grammar.level)}&activity=2`}
-                >
-                  Practice in Speaking Studio
-                </Link>
+              <Button
+                render={
+                  <Link
+                    href={`/studio?from=daily&level=${encodeURIComponent(grammar.level)}&activity=2`}
+                  />
+                }
+                size="sm"
+                variant="outline"
+              >
+                Practice in Speaking Studio
               </Button>
               <Badge variant={progress === 100 ? "success" : "default"}>
                 {progress}% complete
@@ -1171,8 +1177,10 @@ export function AutomaticityScreen({
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-white ring-1 ring-violet-200">
             <div
-              className="h-full bg-violet-700 transition-[width]"
-              style={{ width: `${progress}%` }}
+              className="h-full origin-left bg-violet-700 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none"
+              style={{
+                transform: `scaleX(${Math.min(100, Math.max(0, progress)) / 100})`,
+              }}
             />
           </div>
         </CardContent>

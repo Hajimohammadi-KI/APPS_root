@@ -13,6 +13,7 @@ export const SCREEN_PATHS = {
 	automatization: "/automatization",
 	studio: "/studio",
 	progress: "/progress",
+	analytics: "/analytics",
 	grammar: "/grammar",
 	"integrated-skills": "/integrated-skills",
 	resources: "/resources",

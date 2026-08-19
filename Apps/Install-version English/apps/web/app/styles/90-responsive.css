@@ -70,10 +70,13 @@ body {
     pointer-events: none;
     transform: translateY(-140%);
     visibility: hidden;
-    transition:
-      transform 180ms ease,
-      opacity 180ms ease,
-      visibility 180ms;
+    transition-property: transform, opacity, visibility;
+    transition-duration: 200ms, 160ms, 0s;
+    transition-timing-function:
+      var(--ease-drawer),
+      var(--ease-out),
+      linear;
+    transition-delay: 0s, 0s, 200ms;
   }
 
   .app-sidebar[data-open="true"] {
@@ -81,6 +84,7 @@ body {
     pointer-events: auto;
     transform: translateY(0);
     visibility: visible;
+    transition-delay: 0s;
   }
 
   .sidebar-scrim {
@@ -101,6 +105,21 @@ body {
 
   .mobile-menu {
     display: inline-flex;
+  }
+}
+
+@media (max-width: 1180px) and (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .app-sidebar[data-open="true"] {
+    transform: none;
+    transition-property: opacity, visibility;
+    transition-duration: 100ms, 0s;
+    transition-timing-function: linear, linear;
+    transition-delay: 0s, 100ms;
+  }
+
+  .app-sidebar[data-open="true"] {
+    transition-delay: 0s;
   }
 }
 
@@ -422,21 +441,3 @@ body {
     padding-inline: 0;
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    /* !important is deliberate and required here: a user asking the OS to
-       reduce motion must win over every component-level transition and
-       animation, including ones declared later or more specifically. The four
-       linter-suppression comments that used to sit above these lines were
-       themselves flagged as unused -- noImportantStyles does not fire on this
-       file -- so they were removed rather than left as decoration. */
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
-}
-

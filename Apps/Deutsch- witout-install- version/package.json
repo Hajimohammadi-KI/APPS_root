@@ -1,6 +1,6 @@
 {
   "name": "german-grammar-automaticity",
-  "version": "20.8.10",
+  "version": "20.8.19",
   "private": true,
   "packageManager": "bun@1.3.14",
   "engines": {
@@ -17,6 +17,7 @@
     "dev:api": "bun run --cwd apps/api dev",
     "content:extract": "bun scripts/extract-legacy-catalog.ts",
     "extract:legacy": "bun scripts/extract-legacy-content.ts",
+    "datasets:import": "bun scripts/import-open-language-dataset.ts",
     "db:schema:check": "bun test scripts/supabase-schema.test.ts",
     "legacy:serve": "bun scripts/serve-legacy.ts",
     "build": "bun run --filter '*' --if-present build",
@@ -28,7 +29,7 @@
     "test": "bun run --filter '*' --if-present test",
     "test:integration": "bun run --filter '*' --if-present test:integration",
     "test:e2e": "bun run --cwd apps/web test:e2e",
-    "test:installer": "bun test scripts/windows-installer.test.ts",
+    "test:installer": "bun test scripts/windows-installer.test.ts scripts/hybrid-language-policy.test.ts",
     "parity:check": "bun scripts/check-english-german-parity.ts",
     "parity:check:strict": "bun scripts/check-english-german-parity.ts --strict",
     "package:stores": "bun scripts/package-stores.ts all",

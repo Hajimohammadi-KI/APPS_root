@@ -111,13 +111,13 @@
   cursor: pointer;
   transition:
     border-color 160ms ease,
-    box-shadow 160ms ease,
     transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
-.daily-activity-card:hover {
-  border-color: #9b79ce;
-  box-shadow: 0 12px 24px rgb(78 45 125 / 10%);
-  transform: translateY(-1px);
+@media (hover: hover) and (pointer: fine) {
+  .daily-activity-card:hover {
+    border-color: #9b79ce;
+    transform: translateY(-1px);
+  }
 }
 .daily-activity-card:active {
   transform: scale(0.97);
@@ -307,7 +307,11 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .daily-activity-card {
-    transition: none;
+    transform: none;
+    transition:
+      color 100ms linear,
+      background-color 100ms linear,
+      border-color 100ms linear;
   }
   .daily-activity-card:hover {
     transform: none;

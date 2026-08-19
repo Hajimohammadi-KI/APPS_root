@@ -157,7 +157,35 @@ html[data-low-stimulation="true"] :where(.card, [class*="shadow"]) {
   line-height: 1.75;
   text-align: right;
   pointer-events: none;
-  animation: persian-word-help-in 150ms ease-out;
+  opacity: 1;
+  transform: var(--word-help-anchor) translateY(0);
+  transition-property: opacity, transform;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.persian-word-help-card[data-placement="above"][data-state="closing"] {
+  opacity: 0;
+  transform: var(--word-help-anchor) translateY(4px);
+  transition-duration: 100ms;
+}
+
+.persian-word-help-card[data-placement="below"][data-state="closing"] {
+  opacity: 0;
+  transform: var(--word-help-anchor) translateY(-4px);
+  transition-duration: 100ms;
+}
+
+@starting-style {
+  .persian-word-help-card[data-placement="above"][data-state="open"] {
+    opacity: 0;
+    transform: var(--word-help-anchor) translateY(4px);
+  }
+
+  .persian-word-help-card[data-placement="below"][data-state="open"] {
+    opacity: 0;
+    transform: var(--word-help-anchor) translateY(-4px);
+  }
 }
 
 .persian-word-help-term {
@@ -186,18 +214,12 @@ html[data-low-stimulation="true"] :where(.card, [class*="shadow"]) {
   font-weight: 900;
 }
 
-@keyframes persian-word-help-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .persian-word-help-card {
-    animation: none;
+    transform: var(--word-help-anchor) translateY(0) !important;
+    transition-property: opacity;
+    transition-duration: 100ms;
+    transition-timing-function: linear;
   }
 }
 

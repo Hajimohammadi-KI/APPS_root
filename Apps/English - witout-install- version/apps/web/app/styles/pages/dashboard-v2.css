@@ -15,14 +15,15 @@
 .home-v2-heading h1 { margin: 0; font-size: clamp(27px, 3.2vw, 42px); font-weight: 850; letter-spacing: -.045em; }
 .home-v2-heading > div:first-child > p:last-child { margin: 7px 0 0; color: var(--v2-muted); font-size: 14px; }
 .home-v2-tools { display: flex; align-items: center; gap: 8px; }
-.home-v2-tools > button { position: relative; display: grid; min-width: 42px; height: 42px; place-items: center; border: 1px solid var(--v2-line); border-radius: 14px; background: rgba(255,255,255,.86); color: var(--v2-ink); cursor: pointer; transition: transform 150ms cubic-bezier(.23,1,.32,1), border-color 150ms ease, box-shadow 150ms ease; }
+.home-v2-tools > button { position: relative; display: grid; min-width: 42px; height: 42px; place-items: center; border: 1px solid var(--v2-line); border-radius: 14px; background: rgba(255,255,255,.86); color: var(--v2-ink); cursor: pointer; transition: transform 150ms cubic-bezier(.23,1,.32,1), border-color 150ms ease; }
 .home-v2-tools > button:active, .home-v2 button:active { transform: scale(.97); }
-.home-v2-tools > button:hover { border-color: #d7cae6; box-shadow: 0 9px 24px rgba(84,61,100,.08); }
+.home-v2-tools > button:hover { border-color: #d7cae6; }
 .home-v2-dot { position: absolute; top: 9px; right: 9px; width: 6px; height: 6px; border-radius: 99px; background: #f26d7f; box-shadow: 0 0 0 2px white; }
 .home-v2-tools .home-v2-profile { display: flex; width: auto; align-items: center; gap: 8px; padding: 0 11px 0 5px; }
 .home-v2-profile span { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 10px; background: linear-gradient(135deg,#f1bbca,#aa8ce9); color: white; font-weight: 900; }
 .home-v2-profile strong { font-size: 13px; }
 .home-v2-celebrate { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; border: 1px solid rgba(154,131,239,.35); border-radius: 20px; background: linear-gradient(120deg,rgba(154,131,239,.14),rgba(247,184,204,.16)); padding: 16px 18px; box-shadow: 0 16px 40px rgba(105,75,108,.1); }
+.milestone-enter { opacity: 1; transform: translateY(0) scale(1); transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out); }
 .home-v2-celebrate-icon { display: grid; flex-shrink: 0; width: 40px; height: 40px; place-items: center; border-radius: 12px; background: linear-gradient(135deg,#f1bbca,#aa8ce9); color: white; }
 .home-v2-celebrate > div { flex: 1; display: grid; gap: 4px; }
 .home-v2-celebrate strong { font-size: 14px; letter-spacing: -.01em; }
@@ -75,7 +76,7 @@
 .home-v2-progress-row > div:first-child { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; }
 .home-v2-progress-row strong { font-variant-numeric: tabular-nums; }
 .home-v2-progress-track { height: 8px; margin-top: 8px; overflow: hidden; border-radius: 99px; background: #f0ebf2; }
-.home-v2-progress-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#ef9bb7,#9d84ed); transition: width 220ms cubic-bezier(.23,1,.32,1); }
+.home-v2-progress-track span { display: block; width: 100%; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#ef9bb7,#9d84ed); transform-origin: left center; transition: transform 220ms var(--ease-out); }
 .home-v2-primary { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 20px; border: 0; border-radius: 14px; background: #171426; padding: 12px 14px; color: white; font-size: 12px; font-weight: 800; cursor: pointer; }
 .home-v2-level-check { margin-top: 16px; }
 .home-v2-score { display: grid; place-items: center; width: 130px; height: 130px; margin: 22px auto; border: 12px solid #efe9f7; border-top-color: #9a83ef; border-right-color: #f2a1ba; border-radius: 50%; }
@@ -86,8 +87,10 @@
 .home-v2-focus-card dt { color: var(--v2-muted); }
 .home-v2-focus-card dd { margin: 0; font-weight: 850; }
 .home-v2-course-list { display: grid; gap: 11px; margin-top: 18px; }
-.home-v2-course { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 11px; width: 100%; border: 1px solid rgba(255,255,255,.9); border-radius: 17px; padding: 13px; color: var(--v2-ink); text-align: left; cursor: pointer; transition: transform 160ms cubic-bezier(.23,1,.32,1), box-shadow 160ms ease; }
-.home-v2-course:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(94,67,102,.09); }
+.home-v2-course { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 11px; width: 100%; border: 1px solid rgba(255,255,255,.9); border-radius: 17px; padding: 13px; color: var(--v2-ink); text-align: left; cursor: pointer; transition: transform 160ms cubic-bezier(.23,1,.32,1); }
+@media (hover: hover) and (pointer: fine) {
+  .home-v2-course:hover { transform: translateY(-2px); }
+}
 .home-v2-course-rose { background: #fff0f4; }
 .home-v2-course-lavender { background: #f1edff; }
 .home-v2-course-peach { background: #fff1e8; }
@@ -101,6 +104,29 @@
 .home-v2-week span.is-active { background: linear-gradient(145deg,#f6a6bd,#967fe8); color: white; }
 .home-v2 :focus-visible { outline: 3px solid rgba(128,82,195,.36); outline-offset: 3px; }
 
+@starting-style {
+  .milestone-enter { opacity: 0; transform: translateY(6px) scale(.98); }
+}
+
 @media (max-width: 1050px) { .home-v2-grid { grid-template-columns: 1fr; } .home-v2-aside { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); } }
 @media (max-width: 720px) { .home-v2-heading { align-items: flex-start; } .home-v2-heading > div:first-child > p:last-child, .home-v2-profile strong { display: none; } .home-v2-grid, .home-v2-lower-grid, .home-v2-aside { grid-template-columns: 1fr; } .home-v2-chart-summary { gap: 14px; } .home-v2-chart-wrap { min-height: 180px; } .home-v2-chart-wrap svg { height: 155px; } }
-@media (prefers-reduced-motion: reduce) { .home-v2 *, .home-v2 *::before, .home-v2 *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .home-v2 *,
+  .home-v2 *::before,
+  .home-v2 *::after { scroll-behavior: auto !important; }
+
+  .home-v2 button,
+  .home-v2-course {
+    transform: none !important;
+    transition-property: opacity, color, background-color, border-color !important;
+    transition-duration: 120ms !important;
+    transition-timing-function: linear !important;
+  }
+
+  .home-v2-progress-track span { transition-duration: .01ms !important; }
+
+  .milestone-enter {
+    transform: none !important;
+    transition: opacity 120ms linear !important;
+  }
+}

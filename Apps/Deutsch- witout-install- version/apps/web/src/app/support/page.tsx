@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function SupportPage() {
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10 sm:px-8">
+    <div className="mx-auto max-w-5xl px-6 py-10 sm:px-8">
       <div className="mb-8">
         <Link className="text-sm text-primary hover:underline" href="/">
           ← Zurück zur Lern-App
@@ -84,6 +84,6 @@ export default function SupportPage() {
           </Link>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

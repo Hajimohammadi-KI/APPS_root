@@ -163,14 +163,11 @@
   background: rgba(255, 255, 255, 0.74);
   text-decoration: none;
   color: inherit;
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+  transition: border-color 160ms ease;
 }
 
 .profile-progress-badge:hover {
   border-color: var(--screen-accent, #2a73f5);
-  box-shadow: 0 6px 16px rgba(24, 43, 75, 0.06);
 }
 
 .profile-progress-avatar,
@@ -227,9 +224,7 @@
   background: rgba(255, 255, 255, 0.74);
   padding: 5px;
   box-shadow: 0 6px 18px rgba(24, 43, 75, 0.035);
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+  transition: border-color 160ms ease;
 }
 
 .nav-group[data-active="true"] {
@@ -319,7 +314,6 @@
   transition:
     color 160ms ease,
     background-color 160ms ease,
-    box-shadow 160ms ease,
     transform 160ms ease;
 }
 
@@ -556,4 +550,3 @@
     32px 32px,
     auto;
 }
-

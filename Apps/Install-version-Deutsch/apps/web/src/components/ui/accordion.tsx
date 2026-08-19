@@ -41,7 +41,7 @@ function AccordionTrigger({
         {children}
         <ChevronDownIcon
           data-slot="accordion-trigger-icon"
-          className="pointer-events-none shrink-0 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-aria-expanded/accordion-trigger:rotate-180 motion-reduce:duration-100"
+          className="pointer-events-none shrink-0 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-aria-expanded/accordion-trigger:rotate-180 motion-reduce:duration-[0.01ms]"
         />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
@@ -56,7 +56,7 @@ function AccordionContent({
   return (
     <AccordionPrimitive.Panel
       data-slot="accordion-content"
-      className="h-(--accordion-panel-height) overflow-hidden text-sm opacity-100 transition-[height,opacity] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] data-ending-style:h-0 data-ending-style:opacity-0 data-starting-style:h-0 data-starting-style:opacity-0 motion-reduce:duration-100"
+      className="h-(--accordion-panel-height) overflow-hidden text-sm"
       {...props}
     >
       <div

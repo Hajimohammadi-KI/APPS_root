@@ -1,0 +1,381 @@
+.analytics-dashboard {
+  --analytics-ink: #24143f;
+  --analytics-soft: #f5efff;
+  --analytics-line: #e6d9f7;
+}
+
+.analytics-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border: 1px solid var(--analytics-line);
+  border-radius: 1.75rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: linear-gradient(135deg, #fff 0%, var(--analytics-soft) 100%);
+}
+
+.analytics-hero h1 {
+  margin-top: 0.65rem;
+  color: var(--analytics-ink);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.analytics-hero p {
+  margin-top: 0.8rem;
+  max-width: 66ch;
+  color: var(--muted-foreground);
+  line-height: 1.65;
+}
+
+.analytics-status {
+  display: flex;
+  min-width: 17rem;
+  gap: 0.75rem;
+  border: 1px solid #bbf7d0;
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.analytics-status svg {
+  width: 1.25rem;
+  flex: 0 0 auto;
+}
+.analytics-status span,
+.analytics-status small {
+  display: block;
+}
+.analytics-status small {
+  margin-top: 0.2rem;
+  color: #3f6f4e;
+}
+.analytics-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1rem;
+}
+.analytics-card:hover {
+  transform: none;
+}
+.analytics-kpi [data-slot="card-content"] {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding-top: 0;
+}
+.analytics-kpi-icon {
+  grid-row: 1 / 3;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.6rem;
+  border-radius: 0.85rem;
+  background: var(--analytics-soft);
+  color: #6d28d9;
+}
+.analytics-kpi span {
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.analytics-kpi strong {
+  color: var(--analytics-ink);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+.analytics-kpi small {
+  grid-column: 1 / -1;
+  color: var(--muted-foreground);
+  line-height: 1.45;
+}
+.analytics-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.8fr);
+  gap: 1rem;
+}
+.analytics-card [data-slot="card-header"] p {
+  color: var(--muted-foreground);
+  font-size: 0.9rem;
+}
+.analytics-card-title {
+  color: var(--analytics-ink);
+  font-size: 1.25rem;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+}
+.analytics-bars {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.analytics-bar-row > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+}
+.analytics-bar-row span {
+  color: var(--muted-foreground);
+}
+.analytics-bar-row progress {
+  width: 100%;
+  height: 0.7rem;
+  overflow: hidden;
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  background: #eee8f6;
+}
+.analytics-bar-row progress::-webkit-progress-bar {
+  border-radius: 999px;
+  background: #eee8f6;
+}
+.analytics-bar-row progress::-webkit-progress-value {
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6d28d9, #a855f7);
+}
+.analytics-bar-row progress::-moz-progress-bar {
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6d28d9, #a855f7);
+}
+.analytics-limits dl {
+  display: grid;
+  gap: 0.8rem;
+}
+.analytics-limits dl > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--analytics-line);
+}
+.analytics-limits dt {
+  font-weight: 700;
+}
+.analytics-limits p {
+  margin-top: 1rem;
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.analytics-route-accordion {
+  overflow: hidden;
+  border: 1px solid var(--analytics-line);
+  border-radius: 1.15rem;
+}
+.analytics-route-accordion [data-slot="accordion-item"] {
+  padding-inline: 1rem;
+}
+.analytics-route-trigger {
+  min-height: 4.25rem;
+  gap: 1rem;
+  text-decoration: none;
+}
+.analytics-route-trigger:hover {
+  text-decoration: none;
+}
+.analytics-route-trigger > span {
+  display: grid;
+  gap: 0.15rem;
+}
+.analytics-route-trigger strong {
+  color: var(--analytics-ink);
+  font-size: 1rem;
+}
+.analytics-route-trigger small {
+  color: var(--muted-foreground);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.analytics-route-content {
+  padding-bottom: 1rem;
+}
+.analytics-route-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.analytics-route-card {
+  display: grid;
+  gap: 0.9rem;
+  min-width: 0;
+  border: 1px solid var(--analytics-line);
+  border-radius: 1rem;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--analytics-soft) 45%, white);
+}
+.analytics-route-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.analytics-route-heading a,
+.analytics-route-heading > span:first-child {
+  display: grid;
+  min-width: 0;
+  gap: 0.15rem;
+  color: var(--analytics-ink);
+  text-decoration: none;
+}
+.analytics-route-heading a:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.analytics-route-heading code {
+  overflow-wrap: anywhere;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.analytics-route-type {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  background: #ede9fe;
+  color: #5b21b6;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+.analytics-route-type[data-kind="redirect"] {
+  background: #e0f2fe;
+  color: #075985;
+}
+.analytics-route-type[data-kind="external"] {
+  background: #fef3c7;
+  color: #92400e;
+}
+.analytics-route-type[data-kind="dynamic"] {
+  background: #dcfce7;
+  color: #166534;
+}
+.analytics-route-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+}
+.analytics-route-metrics > div:last-child {
+  grid-column: 1 / -1;
+}
+.analytics-route-metrics > div {
+  min-width: 0;
+  border-top: 1px solid var(--analytics-line);
+  padding-top: 0.65rem;
+}
+.analytics-route-metrics dt {
+  color: var(--muted-foreground);
+  font-size: 0.68rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+.analytics-route-metrics dd {
+  margin-top: 0.25rem;
+  color: var(--analytics-ink);
+  font-size: 0.85rem;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.settings-controls {
+  display: grid;
+  gap: 1rem;
+}
+.settings-controls fieldset {
+  display: grid;
+  gap: 0.55rem;
+}
+.settings-controls legend {
+  margin-bottom: 0.45rem;
+  font-weight: 700;
+}
+.settings-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+.settings-options-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.settings-choice,
+.settings-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  min-height: 2.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 0.75rem;
+  background: var(--background);
+  cursor: pointer;
+}
+.settings-choice:has(input:checked),
+.settings-toggle:has(input:checked) {
+  border-color: #8b5cf6;
+  background: #f5f3ff;
+  box-shadow: 0 0 0 2px rgb(139 92 246 / 12%);
+}
+.settings-choice input,
+.settings-toggle input {
+  margin-top: 0.15rem;
+  accent-color: #7c3aed;
+}
+.settings-choice span,
+.settings-choice small {
+  display: block;
+}
+.settings-choice small {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 1500px) {
+  .analytics-hero {
+    display: grid;
+  }
+  .analytics-status {
+    min-width: 0;
+  }
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .analytics-hero {
+    display: grid;
+  }
+  .analytics-status {
+    min-width: 0;
+  }
+  .analytics-kpis,
+  .settings-options,
+  .settings-options-four {
+    grid-template-columns: 1fr;
+  }
+  .analytics-route-heading {
+    display: grid;
+  }
+  .analytics-route-type {
+    justify-self: start;
+  }
+  .analytics-route-metrics {
+    grid-template-columns: 1fr;
+  }
+}

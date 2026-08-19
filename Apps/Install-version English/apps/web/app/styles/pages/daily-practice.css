@@ -144,9 +144,11 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  transition: border-color 160ms ease, transform 160ms ease;
 }
-.daily-activity-card:hover { border-color: #9c7ee1; box-shadow: 0 10px 24px rgba(83, 55, 145, .09); transform: translateY(-1px); }
+@media (hover: hover) and (pointer: fine) {
+  .daily-activity-card:hover { border-color: #9c7ee1; transform: translateY(-1px); }
+}
 .daily-activity-card[data-completed="true"] { border-color: #9cdabb; background: #f5fcf8; }
 .daily-activity-number,
 .daily-activity-icon { display: grid; place-items: center; border-radius: 50%; font-weight: 900; }
@@ -215,7 +217,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .daily-activity-card { transition: none; }
+  .daily-activity-card {
+    transform: none;
+    transition:
+      border-color 100ms linear,
+      background-color 100ms linear,
+      color 100ms linear;
+  }
+
   .daily-activity-card:hover { transform: none; }
 }
-

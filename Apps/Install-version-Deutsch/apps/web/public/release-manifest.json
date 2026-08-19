@@ -1,7 +1,17 @@
 {
-  "version": "20.8.10",
+  "version": "20.8.19",
   "publishedAt": "2026-08-19",
   "changes": [
+    "Die Seitenanalyse trennt Einstiegsrouten von tatsächlich gerenderten Seiten, validiert lokale Daten und zeigt alle Routen in kompakten, zugänglichen Aufklappbereichen",
+    "Quellenübungen unter Deutsch mit Marija öffnen wieder die echte aktive Übung statt fälschlich zum Grammatik-Labor umzuleiten",
+    "Navigationen besitzen eindeutige Bereichsnamen, einen Sprung zum Hauptinhalt und eine korrekte Ressourcenmarkierung in Quellenübungen",
+    "Gemeinsame Auswahlmenüs und Schaltflächen verwenden jetzt Base-UI-Primitives für einheitlichen Fokus, Tastaturnavigation, Schließen und ARIA-Verhalten auf allen Seiten",
+    "Alle nutzerseitigen Seiten verwenden jetzt eine Apple-inspirierte Systemebene mit ruhigeren Materialien, klarerer Hierarchie, verankerten Menüs, direkter Druckrückmeldung sowie Alternativen für reduzierte Bewegung, reduzierte Transparenz und höheren Kontrast",
+    "Eine datenschutzfreundliche Seitenanalyse prüft alle 26 nutzerseitigen Routen anhand lokaler Navigationsversuche und kennzeichnet fehlende Produktionskennzahlen ausdrücklich als N/A",
+    "Einstellungen funktionieren jetzt vollständig im Web, ohne einen separaten lokalen Dienst vorauszusetzen",
+    "Ein hybrider Coach für vier Fertigkeiten verbindet transparente lokale NLP-Beobachtungen mit optionalen KI-Reparatur- und Transferimpulsen eines verbundenen Providers; beide Wege vergeben weder CEFR noch Beherrschung, Aussprache oder Automatik",
+    "Ein lizenzgeprüfter Katalog ordnet offene englische und deutsche Datensätze den vier Fertigkeiten und geeigneten neuronalen oder transparenten Methoden zu, ohne große Korpora zu bündeln",
+    "Sichere lokale Importer normalisieren selbst heruntergeladene Common-Voice- und Tatoeba-CC0-Dateien und verwerfen Personenkennungen sowie Demografiefelder",
     "Das Grammatik-Labor zeigt jede CEFR-Einheit als eine zugängliche, vollbreite Menüzeile statt als Chip",
     "Tägliches Training und Automatik-Nachweise erscheinen als ein geführter Lernweg",
     "Das Gesprächsstudio übernimmt Thema, Niveau und Zielgrammatik aus der aktuellen Lektion",

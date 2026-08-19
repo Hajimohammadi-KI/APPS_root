@@ -5,6 +5,7 @@ import {
   allDays,
   articleReadings,
   extractionSections,
+  nlpCourseMeta,
   nlpCourseSessions,
   nlpLabDefinition,
   PLAN_VERSION,
@@ -36,7 +37,7 @@ const expectedTopics = [
 ];
 
 const readingFolder =
-  "D:\\Bachelor-Thesis\\02_Literature\\09_NLP_Course_2026_Reading_Order";
+  "D:\\Bachelor-Thesis\\All Artikels\\Recovered_Articles_2026-08-07";
 
 describe("Advanced Deep Learning reading plan", () => {
   test("uses the ten official dates, topics, and class times", () => {
@@ -44,12 +45,19 @@ describe("Advanced Deep Learning reading plan", () => {
     expect(nlpCourseSessions.map((session) => session.topics)).toEqual(expectedTopics);
     expect(nlpCourseSessions).toHaveLength(10);
     for (const session of nlpCourseSessions) {
-      expect(session.berlinTime).toBe("18:00–19:40");
-      expect(session.iranTime).toBe("19:30–21:10");
+      expect(session.berlinTime).toBe("19:30–21:10");
+      expect(session.iranTime).toBe("21:00–22:40");
       expect(session.readingFocus).toHaveLength(3);
       expect(session.projectConnection.length).toBeGreaterThan(40);
       expect(session.extractionGoal.length).toBeGreaterThan(40);
     }
+    expect(nlpCourseMeta.instructor).toBe("Farshid Shirafkan");
+    expect(nlpCourseMeta.platform).toBe("Google Meet");
+    expect(nlpCourseMeta.sessionCount).toBe(10);
+    expect(nlpCourseMeta.sessionMinutes).toBe(100);
+    expect(nlpCourseSessions.every((session) => [1, 3, 6].includes(
+      new Date(`${session.date}T12:00:00Z`).getUTCDay(),
+    ))).toBeTrue();
   });
 
   test("maps every session only to stable, existing article readings", () => {
@@ -60,7 +68,31 @@ describe("Advanced Deep Learning reading plan", () => {
     }
   });
 
-  test("contains exactly 18 unique files with course and original numbering", () => {
+  test("maps every class topic to real plan days with prepared teacher questions", () => {
+    const dayTitles = new Set(allDays.map((day) => day.title));
+    const nlpDays = allDays.filter((day) => day.phaseId.startsWith("nlp-"));
+    const mappedTitles = new Set(
+      nlpCourseSessions.flatMap((session) => session.relatedDayTitles),
+    );
+
+    for (const session of nlpCourseSessions) {
+      expect(session.classQuestionsFa).toHaveLength(3);
+      expect(session.classQuestionsFa.every((question) => question.length > 20)).toBeTrue();
+      expect(session.whyThisMattersFa.length).toBeGreaterThan(60);
+      expect(session.plannedActionFa.length).toBeGreaterThan(60);
+      expect(session.relatedDayTitles.length).toBeGreaterThanOrEqual(2);
+      expect(session.relatedDayTitles.every((title) => dayTitles.has(title))).toBeTrue();
+    }
+
+    expect(mappedTitles).toEqual(new Set(nlpDays.map((day) => day.title)));
+    expect(
+      allDays
+        .filter((day) => mappedTitles.has(day.title))
+        .every((day) => day.phaseId.startsWith("nlp-")),
+    ).toBeTrue();
+  });
+
+  test("contains exactly 18 unique files with names from the recovered article folder", () => {
     expect(articleReadings).toHaveLength(18);
     expect(articleReadings.map((reading) => reading.order)).toEqual(
       Array.from({ length: 18 }, (_, index) => index + 6),
@@ -74,9 +106,6 @@ describe("Advanced Deep Learning reading plan", () => {
     expect(new Set(articleReadings.map((reading) => reading.fileName)).size).toBe(18);
     expect(articleReadings[0]?.status).toBe("in_progress");
     for (const reading of articleReadings) {
-      expect(reading.fileName.startsWith(
-        `C${String(reading.courseOrder).padStart(2, "0")}-O${String(reading.order).padStart(2, "0")}_`,
-      )).toBeTrue();
       expect(existsSync(join(readingFolder, reading.fileName))).toBeTrue();
       expect(Boolean(sources[reading.sourceId])).toBeTrue();
       expect(reading.readingFocus).toHaveLength(3);

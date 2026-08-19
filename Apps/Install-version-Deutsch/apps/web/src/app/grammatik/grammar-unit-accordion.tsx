@@ -68,7 +68,7 @@ export function GrammarUnitAccordion({
                       <button
                         aria-pressed={selected}
                         data-slot="grammar-unit-row"
-                        className={`relative flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-medium outline-none transition-[color,background-color,box-shadow] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-violet-50 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-violet-700 ${
+                        className={`relative flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-medium outline-none transition-[color,background-color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-violet-50 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-violet-700 ${
                           selected
                             ? "bg-violet-100 text-violet-950 shadow-[inset_3px_0_0_#6d28d9]"
                             : "bg-background text-foreground"

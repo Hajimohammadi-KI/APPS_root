@@ -364,13 +364,13 @@
   box-shadow: 0 10px 24px rgb(25 45 80 / 7%);
   transition:
     transform 180ms cubic-bezier(0.23, 1, 0.32, 1),
-    box-shadow 180ms cubic-bezier(0.23, 1, 0.32, 1),
     border-color 180ms ease;
 }
 
-.progress-story-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 34px rgb(25 45 80 / 11%);
+@media (hover: hover) and (pointer: fine) {
+  .progress-story-card:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .progress-story-card[data-status="current"] {
@@ -472,13 +472,13 @@
   box-shadow: 0 8px 22px rgb(24 43 75 / 5%);
   transition:
     transform 180ms cubic-bezier(0.23, 1, 0.32, 1),
-    box-shadow 180ms cubic-bezier(0.23, 1, 0.32, 1),
     border-color 180ms ease;
 }
 
-.daily-step:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 34px rgb(24 43 75 / 8%);
+@media (hover: hover) and (pointer: fine) {
+  .daily-step:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .daily-step[data-done="true"] {

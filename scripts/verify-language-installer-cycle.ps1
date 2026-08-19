@@ -11,11 +11,17 @@ param(
   [Parameter(Mandatory = $true)][int]$ApiPort,
   [string]$ApiHealthPath = '/api/health',
   [Parameter(Mandatory = $true)][string]$ExpectedText,
-  [ValidateRange(90, 600)][int]$RuntimeTimeoutSeconds = 180
+  [ValidateRange(90, 600)][int]$RuntimeTimeoutSeconds = 180,
+  [switch]$SkipRuntimeChecks,
+  [string]$RuntimeBlocker = ''
 )
 
 $ErrorActionPreference = 'Stop'
 $runtimeSessionRoot = Join-Path 'D:\APPS_root\artifacts\desktop-runtime' (([Guid]::NewGuid().ToString('N').Substring(0, 8)) + '-shared')
+
+if ($SkipRuntimeChecks -and [string]::IsNullOrWhiteSpace($RuntimeBlocker)) {
+  throw 'RuntimeBlocker is required when SkipRuntimeChecks is used.'
+}
 
 function Assert-True {
   param([bool]$Condition, [string]$Message)
@@ -169,7 +175,9 @@ Assert-True (Test-Path -LiteralPath $installedExecutable -PathType Leaf) 'Fresh 
 Assert-True (([IO.File]::ReadAllText($versionFile)).Trim() -eq $CurrentVersion) 'Fresh install version does not match.'
 [IO.File]::WriteAllText($markerFile, '{"learner":"installer-cycle","progress":37,"note":"preserve exactly"}', [Text.UTF8Encoding]::new($false))
 $freshMarkerHash = (Get-FileHash -LiteralPath $markerFile -Algorithm SHA256).Hash
-$runtimeChecks += Test-InstalledRuntime 'fresh-install' $installedExecutable
+if (-not $SkipRuntimeChecks) {
+  $runtimeChecks += Test-InstalledRuntime 'fresh-install' $installedExecutable
+}
 
 Invoke-Setup $CurrentSetup '--silent-uninstall'
 Assert-True (-not (Test-Path -LiteralPath $installedExecutable)) 'Silent uninstall left the main executable behind.'
@@ -187,7 +195,9 @@ Assert-True ((Get-FileHash -LiteralPath $markerFile -Algorithm SHA256).Hash -eq 
 Invoke-Setup $CurrentSetup '--silent-repair'
 Assert-True (([IO.File]::ReadAllText($versionFile)).Trim() -eq $CurrentVersion) 'Repair did not restore the corrupted version marker.'
 Assert-True ((Get-FileHash -LiteralPath $markerFile -Algorithm SHA256).Hash -eq $updateMarkerHash) 'Repair changed learner data.'
-$runtimeChecks += Test-InstalledRuntime 'post-update-repair' $installedExecutable
+if (-not $SkipRuntimeChecks) {
+  $runtimeChecks += Test-InstalledRuntime 'post-update-repair' $installedExecutable
+}
 
 Invoke-Setup $CurrentSetup '--silent-uninstall'
 Assert-True (-not (Test-Path -LiteralPath $installedExecutable)) 'Final uninstall left the main executable behind.'
@@ -197,7 +207,7 @@ Assert-True ((Get-FileHash -LiteralPath $markerFile -Algorithm SHA256).Hash -eq 
   product = $Product
   runRoot = $runRoot
   freshInstall = 'VERIFIED'
-  startup = 'VERIFIED'
+  startup = if ($SkipRuntimeChecks) { "BLOCKED: $RuntimeBlocker" } else { 'VERIFIED' }
   update = "$PreviousVersion -> $CurrentVersion VERIFIED"
   repair = 'VERIFIED after deliberate version marker corruption'
   uninstallPreservedData = 'VERIFIED'

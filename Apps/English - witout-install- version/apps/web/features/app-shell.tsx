@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
 	BookOpenText,
 	BrainCircuit,
+	ChartNoAxesCombined,
 	ChevronDown,
 	CircleAlert,
 	CloudDownload,
@@ -106,6 +107,12 @@ const navigation: NavigationItem[] = [
 		icon: BrainCircuit,
 	},
 	{
+		id: "analytics",
+		label: "Page Analytics",
+		subtitle: "Local route and learning evidence",
+		icon: ChartNoAxesCombined,
+	},
+	{
 		id: "library",
 		label: "Audio Library",
 		subtitle: "Review your spoken progress",
@@ -174,7 +181,7 @@ const navigationGroups: NavigationGroup[] = [
 		caption: "Errors and recordings",
 		icon: Clock3,
 		items: navigation.filter((item) =>
-			["progress", "errors", "library", "notebook", "flashcards"].includes(
+			["progress", "analytics", "errors", "library", "notebook", "flashcards"].includes(
 				item.id,
 			),
 		),
@@ -361,12 +368,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 										{group.items.map((item) => {
 											const Icon = item.icon;
 											return (
-												<Link
-													className="nav-button"
-													data-active={item.id === current.id}
-													href={SCREEN_PATHS[item.id]}
-													key={item.id}
-												>
+											<Link
+												className="nav-button"
+												data-active={item.id === current.id}
+												href={SCREEN_PATHS[item.id]}
+												key={item.id}
+												prefetch={item.id !== "notebook"}
+											>
 													<Icon aria-hidden className="size-4.5" />
 													{item.label}
 												</Link>

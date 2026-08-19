@@ -46,6 +46,30 @@ export {
   type CefrCurriculumLevel,
   type CefrStufe,
 } from "./cefr-curriculum";
+export {
+  DATASET_LANGUAGES,
+  FOUR_LANGUAGE_SKILLS,
+  OPEN_LANGUAGE_DATASETS,
+  getOpenDatasetSkillPlans,
+  getOpenLanguageDataset,
+  validateOpenDatasetCatalog,
+} from "./open-language-datasets";
+export type {
+  DatasetLanguage,
+  FourLanguageSkill,
+  LocalDatasetImporter,
+  OpenDatasetLicense,
+  OpenDatasetSkillPlan,
+  OpenLanguageDataset,
+} from "./open-language-datasets";
+export {
+  importOpenDatasetText,
+  importedItemsToJsonLines,
+} from "./open-dataset-import";
+export type {
+  ImportedOpenDatasetItem,
+  ImportOpenDatasetOptions,
+} from "./open-dataset-import";
 
 export {
   deutschMitMarijaSharedWithMeUrl,

@@ -781,7 +781,7 @@ export default function Home() {
         </div>
       </aside>
 
-      <main>
+      <div className="studio-main">
         <header>
           <div>
             <h1>{text.title}</h1>
@@ -960,7 +960,14 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="record-card">
+            <div
+              className="record-card"
+              data-recording-state={
+                recordingState === "idle" && audioUrl
+                  ? "recorded"
+                  : recordingState
+              }
+            >
               <div
                 className={`mic ${recordingState === "recording" ? "recording" : ""}`}
                 aria-hidden="true"
@@ -978,7 +985,7 @@ export default function Home() {
                 <strong>
                   {formatTime(seconds)} / {formatTime(maxSeconds)}
                 </strong>
-                <span className="ready">
+                <span aria-live="polite" className="ready">
                   {recordingState === "paused"
                     ? "Paused"
                     : recordingState === "recording"
@@ -1320,7 +1327,10 @@ export default function Home() {
 
             {active === 6 && (
               <section className="flow-panel save-panel">
-                <div className="flow-title">
+                <div
+                  className={`flow-title${savedId ? " conversation-save-enter" : ""}`}
+                  key={savedId ?? "unsaved"}
+                >
                   <span>▯</span>
                   <div>
                     <small>STEP 7 · {stepLabels[6]}</small>
@@ -1365,7 +1375,10 @@ export default function Home() {
           </section>
 
           <aside className="evidence">
-            <section className="panel feedback">
+            <section
+              className={`panel feedback${evaluation ? " conversation-evaluation-enter" : ""}`}
+              key={evaluation?.checkedAt ?? "pending"}
+            >
               <h3>
                 {language === "de"
                   ? "Echte Sprechdaten"
@@ -1521,7 +1534,7 @@ export default function Home() {
               : `${language === "de" ? "Weiter" : "Continue"} →`}
           </button>
         </footer>
-      </main>
+      </div>
       {dailyComplete && (
         <div
           className="daily-complete-backdrop"

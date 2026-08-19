@@ -208,6 +208,8 @@ $requiredValues = @(
   'installFolder',
   'dataFolder',
   'mainExecutable',
+  'compatibilityLauncherArchive',
+  'compatibilityLauncherSha256',
   'setupFile',
   'shortcutName',
   'environmentPrefix',
@@ -385,6 +387,76 @@ if (-not $SkipElectronBuild) {
 $portableApp = Join-Path $portableOutput 'win-unpacked'
 if (-not (Test-Path -LiteralPath $portableApp -PathType Container)) {
   throw "Portable Electron output is missing: $portableApp"
+}
+
+$configuredMainExecutable = [string]$config.mainExecutable
+if ([IO.Path]::GetFileName($configuredMainExecutable) -ne $configuredMainExecutable) {
+  throw 'The configured main executable must be a root-level file name.'
+}
+$portableLauncher = Join-Path $portableApp $configuredMainExecutable
+if (-not (Test-Path -LiteralPath $portableLauncher -PathType Leaf)) {
+  throw "Portable application executable is missing: $portableLauncher"
+}
+
+$compatibilityLauncherArchive = Resolve-ConfiguredPath `
+  -Base $configDirectory `
+  -Value ([string]$config.compatibilityLauncherArchive)
+if (-not (Test-Path -LiteralPath $compatibilityLauncherArchive -PathType Leaf)) {
+  throw "Compatibility launcher archive is missing: $compatibilityLauncherArchive"
+}
+$expectedCompatibilityLauncherSha256 =
+  ([string]$config.compatibilityLauncherSha256).Trim()
+if ($expectedCompatibilityLauncherSha256 -notmatch '^[0-9A-Fa-f]{64}$') {
+  throw 'The compatibility launcher SHA-256 must contain exactly 64 hexadecimal characters.'
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$compatibilityLauncherTemp = Join-Path $workRoot 'compatibility-launcher.exe'
+$compatibilityArchive = [System.IO.Compression.ZipFile]::OpenRead(
+  $compatibilityLauncherArchive)
+try {
+  $compatibilityEntries = @(
+    $compatibilityArchive.Entries | Where-Object {
+      $_.FullName -ceq $configuredMainExecutable -and
+      -not [string]::IsNullOrEmpty($_.Name)
+    }
+  )
+  if ($compatibilityEntries.Count -ne 1) {
+    throw (
+      "Compatibility launcher archive must contain exactly one root entry " +
+      "named '$configuredMainExecutable'; found $($compatibilityEntries.Count).")
+  }
+  [System.IO.Compression.ZipFileExtensions]::ExtractToFile(
+    $compatibilityEntries[0],
+    $compatibilityLauncherTemp,
+    $true)
+} finally {
+  $compatibilityArchive.Dispose()
+}
+
+try {
+  $actualCompatibilityLauncherSha256 =
+    Get-Sha256Hex -LiteralPath $compatibilityLauncherTemp
+  if (-not [string]::Equals(
+    $actualCompatibilityLauncherSha256,
+    $expectedCompatibilityLauncherSha256,
+    [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw (
+      'Compatibility launcher SHA-256 mismatch. ' +
+      "Expected $expectedCompatibilityLauncherSha256; " +
+      "found $actualCompatibilityLauncherSha256.")
+  }
+
+  # Preserve the App-Control-approved launcher while the current app.asar and
+  # all other resources remain from the newly built application.
+  Copy-Item `
+    -LiteralPath $compatibilityLauncherTemp `
+    -Destination $portableLauncher `
+    -Force
+} finally {
+  if (Test-Path -LiteralPath $compatibilityLauncherTemp -PathType Leaf) {
+    Remove-Item -LiteralPath $compatibilityLauncherTemp -Force
+  }
 }
 
 $workspaceRoot = $null

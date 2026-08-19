@@ -1,0 +1,298 @@
+/*
+ * Apple-inspired interaction and material layer.
+ * It refines every route while preserving DeutschFlow's learning structure
+ * and purple product identity.
+ */
+
+:root {
+  --apple-canvas: #f5f5f7;
+  --apple-surface: rgb(255 255 255 / 86%);
+  --apple-surface-solid: #ffffff;
+  --apple-chrome: rgb(248 248 250 / 78%);
+  --apple-sidebar: rgb(246 244 248 / 84%);
+  --apple-ink: #1d1d1f;
+  --apple-secondary-ink: #5f5f67;
+  --apple-separator: rgb(29 29 31 / 10%);
+  --apple-separator-strong: rgb(29 29 31 / 16%);
+  --apple-focus: rgb(118 81 180 / 26%);
+  --apple-shadow-small:
+    0 1px 2px rgb(35 24 45 / 5%), 0 8px 24px rgb(35 24 45 / 6%);
+  --apple-shadow-large:
+    0 2px 6px rgb(35 24 45 / 6%), 0 22px 60px rgb(35 24 45 / 10%);
+  --background: var(--apple-canvas);
+  --foreground: var(--apple-ink);
+  --card: var(--apple-surface-solid);
+  --card-foreground: var(--apple-ink);
+  --muted-foreground: var(--apple-secondary-ink);
+  --border: #dedce2;
+  --input: #c9c6cf;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui,
+    sans-serif;
+}
+
+html {
+  background: var(--apple-canvas);
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background:
+    radial-gradient(
+      circle at 88% -8%,
+      rgb(129 87 180 / 10%),
+      transparent 31rem
+    ),
+    linear-gradient(180deg, #faf9fb 0, var(--apple-canvas) 22rem);
+  color: var(--apple-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "kern", "liga", "calt";
+  font-optical-sizing: auto;
+  letter-spacing: -0.006em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+:where(h1, h2, h3, h4, .page-title, [data-slot="card-title"]) {
+  color: var(--apple-ink);
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+:where(h1, .learning-page-intro h1) {
+  letter-spacing: -0.038em;
+  line-height: 1.08;
+}
+
+:where(h2, h3, h4, [data-slot="card-title"]) {
+  letter-spacing: -0.022em;
+  line-height: 1.18;
+}
+
+:where(p, li, dd, dt, label) {
+  line-height: 1.55;
+}
+
+:where(button, a, input, textarea, select, summary) {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:where(button, [role="button"], a) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.german-app-sidebar {
+  border-right-color: var(--apple-separator);
+  background: var(--apple-sidebar);
+  box-shadow:
+    1px 0 0 rgb(255 255 255 / 68%),
+    18px 0 54px rgb(38 27 47 / 5%);
+  -webkit-backdrop-filter: saturate(180%) blur(28px);
+  backdrop-filter: saturate(180%) blur(28px);
+}
+
+.german-app-topbar {
+  border-bottom-color: transparent;
+  background: var(--apple-chrome);
+  box-shadow:
+    inset 0 -1px 0 var(--apple-separator),
+    0 10px 30px rgb(40 29 49 / 4%);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+}
+
+.german-app-main {
+  padding-bottom: calc(4.25rem + env(safe-area-inset-bottom));
+}
+
+.german-sidebar-section {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.german-sidebar-trigger,
+.german-app-sidebar nav a {
+  transform-origin: center;
+  transition:
+    color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    transform 120ms var(--ease-out);
+}
+
+.german-sidebar-trigger:hover,
+.german-app-sidebar nav a:hover {
+  background: rgb(118 81 180 / 8%);
+}
+
+.german-app-sidebar nav a[aria-current="page"] {
+  background: rgb(118 81 180 / 14%);
+  color: #573487;
+  box-shadow: inset 0 0 0 1px rgb(118 81 180 / 10%);
+}
+
+:where(.learning-card, [data-slot="card"]) {
+  border-color: var(--apple-separator);
+  background: var(--apple-surface);
+  box-shadow: var(--apple-shadow-small);
+  -webkit-backdrop-filter: saturate(135%) blur(16px);
+  backdrop-filter: saturate(135%) blur(16px);
+}
+
+:where(.learning-page-intro, .daily-mission-hero, .dashboard-hero) {
+  border-color: var(--apple-separator);
+  box-shadow: var(--apple-shadow-large);
+}
+
+.learning-page-intro {
+  border-radius: clamp(1.35rem, 2.4vw, 2rem);
+  background:
+    radial-gradient(
+      circle at 88% 16%,
+      rgb(118 81 180 / 11%),
+      transparent 13rem
+    ),
+    linear-gradient(145deg, rgb(255 255 255 / 94%), rgb(244 239 249 / 92%));
+}
+
+:where(
+  [data-slot="button"],
+  .select-menu-trigger,
+  .german-sidebar-trigger,
+  .german-app-sidebar nav a
+) {
+  transform-origin: center;
+  will-change: transform;
+}
+
+:where([data-slot="button"], .select-menu-trigger):active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: 150ms;
+}
+
+:where(.german-sidebar-trigger, .german-app-sidebar nav a):active:not(
+    :disabled
+  ) {
+  transform: scale(0.975);
+  transition-duration: 80ms;
+}
+
+[data-slot="button"] {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 18%);
+}
+
+:where(input, textarea, select, [data-slot="input"], .select-menu-trigger) {
+  border-color: var(--apple-separator-strong);
+  background: rgb(255 255 255 / 96%);
+  box-shadow: inset 0 1px 2px rgb(35 24 45 / 3%);
+  font: inherit;
+}
+
+:where(
+  input,
+  textarea,
+  select,
+  [data-slot="input"],
+  .select-menu-trigger
+):focus-visible {
+  border-color: rgb(118 81 180 / 58%);
+  box-shadow: 0 0 0 4px var(--apple-focus);
+  outline: none;
+}
+
+.select-menu-panel {
+  transform-origin: top center;
+  border-color: var(--apple-separator);
+  background: rgb(255 255 255 / 96%);
+  box-shadow: var(--apple-shadow-large);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+}
+
+.select-menu-option {
+  min-height: 2.5rem;
+}
+
+:where(:focus-visible) {
+  outline: 3px solid rgb(118 81 180 / 34%);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :where(.learning-card, [data-slot="card"]):hover {
+    border-color: rgb(118 81 180 / 19%);
+    transform: translateY(-1px);
+  }
+}
+
+@media (max-width: 760px) {
+  .german-app-topbar {
+    padding-top: max(0.35rem, env(safe-area-inset-top));
+  }
+
+  .german-app-main {
+    padding-inline: max(0.75rem, env(safe-area-inset-left));
+  }
+
+  .learning-page-intro {
+    padding: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .german-app-sidebar,
+  .german-app-topbar,
+  :where(.learning-card, [data-slot="card"]),
+  .select-menu-panel {
+    background: var(--apple-surface-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --apple-separator: rgb(29 29 31 / 34%);
+    --apple-separator-strong: rgb(29 29 31 / 56%);
+  }
+
+  .german-app-sidebar,
+  .german-app-topbar,
+  :where(.learning-card, [data-slot="card"]),
+  .select-menu-panel {
+    background: #fff;
+  }
+
+  :where(button, a, input, textarea, select):focus-visible {
+    outline-color: #4f2f78;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(
+    [data-slot="button"],
+    .select-menu-trigger,
+    .select-menu-panel,
+    .select-menu-option,
+    .german-sidebar-trigger,
+    .german-app-sidebar nav a,
+    .home-v2-tools > a,
+    .home-v2 a,
+    .daily-activity-card,
+    .progress-story-card,
+    .daily-step,
+    .learning-card,
+    [data-slot="card"]
+  ) {
+    animation: none !important;
+    transform: none !important;
+    transition-property:
+      opacity, color, background-color, border-color !important;
+    transition-duration: 120ms !important;
+    transition-timing-function: linear !important;
+  }
+}

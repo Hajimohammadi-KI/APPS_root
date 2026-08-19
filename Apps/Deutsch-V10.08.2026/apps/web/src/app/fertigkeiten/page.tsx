@@ -1,6 +1,52 @@
-import { FERTIGKEITEN, cefrCurriculum, grammarUnits } from "@grammar/content";
+import {
+  FERTIGKEITEN,
+  cefrCurriculum,
+  getOpenDatasetSkillPlans,
+  grammarUnits,
+  type FourLanguageSkill,
+} from "@grammar/content";
+import { HybridLanguageCoach } from "@/features/language-analysis/hybrid-language-coach";
 
 export const metadata = { title: "Integrierte Fertigkeiten A1–C2" };
+
+const openDatasetSkillPlans = getOpenDatasetSkillPlans("de");
+
+const methodCopy: Readonly<
+  Record<
+    FourLanguageSkill,
+    {
+      readonly label: string;
+      readonly method: string;
+      readonly evidence: string;
+    }
+  >
+> = {
+  listening: {
+    label: "Hören",
+    method: "Neuronale mehrsprachige Spracherkennung plus Bedeutungsabruf",
+    evidence:
+      "Transkript, Inhaltsabruf und zeitversetztes Verstehen bleiben getrennte Nachweise.",
+  },
+  speaking: {
+    label: "Sprechen",
+    method: "Neuronale ASR, Forced Alignment und prüfbare Flüssigkeitsmerkmale",
+    evidence:
+      "Echtes Audio, Wiedergabe, Reparatur und Transfer sind Pflicht; ASR allein bewertet keine Aussprache.",
+  },
+  reading: {
+    label: "Lesen",
+    method: "Syntaxbewusste Suche mit transparenten CEFR-Heuristiken",
+    evidence:
+      "Bedeutung, Belegauswahl und Erklärung zählen; Korpusfrequenz ist keine CEFR-Stufe.",
+  },
+  writing: {
+    label: "Schreiben",
+    method:
+      "Neuronale Korrekturvorschläge plus Lernerkorpus und aktive Reparatur",
+    evidence:
+      "Original, Vorschlag, begründete Reparatur und unabhängiger Transfer werden getrennt gespeichert.",
+  },
+};
 
 export default function FertigkeitenPage() {
   return (
@@ -18,6 +64,73 @@ export default function FertigkeitenPage() {
           erst als gelernt, wenn du es selbstständig verwenden kannst.
         </p>
       </header>
+
+      <section className="rounded-3xl border border-sky-200 bg-sky-50/70 p-4 shadow-sm sm:p-6">
+        <details className="group overflow-hidden rounded-2xl border border-sky-200 bg-background">
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-5">
+            <span>
+              Offene Datensätze und geeignete Methoden für vier Fertigkeiten
+            </span>
+            <span className="text-sm text-primary group-open:hidden">
+              Öffnen
+            </span>
+            <span className="hidden text-sm text-primary group-open:inline">
+              Schließen
+            </span>
+          </summary>
+          <div className="grid gap-4 border-t border-sky-200 p-4 lg:grid-cols-2">
+            {openDatasetSkillPlans.map((plan) => {
+              const copy = methodCopy[plan.skill];
+              return (
+                <article
+                  className="rounded-2xl border bg-secondary/30 p-4"
+                  key={plan.skill}
+                >
+                  <p className="text-xs font-black uppercase tracking-[0.14em] text-primary">
+                    {copy.label}
+                  </p>
+                  <h2 className="mt-2 text-base font-black">{copy.method}</h2>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {copy.evidence}
+                  </p>
+                  <ul className="mt-3 space-y-2">
+                    {plan.datasets.map((dataset) => (
+                      <li key={dataset.id}>
+                        <a
+                          className="block rounded-xl border bg-background p-3 hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                          href={dataset.officialUrl}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          <strong className="block text-sm">
+                            {dataset.title}
+                          </strong>
+                          <span className="mt-1 block text-xs text-muted-foreground">
+                            {dataset.license.spdx}
+                            {dataset.sizeByLanguage?.de
+                              ? ` · ${dataset.sizeByLanguage.de}`
+                              : ""}
+                            {` · geprüft ${dataset.verifiedOn}`}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              );
+            })}
+          </div>
+          <p className="border-t border-sky-200 px-4 py-3 text-sm leading-6 text-muted-foreground sm:px-5">
+            Korpora und Modelle werden nicht automatisch geladen oder in den
+            Installer gepackt. Lokal heruntergeladene Common-Voice- oder
+            Tatoeba-CC0-Dateien lassen sich mit{" "}
+            <code>bun run datasets:import</code> datensparsam normalisieren;
+            Personen- und Demografiefelder werden verworfen.
+          </p>
+        </details>
+      </section>
+
+      <HybridLanguageCoach />
 
       <section className="grid gap-4">
         {cefrCurriculum.map((level, index) => {

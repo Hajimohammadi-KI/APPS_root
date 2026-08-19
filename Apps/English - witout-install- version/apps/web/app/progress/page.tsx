@@ -1,5 +1,5 @@
-import { AutomaticityScreen } from "@/features/screens/automaticity-screen";
+import { ProgressEvidenceScreen } from "@/features/screens/progress-evidence-screen";
 
 export default function ProgressPage() {
-	return <AutomaticityScreen />;
+	return <ProgressEvidenceScreen />;
 }

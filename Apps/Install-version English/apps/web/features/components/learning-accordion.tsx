@@ -76,16 +76,14 @@ export function LearningAccordion({
     <Accordion
       className={cn(
         "learning-accordion overflow-hidden rounded-2xl border shadow-sm",
-        "transition-[border-color,box-shadow,transform] duration-200",
-        "has-[[data-state=open]]:-translate-y-0.5 has-[[data-state=open]]:shadow-lg",
-        "motion-reduce:transform-none motion-reduce:transition-none",
+        "transition-[border-color,transform] duration-200",
+        "has-[[data-open]]:-translate-y-0.5 has-[[data-open]]:shadow-lg",
+        "motion-reduce:transform-none motion-reduce:transition-colors motion-reduce:duration-100",
         styles.shell,
         className,
       )}
-      collapsible
       data-accordion-group={group}
-      defaultValue={defaultOpen ? itemValue : undefined}
-      type="single"
+      defaultValue={defaultOpen ? [itemValue] : undefined}
     >
       <AccordionItem className="border-0" value={itemValue}>
         <AccordionTrigger className="min-h-16 gap-3 px-4 py-3 text-left hover:no-underline sm:px-5">

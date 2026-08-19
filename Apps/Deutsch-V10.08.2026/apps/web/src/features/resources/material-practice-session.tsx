@@ -112,7 +112,7 @@ function ExercisePanel({
         <div
           aria-live="polite"
           className={cn(
-            "rounded-xl border p-4",
+            "shared-feedback-enter rounded-xl border p-4",
             result.correct
               ? "border-emerald-300 bg-emerald-50 text-emerald-950"
               : "border-rose-300 bg-rose-50 text-rose-950",

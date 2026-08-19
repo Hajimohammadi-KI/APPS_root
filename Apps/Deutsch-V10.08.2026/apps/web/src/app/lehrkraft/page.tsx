@@ -68,7 +68,7 @@ export default function LehrkraftPage() {
     await refresh();
   }
   return (
-    <main className="teacher-page">
+    <div className="teacher-page">
       <header className="teacher-hero">
         <a href="/" className="teacher-back">
           <ArrowLeft /> Zurück zur App
@@ -171,7 +171,7 @@ export default function LehrkraftPage() {
             ) : null}
           </fieldset>
           {message ? (
-            <p className="teacher-message" role="status">
+            <p className="teacher-message shared-status-enter" role="status">
               {message}
             </p>
           ) : null}
@@ -247,6 +247,6 @@ export default function LehrkraftPage() {
           )}
         </section>
       </div>
-    </main>
+    </div>
   );
 }

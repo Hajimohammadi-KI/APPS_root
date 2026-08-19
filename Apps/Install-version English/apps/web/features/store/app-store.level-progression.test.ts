@@ -3,10 +3,13 @@ import { grammarUnits } from "@grammar/content";
 
 import {
 	advanceDailyGrammar,
+	calculateAutomaticityEvidenceScore,
 	CEFR_ORDER,
 	DEFAULT_STATE,
 	pickNextGrammarUnit,
+	recalculateMastery,
 	type AppState,
+	type Attempt,
 	type TopicMastery,
 } from "./app-store";
 
@@ -87,5 +90,67 @@ describe("daily grammar auto-progression", () => {
 			state.mastery[unit.title] = automaticMastery(unit.title);
 		}
 		expect(pickNextGrammarUnit(state)).toBeNull();
+	});
+});
+
+function attempt(
+	mode: Attempt["mode"],
+	overrides: Partial<Attempt> = {},
+): Attempt {
+	return {
+		id: `attempt-${mode}-${Math.random()}`,
+		grammarTitle: "Present simple",
+		mode,
+		inputText: "answer",
+		correctedText: "answer",
+		targetHit: true,
+		accuracyScore: 100,
+		fluencyScore: mode === "speaking" ? 100 : 0,
+		latencyMs: mode === "writing" || mode === "transfer" ? 30_000 : 4_000,
+		passed: true,
+		verified: true,
+		createdAt: new Date().toISOString(),
+		...overrides,
+	};
+}
+
+describe("independent automaticity evidence", () => {
+	it("scores independence, consistency, speed, delayed transfer, and retention instead of averaging mastery skills", () => {
+		const attempts = ["recognition", "writing", "speaking", "transfer"].flatMap(
+			(mode) =>
+				Array.from({ length: 3 }, (_, index) =>
+					attempt(mode as Attempt["mode"], {
+						...(mode === "transfer" && index === 2
+							? { fromDueReview: true }
+							: {}),
+					}),
+				),
+		);
+
+		expect(
+			calculateAutomaticityEvidenceScore({
+				attempts,
+				successfulReviews: 2,
+				activeErrorCount: 0,
+				practiceStage: 3,
+				hasLapsedRetention: false,
+			}),
+		).toBe(100);
+	});
+
+	it("keeps a trustworthy wrong answer and lets it lower mastery", () => {
+		const state = baseState("A1");
+		state.attempts = [
+			attempt("recognition", {
+				targetHit: false,
+				passed: false,
+				accuracyScore: 100,
+			}),
+		];
+
+		recalculateMastery(state, "Present simple");
+
+		expect(state.mastery["Present simple"]?.recognitionScore).toBe(59);
+		expect(state.mastery["Present simple"]?.status).toBe("learning");
 	});
 });

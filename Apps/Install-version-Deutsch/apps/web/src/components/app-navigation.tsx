@@ -9,21 +9,26 @@ import { cn } from "@/lib/utils";
 
 export function AppNavigation({
   items,
+  label = "Hauptnavigation",
   onNavigate,
 }: Readonly<{
   items: readonly NavigationItem[];
+  label?: string;
   onNavigate?: () => void;
 }>) {
   const pathname = usePathname();
+  const navigationPathname = pathname.startsWith("/deutsch-mit-marija/uebung/")
+    ? "/ressourcen"
+    : pathname;
 
   return (
-    <nav aria-label="Hauptnavigation">
+    <nav aria-label={label}>
       <ul className="space-y-1">
         {items.map((item) => {
           const active =
             item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
+              ? navigationPathname === "/"
+              : navigationPathname.startsWith(item.href);
           const Icon = item.icon;
 
           return (

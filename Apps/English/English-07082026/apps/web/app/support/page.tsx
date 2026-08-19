@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function SupportPage() {
   return (
-    <main className="legal-page">
+    <div className="legal-page">
       <div className="legal-shell">
         <Link className="legal-back" href="/">
           ← Back to learning app
@@ -84,6 +84,6 @@ export default function SupportPage() {
           </section>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

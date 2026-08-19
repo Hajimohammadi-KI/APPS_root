@@ -326,9 +326,14 @@ function positionFor(rect: DOMRect, entry: HelpEntry): TooltipState {
 
 export function ContextualHoverHelp() {
   const [tooltip, setTooltip] = React.useState<TooltipState | null>(null);
+  const [closing, setClosing] = React.useState(false);
+  const tooltipRef = React.useRef<TooltipState | null>(null);
   const pendingKey = React.useRef("");
   const activeKey = React.useRef("");
   const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const exitTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const warmTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const warm = React.useRef(false);
 
   React.useEffect(() => {
     const cancelPending = () => {
@@ -336,20 +341,53 @@ export function ContextualHoverHelp() {
       timer.current = null;
       pendingKey.current = "";
     };
+    const cancelExit = () => {
+      if (exitTimer.current) clearTimeout(exitTimer.current);
+      exitTimer.current = null;
+      setClosing(false);
+    };
+    const cancelWarmReset = () => {
+      if (warmTimer.current) clearTimeout(warmTimer.current);
+      warmTimer.current = null;
+    };
+    const show = (next: TooltipState) => {
+      cancelExit();
+      cancelWarmReset();
+      warm.current = true;
+      activeKey.current = next.key;
+      pendingKey.current = "";
+      tooltipRef.current = next;
+      setTooltip(next);
+    };
     const hide = () => {
       cancelPending();
       activeKey.current = "";
-      setTooltip(null);
+      if (!tooltipRef.current || exitTimer.current) return;
+      setClosing(true);
+      exitTimer.current = setTimeout(() => {
+        exitTimer.current = null;
+        tooltipRef.current = null;
+        setTooltip(null);
+        setClosing(false);
+        cancelWarmReset();
+        warmTimer.current = setTimeout(() => {
+          warm.current = false;
+          warmTimer.current = null;
+        }, 500);
+      }, 100);
     };
     const schedule = (next: TooltipState) => {
       if (activeKey.current === next.key || pendingKey.current === next.key)
         return;
       cancelPending();
+      cancelExit();
       pendingKey.current = next.key;
+      if (warm.current) {
+        show(next);
+        return;
+      }
       timer.current = setTimeout(() => {
-        activeKey.current = next.key;
-        setTooltip(next);
-        pendingKey.current = "";
+        show(next);
       }, 280);
     };
     const onPointerMove = (event: PointerEvent) => {
@@ -368,8 +406,8 @@ export function ContextualHoverHelp() {
       const entry = controlEntry(event.target);
       if (!entry || !(event.target instanceof HTMLElement)) return;
       cancelPending();
-      activeKey.current = `focus:${entry.term}`;
-      setTooltip(positionFor(event.target.getBoundingClientRect(), entry));
+      const next = positionFor(event.target.getBoundingClientRect(), entry);
+      show({ ...next, key: `focus:${entry.term}` });
     };
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") hide();
@@ -382,6 +420,8 @@ export function ContextualHoverHelp() {
     window.addEventListener("resize", hide);
     return () => {
       cancelPending();
+      if (exitTimer.current) clearTimeout(exitTimer.current);
+      if (warmTimer.current) clearTimeout(warmTimer.current);
       document.removeEventListener("pointermove", onPointerMove, true);
       document.removeEventListener("focusin", onFocus, true);
       document.removeEventListener("focusout", hide, true);
@@ -399,13 +439,17 @@ export function ContextualHoverHelp() {
       id={TOOLTIP_ID}
       lang="en"
       role="tooltip"
-      style={{
-        left: tooltip.left,
-        top: tooltip.top,
-        transform: tooltip.above
-          ? "translate(-50%, -100%)"
-          : "translateX(-50%)",
-      }}
+      data-placement={tooltip.above ? "above" : "below"}
+      data-state={closing ? "closing" : "open"}
+      style={
+        {
+          left: tooltip.left,
+          top: tooltip.top,
+          "--word-help-anchor": tooltip.above
+            ? "translate(-50%, -100%)"
+            : "translateX(-50%)",
+        } as React.CSSProperties
+      }
     >
       <p className="persian-word-help-term">{tooltip.entry.term}</p>
       <div className="persian-word-help-section">

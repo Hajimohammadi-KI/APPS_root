@@ -134,6 +134,7 @@ export default function Home() {
   const [dailyActivity, setDailyActivity] = useState<number | null>(null);
   const [dailyReturn, setDailyReturn] = useState("/daily");
   const [dailyComplete, setDailyComplete] = useState(false);
+  const [dailyCompleteClosing, setDailyCompleteClosing] = useState(false);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -166,7 +167,21 @@ export default function Home() {
       ? [...(current.mistakes || []), ...evaluation.issues.map((issue) => ({ activity: dailyActivity, topic: selected.topic, message: issue.message, correction: evaluation.corrected }))]
       : current.mistakes || [];
     localStorage.setItem(key, JSON.stringify({ ...current, currentActivity: dailyActivity, completedActivities: completed, mistakes, updatedAt: new Date().toISOString() }));
+    setDailyCompleteClosing(false);
     setDailyComplete(true);
+  }
+
+  function closeDailyComplete(afterClose: () => void) {
+    if (dailyCompleteClosing) return;
+    setDailyCompleteClosing(true);
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    window.setTimeout(() => {
+      setDailyComplete(false);
+      setDailyCompleteClosing(false);
+      afterClose();
+    }, reducedMotion ? 120 : 240);
   }
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -184,19 +199,15 @@ export default function Home() {
   const selected = filteredTopics.find((topic) => topic.id === topicId) ?? filteredTopics[0] ?? allForPath[0]!;
   const maxSeconds = practiceMode === "challenge" ? 60 : 120;
   const wordCount = transcript.trim().match(/[\p{L}\p{N}'’-]+/gu)?.length ?? 0;
-  // seconds is wall-clock recording time (it only pauses on the explicit
-  // Pause button), so wordCount/seconds silently counts any natural in-
-  // speech silence as if it were speaking time -- inflating "fluency". Once
-  // the real amplitude-derived active-speech duration is available (set
-  // after recording stops, same lib/audio-fluency.ts analysis the Mission
-  // step already uses for this exact figure), prefer it; the wall-clock
-  // formula is a fallback only for while that analysis hasn't run yet.
+  // Wall-clock recording time includes silence and therefore cannot support
+  // a truthful fluency claim. WPM is shown only after the recorded waveform
+  // has been decoded and active-speech time measured. If that analysis is
+  // unavailable, the UI shows no score instead of falling back to a made-up
+  // wall-clock number.
   const wordsPerMinute =
     audioFluencyResult && audioFluencyResult.activeSpeechSeconds > 0
       ? Math.round(wordCount / (audioFluencyResult.activeSpeechSeconds / 60))
-      : seconds > 0
-        ? Math.round(wordCount / (seconds / 60))
-        : 0;
+      : 0;
 
   useEffect(() => {
     if (recordingState !== "recording") return;
@@ -347,8 +358,7 @@ export default function Home() {
           // Real, audio-derived fluency once the blob is finalized -- same
           // pattern the Mission step's saveSpeaking() already uses. onstop
           // can't be declared async, so this is fire-and-forget rather than
-          // awaited; wordsPerMinute falls back to the wall-clock estimate
-          // until it resolves.
+          // awaited; the UI deliberately shows no WPM until it resolves.
           void analyzeAudioFluency(blob).then(setAudioFluencyResult);
         }
         stream.getTracks().forEach((track) => track.stop());
@@ -478,8 +488,8 @@ export default function Home() {
     // reflects reality instead of implying progress that didn't happen.
     const isUnchangedFromBaseline =
       baseline !== null &&
-      normalizePracticeAnswer(evaluation.corrected) ===
-        normalizePracticeAnswer(baseline.corrected);
+      normalizePracticeAnswer(evaluation.original) ===
+        normalizePracticeAnswer(baseline.original);
     const id = crypto.randomUUID();
     try {
       await saveConversationSession({
@@ -525,6 +535,7 @@ export default function Home() {
 
   return (
     <div className="app-shell">
+      <a className="studio-skip-link" href="#main-content">Skip to main content</a>
       <aside className="sidebar">
         <div className="brand"><div className="brand-mark">{language === "de" ? "D" : "E"}</div><div><strong>{language === "de" ? <>Deutsch<br />Automaticity</> : <>English<br />Automaticity</>}</strong></div></div>
         <nav aria-label="Main navigation">
@@ -535,7 +546,7 @@ export default function Home() {
         <div className="growth"><Icon>♔</Icon><div><b>{language === "de" ? "Du automatisierst dein Deutsch." : "You’re building English automaticity."}</b><span>{language === "de" ? "Regelmäßige Produktion schafft Sicherheit." : "Consistent production creates lasting progress."}</span></div></div>
       </aside>
 
-      <main>
+      <main className="studio-main" id="main-content">
         <header>
           <div><h1>{text.title}</h1><p>{text.subtitle}</p></div>
           <div className="header-actions"><span>● <b>{language === "de" ? "Deutsch" : "English"}</b></span><span>Local-first</span><div className="profile">E</div></div>
@@ -603,10 +614,13 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="record-card">
+            <div
+              className="record-card"
+              data-recording-state={recordingState === "idle" && audioUrl ? "recorded" : recordingState}
+            >
               <div className={`mic ${recordingState === "recording" ? "recording" : ""}`} aria-hidden="true">♩</div>
               <div className="record-main">
-                <h3>{recordingState === "recording" ? text.recording : audioUrl ? text.recorded : text.record}</h3><strong>{formatTime(seconds)} / {formatTime(maxSeconds)}</strong><span className="ready">{recordingState === "paused" ? "Paused" : recordingState === "recording" ? "Listening" : text.ready}</span>
+                <h3>{recordingState === "recording" ? text.recording : audioUrl ? text.recorded : text.record}</h3><strong>{formatTime(seconds)} / {formatTime(maxSeconds)}</strong><span aria-live="polite" className="ready">{recordingState === "paused" ? "Paused" : recordingState === "recording" ? "Listening" : text.ready}</span>
                 <div className={`wave ${recordingState === "recording" ? "live" : ""}`} aria-hidden="true">{Array.from({ length: 58 }, (_, index) => <i key={index} style={{ height: `${8 + ((index * 17) % 30)}px` }} />)}</div>
                 {message && <p className="mic-error" role="status">{message}</p>}
                 {audioUrl && <audio ref={audioRef} className="audio-player" src={audioUrl} controls aria-label="Recorded answer" />}
@@ -626,31 +640,31 @@ export default function Home() {
 
             {active === 2 && <section className="flow-panel replay-panel"><div className="flow-title"><span>▷</span><div><small>STEP 3 · REPLAY</small><h3>{language === "de" ? "Höre deine echte Aufnahme" : "Listen to your real recording"}</h3></div></div>{audioUrl ? <><audio src={audioUrl} controls className="review-audio" /><p className="flow-note">{language === "de" ? "Höre zuerst ohne Text und prüfe danach das Transkript." : "Listen once without reading, then verify the transcript."}</p><div className="flow-actions"><button onClick={() => void startRecording()}>Record again</button><button className="primary" onClick={() => setActive(3)}>Review →</button></div></> : <div className="flow-empty">{language === "de" ? "Noch keine Aufnahme vorhanden." : "No recording yet."}</div>}</section>}
 
-            {active === 3 && <section className="flow-panel review-panel"><div className="flow-title"><span>▧</span><div><small>STEP 4 · {stepLabels[3]}</small><h3>{language === "de" ? "Prüfe deine Antwort" : "Review your answer"}</h3></div></div>{evaluation ? <><div className="review-grid"><article><small>AUDIO</small>{audioUrl && <audio src={audioUrl} controls />}</article><article><small>TRANSCRIPT</small><p>{evaluation.original}</p></article><article><small>MEASURED</small><p><b>{wordCount}</b> words · <b>{formatTime(seconds)}</b> · <b>{wordsPerMinute}</b> WPM</p></article></div><div className="flow-actions"><button onClick={() => setActive(1)}>Try again</button><button className="primary" onClick={() => setActive(4)}>Corrections →</button></div></> : <div className="flow-empty">{language === "de" ? "Noch keine echte Auswertung vorhanden." : "No verified evaluation yet."}</div>}</section>}
+            {active === 3 && <section className="flow-panel review-panel"><div className="flow-title"><span>▧</span><div><small>STEP 4 · {stepLabels[3]}</small><h3>{language === "de" ? "Prüfe deine Antwort" : "Review your answer"}</h3></div></div>{evaluation ? <><div className="review-grid"><article><small>AUDIO</small>{audioUrl && <audio src={audioUrl} controls />}</article><article><small>TRANSCRIPT</small><p>{evaluation.original}</p></article><article><small>MEASURED</small><p><b>{wordCount}</b> words · <b>{formatTime(seconds)}</b> · <b>{audioFluencyResult ? wordsPerMinute : "—"}</b> WPM</p></article></div><div className="flow-actions"><button onClick={() => setActive(1)}>Try again</button><button className="primary" onClick={() => setActive(4)}>Corrections →</button></div></> : <div className="flow-empty">{language === "de" ? "Noch keine echte Auswertung vorhanden." : "No verified evaluation yet."}</div>}</section>}
 
             {active === 4 && <section className="flow-panel correct-panel"><div className="flow-title"><span>✓</span><div><small>STEP 5 · {stepLabels[4]}</small><h3>{language === "de" ? "Korrekturen verstehen" : "Understand the correction"}</h3></div></div>{evaluation ? <><div className="correction-grid"><article><small>{language === "de" ? "DEINE VERSION" : "YOU SAID"}</small><p>{evaluation.original}</p></article><article><small>{language === "de" ? "KORRIGIERTE VERSION" : "CORRECTED VERSION"}</small><p>{evaluation.corrected}</p></article></div>{evaluation.issues.length > 0 ? <><ul className="issue-list">{evaluation.issues.map((issue, index) => <li key={`${issue.ruleId}-${issue.offset}-${index}`}><b>{issue.category}</b> — {issue.message}{issue.replacements[0] ? ` → ${issue.replacements[0]}` : ""}</li>)}</ul><div className="flow-actions"><button onClick={saveCorrectionsAsFlashcards} disabled={flashcardsSaved !== null}>{flashcardsSaved !== null ? (language === "de" ? `${flashcardsSaved} Karteikarte(n) gespeichert ✓` : `${flashcardsSaved} flashcard(s) saved ✓`) : (language === "de" ? "Korrekturen als Karteikarten speichern" : "Save corrections as flashcards")}</button></div></> : <p className="flow-note">{language === "de" ? "LanguageTool hat keine Textfehler erkannt." : "LanguageTool detected no text errors."}</p>}<div className="flow-actions"><button onClick={() => setActive(3)}>Back</button><button className="primary" onClick={() => setActive(5)}>Improve →</button></div></> : <div className="flow-empty">{text.providerUnavailable}</div>}</section>}
 
             {active === 5 && <section className="improve-panel"><div className="improve-heading"><span>↗</span><div><p>STEP 6 · {stepLabels[5]}</p><h3>{language === "de" ? "Die korrigierte Version erneut produzieren" : "Produce the corrected version again"}</h3></div></div>{evaluation ? <><div className="improve-compare"><article><small>{baseline ? "FIRST ATTEMPT" : "ORIGINAL"}</small><p>{baseline?.original ?? evaluation.original}</p></article><article className="better"><small>{baseline ? "NEW VERIFIED ATTEMPT" : "LANGUAGETOOL CORRECTION"}</small><p>{evaluation.corrected}</p></article></div><div className="speaking-tip"><b>{language === "de" ? "Ehrliche Grenze" : "Honest limit"}</b><p>{text.pronunciation}</p></div><div className="improve-actions"><button onClick={() => speak(evaluation.corrected)}>▶ Hear model</button><button className="primary" onClick={() => void practiceImprovedVersion()}>♩ {language === "de" ? "Neue Aufnahme" : "Record improved attempt"}</button></div></> : <div className="improve-empty"><p>{language === "de" ? "Nimm zuerst eine Antwort auf und werte sie aus." : "Record and evaluate an answer first."}</p></div>}</section>}
 
-            {active === 6 && <section className="flow-panel save-panel"><div className="flow-title"><span>▯</span><div><small>STEP 7 · {stepLabels[6]}</small><h3>{savedId ? text.saved : language === "de" ? "Sitzung lokal speichern" : "Save the session locally"}</h3></div></div><div className="save-summary"><span><b>{wordCount}</b> words</span><span><b>{formatTime(seconds)}</b> speaking</span><span><b>{evaluation ? "LanguageTool" : "Not evaluated"}</b> result</span></div><p className="flow-note">{language === "de" ? "Audio, Transkript und Auswertung werden in IndexedDB dieses Browsers gespeichert." : "Audio, transcript, and provider evaluation are stored in this browser’s IndexedDB."}</p><div className="flow-actions"><button onClick={() => setActive(5)}>Back</button><button className="primary" disabled={Boolean(savedId) || !evaluation || !hasAudioBlob} onClick={() => void saveSession()}>✓ {savedId ? "Saved" : "Save session"}</button></div></section>}
+            {active === 6 && <section className="flow-panel save-panel"><div className={`flow-title${savedId ? " conversation-save-enter" : ""}`} key={savedId ?? "unsaved"}><span>▯</span><div><small>STEP 7 · {stepLabels[6]}</small><h3>{savedId ? text.saved : language === "de" ? "Sitzung lokal speichern" : "Save the session locally"}</h3></div></div><div className="save-summary"><span><b>{wordCount}</b> words</span><span><b>{formatTime(seconds)}</b> speaking</span><span><b>{evaluation ? "LanguageTool" : "Not evaluated"}</b> result</span></div><p className="flow-note">{language === "de" ? "Audio, Transkript und Auswertung werden in IndexedDB dieses Browsers gespeichert." : "Audio, transcript, and provider evaluation are stored in this browser’s IndexedDB."}</p><div className="flow-actions"><button onClick={() => setActive(5)}>Back</button><button className="primary" disabled={Boolean(savedId) || !evaluation || !hasAudioBlob} onClick={() => void saveSession()}>✓ {savedId ? "Saved" : "Save session"}</button></div></section>}
           </section>
 
           <aside className="evidence">
-            <section className="panel feedback"><h3>{language === "de" ? "Echte Sprechdaten" : "Real speaking evidence"}</h3>
-              <div className="feedback-row f0"><span>◫</span><div><b>Fluency</b><small>{seconds ? `${wordsPerMinute} WPM from ${formatTime(seconds)} audio` : "Waiting for recorded timing"}</small></div><strong>{seconds ? `${wordsPerMinute}` : "—"}</strong></div>
+            <section className={`panel feedback${evaluation ? " conversation-evaluation-enter" : ""}`} key={evaluation?.checkedAt ?? "pending"}><h3>{language === "de" ? "Echte Sprechdaten" : "Real speaking evidence"}</h3>
+              <div className="feedback-row f0"><span>◫</span><div><b>Fluency</b><small>{audioFluencyResult ? `${wordsPerMinute} WPM from ${audioFluencyResult.activeSpeechSeconds.toFixed(1)}s active speech` : audioUrl ? "Active-speech analysis unavailable" : "Waiting for recorded audio"}</small></div><strong>{audioFluencyResult ? `${wordsPerMinute}` : "—"}</strong></div>
               <div className="feedback-row f1"><span>◉</span><div><b>Pronunciation</b><small>{text.pronunciation}</small></div><strong>—</strong></div>
               <div className="feedback-row f2"><span>G</span><div><b>Grammar</b><small>{evaluation ? `${evaluation.issues.length} LanguageTool issue(s)` : "Not checked"}</small></div><strong>{evaluation ? evaluation.issues.length : "—"}</strong></div>
               <div className="feedback-row f3"><span>Aa</span><div><b>Transcript</b><small>{transcript ? "Browser transcript reviewed by learner" : "Waiting for speech"}</small></div><strong>{wordCount || "—"}</strong></div>
               <div className="coach-tip"><b>☼ Evidence rule</b><p>{language === "de" ? "Keine Bewertung wird angezeigt, wenn der echte Anbieter nicht geantwortet hat." : "No evaluation is shown when the real provider has not responded."}</p></div>
             </section>
-            <section className="panel"><h3>Session evidence</h3><div className="metrics"><div><b>{attempts}</b><span>Turns</span></div><div><b>{formatTime(seconds)}</b><span>Speaking</span></div><div><b>{wordCount}</b><span>Words</span></div><div><b>{wordsPerMinute}</b><span>WPM</span></div></div><p className="encourage">♙ {selected.goal}</p></section>
+            <section className="panel"><h3>Session evidence</h3><div className="metrics"><div><b>{attempts}</b><span>Turns</span></div><div><b>{formatTime(seconds)}</b><span>Speaking</span></div><div><b>{wordCount}</b><span>Words</span></div><div><b>{audioFluencyResult ? wordsPerMinute : "—"}</b><span>WPM</span></div></div><p className="encourage">♙ {selected.goal}</p></section>
             <section className="panel correction"><div className="panel-title"><h3>Grammar correction</h3><label>Show <input type="checkbox" checked={showCorrections} onChange={(event) => setShowCorrections(event.target.checked)} /></label></div>{showCorrections && <><div className="original"><b>Original</b><p>{evaluation?.original ?? "—"}</p></div><div className="corrected"><b>{evaluation?.issues.length ? "Corrected" : "Provider result"}</b><p>{evaluation?.corrected ?? "—"}</p></div></>}</section>
             <section className="panel goal"><span>{selected.level}</span><h3>{language === "de" ? "Heutiges Ziel" : "Today’s goal"}</h3><b>{selected.topic}</b><p>{selected.goal}</p></section>
           </aside>
         </div>
         <footer><div className="turns"><b>{attempts} {attempts === 1 ? "attempt" : "attempts"}</b><span>{evaluation ? "●" : "○"} {audioUrl ? "●" : "○"} {savedId ? "●" : "○"}</span></div><div className="footer-coach"><span>👩🏻</span><p><b>Ava</b><br />{selected.goal}</p></div><button className="save-lite" onClick={() => setActive(6)}>▯ Save practice</button><button className="continue" onClick={() => setActive((current) => Math.min(current + 1, 6))}>{active === 6 ? (savedId ? "Session saved ✓" : "Save session") : `${language === "de" ? "Weiter" : "Continue"} →`}</button></footer>
       </main>
-      {dailyComplete && <div className="daily-complete-backdrop" role="dialog" aria-modal="true" aria-labelledby="daily-complete-title"><section className="daily-complete-card"><h2 id="daily-complete-title">Today’s conversation practice is complete.</h2><p>Your recording, transcript, corrections, and result were saved.</p><button className="primary" onClick={() => window.location.assign(dailyReturn)}>OK · Return to Today’s Practice</button><button onClick={() => { setDailyComplete(false); resetSession(); setActive(0); }}>Practise again</button><button onClick={() => { setDailyComplete(false); setActive(4); }}>Review my mistakes</button></section></div>}
+      {dailyComplete && <div className="daily-complete-backdrop" data-state={dailyCompleteClosing ? "closing" : "open"} role="dialog" aria-modal="true" aria-labelledby="daily-complete-title"><section className="daily-complete-card"><h2 id="daily-complete-title">Today’s conversation practice is complete.</h2><p>Your recording, transcript, corrections, and result were saved.</p><button className="primary" onClick={() => closeDailyComplete(() => window.location.assign(dailyReturn))}>OK · Return to Today’s Practice</button><button onClick={() => closeDailyComplete(() => { resetSession(); setActive(0); })}>Practise again</button><button onClick={() => closeDailyComplete(() => setActive(4))}>Review my mistakes</button></section></div>}
     </div>
   );
 }

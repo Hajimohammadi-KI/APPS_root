@@ -217,13 +217,23 @@ $requiredValues = @(
   'tagline',
   'motifOne',
   'motifTwo',
-  'motifThree'
+  'motifThree',
+  'compatibilityLauncherZip',
+  'compatibilityLauncherSha256'
 )
 foreach ($name in $requiredValues) {
   $value = [string]$config.$name
   if ([string]::IsNullOrWhiteSpace($value)) {
     throw "Setup configuration value '$name' is required."
   }
+}
+
+$compatibilityLauncherZip = Resolve-ConfiguredPath `
+  -Base $configDirectory `
+  -Value ([string]$config.compatibilityLauncherZip)
+$compatibilityLauncherSha256 = ([string]$config.compatibilityLauncherSha256).Trim()
+if ($compatibilityLauncherSha256 -notmatch '^[0-9A-Fa-f]{64}$') {
+  throw 'Setup configuration value compatibilityLauncherSha256 must be a SHA-256 hexadecimal digest.'
 }
 
 Assert-HexColor -Name 'darkColor' -Value ([string]$config.darkColor)
@@ -381,6 +391,62 @@ if (-not $SkipElectronBuild) {
 $portableApp = Join-Path $portableOutput 'win-unpacked'
 if (-not (Test-Path -LiteralPath $portableApp -PathType Container)) {
   throw "Portable Electron output is missing: $portableApp"
+}
+
+if (-not (Test-Path -LiteralPath $compatibilityLauncherZip -PathType Leaf)) {
+  throw "Compatibility launcher payload does not exist: $compatibilityLauncherZip"
+}
+$portableMainExecutable = Join-Path $portableApp ([string]$config.mainExecutable)
+if (-not (Test-Path -LiteralPath $portableMainExecutable -PathType Leaf)) {
+  throw "Portable application executable is missing: $portableMainExecutable"
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$compatibilityLauncherTemp = Join-Path $workRoot 'compatibility-launcher.exe'
+$compatibilityArchive = [System.IO.Compression.ZipFile]::OpenRead(
+  $compatibilityLauncherZip)
+try {
+  $compatibilityLauncherEntries = @(
+    $compatibilityArchive.Entries | Where-Object {
+      $entryName = $_.FullName.Replace('\', '/')
+      -not $entryName.Contains('/') -and
+        [string]::Equals(
+          $entryName,
+          [string]$config.mainExecutable,
+          [System.StringComparison]::OrdinalIgnoreCase)
+    }
+  )
+  if ($compatibilityLauncherEntries.Count -ne 1) {
+    throw "Compatibility launcher payload must contain exactly one root entry named '$($config.mainExecutable)'; found $($compatibilityLauncherEntries.Count)."
+  }
+  [System.IO.Compression.ZipFileExtensions]::ExtractToFile(
+    $compatibilityLauncherEntries[0],
+    $compatibilityLauncherTemp,
+    $false)
+} finally {
+  $compatibilityArchive.Dispose()
+}
+
+$compatibilityLauncherActualSha256 = Get-Sha256Hex `
+  -LiteralPath $compatibilityLauncherTemp
+if (-not [string]::Equals(
+    $compatibilityLauncherActualSha256,
+    $compatibilityLauncherSha256,
+    [System.StringComparison]::OrdinalIgnoreCase)) {
+  throw "Compatibility launcher SHA-256 mismatch. Expected $compatibilityLauncherSha256 but found $compatibilityLauncherActualSha256."
+}
+
+# Preserve the App-Control-approved launcher while the current app.asar and
+# resources remain those produced by the new Electron build.
+Copy-Item `
+  -LiteralPath $compatibilityLauncherTemp `
+  -Destination $portableMainExecutable `
+  -Force
+if (-not [string]::Equals(
+    (Get-Sha256Hex -LiteralPath $portableMainExecutable),
+    $compatibilityLauncherSha256,
+    [System.StringComparison]::OrdinalIgnoreCase)) {
+  throw 'Compatibility launcher replacement failed its post-copy SHA-256 verification.'
 }
 
 $workspaceRoot = $null

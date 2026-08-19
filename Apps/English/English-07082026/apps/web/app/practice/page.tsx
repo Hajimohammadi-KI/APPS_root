@@ -147,7 +147,7 @@ export default function MixedPracticePage() {
 
   if (!current) {
     return (
-      <div className="page-stack">
+      <div className="page-stack session-complete-enter">
         <div className="page-heading">
           <Badge>Mixed Practice</Badge>
           <h1>Session complete</h1>
@@ -195,7 +195,7 @@ export default function MixedPracticePage() {
               <Check className="size-4" /> Check
             </Button>
           ) : (
-            <div className="space-y-3">
+            <div className="shared-feedback-enter space-y-3">
               <p
                 className={
                   correct

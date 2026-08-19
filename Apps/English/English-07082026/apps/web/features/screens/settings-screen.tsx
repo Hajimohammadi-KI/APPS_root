@@ -326,7 +326,7 @@ export function SettingsScreen() {
             ) : null}
           </div>
           {exportStatus ? (
-            <p aria-live="polite" className="settings-export-status" role="status">
+            <p aria-live="polite" className="settings-export-status shared-status-enter" role="status">
               {exportStatus}
             </p>
           ) : null}

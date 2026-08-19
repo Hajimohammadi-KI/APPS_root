@@ -123,7 +123,9 @@ export function DueReviews() {
         fluencyScore: 0,
         latencyMs: null,
         passed: evaluation.pass,
-        verified: evaluation.masteryEligible,
+        // Provider reachability and correctness are separate facts. A checked
+        // wrong review is still verified evidence and must lower the score.
+        verified: evaluation.online,
         assessedBy: evaluation.online ? "online" : "offline",
         contentVersion: EVIDENCE_CONTENT_VERSION,
         fromDueReview: true,

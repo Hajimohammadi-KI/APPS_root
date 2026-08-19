@@ -11,7 +11,7 @@ const updated = "1. August 2026";
 
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10 sm:px-8">
+    <div className="mx-auto max-w-5xl px-6 py-10 sm:px-8">
       <div className="mb-8">
         <Link className="text-sm text-primary hover:underline" href="/">
           ← Zurück zur Lern-App
@@ -97,6 +97,6 @@ export default function PrivacyPage() {
           </Link>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

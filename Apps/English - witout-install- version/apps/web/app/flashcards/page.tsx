@@ -171,8 +171,12 @@ export default function FlashcardsPage() {
 								This card came from <strong>{correctiveLesson}</strong> --
 								practice the pattern itself, not just the word.
 							</span>
-							<Button asChild onClick={practiceCorrectiveLesson} size="sm">
-								<Link href="/daily">Practice {correctiveLesson}</Link>
+							<Button
+								onClick={practiceCorrectiveLesson}
+								render={<Link href="/daily" />}
+								size="sm"
+							>
+								Practice {correctiveLesson}
 							</Button>
 						</div>
 					) : null}

@@ -23,6 +23,7 @@ export interface NavigationItem {
   readonly href:
     | "/"
     | "/fortschritt"
+    | "/analytics"
     | "/heute"
     | "/gemischtes-training"
     | "/studio"
@@ -114,6 +115,12 @@ export const primaryNavigation = [
 ] as const satisfies readonly NavigationItem[];
 
 export const secondaryNavigation = [
+  {
+    href: "/analytics",
+    label: "Seitenanalyse",
+    subtitle: "Lokale Routen- und Lernnachweise",
+    icon: ChartNoAxesCombined,
+  },
   {
     href: "/fertigkeiten",
     label: "Integrierte Fertigkeiten",

@@ -106,7 +106,7 @@ export function ResourcesScreen() {
 					) : null}
 				</CardContent>
 			</Card>
-			<Accordion defaultValue={[level !== "All" ? level : "A1"]} type="multiple">
+			<Accordion defaultValue={[level !== "All" ? level : "A1"]} multiple>
 				{CEFR_ORDER.map((cefrLevel) => {
 					const levelRows = rows.filter((resource) => resource.level === cefrLevel);
 					if (levelRows.length === 0) return null;
@@ -116,7 +116,7 @@ export function ResourcesScreen() {
 								{cefrLevel} · {levelRows.length} resources
 							</AccordionTrigger>
 							<AccordionContent>
-								<Accordion className="grid gap-3" type="multiple">
+								<Accordion className="grid gap-3" multiple>
 									{levelRows.map((resource, index) => {
 										const readerHref = pdfReaderHrefForResource({
 											sourceUrl: resource.url,
@@ -127,7 +127,7 @@ export function ResourcesScreen() {
 										const openHref = readerHref || resource.url;
 										return (
 											<AccordionItem
-											className="resource-card overflow-hidden rounded-2xl border bg-card shadow-sm transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] data-[state=open]:border-primary/35 data-[state=open]:shadow-md"
+											className="resource-card overflow-hidden rounded-2xl border bg-card shadow-sm transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] data-[state=open]:border-primary/35 data-[state=open]:shadow-md"
 											key={`${resource.provider}-${resource.level}-${resource.skill}-${resource.title}-${index}`}
 											value={`resource-${resource.provider}-${resource.level}-${resource.skill}-${index}`}
 										>
@@ -167,16 +167,17 @@ export function ResourcesScreen() {
 														Verified direct link
 													</Badge>
 												</div>
-												<Button asChild className="mt-4 w-full sm:w-auto">
-													<a
+												<Button
+													className="mt-4 w-full sm:w-auto"
+													render={<a
 														href={openHref}
 														rel={readerHref ? undefined : "noreferrer"}
 														target={readerHref ? undefined : "_blank"}
 														title={readerHref ? "Normal click: open here. Right-click: open in a new tab or window." : undefined}
-													>
+													/>}
+												>
 														{readerHref ? "Open exact PDF" : "Open exact resource"}
 														<ExternalLink aria-hidden className="size-4" />
-													</a>
 												</Button>
 											</AccordionContent>
 											</AccordionItem>

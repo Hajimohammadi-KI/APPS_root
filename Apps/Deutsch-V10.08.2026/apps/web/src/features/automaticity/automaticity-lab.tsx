@@ -221,8 +221,10 @@ function Axis({ label, value }: Readonly<{ label: string; value: number }>) {
       <div className="h-2.5 overflow-hidden rounded-full bg-violet-100">
         <div
           aria-hidden="true"
-          className="h-full rounded-full bg-violet-700 transition-[width]"
-          style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+          className="h-full origin-left rounded-full bg-violet-700 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none"
+          style={{
+            transform: `scaleX(${Math.min(100, Math.max(0, value)) / 100})`,
+          }}
         />
       </div>
     </div>
@@ -1100,8 +1102,10 @@ export function AutomaticityLab({
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-white ring-1 ring-violet-200">
               <div
-                className="h-full rounded-full bg-violet-700 transition-[width]"
-                style={{ width: `${progress}%` }}
+                className="h-full origin-left rounded-full bg-violet-700 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none"
+                style={{
+                  transform: `scaleX(${Math.min(100, Math.max(0, progress)) / 100})`,
+                }}
               />
             </div>
           </CardContent>

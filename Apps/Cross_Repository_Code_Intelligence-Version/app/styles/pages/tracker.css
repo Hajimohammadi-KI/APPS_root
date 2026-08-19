@@ -497,6 +497,156 @@
   color: var(--muted);
 }
 
+.course-topic-guide {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+  border: 2px solid #6b3193;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #fbf7ff 0%, #fffaf0 100%);
+  padding: 16px;
+  box-shadow: 0 14px 34px rgba(72, 32, 100, .1);
+}
+
+.course-topic-guide__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.course-topic-guide__heading h3 {
+  margin: 4px 0;
+  color: #482064;
+  font-size: 18px;
+}
+
+.course-topic-guide__heading p,
+.course-topic-guide__days > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.course-topic-guide__eyebrow {
+  color: #8b4b16;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.course-topic-guide__count {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #482064;
+  color: white;
+  padding: 7px 11px;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.course-topic-guide__grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1fr;
+  gap: 10px;
+  text-align: right;
+}
+
+.course-topic-guide__grid article {
+  border: 1px solid rgba(107, 49, 147, .2);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .88);
+  padding: 12px;
+}
+
+.course-topic-guide__grid h4,
+.course-topic-guide__days h4 {
+  margin: 0 0 7px;
+  color: #482064;
+  font-size: 13px;
+}
+
+.course-topic-guide__grid p,
+.course-topic-guide__grid ol {
+  margin: 0;
+  color: #41394a;
+  font-size: 12px;
+  line-height: 1.85;
+}
+
+.course-topic-guide__grid ol {
+  padding: 0 20px 0 0;
+}
+
+.course-topic-guide__questions {
+  border-inline-start: 5px solid #f0a53a !important;
+}
+
+.course-topic-guide__days {
+  border-top: 1px solid rgba(107, 49, 147, .18);
+  padding-top: 12px;
+}
+
+.course-topic-guide__days > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.course-topic-guide__days button {
+  display: grid;
+  gap: 3px;
+  border: 1px solid #d7c2e7;
+  border-radius: 11px;
+  background: #fff;
+  padding: 10px;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.course-topic-guide__days button:hover,
+.course-topic-guide__days button:focus-visible {
+  border-color: #6b3193;
+  background: #f7f0ff;
+}
+
+.course-topic-guide__days button span,
+.course-topic-guide__days button small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.course-topic-guide__days button strong {
+  color: #482064;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .course-topic-guide__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .course-topic-guide__days > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .course-topic-guide__heading {
+    display: grid;
+  }
+
+  .course-topic-guide__count {
+    justify-self: start;
+  }
+
+  .course-topic-guide__days > div {
+    grid-template-columns: 1fr;
+  }
+}
+
 .phase-stack,
 .day-stack,
 .task-stack {
@@ -668,6 +818,27 @@ details[open] > summary .summary-marker {
 .day-card.search-hit {
   animation: targetGlow 2.6s ease;
   box-shadow: 0 0 0 3px rgba(245,185,74,.36), 0 14px 40px rgba(21,50,48,.10);
+}
+
+.day-card.course-related {
+  border: 2px solid #6b3193;
+  background: #f7f0ff;
+  box-shadow: inset 6px 0 0 #f0a53a;
+}
+
+.day-card.course-related > summary time {
+  color: #5b2b82;
+  font-weight: 850;
+}
+
+.course-related-chip {
+  border-radius: 999px;
+  background: #482064;
+  color: #fff;
+  padding: 5px 9px;
+  font-size: 10px;
+  font-weight: 850;
+  white-space: nowrap;
 }
 
 @keyframes targetGlow {

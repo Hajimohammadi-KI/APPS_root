@@ -20,9 +20,75 @@ import {
   grammarTrainingParts,
   grammarUnits,
   idiomDailyMaterials,
+  FOUR_LANGUAGE_SKILLS,
+  OPEN_LANGUAGE_DATASETS,
+  getOpenDatasetSkillPlans,
+  importOpenDatasetText,
+  validateOpenDatasetCatalog,
   speakingTopics,
 } from "./index";
 import { isRetiredGermanResource } from "./resource-links";
+
+describe("offene Datensätze für vier Fertigkeiten", () => {
+  it("deckt Englisch und Deutsch ab, ohne große Korpora zu bündeln", () => {
+    expect(validateOpenDatasetCatalog()).toEqual([]);
+    expect(
+      new Set(OPEN_LANGUAGE_DATASETS.map((dataset) => dataset.id)).size,
+    ).toBe(OPEN_LANGUAGE_DATASETS.length);
+
+    for (const language of ["en", "de"] as const) {
+      const plans = getOpenDatasetSkillPlans(language);
+      expect(plans.map((plan) => plan.skill)).toEqual([
+        ...FOUR_LANGUAGE_SKILLS,
+      ]);
+      for (const plan of plans) {
+        expect(plan.datasets.length).toBeGreaterThanOrEqual(2);
+        expect(
+          plan.datasets.every(
+            (dataset) => dataset.distributionPolicy === "metadata-only",
+          ),
+        ).toBe(true);
+      }
+    }
+
+    const sprechen = getOpenDatasetSkillPlans("de").find(
+      (plan) => plan.skill === "speaking",
+    );
+    expect(sprechen?.caveat).toContain("cannot by themselves");
+    expect(sprechen?.evidenceRule).toContain("real audio blob");
+  });
+
+  it("importiert aus Common Voice keine Personen- oder Demografiedaten", () => {
+    const input = [
+      "client_id\tpath\tsentence\tlocale\tage\tgender",
+      "private-id\tclips/beispiel.mp3\tIch erkläre die Hauptaussage.\tde\ttwenties\tfemale",
+    ].join("\n");
+    const [item] = importOpenDatasetText({
+      datasetId: "common-voice-25",
+      language: "de",
+      input,
+    });
+    expect(item?.audioPath).toBe("clips/beispiel.mp3");
+    expect(item?.text).toBe("Ich erkläre die Hauptaussage.");
+    expect(JSON.stringify(item)).not.toContain("private-id");
+    expect(JSON.stringify(item)).not.toContain("female");
+  });
+
+  it("filtert den Tatoeba-CC0-Export nach Sprache und dedupliziert IDs", () => {
+    const items = importOpenDatasetText({
+      datasetId: "tatoeba-cc0",
+      language: "de",
+      input: [
+        "100\teng\tThis row is English.\t2026-08-01",
+        "101\tdeu\t  Ich kann den Satz selbst erklären.  \t2026-08-02",
+        "101\tdeu\tDuplikat.\t2026-08-03",
+      ].join("\n"),
+    });
+    expect(items).toHaveLength(1);
+    expect(items[0]?.sourceId).toBe("101");
+    expect(items[0]?.licenseSpdx).toBe("CC0-1.0");
+  });
+});
 
 describe("legacy content extraction", () => {
   it("preserves the full v20.8 catalogs", () => {

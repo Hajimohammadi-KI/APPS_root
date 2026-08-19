@@ -118,11 +118,14 @@ export function AssessmentSummary({ result }: { result: EvaluationResult }) {
       {result.links.length ? (
         <div className="mt-3 flex flex-wrap gap-2">
           {result.links.map(([label, url]) => (
-            <Button asChild key={`${label}-${url}`} size="sm" variant="outline">
-              <a href={url} rel="noreferrer" target="_blank">
-                {label}: {result.grammar.title}
-                <ExternalLink aria-hidden="true" className="size-3.5" />
-              </a>
+            <Button
+              key={`${label}-${url}`}
+              render={<a href={url} rel="noreferrer" target="_blank" />}
+              size="sm"
+              variant="outline"
+            >
+              {label}: {result.grammar.title}
+              <ExternalLink aria-hidden="true" className="size-3.5" />
             </Button>
           ))}
         </div>

@@ -161,7 +161,7 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
       ) : null}
 
       {celebrateLevel ? (
-        <div aria-live="polite" className="home-v2-celebrate" role="status">
+        <div aria-live="polite" className="home-v2-celebrate milestone-enter" role="status">
           <span className="home-v2-celebrate-icon"><Award aria-hidden /></span>
           <div>
             <strong>You’ve verified automatic mastery of {celebrateLevel}!</strong>
@@ -198,7 +198,7 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
       ) : null}
 
       <div className="home-v2-grid">
-        <main className="home-v2-main">
+        <div className="home-v2-main">
           <section className="home-v2-chart-card" aria-labelledby="performance-title">
             <div className="home-v2-card-head">
               <div><p>Learning activity</p><h2 id="performance-title">Performance chart</h2></div>
@@ -266,7 +266,7 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
               </dl>
             </article>
           </section>
-        </main>
+        </div>
 
         <aside className="home-v2-aside">
           <section className="home-v2-courses" aria-labelledby="courses-title">
@@ -294,5 +294,5 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
 }
 
 function ProgressRow({ label, value }: { label: string; value: number }) {
-  return <div className="home-v2-progress-row"><div><span>{label}</span><strong>{value}%</strong></div><div className="home-v2-progress-track"><span style={{ width: `${value}%` }} /></div></div>;
+  return <div className="home-v2-progress-row"><div><span>{label}</span><strong>{value}%</strong></div><div className="home-v2-progress-track"><span style={{ transform: `scaleX(${Math.min(100, Math.max(0, value)) / 100})` }} /></div></div>;
 }

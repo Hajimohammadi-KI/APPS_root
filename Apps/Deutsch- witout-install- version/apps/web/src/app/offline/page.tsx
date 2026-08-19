@@ -7,10 +7,15 @@ export const metadata = { title: "Offline" };
 
 export default function OfflinePage() {
   return (
-    <main className="mx-auto grid min-h-screen max-w-2xl place-items-center p-6">
+    <section
+      aria-labelledby="offline-title"
+      className="mx-auto grid min-h-[calc(100dvh-8rem)] max-w-2xl place-items-center p-6"
+    >
       <Card>
         <CardHeader>
-          <CardTitle>Du bist offline</CardTitle>
+          <CardTitle>
+            <h1 id="offline-title">Du bist offline</h1>
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p>
@@ -25,6 +30,6 @@ export default function OfflinePage() {
           </Link>
         </CardContent>
       </Card>
-    </main>
+    </section>
   );
 }

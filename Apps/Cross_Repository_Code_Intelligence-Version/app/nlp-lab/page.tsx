@@ -1,13 +1,14 @@
 import {
   articleReadings,
   extractionSections,
+  nlpCourseMeta,
   nlpCourseSessions,
   nlpLabDefinition,
   sources,
 } from "../plan-data";
 
 const readingFolder =
-  "D:\\Bachelor-Thesis\\02_Literature\\09_NLP_Course_2026_Reading_Order";
+  "D:\\Bachelor-Thesis\\All Artikels\\Recovered_Articles_2026-08-07";
 const readingsById = new Map<string, (typeof articleReadings)[number]>(
   articleReadings.map((reading) => [reading.id, reading]),
 );
@@ -39,8 +40,9 @@ export default function NlpLabPage() {
         <aside className="nlp-lab-time" aria-label="Kurszeit">
           <strong>17. Aug. – 7. Sept. 2026</strong>
           <span>Sa · Mo · Mi</span>
-          <span>Berlin 18:00–19:40</span>
-          <span>Iran 19:30–21:10</span>
+          <span>Berlin {nlpCourseMeta.berlinTime}</span>
+          <span>Iran {nlpCourseMeta.iranTime}</span>
+          <span>{nlpCourseMeta.instructor} · {nlpCourseMeta.platform}</span>
           <code>{readingFolder}</code>
         </aside>
       </header>

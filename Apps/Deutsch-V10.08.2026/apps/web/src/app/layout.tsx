@@ -5,6 +5,7 @@ import "./globals.css";
 import { AppShell } from "@/components/app-shell";
 import { Providers } from "@/components/providers";
 import { DeepLSelectionTranslator } from "@/components/deepl-selection-translator";
+import { PageAnalyticsTracker } from "@/components/page-analytics-tracker";
 
 export const metadata: Metadata = {
   title: {
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#38bdf8",
+  themeColor: "#f5f5f7",
   colorScheme: "light",
 };
 
@@ -59,6 +60,7 @@ export default function RootLayout({
     <html lang="de">
       <body>
         <Providers>
+          <PageAnalyticsTracker />
           <AppShell>{children}</AppShell>
           <DeepLSelectionTranslator />
         </Providers>

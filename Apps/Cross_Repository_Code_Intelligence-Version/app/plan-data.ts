@@ -60,8 +60,8 @@ export type PlanWeek = {
 export type NlpCourseSession = {
   number: number;
   date: string;
-  berlinTime: "18:00–19:40";
-  iranTime: "19:30–21:10";
+  berlinTime: "19:30–21:10";
+  iranTime: "21:00–22:40";
   title: string;
   topics: string[];
   projectQuestion: string;
@@ -70,7 +70,24 @@ export type NlpCourseSession = {
   readingFocus: [string, string, string];
   projectConnection: string;
   extractionGoal: string;
+  classQuestionsFa: [string, string, string];
+  whyThisMattersFa: string;
+  plannedActionFa: string;
+  relatedDayTitles: string[];
 };
+
+export const nlpCourseMeta = {
+  name: "Advanced Deep Learning – Natural Language Processing",
+  instructor: "Farshid Shirafkan",
+  platform: "Google Meet",
+  schedule: "Saturday, Monday, and Wednesday",
+  berlinTime: "19:30–21:10",
+  iranTime: "21:00–22:40",
+  sessionCount: 10,
+  sessionMinutes: 100,
+  startDate: "2026-08-17",
+  endDate: "2026-09-07",
+} as const;
 
 export type ReadingMode = "DEEP" | "TARGET" | "REVIEW" | "RELATED";
 
@@ -199,7 +216,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Xie et al. 2026: CodeFuse Query",
     href: "https://drive.google.com/file/d/1cfU7FbjkIRSamwvWKbL3pTH_EC0V-ObB/view",
     driveName:
-      "10_★★★★★_CORE_R05_Xie_2026_CodeFuse_Query_Large_Scale_Code_Analysis.pdf",
+      "10_TARGET_Read-Data-Metrics-Threats_★★★★★_CORE_R05_Xie_2026_CodeFuse_Query_Large_Scale_Code_Analysis__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "core",
     thesisRole: "related-work",
   },
@@ -224,7 +241,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Allamanis et al. 2018: Learning to Represent Programs with Graphs",
     href: "https://arxiv.org/pdf/1711.00740",
     driveName:
-      "06_TARGET_Read-Data-Metrics-Threats_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs__TARGET_Read-Method-Evaluation-Limitations.pdf",
+      "06-C07_TARGET_Read-Data-Metrics-Threats_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "core",
     thesisRole: "background",
   },
@@ -233,7 +250,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Petroni et al. 2021: KILT",
     href: "https://arxiv.org/pdf/2009.02252",
     driveName:
-      "08_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks__TARGET_Read-Method-Evaluation-Limitations.pdf",
+      "08-C04_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
     thesisRole: "related-work",
   },
@@ -242,7 +259,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Cheng et al. 2024: DraCo",
     href: "https://arxiv.org/pdf/2405.19782",
     driveName:
-      "09_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+      "09-C02_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
     thesisRole: "related-work",
   },
@@ -251,7 +268,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Guo et al. 2021: GraphCodeBERT",
     href: "https://arxiv.org/pdf/2009.08366",
     driveName:
-      "11_TARGET_Read-Data-Metrics-Threats_★★☆☆☆_Guo_2021_GraphCodeBERT_Data_Flow__RELATED_Read-Abstract-Method-Conclusion.pdf",
+      "11-C09_TARGET_Read-Data-Metrics-Threats_★★☆☆☆_Guo_2021_GraphCodeBERT_Data_Flow__RELATED_Read-Abstract-Method-Conclusion.pdf",
     priority: "optional",
     thesisRole: "background",
   },
@@ -259,7 +276,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "gandhiRetrieval",
     label: "Gandhi et al. 2025: Repository-Level Code Search",
     driveName:
-      "08_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R10_Gandhi_2025_Repository_Level_Code_Search_Neural_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+      "20-C03_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R10_Gandhi_2025_Repository_Level_Code_Search_Neural_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
     thesisRole: "related-work",
   },
@@ -268,7 +285,7 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Feng et al. 2020: CodeBERT",
     href: "https://aclanthology.org/2020.findings-emnlp.139/",
     driveName:
-      "10_REVIEW_Read-Taxonomy-Limits_★★★☆☆_NEW_BASELINE_CodeBERT_Pretrained_Model_for_Code_and_Natural_Language__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+      "33-C08_REVIEW_Read-Taxonomy-Limits_★★★☆☆_NEW_BASELINE_CodeBERT_Pretrained_Model_for_Code_and_Natural_Language__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
     priority: "important",
     thesisRole: "background",
   },
@@ -276,7 +293,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "zhangLlmSurvey",
     label: "Zhang et al. 2024: Survey on LLMs for Software Engineering",
     driveName:
-      "11_REVIEW_Read-Taxonomy-Limits_★★☆☆☆_Zhang_2024_Survey_on_LLMs_for_Software_Engineering__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+      "32-C10_REVIEW_Read-Taxonomy-Limits_★★☆☆☆_Zhang_2024_Survey_on_LLMs_for_Software_Engineering__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
     priority: "support",
     thesisRole: "background",
   },
@@ -284,7 +301,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "houLlmReview",
     label: "Hou et al. 2024: LLMs for Software Engineering Review",
     driveName:
-      "12_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R24_Hou_2024_LLMs_for_Software_Engineering_Systematic_Review__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+      "31-C11_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R24_Hou_2024_LLMs_for_Software_Engineering_Systematic_Review__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
     priority: "support",
     thesisRole: "related-work",
   },
@@ -292,7 +309,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "oleaPrompting",
     label: "Olea et al. 2024: Persona Prompting for Question Answering",
     driveName:
-      "16_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R23_Olea_2024_Persona_Prompting_for_Question_Answering__TARGET_Read-Method-Evaluation-Limitations.pdf",
+      "35-C16_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R23_Olea_2024_Persona_Prompting_for_Question_Answering__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
     thesisRole: "related-work",
   },
@@ -300,7 +317,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "abeduKgQa",
     label: "Abedu et al. 2025: LLM + Knowledge Graph Repository QA",
     driveName:
-      "17_DEEP_Read-KG-QA-Pipeline-Eval_★★★★★_CORE_R15_Abedu_2025_LLM_Knowledge_Graph_Repository_QA__DEEP_Read-KG-QA-Pipeline-Evaluation.pdf",
+      "22-C17_DEEP_Read-KG-QA-Pipeline-Eval_★★★★★_CORE_R15_Abedu_2025_LLM_Knowledge_Graph_Repository_QA__DEEP_Read-KG-QA-Pipeline-Evaluation.pdf",
     priority: "core",
     thesisRole: "related-work",
   },
@@ -308,7 +325,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "repocoder",
     label: "Zhang et al. 2023: RepoCoder",
     driveName:
-      "18_TARGET_Read-Method-Eval_★★★☆☆_SUPPORT_R11_Zhang_2023_RepoCoder_Iterative_Retrieval_and_Generation__RELATED_Read-Abstract-Method-Conclusion.pdf",
+      "21-C05_TARGET_Read-Method-Eval_★★★☆☆_SUPPORT_R11_Zhang_2023_RepoCoder_Iterative_Retrieval_and_Generation__RELATED_Read-Abstract-Method-Conclusion.pdf",
     priority: "support",
     thesisRole: "related-work",
   },
@@ -316,7 +333,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "ranger",
     label: "Shah et al. 2025: RANGER",
     driveName:
-      "19_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R17_Shah_2025_RANGER_Graph_Enhanced_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+      "23-C06_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R17_Shah_2025_RANGER_Graph_Enhanced_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
     thesisRole: "related-work",
   },
@@ -324,7 +341,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "ragCodeSurvey",
     label: "Tao et al. 2026: Retrieval-Augmented Code Generation Survey",
     driveName:
-      "20_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R27_Tao_2026_Retrieval_Augmented_Code_Generation_Survey__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+      "19-C13_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R27_Tao_2026_Retrieval_Augmented_Code_Generation_Survey__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
     priority: "support",
     thesisRole: "related-work",
   },
@@ -332,7 +349,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "codeGraphModel",
     label: "Tao et al. 2025: Code Graph Model",
     driveName:
-      "21_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R16_Tao_2025_Code_Graph_Model_CGM_NeurIPS__RELATED_Read-Abstract-Method-Conclusion.pdf",
+      "34-C14_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R16_Tao_2025_Code_Graph_Model_CGM_NeurIPS__RELATED_Read-Abstract-Method-Conclusion.pdf",
     priority: "support",
     thesisRole: "related-work",
   },
@@ -340,7 +357,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "codebadger",
     label: "Lekssays 2026: Bridging CPGs and Language Models",
     driveName:
-      "22_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R13_Lekssays_2026_Bridging_CPGs_and_Language_Models__TARGET_Read-Method-Evaluation-Limitations.pdf",
+      "13-C18_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R13_Lekssays_2026_Bridging_CPGs_and_Language_Models__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
     thesisRole: "related-work",
   },
@@ -348,7 +365,7 @@ export const sources: Record<string, SourceDefinition> = {
     id: "llmxCpg",
     label: "Lekssays 2025: LLMxCPG",
     driveName:
-      "23_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R14_Lekssays_2025_LLMxCPG_Context_Aware_Program_Analysis__RELATED_Read-Abstract-Method-Conclusion.pdf",
+      "14-C15_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R14_Lekssays_2025_LLMxCPG_Context_Aware_Program_Analysis__RELATED_Read-Abstract-Method-Conclusion.pdf",
     priority: "support",
     thesisRole: "related-work",
   },
@@ -501,109 +518,109 @@ export const sources: Record<string, SourceDefinition> = {
 export const articleReadings: ArticleReading[] = [
   {
     id: "reading-06", courseOrder: 1, order: 6, sourceId: "logiclens", mode: "DEEP", status: "in_progress", sessionNumbers: [8, 9, 10],
-    fileName: "C01-O06_DEEP_Read-MultiRepo-Graph-Eval_★★★★★_CORE_R09_Usai_2026_LogicLens_Multi_Repository_Semantic_Code_Graph__DEEP_Read-MultiRepository-Graph-Evaluation (2).pdf",
+    fileName: "06-C01_DEEP_Read-MultiRepo-Graph-Eval_★★★★★_CORE_R09_Usai_2026_LogicLens_Multi_Repository_Semantic_Code_Graph__DEEP_Read-MultiRepository-Graph-Evaluation (2).pdf",
     readingFocus: ["Semantic code graph and cross-repository links", "Provenance and evaluation design", "Differences from Evidence Record and Evidence Path"],
     projectConnection: "RQ1/RQ2: compare LogicLens multi-repository graphs and provenance with the thesis Evidence Record, Evidence Path, and answerability boundary.",
   },
   {
     id: "reading-07", courseOrder: 2, order: 7, sourceId: "draco", mode: "TARGET", status: "planned", sessionNumbers: [1, 2, 8, 10],
-    fileName: "C02-O07_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    fileName: "09-C02_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
     readingFocus: ["Data-flow-aware token and context selection", "Retrieval method and metrics", "Threats and repository-level limits"],
     projectConnection: "RQ2: supplies a data-flow-guided retrieval comparison point and clarifies which structural signals belong in Graph rather than Flat Retrieval.",
   },
   {
     id: "reading-08", courseOrder: 3, order: 8, sourceId: "gandhiRetrieval", mode: "TARGET", status: "planned", sessionNumbers: [2, 4, 9],
-    fileName: "C03-O08_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R10_Gandhi_2025_Repository_Level_Code_Search_Neural_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    fileName: "20-C03_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R10_Gandhi_2025_Repository_Level_Code_Search_Neural_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
     readingFocus: ["Lexical baseline", "Neural reranking", "Repository-level evaluation metrics"],
     projectConnection: "RQ2: anchors the Flat lexical baseline and the optional neural-reranking comparison without weakening evidence traceability.",
   },
   {
     id: "reading-09", courseOrder: 7, order: 9, sourceId: "allamanis", mode: "TARGET", status: "planned", sessionNumbers: [3, 4, 5, 8],
-    fileName: "C07-O09_TARGET_Read-Data-Metrics-Threats_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    fileName: "06-C07_TARGET_Read-Data-Metrics-Threats_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs__TARGET_Read-Method-Evaluation-Limitations.pdf",
     readingFocus: ["Sequential versus graph code representation", "Embedding and message passing", "Evaluation limits"],
     projectConnection: "RQ1/RQ2: explains why token sequences alone cannot replace explicit code structure and Evidence Paths.",
   },
   {
     id: "reading-10", courseOrder: 8, order: 10, sourceId: "codebert", mode: "REVIEW", status: "planned", sessionNumbers: [1, 4, 8, 9],
-    fileName: "C08-O10_REVIEW_Read-Taxonomy-Limits_★★★☆☆_NEW_BASELINE_CodeBERT_Pretrained_Model_for_Code_and_Natural_Language__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    fileName: "33-C08_REVIEW_Read-Taxonomy-Limits_★★★☆☆_NEW_BASELINE_CodeBERT_Pretrained_Model_for_Code_and_Natural_Language__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
     readingFocus: ["Natural-language/code pretraining", "Encoder embeddings", "Code-search use and limits"],
     projectConnection: "RQ2: provides a Transformer encoder baseline for matching questions to code candidates; verification still requires Evidence Records.",
   },
   {
     id: "reading-11", courseOrder: 10, order: 11, sourceId: "zhangLlmSurvey", mode: "REVIEW", status: "planned", sessionNumbers: [5, 6, 9, 10],
-    fileName: "C10-O11_REVIEW_Read-Taxonomy-Limits_★★☆☆☆_Zhang_2024_Survey_on_LLMs_for_Software_Engineering__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    fileName: "32-C10_REVIEW_Read-Taxonomy-Limits_★★☆☆☆_Zhang_2024_Survey_on_LLMs_for_Software_Engineering__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
     readingFocus: ["Model taxonomy", "Fine-tuning and prompting", "Software-engineering limitations"],
     projectConnection: "Positions the thesis against LLM-based software engineering and helps justify a retrieval-and-evidence architecture rather than model-only answers.",
   },
   {
     id: "reading-12", courseOrder: 11, order: 12, sourceId: "houLlmReview", mode: "REVIEW", status: "planned", sessionNumbers: [5, 6, 9, 10],
-    fileName: "C11-O12_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R24_Hou_2024_LLMs_for_Software_Engineering_Systematic_Review__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    fileName: "31-C11_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R24_Hou_2024_LLMs_for_Software_Engineering_Systematic_Review__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
     readingFocus: ["RNN/LSTM/GRU position", "LLM use in software engineering", "Validity and open problems"],
     projectConnection: "Defines why recurrent models are course context, not thesis core, and supports the limitations discussion for RQ2.",
   },
   {
     id: "reading-13", courseOrder: 12, order: 13, sourceId: "rag", mode: "TARGET", status: "planned", sessionNumbers: [7, 10],
-    fileName: "C12-O13_TARGET_Read-Method-Eval_★★★☆☆_SUPPORT_R03_Lewis_2020_Retrieval_Augmented_Generation__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    fileName: "18-C12_TARGET_Read-Method-Eval_★★★☆☆_SUPPORT_R03_Lewis_2020_Retrieval_Augmented_Generation__RELATED_Read-Abstract-Method-Conclusion.pdf",
     readingFocus: ["Seq2Seq RAG architecture", "Parametric versus retrieved memory", "Evaluation setup"],
     projectConnection: "RQ2: motivates separating retrieval evidence from parametric generation and keeping answerability dependent on retrieved Evidence IDs.",
   },
   {
     id: "reading-14", courseOrder: 9, order: 14, sourceId: "graphcodebert", mode: "TARGET", status: "planned", sessionNumbers: [4, 8, 9],
-    fileName: "C09-O14_TARGET_Read-Data-Metrics-Threats_★★☆☆☆_Guo_2021_GraphCodeBERT_Data_Flow__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    fileName: "11-C09_TARGET_Read-Data-Metrics-Threats_★★☆☆☆_Guo_2021_GraphCodeBERT_Data_Flow__RELATED_Read-Abstract-Method-Conclusion.pdf",
     readingFocus: ["Data-flow-guided self-attention", "Encoder representation", "Code-search evaluation"],
     projectConnection: "RQ2: shows how structural data flow can guide attention while remaining distinct from a verifiable Evidence Path.",
   },
   {
     id: "reading-15", courseOrder: 4, order: 15, sourceId: "kilt", mode: "TARGET", status: "planned", sessionNumbers: [2, 7, 10],
-    fileName: "C04-O15_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    fileName: "08-C04_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks__TARGET_Read-Method-Evaluation-Limitations.pdf",
     readingFocus: ["Provenance requirements", "Seq2Seq knowledge tasks", "Retrieval versus generation metrics"],
     projectConnection: "RQ2/Answerability: supports provenance-aware evaluation and explains why BLEU/ROUGE cannot replace retrieval and evidence metrics.",
   },
   {
     id: "reading-16", courseOrder: 16, order: 16, sourceId: "oleaPrompting", mode: "TARGET", status: "planned", sessionNumbers: [9, 10],
-    fileName: "C16-O16_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R23_Olea_2024_Persona_Prompting_for_Question_Answering__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    fileName: "35-C16_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R23_Olea_2024_Persona_Prompting_for_Question_Answering__TARGET_Read-Method-Evaluation-Limitations.pdf",
     readingFocus: ["Persona prompt design", "QA evaluation", "Role effects and threats"],
     projectConnection: "Supports role-specific Developer, Architect, and QA prompts while preserving a shared evidence and answerability contract.",
   },
   {
     id: "reading-17", courseOrder: 17, order: 17, sourceId: "abeduKgQa", mode: "DEEP", status: "planned", sessionNumbers: [9, 10],
-    fileName: "C17-O17_DEEP_Read-KG-QA-Pipeline-Eval_★★★★★_CORE_R15_Abedu_2025_LLM_Knowledge_Graph_Repository_QA__DEEP_Read-KG-QA-Pipeline-Evaluation.pdf",
+    fileName: "22-C17_DEEP_Read-KG-QA-Pipeline-Eval_★★★★★_CORE_R15_Abedu_2025_LLM_Knowledge_Graph_Repository_QA__DEEP_Read-KG-QA-Pipeline-Evaluation.pdf",
     readingFocus: ["Repository QA pipeline", "Knowledge-graph grounding", "Prompting and evaluation"],
     projectConnection: "Closest RQ2 comparison: repository QA over a Knowledge Graph, evaluated against the thesis Evidence Path and refusal boundary.",
   },
   {
     id: "reading-18", courseOrder: 5, order: 18, sourceId: "repocoder", mode: "TARGET", status: "planned", sessionNumbers: [2, 7, 10],
-    fileName: "C05-O18_TARGET_Read-Method-Eval_★★★☆☆_SUPPORT_R11_Zhang_2023_RepoCoder_Iterative_Retrieval_and_Generation__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    fileName: "21-C05_TARGET_Read-Method-Eval_★★★☆☆_SUPPORT_R11_Zhang_2023_RepoCoder_Iterative_Retrieval_and_Generation__RELATED_Read-Abstract-Method-Conclusion.pdf",
     readingFocus: ["Iterative retrieval", "Repository context", "Retrieval-generation feedback"],
     projectConnection: "RQ2: provides an iterative repository-level retrieval comparison while the thesis keeps generation outside evidence verification.",
   },
   {
     id: "reading-19", courseOrder: 6, order: 19, sourceId: "ranger", mode: "TARGET", status: "planned", sessionNumbers: [2, 8, 10],
-    fileName: "C06-O19_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R17_Shah_2025_RANGER_Graph_Enhanced_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    fileName: "23-C06_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R17_Shah_2025_RANGER_Graph_Enhanced_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
     readingFocus: ["Graph-enhanced retrieval", "Flat/Graph comparison", "Data, metrics, and threats"],
     projectConnection: "Directly informs the RQ2 comparison between Flat Retrieval and Graph Retrieval on the same frozen questions and evidence corpus.",
   },
   {
     id: "reading-20", courseOrder: 13, order: 20, sourceId: "ragCodeSurvey", mode: "REVIEW", status: "planned", sessionNumbers: [7, 10],
-    fileName: "C13-O20_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R27_Tao_2026_Retrieval_Augmented_Code_Generation_Survey__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    fileName: "19-C13_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R27_Tao_2026_Retrieval_Augmented_Code_Generation_Survey__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
     readingFocus: ["RAG-for-code taxonomy", "Retrieval and generation stages", "Open limitations"],
     projectConnection: "Frames the thesis within retrieval-augmented code systems and sharpens the boundary between candidate retrieval and answer verification.",
   },
   {
     id: "reading-21", courseOrder: 14, order: 21, sourceId: "codeGraphModel", mode: "RELATED", status: "planned", sessionNumbers: [8, 9, 10],
-    fileName: "C14-O21_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R16_Tao_2025_Code_Graph_Model_CGM_NeurIPS__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    fileName: "34-C14_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R16_Tao_2025_Code_Graph_Model_CGM_NeurIPS__RELATED_Read-Abstract-Method-Conclusion.pdf",
     readingFocus: ["Graph-aware attention", "Adapter strategy", "PEFT/QLoRA boundary"],
     projectConnection: "RQ2: supplies graph-aware neural context and helps keep adapter tuning optional rather than a prerequisite for Evidence Paths.",
   },
   {
     id: "reading-22", courseOrder: 18, order: 22, sourceId: "codebadger", mode: "TARGET", status: "planned", sessionNumbers: [9, 10],
-    fileName: "C18-O22_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R13_Lekssays_2026_Bridging_CPGs_and_Language_Models__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    fileName: "13-C18_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R13_Lekssays_2026_Bridging_CPGs_and_Language_Models__TARGET_Read-Method-Evaluation-Limitations.pdf",
     readingFocus: ["CPG-constrained context", "Language-model integration", "Traceability and evaluation"],
     projectConnection: "RQ1/RQ2: shows how CPG structure can constrain context and improve traceability without treating generated text as evidence.",
   },
   {
     id: "reading-23", courseOrder: 15, order: 23, sourceId: "llmxCpg", mode: "RELATED", status: "planned", sessionNumbers: [8, 9, 10],
-    fileName: "C15-O23_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R14_Lekssays_2025_LLMxCPG_Context_Aware_Program_Analysis__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    fileName: "14-C15_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R14_Lekssays_2025_LLMxCPG_Context_Aware_Program_Analysis__RELATED_Read-Abstract-Method-Conclusion.pdf",
     readingFocus: ["LLM and CPG integration", "Multi-function context", "Method result and limits"],
     projectConnection: "RQ1/RQ2: connects multi-function CPG context to Graph Retrieval and explicit Evidence Paths across repository boundaries.",
   },
@@ -651,7 +668,7 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 1,
     date: "2026-08-17",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "Introduction to NLP, preprocessing, and tokenization",
     topics: ["Introduction to Natural Language Processing", "Text Preprocessing", "Basic Text Representation", "Tokenization"],
     projectQuestion: "Which code tokens must remain searchable without destroying source evidence?",
@@ -660,11 +677,19 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["Tokenization choices", "Code and natural-language representation", "Effect on retrieval context"],
     projectConnection: "Links input representation to Flat Retrieval while source spans remain in the Evidence Record.",
     extractionGoal: "Extract tokenization decisions and their likely effects on recall, context length, and traceability.",
+    classQuestionsFa: [
+      "برای کدهای camelCase و snake_case چه نوع توکنیزیشنی مناسب‌تر است؟",
+      "چگونه هنگام پیش‌پردازش، SourceLocation و مرز دقیق کد را حفظ کنم؟",
+      "کدام خطاهای توکنیزیشن بیشترین کاهش Recall را در بازیابی کد ایجاد می‌کنند؟",
+    ],
+    whyThisMattersFa: "چون کیفیت توکنیزیشن تعیین می‌کند کدام بخش‌های کد قابل جست‌وجو بمانند، بدون اینکه مسیر شواهد و محل منبع از بین برود.",
+    plannedActionFa: "یک tokenizer آگاه از ساختار کد می‌سازم، spanها را حفظ می‌کنم و آن را با fixtureهای ثابت آزمایش می‌کنم.",
+    relatedDayTitles: ["Kursartefakte prüfen und einfrieren", "Code-Aware Tokenizer implementieren"],
   },
   {
     number: 2,
     date: "2026-08-19",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "Bag-of-Words, TF-IDF, vector space, and cosine similarity",
     topics: ["Bag-of-Words Model", "TF-IDF", "Vector Space Models", "Cosine Similarity"],
     projectQuestion: "What is the simplest reproducible Flat baseline for RQ2?",
@@ -673,11 +698,19 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["Lexical baseline", "Retrieval metrics and provenance", "Flat versus graph-enhanced ranking"],
     projectConnection: "Direct RQ2 basis for the Flat/Graph Retrieval comparison and provenance-aware evaluation.",
     extractionGoal: "Extract comparable retrieval methods, datasets, metrics, and threats for the RQ2 evaluation table.",
+    classQuestionsFa: [
+      "برای corpus کوچک پایان‌نامه، پارامترهای TF-IDF را چگونه انتخاب و ثابت کنم؟",
+      "در cosine similarity با بردار صفر و امتیازهای مساوی چه رفتاری درست و قابل بازتولید است؟",
+      "برای مقایسه baseline با بازیابی گرافی، Recall@k و MRR را چگونه گزارش کنم؟",
+    ],
+    whyThisMattersFa: "چون TF-IDF و cosine ساده‌ترین baseline قابل بازتولید برای پاسخ به RQ2 و مقایسه منصفانه با روش گرافی هستند.",
+    plannedActionFa: "یک index نسخه‌بندی‌شده و ranker پایدار می‌سازم و baseline را با Recall@k، MRR و زمان اجرا ثبت می‌کنم.",
+    relatedDayTitles: ["TF-IDF Index bauen", "Cosine Ranker und top-k stabilisieren", "RetrievalRun-Vertrag implementieren", "Flat Baseline Release Gate"],
   },
   {
     number: 3,
     date: "2026-08-22",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "Word2Vec, CBOW, and Skip-Gram",
     topics: ["Word2Vec", "Continuous Bag-of-Words (CBOW)", "Skip-Gram"],
     projectQuestion: "Can subword semantics improve code retrieval enough to justify added cost?",
@@ -686,11 +719,19 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["Token embeddings", "Context learning", "Loss of explicit graph structure"],
     projectConnection: "Clarifies why learned embeddings may rank candidates but cannot replace an explicit Evidence Path.",
     extractionGoal: "Extract how the paper represents programs and where sequential embedding assumptions break down.",
+    classQuestionsFa: [
+      "برای واژه‌ها و شناسه‌های کد، CBOW بهتر است یا Skip-gram و چرا؟",
+      "حداقل اندازه corpus برای یادگیری embedding قابل اتکا چقدر است؟",
+      "چگونه Word2Vec را منصفانه و با همان داده‌ها با TF-IDF مقایسه کنم؟",
+    ],
+    whyThisMattersFa: "چون embedding ممکن است شباهت معنایی را بهتر پیدا کند، اما باید نشان دهد هزینه اضافه‌اش نسبت به baseline واقعاً ارزش دارد.",
+    plannedActionFa: "یک آزمایش کوچک با seed و corpus ثابت اجرا می‌کنم و نتیجه را فقط در صورت بهبود قابل اندازه‌گیری نگه می‌دارم.",
+    relatedDayTitles: ["Embedding-Experiment reproduzieren", "Semantic Experiment Gate"],
   },
   {
     number: 4,
     date: "2026-08-24",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "GloVe, FastText, and embedding layers in Keras",
     topics: ["GloVe", "FastText", "Using Embedding Layers in Keras"],
     projectQuestion: "Which embedding representations are useful retrieval baselines for code and text?",
@@ -699,11 +740,19 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["Embedding input and objective", "Subword and code structure", "Code-search evaluation"],
     projectConnection: "RQ2 comparison point for optional semantic ranking while Evidence Records remain the verification source.",
     extractionGoal: "Extract representation choices, evaluation setup, and the architectural boundary between embedding and evidence.",
+    classQuestionsFa: [
+      "FastText برای شناسه‌های ناآشنا و زیرواژه‌های کد چه مزیتی دارد؟",
+      "ورودی، خروجی و روش آموزش لایه Embedding در Keras دقیقاً چگونه تعریف می‌شود؟",
+      "GloVe، FastText و embeddingهای مخصوص کد را با چه معیار مشترکی مقایسه کنم؟",
+    ],
+    whyThisMattersFa: "چون انتخاب نوع embedding روی پوشش شناسه‌های ناشناخته، هزینه اجرا و کیفیت بازیابی معنایی اثر مستقیم دارد.",
+    plannedActionFa: "نمایش‌های مختلف را از نظر داده، هزینه و معیار ارزیابی مقایسه می‌کنم و برای ادامه یا توقف یک تصمیم مستند می‌نویسم.",
+    relatedDayTitles: ["Embedding-Experiment reproduzieren", "BERT/GraphCodeBERT Go-No-Go"],
   },
   {
     number: 5,
     date: "2026-08-26",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "Recurrent neural networks and the vanishing-gradient problem",
     topics: ["Recurrent Neural Networks (RNNs)", "The Vanishing Gradient Problem"],
     projectQuestion: "Why is recurrent sequence memory outside the thesis core?",
@@ -712,11 +761,19 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["Sequential model assumptions", "Software-engineering uses", "Limitations versus graph structure"],
     projectConnection: "Supports the scope decision that repository Evidence Paths need explicit structure rather than hidden recurrent state.",
     extractionGoal: "Extract evidence for treating RNNs as background rather than a required project component.",
+    classQuestionsFa: [
+      "محو شدن گرادیان در RNN دقیقاً چگونه حافظه توالی‌های بلند را محدود می‌کند؟",
+      "RNN در چه نوع مسئله‌ای از تحلیل مخزن کد واقعاً مناسب است؟",
+      "برای وارد کردن RNN به دامنه پایان‌نامه چه شواهد و داده‌ای لازم دارم؟",
+    ],
+    whyThisMattersFa: "چون باید روشن کنم آیا حافظه توالی‌دار برای RQهای پایان‌نامه ضروری است یا فقط دانش زمینه‌ای محسوب می‌شود.",
+    plannedActionFa: "دامنه و هزینه RNN را در یک تصمیم معماری ثبت می‌کنم و بدون داده کافی آن را به کار اجباری تبدیل نمی‌کنم.",
+    relatedDayTitles: ["RNN/LSTM/GRU Scope Audit", "Semantic Experiment Gate"],
   },
   {
     number: 6,
     date: "2026-08-29",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "LSTM, GRU, and sentiment analysis",
     topics: ["Advanced Recurrent Architectures: LSTM and GRU", "Sentiment Analysis Project Using LSTM"],
     projectQuestion: "What does the recurrent-model literature contribute to scope and limitations?",
@@ -725,11 +782,19 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["LSTM/GRU positioning", "Task-specific evaluation", "Why the thesis does not train them"],
     projectConnection: "Creates a defensible scope boundary: reading is required, recurrent-model implementation is optional and not backlog.",
     extractionGoal: "Extract taxonomy and limitations only; do not create a mandatory sentiment-analysis implementation.",
+    classQuestionsFa: [
+      "برای داده محدود، تفاوت عملی LSTM و GRU در دقت، سرعت و overfitting چیست؟",
+      "مثال تحلیل احساسات از نظر نوع label چه تفاوتی با داده‌های پایان‌نامه من دارد؟",
+      "چه آزمایشی ثابت می‌کند یک مدل بازگشتی ارزش اضافه شدن به پروژه را دارد؟",
+    ],
+    whyThisMattersFa: "چون مثال کلاسی تحلیل احساسات مفید است، اما مسئله و برچسب‌های آن با شواهد ساختاری مخزن کد یکسان نیست.",
+    plannedActionFa: "LSTM و GRU را فقط از نظر تناسب با مسئله مقایسه می‌کنم و در صورت نبود داده مناسب، آن‌ها را خارج از هسته پروژه نگه می‌دارم.",
+    relatedDayTitles: ["RNN/LSTM/GRU Scope Audit", "BERT/GraphCodeBERT Go-No-Go"],
   },
   {
     number: 7,
     date: "2026-08-31",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "Sequence-to-Sequence and introduction to Transformers",
     topics: ["Sequence-to-Sequence Architecture (Seq2Seq)", "Introduction to the Transformer Architecture"],
     projectQuestion: "How should retrieval remain separated from parametric generation?",
@@ -738,11 +803,19 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["Seq2Seq architecture", "Parametric and retrieved memory", "Iterative repository retrieval"],
     projectConnection: "RQ2/Answerability: generation may consume retrieved context, but only Evidence Records can support a repository claim.",
     extractionGoal: "Extract the retrieval-generation boundary, provenance expectations, and evaluation limitations.",
+    classQuestionsFa: [
+      "در Seq2Seq و Transformer مرز encoder و decoder دقیقاً چه مسئولیتی دارد؟",
+      "چگونه سؤال طبیعی را به JSON معتبر و قابل کنترل تبدیل کنم؟",
+      "هنگام تولید پاسخ، منبع و شناسه evidence را چگونه بدون تغییر حفظ کنم؟",
+    ],
+    whyThisMattersFa: "چون سامانه باید سؤال طبیعی را به قرارداد قابل اعتبارسنجی تبدیل کند و تولید متن را از شواهد بازیابی‌شده جدا نگه دارد.",
+    plannedActionFa: "QuestionContract و fixtureها را می‌سازم و مرز روشن retrieval، verification و generation را تعریف می‌کنم.",
+    relatedDayTitles: ["QuestionContract finalisieren", "Question-to-JSON Fixtures", "RAG-Orchestrierung ohne Halluzination"],
   },
   {
     number: 8,
     date: "2026-09-02",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "Self-attention, multi-head attention, and positional encoding",
     topics: ["Self-Attention", "Multi-Head Attention", "Positional Encoding"],
     projectQuestion: "How can attention use structure without becoming evidence?",
@@ -751,11 +824,19 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["Attention and data-flow signals", "Graph-aware context", "Provenance versus latent weights"],
     projectConnection: "RQ1/RQ2: relates attention-guided retrieval to Graph Retrieval while preserving explicit Evidence Paths.",
     extractionGoal: "Extract where graph or data-flow structure enters attention and where traceability is lost or preserved.",
+    classQuestionsFa: [
+      "وزن‌های attention چه چیزی را نشان می‌دهند و چه چیزی را اثبات نمی‌کنند؟",
+      "Positional Encoding چگونه با ساختار گراف و جریان داده کد تفاوت دارد؟",
+      "چرا attention به‌تنهایی نمی‌تواند جای Evidence Path قابل بررسی را بگیرد؟",
+    ],
+    whyThisMattersFa: "چون attention می‌تواند بازیابی را هدایت کند، اما وزن پنهان آن نباید به‌عنوان مدرک یک ادعای ساختاری تلقی شود.",
+    plannedActionFa: "attention و مسیر گراف صریح را مقایسه می‌کنم و verifier را طوری می‌سازم که فقط evidence قابل حل را بپذیرد.",
+    relatedDayTitles: ["BERT/GraphCodeBERT Go-No-Go", "Claim-Evidence-Vertrag", "Verifier-Grenze implementieren"],
   },
   {
     number: 9,
     date: "2026-09-05",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "Transformer encoder/decoder, BERT, and GPT",
     topics: ["Transformer Encoder and Decoder", "BERT Family—Encoder-Based Models", "GPT Family—Decoder-Based Models"],
     projectQuestion: "How can optional neural retrieval and answer wording remain role-aware and grounded?",
@@ -764,11 +845,19 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["Encoder versus decoder role", "Code/repository QA", "Role-aware grounded answers"],
     projectConnection: "RQ2/Answerability: encoders may retrieve and decoders may phrase answers, but both remain downstream of verifiable evidence.",
     extractionGoal: "Extract architecture comparisons, QA pipelines, prompting effects, and limitations relevant to role-specific answers.",
+    classQuestionsFa: [
+      "برای retrieval چه زمانی encoderهایی مثل BERT مناسب‌تر از decoder هستند؟",
+      "GPT را چگونه فقط برای بیان پاسخ و نه ساختن evidence به کار ببرم؟",
+      "چگونه پاسخ Developer، Architect و QA متفاوت باشد ولی ادعاها و شواهد یکسان بمانند؟",
+    ],
+    whyThisMattersFa: "چون نقش encoder در بازیابی و decoder در نگارش پاسخ باید از منبع شواهد جدا و قابل کنترل باقی بماند.",
+    plannedActionFa: "برای BERT/GraphCodeBERT تصمیم Go/No-Go می‌گیرم و خروجی نقش‌ها را روی یک RetrievalRun و evidence مشترک می‌سازم.",
+    relatedDayTitles: ["BERT/GraphCodeBERT Go-No-Go", "Rollenformat für Developer, Architect und QA", "Cross-App Integration Gate"],
   },
   {
     number: 10,
     date: "2026-09-07",
-    berlinTime: "18:00–19:40", iranTime: "19:30–21:10",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
     title: "Prompt engineering, PEFT, RAG, BLEU, and ROUGE",
     topics: ["Prompt Engineering", "Parameter-Efficient Fine-Tuning (PEFT)", "LoRA and QLoRA", "Retrieval-Augmented Generation (RAG)", "BLEU and ROUGE"],
     projectQuestion: "Which parts belong in the thesis core, optional experiments, and future work?",
@@ -777,6 +866,14 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     readingFocus: ["RAG and PEFT boundaries", "Retrieval and generation metrics", "Grounding, provenance, and answerability"],
     projectConnection: "Synthesizes RQ1/RQ2 and fixes the boundary: BLEU/ROUGE assess generated text, not retrieval completeness or Evidence Path validity.",
     extractionGoal: "Complete the six-section notes and record a final architecture decision for each paper: core, comparison, background, or future work.",
+    classQuestionsFa: [
+      "چه زمانی LoRA یا QLoRA برای این پروژه واقعاً توجیه دارد؟",
+      "RAG در نبود evidence کافی چگونه باید پاسخ ندادن درست را اجرا کند؟",
+      "محدودیت BLEU و ROUGE برای سنجش درستی ادعا و کامل بودن شواهد چیست؟",
+    ],
+    whyThisMattersFa: "چون هسته پروژه باید پاسخ grounded و قابل ردگیری بدهد؛ معیار شباهت متن یا fine-tuning به‌تنهایی درستی evidence را تضمین نمی‌کند.",
+    plannedActionFa: "قرارداد RAG grounded و refusal را پیاده می‌کنم، مرز معیارها را ثبت می‌کنم و PEFT را فقط با منفعت سنجش‌پذیر به آینده یا آزمایش اختیاری می‌برم.",
+    relatedDayTitles: ["RAG-Orchestrierung ohne Halluzination", "Rollenformat für Developer, Architect und QA", "Evaluationsgrenze ROUGE/BLEU", "Cross-App Integration Gate"],
   },
 ];
 

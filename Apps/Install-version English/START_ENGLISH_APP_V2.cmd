@@ -3,17 +3,19 @@ setlocal EnableExtensions
 title English Automaticity - Start Current Version
 
 set "ROOT=D:\APPS_root"
-set "ENGLISH=%ROOT%\Apps\English\English-07082026"
+for %%I in ("%~dp0.") do set "ENGLISH=%%~fI"
 set "PDF=%ROOT%\Apps\Apps-For-Integeration\Reader-PDF-App"
 set "SETTINGS=%ROOT%\Apps\Apps-For-Integeration\Einstellungen-APP"
 set "LOGS=%ENGLISH%\runtime-logs"
 if not exist "%LOGS%" mkdir "%LOGS%"
 
 if not exist "%ENGLISH%\apps\web\.next\standalone\apps\web\server.js" goto missing_build
+if not exist "%ENGLISH%\apps\api\dist\main.js" goto missing_build
 if not exist "%PDF%\dist\server\index.js" goto missing_build
 if not exist "%SETTINGS%\dist\server\index.js" goto missing_build
 
 call :start_if_closed 3202 english
+call :start_if_closed 4201 english_api
 call :start_if_closed 4322 pdf
 call :start_if_closed 4323 settings
 
@@ -24,6 +26,7 @@ rem fail completely silently, with no visible error and no log to check.
 powershell.exe -NoProfile -Command "Start-Sleep -Seconds 4"
 set "ALL_UP=1"
 call :report_status 3202 "English app"
+call :report_status 4201 "English API"
 call :report_status 4322 "PDF Reader"
 call :report_status 4323 "Settings"
 
@@ -43,6 +46,7 @@ netstat -ano | findstr /r /c:":%~1 .*LISTENING" >nul
 if not errorlevel 1 exit /b 0
 
 if /i "%~2"=="english" powershell.exe -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath 'node.exe' -ArgumentList @('scripts/start-standalone.mjs','--port','3202','--hostname','127.0.0.1') -WorkingDirectory '%ENGLISH%' -WindowStyle Hidden -RedirectStandardOutput '%LOGS%\english.log' -RedirectStandardError '%LOGS%\english.err.log'"
+if /i "%~2"=="english_api" powershell.exe -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath 'bun.exe' -ArgumentList @('run','--cwd','apps/api','start') -WorkingDirectory '%ENGLISH%' -WindowStyle Hidden -RedirectStandardOutput '%LOGS%\english-api.log' -RedirectStandardError '%LOGS%\english-api.err.log'"
 if /i "%~2"=="pdf" powershell.exe -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath 'bun.exe' -ArgumentList @('run','start','--port','4322') -WorkingDirectory '%PDF%' -WindowStyle Hidden -RedirectStandardOutput '%LOGS%\pdf.log' -RedirectStandardError '%LOGS%\pdf.err.log'"
 if /i "%~2"=="settings" powershell.exe -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath 'bun.exe' -ArgumentList @('run','start','--port','4323') -WorkingDirectory '%SETTINGS%' -WindowStyle Hidden -RedirectStandardOutput '%LOGS%\settings.log' -RedirectStandardError '%LOGS%\settings.err.log'"
 exit /b 0

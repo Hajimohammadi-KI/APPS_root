@@ -75,11 +75,11 @@ button {
   padding: 10px 12px;
   cursor: pointer;
   transition:
-    color 160ms var(--ease-out),
-    background-color 160ms var(--ease-out),
-    border-color 160ms var(--ease-out),
-    box-shadow 160ms var(--ease-out),
-    transform 160ms var(--ease-out);
+    color 100ms var(--ease-out),
+    background-color 100ms var(--ease-out),
+    border-color 100ms var(--ease-out),
+    box-shadow 100ms var(--ease-out),
+    transform 100ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
   button:hover {
@@ -89,6 +89,7 @@ button {
 }
 button:not(:disabled):active {
   transform: scale(0.97);
+  transition-duration: 160ms;
 }
 button:focus-visible {
   outline: 3px solid #b9a5ed;
@@ -142,7 +143,7 @@ nav button {
 .growth span {
   line-height: 1.5;
 }
-main {
+.studio-main {
   min-width: 0;
 }
 header {
@@ -330,15 +331,10 @@ header p,
   font-size: 58px;
   border: 10px solid #e4dcfa;
   box-shadow: 0 0 0 10px #f4f0ff;
+  transition: transform 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
 }
-.mic.recording {
-  animation: pulse 1.2s infinite;
-}
-@keyframes pulse {
-  50% {
-    box-shadow: 0 0 0 18px #e6defc;
-    transform: scale(1.03);
-  }
+.record-card[data-recording-state="recording"] .mic {
+  transform: scale(1.015);
 }
 .record-main h3 {
   color: var(--violet);
@@ -351,6 +347,25 @@ header p,
   padding: 6px;
   border-radius: 6px;
   color: #186a2d;
+  transition:
+    color 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)),
+    background-color 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+.record-card[data-recording-state="recording"] .ready {
+  background: var(--coral);
+  color: #a62720;
+}
+.record-card[data-recording-state="paused"] .ready {
+  background: var(--blue);
+  color: #263e87;
+}
+.record-card:is(
+    [data-recording-state="idle"],
+    [data-recording-state="recorded"]
+  )
+  .ready {
+  background: var(--mint);
+  color: #186a2d;
 }
 .wave {
   height: 60px;
@@ -358,23 +373,17 @@ header p,
   align-items: center;
   gap: 2px;
   margin: 15px 0;
+  opacity: 0.42;
+  transition: opacity 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+.wave.live {
+  opacity: 1;
 }
 .wave i {
   width: 2px;
   background: #7140d8;
   display: block;
   border-radius: 3px;
-}
-.wave.live i {
-  animation: wave 0.6s ease-in-out infinite alternate;
-}
-.wave.live i:nth-child(3n) {
-  animation-delay: 0.2s;
-}
-@keyframes wave {
-  to {
-    transform: scaleY(0.35);
-  }
 }
 .record-controls {
   display: grid;
@@ -862,9 +871,12 @@ input {
   color: var(--ink);
 }
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
   }
 }
 /* Purposeful Conversation Studio motion: feedback for state changes, never
@@ -872,7 +884,7 @@ input {
 button {
   transition-property:
     color, background-color, border-color, box-shadow, transform;
-  transition-duration: 160ms;
+  transition-duration: 100ms;
   transition-timing-function: var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
 }
 
@@ -884,12 +896,24 @@ button {
 
 button:not(:disabled):active {
   transform: scale(0.97);
+  transition-duration: 160ms;
 }
 
-.flow-panel,
-.improve-panel {
-  animation: conversation-stage-enter 180ms
-    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+.conversation-evaluation-enter,
+.conversation-save-enter {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)),
+    transform 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+@starting-style {
+  .conversation-evaluation-enter,
+  .conversation-save-enter {
+    opacity: 0;
+    transform: translateY(4px);
+  }
 }
 
 .mic-error {
@@ -917,13 +941,6 @@ button:not(:disabled):active {
 .daily-complete-backdrop[data-state="closing"] .daily-complete-card {
   animation: conversation-modal-exit 240ms
     var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
-}
-
-@keyframes conversation-stage-enter {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
 }
 
 @keyframes conversation-status-enter {
@@ -964,10 +981,32 @@ button:not(:disabled):active {
   button:not(:disabled):hover,
   button:not(:disabled):active {
     transform: none !important;
+    transition-property:
+      opacity, color, background-color, border-color !important;
+    transition-duration: 100ms !important;
+    transition-timing-function: linear !important;
   }
 
-  .flow-panel,
-  .improve-panel,
+  .mic {
+    transform: none !important;
+  }
+
+  .wave {
+    transition: opacity 100ms linear !important;
+  }
+
+  .ready {
+    transition:
+      color 100ms linear,
+      background-color 100ms linear !important;
+  }
+
+  .conversation-evaluation-enter,
+  .conversation-save-enter {
+    transform: none !important;
+    transition: opacity 100ms linear !important;
+  }
+
   .mic-error,
   .daily-complete-backdrop,
   .daily-complete-card,

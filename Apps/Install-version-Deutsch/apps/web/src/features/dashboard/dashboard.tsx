@@ -262,7 +262,7 @@ export function Dashboard() {
       </header>
 
       {justVerifiedLevel ? (
-        <div className="home-v2-celebration" role="status">
+        <div className="home-v2-celebration milestone-enter" role="status">
           <div className="home-v2-celebration-body">
             <Sparkles aria-hidden="true" />
             <div>
@@ -309,7 +309,7 @@ export function Dashboard() {
       ) : null}
 
       <div className="home-v2-grid">
-        <main className="home-v2-main">
+        <div className="home-v2-main">
           <section
             className="home-v2-chart-card"
             aria-labelledby="performance-title"
@@ -498,7 +498,7 @@ export function Dashboard() {
               </dl>
             </article>
           </section>
-        </main>
+        </div>
 
         <aside className="home-v2-aside">
           <section className="home-v2-courses" aria-labelledby="courses-title">
@@ -566,7 +566,11 @@ function ProgressRow({ label, value }: { label: string; value: number }) {
         <strong>{value}%</strong>
       </div>
       <div className="home-v2-progress-track">
-        <span style={{ width: `${value}%` }} />
+        <span
+          style={{
+            transform: `scaleX(${Math.min(100, Math.max(0, value)) / 100})`,
+          }}
+        />
       </div>
     </div>
   );

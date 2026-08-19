@@ -2,7 +2,10 @@
   [ValidateSet("Menu", "Install", "Update", "Repair", "Uninstall")]
   [string]$Action = "Menu",
   [switch]$NoDialogs,
-  [string]$ScriptRoot = ""
+  [string]$ScriptRoot = "",
+  [string]$InstallRootOverride = "",
+  [string]$SavedDataRootOverride = "",
+  [switch]$SkipShortcuts
 )
 
 Set-StrictMode -Version Latest
@@ -15,8 +18,16 @@ $AppName = "Cross Repository Code Intelligence"
 $MinimumNodeVersion = [Version]"22.13.0"
 $EffectiveScriptRoot = if ([string]::IsNullOrWhiteSpace($ScriptRoot)) { $PSScriptRoot } else { $ScriptRoot }
 $SourceRoot = [IO.Path]::GetFullPath((Join-Path $EffectiveScriptRoot ".."))
-$InstallRoot = Join-Path $env:LOCALAPPDATA "CrossRepositoryCodeIntelligence"
-$SavedDataRoot = Join-Path $env:LOCALAPPDATA "CrossRepositoryCodeIntelligence-UserData"
+$InstallRoot = if ([string]::IsNullOrWhiteSpace($InstallRootOverride)) {
+  Join-Path $env:LOCALAPPDATA "CrossRepositoryCodeIntelligence"
+} else {
+  [IO.Path]::GetFullPath($InstallRootOverride)
+}
+$SavedDataRoot = if ([string]::IsNullOrWhiteSpace($SavedDataRootOverride)) {
+  Join-Path $env:LOCALAPPDATA "CrossRepositoryCodeIntelligence-UserData"
+} else {
+  [IO.Path]::GetFullPath($SavedDataRootOverride)
+}
 $StartBatch = Join-Path $InstallRoot "STARTEN-WINDOWS.bat"
 $SetupBatch = Join-Path $InstallRoot "SETUP-WINDOWS.bat"
 $IconPath = Join-Path $InstallRoot "public\app-icon.ico"
@@ -320,12 +331,18 @@ function New-Shortcut([string]$Path, [string]$Target, [string]$Description) {
 }
 
 function Create-Shortcuts {
+  if ($SkipShortcuts) {
+    return
+  }
   New-Shortcut $DesktopShortcut $StartBatch "$AppName starten"
   New-Shortcut $StartShortcut $StartBatch "$AppName starten"
   New-Shortcut $SetupShortcut $SetupBatch "$AppName aktualisieren, reparieren oder deinstallieren"
 }
 
 function Remove-Shortcuts {
+  if ($SkipShortcuts) {
+    return
+  }
   foreach ($shortcut in @($DesktopShortcut, $StartShortcut, $SetupShortcut)) {
     if (Test-Path -LiteralPath $shortcut) {
       Remove-Item -LiteralPath $shortcut -Force
@@ -350,10 +367,17 @@ function Save-UserData {
 }
 
 function Start-App {
-  if (-not (Test-Path -LiteralPath $StartBatch)) {
-    throw "Die Startdatei fehlt: $StartBatch"
+  $supervisor = Join-Path $InstallRoot "scripts\start-local-app.ps1"
+  if (-not (Test-Path -LiteralPath $supervisor)) {
+    throw "Die Startdatei fehlt: $supervisor"
   }
-  return Start-Process -FilePath $StartBatch -WorkingDirectory $InstallRoot -PassThru
+  $arguments = @(
+    "-NoProfile",
+    "-ExecutionPolicy", "Bypass",
+    "-File", ('"{0}"' -f $supervisor),
+    "-NoBrowser"
+  )
+  return Start-Process -FilePath "powershell.exe" -ArgumentList $arguments -WorkingDirectory $InstallRoot -WindowStyle Hidden -PassThru
 }
 
 function Open-DeepLBrowserExtensionPage {
@@ -602,7 +626,7 @@ function Invoke-Menu {
   $brandKicker = New-UiLabel "FORSCHEN · VERSTEHEN · BAUEN" 34 116 224 22 8.5 ([System.Drawing.FontStyle]::Bold) ([System.Drawing.Color]::FromArgb(216, 200, 233))
   $brandTitle = New-UiLabel "Cross Repository`nCode Intelligence" 34 148 224 72 19 ([System.Drawing.FontStyle]::Bold) $white
   $brandCopy = New-UiLabel "Ihr lokales Lernstudio für Forschungsplanung, PDF-Arbeit und Fokuszeit." 34 232 218 72 10 ([System.Drawing.FontStyle]::Regular) ([System.Drawing.Color]::FromArgb(237, 228, 245))
-  $brandFooter = New-UiLabel "LOKALE INSTALLATION`nVersion2 0.5.1 · Daten bleiben auf diesem PC" 34 510 224 48 8.5 ([System.Drawing.FontStyle]::Regular) ([System.Drawing.Color]::FromArgb(216, 200, 233))
+  $brandFooter = New-UiLabel "LOKALE INSTALLATION`nVersion2 0.5.3 · Daten bleiben auf diesem PC" 34 510 224 48 8.5 ([System.Drawing.FontStyle]::Regular) ([System.Drawing.Color]::FromArgb(216, 200, 233))
   $brandPanel.Controls.AddRange(@($iconBox, $brandKicker, $brandTitle, $brandCopy, $brandFooter))
 
   $content = New-Object System.Windows.Forms.Panel

@@ -34,7 +34,7 @@ export type MasteryStatus =
 // BY automaticity-screen.tsx -- importing it back the other way would be a
 // circular dependency. Re-exported from automaticity-screen.tsx below for
 // its existing importers.
-export const EVIDENCE_CONTENT_VERSION = "27.2.0";
+export const EVIDENCE_CONTENT_VERSION = "27.3.9";
 export type AttemptMode =
 	| "recognition"
 	| "writing"
@@ -215,7 +215,12 @@ export interface TopicMastery {
 	practiceStage: 1 | 2 | 3;
 }
 
-export type FlashcardSource = "lesson" | "pdf" | "highlight" | "conversation" | "manual";
+export type FlashcardSource =
+	| "lesson"
+	| "pdf"
+	| "highlight"
+	| "conversation"
+	| "manual";
 export type FlashcardGrade = "again" | "hard" | "good";
 // Recognition ("which of these is the right word for this meaning?" --
 // multiple choice) and production ("write the word for this meaning" --
@@ -236,7 +241,13 @@ export interface FlashcardScheduleState {
 }
 
 function newFlashcardScheduleState(): FlashcardScheduleState {
-	return { stage: 0, dueAt: Date.now(), successStreak: 0, lapses: 0, lastGrade: null };
+	return {
+		stage: 0,
+		dueAt: Date.now(),
+		successStreak: 0,
+		lapses: 0,
+		lastGrade: null,
+	};
 }
 
 export interface FlashcardItem {
@@ -332,13 +343,22 @@ export interface AppState {
 const STORAGE_KEY = "grammar-automaticity:v27";
 const LEGACY_KEY = "GrammarAutomaticityV11_en";
 const RETIRED_PRIVATE_STORAGE_KEY = "thesis-b2-sprint-v24";
-export const CEFR_ORDER: readonly CefrLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
+export const CEFR_ORDER: readonly CefrLevel[] = [
+	"A1",
+	"A2",
+	"B1",
+	"B2",
+	"C1",
+	"C2",
+];
 
 // Spaced-repetition schedule for reviews: each correct recall advances one
 // step (reset to the first step on a miss). Reaching the streak threshold
 // means the item has been recalled correctly enough times running that it's
 // considered automatized, and it retires from the active review queue.
-export const RECALL_INTERVAL_STEPS_DAYS: readonly number[] = [1, 3, 7, 14, 30, 60];
+export const RECALL_INTERVAL_STEPS_DAYS: readonly number[] = [
+	1, 3, 7, 14, 30, 60,
+];
 const FIRST_RECALL_INTERVAL_DAYS = 1;
 export const RECALL_MASTERY_STREAK_THRESHOLD = 5;
 
@@ -698,24 +718,30 @@ export function normalizeFlashcards(value: unknown): FlashcardItem[] {
 		// old flat schedule fields -- treat that saved progress as production
 		// history (that's what free-recall grading actually was) and start
 		// recognition fresh, rather than discarding real review history.
-		const hasSplitSchedule = isRecord(raw.production) || isRecord(raw.recognition);
+		const hasSplitSchedule =
+			isRecord(raw.production) || isRecord(raw.recognition);
 		return [
 			{
 				id: typeof raw.id === "string" ? raw.id : makeId("flashcard"),
 				front,
 				back,
-				source: (["lesson", "pdf", "highlight", "conversation", "manual"] as const).includes(
-					raw.source as FlashcardSource,
-				)
+				source: (
+					["lesson", "pdf", "highlight", "conversation", "manual"] as const
+				).includes(raw.source as FlashcardSource)
 					? (raw.source as FlashcardSource)
 					: "manual",
-				sourceLabel: typeof raw.sourceLabel === "string" ? raw.sourceLabel : undefined,
+				sourceLabel:
+					typeof raw.sourceLabel === "string" ? raw.sourceLabel : undefined,
 				level: isCefrLevel(raw.level) ? raw.level : null,
 				lesson: typeof raw.lesson === "string" ? raw.lesson : undefined,
 				originalSentence:
-					typeof raw.originalSentence === "string" ? raw.originalSentence : undefined,
+					typeof raw.originalSentence === "string"
+						? raw.originalSentence
+						: undefined,
 				createdAt:
-					typeof raw.createdAt === "string" ? raw.createdAt : new Date().toISOString(),
+					typeof raw.createdAt === "string"
+						? raw.createdAt
+						: new Date().toISOString(),
 				recognition: normalizeScheduleState(raw.recognition),
 				production: hasSplitSchedule
 					? normalizeScheduleState(raw.production)
@@ -866,15 +892,105 @@ function average(values: number[]) {
 	);
 }
 
+function evidenceScore(attempt: Attempt) {
+	return attempt.targetHit
+		? attempt.accuracyScore
+		: Math.min(attempt.accuracyScore, 59);
+}
+
+const AUTOMATICITY_EVIDENCE_MODES = [
+	"recognition",
+	"writing",
+	"speaking",
+	"transfer",
+] as const;
+
+export function calculateAutomaticityEvidenceScore(input: {
+	attempts: readonly Attempt[];
+	successfulReviews: number;
+	activeErrorCount: number;
+	practiceStage: 1 | 2 | 3;
+	hasLapsedRetention: boolean;
+}) {
+	const verifiedFor = (mode: (typeof AUTOMATICITY_EVIDENCE_MODES)[number]) =>
+		input.attempts.filter(
+			(attempt) => attempt.mode === mode && attempt.verified === true,
+		);
+	const independence = average(
+		AUTOMATICITY_EVIDENCE_MODES.map((mode) =>
+			Math.min(100, Math.round((verifiedFor(mode).length / 3) * 100)),
+		),
+	);
+	const consistency = average(
+		AUTOMATICITY_EVIDENCE_MODES.map((mode) =>
+			average(verifiedFor(mode).slice(-5).map(evidenceScore)),
+		),
+	);
+	const writingLatency = median(
+		[...verifiedFor("writing"), ...verifiedFor("transfer")]
+			.slice(-10)
+			.map((attempt) => attempt.latencyMs)
+			.filter((value): value is number => value !== null),
+	);
+	const writingSpeed =
+		writingLatency === null
+			? 0
+			: writingLatency <= WRITING_LATENCY_THRESHOLD_MS
+				? 100
+				: Math.max(
+						0,
+						Math.round(
+							100 -
+								((writingLatency - WRITING_LATENCY_THRESHOLD_MS) /
+									WRITING_LATENCY_THRESHOLD_MS) *
+									100,
+						),
+					);
+	const speakingFluency = average(
+		verifiedFor("speaking")
+			.slice(-5)
+			.map((attempt) => Math.max(0, Math.min(100, attempt.fluencyScore))),
+	);
+	const stagedRecallSpeed =
+		input.practiceStage === 3 ? 100 : input.practiceStage === 2 ? 60 : 0;
+	const speed = average([stagedRecallSpeed, writingSpeed, speakingFluency]);
+	const delayedNovelTransfer = verifiedFor("transfer").some(
+		(attempt) => attempt.fromDueReview === true && attempt.targetHit,
+	)
+		? 100
+		: 0;
+	const retention = input.hasLapsedRetention
+		? 0
+		: Math.min(100, input.successfulReviews * 50);
+	const errorPenalty = Math.min(20, input.activeErrorCount * 10);
+
+	return Math.max(
+		0,
+		Math.min(
+			100,
+			Math.round(
+				independence * 0.2 +
+					consistency * 0.25 +
+					speed * 0.2 +
+					delayedNovelTransfer * 0.2 +
+					retention * 0.15 -
+					errorPenalty,
+			),
+		),
+	);
+}
+
 export function recalculateMastery(draft: AppState, grammarTitle: string) {
 	const current = draft.mastery[grammarTitle] ?? emptyMastery(grammarTitle);
 	const attempts = draft.attempts.filter(
 		(attempt) => attempt.grammarTitle === grammarTitle,
 	);
 	const verifiedFor = (mode: AttemptMode) =>
-		attempts.filter((attempt) => attempt.mode === mode && attempt.verified === true);
+		attempts.filter(
+			(attempt) => attempt.mode === mode && attempt.verified === true,
+		);
 	const scoreFor = (mode: AttemptMode) =>
-		average(verifiedFor(mode).slice(-5).map((attempt) => attempt.accuracyScore));
+		average(verifiedFor(mode).slice(-5).map(evidenceScore));
 
 	current.recognitionScore = scoreFor("recognition");
 	current.writingScore = scoreFor("writing");
@@ -931,14 +1047,6 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 					review.status === "pending",
 			)
 			.toSorted((a, b) => a.dueAt - b.dueAt)[0]?.dueAt ?? null;
-	current.automaticityScore = average([
-		current.recognitionScore,
-		current.writingScore,
-		current.speakingScore,
-		current.repairScore,
-		current.transferScore,
-	]);
-
 	// A single verified attempt can average to a passing score just as well
 	// as five can -- scoreFor()'s average doesn't distinguish "one lucky
 	// attempt" from "five consistent ones". Automaticity is a claim about
@@ -946,7 +1054,8 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 	// skill in addition to the score threshold before it can be claimed.
 	const MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC = 3;
 	const hasEnoughAttempts =
-		verifiedFor("recognition").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC &&
+		verifiedFor("recognition").length >=
+			MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC &&
 		verifiedFor("writing").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC &&
 		verifiedFor("speaking").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC &&
 		verifiedFor("transfer").length >= MINIMUM_VERIFIED_ATTEMPTS_FOR_AUTOMATIC;
@@ -973,8 +1082,15 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 	// TRANSFER_CHECKPOINT_INTERVAL_DAYS there), so this can only be true once
 	// the learner has actually succeeded at a delayed, novel-context recall.
 	const hasDelayedTransferEvidence = verifiedFor("transfer").some(
-		(attempt) => attempt.fromDueReview === true,
+		(attempt) => attempt.fromDueReview === true && attempt.targetHit,
 	);
+	current.automaticityScore = calculateAutomaticityEvidenceScore({
+		attempts,
+		successfulReviews: current.successfulReviews,
+		activeErrorCount: current.activeErrorCount,
+		practiceStage: current.practiceStage,
+		hasLapsedRetention,
+	});
 
 	if (
 		current.recognitionScore >= 85 &&
@@ -987,7 +1103,8 @@ export function recalculateMastery(draft: AppState, grammarTitle: string) {
 		hasEnoughAttempts &&
 		hasDelayedTransferEvidence &&
 		!hasLapsedRetention &&
-		hasFastEnoughWriting
+		hasFastEnoughWriting &&
+		current.automaticityScore >= 80
 	) {
 		current.status = "automatic";
 	} else if (
@@ -1116,7 +1233,11 @@ export function advanceDailyGrammar(state: AppState) {
 	const next = pickNextGrammarUnit(state);
 	if (!next || next.title === currentTitle) return;
 	state.learner.selfDeclaredLevel = next.level;
-	state.todayGrammar = { title: next.title, level: next.level, date: todayKey() };
+	state.todayGrammar = {
+		title: next.title,
+		level: next.level,
+		date: todayKey(),
+	};
 }
 
 function refreshVerifiedLevel(state: AppState) {
@@ -1270,7 +1391,11 @@ interface StoreValue {
 		lesson?: string;
 		originalSentence?: string;
 	}) => FlashcardItem | null;
-	gradeFlashcard: (cardId: string, mode: FlashcardMode, grade: FlashcardGrade) => void;
+	gradeFlashcard: (
+		cardId: string,
+		mode: FlashcardMode,
+		grade: FlashcardGrade,
+	) => void;
 	deleteFlashcard: (cardId: string) => void;
 }
 
@@ -1483,12 +1608,16 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 				// deep-cloned/persisted state size (and recalculateMastery's scan
 				// cost) up linearly forever. Capped to the same magnitude German
 				// already caps `attempts` at.
-				if (draft.attempts.length > 1_000) draft.attempts = draft.attempts.slice(-1_000);
+				if (draft.attempts.length > 1_000)
+					draft.attempts = draft.attempts.slice(-1_000);
 				if (draft.errors.length > 500) draft.errors = draft.errors.slice(-500);
-				if (draft.reviews.length > 1_000) draft.reviews = draft.reviews.slice(-1_000);
-				if (draft.sessions.length > 500) draft.sessions = draft.sessions.slice(-500);
+				if (draft.reviews.length > 1_000)
+					draft.reviews = draft.reviews.slice(-1_000);
+				if (draft.sessions.length > 500)
+					draft.sessions = draft.sessions.slice(-500);
 				if (draft.automatizationCheckpoints.length > 200) {
-					draft.automatizationCheckpoints = draft.automatizationCheckpoints.slice(-200);
+					draft.automatizationCheckpoints =
+						draft.automatizationCheckpoints.slice(-200);
 				}
 			}),
 		);
@@ -1573,22 +1702,31 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 						// and keep cycling at the longest interval rather than
 						// retiring the item -- retention has to keep being
 						// demonstrated, not just proven once.
-						review.masteryMilestonesReached = (review.masteryMilestonesReached ?? 0) + 1;
-						const maxInterval = RECALL_INTERVAL_STEPS_DAYS[RECALL_INTERVAL_STEPS_DAYS.length - 1] ?? FIRST_RECALL_INTERVAL_DAYS;
+						review.masteryMilestonesReached =
+							(review.masteryMilestonesReached ?? 0) + 1;
+						const maxInterval =
+							RECALL_INTERVAL_STEPS_DAYS[
+								RECALL_INTERVAL_STEPS_DAYS.length - 1
+							] ?? FIRST_RECALL_INTERVAL_DAYS;
 						review.dueAt = Date.now() + maxInterval * 86_400_000;
 						review.status = "pending";
 						return;
 					}
 					review.successStreak += 1;
 					if (review.successStreak >= RECALL_MASTERY_STREAK_THRESHOLD) {
-						review.masteryMilestonesReached = (review.masteryMilestonesReached ?? 0) + 1;
+						review.masteryMilestonesReached =
+							(review.masteryMilestonesReached ?? 0) + 1;
 					}
-					const stepIndex = RECALL_INTERVAL_STEPS_DAYS.indexOf(review.intervalDays);
+					const stepIndex = RECALL_INTERVAL_STEPS_DAYS.indexOf(
+						review.intervalDays,
+					);
 					const clampedIndex = Math.min(
 						Math.max(stepIndex + 1, 0),
 						RECALL_INTERVAL_STEPS_DAYS.length - 1,
 					);
-					const nextInterval = RECALL_INTERVAL_STEPS_DAYS[clampedIndex] ?? FIRST_RECALL_INTERVAL_DAYS;
+					const nextInterval =
+						RECALL_INTERVAL_STEPS_DAYS[clampedIndex] ??
+						FIRST_RECALL_INTERVAL_DAYS;
 					review.intervalDays = nextInterval;
 					review.dueAt = Date.now() + nextInterval * 86_400_000;
 					review.status = "pending";
@@ -1623,8 +1761,10 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 				// second card -- keep the queue meaningful, not padded.
 				const duplicate = draft.flashcards.find(
 					(existing) =>
-						existing.front.trim().toLocaleLowerCase() === front.toLocaleLowerCase() &&
-						existing.back.trim().toLocaleLowerCase() === back.toLocaleLowerCase(),
+						existing.front.trim().toLocaleLowerCase() ===
+							front.toLocaleLowerCase() &&
+						existing.back.trim().toLocaleLowerCase() ===
+							back.toLocaleLowerCase(),
 				);
 				if (duplicate) {
 					created = duplicate;
@@ -1670,13 +1810,21 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 				if (grade === "hard") {
 					// Same stage, shorter-than-normal interval: still due sooner
 					// than a "good" answer, but doesn't reset progress like "again".
-					const interval = RECALL_INTERVAL_STEPS_DAYS[schedule.stage] ?? FIRST_RECALL_INTERVAL_DAYS;
-					schedule.dueAt = Date.now() + Math.max(1, Math.round(interval / 2)) * 86_400_000;
+					const interval =
+						RECALL_INTERVAL_STEPS_DAYS[schedule.stage] ??
+						FIRST_RECALL_INTERVAL_DAYS;
+					schedule.dueAt =
+						Date.now() + Math.max(1, Math.round(interval / 2)) * 86_400_000;
 					return;
 				}
 				schedule.successStreak += 1;
-				schedule.stage = Math.min(schedule.stage + 1, RECALL_INTERVAL_STEPS_DAYS.length - 1);
-				const interval = RECALL_INTERVAL_STEPS_DAYS[schedule.stage] ?? FIRST_RECALL_INTERVAL_DAYS;
+				schedule.stage = Math.min(
+					schedule.stage + 1,
+					RECALL_INTERVAL_STEPS_DAYS.length - 1,
+				);
+				const interval =
+					RECALL_INTERVAL_STEPS_DAYS[schedule.stage] ??
+					FIRST_RECALL_INTERVAL_DAYS;
 				schedule.dueAt = Date.now() + interval * 86_400_000;
 			});
 		},
@@ -1686,7 +1834,9 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 	const deleteFlashcard = React.useCallback(
 		(cardId: string) => {
 			mutate((draft) => {
-				draft.flashcards = draft.flashcards.filter((item) => item.id !== cardId);
+				draft.flashcards = draft.flashcards.filter(
+					(item) => item.id !== cardId,
+				);
 			});
 		},
 		[mutate],

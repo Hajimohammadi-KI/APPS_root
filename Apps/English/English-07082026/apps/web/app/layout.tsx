@@ -4,6 +4,7 @@ import { AppStoreProvider } from "@/features/store/app-store";
 import { AppShell } from "@/features/app-shell";
 import { ContextualHoverHelp } from "@/features/components/contextual-hover-help";
 import { DeepLSelectionTranslator } from "@/features/components/deepl-selection-translator";
+import { PageAnalyticsTracker } from "@/features/components/page-analytics-tracker";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "light",
-  themeColor: "#155eef",
+  themeColor: "#f5f5f7",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -54,6 +55,7 @@ export default function RootLayout({
     <html className={GeistSans.variable} lang="en">
       <body>
         <AppStoreProvider>
+          <PageAnalyticsTracker />
           <AppShell>{children}</AppShell>
           <ContextualHoverHelp />
           <DeepLSelectionTranslator />

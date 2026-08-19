@@ -41,7 +41,7 @@ export default function TeacherPage() {
     setDraft(empty()); setAudio(null); setMessage("Content and human audio saved."); await refresh();
   }
 
-  return <main className="teacher-page">
+  return <div className="teacher-page">
     <header className="teacher-hero"><a href="/" className="teacher-back"><ArrowLeft aria-hidden /> Back to app</a><div><span className="teacher-kicker">TEACHER AUTHORING</span><h1>Manage lessons and human audio</h1><p>Add or edit verbs, examples, exercises, and conversations. Uploaded or recorded human voices are used as the lesson audio; synthetic voices are not substituted.</p></div></header>
     <div className="teacher-layout">
       <section className="teacher-editor" aria-label="Content editor">
@@ -57,7 +57,7 @@ export default function TeacherPage() {
         <label>Content key<input value={draft.contextKey} onChange={(e) => setDraft({ ...draft, contextKey: e.target.value })} placeholder="e.g. grammar.present-perfect.example.1" /><small>Use this stable key wherever the audio and edited content should appear.</small></label>
         <label>Text<textarea rows={6} value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })} /></label>
         <fieldset><legend>Human-recorded audio</legend><label className="teacher-upload"><Upload aria-hidden /> Choose audio file<input accept="audio/*" onChange={(e) => setAudio(e.target.files?.[0] ?? null)} type="file" /></label><HumanAudioRecorder onRecorded={setAudio} />{draft.audioName && !audio ? <HumanAudioPlayer contentId={draft.id} /> : null}</fieldset>
-        {message ? <p className="teacher-message" role="status">{message}</p> : null}
+        {message ? <p className="teacher-message shared-status-enter" role="status">{message}</p> : null}
         <button className="teacher-primary-button" onClick={() => void save()} type="button"><Save aria-hidden /> Save content</button>
       </section>
       <TeacherFlashcardPanel />
@@ -65,5 +65,5 @@ export default function TeacherPage() {
         {items.length ? <div className="teacher-items">{items.map((item) => <article key={item.id}><div className="teacher-item-meta"><span>{item.level}</span><span>{item.kind}</span><code>{item.contextKey}</code></div><h3>{item.title}</h3><p>{item.body}</p><HumanAudioPlayer compact contentId={item.id} /><div className="teacher-item-actions"><button onClick={() => { setDraft(item); setAudio(null); window.scrollTo({ top: 0, behavior: "smooth" }); }} type="button"><Pencil aria-hidden /> Edit</button><button className="danger" onClick={async () => { await deleteTeacherContent(item.id); if (draft.id === item.id) setDraft(empty()); await refresh(); }} type="button"><Trash2 aria-hidden /> Delete</button></div></article>)}</div> : <div className="teacher-empty"><FileAudio aria-hidden /><h3>No teacher content yet</h3><p>Add the first item and attach a real human recording.</p></div>}
       </section>
     </div>
-  </main>;
+  </div>;
 }

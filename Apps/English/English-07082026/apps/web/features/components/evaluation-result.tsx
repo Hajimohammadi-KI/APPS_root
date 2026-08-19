@@ -222,15 +222,15 @@ export function EvaluationResult({ evaluation }: { evaluation: Evaluation }) {
         <div className="resource-links">
           {evaluation.links.map((link) => (
             <Button
-              asChild
               key={`${link[0]}-${link[1]}`}
+              render={
+                <a href={link[1]} rel="noreferrer" target="_blank" />
+              }
               size="sm"
               variant="outline"
             >
-              <a href={link[1]} rel="noreferrer" target="_blank">
-                {link[0]}
-                <ExternalLink aria-hidden className="size-3.5" />
-              </a>
+              {link[0]}
+              <ExternalLink aria-hidden className="size-3.5" />
             </Button>
           ))}
         </div>

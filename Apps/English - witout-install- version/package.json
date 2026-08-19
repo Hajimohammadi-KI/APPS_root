@@ -1,36 +1,37 @@
 {
-  "name": "english-grammar-automaticity",
-  "version": "27.2.0",
-  "private": true,
-  "packageManager": "bun@1.3.14",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "scripts": {
-    "dev": "concurrently --kill-others-on-fail --names api,web --prefix-colors magenta,cyan \"bun run --cwd apps/api dev\" \"bun run --cwd apps/web dev\"",
-    "start": "concurrently --kill-others-on-fail --names api,web --prefix-colors magenta,cyan \"bun run --cwd apps/api start\" \"bun run --cwd apps/web start\"",
-    "start:parity": "concurrently --kill-others-on-fail --names api,web,legacy --prefix-colors magenta,cyan,blue \"bun run --cwd apps/api start\" \"bun run --cwd apps/web start -- --port 3201\" \"bun run legacy:preview\"",
-    "build": "bun scripts/check-build-not-locked.mjs && bun run --cwd apps/api build && bun run --cwd apps/web build && bun scripts/prepare-standalone.mjs",
-    "check": "bun run typecheck && bun run test && bun run test:installer && bun run lint",
-    "typecheck": "bun run --cwd packages/content typecheck && bun run --cwd packages/evidence-domain typecheck && bun run --cwd apps/api typecheck && bun run --cwd apps/web typecheck",
-    "test": "bun test packages/content/src/content.test.ts packages/evidence-domain/src/task-versioning.test.ts packages/evidence-domain/src/upcasting.test.ts scripts/task-lifecycle-sql.test.ts apps/web/lib/assessment.test.ts apps/web/lib/automaticity-analysis.test.ts apps/web/lib/adaptive-daily-plan.test.ts apps/web/lib/pdf-reader-link.test.ts apps/web/lib/deepl-integration.test.ts apps/web/lib/automatization.test.ts apps/web/lib/audio-fluency.test.ts apps/web/features/screens/practice-stage.test.ts apps/web/features/store/app-store.level-progression.test.ts apps/web/features/store/app-store.daily-plan.test.ts apps/web/features/store/app-store.flashcards.test.ts apps/web/features/components/teacher-flashcard-panel.test.ts && bun run --cwd apps/api test",
-    "test:e2e": "playwright test",
-    "test:installer": "bun test scripts/windows-installer.test.ts",
-    "legacy:preview": "bun scripts/serve-legacy.ts",
-    "lint": "bun run --cwd apps/web lint",
-    "extract:legacy": "bun scripts/extract-legacy-content.ts",
-    "package:stores": "bun scripts/package-stores.ts all",
-    "package:android": "bun scripts/package-stores.ts android",
-    "package:windows": "bun scripts/package-stores.ts windows",
-    "package:ios": "bun scripts/package-stores.ts ios",
-    "package:windows-exe": "bun scripts/package-windows-installer.ts"
-  },
-  "devDependencies": {
-    "@types/node": "24.10.14",
-    "@playwright/test": "1.62.0",
-    "concurrently": "10.0.4",
-    "next": "16.2.12",
-    "typescript": "7.0.2"
-  }
+	"name": "english-grammar-automaticity",
+  "version": "27.3.9",
+	"private": true,
+	"packageManager": "bun@1.3.14",
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"scripts": {
+		"dev": "concurrently --kill-others-on-fail --names api,web --prefix-colors magenta,cyan \"bun run --cwd apps/api dev\" \"bun run --cwd apps/web dev\"",
+		"start": "concurrently --kill-others-on-fail --names api,web --prefix-colors magenta,cyan \"bun run --cwd apps/api start\" \"bun run --cwd apps/web start\"",
+		"start:parity": "concurrently --kill-others-on-fail --names api,web,legacy --prefix-colors magenta,cyan,blue \"bun run --cwd apps/api start\" \"bun run --cwd apps/web start -- --port 3201\" \"bun run legacy:preview\"",
+		"build": "bun scripts/check-build-not-locked.mjs && bun run --cwd apps/api build && bun run --cwd apps/web build && bun scripts/prepare-standalone.mjs",
+		"check": "bun run typecheck && bun run test && bun run test:installer && bun run lint",
+		"typecheck": "bun run --cwd packages/content typecheck && bun run --cwd packages/evidence-domain typecheck && bun run --cwd apps/api typecheck && bun run --cwd apps/web typecheck",
+		"test": "bun test packages/content/src/content.test.ts packages/evidence-domain/src/task-versioning.test.ts packages/evidence-domain/src/upcasting.test.ts scripts/task-lifecycle-sql.test.ts apps/web/lib/assessment.test.ts apps/web/lib/automaticity-analysis.test.ts apps/web/lib/adaptive-daily-plan.test.ts apps/web/lib/pdf-reader-link.test.ts apps/web/lib/deepl-integration.test.ts apps/web/lib/automatization.test.ts apps/web/lib/audio-fluency.test.ts apps/web/lib/hybrid-language-analysis.test.ts apps/web/lib/page-analytics.test.ts apps/web/features/screens/practice-stage.test.ts apps/web/features/store/app-store.level-progression.test.ts apps/web/features/store/app-store.daily-plan.test.ts apps/web/features/store/app-store.flashcards.test.ts apps/web/features/components/teacher-flashcard-panel.test.ts && bun run --cwd apps/api test",
+		"test:e2e": "playwright test",
+		"test:installer": "bun test scripts/windows-installer.test.ts scripts/hybrid-language-policy.test.ts",
+		"legacy:preview": "bun scripts/serve-legacy.ts",
+		"lint": "bun run --cwd apps/web lint",
+		"extract:legacy": "bun scripts/extract-legacy-content.ts",
+		"datasets:import": "bun scripts/import-open-language-dataset.ts",
+		"package:stores": "bun scripts/package-stores.ts all",
+		"package:android": "bun scripts/package-stores.ts android",
+		"package:windows": "bun scripts/package-stores.ts windows",
+		"package:ios": "bun scripts/package-stores.ts ios",
+		"package:windows-exe": "bun scripts/package-windows-installer.ts"
+	},
+	"devDependencies": {
+		"@types/node": "24.10.14",
+		"@playwright/test": "1.62.0",
+		"concurrently": "10.0.4",
+		"next": "16.2.12",
+		"typescript": "7.0.2"
+	}
 }

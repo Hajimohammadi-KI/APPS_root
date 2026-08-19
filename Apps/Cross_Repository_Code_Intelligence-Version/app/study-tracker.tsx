@@ -14,6 +14,7 @@ import {
   defaultSettings,
   extractionSections,
   migrateLegacyId,
+  nlpCourseMeta,
   nlpCourseSessions,
   planMeta,
   planWeeks,
@@ -1157,9 +1158,27 @@ export default function StudyTracker({
     return [...map.values()];
   }, []);
 
+  const selectedCourseSession = useMemo(() => {
+    if (!phaseFilter.startsWith("course:")) return null;
+    const sessionNumber = Number(phaseFilter.slice("course:".length));
+    return nlpCourseSessions.find((session) => session.number === sessionNumber) ?? null;
+  }, [phaseFilter]);
+
+  const selectedCourseDays = useMemo(() => {
+    if (!selectedCourseSession) return [];
+    const relatedTitles = new Set(selectedCourseSession.relatedDayTitles);
+    return allDays.filter((day) => relatedTitles.has(day.title));
+  }, [selectedCourseSession]);
+
   const filteredGroups = useMemo(() => {
+    const relatedTitles = new Set(selectedCourseSession?.relatedDayTitles ?? []);
     return phaseGroups
-      .filter((phase) => phaseFilter === "all" || phase.id === phaseFilter)
+      .filter(
+        (phase) =>
+          Boolean(selectedCourseSession) ||
+          phaseFilter === "all" ||
+          phase.id === phaseFilter,
+      )
       .map((phase) => ({
         ...phase,
         weeks: phase.weeks
@@ -1167,7 +1186,8 @@ export default function StudyTracker({
             ...week,
             days: week.days.filter(
               (day) =>
-                statusFilter === "all" || dayStatus(day) === statusFilter,
+                (!selectedCourseSession || relatedTitles.has(day.title)) &&
+                (statusFilter === "all" || dayStatus(day) === statusFilter),
             ),
           }))
           .filter((week) => week.days.length > 0),
@@ -1175,7 +1195,7 @@ export default function StudyTracker({
       .filter((phase) => phase.weeks.length > 0);
     // dayStatus intentionally depends on the current completion snapshot.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phaseGroups, phaseFilter, statusFilter, completed]);
+  }, [phaseGroups, phaseFilter, selectedCourseSession, statusFilter, completed]);
 
   const searchResults = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase();
@@ -1826,10 +1846,10 @@ export default function StudyTracker({
       : "Der neue Zeitplan konnte nicht gespeichert werden.");
   }
 
-  function revealDay(day: PlannedDay, searchQuery = query) {
+  function revealDay(day: PlannedDay, searchQuery = query, preservePhaseFilter = false) {
     setActiveView("plan");
     setShowFullPlan(true);
-    if (phaseFilter !== "all" && phaseFilter !== day.phaseId) {
+    if (!preservePhaseFilter && phaseFilter !== "all" && phaseFilter !== day.phaseId) {
       setPhaseFilter(day.phaseId);
     }
     setStatusFilter("all");
@@ -1972,8 +1992,8 @@ export default function StudyTracker({
       .join("\r\n");
     const courseEvents = nlpCourseSessions
       .map((session) => {
-        const start = localIcsDate(session.date, 18 * 60);
-        const end = localIcsDate(session.date, 19 * 60 + 40);
+        const start = localIcsDate(session.date, 19 * 60 + 30);
+        const end = localIcsDate(session.date, 21 * 60 + 10);
         const readings = session.readingIds
           .map((id) => articleReadingsById.get(id))
           .filter((reading) => Boolean(reading))
@@ -2203,6 +2223,60 @@ export default function StudyTracker({
                 </a>
               </article>
             ) : null}
+
+            <details className="course-schedule-panel" open>
+              <summary>
+                <span className="summary-marker"><Icon name="calendar" size={18} /></span>
+                <span className="course-schedule-heading">
+                  <strong>Onlinekurs · NLP, RNN, Transformer und LLM</strong>
+                  <small>
+                    {nlpCourseMeta.instructor} · {nlpCourseMeta.platform} · Montag, Mittwoch und Samstag
+                  </small>
+                </span>
+                <span className="course-schedule-time">
+                  10 × 100 Min. · {nlpCourseMeta.berlinTime} Berlin
+                </span>
+              </summary>
+              <div className="course-session-grid">
+                {nlpCourseSessions.map((session) => {
+                  const readings = session.readingIds
+                    .map((readingId) => articleReadingsById.get(readingId))
+                    .filter((reading) => Boolean(reading));
+                  const sessionState = session.date === systemToday
+                    ? "today"
+                    : session.date < systemToday
+                      ? "past"
+                      : "upcoming";
+                  return (
+                    <article className={`course-session-card ${sessionState}`} key={session.number}>
+                      <header>
+                        <span>Sitzung {session.number}/10</span>
+                        <time dateTime={session.date}>{formatDate(session.date, true)}</time>
+                      </header>
+                      <h3>{session.title}</h3>
+                      <p className="course-session-clock">{session.berlinTime} Berlin · 100 Minuten</p>
+                      <ul className="course-topic-list">
+                        {session.topics.map((topic) => <li key={topic}>{topic}</li>)}
+                      </ul>
+                      <details className="course-session-readings">
+                        <summary>{readings.length} passende Artikel anzeigen</summary>
+                        <ul>
+                          {readings.map((reading) => (
+                            <li key={reading!.id}>{reading!.fileName}</li>
+                          ))}
+                        </ul>
+                      </details>
+                    </article>
+                  );
+                })}
+              </div>
+              <footer className="course-schedule-footer">
+                <span>Kontrastfarbe kennzeichnet alle Kurstermine und die zugehörigen NLP-Phasen im Lernplan.</span>
+                <a className="button secondary" href="/nlp-lab" {...internalLinkProps("/nlp-lab")}>
+                  NLP-Lab und Artikelauswahl öffnen <Icon name="arrow" size={17} />
+                </a>
+              </footer>
+            </details>
 
             <div className="dashboard-primary-grid">
               <article className="today-card">
@@ -2534,17 +2608,27 @@ export default function StudyTracker({
                 )}
               </label>
               <label>
-                <span className="visually-hidden">Nach Phase filtern</span>
+                <span className="visually-hidden">Nach Phase oder Kursthema filtern</span>
                 <select
+                  aria-label="Nach Phase oder Kursthema filtern"
                   value={phaseFilter}
                   onChange={(event) => setPhaseFilter(event.target.value)}
                 >
                   <option value="all">Alle Phasen</option>
-                  {phaseGroups.map((phase) => (
-                    <option value={phase.id} key={phase.id}>
-                      {phase.title}
-                    </option>
-                  ))}
+                  <optgroup label="Kursthemen · Advanced Deep Learning">
+                    {nlpCourseSessions.map((session) => (
+                      <option value={`course:${session.number}`} key={`course-filter-${session.number}`}>
+                        {`Kurs ${session.number} · ${session.title}`}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Projektphasen">
+                    {phaseGroups.map((phase) => (
+                      <option value={phase.id} key={phase.id}>
+                        {phase.title}
+                      </option>
+                    ))}
+                  </optgroup>
                 </select>
               </label>
               <label>
@@ -2583,6 +2667,62 @@ export default function StudyTracker({
                   <span className="empty-state">Versuche einen anderen Suchbegriff.</span>
                 )}
               </div>
+            )}
+
+            {selectedCourseSession && (
+              <section className="course-topic-guide" aria-labelledby="selected-course-topic-title">
+                <div className="course-topic-guide__heading">
+                  <div>
+                    <span className="course-topic-guide__eyebrow">
+                      موضوع کلاس {displayNumber(selectedCourseSession.number)} · {formatDate(selectedCourseSession.date, true)}
+                    </span>
+                    <h3 id="selected-course-topic-title">{selectedCourseSession.title}</h3>
+                    <p>
+                      {selectedCourseSession.berlinTime} به وقت آلمان · {selectedCourseSession.iranTime} به وقت ایران
+                    </p>
+                  </div>
+                  <span className="course-topic-guide__count">
+                    {displayNumber(selectedCourseDays.length)} روز مرتبط
+                  </span>
+                </div>
+
+                <div className="course-topic-guide__grid" dir="rtl">
+                  <article className="course-topic-guide__questions">
+                    <h4>سؤال‌هایی که از مدرس می‌پرسم</h4>
+                    <ol>
+                      {selectedCourseSession.classQuestionsFa.map((question) => (
+                        <li key={question}>{question}</li>
+                      ))}
+                    </ol>
+                  </article>
+                  <article>
+                    <h4>اگر پرسید «چرا؟»</h4>
+                    <p>{selectedCourseSession.whyThisMattersFa}</p>
+                  </article>
+                  <article>
+                    <h4>اگر پرسید «چه کاری می‌خواهی انجام بدهی؟»</h4>
+                    <p>{selectedCourseSession.plannedActionFa}</p>
+                  </article>
+                </div>
+
+                <div className="course-topic-guide__days">
+                  <h4>Natürliche Zuordnung im Lernplan</h4>
+                  <p>Die folgenden Tage und Wochen werden unten automatisch gefiltert.</p>
+                  <div>
+                    {selectedCourseDays.map((day) => (
+                      <button
+                        type="button"
+                        key={`course-day-${day.id}`}
+                        onClick={() => revealDay(day, "", true)}
+                      >
+                        <span>Woche {displayNumber(day.week)} · {formatDate(shiftedPlanDate(day.date, settings.planStartDate), true)}</span>
+                        <strong>{day.title}</strong>
+                        <small>{day.phase}</small>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </section>
             )}
 
             <div className="phase-stack">
@@ -3383,6 +3523,7 @@ function DayCard({
   const focusTaskIndex = currentTaskIndex < 0 ? day.tasks.length - 1 : currentTaskIndex;
   const focusMinutes = workModeTaskMinutes(settings.dailyWorkMode, focusTaskIndex);
   const planIsRunning = settings.planStatus === "running";
+  const courseRelated = day.phaseId.startsWith("nlp-");
 
   // The spaced-recall pipeline (RecallCheck, lib/recall/*) was fully built
   // -- concept, exact Exposé section, Persian/German answers, next review
@@ -3397,7 +3538,7 @@ function DayCard({
 
   return (
     <details
-      className={`day-card ${state} ${active ? "search-hit" : ""}`}
+      className={`day-card ${state} ${courseRelated ? "course-related" : ""} ${active ? "search-hit" : ""}`}
       id={`day-${day.id}`}
       tabIndex={-1}
     >
@@ -3408,6 +3549,7 @@ function DayCard({
           <strong><Highlight text={day.title} query={active ? query : ""} /></strong>
           <small>{day.module} · Ergebnis: {day.deliverable}</small>
         </span>
+        {courseRelated ? <span className="course-related-chip">NLP-Kursbezug</span> : null}
         <span className={`status-chip ${state}`}>{stateLabel} · {displayNumber(count)}/9</span>
         <button
           className="day-focus-button"

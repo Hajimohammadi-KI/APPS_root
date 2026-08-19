@@ -22,7 +22,7 @@ export interface AIExplanationRequest {
   readonly content: string;
   readonly learnerInput?: string;
   readonly language: string;
-  readonly purpose?: "explanation" | "follow-up";
+  readonly purpose?: "explanation" | "follow-up" | "language-analysis";
 }
 
 export interface AIExplanationResponse {

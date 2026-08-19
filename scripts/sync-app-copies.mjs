@@ -18,10 +18,11 @@ import {
   copyFileSync,
   existsSync,
   mkdirSync,
+  readFileSync,
   rmSync,
   statSync,
 } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -60,8 +61,35 @@ function trackedFiles(dir) {
   return new Set(out.split("\n").filter(Boolean).map((p) => p.replace(/\\/g, "/")));
 }
 
+function requiredInstallerAssets(canonical) {
+  const configDirectory = join(
+    ROOT,
+    canonical,
+    "distribution/windows-modern",
+  );
+  const configPath = join(configDirectory, "setup.config.json");
+  if (!existsSync(configPath)) return [];
+  const config = JSON.parse(readFileSync(configPath, "utf8"));
+  return [
+    config.compatibilityLauncherArchive,
+    config.compatibilityLauncherZip,
+  ]
+    .filter((value) => typeof value === "string" && value.length > 0)
+    .map((value) =>
+      relative(ROOT, resolve(configDirectory, value)).replace(/\\/g, "/"),
+    )
+    .filter((file) => existsSync(join(ROOT, file)));
+}
+
 function syncPair({ name, canonical, copies }) {
   const canonicalFiles = trackedFiles(canonical);
+  // Installer compatibility payloads are intentionally gitignored because
+  // they are large generated binaries, but setup.config.json references them
+  // as required build inputs. Mirror those exact assets as part of a release
+  // sync so Install/Update/Repair builds do not fail in distribution copies.
+  for (const file of requiredInstallerAssets(canonical)) {
+    canonicalFiles.add(file);
+  }
   for (const copy of copies) {
     let written = 0;
     let removed = 0;

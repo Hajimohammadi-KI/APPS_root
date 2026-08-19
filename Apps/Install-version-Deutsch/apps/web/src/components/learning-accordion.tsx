@@ -81,9 +81,9 @@ export function LearningAccordion({
     <Accordion
       className={cn(
         "learning-accordion overflow-hidden rounded-2xl border shadow-sm",
-        "transition-[border-color,box-shadow,transform] duration-200",
+        "transition-[border-color,transform] duration-200",
         "has-[[data-open]]:-translate-y-0.5 has-[[data-open]]:shadow-lg",
-        "motion-reduce:transform-none motion-reduce:transition-none",
+        "motion-reduce:transform-none motion-reduce:transition-[color,background-color,border-color] motion-reduce:duration-100 motion-reduce:ease-linear",
         styles.shell,
         className,
       )}

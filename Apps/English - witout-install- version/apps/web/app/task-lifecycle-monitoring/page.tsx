@@ -77,7 +77,7 @@ const MONITORING_VIEWS: ViewRow[] = [
 
 export default function TaskLifecycleMonitoringPage() {
   return (
-    <main className="mx-auto max-w-4xl space-y-6 px-4 py-8">
+    <div className="mx-auto max-w-4xl space-y-6 px-4 py-8">
       <a
         className="inline-flex items-center gap-2 text-sm font-bold text-violet-800"
         href="/"
@@ -201,6 +201,6 @@ export default function TaskLifecycleMonitoringPage() {
         </EmptyHeader>
         <EmptyContent />
       </Empty>
-    </main>
+    </div>
   );
 }

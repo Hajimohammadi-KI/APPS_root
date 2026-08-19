@@ -216,7 +216,6 @@ header p {
   height: 210px;
   border-radius: 50%;
   background: radial-gradient(circle, #e7dcff, #f7f2ff 65%, transparent 66%);
-  animation: coachGlow 3s ease-in-out infinite;
 }
 .coach-glow img {
   height: 225px;
@@ -224,19 +223,6 @@ header p {
   object-fit: contain;
   position: relative;
   z-index: 1;
-  transform-origin: bottom center;
-  animation: coachFloat 3.4s ease-in-out infinite;
-}
-@keyframes coachFloat {
-  50% {
-    transform: translateY(-6px) rotate(0.4deg);
-  }
-}
-@keyframes coachGlow {
-  50% {
-    transform: scale(1.04);
-    opacity: 0.8;
-  }
 }
 .coach-dialogue {
   align-self: center;

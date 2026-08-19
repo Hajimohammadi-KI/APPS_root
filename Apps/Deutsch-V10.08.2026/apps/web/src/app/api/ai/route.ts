@@ -61,20 +61,33 @@ export async function POST(request: Request) {
       content?: string;
       learnerInput?: string;
       language?: string;
-      purpose?: "explanation" | "follow-up";
+      purpose?: "explanation" | "follow-up" | "language-analysis";
     };
     const content = body.content?.trim() || "";
-    if (!content) {
+    if (
+      !content ||
+      content.length > 8_000 ||
+      (body.learnerInput?.length ?? 0) > 8_000
+    ) {
       return Response.json(
-        { message: "Wähle zuerst einen Lerninhalt aus." },
+        {
+          message:
+            "Wähle zuerst einen Lerninhalt aus; jedes Textfeld ist auf 8000 Zeichen begrenzt.",
+        },
         { status: 400, headers: noStore },
       );
     }
+    const analysisRules =
+      body.purpose === "language-analysis"
+        ? "Nutze nur die bereitgestellten Texte und regelbasierten NLP-Beobachtungen. Behandle Kennzahlen als diagnostische Signale, nicht als Punkte. Trenne Beobachtung von Schlussfolgerung. Vergib niemals CEFR, Beherrschung, Automatik, Verstehen oder Aussprache; ein Transkript ist kein Audionachweis. Bewahre die Bedeutung. Antworte mit genau drei kurzen Abschnitten: Beobachtet, Reparatur, Transfer. Schlage eine explizite Reparatur und eine Aufgabe in einem neuen Kontext vor. Erfinde keine Quelle, Audiodaten, Zeitmessung, Provider-Prüfung oder Lernhistorie."
+        : "";
     const question = [
       `Erkläre das Lernthema „${body.topic || "dieses Thema"}“ vollständig auf ${body.language || "Deutsch"}.`,
-      body.purpose === "follow-up"
-        ? "Stelle eine kurze Anschlussfrage, mit der die lernende Person die Zielstruktur selbst produziert."
-        : "Verwende klare Sprache für Erwachsene, eine kurze Regel, ein eigenständig formuliertes Beispiel und eine Abruffrage.",
+      body.purpose === "language-analysis"
+        ? analysisRules
+        : body.purpose === "follow-up"
+          ? "Stelle eine kurze Anschlussfrage, mit der die lernende Person die Zielstruktur selbst produziert."
+          : "Verwende klare Sprache für Erwachsene, eine kurze Regel, ein eigenständig formuliertes Beispiel und eine Abruffrage.",
       body.learnerInput?.trim()
         ? `Die lernende Person hat geschrieben oder gesagt: ${body.learnerInput.trim()}`
         : "",
@@ -104,9 +117,18 @@ export async function POST(request: Request) {
         { status: response.status, headers: noStore },
       );
     }
+    if (!data.answer?.trim()) {
+      return Response.json(
+        {
+          message:
+            "Der verbundene KI-Provider hat keine Rückmeldung geliefert.",
+        },
+        { status: 502, headers: noStore },
+      );
+    }
     return Response.json(
       {
-        text: data.answer || "Es wurde keine Erklärung zurückgegeben.",
+        text: data.answer.trim(),
         provider: "openai",
         providerLabel: "OpenAI",
         model: "zentral",

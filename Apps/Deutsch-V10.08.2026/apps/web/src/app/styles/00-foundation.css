@@ -179,6 +179,21 @@
   transform: translateY(-2px) scale(0.98);
 }
 
+.select-menu-panel[data-starting-style],
+.select-menu-panel[data-ending-style] {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-2px) scale(0.98);
+}
+
+.select-menu-icon {
+  transition: transform 200ms var(--ease-out);
+}
+
+.select-menu-trigger[data-popup-open] .select-menu-icon {
+  transform: rotate(180deg);
+}
+
 @starting-style {
   .select-menu-panel {
     opacity: 0;
@@ -201,19 +216,87 @@
   }
 }
 
+.shared-feedback-enter {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 140ms var(--ease-out),
+    transform 140ms var(--ease-out);
+}
+
+.shared-status-enter {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
+}
+
+.session-complete-enter {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 220ms var(--ease-out),
+    transform 220ms var(--ease-out);
+}
+
+@starting-style {
+  .shared-feedback-enter {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  .shared-status-enter {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  .session-complete-enter {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+
   .select-menu-panel {
     transform: none;
     transition: opacity 100ms linear;
+  }
+
+  .select-menu-icon {
+    transition-duration: 0.01ms;
   }
 
   [data-slot="empty"] {
     animation: shared-empty-enter-reduced 120ms linear both;
   }
 
+  button {
+    transform: none !important;
+  }
+
   [data-slot="button"],
   .select-menu-trigger {
     transform: none !important;
+  }
+
+  .shared-feedback-enter,
+  .shared-status-enter {
+    transform: none;
+    transition: opacity 100ms linear;
+  }
+
+  .session-complete-enter {
+    transform: none;
+    transition: opacity 120ms linear;
   }
 }
 

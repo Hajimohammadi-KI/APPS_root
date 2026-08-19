@@ -111,9 +111,17 @@ test("Windows setup preserves local data during update and repair", () => {
   assert.match(setup, /Restore-SavedData/);
 });
 
+test("Windows setup supports an isolated lifecycle verification target", () => {
+  assert.match(setup, /InstallRootOverride/);
+  assert.match(setup, /SavedDataRootOverride/);
+  assert.match(setup, /SkipShortcuts/);
+});
+
 test("Windows setup automatically restarts the app after a successful operation", () => {
   assert.match(setup, /Create-Shortcuts\s+\$verb = switch/);
   assert.match(setup, /\$launcherProcess = Start-App/);
+  assert.match(setup, /scripts\\start-local-app\.ps1/);
+  assert.match(setup, /Start-Process -FilePath "powershell\.exe"[\s\S]*-WindowStyle Hidden -PassThru/);
   assert.match(setup, /Wait-ForAppReady \$launcherProcess/);
   assert.match(setup, /http:\/\/127\.0\.0\.1:4312\/api\/state/);
   assert.match(setup, /http:\/\/127\.0\.0\.1:4313\/v1\/health/);

@@ -139,11 +139,36 @@ export default function GemischtesTrainingPage() {
     );
   }
 
-  if (!queueReady) return null;
+  if (!queueReady) {
+    return (
+      <div className="space-y-5" aria-busy="true">
+        <div>
+          <Badge className="mb-3 bg-violet-700 text-white">
+            Gemischtes Training
+          </Badge>
+          <h1 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+            Gemischte Wiederholung über Themen hinweg
+          </h1>
+          <p className="mt-2 max-w-3xl text-muted-foreground">
+            Deine Themen werden zu einer abwechslungsreichen Sitzung gemischt.
+          </p>
+        </div>
+        <Card aria-live="polite">
+          <CardHeader>
+            <CardTitle>Übungen werden vorbereitet …</CardTitle>
+            <CardDescription>
+              Die erste Aufgabe erscheint gleich. Deine Eingabe bleibt dabei
+              jederzeit unter deiner Kontrolle.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
 
   if (!current) {
     return (
-      <div className="space-y-5">
+      <div className="session-complete-enter space-y-5">
         <div>
           <Badge className="mb-3 bg-violet-700 text-white">
             Gemischtes Training
@@ -199,7 +224,7 @@ export default function GemischtesTrainingPage() {
               <Check /> Prüfen
             </Button>
           ) : (
-            <div className="space-y-3">
+            <div className="shared-feedback-enter space-y-3">
               <p
                 className={
                   correct

@@ -38,9 +38,14 @@ export function AppShell({
     ...libraryNavigation,
     ...secondaryNavigation,
   ];
+  const navigationPathname = pathname.startsWith("/deutsch-mit-marija/uebung/")
+    ? "/ressourcen"
+    : pathname;
   const current =
     allNavigation.find((item) =>
-      item.href === "/" ? pathname === "/" : pathname.startsWith(item.href),
+      item.href === "/"
+        ? navigationPathname === "/"
+        : navigationPathname.startsWith(item.href),
     ) ?? coreNavigation[0]!;
   const CurrentIcon = current.icon;
   // Filtered by href rather than positional index -- a prior version
@@ -65,7 +70,7 @@ export function AppShell({
     ),
   );
   const evidenceNavigation = allNavigation.filter((item) =>
-    ["/fortschritt", "/fehler", "/audio"].includes(item.href),
+    ["/fortschritt", "/analytics", "/fehler", "/audio"].includes(item.href),
   );
   const settingsNavigation = allNavigation.filter((item) =>
     ["/einstellungen", "/lehrkraft"].includes(item.href),
@@ -103,6 +108,9 @@ export function AppShell({
 
   return (
     <div className="min-h-screen">
+      <a className="skip-link" href="#main-content">
+        Zum Hauptinhalt
+      </a>
       <aside className="german-app-sidebar fixed inset-y-0 left-0 z-30 hidden border-r bg-sidebar/95 backdrop-blur xl:flex xl:flex-col">
         <div className="px-2">
           <Brand />
@@ -115,6 +123,7 @@ export function AppShell({
               <section className="german-sidebar-section" key={group.id}>
                 <p className="german-sidebar-label">{group.title}</p>
                 <button
+                  aria-controls={`sidebar-group-${group.id}`}
                   aria-expanded={expanded}
                   className="german-sidebar-trigger"
                   onClick={() =>
@@ -129,7 +138,14 @@ export function AppShell({
                   <span>{group.caption}</span>
                   <ChevronDown className="ms-auto size-4" aria-hidden="true" />
                 </button>
-                {expanded ? <AppNavigation items={group.items} /> : null}
+                {expanded ? (
+                  <div id={`sidebar-group-${group.id}`}>
+                    <AppNavigation
+                      items={group.items}
+                      label={`${group.title} Navigation`}
+                    />
+                  </div>
+                ) : null}
               </section>
             );
           })}

@@ -53,6 +53,8 @@ import {
 } from "@/lib/audio-fluency";
 import { makeId, todayKey } from "@/lib/utils";
 import { DueReviews } from "@/features/components/due-reviews";
+import { ProgressInsights } from "@/features/components/progress-insights";
+import { dateKey } from "@/lib/streak";
 
 function requireDefaultGrammar() {
   const grammar =
@@ -93,13 +95,9 @@ const presentPerfectExercises = [
 ] as const;
 
 
-// Upper bound on a round, not a promise. curriculum.ts does NOT reach 10
-// exercises for most units -- measured against the current content: 66 of
-// 112 units carry 8 and 28 carry 10, but after dedupeByAnswer only 4
-// distinct answers remain for 49 units and 3 or fewer for 20 more. So a
-// round is frequently shorter than this value. That is the honest yield of
-// the existing content, not a regression; the fix is authoring, not a
-// bigger constant.
+// Upper bound on one focused round. The authored catalogue may offer more
+// prompts, but a single round stays short and deduplicated so it measures
+// retrieval rather than repeatedly typing the same expected answer.
 const ROUND_SIZE = 6;
 
 // Three-stage timed-practice model. Stage 1 is untimed (target >=90%
@@ -272,8 +270,10 @@ function Axis({ label, value }: { label: string; value: number }) {
       <div className="h-2.5 overflow-hidden rounded-full bg-violet-100">
         <div
           aria-hidden
-          className="h-full rounded-full bg-violet-700 transition-[width]"
-          style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+          className="h-full origin-left rounded-full bg-violet-700 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none"
+          style={{
+            transform: `scaleX(${Math.min(100, Math.max(0, value)) / 100})`,
+          }}
         />
       </div>
     </div>
@@ -540,6 +540,49 @@ export function AutomaticityScreen({
     (_, index) => plan.answers[`${key}:shadow:${index}`] === "done",
   );
   const verifiedMastery = state.mastery[topic];
+  const progressInsights = React.useMemo(() => {
+    const levelUnits = grammarUnits.filter(
+      (unit) => unit.level === selectedLevel,
+    );
+    const attemptedTopics = new Set(
+      state.attempts
+        .filter((attempt) => attempt.verified)
+        .map((attempt) => attempt.grammarTitle),
+    );
+    const coverage = levelUnits.length
+      ? (levelUnits.filter((unit) => attemptedTopics.has(unit.title)).length /
+          levelUnits.length) *
+        100
+      : 0;
+    const mastery = levelUnits.length
+      ? (levelUnits.filter((unit) =>
+          ["stable", "automatic"].includes(
+            state.mastery[unit.title]?.status ?? "new",
+          ),
+        ).length /
+          levelUnits.length) *
+        100
+      : 0;
+    const automaticity = levelUnits.length
+      ? levelUnits.reduce(
+          (sum, unit) =>
+            sum + (state.mastery[unit.title]?.automaticityScore ?? 0),
+          0,
+        ) / levelUnits.length
+      : 0;
+    const formatter = new Intl.DateTimeFormat("en", { weekday: "short" });
+    const weekActivity = Array.from({ length: 7 }, (_, index) => {
+      const daysAgo = 6 - index;
+      const date = new Date();
+      date.setDate(date.getDate() - daysAgo);
+      return {
+        day: formatter.format(date),
+        activity: state.activity[dateKey(daysAgo)] ?? 0,
+      };
+    });
+
+    return { coverage, mastery, automaticity, weekActivity };
+  }, [selectedLevel, state.activity, state.attempts, state.mastery]);
   const practiceStage = verifiedMastery?.practiceStage ?? 1;
   const stageSecondsPerItem = STAGE_SECONDS_PER_ITEM[practiceStage];
   const [secondsRemaining, setSecondsRemaining] = React.useState<
@@ -640,12 +683,13 @@ export function AutomaticityScreen({
       // known-correct answer (with a narrow open-production allowance) --
       // not self-rated, not a network call, not fabricated. It's a distinct
       // and legitimate verification basis from the online-provider one used
-      // for writing/speaking, so it can set verified on the same footing:
-      // true only when the check itself passed -- AND only when the answer
-      // was not readable on screen at the time. An open-book round is real
+      // for writing/speaking, so it can set verified on the same footing.
+      // Verification describes whether the result is trustworthy, not
+      // whether it was correct: a closed-book wrong answer must remain in
+      // the evidence and lower the score. An open-book round is real
       // practice but it is not retrieval evidence, so it must not raise
       // mastery.
-      verified: results.every(Boolean) && !openBook,
+      verified: !openBook,
       assessedBy: "offline",
       contentVersion: EVIDENCE_CONTENT_VERSION,
     });
@@ -848,7 +892,10 @@ export function AutomaticityScreen({
       fluencyScore: 0,
       latencyMs,
       passed: analysis.targetHit,
-      verified: analysis.masteryEligible,
+      // `online` means the provider actually assessed this response. Keep a
+      // provider-checked failure as verified evidence so it lowers mastery;
+      // `masteryEligible` also requires a pass and used to hide failures.
+      verified: analysis.online,
       assessedBy: analysis.online ? "online" : "offline",
       contentVersion: EVIDENCE_CONTENT_VERSION,
     });
@@ -887,7 +934,7 @@ export function AutomaticityScreen({
         fluencyScore: 0,
         latencyMs,
         passed: analysis.targetHit,
-        verified: analysis.masteryEligible,
+        verified: analysis.online,
         assessedBy: analysis.online ? "online" : "offline",
         contentVersion: EVIDENCE_CONTENT_VERSION,
       });
@@ -1035,7 +1082,7 @@ export function AutomaticityScreen({
       fluencyScore,
       latencyMs: null,
       passed: analysis.targetHit && seconds >= 45 && hasValidAudioEvidence,
-      verified: analysis.masteryEligible && hasValidAudioEvidence,
+      verified: analysis.online && hasValidAudioEvidence,
       audioId,
       rawTranscript: rawTranscriptRef.current || transcript,
       assessedBy: analysis.online ? "online" : "offline",
@@ -1092,6 +1139,16 @@ export function AutomaticityScreen({
 
       {!embedded ? <DueReviews /> : null}
 
+      {!embedded ? (
+        <ProgressInsights
+          level={selectedLevel}
+          coverage={progressInsights.coverage}
+          mastery={progressInsights.mastery}
+          automaticity={progressInsights.automaticity}
+          weekActivity={progressInsights.weekActivity}
+        />
+      ) : null}
+
       {!embedded ? <Card className="border-violet-200 bg-violet-50/70" id="mission">
         <CardContent className="space-y-4 pt-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -1102,12 +1159,16 @@ export function AutomaticityScreen({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button asChild size="sm" variant="outline">
-                <Link
-                  href={`/studio?from=daily&level=${encodeURIComponent(grammar.level)}&activity=2`}
-                >
-                  Practice in Speaking Studio
-                </Link>
+              <Button
+                render={
+                  <Link
+                    href={`/studio?from=daily&level=${encodeURIComponent(grammar.level)}&activity=2`}
+                  />
+                }
+                size="sm"
+                variant="outline"
+              >
+                Practice in Speaking Studio
               </Button>
               <Badge variant={progress === 100 ? "success" : "default"}>
                 {progress}% complete
@@ -1116,8 +1177,10 @@ export function AutomaticityScreen({
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-white ring-1 ring-violet-200">
             <div
-              className="h-full bg-violet-700 transition-[width]"
-              style={{ width: `${progress}%` }}
+              className="h-full origin-left bg-violet-700 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none"
+              style={{
+                transform: `scaleX(${Math.min(100, Math.max(0, progress)) / 100})`,
+              }}
             />
           </div>
         </CardContent>

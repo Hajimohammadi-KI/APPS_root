@@ -128,7 +128,7 @@ test("automaticity mission saves writing evidence and restores it", async ({
   await expect(restoredEvidence.getByLabel("Present perfect journal")).toHaveValue(
     journal,
   );
-  await expect(restoredEvidence.getByText("66% complete")).toBeVisible();
+  await expect(restoredEvidence.getByText("67% complete")).toBeVisible();
 });
 
 test("automaticity mission remains usable on a phone viewport", async ({

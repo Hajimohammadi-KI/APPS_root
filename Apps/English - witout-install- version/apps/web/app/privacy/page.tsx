@@ -11,7 +11,7 @@ const updated = "July 28, 2026";
 
 export default function PrivacyPage() {
   return (
-    <main className="legal-page">
+    <div className="legal-page">
       <div className="legal-shell">
         <Link className="legal-back" href="/">
           ← Back to learning app
@@ -95,6 +95,6 @@ export default function PrivacyPage() {
           </section>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

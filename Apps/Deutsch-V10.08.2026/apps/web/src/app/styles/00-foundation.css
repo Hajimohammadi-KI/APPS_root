@@ -41,6 +41,9 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
   /* Dedicated palette for the one shared SelectMenu control. Kept separate
      from the app tokens above on purpose: the selection control has a fixed
@@ -60,6 +63,11 @@
 }
 
 :root {
+  /* Reassert the shared motion curves after Tailwind's defaults so computed
+     styles keep the product motion spec rather than the framework preset. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --app-font: "Aptos", "Segoe UI Variable", "Segoe UI", sans-serif;
   --background: oklch(0.98 0.01 295);
   --foreground: oklch(0.22 0.035 285);
@@ -146,5 +154,71 @@
 
   .section-title {
     @apply mt-1 text-xl font-semibold tracking-tight sm:text-2xl;
+  }
+}
+
+/* Shared, low-frequency component motion. These primitives appear across the
+   product, so one token-driven implementation keeps every page consistent. */
+.select-menu-trigger,
+[data-slot="button"] {
+  transition-timing-function: var(--ease-out);
+}
+
+.select-menu-panel {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transform-origin: top center;
+  transition:
+    opacity 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
+}
+
+.select-menu-panel[data-state="closing"] {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-2px) scale(0.98);
+}
+
+@starting-style {
+  .select-menu-panel {
+    opacity: 0;
+    transform: translateY(-2px) scale(0.98);
+  }
+
+  .select-menu-panel[data-state="closing"] {
+    opacity: 0;
+  }
+}
+
+[data-slot="empty"] {
+  animation: shared-empty-enter 220ms var(--ease-out) both;
+}
+
+@keyframes shared-empty-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .select-menu-panel {
+    transform: none;
+    transition: opacity 100ms linear;
+  }
+
+  [data-slot="empty"] {
+    animation: shared-empty-enter-reduced 120ms linear both;
+  }
+
+  [data-slot="button"],
+  .select-menu-trigger {
+    transform: none !important;
+  }
+}
+
+@keyframes shared-empty-enter-reduced {
+  from {
+    opacity: 0;
   }
 }

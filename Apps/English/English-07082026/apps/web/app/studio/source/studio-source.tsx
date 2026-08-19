@@ -134,6 +134,7 @@ export default function Home() {
   const [dailyActivity, setDailyActivity] = useState<number | null>(null);
   const [dailyReturn, setDailyReturn] = useState("/daily");
   const [dailyComplete, setDailyComplete] = useState(false);
+  const [dailyCompleteClosing, setDailyCompleteClosing] = useState(false);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -166,7 +167,21 @@ export default function Home() {
       ? [...(current.mistakes || []), ...evaluation.issues.map((issue) => ({ activity: dailyActivity, topic: selected.topic, message: issue.message, correction: evaluation.corrected }))]
       : current.mistakes || [];
     localStorage.setItem(key, JSON.stringify({ ...current, currentActivity: dailyActivity, completedActivities: completed, mistakes, updatedAt: new Date().toISOString() }));
+    setDailyCompleteClosing(false);
     setDailyComplete(true);
+  }
+
+  function closeDailyComplete(afterClose: () => void) {
+    if (dailyCompleteClosing) return;
+    setDailyCompleteClosing(true);
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    window.setTimeout(() => {
+      setDailyComplete(false);
+      setDailyCompleteClosing(false);
+      afterClose();
+    }, reducedMotion ? 120 : 240);
   }
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -645,7 +660,7 @@ export default function Home() {
         </div>
         <footer><div className="turns"><b>{attempts} {attempts === 1 ? "attempt" : "attempts"}</b><span>{evaluation ? "●" : "○"} {audioUrl ? "●" : "○"} {savedId ? "●" : "○"}</span></div><div className="footer-coach"><span>👩🏻</span><p><b>Ava</b><br />{selected.goal}</p></div><button className="save-lite" onClick={() => setActive(6)}>▯ Save practice</button><button className="continue" onClick={() => setActive((current) => Math.min(current + 1, 6))}>{active === 6 ? (savedId ? "Session saved ✓" : "Save session") : `${language === "de" ? "Weiter" : "Continue"} →`}</button></footer>
       </main>
-      {dailyComplete && <div className="daily-complete-backdrop" role="dialog" aria-modal="true" aria-labelledby="daily-complete-title"><section className="daily-complete-card"><h2 id="daily-complete-title">Today’s conversation practice is complete.</h2><p>Your recording, transcript, corrections, and result were saved.</p><button className="primary" onClick={() => window.location.assign(dailyReturn)}>OK · Return to Today’s Practice</button><button onClick={() => { setDailyComplete(false); resetSession(); setActive(0); }}>Practise again</button><button onClick={() => { setDailyComplete(false); setActive(4); }}>Review my mistakes</button></section></div>}
+      {dailyComplete && <div className="daily-complete-backdrop" data-state={dailyCompleteClosing ? "closing" : "open"} role="dialog" aria-modal="true" aria-labelledby="daily-complete-title"><section className="daily-complete-card"><h2 id="daily-complete-title">Today’s conversation practice is complete.</h2><p>Your recording, transcript, corrections, and result were saved.</p><button className="primary" onClick={() => closeDailyComplete(() => window.location.assign(dailyReturn))}>OK · Return to Today’s Practice</button><button onClick={() => closeDailyComplete(() => { resetSession(); setActive(0); })}>Practise again</button><button onClick={() => closeDailyComplete(() => setActive(4))}>Review my mistakes</button></section></div>}
     </div>
   );
 }

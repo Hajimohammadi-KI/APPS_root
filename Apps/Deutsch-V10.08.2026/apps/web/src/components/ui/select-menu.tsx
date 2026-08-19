@@ -51,9 +51,12 @@ export function SelectMenu({
   const panelId = `${fieldId}-panel`;
 
   const [open, setOpen] = React.useState(false);
+  const [closing, setClosing] = React.useState(false);
   const wrapperRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRef = React.useRef<HTMLButtonElement | null>(null);
   const optionRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
+  const openRef = React.useRef(false);
+  const closeTimerRef = React.useRef<number | null>(null);
 
   const selectedIndex = options.findIndex((option) => option.value === value);
   const selectedLabel = selectedIndex >= 0 ? options[selectedIndex]?.label : "";
@@ -63,7 +66,34 @@ export function SelectMenu({
   // selection only commits on Enter or click.
   const [activeIndex, setActiveIndex] = React.useState(0);
 
-  const close = React.useCallback(() => setOpen(false), []);
+  const close = React.useCallback(() => {
+    if (!openRef.current) return;
+    openRef.current = false;
+    setOpen(false);
+    setClosing(true);
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+    }
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    closeTimerRef.current = window.setTimeout(
+      () => {
+        setClosing(false);
+        closeTimerRef.current = null;
+      },
+      reducedMotion ? 100 : 160,
+    );
+  }, []);
+
+  React.useEffect(
+    () => () => {
+      if (closeTimerRef.current !== null) {
+        window.clearTimeout(closeTimerRef.current);
+      }
+    },
+    [],
+  );
 
   // Register/unregister this menu's closer so a newly opened menu can close it.
   React.useEffect(() => {
@@ -100,6 +130,12 @@ export function SelectMenu({
 
   function openMenu() {
     if (disabled) return;
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setClosing(false);
+    openRef.current = true;
     setOpen(true);
   }
 
@@ -179,7 +215,7 @@ export function SelectMenu({
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label={ariaLabel}
-        className="select-menu-trigger flex w-full items-center gap-3 rounded-[14px] border border-select-line bg-select-surface px-3.5 py-2 text-start outline-none transition-colors hover:border-select-accent/40 focus-visible:border-select-accent focus-visible:ring-4 focus-visible:ring-select-accent/15 disabled:cursor-not-allowed disabled:opacity-60"
+        className="select-menu-trigger flex w-full items-center gap-3 rounded-[14px] border border-select-line bg-select-surface px-3.5 py-2 text-start outline-none transition-[color,border-color,box-shadow,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-select-accent/40 focus-visible:border-select-accent focus-visible:ring-4 focus-visible:ring-select-accent/15 active:scale-[.97] disabled:cursor-not-allowed disabled:opacity-60"
         disabled={disabled}
         id={triggerId}
         onClick={() => (open ? close() : openMenu())}
@@ -203,18 +239,20 @@ export function SelectMenu({
         <ChevronDown
           aria-hidden
           className={cn(
-            "size-4 shrink-0 text-select-muted transition-transform duration-200",
+            "size-4 shrink-0 text-select-muted transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]",
             open && "rotate-180",
           )}
         />
       </button>
 
-      {open ? (
+      {open || closing ? (
         // left-0/right-0 pins the panel to the trigger's own box, so it
         // always matches the trigger width without measuring it in JS.
         <div
+          aria-hidden={closing || undefined}
           aria-labelledby={triggerId}
           className="select-menu-panel absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-[14px] border border-select-line bg-select-surface p-1.5 shadow-[0_4px_14px_rgba(70,50,110,0.07)]"
+          data-state={closing ? "closing" : "open"}
           id={panelId}
           role="listbox"
         >
@@ -237,7 +275,7 @@ export function SelectMenu({
                   optionRefs.current[index] = node;
                 }}
                 role="option"
-                tabIndex={index === activeIndex ? 0 : -1}
+                tabIndex={!closing && index === activeIndex ? 0 : -1}
                 type="button"
               >
                 <Check

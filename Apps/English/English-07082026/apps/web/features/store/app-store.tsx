@@ -34,7 +34,7 @@ export type MasteryStatus =
 // BY automaticity-screen.tsx -- importing it back the other way would be a
 // circular dependency. Re-exported from automaticity-screen.tsx below for
 // its existing importers.
-export const EVIDENCE_CONTENT_VERSION = "27.3.0";
+export const EVIDENCE_CONTENT_VERSION = "27.3.1";
 export type AttemptMode =
 	| "recognition"
 	| "writing"

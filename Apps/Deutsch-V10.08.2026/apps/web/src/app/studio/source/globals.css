@@ -74,11 +74,21 @@ button {
   border-radius: 9px;
   padding: 10px 12px;
   cursor: pointer;
-  transition: 0.18s;
+  transition:
+    color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
 }
-button:hover {
-  border-color: #a48be0;
-  transform: translateY(-1px);
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    border-color: #a48be0;
+    transform: translateY(-1px);
+  }
+}
+button:not(:disabled):active {
+  transform: scale(0.97);
 }
 button:focus-visible {
   outline: 3px solid #b9a5ed;
@@ -855,5 +865,132 @@ input {
   * {
     animation: none !important;
     transition: none !important;
+  }
+}
+/* Purposeful Conversation Studio motion: feedback for state changes, never
+   decoration on navigation or frequently changing transcript text. */
+button {
+  transition-property:
+    color, background-color, border-color, box-shadow, transform;
+  transition-duration: 160ms;
+  transition-timing-function: var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  button:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
+}
+
+button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.flow-panel,
+.improve-panel {
+  animation: conversation-stage-enter 180ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.mic-error {
+  animation: conversation-status-enter 160ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.daily-complete-backdrop {
+  animation: conversation-backdrop-enter 180ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.daily-complete-card {
+  transform-origin: center;
+  animation: conversation-modal-enter 240ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.daily-complete-backdrop[data-state="closing"] {
+  pointer-events: none;
+  animation: conversation-backdrop-exit 180ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.daily-complete-backdrop[data-state="closing"] .daily-complete-card {
+  animation: conversation-modal-exit 240ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+@keyframes conversation-stage-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes conversation-status-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes conversation-backdrop-enter {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes conversation-backdrop-exit {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes conversation-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+@keyframes conversation-modal-exit {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button,
+  button:not(:disabled):hover,
+  button:not(:disabled):active {
+    transform: none !important;
+  }
+
+  .flow-panel,
+  .improve-panel,
+  .mic-error,
+  .daily-complete-backdrop,
+  .daily-complete-card,
+  .daily-complete-backdrop[data-state="closing"],
+  .daily-complete-backdrop[data-state="closing"] .daily-complete-card {
+    transform: none !important;
+    animation: conversation-fade-enter 120ms linear both !important;
+  }
+
+  .daily-complete-backdrop[data-state="closing"],
+  .daily-complete-backdrop[data-state="closing"] .daily-complete-card {
+    animation-name: conversation-fade-exit !important;
+  }
+}
+
+@keyframes conversation-fade-enter {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes conversation-fade-exit {
+  to {
+    opacity: 0;
   }
 }

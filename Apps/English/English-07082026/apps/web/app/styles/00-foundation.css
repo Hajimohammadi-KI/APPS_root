@@ -52,6 +52,11 @@
 }
 
 :root {
+  /* Reassert the shared motion curves after Tailwind's defaults so computed
+     styles keep the product motion spec rather than the framework preset. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --background: #f7f4fb;
   --foreground: #21182f;
   --card: #fffefe;
@@ -97,6 +102,50 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Shared, low-frequency component motion. These primitives appear across the
+   product, so one token-driven implementation keeps every page consistent. */
+.select-menu-trigger,
+[data-slot="button"] {
+  transition-timing-function: var(--ease-out);
+}
+
+.select-menu-panel {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transform-origin: top center;
+  transition:
+    opacity 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
+}
+
+.select-menu-panel[data-state="closing"] {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-2px) scale(0.98);
+}
+
+@starting-style {
+  .select-menu-panel {
+    opacity: 0;
+    transform: translateY(-2px) scale(0.98);
+  }
+
+  .select-menu-panel[data-state="closing"] {
+    opacity: 0;
+  }
+}
+
+[data-slot="empty"] {
+  animation: shared-empty-enter 220ms var(--ease-out) both;
+}
+
+@keyframes shared-empty-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* One real global baseline instead of the 1-2 narrow, component-scoped
      overrides this app had before -- gentler, not zero: keep opacity/color
@@ -111,6 +160,26 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .select-menu-panel {
+    transform: none !important;
+    transition: opacity 100ms linear !important;
+  }
+
+  [data-slot="empty"] {
+    animation: shared-empty-enter-reduced 120ms linear both !important;
+  }
+
+  [data-slot="button"],
+  .select-menu-trigger {
+    transform: none !important;
+  }
+}
+
+@keyframes shared-empty-enter-reduced {
+  from {
+    opacity: 0;
   }
 }
 

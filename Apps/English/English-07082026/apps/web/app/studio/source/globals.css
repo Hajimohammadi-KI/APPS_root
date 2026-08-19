@@ -7,3 +7,133 @@
 .improve-panel{margin-top:16px;border:1px solid #d9cff5;border-radius:18px;padding:20px;background:linear-gradient(135deg,#faf8ff,#f3efff);box-shadow:0 8px 22px #5527bd14}.improve-heading{display:flex;align-items:center;gap:12px}.improve-heading>span{width:42px;height:42px;border-radius:12px;background:var(--violet);color:white;display:grid;place-items:center;font-size:20px}.improve-heading p{margin:0 0 5px;color:var(--violet);font-size:9px;font-weight:800;letter-spacing:.12em}.improve-heading h3{margin:0;font-size:17px}.improve-compare{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin:18px 0}.improve-compare article{background:white;border:1px solid var(--line);border-radius:12px;padding:14px}.improve-compare article.better{border-color:#a98de8;background:#fff}.improve-compare small{font-size:9px;color:var(--muted);font-weight:800;letter-spacing:.08em}.improve-compare p{font-size:15px;line-height:1.5;margin:8px 0 0}.improve-compare .better p{color:var(--violet);font-weight:700}.speaking-tip{background:#e9f3ff;border-radius:10px;padding:12px 14px}.speaking-tip p{margin:5px 0 0;color:var(--muted);line-height:1.45}.improve-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}.improve-empty{margin-top:16px;background:white;border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:16px}.improve-empty p{margin:0;color:var(--muted);line-height:1.5}
 .flow-panel{margin-top:16px;border:1px solid #d9cff5;border-radius:18px;padding:20px;background:#fbfaff;box-shadow:0 8px 22px #5527bd10}.flow-title{display:flex;align-items:center;gap:12px}.flow-title>span{width:42px;height:42px;border-radius:12px;background:var(--violet);color:#fff;display:grid;place-items:center;font-size:19px}.flow-title small{display:block;color:var(--violet);font-weight:800;letter-spacing:.1em;font-size:9px;margin-bottom:5px}.flow-title h3{margin:0;font-size:17px}.flow-panel blockquote{margin:18px 0;background:#fff;border-left:4px solid var(--violet);border-radius:0 12px 12px 0;padding:18px;font-size:17px}.flow-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}.flow-empty{margin-top:16px;padding:16px;background:#fff;border:1px dashed #cfc7e5;border-radius:12px;color:var(--muted)}.flow-note{background:#f1edfc;padding:11px 13px;border-radius:9px;color:var(--muted);line-height:1.45}.review-audio,.review-grid audio{width:100%;height:36px}.review-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr);gap:10px;margin-top:18px}.review-grid article,.correction-grid article{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}.review-grid small,.correction-grid small{color:var(--muted);font-weight:800;font-size:9px;letter-spacing:.08em}.review-grid p,.correction-grid p{line-height:1.5}.correction-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:18px}.correction-grid article:first-child{background:var(--coral)}.correction-grid article:last-child{background:#effaf0}.save-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.save-summary span{background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px;display:grid;gap:5px}.save-summary b{color:var(--violet);font-size:16px}.save-success{margin-top:18px;background:#effaf0;border-radius:12px;padding:18px;color:#185f2b}.save-success p{color:var(--ink)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* Purposeful Conversation Studio motion: feedback for state changes, never
+   decoration on navigation or frequently changing transcript text. */
+button {
+  transition-property:
+    color, background-color, border-color, box-shadow, transform;
+  transition-duration: 160ms;
+  transition-timing-function: var(
+    --ease-out,
+    cubic-bezier(0.23, 1, 0.32, 1)
+  );
+}
+
+@media (hover: hover) and (pointer: fine) {
+  button:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
+}
+
+button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.flow-panel,
+.improve-panel {
+  animation: conversation-stage-enter 180ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.mic-error {
+  animation: conversation-status-enter 160ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.daily-complete-backdrop {
+  animation: conversation-backdrop-enter 180ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.daily-complete-card {
+  transform-origin: center;
+  animation: conversation-modal-enter 240ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.daily-complete-backdrop[data-state="closing"] {
+  pointer-events: none;
+  animation: conversation-backdrop-exit 180ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+.daily-complete-backdrop[data-state="closing"] .daily-complete-card {
+  animation: conversation-modal-exit 240ms
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+@keyframes conversation-stage-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes conversation-status-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes conversation-backdrop-enter {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes conversation-backdrop-exit {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes conversation-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+@keyframes conversation-modal-exit {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button,
+  button:not(:disabled):hover,
+  button:not(:disabled):active {
+    transform: none !important;
+  }
+
+  .flow-panel,
+  .improve-panel,
+  .mic-error,
+  .daily-complete-backdrop,
+  .daily-complete-card,
+  .daily-complete-backdrop[data-state="closing"],
+  .daily-complete-backdrop[data-state="closing"] .daily-complete-card {
+    transform: none !important;
+    animation: conversation-fade-enter 120ms linear both !important;
+  }
+
+  .daily-complete-backdrop[data-state="closing"],
+  .daily-complete-backdrop[data-state="closing"] .daily-complete-card {
+    animation-name: conversation-fade-exit !important;
+  }
+}
+
+@keyframes conversation-fade-enter {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes conversation-fade-exit {
+  to {
+    opacity: 0;
+  }
+}

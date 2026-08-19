@@ -3,7 +3,7 @@
   "manifestPath": "/manifest.webmanifest",
   "name": "DeutschFlow",
   "fullName": "DeutschFlow – Grammatik automatisieren",
-  "version": "20.8.10",
+  "version": "20.8.11",
   "themeColor": "#38bdf8",
   "backgroundColor": "#f5fbff",
   "android": {

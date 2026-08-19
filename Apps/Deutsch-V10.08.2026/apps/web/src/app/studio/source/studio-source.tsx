@@ -159,6 +159,7 @@ export default function Home() {
   const [dailyActivity, setDailyActivity] = useState<number | null>(null);
   const [dailyReturn, setDailyReturn] = useState("/heute");
   const [dailyComplete, setDailyComplete] = useState(false);
+  const [dailyCompleteClosing, setDailyCompleteClosing] = useState(false);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -259,7 +260,24 @@ export default function Home() {
         updatedAt: new Date().toISOString(),
       }),
     );
+    setDailyCompleteClosing(false);
     setDailyComplete(true);
+  }
+
+  function closeDailyComplete(afterClose: () => void) {
+    if (dailyCompleteClosing) return;
+    setDailyCompleteClosing(true);
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    window.setTimeout(
+      () => {
+        setDailyComplete(false);
+        setDailyCompleteClosing(false);
+        afterClose();
+      },
+      reducedMotion ? 120 : 240,
+    );
   }
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -1507,6 +1525,7 @@ export default function Home() {
       {dailyComplete && (
         <div
           className="daily-complete-backdrop"
+          data-state={dailyCompleteClosing ? "closing" : "open"}
           role="dialog"
           aria-modal="true"
           aria-labelledby="daily-complete-title"
@@ -1520,25 +1539,23 @@ export default function Home() {
             </p>
             <button
               className="primary"
-              onClick={() => window.location.assign(dailyReturn)}
+              onClick={() =>
+                closeDailyComplete(() => window.location.assign(dailyReturn))
+              }
             >
               OK · Zum heutigen Training
             </button>
             <button
-              onClick={() => {
-                setDailyComplete(false);
-                resetSession();
-                setActive(0);
-              }}
+              onClick={() =>
+                closeDailyComplete(() => {
+                  resetSession();
+                  setActive(0);
+                })
+              }
             >
               Noch einmal üben
             </button>
-            <button
-              onClick={() => {
-                setDailyComplete(false);
-                setActive(4);
-              }}
-            >
+            <button onClick={() => closeDailyComplete(() => setActive(4))}>
               Meine Fehler ansehen
             </button>
           </section>

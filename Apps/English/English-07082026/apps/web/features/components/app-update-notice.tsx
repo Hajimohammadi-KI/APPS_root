@@ -11,7 +11,7 @@ interface ReleaseManifest {
 }
 
 const fallbackRelease: ReleaseManifest = {
-  version: "27.3.0",
+  version: "27.3.1",
   changes: [
     "Task Definition versioning and lifecycle monitoring foundations",
     "Deterministic legacy-event upcasting without rewriting learner history",

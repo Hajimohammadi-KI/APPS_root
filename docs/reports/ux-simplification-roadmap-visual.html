@@ -1,0 +1,655 @@
+<title>رودمپ ساده‌سازی UX</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #eef1f4;
+    --surface: #ffffff;
+    --surface-2: #f5f7f9;
+    --line: #dbe2e8;
+    --line-strong: #c1cbd3;
+    --ink: #17212b;
+    --ink-dim: #56636f;
+    --ink-faint: #8894a0;
+    --accent: #2b4c7e;
+    --accent-strong: #1c3457;
+    --accent-soft: #e3eaf3;
+    --track-en: #a8641f;
+    --track-en-soft: #f6ead8;
+    --track-de: #17715f;
+    --track-de-soft: #dcf1ea;
+    --done: #1f7a6c;
+    --done-soft: #e1f3ef;
+    --active: #2b4c7e;
+    --active-soft: #e3eaf3;
+    --pending: #7c8792;
+    --pending-soft: #eef1f3;
+    --blocked: #ad2b21;
+    --blocked-soft: #fbeae8;
+    --shadow: 0 1px 2px rgba(23, 33, 43, 0.06), 0 10px 28px rgba(23, 33, 43, 0.07);
+    --radius: 14px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10161d;
+      --surface: #182230;
+      --surface-2: #1e2a3a;
+      --line: #2c3a49;
+      --line-strong: #3c4d5e;
+      --ink: #e8edf2;
+      --ink-dim: #a2aebb;
+      --ink-faint: #71808f;
+      --accent: #7fa5d6;
+      --accent-strong: #9dbce4;
+      --accent-soft: #203450;
+      --track-en: #d69a52;
+      --track-en-soft: #3a2c18;
+      --track-de: #4fc0a4;
+      --track-de-soft: #123329;
+      --done: #4fc0a4;
+      --done-soft: #123329;
+      --active: #7fa5d6;
+      --active-soft: #203450;
+      --pending: #8894a0;
+      --pending-soft: #232f3b;
+      --blocked: #e5766a;
+      --blocked-soft: #3a1e1a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.32);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #10161d;
+    --surface: #182230;
+    --surface-2: #1e2a3a;
+    --line: #2c3a49;
+    --line-strong: #3c4d5e;
+    --ink: #e8edf2;
+    --ink-dim: #a2aebb;
+    --ink-faint: #71808f;
+    --accent: #7fa5d6;
+    --accent-strong: #9dbce4;
+    --accent-soft: #203450;
+    --track-en: #d69a52;
+    --track-en-soft: #3a2c18;
+    --track-de: #4fc0a4;
+    --track-de-soft: #123329;
+    --done: #4fc0a4;
+    --done-soft: #123329;
+    --active: #7fa5d6;
+    --active-soft: #203450;
+    --pending: #8894a0;
+    --pending-soft: #232f3b;
+    --blocked: #e5766a;
+    --blocked-soft: #3a1e1a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.32);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
+    direction: rtl;
+    line-height: 1.65;
+  }
+
+  .mono {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  header.top {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    text-align: right;
+    unicode-bidi: isolate;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 800;
+    margin: 0;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  .lede {
+    color: var(--ink-dim);
+    font-size: 15.5px;
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .app-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .app-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .app-tag.en { background: var(--track-en-soft); color: var(--track-en); }
+  .app-tag.de { background: var(--track-de-soft); color: var(--track-de); }
+
+  .app-tag .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 6px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--done));
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-size: 13px;
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+
+  /* metro tracker */
+  .tracker {
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    padding: 4px 2px 18px;
+    margin-bottom: 8px;
+  }
+
+  .tracker::-webkit-scrollbar { height: 6px; }
+  .tracker::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+
+  .tnode {
+    flex: 0 0 auto;
+    width: 108px;
+    text-align: center;
+    position: relative;
+    padding-top: 30px;
+  }
+
+  .tnode::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--line-strong);
+  }
+
+  .tnode:first-child::before { display: none; }
+
+  .tnode .pip {
+    position: absolute;
+    top: 2px;
+    right: calc(50% - 8px);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--pending);
+    z-index: 1;
+  }
+
+  .tnode.done .pip { background: var(--done); border-color: var(--done); }
+  .tnode.active .pip { background: var(--active-soft); border-color: var(--active); box-shadow: 0 0 0 4px var(--active-soft); }
+
+  .tnode .tlabel {
+    font-size: 12px;
+    color: var(--ink-dim);
+    line-height: 1.4;
+  }
+
+  .tnode .tphase {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-size: 11px;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* phase cards */
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 24px;
+    margin-bottom: 16px;
+  }
+
+  .phase-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .phase-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .phase-id {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1px 7px;
+  }
+
+  .phase h2 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .chip.done { background: var(--done-soft); color: var(--done); }
+  .chip.active { background: var(--active-soft); color: var(--active); }
+  .chip.pending { background: var(--pending-soft); color: var(--pending); }
+  .chip.blocked { background: var(--blocked-soft); color: var(--blocked); }
+
+  .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .phase-when {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin-top: 4px;
+  }
+
+  .phase-body {
+    margin-top: 12px;
+    color: var(--ink-dim);
+    font-size: 14.5px;
+  }
+
+  .phase-body p { margin: 0 0 10px; }
+  .phase-body p:last-child { margin-bottom: 0; }
+
+  .table-scroll {
+    overflow-x: auto;
+    margin-top: 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13.5px;
+    min-width: 480px;
+  }
+
+  th, td {
+    padding: 9px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  th {
+    background: var(--surface-2);
+    color: var(--ink-dim);
+    font-weight: 600;
+    font-size: 12.5px;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td.num, th.num { text-align: center; font-family: "IBM Plex Mono", monospace; }
+
+  /* menu architecture diagram (phase 1) */
+  .menu-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .menu-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .menu-box {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 8px 14px;
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+
+  .menu-box.top {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent-strong);
+    font-weight: 700;
+  }
+
+  .menu-children {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-right: 26px;
+    border-right: 2px dashed var(--line-strong);
+    margin-right: 12px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  .menu-children .menu-box {
+    font-size: 13px;
+    color: var(--ink-dim);
+    font-weight: 500;
+  }
+
+  footer.hist {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  footer.hist h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    margin: 0 0 12px;
+  }
+
+  .hist-entry {
+    display: flex;
+    gap: 12px;
+    font-size: 13.5px;
+    color: var(--ink-dim);
+    padding: 6px 0;
+  }
+
+  .hist-date {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    color: var(--ink-faint);
+    flex: 0 0 auto;
+  }
+
+  .src-note {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin-top: 6px;
+  }
+
+  code.path {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    unicode-bidi: isolate;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-size: 12.5px;
+    color: var(--accent-strong);
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">UX SIMPLIFICATION ROADMAP · 2026-08-20</div>
+    <h1>رودمپ ساده‌سازی تجربهٔ کاربری</h1>
+    <p class="lede">
+      برای اپ‌های آموزش انگلیسی و آلمانی. مشکل اصلی رنگ یا زیبایی نیست —
+      تعداد انتخاب‌ها، تکرار تصمیم‌ها و چند نقطهٔ شروع موازی است. این سند
+      زنده است: هر تغییر مرتبط در کد، وضعیت فاز مربوطه را همین‌جا به‌روز
+      می‌کند.
+    </p>
+    <div class="app-tags">
+      <span class="app-tag en"><span class="dot"></span>English-07082026</span>
+      <span class="app-tag de"><span class="dot"></span>Deutsch-V10.08.2026</span>
+    </div>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">1 / 10 فاز انجام‌شده</div>
+    </div>
+  </header>
+
+  <nav class="tracker" id="tracker" aria-label="نقشهٔ فازها"></nav>
+
+  <main id="phases"></main>
+
+  <footer class="hist">
+    <h3>تاریخچهٔ به‌روزرسانی</h3>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-20</span>
+      <span>ایجاد سند. نقد پایه (فاز ۰) با بررسی بصری Codex + بررسی کد Claude انجام شد. فازهای ۱ تا ۹ هنوز شروع نشده‌اند.</span>
+    </div>
+    <div class="src-note">
+      منبع متنی همراه: <code class="path">docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md</code>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const phases = [
+    {
+      id: "p0", phase: "فاز ۰", title: "نقد پایه", status: "done", when: "۲۰۲۶-۰۸-۲۰ — انجام‌شده",
+      body: `<p>بررسی بصری (Codex، با اسکرین‌شات از هر دو اپ) + بررسی مستقیم کد (Claude) کامل شد.
+      یافتهٔ مشترک: Conversation Studio گیج‌کننده‌ترین صفحه است — فیلتر، حالت، مرحله و آمار هم‌زمان دیده
+      می‌شوند و طراحی‌اش با بقیهٔ اپ فرق دارد. کد مشترک واقعی بین English و Deutsch صفر است؛ فقط با
+      <code class="path">shared/check-duplicated-files.mjs</code> سازگار نگه داشته می‌شوند.</p>`,
+    },
+    {
+      id: "p1", phase: "فاز ۱", title: "ساده‌سازی معماری منو", status: "pending", when: "این هفته",
+      body: `<p>بدون دادهٔ جدید، کمترین ریسک. دکمهٔ Home در همهٔ صفحات در دسترس باشد. معیار پذیرش: در Home
+      فقط یک CTA غالب دیده شود.</p>
+      <div class="menu-tree">
+        <div class="menu-row"><span class="menu-box top">Start / Startseite</span></div>
+        <div class="menu-row"><span class="menu-box top">Today / Heute</span></div>
+        <div class="menu-row">
+          <span class="menu-box">Practice ▾</span>
+          <div class="menu-children">
+            <span class="menu-box">Mixed Training</span>
+            <span class="menu-box">Conversation Studio</span>
+            <span class="menu-box">Review</span>
+          </div>
+        </div>
+        <div class="menu-row">
+          <span class="menu-box">Learn ▾</span>
+          <div class="menu-children">
+            <span class="menu-box">Grammar</span>
+            <span class="menu-box">Vocabulary</span>
+            <span class="menu-box">PDF Reader</span>
+          </div>
+        </div>
+        <div class="menu-row">
+          <span class="menu-box">Progress ▾</span>
+          <div class="menu-children">
+            <span class="menu-box">Learning Evidence</span>
+            <span class="menu-box">Repair Items</span>
+            <span class="menu-box">Statistics</span>
+          </div>
+        </div>
+        <div class="menu-row"><span class="menu-box">Settings ▾</span></div>
+      </div>`,
+    },
+    {
+      id: "p2", phase: "فاز ۲", title: "موتور جلسهٔ روزانهٔ یکپارچه", status: "pending", when: "۱ تا ۲ هفته",
+      body: `<p>بعد از انتخاب زمان، کاربر دیگر بین Grammar/Studio/Review/Mixed تصمیم نگیرد. نسخهٔ ۴۵ دقیقه
+      فقط کشیده‌شدهٔ نسخهٔ ۱۵ دقیقه نیست — گفتار طولانی‌تر، نوشتن مستقل، دو زمینهٔ جدید. ارتقای سطح بر پایهٔ
+      کیفیت شواهد باشد نه تعداد دقیقه.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>بخش روزانه</th><th class="num">۱۵ دقیقه</th><th class="num">۳۰ دقیقه</th><th class="num">۴۵ دقیقه</th></tr></thead>
+        <tbody>
+          <tr><td>Wiederholen / Recall</td><td class="num">۳</td><td class="num">۵</td><td class="num">۷</td></tr>
+          <tr><td>Mixed Training</td><td class="num">۳</td><td class="num">۶</td><td class="num">۱۰</td></tr>
+          <tr><td>Conversation Studio</td><td class="num">۴</td><td class="num">۸</td><td class="num">۱۲</td></tr>
+          <tr><td>Grammar &amp; Repair</td><td class="num">۲</td><td class="num">۵</td><td class="num">۷</td></tr>
+          <tr><td>Transfer به موقعیت جدید</td><td class="num">۳</td><td class="num">۶</td><td class="num">۹</td></tr>
+          <tr><td><strong>مجموع</strong></td><td class="num"><strong>۱۵</strong></td><td class="num"><strong>۳۰</strong></td><td class="num"><strong>۴۵</strong></td></tr>
+        </tbody>
+      </table></div>`,
+    },
+    {
+      id: "p3", phase: "فاز ۳", title: "توضیح ساده برای اصطلاحات فنی", status: "pending", when: "۱ تا ۲ هفته، موازی با فاز ۲",
+      body: `<p>Evidence، Automaticity، Nachweise در Progress/Evidence باید یک توضیح یک‌خطی به زبان
+      زبان‌آموز داشته باشند — نه واژهٔ فنی بدون تعریف.</p>`,
+    },
+    {
+      id: "p4", phase: "فاز ۴", title: "schema واحد محتوا", status: "pending", when: "۲ تا ۴ هفته",
+      body: `<p>schema مشترک (zod) برای واحد محتوایی: سطح CEFR، مثال، صوت، ترجمه،
+      recognition/writing/speaking/repair/transfer. انتقال باقیماندهٔ محتوای انگلیسی از آرایهٔ TS دستی
+      (<code class="path">packages/content/src/authored/*.ts</code>) به همان الگوی JSON اعتبارسنجی‌شده
+      که آلمانی تا حدی دارد (<code class="path">data/grammar.json</code>).</p>`,
+    },
+    {
+      id: "p5", phase: "فاز ۵", title: "ادغام دیتاست‌های باز", status: "pending", when: "۱ تا ۲ ماه",
+      body: `<p>کاتالوگ فعلی فقط metadata است، دانلود/آموزش واقعی انجام نشده. به‌عنوان seed ادغام شود،
+      نه در Installer:</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>دیتاست</th><th>کاربرد</th><th>محدودیت</th></tr></thead>
+        <tbody>
+          <tr><td>Tatoeba CC0</td><td>جملهٔ کوتاه دوزبانه — Reading/Transformation</td><td>صوت هر فایل مجوز جدا دارد</td></tr>
+          <tr><td>Mozilla Common Voice</td><td>تنوع گویندگان برای ارزیابی ASR</td><td>معیار تلفظ زبان‌آموز نیست</td></tr>
+          <tr><td>MERLIN</td><td>خطای واقعی زبان‌آموز آلمانی + سطح CEFR</td><td>مجوز CC BY-SA</td></tr>
+          <tr><td>UD English EWT / German GSD</td><td>نقش کلمه، حالت، ترتیب کلمات</td><td>برچسب CEFR ندارد</td></tr>
+          <tr><td>FLEURS</td><td>Benchmark مقایسه‌ای ASR</td><td>برای محتوای آموزشی مناسب نیست</td></tr>
+          <tr><td>W&amp;I + LOCNESS, C4 200M GEC</td><td>پیش‌آموزش تصحیح خطای نوشتاری</td><td>بررسی مجوز قبل از استفادهٔ تجاری</td></tr>
+        </tbody>
+      </table></div>`,
+    },
+    {
+      id: "p6", phase: "فاز ۶", title: "پایپ‌لاین ترکیبی هوش مصنوعی", status: "pending", when: "۱ تا ۲ ماه، موازی با فاز ۵",
+      body: `<p><strong>Rule Engine</strong> برای زمان‌بندی و تصمیم تسلط · <strong>Whisper</strong> فقط برای
+      transcript، نه نمرهٔ تلفظ · <strong>LanguageTool + UD</strong> فقط پیشنهاد، نه جایگزینی خودکار ·
+      <strong>LLM</strong> فقط تولید تمرین/توضیح با خروجی JSON · <strong>FSRS</strong> برای زمان‌بندی مرور ·
+      IndexedDB محلی با صف همگام‌سازی برای PWA آفلاین‌محور.</p>`,
+    },
+    {
+      id: "p7", phase: "فاز ۷", title: "پکیج مشترک واقعی", status: "pending", when: "بلندمدت",
+      body: `<p>الان English و Deutsch معماری تقریباً یکسان دارند ولی فقط با کپی +
+      <code class="path">check-duplicated-files.mjs</code> سازگار می‌مانند — هر باگ دوبار fix می‌شود.
+      هدف: <code class="path">packages/learning-core</code> واقعی شامل مدل CEFR/automaticity، schema
+      محتوا، منطق وضعیت (به سبک بازسازی امروز Tracker با
+      <code class="path">lib/study-progress.ts</code>) و توکن‌های طراحی مشترک واقعی.</p>`,
+    },
+    {
+      id: "p8", phase: "فاز ۸", title: "QA تعاملی دسترس‌پذیری", status: "pending", when: "بلندمدت",
+      body: `<p>از روی اسکرین‌شات قابل تأیید نیست: WCAG 2.2، ترتیب فوکوس کیبورد، Screen Reader، عملکرد
+      میکروفون، بازیابی خطا. حداقل برای وب: reflow در عرض ۳۲۰px، فوکوس آشکار، هدف‌های لمسی مناسب.</p>`,
+    },
+    {
+      id: "p9", phase: "فاز ۹", title: "معیارهای موفقیت واقعی", status: "pending", when: "مستمر",
+      body: `<p>جایگزین تعداد کلیک/XP: زمان تا اولین پاسخ گفتاری، بازیابی درست بدون دیدن جواب، توانایی
+      صحبت‌کردن ۴۵ تا ۶۰ ثانیه، اصلاح مستقل خطا، استفاده از همان ساختار بعد از ۱/۳/۷ روز، انتقال به موضوع
+      جدید، نرخ خطای کاذب Grammar/ASR.</p>`,
+    },
+  ];
+
+  const statusMeta = {
+    done: { label: "انجام‌شده", chip: "done" },
+    active: { label: "در حال انجام", chip: "active" },
+    pending: { label: "شروع‌نشده", chip: "pending" },
+    blocked: { label: "مسدود", chip: "blocked" },
+  };
+
+  const trackerEl = document.getElementById("tracker");
+  const phasesEl = document.getElementById("phases");
+
+  phases.forEach((p) => {
+    const node = document.createElement("div");
+    node.className = "tnode " + p.status;
+    node.innerHTML = `<span class="pip"></span><span class="tlabel"><span class="tphase">${p.id}</span>${p.title}</span>`;
+    trackerEl.appendChild(node);
+
+    const card = document.createElement("section");
+    card.className = "phase";
+    card.id = p.id;
+    const meta = statusMeta[p.status];
+    card.innerHTML = `
+      <div class="phase-head">
+        <div>
+          <div class="phase-title-row">
+            <span class="phase-id">${p.id}</span>
+            <h2>${p.title}</h2>
+          </div>
+          <div class="phase-when">${p.phase} · ${p.when}</div>
+        </div>
+        <span class="chip ${meta.chip}"><span class="dot"></span>${meta.label}</span>
+      </div>
+      <div class="phase-body">${p.body}</div>
+    `;
+    phasesEl.appendChild(card);
+  });
+
+  const done = phases.filter((p) => p.status === "done").length;
+  document.getElementById("progress-fill").style.width = (done / phases.length) * 100 + "%";
+  document.getElementById("progress-label").textContent = `${done} / ${phases.length} فاز انجام‌شده`;
+</script>

@@ -19,6 +19,23 @@ app-shell/navigation/home در English یا Deutsch بخوانند و بعد ا�
 معیار پذیرش: در صفحهٔ Home فقط **یک CTA غالب** دیده شود (نه چند دکمهٔ شروع
 رقیب)، و دکمهٔ Home از همهٔ صفحات در دسترس باشد.
 
+## بروزرسانی ۲۰۲۶-۰۸-۲۰ ~۲۳:۵۰ — Claude: تأیید شد، Codex عملاً فاز ۱ (و بخشی از فاز ۲) را پیاده کرده
+
+بعد از commit شدن کار Codex (`Fix`, `Fix3`)، بررسی مستقیم کد نشان داد:
+
+- **یک CTA غالب در Home هر دو اپ**: `mission-home__primary` ("Start today's mission" / لینک به `/heute`) — بدون دکمهٔ شروع رقیب.
+- **موتور جلسهٔ روزانهٔ یکپارچه از قبل پیاده شده**: کامپوننت جدید `DailyAutomaticityProgram` (هم در English: `apps/web/features/components/daily-automaticity-program.tsx`, هم در Deutsch: `apps/web/src/features/daily-program/daily-automaticity-program.tsx`) دقیقاً همان ایدهٔ فاز ۲ رودمپ را پیاده کرده: انتخاب دقیقه (`DAILY_SESSION_OPTIONS`) و پیام «هر مدت شامل Grammar، Mixed Retrieval، Conversation، Review و Automatization است» — این از قبل روی صفحهٔ Home جاسازی شده، نه یک صفحهٔ جدا.
+- **Conversation Studio**: هر دو اپ حالا `if (pathname.startsWith("/studio")) return <>{children}</>;` دارند — یعنی مشکل «دو Sidebar/دو Topbar» که Codex در نقد خودش پرچم زده بود، در هر دو اپ یکسان رفع شده (parity).
+
+**نتیجهٔ تست واقعی (نه فقط خواندن کد):**
+
+| اپ | typecheck | test |
+|---|---|---|
+| English-07082026 | ✅ پاک | ✅ 142+2 pass, 0 fail |
+| Deutsch-V10.08.2026 | ✅ پاک (۵ پکیج) | ✅ 91 pass (۶۲+۲+۲۲+۵) , 0 fail |
+
+**نتیجه‌گیری:** بازنویسی دستی همین فایل‌ها از صفر توسط Claude لازم نبود — Codex از قبل هدف فاز ۱ را رسانده. مورد باقیمانده: نام‌گذاری گروه‌های منوی جانبی (`navigationGroups` در `app-shell.tsx`) هنوز دقیقاً «Practice ▾ / Learn ▾ / Progress ▾» نامگذاری نشده (فعلاً «Daily Practice / Learning Paths / Learning Evidence / App and Settings») — تغییر صرفاً برچسب است، پایین‌اولویت نسبت به آنچه همین الان کار می‌کند.
+
 ## وضعیت لحظه‌ای (بررسی‌شده در ۲۰۲۶-۰۸-۲۰، ساعت ~۲۳:۲۰)
 
 `git status` نشان می‌دهد این فایل‌ها **همین الان تغییر یافته و commit نشده‌اند** —
@@ -52,8 +69,8 @@ Codex دقیقاً چه چیزی را تغییر داده. تا آن زمان Cl
 
 | اپ | وضعیت | آخرین بروزرسانی |
 |---|---|---|
-| English | 🟡 در حال ویرایش (احتمالاً Codex، commit نشده) | ۲۰۲۶-۰۸-۲۰ |
-| Deutsch | 🟡 در حال ویرایش (احتمالاً Codex، commit نشده) | ۲۰۲۶-۰۸-۲۰ |
+| English | ✅ CTA واحد + موتور جلسه پیاده و تست‌شده. باقی‌مانده: نام‌گذاری گروه‌های منو (پایین‌اولویت) | ۲۰۲۶-۰۸-۲۰ ۲۳:۵۰ |
+| Deutsch | ✅ CTA واحد + موتور جلسه پیاده و تست‌شده. باقی‌مانده: نام‌گذاری گروه‌های منو (پایین‌اولویت) | ۲۰۲۶-۰۸-۲۰ ۲۳:۵۰ |
 
 ## گام بعدی که Claude همین الان می‌تواند انجام بدهد بدون تداخل
 

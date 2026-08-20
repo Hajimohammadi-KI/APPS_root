@@ -495,6 +495,10 @@
       <span class="hist-date">2026-08-20 23:20</span>
       <span>کاربر ضرب‌الاجل فردا (۲۰۲۶-۰۸-۲۱) برای فاز ۱ تعیین کرد. مشاهده شد Codex از قبل روی فایل‌های ناوبری/Home هر دو اپ کار می‌کند (uncommitted). چک‌لیست مشترک ایجاد شد: <code class="path">docs/roadmaps/PHASE-1-HANDOFF-2026-08-20.md</code>.</span>
     </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-20 23:50</span>
+      <span>Codex کار خود را commit کرد (<code class="path">Fix</code>, <code class="path">Fix3</code>). Claude بررسی و تست مستقیم انجام داد: فاز ۱ ✅ (CTA واحد + parity رفع مشکل Conversation Studio)، فاز ۲ اسکلتش پیاده شده 🟡. typecheck و test هر دو اپ سبز (English 144، Deutsch 91 تست). Commit و push شد.</span>
+    </div>
     <div class="src-note">
       منبع متنی همراه: <code class="path">docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md</code>
     </div>
@@ -511,11 +515,11 @@
       <code class="path">shared/check-duplicated-files.mjs</code> سازگار نگه داشته می‌شوند.</p>`,
     },
     {
-      id: "p1", phase: "فاز ۱", title: "ساده‌سازی معماری منو", status: "active", when: "ضرب‌الاجل: فردا ۲۰۲۶-۰۸-۲۱",
-      body: `<p><strong>Codex از قبل (uncommitted) روی فایل‌های app-shell/navigation/Home هر دو اپ کار می‌کند.</strong>
-      چک‌لیست و تقسیم کار مشترک: <code class="path">docs/roadmaps/PHASE-1-HANDOFF-2026-08-20.md</code>.
-      بدون دادهٔ جدید، کمترین ریسک. دکمهٔ Home در همهٔ صفحات در دسترس باشد. معیار پذیرش: در Home
-      فقط یک CTA غالب دیده شود.</p>
+      id: "p1", phase: "فاز ۱", title: "ساده‌سازی معماری منو", status: "done", when: "تأیید شد ۲۰۲۶-۰۸-۲۰ ~۲۳:۵۰",
+      body: `<p><strong>تأیید شد با typecheck + test واقعی روی هر دو اپ.</strong> Codex هدف اصلی را از قبل پیاده کرده:
+      یک CTA غالب در Home (بدون دکمهٔ شروع رقیب) و رفع مشکل «دو Sidebar» در Conversation Studio — هر دو اپ
+      حالا یکسان رفتار می‌کنند. جزئیات: <code class="path">docs/roadmaps/PHASE-1-HANDOFF-2026-08-20.md</code>.
+      باقی‌مانده: نام‌گذاری گروه‌های منوی جانبی (پایین‌اولویت).</p>
       <div class="menu-tree">
         <div class="menu-row"><span class="menu-box top">Start / Startseite</span></div>
         <div class="menu-row"><span class="menu-box top">Today / Heute</span></div>
@@ -547,8 +551,10 @@
       </div>`,
     },
     {
-      id: "p2", phase: "فاز ۲", title: "موتور جلسهٔ روزانهٔ یکپارچه", status: "pending", when: "۱ تا ۲ هفته",
-      body: `<p>بعد از انتخاب زمان، کاربر دیگر بین Grammar/Studio/Review/Mixed تصمیم نگیرد. نسخهٔ ۴۵ دقیقه
+      id: "p2", phase: "فاز ۲", title: "موتور جلسهٔ روزانهٔ یکپارچه", status: "active", when: "اسکلت پیاده شد ۲۰۲۶-۰۸-۲۰",
+      body: `<p><strong>کامپوننت <code class="path">DailyAutomaticityProgram</code> در هر دو اپ از قبل پیاده و تست‌شده است</strong>
+      (انتخاب دقیقه + پیام «هر مدت شامل همهٔ بخش‌ها می‌شود»). باقی‌مانده: تطبیق دقیق تخصیص per-بخش با جدول زیر.
+      بعد از انتخاب زمان، کاربر دیگر بین Grammar/Studio/Review/Mixed تصمیم نگیرد. نسخهٔ ۴۵ دقیقه
       فقط کشیده‌شدهٔ نسخهٔ ۱۵ دقیقه نیست — گفتار طولانی‌تر، نوشتن مستقل، دو زمینهٔ جدید. ارتقای سطح بر پایهٔ
       کیفیت شواهد باشد نه تعداد دقیقه.</p>
       <div class="table-scroll"><table>

@@ -13,7 +13,10 @@ export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 sm:px-8">
       <div className="mb-8">
-        <Link className="text-sm text-primary hover:underline" href="/">
+        <Link
+          className="inline-flex min-h-8 items-center text-sm text-primary hover:underline"
+          href="/"
+        >
           ← Zurück zur Lern-App
         </Link>
       </div>
@@ -90,7 +93,7 @@ export default function PrivacyPage() {
             lokale Lerndaten direkt auf deinem Gerät verwaltet.
           </p>
           <Link
-            className="mt-3 inline-flex text-sm font-medium text-primary hover:underline"
+            className="mt-3 inline-flex min-h-8 items-center text-sm font-medium text-primary hover:underline"
             href="/support"
           >
             Installations- und Supporthilfe öffnen →

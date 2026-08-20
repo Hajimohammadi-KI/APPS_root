@@ -48,6 +48,13 @@ export function AppShell({
         : navigationPathname.startsWith(item.href),
     ) ?? coreNavigation[0]!;
   const CurrentIcon = current.icon;
+
+  // The conversation studio ships its own complete product chrome. Wrapping
+  // it in the shared shell creates two sidebars and two top bars, squeezing
+  // the recording workspace and breaking parity with the English app.
+  if (pathname.startsWith("/studio")) {
+    return <>{children}</>;
+  }
   // Filtered by href rather than positional index -- a prior version
   // indexed into primaryNavigation/secondaryNavigation by array position,
   // which silently left "/fortschritt" and "/wiederholungen" out of every
@@ -153,14 +160,14 @@ export function AppShell({
         <ProfileProgressBadge />
       </aside>
 
-      <div className="min-w-0 xl:pl-[310px]">
+      <div className="german-app-frame min-w-0 xl:pl-[310px]">
         <header className="german-app-topbar sticky top-0 z-20 border-b bg-background/88 backdrop-blur-xl">
           <div className="flex min-h-16 flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3 xl:hidden">
+            <div className="german-mobile-nav flex items-center gap-3 xl:hidden">
               <MobileNavigation />
               <Brand compact />
             </div>
-            <div className="hidden items-center gap-3 xl:flex">
+            <div className="german-current-route hidden items-center gap-3 xl:flex">
               <span className="grid size-9 place-items-center rounded-xl border border-primary/20 bg-secondary text-primary">
                 <CurrentIcon className="size-4.5" aria-hidden="true" />
               </span>
@@ -172,6 +179,16 @@ export function AppShell({
               </span>
             </div>
             <div className="flex min-w-0 items-center gap-2 justify-self-end">
+              <div
+                aria-label="Aktuelle Lernsprache: Deutsch"
+                className="language-status"
+              >
+                <span>EN</span>
+                <small>English</small>
+                <i aria-hidden />
+                <span data-current="true">DE</span>
+                <strong>Deutsch</strong>
+              </div>
               <ApiConnectionStatus />
               <NeuroReader
                 onOpenSettings={() => setReadingSettingsOpen(true)}
@@ -190,7 +207,7 @@ export function AppShell({
               <InstallAppButton surface="header" />
               <Badge
                 variant="secondary"
-                className="hidden md:inline-flex xl:inline-flex"
+                className="german-version-badge hidden md:inline-flex xl:inline-flex"
               >
                 v20.8 · aktuelle Version
               </Badge>

@@ -79,7 +79,7 @@ export default function TaskLifecycleMonitoringPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-8">
       <a
-        className="inline-flex items-center gap-2 text-sm font-bold text-violet-800"
+        className="inline-flex min-h-8 items-center gap-2 text-sm font-bold text-violet-800"
         href="/"
       >
         <ArrowLeft className="size-4" /> Back to app

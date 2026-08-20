@@ -11,7 +11,7 @@ interface ReleaseManifest {
 }
 
 const fallbackRelease: ReleaseManifest = {
-  version: "27.3.9",
+  version: "27.3.10",
 	changes: [
 		"Page analytics now separates requested entries from rendered pages, validates local data, and uses compact accessible dropdowns",
 		"Conversation Studio now exposes a keyboard skip link",

@@ -57,6 +57,21 @@ export type PlanWeek = {
   days: PlannedDay[];
 };
 
+export type SessionReadingDeliverable = {
+  id: string;
+  title: string;
+  readingIds: string[];
+  mode: "DEEP" | "TARGET" | "COMPARE" | "SYNTHESIS";
+  acceptance: string;
+};
+
+export type SessionReadingPlan = {
+  required: string[];
+  reuse: string[];
+  optional: string[];
+  deliverables: SessionReadingDeliverable[];
+};
+
 export type NlpCourseSession = {
   number: number;
   date: string;
@@ -67,6 +82,7 @@ export type NlpCourseSession = {
   projectQuestion: string;
   useCase: string;
   readingIds: string[];
+  readingPlan?: SessionReadingPlan;
   readingFocus: [string, string, string];
   projectConnection: string;
   extractionGoal: string;
@@ -842,6 +858,34 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     projectQuestion: "How can optional neural retrieval and answer wording remain role-aware and grounded?",
     useCase: "Position encoder retrieval, decoder generation, role prompts, and graph context",
     readingIds: ["reading-08", "reading-10", "reading-11", "reading-12", "reading-14", "reading-16", "reading-17", "reading-21", "reading-22", "reading-23"],
+    readingPlan: {
+      required: ["reading-17", "reading-22", "reading-10", "reading-14"],
+      reuse: [],
+      optional: ["reading-08", "reading-11", "reading-12", "reading-16", "reading-21", "reading-23"],
+      deliverables: [
+        {
+          id: "session-09-kg-qa-note",
+          title: "DEEP-Notiz: Knowledge-Graph Repository QA",
+          readingIds: ["reading-17"],
+          mode: "DEEP",
+          acceptance: "Pipeline, Graph-Grounding, Evaluationsaufbau und Abgrenzung zur Evidence-Path-Prüfung sind festgehalten.",
+        },
+        {
+          id: "session-09-cpg-lm-note",
+          title: "TARGET-Notiz: CPG-beschränkter LLM-Kontext",
+          readingIds: ["reading-22"],
+          mode: "TARGET",
+          acceptance: "CPG-Kontext, Traceability, Evaluationsgrenze und Bezug zu RQ1/RQ2 sind als sechs Abschnitte extrahiert.",
+        },
+        {
+          id: "session-09-encoder-go-no-go",
+          title: "Go/No-Go: CodeBERT gegenüber GraphCodeBERT",
+          readingIds: ["reading-10", "reading-14"],
+          mode: "COMPARE",
+          acceptance: "Eine begründete Entscheidung nennt Nutzen, Messkriterien, Kosten und die unveränderte Evidence-Record-Grenze.",
+        },
+      ],
+    },
     readingFocus: ["Encoder versus decoder role", "Code/repository QA", "Role-aware grounded answers"],
     projectConnection: "RQ2/Answerability: encoders may retrieve and decoders may phrase answers, but both remain downstream of verifiable evidence.",
     extractionGoal: "Extract architecture comparisons, QA pipelines, prompting effects, and limitations relevant to role-specific answers.",
@@ -863,6 +907,34 @@ export const nlpCourseSessions: NlpCourseSession[] = [
     projectQuestion: "Which parts belong in the thesis core, optional experiments, and future work?",
     useCase: "Synthesize retrieval, graph grounding, prompting, provenance, and evaluation",
     readingIds: ["reading-06", "reading-07", "reading-11", "reading-12", "reading-13", "reading-15", "reading-16", "reading-17", "reading-18", "reading-19", "reading-20", "reading-21", "reading-22", "reading-23"],
+    readingPlan: {
+      required: ["reading-15", "reading-19", "reading-13"],
+      reuse: ["reading-06", "reading-17", "reading-22"],
+      optional: ["reading-07", "reading-11", "reading-12", "reading-16", "reading-18", "reading-20", "reading-21", "reading-23"],
+      deliverables: [
+        {
+          id: "session-10-provenance-contract",
+          title: "KILT-Vertrag: Provenance und Evaluation",
+          readingIds: ["reading-15"],
+          mode: "TARGET",
+          acceptance: "Recall@k, MRR, Evidence Coverage und korrekte Ablehnung sind Primärmetriken; BLEU/ROUGE bleiben sekundär.",
+        },
+        {
+          id: "session-10-flat-graph-protocol",
+          title: "RANGER-Protokoll: Flat gegen Graph Retrieval",
+          readingIds: ["reading-19"],
+          mode: "COMPARE",
+          acceptance: "Beide Retriever verwenden dieselben eingefrorenen Fragen, denselben Corpus und dieselben Evidence-IDs.",
+        },
+        {
+          id: "session-10-rag-refusal-contract",
+          title: "RAG-Vertrag: Grounding und NOT_ANSWERABLE",
+          readingIds: ["reading-13"],
+          mode: "SYNTHESIS",
+          acceptance: "Generierung startet erst nach Retrieval und Verifikation; bei unzureichender Evidenz endet der Ablauf mit NOT_ANSWERABLE.",
+        },
+      ],
+    },
     readingFocus: ["RAG and PEFT boundaries", "Retrieval and generation metrics", "Grounding, provenance, and answerability"],
     projectConnection: "Synthesizes RQ1/RQ2 and fixes the boundary: BLEU/ROUGE assess generated text, not retrieval completeness or Evidence Path validity.",
     extractionGoal: "Complete the six-section notes and record a final architecture decision for each paper: core, comparison, background, or future work.",
@@ -1490,6 +1562,24 @@ export const PLAN_VERSION_HISTORY: readonly PlanVersionEntry[] = [
       "Doppelte Artikelnummerierung: aktuelle Kursreihenfolge C01 bis C18 und erhaltene Originalnummer O06 bis O23",
       "Sechsteiliger Extraktionsbogen für Problem, Method, Data/Evaluation, Findings, Limitations und Projektbezug",
       "Explizite Zuordnung jeder Lektüre zu RQ1/RQ2, Evidence Record, Evidence Path, Flat/Graph Retrieval und Answerability",
+    ],
+  },
+  {
+    version: 3,
+    effectiveDate: "2026-08-20",
+    reason:
+      "Die Artikel der Sitzungen 9 und 10 sind jetzt nach Pflichtlektüre, wiederverwendbaren Notizen und optionalem Related Work priorisiert; jede Sitzung hat genau drei prüfbare Ergebnisse.",
+    tasksRemoved: [
+      "Undifferenzierte Pflichtannahme für alle 10 beziehungsweise 14 zugeordneten Artikel",
+      "Erneutes Lesen von LogicLens, Abedu und Lekssays in Sitzung 10",
+    ],
+    tasksMoved: [
+      "Nicht zentrale Übersichts-, Prompting- und Related-Work-Artikel der Sitzungen 9 und 10 in den optionalen Bereich",
+    ],
+    tasksAdded: [
+      "Drei verbindliche Ergebnisse für Sitzung 9: KG-QA-Notiz, CPG-LM-Notiz und CodeBERT/GraphCodeBERT-Go-No-Go",
+      "Drei verbindliche Ergebnisse für Sitzung 10: Provenance-Vertrag, Flat/Graph-Protokoll und RAG-Refusal-Vertrag",
+      "Explizite Wiederverwendung vorhandener Notizen ohne erneute Lektüre",
     ],
   },
 ];

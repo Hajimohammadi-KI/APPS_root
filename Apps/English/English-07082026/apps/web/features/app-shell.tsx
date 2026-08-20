@@ -421,6 +421,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 						</div>
 					</div>
 					<div className="flex items-center gap-2">
+						<div aria-label="Current learning language: English" className="language-status">
+							<span data-current="true">EN</span><strong>English</strong>
+							<i aria-hidden />
+							<span>DE</span><small>Deutsch</small>
+						</div>
 						<ApiConnectionStatus baseUrl={state.settings.apiBaseUrl} />
 						<NeuroReader
 							onOpenSettings={() => navigate("settings")}

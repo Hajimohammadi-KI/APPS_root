@@ -205,7 +205,7 @@ body {
 }
 
 .select-menu-panel {
-  transform-origin: top center;
+  transform-origin: var(--transform-origin, top center);
   border-color: var(--apple-separator);
   background: rgb(255 255 255 / 96%);
   box-shadow: var(--apple-shadow-large);

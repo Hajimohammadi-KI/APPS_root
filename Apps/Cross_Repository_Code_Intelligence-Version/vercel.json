@@ -1,8 +1,7 @@
 {
   "framework": "nextjs",
-  "bunVersion": "1.x",
-  "installCommand": "bun install --frozen-lockfile",
-  "buildCommand": "bun run build:vercel",
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build:vercel",
   "env": {
     "NEXT_PUBLIC_STORAGE_MODE": "device"
   }

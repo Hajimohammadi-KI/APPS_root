@@ -57,6 +57,19 @@ body {
     display: block;
   }
 
+  .workspace {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .evidence {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .feedback {
+    grid-column: 1 / -1;
+  }
+
   .app-sidebar {
     position: fixed;
     inset: 68px 10px auto;
@@ -197,6 +210,10 @@ body {
 }
 
 @media (max-width: 560px) {
+  .evidence {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
   .steps {
     width: 100%;
     height: auto !important;

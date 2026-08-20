@@ -3,12 +3,12 @@
   "manifestPath": "/manifest.webmanifest",
   "name": "DeutschFlow",
   "fullName": "DeutschFlow – Grammatik automatisieren",
-  "version": "20.8.19",
+  "version": "20.8.20",
   "themeColor": "#38bdf8",
   "backgroundColor": "#f5fbff",
   "android": {
     "packageId": "app.deutschflow.grammar",
-    "versionCode": 3
+    "versionCode": 4
   },
   "ios": {
     "bundleId": "app.deutschflow.grammar"

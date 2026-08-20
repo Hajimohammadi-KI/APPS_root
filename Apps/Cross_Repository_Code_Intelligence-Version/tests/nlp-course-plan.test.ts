@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
+import appPackage from "../package.json";
 import {
   allDays,
   articleReadings,
@@ -17,6 +18,7 @@ import {
   getDayStatus,
   requiredItemTotal,
 } from "../lib/study-progress";
+import { buildCourseReadingPlanDescription } from "../lib/nlp-course-calendar";
 
 const expectedDates = [
   "2026-08-17", "2026-08-19", "2026-08-22", "2026-08-24", "2026-08-26",
@@ -66,6 +68,60 @@ describe("Advanced Deep Learning reading plan", () => {
       expect(session.readingIds.length).toBeGreaterThan(0);
       expect(session.readingIds.every((id) => readingIds.has(id as `reading-${number}`))).toBeTrue();
     }
+  });
+
+  test("partitions sessions 9 and 10 into required, reuse, and optional work", () => {
+    const prioritizedSessions = nlpCourseSessions.filter((session) => session.readingPlan);
+    expect(prioritizedSessions.map((session) => session.number)).toEqual([9, 10]);
+
+    for (const session of prioritizedSessions) {
+      const plan = session.readingPlan!;
+      const partition = [...plan.required, ...plan.reuse, ...plan.optional];
+      expect(new Set(partition).size).toBe(partition.length);
+      expect(new Set(partition)).toEqual(new Set(session.readingIds));
+      expect(plan.deliverables).toHaveLength(3);
+      const coveredByDeliverables = new Set(
+        plan.deliverables.flatMap((deliverable) => deliverable.readingIds),
+      );
+      expect(plan.required.every((readingId) => coveredByDeliverables.has(readingId))).toBeTrue();
+      expect(plan.deliverables.every((deliverable) => deliverable.acceptance.length > 60)).toBeTrue();
+    }
+
+    const session9 = nlpCourseSessions.find((session) => session.number === 9)!;
+    expect(session9.readingPlan?.required).toEqual([
+      "reading-17", "reading-22", "reading-10", "reading-14",
+    ]);
+    expect(session9.readingPlan?.reuse).toEqual([]);
+    expect(session9.readingPlan?.optional).toHaveLength(6);
+    expect(session9.readingPlan?.deliverables.at(-1)?.readingIds).toEqual([
+      "reading-10", "reading-14",
+    ]);
+
+    const session10 = nlpCourseSessions.find((session) => session.number === 10)!;
+    expect(session10.readingPlan?.required).toEqual([
+      "reading-15", "reading-19", "reading-13",
+    ]);
+    expect(session10.readingPlan?.reuse).toEqual([
+      "reading-06", "reading-17", "reading-22",
+    ]);
+    expect(session10.readingPlan?.optional).toHaveLength(8);
+    expect(session10.readingPlan?.deliverables.at(-1)?.acceptance).toContain("NOT_ANSWERABLE");
+  });
+
+  test("writes priority, reuse, optional work, and deliverables into calendar descriptions", () => {
+    const session9 = nlpCourseSessions.find((session) => session.number === 9)!;
+    const session10 = nlpCourseSessions.find((session) => session.number === 10)!;
+    const formatReading = (readingId: string) => `REF:${readingId}`;
+
+    const session9Description = buildCourseReadingPlanDescription(session9, formatReading);
+    expect(session9Description).toContain("Pflichtquellen: REF:reading-17");
+    expect(session9Description.includes("Notizen wiederverwenden")).toBeFalse();
+    expect(session9Description).toContain("Optional / Related Work: REF:reading-08");
+    expect(session9Description).toContain("Pflichtergebnisse:");
+
+    const session10Description = buildCourseReadingPlanDescription(session10, formatReading);
+    expect(session10Description).toContain("Notizen wiederverwenden (nicht erneut lesen): REF:reading-06");
+    expect(session10Description).toContain("RAG-Vertrag: Grounding und NOT_ANSWERABLE");
   });
 
   test("maps every class topic to real plan days with prepared teacher questions", () => {
@@ -129,9 +185,10 @@ describe("Advanced Deep Learning reading plan", () => {
     expect(getDayStatus(optionalDay, oneCompleted)).toBe("optional");
   });
 
-  test("records Revision 2 and a reading-only course boundary", () => {
-    expect(PLAN_VERSION).toBe(2);
-    expect(PLAN_VERSION_HISTORY.at(-1)?.effectiveDate).toBe("2026-08-19");
+  test("records Revision 3 and a reading-only course boundary", () => {
+    expect(PLAN_VERSION).toBe(3);
+    expect(PLAN_VERSION_HISTORY.at(-1)?.effectiveDate).toBe("2026-08-20");
+    expect(appPackage.version).toBe("0.5.4-version2");
     expect(nlpLabDefinition.courseStart).toBe("2026-08-17");
     expect(nlpLabDefinition.courseEnd).toBe("2026-09-07");
     expect(nlpLabDefinition.projectFit).toContain("optional");

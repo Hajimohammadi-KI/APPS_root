@@ -1,7 +1,9 @@
 {
-  "version": "27.3.9",
-	"publishedAt": "2026-08-19",
+  "version": "27.3.10",
+	"publishedAt": "2026-08-20",
 	"changes": [
+		"Every English page now follows the supplied white-and-violet reference system and remains structurally clean at desktop, tablet, and mobile widths",
+		"A same-origin local API bridge and LAN launcher let Windows and Android browsers use the host PC without installation",
 		"Page analytics now separates requested entries from rendered pages, validates and repairs local route data, and presents every route in compact accessible dropdowns",
 		"Conversation Studio now exposes a keyboard skip link and all audited routes retain one main landmark without horizontal overflow",
 		"Shared selects, accordions, progress indicators, and buttons now use Base UI primitives for consistent focus, keyboard navigation, dismissal, and ARIA behavior across every page",

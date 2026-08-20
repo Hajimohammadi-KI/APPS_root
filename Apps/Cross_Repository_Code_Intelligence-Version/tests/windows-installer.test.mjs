@@ -9,6 +9,15 @@ const localSupervisor = await readFile(new URL("../scripts/start-local-app.ps1",
 const uninstallLauncher = await readFile(new URL("../DEINSTALLIEREN-WINDOWS.bat", import.meta.url), "utf8");
 const localEnvGenerator = await readFile(new URL("../scripts/generate-local-env.mjs", import.meta.url), "utf8");
 const runWebScript = await readFile(new URL("../scripts/wsl/run-web.sh", import.meta.url), "utf8");
+const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+const packageLock = JSON.parse(await readFile(new URL("../package-lock.json", import.meta.url), "utf8"));
+
+test("release version is synchronized across package and Windows setup", () => {
+  assert.equal(packageJson.version, "0.5.4-version2");
+  assert.equal(packageLock.version, packageJson.version);
+  assert.equal(packageLock.packages[""].version, packageJson.version);
+  assert.match(setup, /Version2 0\.5\.4/);
+});
 
 test("Windows setup exposes install, update, repair, and uninstall", () => {
   for (const action of ["Install", "Update", "Repair", "Uninstall"]) {

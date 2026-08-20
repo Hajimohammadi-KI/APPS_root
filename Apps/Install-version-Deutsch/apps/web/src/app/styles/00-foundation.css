@@ -167,7 +167,7 @@
 .select-menu-panel {
   opacity: 1;
   transform: translateY(0) scale(1);
-  transform-origin: top center;
+  transform-origin: var(--transform-origin, top center);
   transition:
     opacity 160ms var(--ease-out),
     transform 160ms var(--ease-out);

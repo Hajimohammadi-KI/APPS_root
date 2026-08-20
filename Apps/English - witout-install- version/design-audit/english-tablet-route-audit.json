@@ -1,0 +1,296 @@
+{
+  "capturedAt": "2026-08-19T23:00:29.853Z",
+  "requestedViewport": [
+    800,
+    1280
+  ],
+  "networkUrlBase": "http://192.168.178.24:3302",
+  "verificationUrlBase": "http://127.0.0.1:3302",
+  "rows": [
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/",
+      "route": "/",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/analytics",
+      "route": "/analytics",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/analytics",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/automatization",
+      "route": "/automatization",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/automatization",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/daily",
+      "route": "/daily",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/daily",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/errors",
+      "route": "/errors",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/errors",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/flashcards",
+      "route": "/flashcards",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/flashcards",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/grammar",
+      "route": "/grammar",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/grammar",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/integrated-skills",
+      "route": "/integrated-skills",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/integrated-skills",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/library",
+      "route": "/library",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/library",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/offline",
+      "route": "/offline",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/offline",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/practice",
+      "route": "/practice",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/practice",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/privacy",
+      "route": "/privacy",
+      "title": "Privacy | English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/privacy",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/progress",
+      "route": "/progress",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/progress",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/resources",
+      "route": "/resources",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/resources",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/settings",
+      "route": "/settings",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/settings",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/studio",
+      "route": "/studio",
+      "title": "Conversation Studio | English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/studio",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/support",
+      "route": "/support",
+      "title": "Support | English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/support",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/task-lifecycle-monitoring",
+      "route": "/task-lifecycle-monitoring",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/task-lifecycle-monitoring",
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "mobileMenuVisible": true,
+      "requestedUrl": "http://192.168.178.24:3302/teacher",
+      "route": "/teacher",
+      "title": "English Automaticity",
+      "verificationUrl": "http://127.0.0.1:3302/teacher",
+      "viewport": [
+        800,
+        1280
+      ]
+    }
+  ]
+}

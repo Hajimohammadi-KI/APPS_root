@@ -23,6 +23,50 @@ function formatDate(date: string) {
   }).format(new Date(`${date}T12:00:00Z`));
 }
 
+type ReadingTier = "required" | "reuse" | "optional" | "standard";
+
+function ReadingGroup({
+  title,
+  tier,
+  readingIds,
+}: {
+  title: string;
+  tier: ReadingTier;
+  readingIds: readonly string[];
+}) {
+  if (readingIds.length === 0) return null;
+  return (
+    <section className={`nlp-reading-group ${tier}`}>
+      <header>
+        <h4>{title}</h4>
+        <span>{readingIds.length} Quelle{readingIds.length === 1 ? "" : "n"}</span>
+      </header>
+      <div className="nlp-reading-list">
+        {readingIds.map((readingId) => {
+          const reading = readingsById.get(readingId);
+          if (!reading) return null;
+          const source = sources[reading.sourceId];
+          return (
+            <article key={reading.id}>
+              <header>
+                <strong>
+                  Reihenfolge C{String(reading.courseOrder).padStart(2, "0")} · Original O{String(reading.order).padStart(2, "0")}
+                </strong>
+                <span className={`reading-mode ${reading.mode.toLowerCase()}`}>{reading.mode}</span>
+                {tier === "reuse" && <span className="reading-reuse">Nicht erneut lesen</span>}
+                {reading.status === "in_progress" && <span className="reading-status">In Arbeit</span>}
+              </header>
+              <h4>{source?.label ?? reading.sourceId}</h4>
+              <code>{reading.fileName}</code>
+              <p>{reading.projectConnection}</p>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export default function NlpLabPage() {
   return (
     <main className="nlp-lab-shell">
@@ -117,27 +161,53 @@ export default function NlpLabPage() {
                   <h4>Extraktionsziel</h4><p>{session.extractionGoal}</p>
                 </div>
               </div>
-              <div className="nlp-reading-list">
-                {session.readingIds.map((readingId) => {
-                  const reading = readingsById.get(readingId);
-                  if (!reading) return null;
-                  const source = sources[reading.sourceId];
-                  return (
-                    <article key={reading.id}>
-                      <header>
-                        <strong>
-                          Reihenfolge C{String(reading.courseOrder).padStart(2, "0")} · Original O{String(reading.order).padStart(2, "0")}
-                        </strong>
-                        <span className={`reading-mode ${reading.mode.toLowerCase()}`}>{reading.mode}</span>
-                        {reading.status === "in_progress" && <span className="reading-status">In Arbeit</span>}
-                      </header>
-                      <h4>{source?.label ?? reading.sourceId}</h4>
-                      <code>{reading.fileName}</code>
-                      <p>{reading.projectConnection}</p>
-                    </article>
-                  );
-                })}
-              </div>
+              <section className="nlp-session-guidance" lang="fa" dir="rtl">
+                <div>
+                  <h4>سؤال‌هایی که از مدرس می‌پرسم</h4>
+                  <ol>{session.classQuestionsFa.map((question) => <li key={question}>{question}</li>)}</ol>
+                </div>
+                <div>
+                  <h4>چرا این موضوع برای پروژه مهم است؟</h4>
+                  <p>{session.whyThisMattersFa}</p>
+                  <h4>بعد از کلاس چه کاری انجام می‌دهم؟</h4>
+                  <p>{session.plannedActionFa}</p>
+                </div>
+              </section>
+              {session.readingPlan ? (
+                <div className="nlp-priority-plan">
+                  <section className="nlp-required-outputs">
+                    <header>
+                      <div>
+                        <p className="nlp-lab-eyebrow">Genau drei reale Ergebnisse</p>
+                        <h4>Verpflichtende Ergebnisse</h4>
+                      </div>
+                      <span>{session.readingPlan.deliverables.length} Pflicht-Ergebnisse</span>
+                    </header>
+                    <div>
+                      {session.readingPlan.deliverables.map((deliverable, index) => (
+                        <article key={deliverable.id}>
+                          <span>{index + 1} · {deliverable.mode}</span>
+                          <h5>{deliverable.title}</h5>
+                          <p>{deliverable.acceptance}</p>
+                          <small>
+                            Quellen: {deliverable.readingIds.map((readingId) => {
+                              const reading = readingsById.get(readingId);
+                              return reading ? `C${String(reading.courseOrder).padStart(2, "0")}/O${String(reading.order).padStart(2, "0")}` : readingId;
+                            }).join(" + ")}
+                          </small>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                  <div className="nlp-reading-priority-grid">
+                    <ReadingGroup title="Verpflichtend" tier="required" readingIds={session.readingPlan.required} />
+                    <ReadingGroup title="Notizen wiederverwenden · nicht erneut lesen" tier="reuse" readingIds={session.readingPlan.reuse} />
+                    <ReadingGroup title="Optional / Related Work" tier="optional" readingIds={session.readingPlan.optional} />
+                  </div>
+                </div>
+              ) : (
+                <ReadingGroup title="Zugeordnete Artikel" tier="standard" readingIds={session.readingIds} />
+              )}
               <footer><strong>Nach der Sitzung festhalten</strong><p>{extractionSections.join(" · ")}</p></footer>
             </article>
           ))}

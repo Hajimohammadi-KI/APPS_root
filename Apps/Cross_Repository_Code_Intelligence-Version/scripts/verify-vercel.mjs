@@ -17,8 +17,17 @@ const checks = [];
 try {
   for (const profile of [
     { name: "desktop-1440", viewport: { width: 1440, height: 1000 } },
+    { name: "compact-946", viewport: { width: 946, height: 900 } },
     { name: "laptop-1024", viewport: { width: 1024, height: 900 } },
     { name: "tablet-768", viewport: { width: 768, height: 1024 }, hasTouch: true },
+    { name: "mobile-390", viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+    {
+      name: "android-pixel-412",
+      viewport: { width: 412, height: 915 },
+      isMobile: true,
+      hasTouch: true,
+      userAgent: "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+    },
     { name: "mobile-375", viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true },
   ]) {
     const context = await browser.newContext(profile);
@@ -34,7 +43,7 @@ try {
       if (response.status() >= 400) failedResponses.push({ status: response.status(), url: response.url() });
     });
 
-    for (const route of ["/", "/settings", "/pdf-reader"]) {
+    for (const route of ["/", "/nlp-lab", "/settings", "/pdf-reader"]) {
       const response = await page.goto(`${baseUrl}${route}`, { waitUntil: "domcontentloaded", timeout: 45_000 });
       await page.waitForLoadState("load", { timeout: 15_000 });
       await page.waitForTimeout(1_500);

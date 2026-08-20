@@ -34,7 +34,7 @@ export type MasteryStatus =
 // BY automaticity-screen.tsx -- importing it back the other way would be a
 // circular dependency. Re-exported from automaticity-screen.tsx below for
 // its existing importers.
-export const EVIDENCE_CONTENT_VERSION = "27.3.9";
+export const EVIDENCE_CONTENT_VERSION = "27.3.10";
 export type AttemptMode =
 	| "recognition"
 	| "writing"
@@ -376,7 +376,7 @@ export const DEFAULT_STATE: AppState = {
 	settings: {
 		apiBaseUrl:
 			process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
-			"http://127.0.0.1:4201",
+			"/api/local",
 		minWords: 12,
 		dailyStudyMinutes: 15,
 		honovrLanguage: "en",
@@ -492,10 +492,12 @@ export function normalizeAppState(value: unknown): AppState {
 		typeof settings.apiBaseUrl === "string" && settings.apiBaseUrl.trim()
 			? settings.apiBaseUrl.trim().replace(/\/$/, "")
 			: fallback.settings.apiBaseUrl;
-	const apiBaseUrl =
-		storedApiBaseUrl === "http://localhost:4201"
-			? fallback.settings.apiBaseUrl
-			: storedApiBaseUrl;
+	const apiBaseUrl = [
+		"http://localhost:4201",
+		"http://127.0.0.1:4201",
+	].includes(storedApiBaseUrl)
+		? fallback.settings.apiBaseUrl
+		: storedApiBaseUrl;
 	const todayGrammar =
 		isRecord(value.todayGrammar) &&
 		typeof value.todayGrammar.title === "string" &&

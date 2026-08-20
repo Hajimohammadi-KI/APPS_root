@@ -1,5 +1,5 @@
-import { Dashboard } from "@/features/dashboard/dashboard";
+import { MissionHome } from "@/features/dashboard/mission-home";
 
 export default function DashboardPage() {
-  return <Dashboard />;
+  return <MissionHome />;
 }

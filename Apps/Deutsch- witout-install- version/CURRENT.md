@@ -1,7 +1,7 @@
 # CURRENT
 
 - Produkt: DeutschFlow – Grammatik automatisieren
-- Version: 20.8.19
+- Version: 20.8.20
 - Repository: `D:\APPS_root\Apps\Deutsch-V10.08.2026`
 - Web: `http://127.0.0.1:3210`
 - API: `http://127.0.0.1:4210/api/v1`

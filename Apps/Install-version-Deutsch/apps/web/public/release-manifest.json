@@ -1,7 +1,9 @@
 {
-  "version": "20.8.19",
-  "publishedAt": "2026-08-19",
+  "version": "20.8.20",
+  "publishedAt": "2026-08-20",
   "changes": [
+    "Alle deutschen Seiten folgen jetzt demselben weißen und violetten Referenzsystem wie die englische App und bleiben auf Desktop, Tablet und Mobilgeräten strukturell sauber",
+    "Eine Same-Origin-API-Brücke und ein LAN-Starter ermöglichen die Nutzung im Windows- und Android-Browser ohne Installation",
     "Die Seitenanalyse trennt Einstiegsrouten von tatsächlich gerenderten Seiten, validiert lokale Daten und zeigt alle Routen in kompakten, zugänglichen Aufklappbereichen",
     "Quellenübungen unter Deutsch mit Marija öffnen wieder die echte aktive Übung statt fälschlich zum Grammatik-Labor umzuleiten",
     "Navigationen besitzen eindeutige Bereichsnamen, einen Sprung zum Hauptinhalt und eine korrekte Ressourcenmarkierung in Quellenübungen",

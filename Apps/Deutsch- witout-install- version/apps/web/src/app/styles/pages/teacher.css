@@ -27,6 +27,7 @@
 }
 .teacher-back {
   display: flex;
+  min-height: 32px;
   width: fit-content;
   gap: 0.45rem;
   align-items: center;

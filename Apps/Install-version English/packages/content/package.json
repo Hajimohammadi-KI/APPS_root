@@ -1,6 +1,6 @@
 {
 	"name": "@grammar/content",
-  "version": "27.3.9",
+  "version": "27.3.10",
 	"private": true,
 	"type": "module",
 	"exports": {

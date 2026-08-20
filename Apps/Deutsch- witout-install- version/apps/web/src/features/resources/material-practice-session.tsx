@@ -347,7 +347,7 @@ export function MaterialPracticeSession({
             {plan.rule}
           </p>
           <Button
-            className="mt-3"
+            className="mt-3 min-h-8"
             onClick={() => readPrompt(plan.rule)}
             size="sm"
             type="button"

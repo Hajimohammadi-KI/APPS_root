@@ -30,7 +30,8 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   const port = Number(process.env.API_PORT ?? 4210);
-  await app.listen(port, '0.0.0.0');
+  const host = process.env.API_HOST?.trim() || '127.0.0.1';
+  await app.listen(port, host);
 }
 
 void bootstrap();

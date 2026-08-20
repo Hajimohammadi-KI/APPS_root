@@ -781,7 +781,7 @@ export default function Home() {
         </div>
       </aside>
 
-      <div className="studio-main">
+      <main className="studio-main" id="main-content">
         <header>
           <div>
             <h1>{text.title}</h1>
@@ -1534,7 +1534,7 @@ export default function Home() {
               : `${language === "de" ? "Weiter" : "Continue"} →`}
           </button>
         </footer>
-      </div>
+      </main>
       {dailyComplete && (
         <div
           className="daily-complete-backdrop"

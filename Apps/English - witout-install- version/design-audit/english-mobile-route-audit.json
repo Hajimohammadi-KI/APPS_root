@@ -1,0 +1,237 @@
+{
+  "capturedAt": "2026-08-19T23:01:54.493Z",
+  "requestedViewport": [
+    412,
+    915
+  ],
+  "rows": [
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/analytics",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/automatization",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/daily",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/errors",
+      "scrollWidth": 412,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/flashcards",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/grammar",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/integrated-skills",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/library",
+      "scrollWidth": 412,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/offline",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/practice",
+      "scrollWidth": 412,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/privacy",
+      "scrollWidth": 397,
+      "title": "Privacy | English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/progress",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/resources",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/settings",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/studio",
+      "scrollWidth": 397,
+      "title": "Conversation Studio | English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/support",
+      "scrollWidth": 397,
+      "title": "Support | English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/task-lifecycle-monitoring",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/teacher",
+      "scrollWidth": 397,
+      "title": "English Automaticity",
+      "viewport": [
+        412,
+        915
+      ]
+    }
+  ]
+}

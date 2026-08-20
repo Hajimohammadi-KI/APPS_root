@@ -55,6 +55,7 @@ import {
   googleDriveFileId,
   isDirectPdfUrl,
 } from "../lib/pdf-reader-link";
+import { buildCourseReadingPlanDescription } from "../lib/nlp-course-calendar";
 
 type StatusFilter = "all" | "open" | "started" | "optional" | "done";
 
@@ -205,6 +206,16 @@ const LOCAL_FOCUS_KEY = "cross-repository-study-tracker:focus:v1";
 const articleReadingsById = new Map<string, (typeof articleReadings)[number]>(
   articleReadings.map((reading) => [reading.id, reading]),
 );
+
+function getCourseReadings(readingIds: readonly string[]) {
+  return readingIds
+    .map((readingId) => articleReadingsById.get(readingId))
+    .filter((reading): reading is (typeof articleReadings)[number] => Boolean(reading));
+}
+
+function formatCourseReading(reading: (typeof articleReadings)[number]) {
+  return `C${String(reading.courseOrder).padStart(2, "0")}/O${String(reading.order).padStart(2, "0")} ${sources[reading.sourceId]?.label ?? reading.sourceId} [${reading.mode}]`;
+}
 
 const priorityMeta: Record<
   SourceDefinition["priority"],
@@ -1994,11 +2005,13 @@ export default function StudyTracker({
       .map((session) => {
         const start = localIcsDate(session.date, 19 * 60 + 30);
         const end = localIcsDate(session.date, 21 * 60 + 10);
-        const readings = session.readingIds
-          .map((id) => articleReadingsById.get(id))
-          .filter((reading) => Boolean(reading))
-          .map((reading) => `C${String(reading!.courseOrder).padStart(2, "0")}/O${String(reading!.order).padStart(2, "0")} ${sources[reading!.sourceId]?.label ?? reading!.sourceId} [${reading!.mode}]`)
-          .join("; ");
+        const readingPlanDescription = buildCourseReadingPlanDescription(
+          session,
+          (readingId) => {
+            const reading = articleReadingsById.get(readingId);
+            return reading ? formatCourseReading(reading) : readingId;
+          },
+        );
         return [
           "BEGIN:VEVENT",
           `UID:nlp-live-${session.number}-2026@study-tracker`,
@@ -2006,7 +2019,7 @@ export default function StudyTracker({
           `DTSTART;TZID=Europe/Berlin:${start}`,
           `DTEND;TZID=Europe/Berlin:${end}`,
           `SUMMARY:${escapeIcs(`Study Tracker · NLP ${String(session.number).padStart(2, "0")}/10 · ${session.title}`)}`,
-          `DESCRIPTION:${escapeIcs(`Artikel: ${readings}\nLesefokus: ${session.readingFocus.join("; ")}\nProjektbezug: ${session.projectConnection}\nExtraktion: ${extractionSections.join("; ")}`)}`,
+          `DESCRIPTION:${escapeIcs(`${readingPlanDescription}\nLesefokus: ${session.readingFocus.join("; ")}\nProjektbezug: ${session.projectConnection}\nExtraktion: ${extractionSections.join("; ")}`)}`,
           "END:VEVENT",
         ].join("\r\n");
       })
@@ -2239,9 +2252,7 @@ export default function StudyTracker({
               </summary>
               <div className="course-session-grid">
                 {nlpCourseSessions.map((session) => {
-                  const readings = session.readingIds
-                    .map((readingId) => articleReadingsById.get(readingId))
-                    .filter((reading) => Boolean(reading));
+                  const readings = getCourseReadings(session.readingIds);
                   const sessionState = session.date === systemToday
                     ? "today"
                     : session.date < systemToday
@@ -2259,12 +2270,54 @@ export default function StudyTracker({
                         {session.topics.map((topic) => <li key={topic}>{topic}</li>)}
                       </ul>
                       <details className="course-session-readings">
-                        <summary>{readings.length} passende Artikel anzeigen</summary>
-                        <ul>
-                          {readings.map((reading) => (
-                            <li key={reading!.id}>{reading!.fileName}</li>
-                          ))}
-                        </ul>
+                        <summary>
+                          {session.readingPlan
+                            ? `${session.readingPlan.deliverables.length} Pflicht-Ergebnisse · ${session.readingPlan.required.length} Pflichtquellen${session.readingPlan.reuse.length ? ` · ${session.readingPlan.reuse.length} Notizen wiederverwenden` : ""} · ${session.readingPlan.optional.length} optional`
+                            : `${readings.length} passende Artikel anzeigen`}
+                        </summary>
+                        {session.readingPlan ? (
+                          <div className="course-reading-priority">
+                            <section className="course-required-deliverables">
+                              <strong>Verpflichtende Ergebnisse</strong>
+                              <ol>
+                                {session.readingPlan.deliverables.map((deliverable) => (
+                                  <li key={deliverable.id}>
+                                    <b>{deliverable.title}</b>
+                                    <span>{deliverable.acceptance}</span>
+                                  </li>
+                                ))}
+                              </ol>
+                            </section>
+                            {[
+                              ["Verpflichtend", "required", session.readingPlan.required],
+                              ["Notizen wiederverwenden · nicht erneut lesen", "reuse", session.readingPlan.reuse],
+                              ["Optional / Related Work", "optional", session.readingPlan.optional],
+                            ].map(([label, tier, ids]) => {
+                              const tierReadings = getCourseReadings(ids as string[]);
+                              if (tierReadings.length === 0) return null;
+                              return (
+                                <section className={`course-reading-tier ${tier}`} key={tier as string}>
+                                  <strong>{label as string}</strong>
+                                  <ul>
+                                    {tierReadings.map((reading) => <li key={reading.id}>{reading.fileName}</li>)}
+                                  </ul>
+                                </section>
+                              );
+                            })}
+                            <section className="course-session-guidance" lang="fa" dir="rtl">
+                              <strong>سؤال‌هایی که از مدرس می‌پرسم</strong>
+                              <ol>{session.classQuestionsFa.map((question) => <li key={question}>{question}</li>)}</ol>
+                              <p><b>چرا مهم است:</b> {session.whyThisMattersFa}</p>
+                              <p><b>چه کاری انجام می‌دهم:</b> {session.plannedActionFa}</p>
+                            </section>
+                          </div>
+                        ) : (
+                          <ul>
+                            {readings.map((reading) => (
+                              <li key={reading.id}>{reading.fileName}</li>
+                            ))}
+                          </ul>
+                        )}
                       </details>
                     </article>
                   );

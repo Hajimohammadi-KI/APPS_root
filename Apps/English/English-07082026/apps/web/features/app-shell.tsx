@@ -458,7 +458,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 							</p>
 						</div>
 					</div>
-					<div className="flex items-center gap-2">
+					<div className="topbar-actions flex min-w-0 max-w-full flex-wrap items-center justify-end gap-2">
 						<div aria-label="Current learning language: English" className="language-status">
 							<span data-current="true">EN</span><strong>English</strong>
 							<i aria-hidden />

@@ -57,10 +57,9 @@ test("automaticity mission saves writing evidence and restores it", async ({
     )
     .toBe("Present perfect");
 
-  await page.goto("/progress");
-  await expect(
-    page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
-  ).toBeVisible();
+	await expect(
+		page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
+	).toBeVisible();
   const evidence = page;
   await expect(evidence.getByText("Present perfect", { exact: true })).toBeVisible();
 
@@ -139,14 +138,14 @@ test("automaticity mission remains usable on a phone viewport", async ({
     if (message.type() === "error") consoleErrors.push(message.text());
   });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/progress");
+	await page.goto("/grammar");
 
-  await expect(
-    page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Start evidence practice" }),
-  ).toBeVisible();
+	await expect(
+		page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
+	).toBeVisible();
+	await expect(
+		page.getByRole("button", { name: /1\. Activate & use accurately/ }),
+	).toBeVisible();
   await page
     .getByRole("button", { name: /2\. Automate & write/ })
     .click();
@@ -203,8 +202,7 @@ test("automaticity mission follows the lesson selected in Grammar Lab", async ({
     )
     .toBe(selectedLesson);
 
-  await page.goto("/progress");
-  await expect(page.getByText(selectedLesson, { exact: true }).first()).toBeVisible();
+	await expect(page.getByText(selectedLesson, { exact: true }).first()).toBeVisible();
   await page
     .getByRole("button", { name: /2\. Automate & write/ })
     .click();

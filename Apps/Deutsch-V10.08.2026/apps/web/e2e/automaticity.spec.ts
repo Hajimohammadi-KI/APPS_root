@@ -1,36 +1,24 @@
 import { expect, test } from "@playwright/test";
 
-test("Automatik-Mission speichert den Schreibnachweis dauerhaft", async ({
+test("Tagesprogramm speichert die gewählte Lernzeit dauerhaft", async ({
   page,
 }) => {
   await page.goto("/heute");
-  await page
-    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
-    .click();
-
-  const journal =
-    "Ich übe heute, weil ich sicherer sprechen möchte. Ich schreibe Beispiele, weil ich die Regel behalten will. Ich höre zu, weil gute Aussprache wichtig ist. Ich wiederhole den Text, weil mir das Rhythmus gibt. Danach spreche ich frei. Morgen mache ich weiter.";
-  const journalField = page.getByLabel("Personalpronomen und sein-Tagebuch");
-  await journalField.fill(journal);
-  await page
-    .getByRole("button", { name: "Schreiben analysieren und speichern" })
-    .click();
-  await expect(
-    page.getByText(
-      "Tagebuch gespeichert. Du hast die Zielstruktur selbst produziert.",
-    ),
-  ).toBeVisible();
+  await page.getByRole("button", { name: "30 Min." }).click();
+  await expect(page.getByRole("button", { name: "30 Min." })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
 
   await page.reload();
-  await page
-    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
-    .click();
-  await expect(
-    page.getByLabel("Personalpronomen und sein-Tagebuch"),
-  ).toHaveValue(journal);
+  await expect(page.getByRole("button", { name: "30 Min." })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(page.locator(".daily-auto-program__grid > li")).toHaveCount(5);
 });
 
-test("Automatik-Mission bleibt auf dem Smartphone bedienbar", async ({
+test("Automatisierungstrainer bleibt auf dem Smartphone bedienbar", async ({
   page,
 }) => {
   const consoleErrors: string[] = [];
@@ -40,18 +28,13 @@ test("Automatik-Mission bleibt auf dem Smartphone bedienbar", async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/automatik");
 
-  await expect(page).toHaveURL(/\/heute$/);
+  await expect(page).toHaveURL(/\/automatik$/);
   await expect(
-    page.getByRole("heading", { name: "Automatik-Mission" }),
+    page.getByRole("heading", { name: "Automatik gezielt aufbauen" }),
   ).toBeVisible();
+  await expect(page.getByRole("button", { name: /Abrufübung/ })).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Nachweis starten" }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
-    .click();
-  await expect(
-    page.getByLabel("Personalpronomen und sein-Tagebuch"),
+    page.getByText("Trainingsparameter", { exact: true }),
   ).toBeVisible();
   await expect(
     page.locator(

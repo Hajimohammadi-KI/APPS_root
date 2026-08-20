@@ -8,16 +8,14 @@ async function openNavigationLink(page: Page, label: string, group: string) {
   const navigation = page.getByRole("navigation", {
     name: "Product navigation",
   });
-  // The group's visible section label (e.g. "Daily Practice") is a plain
-  // paragraph; the expandable trigger button underneath it carries its own
-  // caption text (e.g. "Practice and speak today"), so matching the
-  // trigger's own accessible name against the group label could never
-  // resolve. Locate by section structure instead, mirroring app.spec.ts's
-  // (already-correct) helper of the same name.
-  const section = navigation.locator("section", { hasText: group }).first();
-  const trigger = section.getByRole("button").first();
-  if ((await trigger.getAttribute("aria-expanded")) !== "true") {
-    await trigger.click();
+  const directLink = navigation.getByRole("link", { name: label, exact: true });
+  if ((await directLink.count()) === 0) {
+    const trigger = navigation.getByRole("button", {
+      name: new RegExp(`^${group}\\b`),
+    });
+    if ((await trigger.getAttribute("aria-expanded")) !== "true") {
+      await trigger.click();
+    }
   }
   await navigation.getByRole("link", { name: label, exact: true }).click();
 }
@@ -71,10 +69,10 @@ test("preserves legacy content while applying the shared accessible theme", asyn
   // migrated page still carries real welcoming/orienting copy, not blank
   // space, under the shared accessible theme.
   for (const text of [
-    "Personal learning dashboard",
-    "Small, measurable practice that turns English into a usable skill.",
-    "Select a course",
-    "Master Everyday Conversations",
+    "Your automaticity workspace",
+    "Build accurate, confident English through one focused path.",
+    "Adaptive daily program",
+    "One guided route, five required modules",
   ]) {
     await expect(page.getByText(text, { exact: true })).toBeVisible();
   }
@@ -102,12 +100,12 @@ test("preserves legacy content while applying the shared accessible theme", asyn
     primary: "#1760df",
   });
   expect(migratedTheme).toEqual({
-    background: "#f7f4fb",
-    border: "#ded4e7",
-    card: "#fffefe",
-    foreground: "#21182f",
-    muted: "#655d70",
-    primary: "#7651b4",
+    background: "#fbfafc",
+    border: "#e7e3ef",
+    card: "#fff",
+    foreground: "#111638",
+    muted: "#666b86",
+    primary: "#5b2fd0",
   });
   await page.screenshot({
     fullPage: true,
@@ -130,12 +128,10 @@ test("keeps every legacy surface, catalog, and primary control available", async
   const navigation = page.getByRole("navigation", {
     name: "Product navigation",
   });
-  // All 4 nav groups render expanded by default now (app-shell.tsx's
-  // defaultOpenGroups), not just the active one -- so every item across
-  // every group is a visible link: practice(5) + curriculum(3) +
-  // evidence(5) + system(2) = 15. The 4 group-trigger buttons are unchanged
-  // (one per group, regardless of expanded state).
-  await expect(navigation.getByRole("link")).toHaveCount(15);
+  await expect(navigation.getByRole("link", { name: "Home" })).toBeVisible();
+  await expect(
+    navigation.getByRole("link", { name: "Today’s Practice" }),
+  ).toBeVisible();
   await expect(navigation.getByRole("button")).toHaveCount(4);
 
   // Every content list from here on was checked against source code that
@@ -150,7 +146,7 @@ test("keeps every legacy surface, catalog, and primary control available", async
   // Conversation Studio, `navigation` no longer resolves, so this returns to
   // "/" before continuing the nav-based walk (mirrors app.spec.ts's fix for
   // the same issue).
-  await openNavigationLink(page, "Conversation Studio", "Daily Practice");
+  await openNavigationLink(page, "Conversation Studio", "Practice");
   await expect(
     page.getByRole("heading", { level: 1, name: "Speaking Studio" }),
   ).toBeVisible();
@@ -175,19 +171,20 @@ test("keeps every legacy surface, catalog, and primary control available", async
   // /progress uses. Checking against that mockup's invented step names
   // was never real legacy parity; these are this Mission's actual step
   // headings (automaticity-screen.tsx).
-  await openNavigationLink(page, "Today’s Practice", "Daily Practice");
+  await openNavigationLink(page, "Today’s Practice", "");
   await expect(
-    page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
+    page.getByRole("heading", {
+      level: 1,
+      name: "Your complete daily automaticity program",
+    }),
   ).toBeVisible();
-  // Only the current step's card is in the DOM at a time (one active
-  // exercise, not several at once) -- step 1 is what's actually visible on
-  // arrival; steps 2/3 render only once the learner reaches them.
   await expect(
-    page.getByText("1. Lesson and controlled practice", { exact: true }).first(),
+    page.getByText("One guided route, five required modules", { exact: true }),
   ).toBeVisible();
+  await expect(page.locator(".daily-auto-program__grid > li")).toHaveCount(5);
   await page.goto("/");
 
-  await openNavigationLink(page, "Grammar Lab", "Learning Paths");
+  await openNavigationLink(page, "Grammar Lab", "Learn");
   await expect(
     page.getByText(`${112} units, A1 to C2`, { exact: true }),
   ).toBeVisible();
@@ -199,7 +196,7 @@ test("keeps every legacy surface, catalog, and primary control available", async
     path: "test-results/parity-migrated-grammar.png",
   });
 
-  await openNavigationLink(page, "Learning Resources", "Learning Paths");
+  await openNavigationLink(page, "Learning Resources", "Learn");
   // Resources now render inside a per-CEFR-level accordion with only the
   // default level (A1) expanded, so raw .resource-card elements aren't all
   // simultaneously in the DOM to count -- the "N direct resources" badge is
@@ -209,17 +206,17 @@ test("keeps every legacy surface, catalog, and primary control available", async
     page.getByText("43 direct resources", { exact: true }),
   ).toBeVisible();
 
-  await openNavigationLink(page, "Error Workshop", "Learning Evidence");
+  await openNavigationLink(page, "Error Workshop", "Progress");
   await expect(
     page.getByRole("heading", { level: 1, name: "Error Workshop" }),
   ).toBeVisible();
 
-  await openNavigationLink(page, "Audio Library", "Learning Evidence");
+  await openNavigationLink(page, "Audio Library", "Progress");
   await expect(
     page.getByRole("heading", { level: 1, name: "Audio Library" }),
   ).toBeVisible();
 
-  await openNavigationLink(page, "Settings", "App and Settings");
+  await openNavigationLink(page, "Settings", "Settings");
   for (const label of [
     "Reading & focus",
     "Grammar accuracy",

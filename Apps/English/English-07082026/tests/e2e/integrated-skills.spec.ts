@@ -45,11 +45,11 @@ test("keeps the daily mission readable on a narrow mobile screen", async ({
   ).toBeVisible();
   await expect(page.getByLabel("Integrated skills evidence")).toBeVisible();
 
-  const bodyWidth = await page
-    .locator("body")
-    .evaluate((body) => body.scrollWidth);
-  const viewportWidth = await page.evaluate(() => window.innerWidth);
-  expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 1);
+	const bodyWidth = await page
+		.locator("body")
+		.evaluate((body) => body.scrollWidth);
+	const viewportWidth = await page.evaluate(() => window.innerWidth);
+	expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 1);
 });
 
 test("plays original listening and opens the exact speaking lesson in the studio", async ({

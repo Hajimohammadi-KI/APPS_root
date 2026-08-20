@@ -5,8 +5,7 @@ import { AutomaticityScreen } from "@/features/screens/automaticity-screen";
 // activities"/"0% verified mastery" stats that no script ever updated, and
 // its own separate localStorage key that could never agree with Home's
 // real progress. This route now renders the same real, mastery-safe
-// Mission component /progress already uses -- one evidence store, real
-// numbers.
+// Automaticity Mission component -- one evidence store and real numbers.
 export default function DailyPracticePage() {
 	return <AutomaticityScreen />;
 }

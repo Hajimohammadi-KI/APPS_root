@@ -51,7 +51,7 @@ const PROGRAM_CONTENT: Record<
 	conversation_studio: {
 		title: "Conversation Studio",
 		description: "Produce the target aloud in a real context.",
-		href: "/studio?from=daily",
+		href: "/studio",
 		icon: MessagesSquare,
 		unitSingular: "round",
 		unitPlural: "rounds",
@@ -94,7 +94,8 @@ export function DailyAutomaticityProgram() {
 			minutes: String(block.minutes),
 			units: String(block.practiceUnits),
 		});
-		return `${content.href}?${params.toString()}` as Route;
+		const separator = content.href.includes("?") ? "&" : "?";
+		return `${content.href}${separator}${params.toString()}` as Route;
 	};
 	const firstBlock = program.blocks.find((block) => block.id === "grammar");
 

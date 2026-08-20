@@ -29,15 +29,14 @@ async function openNavigationLink(page: Page, label: string, group: string) {
   const navigation = page.getByRole("navigation", {
     name: "Product navigation",
   });
-  // The group's visible section label (e.g. "Daily Practice") is a plain
-  // paragraph; the expandable trigger button underneath it carries its own
-  // caption text (e.g. "Practice and speak today"). Locate by section
-  // structure instead of the trigger's caption so this stays correct if the
-  // caption copy changes.
-  const section = navigation.locator("section", { hasText: group }).first();
-  const trigger = section.getByRole("button").first();
-  if ((await trigger.getAttribute("aria-expanded")) !== "true") {
-    await trigger.click();
+  const directLink = navigation.getByRole("link", { name: label, exact: true });
+  if ((await directLink.count()) === 0) {
+    const trigger = navigation.getByRole("button", {
+      name: new RegExp(`^${group}\\b`),
+    });
+    if ((await trigger.getAttribute("aria-expanded")) !== "true") {
+      await trigger.click();
+    }
   }
   await navigation.getByRole("link", { name: label, exact: true }).click();
 }
@@ -67,15 +66,14 @@ test("loads the focused dashboard and complete product navigation", async ({
     page.getByRole("heading", { level: 1, name: "Good morning, Learner" }),
   ).toBeAttached();
   await expect(
-    page.getByText("Personal learning dashboard", { exact: true }),
-  ).toBeVisible();
-  const courseList = page.locator(".home-v2-course-list");
-  await expect(
-    courseList.getByRole("button", { name: /Build Strong Grammar Skills/ }),
+    page.getByText("Your automaticity workspace", { exact: true }),
   ).toBeVisible();
   await expect(
-    courseList.getByRole("button", {
-      name: /Master Everyday Conversations/,
+    page.getByRole("region", { name: "Verb be: am/is/are · A1" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("region", {
+      name: "Choose your time, then follow all five steps",
     }),
   ).toBeVisible();
   await expect(
@@ -121,18 +119,21 @@ test("shows the learner's current level and starts today's practice from the das
   page,
 }) => {
   await expect(
-    page.getByText("Current level · A1", { exact: true }),
+    page.getByRole("link", { name: /Learner A1 0/ }),
   ).toBeVisible();
 
-  const continueButton = page
-    .getByRole("button", { name: "Continue today’s practice" })
-    .first();
+  const continueButton = page.getByRole("button", {
+    name: "Start today's mission",
+  });
   await expect(continueButton).toBeVisible();
   await continueButton.click();
 
   await expect(page).toHaveURL(/\/daily$/);
   await expect(
-    page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
+    page.getByRole("heading", {
+      level: 1,
+      name: "Your complete daily automaticity program",
+    }),
   ).toBeVisible();
 });
 
@@ -167,14 +168,14 @@ test("opens every legacy product surface", async ({ page }) => {
   //   component /progress does, inside the normal AppShell, so it no
   //   longer needs the standalone-chrome workaround below.
   const surfaces = [
-    ["Grammar Lab", "Learning Paths", "Grammar Lab"],
-    ["Learning Resources", "Learning Paths", "Online Learning Resources"],
-    ["Error Workshop", "Learning Evidence", "Error Workshop"],
-    ["Audio Library", "Learning Evidence", "Audio Library"],
-    ["Settings", "App and Settings", "Settings"],
-    ["Home", "Daily Practice", "Good morning, Learner"],
-    ["Today’s Practice", "Daily Practice", "Automaticity Mission"],
-    ["Conversation Studio", "Daily Practice", "Speaking Studio"],
+    ["Grammar Lab", "Learn", "Grammar Lab"],
+    ["Learning Resources", "Learn", "Online Learning Resources"],
+    ["Error Workshop", "Progress", "Error Workshop"],
+    ["Audio Library", "Progress", "Audio Library"],
+    ["Settings", "Settings", "Settings"],
+    ["Home", "", "Good morning, Learner"],
+    ["Today’s Practice", "", "Your complete daily automaticity program"],
+    ["Conversation Studio", "Practice", "Speaking Studio"],
   ] as const;
 
   for (const [button, group, heading] of surfaces) {
@@ -220,7 +221,7 @@ test("preserves catalog counts and supports grammar practice", async ({
   // current Studio implementation for reasons unrelated to tonight's
   // routing/Grammar Lab work (confirmed absent from
   // app/studio/source/studio-source.tsx), so it's out of scope here.
-  await openNavigationLink(page, "Grammar Lab", "Learning Paths");
+  await openNavigationLink(page, "Grammar Lab", "Learn");
   await expect(
     page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
   ).toBeVisible();
@@ -241,7 +242,7 @@ test("preserves catalog counts and supports grammar practice", async ({
     page.getByText("Word order in phrasal verbs", { exact: true }).first(),
   ).toBeInViewport();
 
-  await openNavigationLink(page, "Learning Resources", "Learning Paths");
+  await openNavigationLink(page, "Learning Resources", "Learn");
   await expect(
     page.getByText("43 direct resources", { exact: true }),
   ).toBeVisible();
@@ -261,12 +262,13 @@ test("is usable through the compact mobile navigation", async ({ page }) => {
   });
 
   await expect(
-    page.getByRole("heading", { name: "Select a course" }),
+    page.getByRole("heading", { name: "Good morning, Learner" }),
   ).toBeVisible();
   await expect(
-    page.locator(".home-v2-course-list .home-v2-course"),
-  ).toHaveCount(3);
-  await expect(page.locator(".home-v2-chart-wrap")).toBeVisible();
+    page.getByRole("region", {
+      name: "Choose your time, then follow all five steps",
+    }),
+  ).toBeVisible();
   await page.screenshot({
     fullPage: true,
     path: "test-results/dashboard-mobile.png",
@@ -281,7 +283,10 @@ test("is usable through the compact mobile navigation", async ({ page }) => {
   });
   await navigation.getByRole("link", { name: "Today’s Practice" }).click();
   await expect(
-    page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
+    page.getByRole("heading", {
+      level: 1,
+      name: "Your complete daily automaticity program",
+    }),
   ).toBeVisible();
   await expect(navigation).not.toBeVisible();
 
@@ -302,25 +307,24 @@ test("provides accordion navigation and cross-platform installation", async ({
   const navigation = page.getByRole("navigation", {
     name: "Product navigation",
   });
-  const practiceGroup = navigation
-    .locator("section", { hasText: "Daily Practice" })
-    .first()
-    .getByRole("button")
-    .first();
+  const practiceGroup = navigation.getByRole("button", {
+    name: /^Practice\b/,
+  });
 
   // Collapsing the group via Enter removes its links from the accessibility
   // tree entirely (not just visually hidden)...
+  await expect(practiceGroup).toHaveAttribute("aria-expanded", "false");
+  await practiceGroup.press("Enter");
   await expect(practiceGroup).toHaveAttribute("aria-expanded", "true");
+  await expect(
+    navigation.getByRole("link", { name: "Conversation Studio", exact: true }),
+  ).toBeVisible();
+  // Pressing Enter again removes the nested links from the accessibility tree.
   await practiceGroup.press("Enter");
   await expect(practiceGroup).toHaveAttribute("aria-expanded", "false");
   await expect(
-    navigation.getByRole("link", { name: "Home", exact: true }),
+    navigation.getByRole("link", { name: "Conversation Studio", exact: true }),
   ).not.toBeAttached();
-  // ...and pressing Enter again restores them.
-  await practiceGroup.press("Enter");
-  await expect(
-    navigation.getByRole("link", { name: "Home", exact: true }),
-  ).toBeVisible();
 
   // The install dialog must not mention infra the learner never sets up
   // themselves (Slack, Vercel) — it should read as consumer software.
@@ -483,7 +487,7 @@ test("deep-links every screen and preserves browser navigation", async ({
     name: "Product navigation",
   });
 
-  await openNavigationLink(page, "Grammar Lab", "Learning Paths");
+  await openNavigationLink(page, "Grammar Lab", "Learn");
   await expect(page).toHaveURL(/\/grammar$/);
   // A hard reload on this URL must land on the same screen, not the home
   // screen — proves the route is real, not just client-side navigation state.
@@ -492,7 +496,7 @@ test("deep-links every screen and preserves browser navigation", async ({
     page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
   ).toBeVisible();
 
-  await openNavigationLink(page, "Settings", "App and Settings");
+  await openNavigationLink(page, "Settings", "Settings");
   await expect(page).toHaveURL(/\/settings$/);
   await page.goBack();
   await expect(
@@ -634,9 +638,9 @@ test("rejects copied repair evidence and accepts a checked new context", async (
   // The profile privacy record is the source of truth for provider access;
   // use the real Settings control so its hydration effect cannot silently
   // replace a test-only localStorage flag with the profile default.
-  await openNavigationLink(page, "Settings", "App and Settings");
+  await openNavigationLink(page, "Settings", "Settings");
   await page.getByLabel(/Allow optional online AI/).check();
-  await openNavigationLink(page, "Error Workshop", "Learning Evidence");
+  await openNavigationLink(page, "Error Workshop", "Progress");
   await expect(
     page.getByRole("heading", { level: 1, name: "Error Workshop" }),
   ).toBeVisible();

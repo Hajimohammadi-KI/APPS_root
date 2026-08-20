@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  BookMarked,
   Bug,
   CaseSensitive,
   ChartNoAxesCombined,
@@ -34,6 +35,7 @@ export interface NavigationItem {
     | "/fehler"
     | "/audio"
     | "/ressourcen"
+    | "/notizbuch"
     | "/fertigkeiten"
     | "/einstellungen"
     | "/lehrkraft"
@@ -132,6 +134,12 @@ export const secondaryNavigation = [
     label: "Ressourcen",
     subtitle: "Eigene Übungen und öffentliche Direktlinks",
     icon: Library,
+  },
+  {
+    href: "/notizbuch",
+    label: "Notizbuch & PDF-Reader",
+    subtitle: "Lesen, markieren, übersetzen und exportieren",
+    icon: BookMarked,
   },
   {
     href: "/einstellungen",

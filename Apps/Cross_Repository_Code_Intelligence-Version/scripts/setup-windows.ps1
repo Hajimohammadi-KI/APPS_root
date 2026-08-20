@@ -145,6 +145,7 @@ function Copy-ApplicationFiles {
     ".wrangler",
     ".npm-cache",
     ".git",
+    "outputs",
     "/XF",
     ".env.local",
     "*.log",
@@ -307,11 +308,25 @@ function Initialize-WslCopy {
   $wslInstallRoot = $wslInstallRoot.Trim()
   $prepareScriptWsl = (& wsl.exe wslpath -a "$($prepareScript.Replace('\', '/'))") 2>$null
   if ($prepareScriptWsl) { $prepareScriptWsl = $prepareScriptWsl.Trim() }
-  $output = & wsl.exe -d Ubuntu -u root -- bash $prepareScriptWsl $wslInstallRoot 2>&1
+  $prepareArguments = @("-d", "Ubuntu", "-u", "root", "--", "bash", $prepareScriptWsl, $wslInstallRoot)
+  if ([string]::IsNullOrWhiteSpace($InstallRootOverride)) {
+    $prepareArguments += "--migrate-legacy"
+  }
+  $previousPreference = $ErrorActionPreference
+  try {
+    # Bun writes normal install progress to stderr. Capture it as diagnostic
+    # text without letting PowerShell turn a successful WSL run into an error.
+    $ErrorActionPreference = "Continue"
+    $output = & wsl.exe @prepareArguments 2>&1
+    $wslExitCode = $LASTEXITCODE
+  }
+  finally {
+    $ErrorActionPreference = $previousPreference
+  }
   foreach ($line in $output) {
     Add-Content -LiteralPath $SetupLog -Value $line.ToString() -Encoding UTF8
   }
-  if ($LASTEXITCODE -ne 0) {
+  if ($wslExitCode -ne 0) {
     throw "Die WSL-Umgebung für den lokalen Webserver konnte nicht vorbereitet werden.`r`n`r`nLetzte Meldungen:`r`n$($output -join "`r`n")`r`n`r`nVollständiges Protokoll:`r`n$SetupLog"
   }
 }
@@ -499,7 +514,7 @@ Remove-Item -LiteralPath $PSCommandPath -Force -ErrorAction SilentlyContinue
 
 function Stop-LocalAppProcesses {
   $escapedRoot = [Regex]::Escape($InstallRoot)
-  $processNames = @("bun.exe", "node.exe", "workerd.exe", "wrangler.exe", "esbuild.exe", "cmd.exe", "npm.exe", "powershell.exe")
+  $processNames = @("bun.exe", "node.exe", "workerd.exe", "wrangler.exe", "esbuild.exe", "cmd.exe", "npm.exe", "powershell.exe", "wsl.exe")
   $protectedIds = [Collections.Generic.HashSet[int]]::new()
   $currentId = $PID
   while ($currentId -gt 0 -and $protectedIds.Add($currentId)) {
@@ -626,7 +641,7 @@ function Invoke-Menu {
   $brandKicker = New-UiLabel "FORSCHEN · VERSTEHEN · BAUEN" 34 116 224 22 8.5 ([System.Drawing.FontStyle]::Bold) ([System.Drawing.Color]::FromArgb(216, 200, 233))
   $brandTitle = New-UiLabel "Cross Repository`nCode Intelligence" 34 148 224 72 19 ([System.Drawing.FontStyle]::Bold) $white
   $brandCopy = New-UiLabel "Ihr lokales Lernstudio für Forschungsplanung, PDF-Arbeit und Fokuszeit." 34 232 218 72 10 ([System.Drawing.FontStyle]::Regular) ([System.Drawing.Color]::FromArgb(237, 228, 245))
-  $brandFooter = New-UiLabel "LOKALE INSTALLATION`nVersion2 0.5.4 · Daten bleiben auf diesem PC" 34 510 224 48 8.5 ([System.Drawing.FontStyle]::Regular) ([System.Drawing.Color]::FromArgb(216, 200, 233))
+  $brandFooter = New-UiLabel "LOKALE INSTALLATION`nVersion2 0.5.7 · Daten bleiben auf diesem PC" 34 510 224 48 8.5 ([System.Drawing.FontStyle]::Regular) ([System.Drawing.Color]::FromArgb(216, 200, 233))
   $brandPanel.Controls.AddRange(@($iconBox, $brandKicker, $brandTitle, $brandCopy, $brandFooter))
 
   $content = New-Object System.Windows.Forms.Panel

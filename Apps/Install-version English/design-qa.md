@@ -1,39 +1,28 @@
-# English Automaticity design QA
+# Design QA — dropdown menus
 
-## Result
+Date: 2026-08-20
 
-**Passed** for the implemented scope. The production UI keeps the application's real learner data and working controls while adopting the supplied white-and-violet reference direction.
+## Inputs
 
-## Source references
+- Reference: `D:\APPS_root\artifacts\dropdown-menu-audit-20260820\00-reference.png`
+- Same-input comparison: `D:\APPS_root\artifacts\dropdown-menu-audit-20260820\08-reference-vs-implementation.png`
+- English desktop implementation: `D:\APPS_root\artifacts\dropdown-menu-audit-20260820\05-english-full.png`
+- English mobile implementation: `D:\APPS_root\artifacts\dropdown-menu-audit-20260820\07-english-mobile-menu.png`
 
-- `D:/Downloads/exec-9b2a2aef-1658-4177-8054-286935ea898e.png` — home/dashboard direction
-- `D:/AIBild/Apps/Grammerlab.png` — grammar direction
-- `D:/AIBild/Apps/654bdb9f-650a-454a-b898-7e5511adcee8.png` — conversation direction
+## Comparison
 
-## Side-by-side evidence
+The implementation preserves the reference hierarchy: a white container, concise heading and supporting copy, separated full-width rows, right-aligned chevrons, and a restrained violet selected state. The application shell applies the same pattern to navigation groups while keeping Home as the first direct action. One group is open at a time and the active route's group opens automatically.
 
-- [Home comparison](design-audit/comparison-home.png)
-- [Grammar comparison](design-audit/comparison-grammar.png)
-- [Conversation Studio comparison](design-audit/comparison-studio.png)
+The desktop and 412 px mobile states were exercised in the in-app Browser. The mobile drawer preserves the same order and single-open behavior. Selection controls use the shared dropdown component and open below their trigger. The contextual-help tooltip is suppressed inside modal navigation so it cannot cover the mobile menu.
 
-## Responsive evidence
+## Findings
 
-- Desktop: 19/19 routes passed one-H1, one-main, no horizontal-overflow, and minimum 32 px interactive-target checks. See [desktop audit](design-audit/english-route-audit.json).
-- Tablet (800 x 1280): 19/19 routes passed the structural and overflow checks. See [tablet audit](design-audit/english-tablet-route-audit.json).
-- Mobile (412 x 915): 19/19 routes passed the structural and overflow checks. See [mobile audit](design-audit/english-mobile-route-audit.json).
-- Visual samples: [tablet home](design-audit/07-home-tablet-800x1280.png), [tablet Studio](design-audit/08-studio-tablet-800x1280.png), and [mobile home](design-audit/09-home-mobile-412x915.png).
+- P0: none.
+- P1: none.
+- P2: none.
 
-## Implemented changes
+The visible focus outline in the comparison is an intentional keyboard-accessibility state, not a styling defect. Row height is slightly larger than the reference to retain a reliable touch target.
 
-- Unified white surfaces, violet accents, restrained borders, type scale, cards, navigation, mission stages, repair summaries, and evidence summaries.
-- Rebuilt the home mission composition against the reference while retaining live state.
-- Made the app shell, Grammar Lab, Conversation Studio, analytics, teacher, privacy, and supporting pages responsive.
-- Removed squeezed multi-column Studio layouts at tablet widths and improved mobile stacking.
-- Added reduced-motion-safe transitions and eliminated decorative infinite motion from task flows.
-- Added a same-origin local API bridge so phones/tablets do not try to call their own `localhost`.
+## Final result
 
-## Evidence limits
-
-- Real HTTP access through the LAN address and Browser viewport emulation were verified.
-- A physical Android tablet was not available in this run; hardware-specific microphone permission and browser-chrome behavior are therefore **N/A — not sufficiently verified**.
-- Reference screenshots contain illustrative progress values. The implementation intentionally shows real application state rather than hard-coded mock scores.
+passed

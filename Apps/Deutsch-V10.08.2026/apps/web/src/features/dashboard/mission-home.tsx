@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { grammarUnits } from "@grammar/content";
 import { DAILY_PRACTICE_STEPS, getDailyPlan } from "@grammar/domain";
+import { DailyAutomaticityProgram } from "@/features/daily-program/daily-automaticity-program";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
 export function MissionHome() {
@@ -104,6 +105,8 @@ export function MissionHome() {
           <span>heute abgeschlossen</span>
         </div>
       </section>
+
+      <DailyAutomaticityProgram />
 
       <section
         className="mission-home__path"

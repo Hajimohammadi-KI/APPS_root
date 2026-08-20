@@ -13,6 +13,7 @@ import {
 	TriangleAlert,
 } from "lucide-react";
 import { grammarUnits } from "@grammar/content";
+import { DailyAutomaticityProgram } from "@/features/components/daily-automaticity-program";
 import {
 	currentDailyPlan,
 	dailyPlanCompletionPercent,
@@ -105,6 +106,8 @@ export function MissionHomeScreen({
 					<span>today&apos;s progress</span>
 				</div>
 			</section>
+
+			<DailyAutomaticityProgram />
 
 			<section className="mission-home__path" aria-label="Three-step learning path">
 				<LearningStep icon={BookOpen} number="1" title="Recall" text="Activate and use the target accurately." />

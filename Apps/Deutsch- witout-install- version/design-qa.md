@@ -1,39 +1,28 @@
-# DeutschFlow design QA
+# Design QA — Dropdown-Menüs
 
-## Result
+Datum: 2026-08-20
 
-**Passed** for the implemented scope. The German app now follows the same white-and-violet design language and responsive structure as the English app while preserving German content, routes, and real learner state.
+## Eingaben
 
-## Source references
+- Referenz: `D:\APPS_root\artifacts\dropdown-menu-audit-20260820\00-reference.png`
+- Vergleich in einer gemeinsamen Eingabe: `D:\APPS_root\artifacts\dropdown-menu-audit-20260820\08-reference-vs-implementation.png`
+- Deutsche Desktop-Implementierung: `D:\APPS_root\artifacts\dropdown-menu-audit-20260820\04-german-full.png`
+- Deutsche Mobile-Implementierung: `D:\APPS_root\artifacts\dropdown-menu-audit-20260820\06-german-mobile-menu.png`
 
-- `D:/Downloads/exec-9b2a2aef-1658-4177-8054-286935ea898e.png` — home/dashboard direction
-- `D:/AIBild/Apps/Grammerlab.png` — grammar direction
-- `D:/AIBild/Apps/654bdb9f-650a-454a-b898-7e5511adcee8.png` — conversation direction
+## Vergleich
 
-## Side-by-side evidence
+Die Implementierung übernimmt die Hierarchie der Referenz: weißer Container, kurze Überschrift und Erklärung, getrennte Zeilen über die volle Breite, rechts ausgerichtete Pfeile und ein zurückhaltender violetter Auswahlzustand. Die App-Navigation verwendet dasselbe Muster; Start bleibt die erste direkte Aktion. Es ist jeweils nur eine Gruppe geöffnet und die Gruppe der aktiven Seite öffnet sich automatisch.
 
-- [Home comparison](design-audit/comparison-home.png)
-- [Grammar comparison](design-audit/comparison-grammar.png)
-- [Conversation Studio comparison](design-audit/comparison-studio.png)
+Desktop und 412-px-Mobilansicht wurden im eingebauten Browser interaktiv geprüft. Der mobile Drawer behält Reihenfolge und Einzelauswahl bei. Die Grammatikstufen sind echte Akkordeons. Auswahlfelder verwenden die gemeinsame Dropdown-Komponente und öffnen unter ihrem Auslöser. Die kontextuelle Hilfe wird innerhalb modaler Navigation unterdrückt und kann das Menü daher nicht verdecken.
 
-## Responsive evidence
+## Befunde
 
-- Desktop: 20/20 routes passed one-H1, one-main, no horizontal-overflow, and minimum 32 px interactive-target checks. See [desktop audit](design-audit/german-route-audit.json).
-- Tablet (800 x 1280): 20/20 routes passed the structural and overflow checks. See [tablet audit](design-audit/german-tablet-route-audit.json).
-- Mobile (412 x 915): 20/20 routes passed the structural and overflow checks. See [mobile audit](design-audit/german-mobile-route-audit.json).
-- Visual samples: [tablet home](design-audit/07-home-tablet-800x1280.png), [tablet Studio](design-audit/08-studio-tablet-800x1280.png), and [mobile home](design-audit/09-home-mobile-412x915.png).
+- P0: keine.
+- P1: keine.
+- P2: keine.
 
-## Implemented changes
+Die sichtbare Fokuslinie im Vergleich ist ein beabsichtigter Tastaturzustand und kein Darstellungsfehler. Die Zeilen sind etwas höher als in der Referenz, damit Touch-Ziele zuverlässig bedienbar bleiben.
 
-- Matched the English app's white surfaces, violet accents, navigation, mission stages, cards, spacing, and responsive hierarchy.
-- Rebuilt the German home mission layout while keeping German content and live state.
-- Improved the desktop sidebar, compact tablet shell, and wrapped mobile top bar.
-- Kept Grammar Lab's useful accordion interaction but restyled and resized it to fit the common system.
-- Reworked Conversation Studio's tablet/mobile columns, footer actions, coach panel, and reduced-motion behavior.
-- Added a same-origin local API bridge so Windows and Android browsers can use the host PC API safely over LAN.
+## Endergebnis
 
-## Evidence limits
-
-- Real HTTP access through the LAN address and Browser viewport emulation were verified.
-- A physical Android tablet was not available in this run; hardware-specific microphone permission and browser-chrome behavior are therefore **N/A — not sufficiently verified**.
-- Reference screenshots contain illustrative progress values. The implementation intentionally shows real application state rather than hard-coded mock scores.
+passed

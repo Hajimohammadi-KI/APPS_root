@@ -1,13 +1,14 @@
 import { describe, expect, test } from "bun:test";
 import {
 	allocateCoreMissionMinutes,
+	buildDailyAutomaticityProgram,
 	buildAdaptiveDailyPlan,
 	calculateDailyProgress,
 } from "./adaptive-daily-plan";
 
 describe("adaptive daily plan", () => {
 	test("allocates six core activities to the exact selected duration", () => {
-		for (const minutes of [15, 30, 45, 60] as const) {
+		for (const minutes of [15, 30, 45] as const) {
 			expect(
 				allocateCoreMissionMinutes(minutes).reduce(
 					(total, activityMinutes) => total + activityMinutes,
@@ -36,7 +37,7 @@ describe("adaptive daily plan", () => {
 
 	test("does not advance while review, errors, or unfinished work remain", () => {
 		const plan = buildAdaptiveDailyPlan({
-			sessionMinutes: 60,
+			sessionMinutes: 45,
 			hasPreviousLesson: true,
 			previousLessonRecalled: true,
 			dueReviewCount: 0,
@@ -50,13 +51,13 @@ describe("adaptive daily plan", () => {
 		expect(plan.canAdvance).toBeFalse();
 		expect(plan.blocks[1]?.id).toBe("resume");
 		expect(
-			plan.blocks.slice(0, 3).every((block) => block.breakAfterMinutes === 4),
+			plan.blocks.slice(0, 2).every((block) => block.breakAfterMinutes === 4),
 		).toBeTrue();
 	});
 
 	test("advances only after the can-do quality gate", () => {
 		const plan = buildAdaptiveDailyPlan({
-			sessionMinutes: 60,
+			sessionMinutes: 45,
 			hasPreviousLesson: true,
 			previousLessonRecalled: true,
 			dueReviewCount: 0,
@@ -69,13 +70,11 @@ describe("adaptive daily plan", () => {
 		expect(plan.mission).toBe("advance");
 		expect(plan.canAdvance).toBeTrue();
 		expect(plan.blocks[1]?.id).toBe("new_lesson");
-		expect(plan.blocks.map((block) => block.minutes)).toEqual([
-			10, 10, 10, 12, 6,
-		]);
+		expect(plan.blocks.map((block) => block.minutes)).toEqual([8, 8, 8, 10, 3]);
 	});
 
 	test("keeps every selectable route inside its promised duration", () => {
-		for (const sessionMinutes of [15, 30, 45, 60] as const) {
+		for (const sessionMinutes of [15, 30, 45] as const) {
 			const plan = buildAdaptiveDailyPlan({
 				sessionMinutes,
 				hasPreviousLesson: false,
@@ -95,7 +94,7 @@ describe("adaptive daily plan", () => {
 	});
 
 	test("keeps all four CEFR skills in every selectable daily route", () => {
-		for (const sessionMinutes of [15, 30, 45, 60] as const) {
+		for (const sessionMinutes of [15, 30, 45] as const) {
 			const plan = buildAdaptiveDailyPlan({
 				sessionMinutes,
 				hasPreviousLesson: true,
@@ -111,6 +110,25 @@ describe("adaptive daily plan", () => {
 				new Set(["listening", "reading", "speaking", "writing"]),
 			);
 			expect(plan.blocks.every((block) => block.minutes > 0)).toBeTrue();
+		}
+	});
+
+	test("puts every automaticity activity in every daily duration", () => {
+		for (const sessionMinutes of [15, 30, 45] as const) {
+			const program = buildDailyAutomaticityProgram(sessionMinutes);
+			expect(program.blocks.map((block) => block.id)).toEqual([
+				"grammar",
+				"mixed_practice",
+				"conversation_studio",
+				"review",
+				"automatization",
+			]);
+			expect(
+				program.blocks.reduce((sum, block) => sum + block.minutes, 0),
+			).toBe(sessionMinutes);
+			expect(
+				program.blocks.reduce((sum, block) => sum + block.practiceUnits, 0),
+			).toBe(8 * program.volumeMultiplier);
 		}
 	});
 

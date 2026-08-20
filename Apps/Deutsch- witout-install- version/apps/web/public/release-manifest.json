@@ -1,7 +1,11 @@
 {
-  "version": "20.8.20",
+  "version": "20.8.23",
   "publishedAt": "2026-08-20",
   "changes": [
+    "Alle Desktop-, Tablet- und Mobilnavigationen verwenden jetzt ein einheitliches Dropdown-Muster mit jeweils nur einer offenen Gruppe; Start bleibt der erste Eintrag und Auswahlmenüs nutzen dieselbe zugängliche Gestaltung",
+    "Notizbuch & PDF-Reader ist jetzt als echter responsiver Web-Reader mit Start- und Vollbildsteuerung auf Windows und Android-Tablets verbunden",
+    "Lernende wählen täglich 15, 30 oder 45 Minuten; jeder Weg enthält Grammatik-Labor, Gemischtes Training, Gesprächsstudio, Wiederholung und Automatisierung mit exakter Zeit- und Umfangsverteilung",
+    "Start ist jetzt auf jeder Seite der erste dauerhaft erreichbare Navigationspunkt, einschließlich Gesprächsstudio sowie Tablet- und Mobilansicht",
     "Alle deutschen Seiten folgen jetzt demselben weißen und violetten Referenzsystem wie die englische App und bleiben auf Desktop, Tablet und Mobilgeräten strukturell sauber",
     "Eine Same-Origin-API-Brücke und ein LAN-Starter ermöglichen die Nutzung im Windows- und Android-Browser ohne Installation",
     "Die Seitenanalyse trennt Einstiegsrouten von tatsächlich gerenderten Seiten, validiert lokale Daten und zeigt alle Routen in kompakten, zugänglichen Aufklappbereichen",

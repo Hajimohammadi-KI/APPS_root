@@ -161,7 +161,7 @@ const navigationGroups: NavigationGroup[] = [
 		caption: "Practice and speak today",
 		icon: Clock3,
 		items: navigation.filter((item) =>
-			["home", "daily", "practice", "studio", "automatization"].includes(
+			["daily", "practice", "studio", "automatization"].includes(
 				item.id,
 			),
 		),
@@ -195,11 +195,11 @@ const navigationGroups: NavigationGroup[] = [
 	},
 ];
 
-const defaultOpenGroups: Record<NavigationGroupId, boolean> = {
-	practice: true,
-	curriculum: true,
-	evidence: true,
-	system: true,
+const closedNavigationGroups: Record<NavigationGroupId, boolean> = {
+	practice: false,
+	curriculum: false,
+	evidence: false,
+	system: false,
 };
 
 function currentNavItem(pathname: string): NavigationItem {
@@ -221,24 +221,30 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 	const { state, mutate } = useAppStore();
 	const navigate = useAppNavigate();
 	const pathname = usePathname();
+	const current = currentNavItem(pathname);
 	const [menuOpen, setMenuOpen] = React.useState(false);
 	const [openGroups, setOpenGroups] =
-		React.useState<Record<NavigationGroupId, boolean>>(defaultOpenGroups);
+		React.useState<Record<NavigationGroupId, boolean>>(closedNavigationGroups);
 	const sidebarRef = React.useRef<HTMLElement>(null);
-	const current = currentNavItem(pathname);
 	const CurrentIcon = current.icon;
 
 	React.useEffect(() => {
 		const group = navigationGroups.find((candidate) =>
 			candidate.items.some((item) => item.id === current.id),
 		);
-		if (!group) return;
-		setOpenGroups((currentGroups) =>
-			currentGroups[group.id]
-				? currentGroups
-				: { ...currentGroups, [group.id]: true },
+		setOpenGroups(
+			group
+				? { ...closedNavigationGroups, [group.id]: true }
+				: closedNavigationGroups,
 		);
 	}, [current.id]);
+
+	const toggleNavigationGroup = React.useCallback((groupId: NavigationGroupId) => {
+		setOpenGroups((groups) => ({
+			...closedNavigationGroups,
+			[groupId]: !groups[groupId],
+		}));
+	}, []);
 
 	React.useEffect(() => {
 		setMenuOpen(false);
@@ -329,6 +335,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 					</span>
 				</div>
 				<nav aria-label="Product navigation" className="sidebar-nav">
+					<Link
+						aria-current={current.id === "home" ? "page" : undefined}
+						className="nav-button nav-home-button"
+						data-active={current.id === "home"}
+						href={SCREEN_PATHS.home}
+					>
+						<House aria-hidden className="size-4.5" />
+						Home
+					</Link>
 					{navigationGroups.map((group) => {
 						const expanded = openGroups[group.id];
 						const GroupIcon = group.icon;
@@ -339,24 +354,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 							<section
 								className="nav-group"
 								data-active={groupIsActive}
+								data-open={expanded}
 								key={group.id}
 							>
-								<p className="nav-section-label">{group.label}</p>
 								<button
 									aria-controls={`nav-group-${group.id}`}
 									aria-expanded={expanded}
 									className="nav-group-trigger"
-									onClick={() =>
-										setOpenGroups((groups) => ({
-											...groups,
-											[group.id]: !groups[group.id],
-										}))
-									}
+									onClick={() => toggleNavigationGroup(group.id)}
 									type="button"
 								>
 									<GroupIcon aria-hidden className="nav-group-icon size-5" />
 									<span className="nav-group-copy">
-										<strong>{group.caption}</strong>
+										<strong>{group.label}</strong>
+										<small>{group.caption}</small>
 									</span>
 									<ChevronDown
 										aria-hidden
@@ -410,6 +421,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 						>
 							{menuOpen ? <X aria-hidden /> : <Menu aria-hidden />}
 						</Button>
+						<Link
+							aria-label="Go to Home"
+							className="topbar-home-button"
+							href={SCREEN_PATHS.home}
+						>
+							<House aria-hidden className="size-4" />
+							<span>Home</span>
+						</Link>
 						<span className="topbar-screen-icon">
 							<CurrentIcon aria-hidden className="size-4" />
 						</span>

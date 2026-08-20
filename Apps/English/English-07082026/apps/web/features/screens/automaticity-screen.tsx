@@ -53,6 +53,7 @@ import {
 } from "@/lib/audio-fluency";
 import { makeId, todayKey } from "@/lib/utils";
 import { DueReviews } from "@/features/components/due-reviews";
+import { DailyAutomaticityProgram } from "@/features/components/daily-automaticity-program";
 import { ProgressInsights } from "@/features/components/progress-insights";
 import { dateKey } from "@/lib/streak";
 
@@ -1113,6 +1114,45 @@ export function AutomaticityScreen({
     );
   }
 
+  if (!embedded) {
+    return (
+      <div className="page-stack">
+        <div className="page-heading automaticity-hero">
+          <div>
+            <Badge>Today · {missionMinutes} minutes</Badge>
+            <h1>Your complete daily automaticity program</h1>
+            <p>
+              Grammar, mixed practice, conversation, review, and
+              automatization now form one timed route. Longer sessions contain
+              more practice, while every route keeps the same quality gates.
+            </p>
+          </div>
+          <Button
+            className="automaticity-hero-action"
+            size="lg"
+            onClick={() =>
+              document
+                .getElementById("daily-program-title")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
+            <Play className="size-4" /> Choose time and start
+          </Button>
+        </div>
+
+        <DailyAutomaticityProgram />
+        <DueReviews />
+        <ProgressInsights
+          level={selectedLevel}
+          coverage={progressInsights.coverage}
+          mastery={progressInsights.mastery}
+          automaticity={progressInsights.automaticity}
+          weekActivity={progressInsights.weekActivity}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="page-stack">
       {!embedded ? <div className="page-heading automaticity-hero">
@@ -1136,6 +1176,8 @@ export function AutomaticityScreen({
           <Play className="size-4" /> Start evidence practice
         </Button>
       </div> : null}
+
+      {!embedded ? <DailyAutomaticityProgram /> : null}
 
       {!embedded ? <DueReviews /> : null}
 

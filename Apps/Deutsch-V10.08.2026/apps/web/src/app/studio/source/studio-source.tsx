@@ -21,15 +21,16 @@ import {
 } from "@/lib/audio-fluency";
 import { normalizePracticeAnswer } from "@/features/automaticity/automaticity-analysis";
 
-const nav = [
-  "Tägliches Training",
-  "Lektionen",
-  "Gesprächsstudio",
-  "Wiederholen",
-  "Fortschritt",
-  "Wortschatz",
-  "Notizbuch",
-];
+const studioNavigation = [
+  { label: "Start", href: "/", icon: "⌂" },
+  { label: "Tägliches Training", href: "/heute", icon: "◷" },
+  { label: "Lektionen", href: "/grammatik", icon: "▤" },
+  { label: "Gesprächsstudio", href: "/studio", icon: "♩" },
+  { label: "Wiederholen", href: "/wiederholungen", icon: "◴" },
+  { label: "Fortschritt", href: "/fortschritt", icon: "▥" },
+  { label: "Wortschatz", href: "/vokabelkarten", icon: "▧" },
+  { label: "Notizbuch", href: "/ressourcen", icon: "▣" },
+] as const;
 const paths = ["Komplettes Deutsch"] as const;
 
 type RecordingState = "idle" | "recording" | "paused";
@@ -748,10 +749,22 @@ export default function Home() {
           </div>
         </div>
         <nav aria-label="Hauptnavigation">
-          {nav.map((item, index) => (
-            <button key={item} className={index === 2 ? "nav-active" : ""}>
-              <Icon>{["⌂", "▤", "♩", "◴", "▥", "▧", "▣"][index]}</Icon>
-              {item}
+          {studioNavigation.map((item) => (
+            <button
+              aria-current={item.href === "/studio" ? "page" : undefined}
+              className={
+                item.href === "/studio"
+                  ? "nav-active"
+                  : item.href === "/"
+                    ? "nav-home"
+                    : ""
+              }
+              key={item.href}
+              onClick={() => window.location.assign(item.href)}
+              type="button"
+            >
+              <Icon>{item.icon}</Icon>
+              {item.label}
             </button>
           ))}
         </nav>
@@ -788,6 +801,13 @@ export default function Home() {
             <p>{text.subtitle}</p>
           </div>
           <div className="header-actions">
+            <button
+              className="studio-home-link"
+              onClick={() => window.location.assign("/")}
+              type="button"
+            >
+              <Icon>⌂</Icon>Start
+            </button>
             <span>
               ● <b>Deutsch</b>
             </span>

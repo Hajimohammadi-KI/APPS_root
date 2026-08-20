@@ -39,6 +39,7 @@ export function GrammarUnitAccordion({
   return (
     <Accordion
       aria-label="Grammatikniveau und Einheit wählen"
+      className="overflow-hidden rounded-2xl border border-violet-100 bg-background px-1 shadow-[0_9px_28px_rgb(65_43_84_/_6%)]"
       onValueChange={setOpenLevels}
       value={openLevels}
     >
@@ -48,8 +49,18 @@ export function GrammarUnitAccordion({
         const label = `${level} · ${units.length} Einheiten`;
 
         return (
-          <AccordionItem key={level} value={level}>
-            <AccordionTrigger className="px-1 text-sm font-bold text-muted-foreground hover:bg-violet-50 hover:text-violet-950 hover:no-underline">
+          <AccordionItem
+            data-selected={selectedLevel === level}
+            key={level}
+            value={level}
+          >
+            <AccordionTrigger
+              className={`px-2 text-sm font-bold hover:no-underline ${
+                selectedLevel === level
+                  ? "bg-violet-100 text-violet-950"
+                  : "text-muted-foreground"
+              }`}
+            >
               {label}
             </AccordionTrigger>
             <AccordionContent className="pb-3">

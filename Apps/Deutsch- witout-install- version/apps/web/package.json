@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "20.8.20",
+  "version": "20.8.23",
   "private": true,
   "scripts": {
     "dev": "bun --bun next dev",

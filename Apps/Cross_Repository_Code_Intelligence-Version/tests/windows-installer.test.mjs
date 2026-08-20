@@ -9,14 +9,15 @@ const localSupervisor = await readFile(new URL("../scripts/start-local-app.ps1",
 const uninstallLauncher = await readFile(new URL("../DEINSTALLIEREN-WINDOWS.bat", import.meta.url), "utf8");
 const localEnvGenerator = await readFile(new URL("../scripts/generate-local-env.mjs", import.meta.url), "utf8");
 const runWebScript = await readFile(new URL("../scripts/wsl/run-web.sh", import.meta.url), "utf8");
+const prepareWslScript = await readFile(new URL("../scripts/wsl/prepare-wsl.sh", import.meta.url), "utf8");
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 const packageLock = JSON.parse(await readFile(new URL("../package-lock.json", import.meta.url), "utf8"));
 
 test("release version is synchronized across package and Windows setup", () => {
-  assert.equal(packageJson.version, "0.5.4-version2");
+  assert.equal(packageJson.version, "0.5.7-version2");
   assert.equal(packageLock.version, packageJson.version);
   assert.equal(packageLock.packages[""].version, packageJson.version);
-  assert.match(setup, /Version2 0\.5\.4/);
+  assert.match(setup, /Version2 0\.5\.7/);
 });
 
 test("Windows setup exposes install, update, repair, and uninstall", () => {
@@ -120,10 +121,20 @@ test("Windows setup preserves local data during update and repair", () => {
   assert.match(setup, /Restore-SavedData/);
 });
 
+test("Windows setup excludes audit-only screenshots from the installed payload", () => {
+  assert.match(setup, /"outputs"/);
+});
+
 test("Windows setup supports an isolated lifecycle verification target", () => {
   assert.match(setup, /InstallRootOverride/);
   assert.match(setup, /SavedDataRootOverride/);
   assert.match(setup, /SkipShortcuts/);
+  assert.match(runWebScript, /APP_KEY=.*sha256sum/);
+  assert.match(runWebScript, /windows install root in WSL notation is required/);
+  assert.match(setup, /--migrate-legacy/);
+  assert.match(setup, /\$ErrorActionPreference = "Continue"[\s\S]*\$wslExitCode = \$LASTEXITCODE/);
+  assert.match(localSupervisor, /\$RunWebScriptWsl, \$AppRootWsl/);
+  assert.match(prepareWslScript, /for attempt in 1 2/);
 });
 
 test("Windows setup automatically restarts the app after a successful operation", () => {
@@ -137,6 +148,11 @@ test("Windows setup automatically restarts the app after a successful operation"
   assert.match(setup, /Show-Info \"\$AppName wurde erfolgreich/);
   assert.match(setup, /Die App wurde automatisch gestartet/);
   assert.doesNotMatch(setup, /App jetzt starten\?/);
+});
+
+test("Windows update also stops the WSL web host before replacing files", () => {
+  assert.match(setup, /processNames\s*=\s*@\([^\n]*"wsl\.exe"/);
+  assert.match(setup, /CommandLine\s+-match\s+\$escapedRoot/);
 });
 
 test("Windows setup closes itself after the launched app is ready", () => {

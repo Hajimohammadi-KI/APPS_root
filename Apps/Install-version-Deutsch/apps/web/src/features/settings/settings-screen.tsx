@@ -132,7 +132,7 @@ export function SettingsScreen() {
             <fieldset>
               <legend>Tägliche Lernzeit</legend>
               <div className="settings-options settings-options-four">
-                {([15, 30, 45, 60] as const).map((minutes) => (
+                {([15, 30, 45] as const).map((minutes) => (
                   <Choice
                     checked={settings.dailyStudyMinutes === minutes}
                     key={minutes}

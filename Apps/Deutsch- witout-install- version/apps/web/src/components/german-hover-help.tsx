@@ -400,6 +400,13 @@ export function GermanHoverHelp() {
       if (activeKey.current || pendingKey.current) hide();
     };
     const onFocus = (event: FocusEvent) => {
+      if (
+        event.target instanceof Element &&
+        event.target.closest('[role="dialog"], [aria-modal="true"]')
+      )
+        return;
+      if (window.matchMedia("(max-width: 767px), (hover: none)").matches)
+        return;
       const entry = controlEntry(event.target);
       if (!entry || !(event.target instanceof HTMLElement)) return;
       cancelPending();

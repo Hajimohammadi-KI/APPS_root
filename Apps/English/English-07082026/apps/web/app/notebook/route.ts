@@ -1,6 +1,10 @@
 export function GET(request: Request) {
 	const incoming = new URL(request.url);
-	const target = new URL(process.env.NEXT_PUBLIC_PDF_READER_URL ?? "http://127.0.0.1:4322/");
+	const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+	const host = forwardedHost || request.headers.get("host") || incoming.host;
+	const forwardedProtocol = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+	const protocol = forwardedProtocol || incoming.protocol.replace(":", "");
+	const target = new URL("/pdf-reader", `${protocol}://${host}`);
 	target.searchParams.set("lang", "en");
 	target.searchParams.set("source", "english-notebook");
 	incoming.searchParams.forEach((value, key) => target.searchParams.set(key, value));

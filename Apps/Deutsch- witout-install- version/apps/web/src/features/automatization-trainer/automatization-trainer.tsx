@@ -542,14 +542,13 @@ export function AutomatizationTrainer() {
               label="Tägliche Übungsdauer"
               onChange={(next) =>
                 updateSettings({
-                  dailyStudyMinutes: Number(next) as 15 | 30 | 45 | 60,
+                  dailyStudyMinutes: Number(next) as 15 | 30 | 45,
                 })
               }
               options={[
                 { value: "15", label: "15 Minuten" },
                 { value: "30", label: "30 Minuten" },
                 { value: "45", label: "45 Minuten" },
-                { value: "60", label: "60 Minuten" },
               ]}
               value={String(dailyMinutes)}
             />

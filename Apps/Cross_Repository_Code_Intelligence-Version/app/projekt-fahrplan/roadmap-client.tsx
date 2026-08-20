@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { allDays, planMeta, planWeeks, type PlannedDay, type PlanWeek } from "../plan-data";
-import { countCompletedItems, percentComplete } from "../../lib/study-progress";
+import { countCompletedItems, countCompletedOutputs, outputTotal, percentComplete } from "../../lib/study-progress";
 import { loadCompletedIds, toggleTaskCompletion } from "../../lib/task-completion-store";
 
 // Same five macro stages already used to summarize the plan on the Study
@@ -20,7 +20,7 @@ const ROADMAP_STAGES: Array<{
   {
     id: "design",
     title: "Design",
-    blurb: "Problem, Architektur, Domänenmodell, Evaluationsdesign und Umsetzungsplan vor dem ersten Code.",
+    blurb: "Problem, Architektur und Evaluation mit einem ausführbaren Vertical Slice bereits in Woche 3.",
     start: 1,
     end: 6,
   },
@@ -54,16 +54,16 @@ const ROADMAP_STAGES: Array<{
   },
 ];
 
-function weekItemTotal(week: PlanWeek) {
-  return week.days.length * 9;
+function weekOutputTotal(week: PlanWeek) {
+  return week.days.reduce((sum, day) => sum + outputTotal(day), 0);
 }
 
-function weekCompletedItems(week: PlanWeek, completed: ReadonlySet<string>) {
-  return week.days.reduce((sum, day) => sum + countCompletedItems(day, completed), 0);
+function weekCompletedOutputs(week: PlanWeek, completed: ReadonlySet<string>) {
+  return week.days.reduce((sum, day) => sum + countCompletedOutputs(day, completed), 0);
 }
 
 function isDayDone(day: PlannedDay, completed: ReadonlySet<string>) {
-  return countCompletedItems(day, completed) === 9;
+  return countCompletedOutputs(day, completed) === outputTotal(day);
 }
 
 function dayItemIds(day: PlannedDay) {
@@ -101,12 +101,12 @@ export default function RoadmapClient() {
     return () => window.clearTimeout(timeout);
   }, [toast]);
 
-  const totalItems = allDays.length * 9;
-  const totalCompleted = useMemo(
-    () => allDays.reduce((sum, day) => sum + countCompletedItems(day, completed), 0),
-    [completed],
+  const totalOutputs = allDays.reduce((sum, day) => sum + outputTotal(day), 0);
+  const totalCompleted = allDays.reduce(
+    (sum, day) => sum + countCompletedOutputs(day, completed),
+    0,
   );
-  const overallPercent = percentComplete(totalCompleted, totalItems);
+  const overallPercent = percentComplete(totalCompleted, totalOutputs);
 
   function toggleWeek(weekNumber: number) {
     setOpenWeeks((current) => {
@@ -185,9 +185,9 @@ export default function RoadmapClient() {
           const stageWeeks = planWeeks.filter(
             (week) => week.number >= stage.start && week.number <= stage.end,
           );
-          const stageTotal = stageWeeks.reduce((sum, week) => sum + weekItemTotal(week), 0);
+          const stageTotal = stageWeeks.reduce((sum, week) => sum + weekOutputTotal(week), 0);
           const stageDone = stageWeeks.reduce(
-            (sum, week) => sum + weekCompletedItems(week, completed),
+            (sum, week) => sum + weekCompletedOutputs(week, completed),
             0,
           );
           const stagePercent = percentComplete(stageDone, stageTotal);
@@ -216,8 +216,8 @@ export default function RoadmapClient() {
 
               <ol className="roadmap-weeks">
                 {stageWeeks.map((week) => {
-                  const weekTotal = weekItemTotal(week);
-                  const weekDone = weekCompletedItems(week, completed);
+                  const weekTotal = weekOutputTotal(week);
+                  const weekDone = weekCompletedOutputs(week, completed);
                   const weekPercent = percentComplete(weekDone, weekTotal);
                   const weekComplete = weekTotal > 0 && weekDone === weekTotal;
                   const open = openWeeks.has(week.number);

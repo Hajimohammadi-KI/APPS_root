@@ -8,6 +8,8 @@ import {
   extractionSections,
   nlpCourseMeta,
   nlpCourseSessions,
+  nlpCourseTransferPlans,
+  nlpSessionsRelatedToPlanDay,
   nlpLabDefinition,
   PLAN_VERSION,
   PLAN_VERSION_HISTORY,
@@ -146,6 +148,12 @@ describe("Advanced Deep Learning reading plan", () => {
         .filter((day) => mappedTitles.has(day.title))
         .every((day) => day.phaseId.startsWith("nlp-")),
     ).toBeTrue();
+    expect(
+      allDays.every(
+        (day) => (nlpSessionsRelatedToPlanDay(day.title).length > 0) === mappedTitles.has(day.title),
+      ),
+    ).toBeTrue();
+    expect(nlpSessionsRelatedToPlanDay("Problemstellung und Projektwert")).toEqual([]);
   });
 
   test("contains exactly 18 unique files with names from the recovered article folder", () => {
@@ -185,10 +193,27 @@ describe("Advanced Deep Learning reading plan", () => {
     expect(getDayStatus(optionalDay, oneCompleted)).toBe("optional");
   });
 
-  test("records Revision 3 and a reading-only course boundary", () => {
-    expect(PLAN_VERSION).toBe(3);
+  test("creates a bounded transfer within 24 hours and seven days for every session", () => {
+    expect(nlpCourseTransferPlans).toHaveLength(10);
+    expect(new Set(nlpCourseTransferPlans.map((plan) => plan.sessionNumber)).size).toBe(10);
+    for (const transfer of nlpCourseTransferPlans) {
+      const session = nlpCourseSessions.find((item) => item.number === transfer.sessionNumber)!;
+      const classDate = new Date(`${session.date}T00:00:00Z`).getTime();
+      const noteLag = (new Date(`${transfer.noteDue}T00:00:00Z`).getTime() - classDate) / 86_400_000;
+      const artifactLag = (new Date(`${transfer.artifactDue}T00:00:00Z`).getTime() - classDate) / 86_400_000;
+      expect(noteLag).toBeGreaterThanOrEqual(1);
+      expect(noteLag).toBeLessThanOrEqual(1);
+      expect(artifactLag).toBeGreaterThanOrEqual(1);
+      expect(artifactLag).toBeLessThanOrEqual(7);
+      expect(transfer.maxMinutes).toBeLessThanOrEqual(45);
+      expect(transfer.replacesDailyOutput).toBeTrue();
+    }
+  });
+
+  test("records Revision 4 and a reading-only course boundary", () => {
+    expect(PLAN_VERSION).toBe(4);
     expect(PLAN_VERSION_HISTORY.at(-1)?.effectiveDate).toBe("2026-08-20");
-    expect(appPackage.version).toBe("0.5.4-version2");
+    expect(appPackage.version).toBe("0.5.7-version2");
     expect(nlpLabDefinition.courseStart).toBe("2026-08-17");
     expect(nlpLabDefinition.courseEnd).toBe("2026-09-07");
     expect(nlpLabDefinition.projectFit).toContain("optional");

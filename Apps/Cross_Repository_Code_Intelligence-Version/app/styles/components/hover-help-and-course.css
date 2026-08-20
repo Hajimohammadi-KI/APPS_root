@@ -50,6 +50,11 @@
   background: #f7f0ff;
   box-shadow: 0 12px 30px rgb(65 30 94 / 10%);
 }
+.persian-hover-tooltip[data-placement="above"] { transform: translate(-50%, -100%); }
+
+@media (hover: none), (pointer: coarse) {
+  .persian-hover-tooltip { display: none; }
+}
 
 .course-schedule-panel > summary {
   display: flex;
@@ -148,6 +153,22 @@
   font-size: 10px;
   font-weight: 750;
 }
+
+.course-transfer-brief {
+  margin-top: 10px;
+  border: 1px solid #d7c6e5;
+  border-inline-start: 4px solid #6b3193;
+  border-radius: 10px;
+  background: #faf7fd;
+  padding: 9px 10px;
+}
+.course-transfer-brief.experiment { border-inline-start-color: #a66b12; background: #fffaf0; }
+.course-transfer-brief.scope { border-inline-start-color: #74707a; background: #f6f5f6; }
+.course-transfer-brief > strong { display: block; color: #482064; font-size: 10px; }
+.course-transfer-brief p { margin: 5px 0 0; color: #4c4059; font-size: 10px; line-height: 1.45; }
+.course-transfer-brief p span { display: inline-block; min-width: 58px; color: #6b3193; font-weight: 850; }
+.course-transfer-brief code { overflow-wrap: anywhere; color: #402056; font-size: 9px; }
+.course-transfer-brief small { display: block; margin-top: 6px; color: #625769; font-size: 9px; line-height: 1.5; }
 
 .course-session-readings {
   margin-top: 11px;

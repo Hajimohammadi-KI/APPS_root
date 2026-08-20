@@ -4,6 +4,7 @@ import * as React from "react";
 import { Brain, CheckCircle2, ShieldAlert, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { Textarea } from "@/components/ui/textarea";
 import {
   readAIProviderStatus,
@@ -150,23 +151,19 @@ export function HybridLanguageCoach({
 
         <div className="space-y-5 border-t border-indigo-200 p-4 sm:p-5">
           <div className="grid gap-4 lg:grid-cols-2">
-            <label className="grid gap-2 text-sm font-bold">
-              Fertigkeit
-              <select
-                className="h-11 rounded-xl border border-input bg-background px-3 font-medium outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-                onChange={(event) => {
-                  setSkill(event.target.value as HybridAnalysisSkill);
-                  invalidateResult();
-                }}
-                value={skill}
-              >
-                {Object.entries(skillLabels).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectMenu
+              ariaLabel="Fertigkeit"
+              label="Fertigkeit"
+              onChange={(nextSkill) => {
+                setSkill(nextSkill as HybridAnalysisSkill);
+                invalidateResult();
+              }}
+              options={Object.entries(skillLabels).map(([value, label]) => ({
+                value,
+                label,
+              }))}
+              value={skill}
+            />
             {skill === "speaking" ? (
               <label className="grid gap-2 text-sm font-bold">
                 Dauer der echten Aufnahme in Sekunden

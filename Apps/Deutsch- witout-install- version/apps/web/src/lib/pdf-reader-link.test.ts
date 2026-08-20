@@ -13,7 +13,7 @@ describe("gemeinsame PDF-Reader-Links", () => {
       isPdf: true,
     });
     expect(href).not.toBeNull();
-    const url = new URL(href ?? "");
+    const url = new URL(href ?? "", "http://deutschflow.local");
 
     expect(url.searchParams.get("driveId")).toBe(
       "1TV1AAAHkng5USBOeewMc3NpHFk97eMwi",
@@ -22,9 +22,10 @@ describe("gemeinsame PDF-Reader-Links", () => {
       "Lektion 1 · Nominativ erkennen",
     );
     expect(url.searchParams.get("context")).toBe("Deutsch A1 · Grammatik");
+    expect(url.pathname).toBe("/pdf-reader");
   });
 
-  test("bevorzugt eine vorhandene lokale Original-PDF und behält Drive als Rückweg", () => {
+  test("öffnet Web-Material ohne lokale Reader-Abhängigkeit über Drive", () => {
     const sourceUrl =
       "https://drive.google.com/file/d/1x1TfLy_Az6Ztd0HBO52exAEh2FmptFxZ/view";
     const href = pdfReaderHrefForMaterial({
@@ -36,13 +37,13 @@ describe("gemeinsame PDF-Reader-Links", () => {
       isPdf: true,
     });
     expect(href).not.toBeNull();
-    const url = new URL(href ?? "");
+    const url = new URL(href ?? "", "http://deutschflow.local");
 
-    expect(url.searchParams.get("sourceUrl")).toBe(
-      "http://127.0.0.1:3199/api/materials/idiom-day-1.pdf",
+    expect(url.searchParams.get("sourceUrl")).toBeNull();
+    expect(url.searchParams.get("originalSourceUrl")).toBeNull();
+    expect(url.searchParams.get("driveId")).toBe(
+      "1x1TfLy_Az6Ztd0HBO52exAEh2FmptFxZ",
     );
-    expect(url.searchParams.get("originalSourceUrl")).toBe(sourceUrl);
-    expect(url.searchParams.get("driveId")).toBeNull();
   });
 
   test("lässt Ordner und Audiodateien in ihrer ursprünglichen Anwendung", () => {

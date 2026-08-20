@@ -1,4 +1,72 @@
-export type DailySessionMinutes = 15 | 30 | 45 | 60;
+export type DailySessionMinutes = 15 | 30 | 45;
+
+export type DailyAutomaticityBlockId =
+  | "grammar"
+  | "mixed_practice"
+  | "conversation_studio"
+  | "review"
+  | "automatization";
+
+export interface DailyAutomaticityBlock {
+  readonly id: DailyAutomaticityBlockId;
+  readonly minutes: number;
+  readonly practiceUnits: number;
+}
+
+export interface DailyAutomaticityProgram {
+  readonly sessionMinutes: DailySessionMinutes;
+  readonly volumeMultiplier: 1 | 2 | 3;
+  readonly blocks: readonly DailyAutomaticityBlock[];
+}
+
+export const DAILY_SESSION_OPTIONS = [15, 30, 45] as const;
+
+const DAILY_AUTOMATICITY_MINUTES: Record<
+  DailySessionMinutes,
+  readonly [number, number, number, number, number]
+> = {
+  15: [3, 3, 4, 2, 3],
+  30: [6, 6, 8, 4, 6],
+  45: [9, 10, 12, 5, 9],
+};
+
+const DAILY_AUTOMATICITY_UNITS: Record<
+  DailySessionMinutes,
+  readonly [number, number, number, number, number]
+> = {
+  15: [2, 2, 1, 2, 1],
+  30: [4, 4, 2, 4, 2],
+  45: [6, 6, 3, 6, 3],
+};
+
+/**
+ * Baut den sichtbaren Tagesweg. Jede Dauer enthält Grammatik, gemischten
+ * Abruf, freie Produktion, verzögerte Wiederholung und Automatisierung.
+ * Mehr Zeit erhöht Umfang und Dauer, nicht aber die Qualitätsanforderungen.
+ */
+export function buildDailyAutomaticityProgram(
+  sessionMinutes: DailySessionMinutes,
+): DailyAutomaticityProgram {
+  const minutes = DAILY_AUTOMATICITY_MINUTES[sessionMinutes];
+  const units = DAILY_AUTOMATICITY_UNITS[sessionMinutes];
+  const ids: readonly DailyAutomaticityBlockId[] = [
+    "grammar",
+    "mixed_practice",
+    "conversation_studio",
+    "review",
+    "automatization",
+  ];
+
+  return {
+    sessionMinutes,
+    volumeMultiplier: (sessionMinutes / 15) as 1 | 2 | 3,
+    blocks: ids.map((id, index) => ({
+      id,
+      minutes: minutes[index]!,
+      practiceUnits: units[index]!,
+    })),
+  };
+}
 
 export type DailyMissionKind =
   "recall" | "review" | "resume" | "consolidate" | "advance";
@@ -43,7 +111,6 @@ const CORE_MISSION_MINUTES: Record<
   15: [3, 2, 2, 3, 2, 3],
   30: [6, 5, 4, 5, 4, 6],
   45: [9, 7, 7, 7, 6, 9],
-  60: [12, 9, 9, 10, 8, 12],
 };
 
 /** Die sechs Kernaktivitäten ergeben immer genau die gewählte Lernzeit. */
@@ -71,10 +138,6 @@ const SESSION_LAYOUTS: Record<
   45: {
     activityMinutes: [8, 8, 8, 10, 3],
     breakMinutes: [4, 4, 0, 0, 0],
-  },
-  60: {
-    activityMinutes: [10, 10, 10, 12, 6],
-    breakMinutes: [4, 4, 4, 0, 0],
   },
 };
 

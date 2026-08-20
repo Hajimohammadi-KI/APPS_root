@@ -40,6 +40,7 @@ import {
   type AutomatikIssue,
 } from "@/features/automaticity/automaticity-analysis";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
+import { DailyAutomaticityProgram } from "@/features/daily-program/daily-automaticity-program";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import {
   analyzeAudioFluency,
@@ -1048,6 +1049,42 @@ export function AutomaticityLab({
       "Sprechnachweis abgeschlossen und gespeichert. Höre ihn an und wiederhole ihn bei Bedarf.",
     );
   }
+
+  if (!embedded) {
+    return (
+      <div className="space-y-5">
+        <section className="flex flex-col gap-4 overflow-hidden rounded-3xl border border-violet-200 bg-violet-50 p-5 shadow-sm sm:p-7 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <Badge className="mb-3 bg-violet-700 text-white">
+              Heute · {missionMinutes} Minuten
+            </Badge>
+            <h1 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+              Dein vollständiges tägliches Automatikprogramm
+            </h1>
+            <p className="mt-2 max-w-3xl text-muted-foreground">
+              Grammatik, gemischtes Training, Gespräch, Wiederholung und
+              Automatisierung bilden jetzt einen Zeitplan. Längere Einheiten
+              enthalten mehr Übung; die Qualitätsgrenzen bleiben gleich.
+            </p>
+          </div>
+          <Button
+            className="bg-violet-700 text-white hover:bg-violet-800"
+            size="lg"
+            onClick={() =>
+              document
+                .getElementById("daily-program-title")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
+            <Play /> Zeit wählen und starten
+          </Button>
+        </section>
+
+        <DailyAutomaticityProgram />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-5">
       {/* Vollständig auf !embedded gesperrt statt nur die Überschrift zu
@@ -1084,6 +1121,10 @@ export function AutomaticityLab({
             <Play /> Nachweis starten
           </Button>
         </section>
+      ) : null}
+
+      {!embedded && focusedStep === undefined ? (
+        <DailyAutomaticityProgram />
       ) : null}
 
       {!embedded && focusedStep === undefined ? (

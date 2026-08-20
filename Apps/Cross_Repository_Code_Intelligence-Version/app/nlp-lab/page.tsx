@@ -1,5 +1,6 @@
 import {
   articleReadings,
+  courseTransferForSession,
   extractionSections,
   nlpCourseMeta,
   nlpCourseSessions,
@@ -93,10 +94,11 @@ export default function NlpLabPage() {
 
       <section className="nlp-lab-alert" aria-labelledby="course-scope-title">
         <strong id="course-scope-title">Kursregel bis 7. September</strong>
-        <p>
-          Pflicht ist nur Lesen und Extrahieren. Nicht erledigte technische
-          Aufgaben senken weder Fortschritt noch Lernkette und gelten nicht als
-          Rückstand.
+          <p>
+          Pro Sitzung gibt es höchstens eine kurze Transfernotiz oder ein
+          Mikroartefakt. Es ersetzt ein normales Tagesergebnis; zusätzliche
+          technische Übungen senken weder Fortschritt noch Lernkette und gelten
+          nicht als Rückstand.
         </p>
       </section>
 
@@ -173,6 +175,27 @@ export default function NlpLabPage() {
                   <p>{session.plannedActionFa}</p>
                 </div>
               </section>
+              {(() => {
+                const transfer = courseTransferForSession(session.number);
+                if (!transfer) return null;
+                return (
+                  <section className={`nlp-transfer-plan ${transfer.relevance}`}>
+                    <header>
+                      <div>
+                        <p className="nlp-lab-eyebrow">Kurs → Thesis ohne Zusatz-Backlog</p>
+                        <h4>Sofortiger Transfer</h4>
+                      </div>
+                      <span>max. {transfer.maxMinutes} Min.</span>
+                    </header>
+                    <div>
+                      <p><b>≤ 24 Stunden:</b> Notiz bis <time dateTime={transfer.noteDue}>{formatDate(transfer.noteDue)}</time></p>
+                      <p><b>≤ 7 Tage:</b> <code>{transfer.artifact}</code> bis <time dateTime={transfer.artifactDue}>{formatDate(transfer.artifactDue)}</time></p>
+                      <p>{transfer.acceptance}</p>
+                    </div>
+                    <small>Ersetzt ein Tagesergebnis; erzeugt keine vierte Aufgabe.</small>
+                  </section>
+                );
+              })()}
               {session.readingPlan ? (
                 <div className="nlp-priority-plan">
                   <section className="nlp-required-outputs">

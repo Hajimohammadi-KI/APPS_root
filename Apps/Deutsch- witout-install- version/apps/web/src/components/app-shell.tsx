@@ -1,8 +1,9 @@
 "use client";
 
-import { ChevronDown, Clock3, Folder, Settings } from "lucide-react";
+import { ChevronDown, Clock3, Folder, House, Settings } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AppNavigation } from "@/components/app-navigation";
 import { ApiConnectionStatus } from "@/components/api-connection-status";
@@ -28,10 +29,10 @@ export function AppShell({
   const { state, updateSettings } = useLearnerState();
   const [readingSettingsOpen, setReadingSettingsOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState({
-    practice: true,
-    learning: true,
-    evidence: true,
-    settings: true,
+    practice: false,
+    learning: false,
+    evidence: false,
+    settings: false,
   });
   const allNavigation = [
     ...coreNavigation,
@@ -49,12 +50,6 @@ export function AppShell({
     ) ?? coreNavigation[0]!;
   const CurrentIcon = current.icon;
 
-  // The conversation studio ships its own complete product chrome. Wrapping
-  // it in the shared shell creates two sidebars and two top bars, squeezing
-  // the recording workspace and breaking parity with the English app.
-  if (pathname.startsWith("/studio")) {
-    return <>{children}</>;
-  }
   // Filtered by href rather than positional index -- a prior version
   // indexed into primaryNavigation/secondaryNavigation by array position,
   // which silently left "/fortschritt" and "/wiederholungen" out of every
@@ -63,7 +58,6 @@ export function AppShell({
   // or reordered, as happened when Mixed Practice was added.
   const practiceNavigation = allNavigation.filter((item) =>
     [
-      "/",
       "/heute",
       "/gemischtes-training",
       "/studio",
@@ -72,9 +66,13 @@ export function AppShell({
     ].includes(item.href),
   );
   const learningNavigation = allNavigation.filter((item) =>
-    ["/grammatik", "/kasus-trainer", "/fertigkeiten", "/ressourcen"].includes(
-      item.href,
-    ),
+    [
+      "/grammatik",
+      "/kasus-trainer",
+      "/fertigkeiten",
+      "/ressourcen",
+      "/notizbuch",
+    ].includes(item.href),
   );
   const evidenceNavigation = allNavigation.filter((item) =>
     ["/fortschritt", "/analytics", "/fehler", "/audio"].includes(item.href),
@@ -113,6 +111,34 @@ export function AppShell({
     },
   ] as const;
 
+  useEffect(() => {
+    const activeGroup = groups.find((group) =>
+      group.items.some((item) => item.href === current.href),
+    );
+    setOpenGroups({
+      practice: activeGroup?.id === "practice",
+      learning: activeGroup?.id === "learning",
+      evidence: activeGroup?.id === "evidence",
+      settings: activeGroup?.id === "settings",
+    });
+  }, [current.href]);
+
+  function toggleNavigationGroup(groupId: (typeof groups)[number]["id"]) {
+    setOpenGroups((currentGroups) => ({
+      practice: groupId === "practice" ? !currentGroups.practice : false,
+      learning: groupId === "learning" ? !currentGroups.learning : false,
+      evidence: groupId === "evidence" ? !currentGroups.evidence : false,
+      settings: groupId === "settings" ? !currentGroups.settings : false,
+    }));
+  }
+
+  // The conversation studio ships its own complete product chrome. Wrapping
+  // it in the shared shell creates two sidebars and two top bars, squeezing
+  // the recording workspace and breaking parity with the English app.
+  if (pathname.startsWith("/studio")) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="min-h-screen">
       <a className="skip-link" href="#main-content">
@@ -122,27 +148,38 @@ export function AppShell({
         <div className="px-2">
           <Brand />
         </div>
+        <div className="german-home-entry">
+          <AppNavigation
+            items={[coreNavigation[0]!]}
+            label="Startseite Navigation"
+          />
+        </div>
         <div className="german-sidebar-groups mt-7 flex-1">
           {groups.map((group) => {
             const GroupIcon = group.icon;
             const expanded = openGroups[group.id];
+            const groupIsActive = group.items.some(
+              (item) => item.href === current.href,
+            );
             return (
-              <section className="german-sidebar-section" key={group.id}>
-                <p className="german-sidebar-label">{group.title}</p>
+              <section
+                className="german-sidebar-section"
+                data-active={groupIsActive}
+                data-open={expanded}
+                key={group.id}
+              >
                 <button
                   aria-controls={`sidebar-group-${group.id}`}
                   aria-expanded={expanded}
                   className="german-sidebar-trigger"
-                  onClick={() =>
-                    setOpenGroups((current) => ({
-                      ...current,
-                      [group.id]: !current[group.id],
-                    }))
-                  }
+                  onClick={() => toggleNavigationGroup(group.id)}
                   type="button"
                 >
                   <GroupIcon className="size-5" aria-hidden="true" />
-                  <span>{group.caption}</span>
+                  <span className="german-sidebar-trigger-copy">
+                    <strong>{group.title}</strong>
+                    <small>{group.caption}</small>
+                  </span>
                   <ChevronDown className="ms-auto size-4" aria-hidden="true" />
                 </button>
                 {expanded ? (
@@ -165,6 +202,14 @@ export function AppShell({
           <div className="flex min-h-16 flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 lg:px-8">
             <div className="german-mobile-nav flex items-center gap-3 xl:hidden">
               <MobileNavigation />
+              <Link
+                aria-label="Zur Startseite"
+                className="german-topbar-home-link"
+                href="/"
+              >
+                <House aria-hidden="true" className="size-4" />
+                <span>Start</span>
+              </Link>
               <Brand compact />
             </div>
             <div className="german-current-route hidden items-center gap-3 xl:flex">

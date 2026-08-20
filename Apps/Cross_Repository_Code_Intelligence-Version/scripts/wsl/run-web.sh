@@ -10,7 +10,9 @@
 # setup-windows.ps1).
 set -euo pipefail
 
-WSL_APP_DIR="$HOME/apps/cross-repository-code-intelligence-installed"
+WIN_ROOT="${1:?windows install root in WSL notation is required}"
+APP_KEY="$(printf '%s' "$WIN_ROOT" | sha256sum | cut -c1-12)"
+WSL_APP_DIR="$HOME/apps/cross-repository-code-intelligence-$APP_KEY"
 INTERNAL_PORT=15412
 PUBLIC_PORT=4312
 LOG_DIR="$WSL_APP_DIR/.wsl-logs"

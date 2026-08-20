@@ -27,7 +27,7 @@ export const LEGACY_STORAGE_KEY = "GrammarAutomaticityV11_de";
 export const CURRENT_STORAGE_KEY = "GrammarAutomaticityV12_de";
 
 export interface LearnerSettings {
-  readonly dailyStudyMinutes: 15 | 30 | 45 | 60;
+  readonly dailyStudyMinutes: 15 | 30 | 45;
   readonly minWords: number;
   readonly saveAudio: boolean;
   readonly grammarEngine: "languagetool";
@@ -867,9 +867,7 @@ export function normalizeLearnerState(value: unknown): LearnerState {
       ...settings,
       grammarEngine: "languagetool",
       dailyStudyMinutes:
-        settings.dailyStudyMinutes === 30 ||
-        settings.dailyStudyMinutes === 45 ||
-        settings.dailyStudyMinutes === 60
+        settings.dailyStudyMinutes === 30 || settings.dailyStudyMinutes === 45
           ? settings.dailyStudyMinutes
           : 15,
       minWords:

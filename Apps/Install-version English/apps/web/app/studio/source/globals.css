@@ -154,6 +154,29 @@ button:not(:disabled):active {
   }
 }
 
+.nav-home {
+  border: 1px solid #d9ccef !important;
+  background: #f4f0fb !important;
+  color: #4f2f78 !important;
+  font-weight: 800;
+}
+
+.header-actions button.studio-home-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  border-color: #d9ccef;
+  background: #f8f5fc;
+  color: #4f2f78;
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .header-actions button.studio-home-link {
+    display: inline-flex;
+  }
+}
+
 @keyframes conversation-fade-enter {
   from {
     opacity: 0;

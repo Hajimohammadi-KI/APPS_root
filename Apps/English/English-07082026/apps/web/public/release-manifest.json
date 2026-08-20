@@ -1,7 +1,11 @@
 {
-  "version": "27.3.10",
+	"version": "27.3.13",
 	"publishedAt": "2026-08-20",
 	"changes": [
+		"All desktop, tablet, and mobile navigation groups now use one clean single-open dropdown pattern; Home stays first and selection menus share the same accessible visual language",
+		"Notebook & PDF Reader now opens a real responsive web reader with Home and full-screen controls on Windows and Android tablets",
+		"The learner can choose a 15, 30, or 45 minute daily route; every route includes Grammar Lab, Mixed Practice, Conversation Studio, Review, and Automatization with exact time and workload allocations",
+		"Home is now the first persistent navigation action on every page, including Conversation Studio and responsive tablet or mobile layouts",
 		"Every English page now follows the supplied white-and-violet reference system and remains structurally clean at desktop, tablet, and mobile widths",
 		"A same-origin local API bridge and LAN launcher let Windows and Android browsers use the host PC without installation",
 		"Page analytics now separates requested entries from rendered pages, validates and repairs local route data, and presents every route in compact accessible dropdowns",

@@ -1,5 +1,5 @@
 const DRIVE_FILE_ID = /^[a-zA-Z0-9_-]{10,200}$/;
-const DEFAULT_PDF_READER_URL = "http://127.0.0.1:4312/pdf-reader";
+const DEFAULT_PDF_READER_URL = "/pdf-reader";
 
 function driveFileId(value: string) {
   try {
@@ -37,11 +37,12 @@ export function pdfReaderHrefForResource({
 
   const readerUrl = process.env.NEXT_PUBLIC_PDF_READER_URL?.trim()
     || DEFAULT_PDF_READER_URL;
-  const url = new URL(readerUrl);
+  const isAppRelative = readerUrl.startsWith("/");
+  const url = new URL(readerUrl, "http://english-automaticity.local");
   if (driveId) url.searchParams.set("driveId", driveId);
   else url.searchParams.set("sourceUrl", sourceUrl);
   url.searchParams.set("name", name.trim().slice(0, 600));
   url.searchParams.set("focus", focus.trim().slice(0, 600));
   url.searchParams.set("context", context.trim().slice(0, 600));
-  return url.toString();
+  return isAppRelative ? `${url.pathname}${url.search}` : url.toString();
 }

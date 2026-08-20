@@ -1,14 +1,19 @@
 export { DAILY_PRACTICE_STEPS, type DailyPracticeStep } from "./practice-plan";
 export {
   allocateCoreMissionMinutes,
+  buildDailyAutomaticityProgram,
   buildAdaptiveDailyPlan,
   calculateDailyProgress,
   type AdaptiveDailyBlock,
   type AdaptiveDailyPlan,
   type AdaptiveDailySignals,
+  type DailyAutomaticityBlock,
+  type DailyAutomaticityBlockId,
+  type DailyAutomaticityProgram,
   type DailyBlockId,
   type DailyMissionKind,
   type DailySessionMinutes,
+  DAILY_SESSION_OPTIONS,
 } from "./adaptive-daily-plan";
 export {
   REVIEW_INTERVAL_DAYS,

@@ -48,10 +48,13 @@ export function SelectMenu({
 			}}
 			value={selectedValue}
 		>
-			<div className={cn("select-menu relative", className)}>
+			<div
+				className={cn("select-menu relative", className)}
+				data-dropdown-menu="true"
+			>
 				<Select.Label className="sr-only">{ariaLabel ?? label}</Select.Label>
 				<Select.Trigger
-					className="select-menu-trigger group flex w-full items-center gap-3 rounded-[14px] border border-select-line bg-select-surface px-3.5 py-2 text-start outline-none transition-[color,border-color,transform] duration-100 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-select-accent/40 focus-visible:border-select-accent focus-visible:ring-4 focus-visible:ring-select-accent/15 active:scale-[.97] active:duration-150 disabled:cursor-not-allowed disabled:opacity-60"
+					className="select-menu-trigger group flex min-h-12 w-full items-center gap-3 rounded-xl border border-violet-100 bg-white px-4 py-2.5 text-start outline-none transition-[color,background-color,border-color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-violet-200 hover:bg-violet-50/50 focus-visible:border-violet-500 focus-visible:ring-4 focus-visible:ring-violet-600/15 data-[popup-open]:border-violet-200 data-[popup-open]:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-60"
 					id={`${fieldId}-trigger`}
 				>
 					<span className="min-w-0 flex-1">
@@ -72,14 +75,19 @@ export function SelectMenu({
 					align="start"
 					alignItemWithTrigger={false}
 					className="select-menu-positioner z-50 w-[var(--anchor-width)]"
+					collisionAvoidance={{
+						align: "shift",
+						fallbackAxisSide: "none",
+						side: "shift",
+					}}
 					side="bottom"
 					sideOffset={4}
 				>
-					<Select.Popup className="select-menu-panel max-h-[min(16rem,var(--available-height))] w-full overflow-y-auto rounded-[14px] border border-select-line bg-select-surface p-1.5 shadow-[0_4px_14px_rgba(70,50,110,0.07)]">
+					<Select.Popup className="select-menu-panel max-h-[min(16rem,var(--available-height))] w-full overflow-y-auto rounded-xl border border-violet-100 bg-white p-0 shadow-[0_14px_34px_rgba(70,50,110,0.12)]">
 						<Select.List>
 							{options.map((option) => (
 								<Select.Item
-									className="select-menu-option group flex w-full cursor-default items-center gap-2 rounded-[9px] px-2.5 py-2 text-start text-sm text-select-ink-soft outline-none transition-colors data-[highlighted]:bg-select-hover data-[selected]:bg-select-selected data-[selected]:font-bold data-[selected]:text-select-accent-ink"
+									className="select-menu-option group flex min-h-11 w-full cursor-default items-center gap-2 border-b border-violet-100 px-4 py-2.5 text-start text-sm text-select-ink-soft outline-none transition-colors last:border-b-0 data-[highlighted]:bg-violet-50 data-[selected]:bg-violet-100 data-[selected]:font-bold data-[selected]:text-violet-950"
 									key={option.value}
 									label={option.label}
 									value={option.value}

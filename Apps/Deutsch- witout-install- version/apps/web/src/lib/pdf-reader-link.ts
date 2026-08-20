@@ -1,8 +1,7 @@
 import localMaterialManifest from "./local-material-manifest.json";
 
 const DRIVE_FILE_ID = /^[a-zA-Z0-9_-]{10,200}$/;
-const DEFAULT_PDF_READER_URL = "http://127.0.0.1:4312/pdf-reader";
-const DEFAULT_LOCAL_MATERIAL_URL = "http://127.0.0.1:3199/api/materials";
+const DEFAULT_PDF_READER_URL = "/pdf-reader";
 const localMaterialIds = new Set(Object.keys(localMaterialManifest));
 
 function driveFileId(value: string) {
@@ -41,9 +40,14 @@ export function pdfReaderHrefForMaterial({
   isPdf?: boolean;
   materialId?: string;
 }) {
+  const configuredLocalMaterialUrl =
+    process.env.NEXT_PUBLIC_LOCAL_MATERIAL_URL?.trim();
   const localSourceUrl =
-    isPdf && materialId && localMaterialIds.has(materialId)
-      ? `${process.env.NEXT_PUBLIC_LOCAL_MATERIAL_URL?.trim() || DEFAULT_LOCAL_MATERIAL_URL}/${encodeURIComponent(materialId)}.pdf`
+    configuredLocalMaterialUrl &&
+    isPdf &&
+    materialId &&
+    localMaterialIds.has(materialId)
+      ? `${configuredLocalMaterialUrl}/${encodeURIComponent(materialId)}.pdf`
       : null;
   const effectiveSourceUrl = localSourceUrl || sourceUrl;
   const driveId = driveFileId(effectiveSourceUrl);
@@ -51,12 +55,13 @@ export function pdfReaderHrefForMaterial({
 
   const readerUrl =
     process.env.NEXT_PUBLIC_PDF_READER_URL?.trim() || DEFAULT_PDF_READER_URL;
-  const url = new URL(readerUrl);
+  const isAppRelative = readerUrl.startsWith("/");
+  const url = new URL(readerUrl, "http://deutschflow.local");
   if (driveId) url.searchParams.set("driveId", driveId);
   else url.searchParams.set("sourceUrl", effectiveSourceUrl);
   if (localSourceUrl) url.searchParams.set("originalSourceUrl", sourceUrl);
   url.searchParams.set("name", name.trim().slice(0, 600));
   url.searchParams.set("focus", focus.trim().slice(0, 600));
   url.searchParams.set("context", context.trim().slice(0, 600));
-  return url.toString();
+  return isAppRelative ? `${url.pathname}${url.search}` : url.toString();
 }

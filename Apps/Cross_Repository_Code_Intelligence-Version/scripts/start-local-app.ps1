@@ -137,13 +137,14 @@ Set-Content -LiteralPath $StartupLog -Value "$AppName - Startprotokoll" -Encodin
 Stop-StaleRuntimeProcesses
 Initialize-WebPortproxy
 $RunWebScriptWsl = ConvertTo-WslPath $RunWebScript
+$AppRootWsl = ConvertTo-WslPath $AppRoot
 
 for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
   Write-StartupStatus "Startversuch $attempt von $MaxAttempts."
 
   $apiProcess = Start-Process -FilePath $BunExecutable -ArgumentList @("run", "--cwd", "apps/api", "start") -WorkingDirectory $AppRoot -NoNewWindow -PassThru -RedirectStandardOutput $ApiOutputLog -RedirectStandardError $ApiErrorLog
   Start-Sleep -Milliseconds 500
-  $webProcess = Start-Process -FilePath "wsl.exe" -ArgumentList @("-d", "Ubuntu", "-u", "root", "--", "bash", $RunWebScriptWsl) -NoNewWindow -PassThru -RedirectStandardOutput $WebOutputLog -RedirectStandardError $WebErrorLog
+  $webProcess = Start-Process -FilePath "wsl.exe" -ArgumentList @("-d", "Ubuntu", "-u", "root", "--", "bash", $RunWebScriptWsl, $AppRootWsl) -NoNewWindow -PassThru -RedirectStandardOutput $WebOutputLog -RedirectStandardError $WebErrorLog
 
   $deadline = (Get-Date).AddSeconds($StartupTimeoutSeconds)
   $ready = $false

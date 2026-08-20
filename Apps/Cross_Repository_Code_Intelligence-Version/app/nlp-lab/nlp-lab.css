@@ -56,6 +56,15 @@ body { background: #f8f6fb; color: var(--nlp-ink); }
 .nlp-session-guidance h4:not(:first-child) { margin-top: 14px; }
 .nlp-session-guidance ol, .nlp-session-guidance p { margin: 0; color: #4a3b53; }
 .nlp-session-guidance ol { padding-right: 22px; }
+.nlp-transfer-plan { margin: 0 22px 22px; overflow: hidden; border: 1px solid #cbb8dc; border-inline-start: 6px solid var(--nlp-purple); border-radius: 16px; background: #faf7fd; }
+.nlp-transfer-plan.experiment { border-inline-start-color: var(--nlp-reuse); background: #fffaf0; }
+.nlp-transfer-plan.scope { border-inline-start-color: var(--nlp-optional); background: #f5f3f6; }
+.nlp-transfer-plan > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: rgba(242, 236, 248, .74); }
+.nlp-transfer-plan > header h4 { margin: 0; color: var(--nlp-purple-dark); font-size: 18px; }
+.nlp-transfer-plan > header span { flex: 0 0 auto; border-radius: 999px; background: var(--nlp-purple-dark); color: #fff; padding: 5px 9px; font-size: 11px; font-weight: 850; }
+.nlp-transfer-plan > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 13px 14px 8px; }
+.nlp-transfer-plan > div p { margin: 0; color: var(--nlp-muted); font-size: 13px; }
+.nlp-transfer-plan > small { display: block; padding: 0 14px 13px; color: var(--nlp-purple-dark); font-weight: 800; }
 .nlp-priority-plan { display: grid; gap: 16px; padding: 0 22px 22px; }
 .nlp-required-outputs { border: 2px solid var(--nlp-required); border-radius: 17px; overflow: hidden; background: #fff; }
 .nlp-required-outputs > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 17px; background: #f8eaf4; }
@@ -96,10 +105,10 @@ body { background: #f8f6fb; color: var(--nlp-ink); }
 
 @media (max-width: 760px) {
   .nlp-lab-shell { width: min(100% - 20px, 1180px); margin-top: 10px; }
-  .nlp-lab-hero, .nlp-lab-grid, .nlp-lab-boundaries, .nlp-session-body, .nlp-session-guidance, .nlp-reading-list, .nlp-required-outputs > div { grid-template-columns: 1fr; }
+  .nlp-lab-hero, .nlp-lab-grid, .nlp-lab-boundaries, .nlp-session-body, .nlp-session-guidance, .nlp-reading-list, .nlp-required-outputs > div, .nlp-transfer-plan > div { grid-template-columns: 1fr; }
   .nlp-lab-use-cases ol { grid-template-columns: 1fr; padding-left: 22px; }
   .nlp-session-card > header { align-items: flex-start; }
-  .nlp-session-guidance, .nlp-reading-group { margin-right: 12px; margin-left: 12px; }
+  .nlp-session-guidance, .nlp-reading-group, .nlp-transfer-plan { margin-right: 12px; margin-left: 12px; }
   .nlp-priority-plan { padding-right: 12px; padding-left: 12px; }
   .nlp-priority-plan .nlp-reading-group { margin-right: 0; margin-left: 0; }
   .nlp-required-outputs > header { align-items: flex-start; flex-direction: column; }

@@ -100,7 +100,6 @@ function syncPair({ name, canonical, copies }) {
     for (const file of canonicalFiles) {
       const rel = relative(canonical, file);
       const destRel = join(copy, rel).replace(/\\/g, "/");
-      wantedInCopy.add(destRel);
       const src = join(ROOT, file);
       if (!existsSync(src) || !statSync(src).isFile()) {
         // Tracked-but-deleted-in-working-tree (not yet committed) -- there
@@ -109,6 +108,7 @@ function syncPair({ name, canonical, copies }) {
         skippedMissing += 1;
         continue;
       }
+      wantedInCopy.add(destRel);
       const dest = join(ROOT, destRel);
       if (dryRun) {
         written += 1;

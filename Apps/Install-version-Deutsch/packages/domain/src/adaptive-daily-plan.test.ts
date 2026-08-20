@@ -1,13 +1,14 @@
 import { describe, expect, it } from "bun:test";
 import {
   allocateCoreMissionMinutes,
+  buildDailyAutomaticityProgram,
   buildAdaptiveDailyPlan,
   calculateDailyProgress,
 } from "./adaptive-daily-plan";
 
 describe("adaptive daily plan", () => {
   it("verteilt sechs Kernaktivitäten exakt auf die gewählte Lernzeit", () => {
-    for (const minutes of [15, 30, 45, 60] as const) {
+    for (const minutes of [15, 30, 45] as const) {
       expect(
         allocateCoreMissionMinutes(minutes).reduce(
           (total, activityMinutes) => total + activityMinutes,
@@ -37,7 +38,7 @@ describe("adaptive daily plan", () => {
 
   it("resumes unfinished learning before unlocking a new lesson", () => {
     const plan = buildAdaptiveDailyPlan({
-      sessionMinutes: 60,
+      sessionMinutes: 45,
       hasPreviousLesson: true,
       previousLessonRecalled: true,
       dueReviewCount: 0,
@@ -53,7 +54,7 @@ describe("adaptive daily plan", () => {
 
   it("unlocks a new lesson only after the quality gate", () => {
     const plan = buildAdaptiveDailyPlan({
-      sessionMinutes: 60,
+      sessionMinutes: 45,
       hasPreviousLesson: true,
       previousLessonRecalled: true,
       dueReviewCount: 0,
@@ -64,13 +65,11 @@ describe("adaptive daily plan", () => {
     });
     expect(plan.canAdvance).toBeTrue();
     expect(plan.blocks[1]?.id).toBe("new_lesson");
-    expect(plan.blocks.map((block) => block.minutes)).toEqual([
-      10, 10, 10, 12, 6,
-    ]);
+    expect(plan.blocks.map((block) => block.minutes)).toEqual([8, 8, 8, 10, 3]);
   });
 
   it("hält jede wählbare Einheit in der versprochenen Gesamtdauer", () => {
-    for (const sessionMinutes of [15, 30, 45, 60] as const) {
+    for (const sessionMinutes of [15, 30, 45] as const) {
       const plan = buildAdaptiveDailyPlan({
         sessionMinutes,
         hasPreviousLesson: false,
@@ -86,6 +85,25 @@ describe("adaptive daily plan", () => {
         0,
       );
       expect(total).toBe(sessionMinutes);
+    }
+  });
+
+  it("nimmt alle Automatik-Aktivitäten in jede Tagesdauer auf", () => {
+    for (const sessionMinutes of [15, 30, 45] as const) {
+      const program = buildDailyAutomaticityProgram(sessionMinutes);
+      expect(program.blocks.map((block) => block.id)).toEqual([
+        "grammar",
+        "mixed_practice",
+        "conversation_studio",
+        "review",
+        "automatization",
+      ]);
+      expect(
+        program.blocks.reduce((sum, block) => sum + block.minutes, 0),
+      ).toBe(sessionMinutes);
+      expect(
+        program.blocks.reduce((sum, block) => sum + block.practiceUnits, 0),
+      ).toBe(8 * program.volumeMultiplier);
     }
   });
 

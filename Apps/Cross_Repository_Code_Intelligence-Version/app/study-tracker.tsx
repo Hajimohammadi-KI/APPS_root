@@ -14,8 +14,10 @@ import {
   defaultSettings,
   extractionSections,
   migrateLegacyId,
+  courseTransferForSession,
   nlpCourseMeta,
   nlpCourseSessions,
+  nlpSessionsRelatedToPlanDay,
   planMeta,
   planWeeks,
   PLAN_VERSION,
@@ -28,10 +30,10 @@ import {
 } from "./plan-data";
 import {
   countCompletedItems,
-  countRequiredCompletedItems,
-  estimatedLearningHours,
-  getDayStatus,
-  requiredItemTotal,
+  countCompletedOutputs,
+  countRequiredCompletedOutputs,
+  getDayOutputStatus,
+  requiredOutputTotal,
 } from "../lib/study-progress";
 import { RecallCheck } from "../components/RecallCheck";
 import { useRecallEntries } from "../lib/recall/useRecallEntries";
@@ -47,7 +49,10 @@ import { rescheduleAfterPause } from "../lib/project-schedule";
 import {
   DAILY_WORK_MODES,
   DailyWorkMode,
+  effectivePlanHours,
+  isTaskRequiredForMode,
   normalizeDailyWorkMode,
+  workModeRequiredTaskIndexes,
   workModeTaskMinutes,
 } from "../lib/daily-work-mode";
 import {
@@ -1150,8 +1155,12 @@ export default function StudyTracker({
     return countCompletedItems(day, completed);
   }
 
+  function outputCount(day: PlannedDay) {
+    return countCompletedOutputs(day, completed);
+  }
+
   function dayStatus(day: PlannedDay): StatusFilter {
-    return getDayStatus(day, completed);
+    return getDayOutputStatus(day, completed);
   }
 
   const phaseGroups = useMemo<PhaseGroup[]>(() => {
@@ -1180,6 +1189,9 @@ export default function StudyTracker({
     const relatedTitles = new Set(selectedCourseSession.relatedDayTitles);
     return allDays.filter((day) => relatedTitles.has(day.title));
   }, [selectedCourseSession]);
+  const selectedCourseTransfer = selectedCourseSession
+    ? courseTransferForSession(selectedCourseSession.number)
+    : null;
 
   const filteredGroups = useMemo(() => {
     const relatedTitles = new Set(selectedCourseSession?.relatedDayTitles ?? []);
@@ -1236,17 +1248,17 @@ export default function StudyTracker({
       .slice(0, 12);
   }, [query, settings]);
 
-  const completedItems = allDays.reduce(
-    (sum, day) => sum + countRequiredCompletedItems(day, completed),
+  const completedOutputs = allDays.reduce(
+    (sum, day) => sum + countRequiredCompletedOutputs(day, completed),
     0,
   );
-  const completedDays = allDays.filter(
-    (day) => requiredItemTotal(day) > 0 && itemCount(day) === requiredItemTotal(day),
-  ).length;
-  const estimatedHours = estimatedLearningHours(completedItems);
+  const totalRequiredOutputs = allDays.reduce(
+    (sum, day) => sum + requiredOutputTotal(day),
+    0,
+  );
   const nextDay = allDays.find(
-    (day) => requiredItemTotal(day) > 0 && itemCount(day) < requiredItemTotal(day),
-  ) ?? allDays.findLast((day) => requiredItemTotal(day) > 0) ?? allDays.at(-1)!;
+    (day) => requiredOutputTotal(day) > 0 && outputCount(day) < requiredOutputTotal(day),
+  ) ?? allDays.findLast((day) => requiredOutputTotal(day) > 0) ?? allDays.at(-1)!;
   const systemTodayDay = allDays.find(
     (day) => shiftedPlanDate(day.date, settings.planStartDate) === systemToday,
   );
@@ -1277,26 +1289,35 @@ export default function StudyTracker({
   const displayedProjectName = settings.projectName
     .replace(/^Cross_Repository/i, "Cross-Repository")
     .replaceAll("_", " ");
-  const completedTaskGroups = dashboardDay.tasks.filter((task) =>
+  const activeDailyWorkMode = DAILY_WORK_MODES[settings.dailyWorkMode];
+  const requiredTodayTaskIndexes = workModeRequiredTaskIndexes(settings.dailyWorkMode);
+  const requiredTodayTasks = dashboardDay.tasks.filter((_, taskIndex) =>
+    requiredTodayTaskIndexes.includes(taskIndex as never),
+  );
+  const completedTaskGroups = requiredTodayTasks.filter((task) =>
     task.items.every((item) => completed.has(item.id)),
   ).length;
-  const currentTodayTask = dashboardDay.tasks.find((task) =>
+  const currentTodayTask = requiredTodayTasks.find((task) =>
     task.items.some((item) => !completed.has(item.id)),
-  ) ?? dashboardDay.tasks[dashboardDay.tasks.length - 1];
+  ) ?? requiredTodayTasks.at(-1) ?? dashboardDay.tasks.at(-1)!;
   const currentTodayTaskIndex = Math.max(
     0,
     dashboardDay.tasks.findIndex((task) => task.id === currentTodayTask?.id),
   );
-  const activeDailyWorkMode = DAILY_WORK_MODES[settings.dailyWorkMode];
+  const activeModePlanHours = effectivePlanHours(settings.dailyWorkMode, planMeta.totalDays);
+  const activeDayCount = new Set([
+    ...allDays.filter((day) => itemCount(day) > 0).map((day) => day.id),
+    ...focusSessions.filter((session) => focusSeconds(session, focusNow) > 0).map((session) => session.contextId),
+  ]).size;
   const designDays = allDays.filter(
-    (day) => day.phaseId.startsWith("design-") && requiredItemTotal(day) > 0,
+    (day) => day.phaseId.startsWith("design-") && requiredOutputTotal(day) > 0,
   );
   const designCompletedItems = designDays.reduce(
-    (sum, day) => sum + itemCount(day),
+    (sum, day) => sum + outputCount(day),
     0,
   );
   const designPercent = Math.round(
-    (designCompletedItems / Math.max(1, designDays.reduce((sum, day) => sum + requiredItemTotal(day), 0))) * 100,
+    (designCompletedItems / Math.max(1, designDays.reduce((sum, day) => sum + requiredOutputTotal(day), 0))) * 100,
   );
   const nextWeekIndex = Math.max(
     0,
@@ -1305,12 +1326,12 @@ export default function StudyTracker({
   const rhythmStart = Math.max(0, Math.min(nextWeekIndex, planWeeks.length - 5));
   const rhythmWeeks = planWeeks.slice(rhythmStart, rhythmStart + 5);
   const rhythmTotalItems = rhythmWeeks.reduce(
-    (sum, week) => sum + week.days.reduce((daySum, day) => daySum + requiredItemTotal(day), 0),
+    (sum, week) => sum + week.days.reduce((daySum, day) => daySum + requiredOutputTotal(day), 0),
     0,
   );
   const rhythmCompletedItems = rhythmWeeks.reduce(
     (sum, week) => sum + week.days.reduce(
-      (daySum, day) => daySum + countRequiredCompletedItems(day, completed),
+      (daySum, day) => daySum + countRequiredCompletedOutputs(day, completed),
       0,
     ),
     0,
@@ -1433,9 +1454,9 @@ export default function StudyTracker({
   const weekProgress = useMemo(
     () =>
       planWeeks.map((week) => {
-        const total = week.days.reduce((sum, day) => sum + requiredItemTotal(day), 0);
+        const total = week.days.reduce((sum, day) => sum + requiredOutputTotal(day), 0);
         const done = week.days.reduce(
-          (sum, day) => sum + countRequiredCompletedItems(day, completed),
+          (sum, day) => sum + countRequiredCompletedOutputs(day, completed),
           0,
         );
         return {
@@ -1971,7 +1992,7 @@ export default function StudyTracker({
   function exportIcs(remainingOnly = false) {
     const visibleDays = remainingOnly
       ? allDays.filter(
-          (day) => requiredItemTotal(day) > 0 && itemCount(day) < requiredItemTotal(day),
+          (day) => requiredOutputTotal(day) > 0 && outputCount(day) < requiredOutputTotal(day),
         )
       : allDays;
     const days = visibleDays.filter(
@@ -1988,7 +2009,7 @@ export default function StudyTracker({
       .map((day) => {
         const effectiveDate = shiftedPlanDate(day.date, settings.planStartDate);
         const start = localIcsDate(effectiveDate, startMinutes);
-        const end = localIcsDate(effectiveDate, startMinutes + 240);
+        const end = localIcsDate(effectiveDate, startMinutes + activeDailyWorkMode.totalMinutes);
         return [
           "BEGIN:VEVENT",
           `UID:${day.id}-${settings.projectName.replace(/\s+/g, "-")}@study-tracker`,
@@ -1996,7 +2017,7 @@ export default function StudyTracker({
           `DTSTART;TZID=Europe/Berlin:${start}`,
           `DTEND;TZID=Europe/Berlin:${end}`,
           `SUMMARY:${escapeIcs(`${settings.planName || settings.projectName} — ${day.title}`)}`,
-          `DESCRIPTION:${escapeIcs(`Ergebnis: ${day.deliverable}\nModul: ${day.module}`)}`,
+          `DESCRIPTION:${escapeIcs(`Tagesergebnis: ${day.deliverable}\nModul: ${day.module}\nArbeitsmodus: ${activeDailyWorkMode.label}\nMaximal ${workModeRequiredTaskIndexes(settings.dailyWorkMode).length} verpflichtende Ergebnisse; übrige Details sind Qualitätsleitfaden.`)}`,
           "END:VEVENT",
         ].join("\r\n");
       })
@@ -2012,6 +2033,10 @@ export default function StudyTracker({
             return reading ? formatCourseReading(reading) : readingId;
           },
         );
+        const transfer = courseTransferForSession(session.number);
+        const transferDescription = transfer
+          ? `\nKurs→Thesis-Transfer: Notiz bis ${transfer.noteDue}; ${transfer.artifact} bis ${transfer.artifactDue}; maximal ${transfer.maxMinutes} Minuten; ersetzt ein Tagesergebnis und erzeugt keinen Zusatz-Backlog.`
+          : "";
         return [
           "BEGIN:VEVENT",
           `UID:nlp-live-${session.number}-2026@study-tracker`,
@@ -2019,7 +2044,7 @@ export default function StudyTracker({
           `DTSTART;TZID=Europe/Berlin:${start}`,
           `DTEND;TZID=Europe/Berlin:${end}`,
           `SUMMARY:${escapeIcs(`Study Tracker · NLP ${String(session.number).padStart(2, "0")}/10 · ${session.title}`)}`,
-          `DESCRIPTION:${escapeIcs(`${readingPlanDescription}\nLesefokus: ${session.readingFocus.join("; ")}\nProjektbezug: ${session.projectConnection}\nExtraktion: ${extractionSections.join("; ")}`)}`,
+          `DESCRIPTION:${escapeIcs(`${readingPlanDescription}${transferDescription}\nLesefokus: ${session.readingFocus.join("; ")}\nProjektbezug: ${session.projectConnection}\nExtraktion: ${extractionSections.join("; ")}`)}`,
           "END:VEVENT",
         ].join("\r\n");
       })
@@ -2201,6 +2226,7 @@ export default function StudyTracker({
                   <label>
                     <span>Fortsetzen am</span>
                     <input dir="ltr" type="date" min={settings.planPausedAt} value={resumeDate} onChange={(event) => setResumeDate(event.target.value)} />
+                    <small className="localized-date-preview">{formatDate(resumeDate, true)}</small>
                   </label>
                   <button className="button primary" type="button" onClick={() => void resumePlan()}>
                     Plan fortsetzen und Termine neu berechnen
@@ -2211,6 +2237,7 @@ export default function StudyTracker({
                   <label>
                     <span>{settings.planStatus === "running" ? "Neues Startdatum" : "Startdatum"}</span>
                     <input dir="ltr" type="date" value={requestedStartDate} onChange={(event) => setRequestedStartDate(event.target.value)} />
+                    <small className="localized-date-preview">{formatDate(requestedStartDate, true)}</small>
                   </label>
                   <button className="button primary" type="button" onClick={() => void startPlan()}>
                     {settings.planStatus === "running" ? "Mit neuem Datum erneut starten" : "Lernplan starten"}
@@ -2237,7 +2264,7 @@ export default function StudyTracker({
               </article>
             ) : null}
 
-            <details className="course-schedule-panel" open>
+            <details className="course-schedule-panel" open={Boolean(todayCourseSession)}>
               <summary>
                 <span className="summary-marker"><Icon name="calendar" size={18} /></span>
                 <span className="course-schedule-heading">
@@ -2253,6 +2280,7 @@ export default function StudyTracker({
               <div className="course-session-grid">
                 {nlpCourseSessions.map((session) => {
                   const readings = getCourseReadings(session.readingIds);
+                  const transfer = courseTransferForSession(session.number);
                   const sessionState = session.date === systemToday
                     ? "today"
                     : session.date < systemToday
@@ -2269,6 +2297,18 @@ export default function StudyTracker({
                       <ul className="course-topic-list">
                         {session.topics.map((topic) => <li key={topic}>{topic}</li>)}
                       </ul>
+                      {transfer ? (
+                        <section className={`course-transfer-brief ${transfer.relevance}`} aria-label={`Transferplan für Sitzung ${session.number}`}>
+                          <strong>Kurs → Thesis · kein Zusatz-Backlog</strong>
+                          <p>
+                            <span>≤ 24 h</span> Notiz bis <time dateTime={transfer.noteDue}>{formatDate(transfer.noteDue)}</time>
+                          </p>
+                          <p>
+                            <span>≤ 7 Tage</span> <code dir="ltr">{transfer.artifact}</code> bis <time dateTime={transfer.artifactDue}>{formatDate(transfer.artifactDue)}</time>
+                          </p>
+                          <small>Max. {displayNumber(transfer.maxMinutes)} Min. · ersetzt ein Tagesergebnis · {transfer.acceptance}</small>
+                        </section>
+                      ) : null}
                       <details className="course-session-readings">
                         <summary>
                           {session.readingPlan
@@ -2379,6 +2419,10 @@ export default function StudyTracker({
                     <strong>{activeDailyWorkMode.label}</strong>
                   </summary>
                   <p>{activeDailyWorkMode.description}</p>
+                  <p className="daily-mode-budget">
+                    Mit diesem Modus umfasst der gesamte 25-Wochen-Plan ungefähr <strong>{displayNumber(activeModePlanHours)} Stunden</strong>
+                    {settings.dailyWorkMode !== "full" ? " statt 511 Stunden im Vollmodus." : "."}
+                  </p>
                   <div className="daily-mode-options" role="group" aria-label="Arbeitsmodus für heute wählen">
                     {(Object.keys(DAILY_WORK_MODES) as DailyWorkMode[]).map((mode) => (
                       <button
@@ -2396,7 +2440,7 @@ export default function StudyTracker({
                 </details>
                 <h2>{dashboardDay.title}</h2>
                 <div className="today-task-list">
-                  {dashboardDay.tasks.map((task) => {
+                  {requiredTodayTasks.map((task) => {
                     const checked = task.items.every((item) => completed.has(item.id));
                     return (
                       <label key={task.id}>
@@ -2413,10 +2457,15 @@ export default function StudyTracker({
                     );
                   })}
                 </div>
-                <div className="today-progress" aria-label={`${completedTaskGroups} von 3 großen Aufgaben erledigt`}>
-                  <span><i style={{ width: `${(completedTaskGroups / 3) * 100}%` }} /></span>
-                  <small>{displayNumber(completedTaskGroups)} von 3 Aufgaben</small>
+                <div className="today-progress" aria-label={`${completedTaskGroups} von ${requiredTodayTasks.length} Tagesergebnissen erledigt`}>
+                  <span><i style={{ width: `${(completedTaskGroups / Math.max(1, requiredTodayTasks.length)) * 100}%` }} /></span>
+                  <small>{displayNumber(completedTaskGroups)} von {displayNumber(requiredTodayTasks.length)} Ergebnissen</small>
                 </div>
+                {requiredTodayTasks.length < dashboardDay.tasks.length ? (
+                  <p className="today-optional-note">
+                    {displayNumber(dashboardDay.tasks.length - requiredTodayTasks.length)} weiteres Ergebnis ist heute optional und erzeugt keinen Rückstand.
+                  </p>
+                ) : null}
                 <div className="today-actions">
                   <button className="dashboard-text-action" type="button" onClick={() => revealDay(dashboardDay)}>
                     {planCanRecordToday ? "Heutigen Tagesplan öffnen" : "Plantag als Vorschau ansehen"} <Icon name="arrow" size={17} />
@@ -2444,13 +2493,32 @@ export default function StudyTracker({
               </button>
               <article>
                 <span className="dashboard-metric-icon"><Icon name="book" /></span>
-                <span><small>Lernzeit</small><strong>{displayNumber(estimatedHours)} Std.</strong></span>
+                <span><small>Planergebnisse</small><strong>{displayNumber(completedOutputs)} / {displayNumber(totalRequiredOutputs)}</strong></span>
               </article>
               <article>
                 <span className="dashboard-metric-icon"><Icon name="flame" /></span>
-                <span><small>Aktive Tage</small><strong>{displayNumber(completedDays)}</strong></span>
+                <span><small>Aktive Tage</small><strong>{displayNumber(activeDayCount)}</strong></span>
               </article>
             </section>
+
+            <details className="critical-path-card dashboard-disclosure" open>
+              <summary>
+                <h2><Icon name="flag" size={20} /> Kritischer Pfad · erste 6 Wochen</h2>
+                <span>Design und ausführbarer Beleg parallel</span>
+              </summary>
+              <ol className="critical-path-list">
+                <li><b>W1</b><span>Scope + eine prüfbare End-to-End-Frage</span></li>
+                <li><b>W2</b><span>Modulverträge + Walking-Skeleton-Grenze</span></li>
+                <li className="is-gate"><b>W3</b><span>Roslyn → EvidenceRecord → JSONL + Golden Test</span></li>
+                <li><b>W4</b><span>Goldstandard-Fixture + messbare RQ1/RQ2-Kriterien</span></li>
+                <li><b>W5</b><span>Reproduzierbarer Build + Flat-Retrieval-Contract</span></li>
+                <li className="is-gate"><b>W6</b><span>Mini-Demo + Readiness Gate; kein Design ohne Laufbeleg</span></li>
+              </ol>
+              <footer>
+                <span>Eine Woche zählt erst als bestanden, wenn Artefakt, Test und rückverfolgbarer Beleg vorhanden sind.</span>
+                <a className="button secondary" href="/projekt-fahrplan" {...internalLinkProps("/projekt-fahrplan")}>Projekt-Fahrplan öffnen <Icon name="arrow" size={16} /></a>
+              </footer>
+            </details>
 
             {acknowledgedPlanVersion !== null && acknowledgedPlanVersion < PLAN_VERSION && (
               <section className="plan-version-banner" aria-label="Planänderung">
@@ -2758,6 +2826,18 @@ export default function StudyTracker({
                   </article>
                 </div>
 
+                {selectedCourseTransfer ? (
+                  <aside className="course-topic-guide__transfer" aria-label="برنامه انتقال فوری کلاس به پایان‌نامه">
+                    <div lang="fa" dir="rtl">
+                      <h4>انتقال فوری به پایان‌نامه</h4>
+                      <p>این کار جای یکی از خروجی‌های همان روز را می‌گیرد و کار چهارم ایجاد نمی‌کند.</p>
+                    </div>
+                    <p><b>≤ ۲۴ ساعت:</b> یادداشت تا <time dateTime={selectedCourseTransfer.noteDue}>{formatDate(selectedCourseTransfer.noteDue, true)}</time></p>
+                    <p><b>≤ ۷ روز:</b> <code dir="ltr">{selectedCourseTransfer.artifact}</code> تا <time dateTime={selectedCourseTransfer.artifactDue}>{formatDate(selectedCourseTransfer.artifactDue, true)}</time></p>
+                    <small>حداکثر {displayNumber(selectedCourseTransfer.maxMinutes)} دقیقه · {selectedCourseTransfer.acceptance}</small>
+                  </aside>
+                ) : null}
+
                 <div className="course-topic-guide__days">
                   <h4>Natürliche Zuordnung im Lernplan</h4>
                   <p>Die folgenden Tage und Wochen werden unten automatisch gefiltert.</p>
@@ -2782,11 +2862,11 @@ export default function StudyTracker({
               {filteredGroups.map((phase) => {
                 const phaseDays = phase.weeks.flatMap((week) => week.days);
                 const phaseDone = phaseDays.reduce(
-                  (sum, day) => sum + countRequiredCompletedItems(day, completed),
+                  (sum, day) => sum + countRequiredCompletedOutputs(day, completed),
                   0,
                 );
                 const phaseTotal = phaseDays.reduce(
-                  (sum, day) => sum + requiredItemTotal(day),
+                  (sum, day) => sum + requiredOutputTotal(day),
                   0,
                 );
                 return (
@@ -3469,11 +3549,11 @@ function WeekCard({
   onStartFocus: (day: PlannedDay) => void;
 }) {
   const weekDone = week.days.reduce(
-    (sum, day) => sum + countRequiredCompletedItems(day, completed),
+    (sum, day) => sum + countRequiredCompletedOutputs(day, completed),
     0,
   );
   const weekTotal = week.days.reduce(
-    (sum, day) => sum + requiredItemTotal(day),
+    (sum, day) => sum + requiredOutputTotal(day),
     0,
   );
 
@@ -3557,12 +3637,8 @@ function DayCard({
   onReveal: (day: PlannedDay) => void;
   onStartFocus: (day: PlannedDay) => void;
 }) {
-  const count = day.tasks.reduce(
-    (sum, task) =>
-      sum + task.items.filter((item) => completed.has(item.id)).length,
-    0,
-  );
-  const state = getDayStatus(day, completed);
+  const count = countCompletedOutputs(day, completed);
+  const state = getDayOutputStatus(day, completed);
   const stateLabel = state === "done"
     ? "Abgeschlossen"
     : state === "started"
@@ -3572,11 +3648,14 @@ function DayCard({
         : "Noch nicht begonnen";
   const effectiveDate = shiftedPlanDate(day.date, settings.planStartDate);
   const taskProgress = day.tasks.map((task) => task.items.filter((item) => completed.has(item.id)).length);
-  const currentTaskIndex = taskProgress.findIndex((done) => done < 3);
-  const focusTaskIndex = currentTaskIndex < 0 ? day.tasks.length - 1 : currentTaskIndex;
+  const requiredTaskIndexes = workModeRequiredTaskIndexes(settings.dailyWorkMode);
+  const currentTaskIndex = requiredTaskIndexes.find((taskIndex) => (taskProgress[taskIndex] ?? 0) < 3) ?? -1;
+  const focusTaskIndex = currentTaskIndex < 0 ? requiredTaskIndexes.at(-1) ?? day.tasks.length - 1 : currentTaskIndex;
   const focusMinutes = workModeTaskMinutes(settings.dailyWorkMode, focusTaskIndex);
   const planIsRunning = settings.planStatus === "running";
-  const courseRelated = day.phaseId.startsWith("nlp-");
+  const relatedCourseSessions = nlpSessionsRelatedToPlanDay(day.title);
+  const courseRelated = relatedCourseSessions.length > 0;
+  const relatedCourseSessionNumbers = relatedCourseSessions.map((session) => session.number);
 
   // The spaced-recall pipeline (RecallCheck, lib/recall/*) was fully built
   // -- concept, exact Exposé section, Persian/German answers, next review
@@ -3602,8 +3681,17 @@ function DayCard({
           <strong><Highlight text={day.title} query={active ? query : ""} /></strong>
           <small>{day.module} · Ergebnis: {day.deliverable}</small>
         </span>
-        {courseRelated ? <span className="course-related-chip">NLP-Kursbezug</span> : null}
-        <span className={`status-chip ${state}`}>{stateLabel} · {displayNumber(count)}/9</span>
+        {courseRelated ? (
+          <span
+            className="course-related-chip"
+            title={relatedCourseSessions
+              .map((session) => `Sitzung ${session.number}: ${session.title}`)
+              .join(" · ")}
+          >
+            Kursrelevant · {relatedCourseSessionNumbers.length === 1 ? "Sitzung" : "Sitzungen"} {relatedCourseSessionNumbers.join(" + ")}
+          </span>
+        ) : null}
+        <span className={`status-chip ${state}`}>{stateLabel} · {displayNumber(count)}/3 Ergebnisse</span>
         <button
           className="day-focus-button"
           type="button"
@@ -3725,22 +3813,24 @@ function DayCard({
             const taskState = taskDone === 3 ? "done" : taskIndex === currentTaskIndex ? "current" : "open";
             const taskStateLabel = taskState === "done" ? "Erledigt" : taskState === "current" ? "In Arbeit" : "Offen";
             const plannedMinutes = workModeTaskMinutes(settings.dailyWorkMode, taskIndex);
+            const requiredToday = isTaskRequiredForMode(settings.dailyWorkMode, taskIndex);
             return (
-              <details className={`task-card ${taskState}`} key={task.id}>
+              <details className={`task-card ${taskState} ${requiredToday ? "required-today" : "optional-today"}`} key={task.id}>
                 <summary>
                   <span className="summary-marker"><Icon name="arrow" size={16} /></span>
                   <span className="task-index">{task.title.slice(0, 2)}</span>
                   <span className="summary-main">
                     <strong>{task.title.slice(3)}</strong>
-                    <small>{displayNumber(plannedMinutes)} Minuten Fokus</small>
+                    <small>{requiredToday ? `${displayNumber(plannedMinutes)} Minuten Fokus` : "Heute optional · kein Rückstand"}</small>
                   </span>
                   <span className="task-metadata">
-                    <span className={`task-state ${taskState}`}>{taskStateLabel}</span>
-                    <span>{displayNumber(plannedMinutes)} Min.</span>
-                    <span>{displayNumber(taskDone)}/3 Aufgaben</span>
+                    <span className={`task-state ${taskState}`}>{requiredToday ? taskStateLabel : "Optional"}</span>
+                    {requiredToday ? <span>{displayNumber(plannedMinutes)} Min.</span> : null}
+                    <span>{displayNumber(taskDone)}/3 Qualitätskriterien</span>
                   </span>
                 </summary>
                 <div className="checklist">
+                  <p className="checklist-guidance">Diese drei Punkte sind Qualitätskriterien für ein Ergebnis — keine drei zusätzlichen Tagesaufgaben.</p>
                   {task.items.map((item) => (
                     <label key={item.id} className={completed.has(item.id) ? "checked" : ""}>
                       <input
@@ -3813,9 +3903,9 @@ function DayCard({
         <p className="break-note">
           <Icon name="clock" size={17} />
           {settings.dailyWorkMode === "rescue"
-            ? "12 Minuten Rettungsmodus ohne Pflichtpause. Offene Arbeit bleibt erhalten."
+            ? "12 Minuten für genau ein Tagesergebnis. Die übrigen Ergebnisse bleiben optional und erzeugen keinen Rückstand."
             : settings.dailyWorkMode === "light"
-              ? "70 Minuten Arbeit in drei Fokusblöcken + eine Pause von 10 Minuten."
+              ? "70 Minuten für zwei Tagesergebnisse + eine Pause von 10 Minuten. Das dritte Ergebnis ist optional."
               : "210 Minuten Arbeit + zwei Pausen à 15 Minuten = 4 Stunden."}
         </p>
 

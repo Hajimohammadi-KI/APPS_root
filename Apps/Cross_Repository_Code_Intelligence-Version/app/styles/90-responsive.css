@@ -89,6 +89,12 @@
   .day-card > summary { flex-wrap: wrap; }
   .day-card > summary time { min-width: 0; }
   .day-card > summary .summary-main { order: 5; width: 100%; flex-basis: 100%; padding-left: 40px; }
+  .day-card > summary .course-related-chip {
+    order: 5;
+    max-width: calc(100% - 40px);
+    margin-left: 40px;
+    white-space: normal;
+  }
   .day-focus-button { order: 6; width: 100%; }
   .task-metadata { width: 100%; justify-content: flex-start; padding-left: 39px; }
   .integration-grid { grid-template-columns: 1fr; }
@@ -128,6 +134,9 @@
   .dashboard-text-action { justify-content: center; }
   .milestone-progress { gap: 22px; }
   .dashboard-metrics { grid-template-columns: 1fr; }
+  .critical-path-list { grid-template-columns: 1fr; }
+  .critical-path-card footer { align-items: stretch; flex-direction: column; }
+  .critical-path-card footer .button { width: 100%; }
   .rhythm-card, .journey-card { padding: 14px; }
   .rhythm-week { grid-template-columns: 1fr; gap: 8px; }
   .rhythm-week > header { grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 8px; }

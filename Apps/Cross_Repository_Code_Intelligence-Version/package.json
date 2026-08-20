@@ -1,6 +1,6 @@
 {
   "name": "cross-repository-study-tracker",
-  "version": "0.5.4-version2",
+  "version": "0.5.7-version2",
   "private": true,
   "packageManager": "bun@1.3.14",
   "workspaces": [
@@ -24,7 +24,7 @@
     "start:web": "vinext start --hostname 127.0.0.1 --port 4312",
     "start:vercel": "next start",
     "start:api": "bun run --cwd apps/api start",
-    "test": "bun run build && bun test tests/*.test.ts && node --test tests/*.test.mjs",
+    "test": "bun run build && bun test --cwd tests && node --test tests/*.test.mjs",
     "validate:artifact": "node --input-type=module -e \"import('./dist/server/index.js').then(m=>{if(typeof m.default?.fetch!=='function')process.exit(1)})\"",
     "verify:vercel": "node scripts/verify-vercel.mjs",
     "verify:responsive": "node scripts/verify-local-responsive.mjs",

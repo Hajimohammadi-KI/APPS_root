@@ -15,12 +15,20 @@
 # binary) -- dist/server and apps/api/dist are plain built JS, already
 # produced by the Windows-side build, and are just synced over as-is.
 #
-# Usage: prepare-wsl.sh <windows_install_root_as_wsl_path>
+# Usage: prepare-wsl.sh <windows_install_root_as_wsl_path> [--migrate-legacy]
 set -euo pipefail
 
 WIN_ROOT="$1"
-WSL_APP_DIR="$HOME/apps/cross-repository-code-intelligence-installed"
+APP_KEY="$(printf '%s' "$WIN_ROOT" | sha256sum | cut -c1-12)"
+WSL_APP_DIR="$HOME/apps/cross-repository-code-intelligence-$APP_KEY"
+LEGACY_APP_DIR="$HOME/apps/cross-repository-code-intelligence-installed"
 mkdir -p "$WSL_APP_DIR"
+
+# The production install used one fixed WSL directory before 0.5.6. Migrate
+# that state only for the real installation, never for lifecycle test roots.
+if [ "${2:-}" = "--migrate-legacy" ] && [ ! -d "$WSL_APP_DIR/.wrangler" ] && [ -d "$LEGACY_APP_DIR/.wrangler" ]; then
+  cp -a "$LEGACY_APP_DIR/.wrangler" "$WSL_APP_DIR/.wrangler"
+fi
 
 rsync -a --delete \
   --exclude node_modules --exclude .git --exclude .next --exclude .wrangler \
@@ -31,7 +39,18 @@ export PATH="$HOME/.bun/bin:$PATH"
 cd "$WSL_APP_DIR"
 
 if [ ! -x node_modules/.bin/wrangler ]; then
-  bun install
+  install_ok=false
+  for attempt in 1 2; do
+    if bun install; then
+      install_ok=true
+      break
+    fi
+    sleep 2
+  done
+  if [ "$install_ok" != "true" ]; then
+    echo "WSL dependency installation failed after two attempts." >&2
+    exit 1
+  fi
 fi
 
 echo "OK: WSL copy prepared at $WSL_APP_DIR"

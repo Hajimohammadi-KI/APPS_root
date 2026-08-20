@@ -12,6 +12,34 @@ export function countCompletedItems(day: ProgressDay, completed: ReadonlySet<str
   );
 }
 
+export function countCompletedOutputs(day: ProgressDay, completed: ReadonlySet<string>) {
+  return day.tasks.filter((task) => task.items.every((item) => completed.has(item.id))).length;
+}
+
+export function outputTotal(day: ProgressDay) {
+  return day.tasks.length;
+}
+
+export function requiredOutputTotal(day: ProgressDay) {
+  return day.optionalDuringCourse ? 0 : outputTotal(day);
+}
+
+export function countRequiredCompletedOutputs(
+  day: ProgressDay,
+  completed: ReadonlySet<string>,
+) {
+  return day.optionalDuringCourse ? 0 : countCompletedOutputs(day, completed);
+}
+
+export function getDayOutputStatus(day: ProgressDay, completed: ReadonlySet<string>) {
+  const done = countCompletedOutputs(day, completed);
+  const total = outputTotal(day);
+  if (day.optionalDuringCourse && done < total) return "optional" as const;
+  if (done === 0) return "open" as const;
+  if (done === total) return "done" as const;
+  return "started" as const;
+}
+
 export function getDayStatus(day: ProgressDay, completed: ReadonlySet<string>, itemsPerDay = 9) {
   const count = countCompletedItems(day, completed);
   if (day.optionalDuringCourse && count < itemsPerDay) return "optional" as const;

@@ -37,10 +37,15 @@ export function CardTitle({
 
 export function CardDescription({
   className,
+  dir = "auto",
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={cn("text-sm text-muted-foreground", className)} {...props} />
+    <p
+      className={cn("text-sm text-muted-foreground", className)}
+      dir={dir}
+      {...props}
+    />
   );
 }
 

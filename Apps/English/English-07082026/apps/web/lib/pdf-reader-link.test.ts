@@ -11,10 +11,11 @@ describe("shared PDF reader links", () => {
       context: "English A1 · Reading",
     });
     expect(href).not.toBeNull();
-    const url = new URL(href ?? "");
+    const url = new URL(href ?? "", "http://english-automaticity.local");
 
     expect(url.searchParams.get("driveId")).toBe("1TV1AAAHkng5USBOeewMc3NpHFk97eMwi");
     expect(url.searchParams.get("focus")).toBe("Find the main idea");
+    expect(url.pathname).toBe("/pdf-reader");
   });
 
   test("leaves non-PDF learning pages outside the PDF reader", () => {

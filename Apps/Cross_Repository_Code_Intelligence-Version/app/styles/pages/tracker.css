@@ -581,6 +581,23 @@
   border-inline-start: 5px solid #f0a53a !important;
 }
 
+.course-topic-guide__transfer {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) repeat(2, minmax(180px, 1fr));
+  gap: 10px;
+  border: 1px solid #d8c0e8;
+  border-inline-start: 5px solid #6b3193;
+  border-radius: 13px;
+  background: #faf5ff;
+  padding: 12px;
+}
+.course-topic-guide__transfer h4,
+.course-topic-guide__transfer p { margin: 0; }
+.course-topic-guide__transfer p,
+.course-topic-guide__transfer small { font-size: 11px; line-height: 1.65; }
+.course-topic-guide__transfer code { overflow-wrap: anywhere; }
+.course-topic-guide__transfer small { grid-column: 1 / -1; color: var(--muted); }
+
 .course-topic-guide__days {
   border-top: 1px solid rgba(107, 49, 147, .18);
   padding-top: 12px;
@@ -631,6 +648,9 @@
   .course-topic-guide__days > div {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .course-topic-guide__transfer { grid-template-columns: 1fr; }
+  .course-topic-guide__transfer small { grid-column: auto; }
 }
 
 @media (max-width: 600px) {
@@ -821,19 +841,19 @@ details[open] > summary .summary-marker {
 }
 
 .day-card.course-related {
-  border: 2px solid #6b3193;
-  background: #f7f0ff;
-  box-shadow: inset 6px 0 0 #f0a53a;
+  border: 2px solid var(--red);
+  background: var(--red-soft);
+  box-shadow: inset 6px 0 0 var(--red);
 }
 
 .day-card.course-related > summary time {
-  color: #5b2b82;
+  color: #9f4033;
   font-weight: 850;
 }
 
 .course-related-chip {
   border-radius: 999px;
-  background: #482064;
+  background: #9f4033;
   color: #fff;
   padding: 5px 9px;
   font-size: 10px;
@@ -855,6 +875,22 @@ details[open] > summary .summary-marker {
 .status-chip {
   padding: 5px 9px;
   font-size: 10px;
+}
+
+.task-card.optional-today {
+  border-style: dashed;
+  background: #faf9fa;
+  opacity: .86;
+}
+.task-card.optional-today .task-index { background: #ece9ed; color: #68616d; }
+.checklist-guidance {
+  margin: 0 0 8px;
+  border-radius: 9px;
+  background: #f1ebf8;
+  color: #493465;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 .status-chip.open { background: #f2eff5; color: var(--muted); }
@@ -1654,7 +1690,8 @@ details[open] > summary .summary-marker {
 .plan-control-actions { display: flex; align-items: end; justify-content: flex-end; gap: .65rem; flex-wrap: wrap; }
 .plan-control-actions label { display: grid; gap: .35rem; font-size: .78rem; font-weight: 750; }
 .plan-control-actions input { min-height: 2.75rem; padding: .6rem .75rem; border: 1px solid var(--line); border-radius: .75rem; background: #fff; }
-@media (max-width: 900px) {
+.localized-date-preview { color: var(--muted); font-size: .7rem; font-weight: 650; }
+@media (max-width: 1080px) {
   .plan-control-panel { grid-template-columns: 1fr; }
   .plan-control-actions { justify-content: flex-start; }
 }

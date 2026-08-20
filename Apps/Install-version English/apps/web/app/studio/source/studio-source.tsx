@@ -18,8 +18,16 @@ import { useAppStore } from "@/features/store/app-store";
 import { analyzeAudioFluency, type AudioFluencyAnalysis } from "@/lib/audio-fluency";
 import { normalizePracticeAnswer } from "@/lib/automaticity-analysis";
 
-const nav = ["Daily Practice", "Lessons", "Speaking Studio", "Review", "Progress", "Vocabulary", "Notebook"];
-const navRoutes = ["/daily", "/grammar", "/studio", "/?screen=errors", "/?screen=progress", "/flashcards", "/notebook"];
+const studioNavigation = [
+  { label: "Home", href: "/", icon: "⌂" },
+  { label: "Daily Practice", href: "/daily", icon: "◷" },
+  { label: "Lessons", href: "/grammar", icon: "▤" },
+  { label: "Speaking Studio", href: "/studio", icon: "♩" },
+  { label: "Review", href: "/?screen=errors", icon: "◴" },
+  { label: "Progress", href: "/?screen=progress", icon: "▥" },
+  { label: "Vocabulary", href: "/flashcards", icon: "▧" },
+  { label: "Notebook", href: "/notebook", icon: "▣" },
+] as const;
 const paths = ["Complete English"] as const;
 
 type RecordingState = "idle" | "recording" | "paused";
@@ -539,7 +547,17 @@ export default function Home() {
       <aside className="sidebar">
         <div className="brand"><div className="brand-mark">{language === "de" ? "D" : "E"}</div><div><strong>{language === "de" ? <>Deutsch<br />Automaticity</> : <>English<br />Automaticity</>}</strong></div></div>
         <nav aria-label="Main navigation">
-          {nav.map((item, index) => <button key={item} className={index === 2 ? "nav-active" : ""} onClick={() => { window.location.href = navRoutes[index]!; }}><Icon>{["⌂", "▤", "♩", "◴", "▥", "▧", "▣"][index]}</Icon>{item}</button>)}
+		  {studioNavigation.map((item) => (
+			<button
+			  aria-current={item.href === "/studio" ? "page" : undefined}
+			  className={item.href === "/studio" ? "nav-active" : item.href === "/" ? "nav-home" : ""}
+			  key={item.href}
+			  onClick={() => window.location.assign(item.href)}
+			  type="button"
+			>
+			  <Icon>{item.icon}</Icon>{item.label}
+			</button>
+		  ))}
         </nav>
         <div className="nav-divider" />
         <nav aria-label="Support navigation"><button onClick={() => { window.location.href = "/settings"; }}><Icon>⚙</Icon>Settings</button><button onClick={() => { window.location.href = "/support"; }}><Icon>?</Icon>Help & support</button></nav>
@@ -549,7 +567,7 @@ export default function Home() {
       <main className="studio-main" id="main-content">
         <header>
           <div><h1>{text.title}</h1><p>{text.subtitle}</p></div>
-          <div className="header-actions"><span>● <b>{language === "de" ? "Deutsch" : "English"}</b></span><span>Local-first</span><div className="profile">E</div></div>
+		  <div className="header-actions"><button className="studio-home-link" onClick={() => window.location.assign("/")} type="button"><Icon>⌂</Icon>{language === "de" ? "Start" : "Home"}</button><span>● <b>{language === "de" ? "Deutsch" : "English"}</b></span><span>Local-first</span><div className="profile">E</div></div>
         </header>
 
         {dailyActivity !== null && <section className="daily-context-bar" aria-label="Today's practice navigation"><button onClick={() => active > 0 ? setActive((current) => current - 1) : window.location.assign(dailyReturn)}>← Previous</button><strong>Today’s speaking practice · activity {dailyActivity}</strong><button onClick={() => window.location.assign(dailyReturn)}>Return to Today’s Practice</button></section>}

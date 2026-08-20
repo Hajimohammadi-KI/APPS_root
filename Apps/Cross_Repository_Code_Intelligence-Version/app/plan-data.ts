@@ -92,6 +92,17 @@ export type NlpCourseSession = {
   relatedDayTitles: string[];
 };
 
+export type CourseTransferPlan = {
+  sessionNumber: number;
+  relevance: "core" | "experiment" | "scope";
+  noteDue: string;
+  artifactDue: string;
+  maxMinutes: number;
+  artifact: string;
+  acceptance: string;
+  replacesDailyOutput: true;
+};
+
 export const nlpCourseMeta = {
   name: "Advanced Deep Learning – Natural Language Processing",
   instructor: "Farshid Shirafkan",
@@ -949,6 +960,31 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   },
 ];
 
+// The later technical plan still contains the production-grade implementation.
+// These small transfer outputs prevent a 3+ month knowledge gap after the live
+// course. They replace one normal daily output; they never add a fourth output
+// or create backlog.
+export const nlpCourseTransferPlans: readonly CourseTransferPlan[] = [
+  { sessionNumber: 1, relevance: "core", noteDue: "2026-08-18", artifactDue: "2026-08-24", maxMinutes: 45, artifact: "nlp-tokenization-decision.md", acceptance: "Code-aware Tokenisierung gegen die Anforderungen des Repository-Corpus abgrenzen.", replacesDailyOutput: true },
+  { sessionNumber: 2, relevance: "core", noteDue: "2026-08-20", artifactDue: "2026-08-26", maxMinutes: 45, artifact: "tfidf-baseline-contract.md", acceptance: "Input, top-k, Cosine-Metrik und einen NOT_ANSWERABLE-Fall festhalten.", replacesDailyOutput: true },
+  { sessionNumber: 3, relevance: "experiment", noteDue: "2026-08-23", artifactDue: "2026-08-29", maxMinutes: 30, artifact: "word2vec-go-no-go.md", acceptance: "Nur Nutzen, Messgröße und Abbruchkriterium dokumentieren; kein Modelltraining als Pflicht.", replacesDailyOutput: true },
+  { sessionNumber: 4, relevance: "experiment", noteDue: "2026-08-25", artifactDue: "2026-08-31", maxMinutes: 30, artifact: "embedding-layer-relevance.md", acceptance: "GloVe, FastText und trainierbare Embeddings als Core, Extension oder Future einstufen.", replacesDailyOutput: true },
+  { sessionNumber: 5, relevance: "scope", noteDue: "2026-08-27", artifactDue: "2026-09-02", maxMinutes: 20, artifact: "rnn-scope-decision.md", acceptance: "Begründen, warum RNN für die Thesis Kern, Vergleich oder außerhalb des Scope ist.", replacesDailyOutput: true },
+  { sessionNumber: 6, relevance: "scope", noteDue: "2026-08-30", artifactDue: "2026-09-05", maxMinutes: 20, artifact: "lstm-gru-scope-decision.md", acceptance: "Eine prüfbare Scope-Entscheidung ohne zusätzliche Implementierung treffen.", replacesDailyOutput: true },
+  { sessionNumber: 7, relevance: "core", noteDue: "2026-09-01", artifactDue: "2026-09-07", maxMinutes: 45, artifact: "question-contract-v0.md", acceptance: "Eine reale Repository-Frage mit erwarteter Evidenz und Refusal-Fall definieren.", replacesDailyOutput: true },
+  { sessionNumber: 8, relevance: "core", noteDue: "2026-09-03", artifactDue: "2026-09-09", maxMinutes: 45, artifact: "attention-to-evidence-note.md", acceptance: "Attention nicht als Provenance missverstehen und die Evidence-Grenze explizit machen.", replacesDailyOutput: true },
+  { sessionNumber: 9, relevance: "core", noteDue: "2026-09-06", artifactDue: "2026-09-12", maxMinutes: 45, artifact: "codebert-graphcodebert-go-no-go.md", acceptance: "Nutzen, Messkriterien, Kosten und unveränderte Evidence-Record-Grenze dokumentieren.", replacesDailyOutput: true },
+  { sessionNumber: 10, relevance: "core", noteDue: "2026-09-08", artifactDue: "2026-09-14", maxMinutes: 45, artifact: "rag-refusal-contract-v0.md", acceptance: "Retrieval, Verifier, Generator und NOT_ANSWERABLE als testbaren Vertrag festhalten.", replacesDailyOutput: true },
+];
+
+export function courseTransferForSession(sessionNumber: number) {
+  return nlpCourseTransferPlans.find((plan) => plan.sessionNumber === sessionNumber) ?? null;
+}
+
+export function nlpSessionsRelatedToPlanDay(dayTitle: string) {
+  return nlpCourseSessions.filter((session) => session.relatedDayTitles.includes(dayTitle));
+}
+
 const d = (
   title: string,
   sourceIds: string[],
@@ -1300,7 +1336,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
       d("Relationship Types", ["yamaguchi", "nagy"], "Jede Kante benötigt klare Richtung, Bedeutung, Quelle und Erzeugungsregel.", ["Definiere DEFINES, INVOKES und MAPS_TO", "Definiere MUTATES, PERSISTS, READS_FROM und WRITES_TO", "Kennzeichne jede Beziehung als DIRECT oder DERIVED"], ["3.3", "10.3", "38.5"], "Graph Model", "relationship-catalog-v1.yaml"),
       d("EvidenceRecord und SourceLocation", ["proposal", "shatnawi"], "Ohne Datei, Zeile und Regel ist kein Claim prüfbar.", ["Bestimme die Felder des EvidenceRecord", "Mache Repository, Commit, File und Line verpflichtend", "Ergänze RuleId, RuleVersion und ExtractorVersion"], ["3.2", "38.4 bis 38.6"], "Evidence Model", "evidence-record.schema.json"),
       d("Unsicherheit und Answer Status", ["proposal", "kilt"], "Das System muss Nichtwissen modellieren und erfundene Antworten verhindern.", ["Definiere OBSERVED, DERIVED, UNRESOLVED und CONFLICTING", "Definiere SUPPORTED, PARTIALLY_SUPPORTED und NOT_ANSWERABLE", "Formuliere die Regel von Evidenz zu Answer Status"], ["3.6", "14.3", "27"], "Verifier / Status Model", "evidence-and-answer-status.yaml"),
-      d("Vertical Slice auf Papier", ["proposal", "danphe"], "Ein Beispielpfad zeigt Modellfehler vor dem Coding.", ["Wähle einen realen Pfad Controller→Service→Repository", "Schreibe alle Nodes, Edges und Evidenzelemente manuell", "Markiere Lücken in Schema und Contract"], ["10.2", "12", "26"], "Design / Walkthrough", "manual-vertical-slice.json"),
+      d("Ausführbarer Vertical Slice", ["proposal", "danphe", "roslynSyntax"], "Ein früher ausführbarer Pfad zeigt Modell- und Integrationsfehler, bevor sechs reine Designwochen vergehen.", ["Extrahiere einen realen Controller→Service→Repository-Pfad mit Roslyn", "Schreibe EvidenceRecord und SourceLocation deterministisch als JSONL", "Führe einen Golden Test aus und markiere Lücken in Schema und Contract"], ["10.2", "12", "17", "26"], "Walking Skeleton / Evidence", "vertical-slice-v0.jsonl + golden test"),
     ],
   },
   {
@@ -1580,6 +1616,26 @@ export const PLAN_VERSION_HISTORY: readonly PlanVersionEntry[] = [
       "Drei verbindliche Ergebnisse für Sitzung 9: KG-QA-Notiz, CPG-LM-Notiz und CodeBERT/GraphCodeBERT-Go-No-Go",
       "Drei verbindliche Ergebnisse für Sitzung 10: Provenance-Vertrag, Flat/Graph-Protokoll und RAG-Refusal-Vertrag",
       "Explizite Wiederverwendung vorhandener Notizen ohne erneute Lektüre",
+    ],
+  },
+  {
+    version: 4,
+    effectiveDate: "2026-08-20",
+    reason:
+      "Der Plan ist jetzt ausgabeorientiert: maximal drei Tagesergebnisse, ein echter Leichtmodus, Kurs-Transfer binnen 24 Stunden beziehungsweise sieben Tagen und ein ausführbarer Vertical Slice in Designwoche 3.",
+    tasksRemoved: [
+      "Neun gleichwertige Pflicht-Häkchen pro Tag",
+      "Drei Monate Wartezeit bis zur ersten Anwendung zentraler Kurskonzepte",
+      "Sechs reine Designwochen ohne ausführbaren technischen Beleg",
+    ],
+    tasksMoved: [
+      "Detail-Checklisten dienen als Qualitätsleitfaden unter höchstens drei Tagesergebnissen",
+      "Kurs-Mikroartefakte ersetzen ein Tagesergebnis und erzeugen keine zusätzliche Aufgabe",
+    ],
+    tasksAdded: [
+      "Rettungsmodus mit einem und Leichtmodus mit zwei verpflichtenden Tagesergebnissen",
+      "Zehn unmittelbare Kurs-Transferpläne mit 24-Stunden-Notiz und Sieben-Tage-Artefakt",
+      "Ausführbarer Roslyn→EvidenceRecord→JSONL-Vertical-Slice mit Golden Test in Woche 3",
     ],
   },
 ];

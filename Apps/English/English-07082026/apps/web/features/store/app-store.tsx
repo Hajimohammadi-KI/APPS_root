@@ -34,7 +34,7 @@ export type MasteryStatus =
 // BY automaticity-screen.tsx -- importing it back the other way would be a
 // circular dependency. Re-exported from automaticity-screen.tsx below for
 // its existing importers.
-export const EVIDENCE_CONTENT_VERSION = "27.3.10";
+export const EVIDENCE_CONTENT_VERSION = "27.3.13";
 export type AttemptMode =
 	| "recognition"
 	| "writing"
@@ -63,7 +63,7 @@ export type ErrorClass =
 export interface Settings {
 	apiBaseUrl: string;
 	minWords: number;
-	dailyStudyMinutes: 15 | 30 | 45 | 60;
+	dailyStudyMinutes: 15 | 30 | 45;
 	honovrLanguage: "en";
 	saveAudio: boolean;
 	onlineFeedback: boolean;
@@ -516,9 +516,7 @@ export function normalizeAppState(value: unknown): AppState {
 			apiBaseUrl,
 			minWords,
 			dailyStudyMinutes:
-				settings.dailyStudyMinutes === 30 ||
-				settings.dailyStudyMinutes === 45 ||
-				settings.dailyStudyMinutes === 60
+				settings.dailyStudyMinutes === 30 || settings.dailyStudyMinutes === 45
 					? settings.dailyStudyMinutes
 					: 15,
 			honovrLanguage: "en",

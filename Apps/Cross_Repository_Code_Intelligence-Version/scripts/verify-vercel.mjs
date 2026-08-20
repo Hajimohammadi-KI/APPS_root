@@ -65,6 +65,33 @@ try {
       });
     }
 
+    await page.getByRole("button", { name: "Bibliothek", exact: true }).click();
+    const researchLibrary = page.getByRole("region", { name: "Bibliotheksübersicht" });
+    await researchLibrary.waitFor({ state: "visible" });
+    const libraryLayout = await page.evaluate(() => {
+      const panel = document.querySelector(".study-panel")?.getBoundingClientRect();
+      return {
+        panelWidth: panel?.width ?? 0,
+        panelRight: panel?.right ?? 0,
+        viewportWidth: window.innerWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        hasMetadataAction: [...document.querySelectorAll("button")].some((button) => button.textContent?.includes("Metadaten bearbeiten")),
+        hasJsonBackup: [...document.querySelectorAll("button")].some((button) => button.textContent?.includes("Backup JSON")),
+      };
+    });
+    await page.screenshot({ path: join(outputDirectory, `${profile.name}-pdf-research-library.png`), fullPage: false });
+    checks.push({
+      kind: "pdf-research-library",
+      profile: profile.name,
+      ...libraryLayout,
+      passed: libraryLayout.panelWidth > 0
+        && libraryLayout.panelRight <= libraryLayout.viewportWidth + 1
+        && libraryLayout.scrollWidth <= libraryLayout.viewportWidth + 1
+        && libraryLayout.hasMetadataAction
+        && libraryLayout.hasJsonBackup,
+    });
+
+    await page.getByRole("button", { name: "Panel schließen", exact: true }).last().click();
     await page.getByRole("button", { name: "Einstellungen", exact: true }).click();
     const codeEditor = page.getByRole("textbox", { name: "Editierbarer Embed-Code" });
     await codeEditor.waitFor({ state: "visible" });
@@ -143,6 +170,7 @@ const failures = checks.filter((check) =>
   ("status" in check && (check.status !== 200 || check.textLength === 0 || check.hasErrorOverlay || check.horizontalOverflow))
   || ("pageErrors" in check && (check.pageErrors.length > 0 || (!allowLocalApiFailures && check.consoleErrors.length > 0)))
   || (check.kind === "reader-readability" && !check.passed)
+  || (check.kind === "pdf-research-library" && !check.passed)
   || (check.kind === "persistence" && (!check.progressPersisted || !check.focusPersisted || !check.settingPersisted)),
 );
 

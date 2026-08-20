@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { AutomatizationTrainer } from "@/features/automatization-trainer/automatization-trainer";
 
 export default function AutomaticityPage() {
-  redirect("/heute");
+  return <AutomatizationTrainer />;
 }

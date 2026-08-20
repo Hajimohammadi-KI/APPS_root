@@ -56,15 +56,20 @@ export function AppShell({
   // group (unreachable from the sidebar, only linkable by typing the URL
   // directly) and would have broken again the moment an item was inserted
   // or reordered, as happened when Mixed Practice was added.
+  // "/heute" moved out of this group (2026-08-20 UX roadmap): it was tied
+  // with Home for the "where do I start" role but sat one click deep in a
+  // collapsed group. Now rendered as its own persistent sidebar entry below.
   const practiceNavigation = allNavigation.filter((item) =>
     [
-      "/heute",
       "/gemischtes-training",
       "/studio",
       "/wiederholungen",
       "/vokabelkarten",
     ].includes(item.href),
   );
+  const todayNavigationItem = coreNavigation.find(
+    (item) => item.href === "/heute",
+  )!;
   const learningNavigation = allNavigation.filter((item) =>
     [
       "/grammatik",
@@ -80,31 +85,35 @@ export function AppShell({
   const settingsNavigation = allNavigation.filter((item) =>
     ["/einstellungen", "/lehrkraft"].includes(item.href),
   );
+  // Titles simplified to match the cross-app UX roadmap's 6-item IA
+  // (Start/Today/Practice/Learn/Progress/Settings) -- see
+  // docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md. Captions keep the
+  // longer descriptive text; only the bold group title changed.
   const groups = [
     {
       id: "practice",
-      title: "Tägliche Praxis",
-      caption: "Heute üben und sprechen",
+      title: "Praxis",
+      caption: "Gemischtes Training, Gespräch und Wiederholung",
       icon: Clock3,
       items: practiceNavigation,
     },
     {
       id: "learning",
-      title: "Lernpfade",
+      title: "Lernen",
       caption: "Grammatik und Deutsch lernen",
       icon: Settings,
       items: learningNavigation,
     },
     {
       id: "evidence",
-      title: "Lernnachweise",
+      title: "Fortschritt",
       caption: "Fehler und Aufnahmen",
       icon: Clock3,
       items: evidenceNavigation,
     },
     {
       id: "settings",
-      title: "App und Einstellungen",
+      title: "Einstellungen",
       caption: "Speicher und persönliche Optionen",
       icon: Folder,
       items: settingsNavigation,
@@ -150,7 +159,7 @@ export function AppShell({
         </div>
         <div className="german-home-entry">
           <AppNavigation
-            items={[coreNavigation[0]!]}
+            items={[coreNavigation[0]!, todayNavigationItem]}
             label="Startseite Navigation"
           />
         </div>

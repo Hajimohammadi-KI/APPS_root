@@ -144,6 +144,12 @@ const navigation: NavigationItem[] = [
 	},
 ];
 
+// UX audit (2026-08-20): Today's Practice was the second most-used
+// destination but sat one click deep inside the "Daily Practice" group,
+// tied for attention with Home. Promoted to a persistent top-level button
+// (see JSX) instead of a collapsed group item, mirroring Home's placement.
+const todayNavigation = navigation.find((item) => item.id === "daily")!;
+
 type NavigationGroupId = "practice" | "curriculum" | "evidence" | "system";
 
 interface NavigationGroup {
@@ -154,21 +160,25 @@ interface NavigationGroup {
 	items: NavigationItem[];
 }
 
+// Labels simplified to match the cross-app UX roadmap's 6-item IA
+// (Start/Today/Practice/Learn/Progress/Settings) -- see
+// docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md. Captions keep the
+// longer descriptive text; only the bold group label changed.
 const navigationGroups: NavigationGroup[] = [
 	{
 		id: "practice",
-		label: "Daily Practice",
-		caption: "Practice and speak today",
+		label: "Practice",
+		caption: "Mixed drills, conversation, and automatization",
 		icon: Clock3,
+		// "daily" (Today's Practice) moved out of this group -- see
+		// todayNavigation above, rendered as its own persistent nav button.
 		items: navigation.filter((item) =>
-			["daily", "practice", "studio", "automatization"].includes(
-				item.id,
-			),
+			["practice", "studio", "automatization"].includes(item.id),
 		),
 	},
 	{
 		id: "curriculum",
-		label: "Learning Paths",
+		label: "Learn",
 		caption: "Grammar and English study",
 		icon: Settings,
 		items: navigation.filter((item) =>
@@ -177,7 +187,7 @@ const navigationGroups: NavigationGroup[] = [
 	},
 	{
 		id: "evidence",
-		label: "Learning Evidence",
+		label: "Progress",
 		caption: "Errors and recordings",
 		icon: Clock3,
 		items: navigation.filter((item) =>
@@ -188,7 +198,7 @@ const navigationGroups: NavigationGroup[] = [
 	},
 	{
 		id: "system",
-		label: "App and Settings",
+		label: "Settings",
 		caption: "Storage and personal options",
 		icon: Folder,
 		items: navigation.filter((item) => ["settings", "teacher"].includes(item.id)),
@@ -343,6 +353,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 					>
 						<House aria-hidden className="size-4.5" />
 						Home
+					</Link>
+					<Link
+						aria-current={current.id === todayNavigation.id ? "page" : undefined}
+						className="nav-button nav-today-button"
+						data-active={current.id === todayNavigation.id}
+						href={SCREEN_PATHS[todayNavigation.id]}
+					>
+						<todayNavigation.icon aria-hidden className="size-4.5" />
+						{todayNavigation.label}
 					</Link>
 					{navigationGroups.map((group) => {
 						const expanded = openGroups[group.id];

@@ -61,14 +61,16 @@ gantt
 گیج‌کننده‌ترین صفحه است چون فیلتر/حالت/مرحله/آمار هم‌زمان دیده می‌شوند و
 طراحی‌اش با بقیهٔ اپ فرق دارد.
 
-## فاز ۱ — ساده‌سازی معماری منو ✅ (تأیید شد ۲۰۲۶-۰۸-۲۰ ~۲۳:۵۰)
+## فاز ۱ — ساده‌سازی معماری منو ✅ (کامل شد ۲۰۲۶-۰۸-۲۱ ~۰۰:۲۰)
 
-**بروزرسانی نهایی:** بعد از commit شدن کار Codex، بررسی و تست مستقیم کد نشان
-داد هدف اصلی فاز ۱ از قبل پیاده شده: یک CTA غالب در Home هر دو اپ، و رفع
-مشکل «دو Sidebar» در Conversation Studio (parity کامل بین English/Deutsch).
-جزئیات کامل و نتیجهٔ typecheck/test واقعی:
-`docs/roadmaps/PHASE-1-HANDOFF-2026-08-20.md` (فایل مشترک Claude/Codex).
-باقی‌مانده: نام‌گذاری گروه‌های منوی جانبی — پایین‌اولویت.
+Codex بخش اصلی را پیاده کرد (CTA واحد در Home، رفع «دو Sidebar» در
+Conversation Studio). Claude باقیمانده را کامل کرد: **Today's Practice /
+Heutiges Training** از داخل گروه «Practice» بیرون آورده شد و کنار Home به‌صورت
+دکمهٔ دائمی نمایش داده می‌شود (هم Desktop هم Mobile، هر دو اپ)، و ۴ گروه منو
+نام‌گذاری ساده شدند: **Practice / Learn / Progress / Settings**
+(Praxis / Lernen / Fortschritt / Einstellungen در آلمانی). تأیید با
+typecheck + test واقعی + اسکرین‌شات از dev serverهای زندهٔ هر دو اپ
+(localhost:3201 و localhost:3210). جزئیات: `docs/roadmaps/PHASE-1-HANDOFF-2026-08-20.md`.
 
 **بدون داده جدید، کمترین ریسک.** بازآرایی ناوبری هر دو اپ به:
 
@@ -110,10 +112,18 @@ Mixed تصمیم نگیرد؛ موتور برنامه بر اساس جدول ز�
 نوشتن مستقل، دو زمینهٔ جدید. ارتقای سطح بر پایهٔ کیفیت شواهد باشد نه تعداد
 دقیقه/XP.
 
-## فاز ۳ — توضیح ساده برای اصطلاحات فنی ⬜
+## فاز ۳ — توضیح ساده برای اصطلاحات فنی ✅ (کامل شد ۲۰۲۶-۰۸-۲۱ ~۰۰:۴۰)
 
-Evidence، Automaticity، Nachweise در Progress/Evidence باید یک توضیح
-یک‌خطی به زبان زبان‌آموز داشته باشند (نه واژهٔ فنی بدون تعریف).
+بررسی کد نشان داد English از قبل یک glossary کامل hover-help دارد
+(`features/components/contextual-hover-help.tsx`) که به‌صورت خودکار روی هر
+متنی که کلماتی مثل evidence/automaticity/mastery/coverage/accuracy دارد
+تعریف ساده نشان می‌دهد — این چیزی است که از روی اسکرین‌شات (نقد Codex) قابل
+تشخیص نبود چون hover در تصویر ثابت دیده نمی‌شود. Deutsch معادل این سیستم را
+دارد (`german-hover-help.tsx`) ولی فقط برای اصطلاحات گرامری (Kasus و...)؛
+**"Nachweise" دقیقاً همان کلمه‌ای بود که Codex اسمش را برد و واقعاً در
+glossary آلمانی نبود.** اضافه شد: `Nachweis(e)`، `Beherrschung`، `Abdeckung`،
+`Genauigkeit` — ترجمهٔ همان تعریف‌های انگلیسی، برای هماهنگی دو اپ.
+typecheck + test اپ Deutsch سبز.
 
 ## فاز ۴ — schema واحد محتوا ⬜
 

@@ -499,6 +499,10 @@
       <span class="hist-date">2026-08-20 23:50</span>
       <span>Codex کار خود را commit کرد (<code class="path">Fix</code>, <code class="path">Fix3</code>). Claude بررسی و تست مستقیم انجام داد: فاز ۱ ✅ (CTA واحد + parity رفع مشکل Conversation Studio)، فاز ۲ اسکلتش پیاده شده 🟡. typecheck و test هر دو اپ سبز (English 144، Deutsch 91 تست). Commit و push شد.</span>
     </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-21 00:20</span>
+      <span>فاز ۱ کامل شد: Today کنار Home دائمی، ۴ گروه منو ساده‌نام‌گذاری شد (هر دو اپ). فاز ۲ تصحیح شد — تخصیص per-بخش از قبل کامل پیاده بود. فاز ۳ کامل شد: glossary آلمانی با Nachweise/Beherrschung/Abdeckung/Genauigkeit تکمیل شد. همه با typecheck+test تأیید و push شدند.</span>
+    </div>
     <div class="src-note">
       منبع متنی همراه: <code class="path">docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md</code>
     </div>
@@ -515,11 +519,11 @@
       <code class="path">shared/check-duplicated-files.mjs</code> سازگار نگه داشته می‌شوند.</p>`,
     },
     {
-      id: "p1", phase: "فاز ۱", title: "ساده‌سازی معماری منو", status: "done", when: "تأیید شد ۲۰۲۶-۰۸-۲۰ ~۲۳:۵۰",
-      body: `<p><strong>تأیید شد با typecheck + test واقعی روی هر دو اپ.</strong> Codex هدف اصلی را از قبل پیاده کرده:
-      یک CTA غالب در Home (بدون دکمهٔ شروع رقیب) و رفع مشکل «دو Sidebar» در Conversation Studio — هر دو اپ
-      حالا یکسان رفتار می‌کنند. جزئیات: <code class="path">docs/roadmaps/PHASE-1-HANDOFF-2026-08-20.md</code>.
-      باقی‌مانده: نام‌گذاری گروه‌های منوی جانبی (پایین‌اولویت).</p>
+      id: "p1", phase: "فاز ۱", title: "ساده‌سازی معماری منو", status: "done", when: "کامل شد ۲۰۲۶-۰۸-۲۱ ~۰۰:۲۰",
+      body: `<p><strong>کامل شد و تأیید شد (typecheck + test + اسکرین‌شات از dev serverهای زنده).</strong> Codex بخش
+      اصلی را پیاده کرد: یک CTA غالب در Home، رفع «دو Sidebar» در Conversation Studio. Claude باقی‌مانده را کامل کرد:
+      Today's Practice / Heutiges Training کنار Home به‌صورت دکمهٔ دائمی (نه داخل گروه)، و نام‌گذاری ۴ گروه ساده شد:
+      Practice/Learn/Progress/Settings (Praxis/Lernen/Fortschritt/Einstellungen).</p>
       <div class="menu-tree">
         <div class="menu-row"><span class="menu-box top">Start / Startseite</span></div>
         <div class="menu-row"><span class="menu-box top">Today / Heute</span></div>
@@ -551,10 +555,11 @@
       </div>`,
     },
     {
-      id: "p2", phase: "فاز ۲", title: "موتور جلسهٔ روزانهٔ یکپارچه", status: "active", when: "اسکلت پیاده شد ۲۰۲۶-۰۸-۲۰",
-      body: `<p><strong>کامپوننت <code class="path">DailyAutomaticityProgram</code> در هر دو اپ از قبل پیاده و تست‌شده است</strong>
-      (انتخاب دقیقه + پیام «هر مدت شامل همهٔ بخش‌ها می‌شود»). باقی‌مانده: تطبیق دقیق تخصیص per-بخش با جدول زیر.
-      بعد از انتخاب زمان، کاربر دیگر بین Grammar/Studio/Review/Mixed تصمیم نگیرد. نسخهٔ ۴۵ دقیقه
+      id: "p2", phase: "فاز ۲", title: "موتور جلسهٔ روزانهٔ یکپارچه", status: "done", when: "تأیید شد ۲۰۲۶-۰۸-۲۱ ~۰۰:۲۰",
+      body: `<p><strong>کامپوننت <code class="path">DailyAutomaticityProgram</code> در هر دو اپ کامل پیاده و تست‌شده است</strong>
+      (انتخاب دقیقه + تخصیص واقعی دقیقه/تعداد آیتم per-بخش در <code class="path">adaptive-daily-plan.ts</code>).
+      تصحیح یک اشتباه قبلی: قبلاً گفته شد این تخصیص پیاده نشده — بدون خواندن فایل. بعد از انتخاب زمان، کاربر دیگر
+      بین Grammar/Studio/Review/Mixed تصمیم نمی‌گیرد. نسخهٔ ۴۵ دقیقه
       فقط کشیده‌شدهٔ نسخهٔ ۱۵ دقیقه نیست — گفتار طولانی‌تر، نوشتن مستقل، دو زمینهٔ جدید. ارتقای سطح بر پایهٔ
       کیفیت شواهد باشد نه تعداد دقیقه.</p>
       <div class="table-scroll"><table>
@@ -570,9 +575,10 @@
       </table></div>`,
     },
     {
-      id: "p3", phase: "فاز ۳", title: "توضیح ساده برای اصطلاحات فنی", status: "pending", when: "۱ تا ۲ هفته، موازی با فاز ۲",
-      body: `<p>Evidence، Automaticity، Nachweise در Progress/Evidence باید یک توضیح یک‌خطی به زبان
-      زبان‌آموز داشته باشند — نه واژهٔ فنی بدون تعریف.</p>`,
+      id: "p3", phase: "فاز ۳", title: "توضیح ساده برای اصطلاحات فنی", status: "done", when: "کامل شد ۲۰۲۶-۰۸-۲۱ ~۰۰:۴۰",
+      body: `<p>English از قبل یک glossary خودکار hover-help داشت (evidence، automaticity، mastery، coverage،
+      accuracy...) — چیزی که از روی اسکرین‌شات ثابت قابل دیدن نبود. در Deutsch دقیقاً همان کلمه‌ای که Codex نام برد
+      («Nachweise») در glossary نبود؛ اضافه شد به‌همراه Beherrschung، Abdeckung، Genauigkeit.</p>`,
     },
     {
       id: "p4", phase: "فاز ۴", title: "schema واحد محتوا", status: "pending", when: "۲ تا ۴ هفته",

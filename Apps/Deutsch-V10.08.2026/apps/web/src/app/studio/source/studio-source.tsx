@@ -13,6 +13,7 @@ import {
   type StoredEvaluationIssue,
 } from "./conversation-storage";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
+import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
 const nav = [
   "Tägliches Training",
@@ -107,6 +108,7 @@ function formatTime(seconds: number) {
 }
 
 export default function Home() {
+  const { state } = useLearnerState();
   const [path] = useState<(typeof paths)[number]>(paths[0]);
   const language: StudioLanguage = "de";
   const text = copy[language];
@@ -461,6 +463,14 @@ export default function Home() {
       );
       return;
     }
+    const reviewedWordCount =
+      reviewedTranscript.match(/[\p{L}\p{N}'’-]+/gu)?.length ?? 0;
+    if (reviewedWordCount < state.settings.minWords) {
+      setMessage(
+        `${reviewedWordCount}/${state.settings.minWords} Wörter. Ergänze deine Antwort, bevor sie als Produktionsnachweis ausgewertet wird.`,
+      );
+      return;
+    }
     setTranscript(reviewedTranscript);
     setInterimTranscript("");
     setEvaluating(true);
@@ -731,6 +741,9 @@ export default function Home() {
                 onChange={(event) => {
                   setTopicId(event.target.value);
                   resetSession();
+                  setMessage(
+                    "Thema geändert. Die vorige Antwort wurde verworfen; es wird keine alte Bewertung übernommen.",
+                  );
                 }}
               >
                 {filteredTopics.map((topic) => (

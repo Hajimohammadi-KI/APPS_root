@@ -146,14 +146,18 @@ typecheck + test اپ Deutsch سبز.
 
 ## فاز ۴ — Foundation Gate مشترک 🟡
 
-**وضعیت ۲۰۲۶-۰۸-۲۲:** G0، G1 و G2 این فاز عبور کرده‌اند. هستهٔ مشترک،
+**وضعیت ۲۰۲۶-۰۸-۲۲:** G0، G1، G2 و G3 این فاز عبور کرده‌اند. هستهٔ مشترک،
 `ContentUnit` دارای provenance/license/review، `EvidenceRecord`، رویدادهای شناسه‌محور،
 JSON Schema و Mirror CI روی `main` هستند. Gate G1 در
 [PR #17](https://github.com/Hajimohammadi-KI/APPS_root/pull/17) با merge
 `b452e3e` بسته شد. Gate G2 نیز در
 [PR #21](https://github.com/Hajimohammadi-KI/APPS_root/pull/21) با merge
 `032ad14` و CI سبز بسته شد: consent نسخه‌دار، baseline پیش از intervention، export
-پژوهشی امن، revoke/delete، retention و data-quality در هر دو زبان. کل فاز هنوز ✅
+پژوهشی امن، revoke/delete، retention و data-quality در هر دو زبان. Gate G3 نیز در
+[PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24) با merge
+`ea3d25c` و CI سبز بسته شد: Shadow Safety برای برنامهٔ 15/30/45 دقیقهٔ هر دو اپ
+default-off، نامرئی و بدون تغییر/ذخیرهٔ داده باقی می‌ماند و E2E حفظ learner/evidence
+را تأیید می‌کند. کل فاز هنوز ✅
 نیست، چون Accessibility baseline قابل تکرار باقی مانده است.
 
 **اثر برای زبان‌آموز:** رفتار پایهٔ هر دو اپ یکسان می‌شود؛ دادهٔ یادگیری،
@@ -177,7 +181,8 @@ mastery مبتنی بر AI تا عبور vertical slice ممنوع است.
 **معیار پذیرش:** یک واحد B1 انگلیسی و یک واحد B1 آلمانی از مسیر کامل
 `content → daily plan → learner response → evidence → analytics event`
 با schema معتبر و بدون دو مدل موازی عبور کنند. مسیر تا local domain event و export
-در G1 تأیید شد؛ قرارداد analytics رضایت‌محور و baseline در G2 تأیید شدند. فقط
+در G1 تأیید شد؛ قرارداد analytics رضایت‌محور و baseline در G2 و shadow بدون
+mutation در G3 تأیید شدند. فقط
 Accessibility baseline قابل تکرار برای بستن فاز باقی مانده است.
 
 ## فاز ۵ — کیفیت محتوا و پایلوت گزینش‌شدهٔ دیتاست ⬜
@@ -299,4 +304,5 @@ viewport و تست دستی Screen Reader/میکروفون روی سخت‌اف�
 - **۲۰۲۶-۰۸-۲۱ (بعد از ظهر)**: فازهای ۴ تا ۹ توسط Codex بازطراحی و غنی‌سازی شدند — Foundation Gate قبل از ادغام runtime دیتاست/AI، Quality Gate با نمونه‌گیری دو-داور، پوشش Mediation طبق CEFR Companion Volume، و دروازهٔ اندازه‌گیری صریح («تا دادهٔ کاربر واقعی هیچ درصد automaticity اعلام نشود»). منبع سوم («نقد پداگوژیک») به همین دلیل به بخش منشأ اضافه شد. این نسخه ابتدا روی Alias قدیمی `automaticity-ux-roadmap.vercel.app` منتشر شده بود که اکنون در Scope قابل‌دسترسی حساب فعلی نیست.
 - **۲۰۲۶-۰۸-۲۲**: G1 در PR #17 (`b452e3e`) با CI سبز عبور کرد؛ مسیر B1 نوشتن/گفتار، audio gate، re-record invalidation، provider-unavailable و delayed/novel events برای هر دو زبان ادغام شد. فاز ۴ به 🟡 تغییر کرد و ادامهٔ Foundation Gate به Issue #18 (consent، baseline، data quality) منتقل شد. میکروفون سخت‌افزاری واقعی و provider زنده همچنان N/A هستند.
 - **۲۰۲۶-۰۸-۲۲**: G2 در PR #21 (`032ad14`) با CI سبز عبور کرد؛ consent نسخه‌دار، baseline پیش از intervention، export پژوهشی امن، revoke/delete، retention و data-quality در هر دو زبان ادغام و با Settings E2E تأیید شد. فاز ۴ فقط برای Accessibility baseline قابل تکرار باز است؛ cohort واقعی و اثر یادگیری همچنان N/A است.
+- **۲۰۲۶-۰۸-۲۲**: G3 در PR #24 (`ea3d25c`) با دو CI سبز عبور کرد؛ Shadow Safety به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شد، اما default-off، نامرئی و بدون تغییر یا persistence دادهٔ زبان‌آموز باقی ماند. E2E انگلیسی و آلمانی حفظ learner/evidence را تأیید کرد؛ cohort واقعی و اثر یادگیری همچنان N/A است.
 - **۲۰۲۶-۰۸-۲۲ ۰۰:۳۲ CEST**: نسخهٔ جدید روی `automaticity-ux-roadmap-elahe.vercel.app` با وضعیت Vercel Ready منتشر شد. Alias قدیمی به‌دلیل مالکیت Scope دیگر قابل انتقال نبود و محتوای قدیمی آن به‌عنوان نسخهٔ جاری معرفی نمی‌شود.

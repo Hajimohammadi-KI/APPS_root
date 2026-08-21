@@ -440,7 +440,7 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.2 · 2026-08-21</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.3 · 2026-08-21</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
       <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
@@ -464,14 +464,15 @@
     <table>
       <thead><tr><th>بخش</th><th>وضعیت 2026-08-21</th><th>مدرک</th></tr></thead>
       <tbody>
-        <tr><td>هستهٔ مشترک learning-core</td><td>در commit <code>c666175</code> و Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a>؛ هنوز merge نشده</td><td><code>shared/learning-core</code></td></tr>
-        <tr><td>SKILL-001 Adherence Core</td><td>remote و قابل بازبینی؛ shadow flag پیش‌فرض خاموش؛ هنوز released نیست</td><td><code>shared/learning-core/src/adherence</code></td></tr>
+        <tr><td>هستهٔ مشترک learning-core</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز merge شد</td><td>merge <code>ed7e73f</code> و <code>shared/learning-core</code></td></tr>
+        <tr><td>SKILL-001 Adherence Core</td><td>روی <code>main</code> ادغام شده؛ shadow flag پیش‌فرض خاموش است؛ هنوز در release کاربر نهایی فعال نشده</td><td><code>shared/learning-core/src/adherence</code></td></tr>
         <tr><td>تست اختصاصی adherence</td><td>۲۱ تست، ۶۰٬۱۸۵ assertion</td><td><code>bun run test:adherence-core</code></td></tr>
-        <tr><td>کل تست learning-core</td><td>۲۷ تست، ۶۰٬۲۰۰ assertion</td><td><code>bun run test</code></td></tr>
+        <tr><td>کل تست learning-core</td><td>۲۸ تست، ۶۰٬۲۰۵ assertion پس از افزودن export شواهد</td><td><code>bun run test</code></td></tr>
         <tr><td>TypeScript و mirror parity</td><td>تأییدشده</td><td><code>bun run typecheck</code></td></tr>
-        <tr><td>CI اختصاصی</td><td>هر دو workflow روی <code>c666175</code> سبز؛ review/merge باقی است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
-        <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> با CI لینوکس سبز؛ آلمانی‌محور و stacked است، پس به‌تنهایی G1 را نمی‌بندد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
-        <tr><td>ادغام runtime در هر دو اپ</td><td>کامل و مستقل اثبات نشده</td><td><strong style="color:var(--open)">Gate G1 باز است</strong></td></tr>
+        <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
+        <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از تست کامل محلی و CI لینوکس merge شد</td><td>merge <code>b3fbc07</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
+        <tr><td>ادغام runtime در هر دو اپ</td><td>ledger مشترک، gate صوت و export نسخه‌دار موجود است؛ مسیر B1 کامل هنوز مستقل اثبات نشده</td><td><strong style="color:var(--active)">Gate G1 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">Issue #14</a> در حال انجام است</strong></td></tr>
+        <tr><td>export محلی شواهد</td><td>انگلیسی و آلمانی اکنون <code>learnerState</code> و <code>learningEvidence</code> را در envelope نسخه‌دار صادر می‌کنند</td><td>commit <code>a0e5642</code>؛ E2E دانلود هر دو زبان پاس شد</td></tr>
         <tr><td>AI و دیتاست runtime</td><td>نباید آغاز شود</td><td>وابسته به G1 و G2</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
       </tbody>
@@ -517,8 +518,8 @@ flowchart LR
 
   <h2 id="gates"><span class="num">gates</span> دروازه‌های اجباری</h2>
   <div class="gate-rail">
-    <div class="gate-card"><span class="gid">G0</span><span class="gname">Source Gate</span><span class="chip active"><span class="dot"></span>CI سبز؛ merge مانده</span></div>
-    <div class="gate-card"><span class="gid">G1</span><span class="gname">Runtime Evidence Slice</span><span class="chip open"><span class="dot"></span>باز</span></div>
+    <div class="gate-card"><span class="gid">G0</span><span class="gname">Source Gate</span><span class="chip pass"><span class="dot"></span>عبور کرده</span></div>
+    <div class="gate-card"><span class="gid">G1</span><span class="gname">Runtime Evidence Slice</span><span class="chip active"><span class="dot"></span>در حال انجام · #14</span></div>
     <div class="gate-card"><span class="gid">G2</span><span class="gname">Measurement Contract</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
     <div class="gate-card"><span class="gid">G3</span><span class="gname">Shadow Safety</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
     <div class="gate-card"><span class="gid">G4</span><span class="gname">Content Quality</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
@@ -550,10 +551,10 @@ flowchart LR
   <section class="phase">
     <div class="phase-head">
       <div class="phase-title-row"><span class="phase-num">۰</span><h3>تفکیک و merge کردن Vertical Slice 1</h3></div>
-      <span class="chip active"><span class="dot"></span>در حال انجام</span>
+      <span class="chip pass"><span class="dot"></span>کامل</span>
     </div>
     <div class="phase-tags">برآورد: ۱ تا ۲ روز کاری · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/3" class="mono">#3</a></div>
-    <p>پیاده‌سازی در commit <code>c666175</code> و Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> ثبت شده و CI سبز است؛ review و merge باقی است. محدودهٔ اصلی این چهار مسیر است:</p>
+    <p>پیاده‌سازی commit <code>c666175</code> در PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز با merge <code>ed7e73f</code> وارد <code>main</code> شد. محدودهٔ اصلی این چهار مسیر است:</p>
     <ul>
       <li><code>shared/learning-core</code></li>
       <li><code>Apps/English/English-07082026/packages/learning-core</code></li>
@@ -566,8 +567,8 @@ flowchart LR
       <ul>
         <li>✓ PR مستقل فقط محدودهٔ source/mirrors/CI و lockfileهای workspace لازم را دارد</li>
         <li>✓ CI روی PR سبز است و فایل‌های نامرتبط worktree وارد commit نشده‌اند</li>
-        <li>□ review و merge PR #11 انجام شود</li>
-        <li>تا پیش از merge، SKILL-001 «remote verified» است، نه «released»</li>
+        <li>✓ review و merge PR #11 انجام شد</li>
+        <li>✓ SKILL-001 روی <code>main</code> ادغام شد؛ فعال‌سازی محصولی آن تابع G2 و G3 است</li>
       </ul>
     </div>
   </section>
@@ -575,9 +576,9 @@ flowchart LR
   <section class="phase" id="p1">
     <div class="phase-head">
       <div class="phase-title-row"><span class="phase-num">۱</span><h3>Vertical Slice واقعی در English و Deutsch</h3></div>
-      <span class="chip pending"><span class="dot"></span>در انتظار G0</span>
+      <span class="chip active"><span class="dot"></span>در حال انجام</span>
     </div>
-    <div class="phase-tags">برآورد: ۱ sprint · وابستگی: <code>G0</code></div>
+    <div class="phase-tags">برآورد: ۱ sprint · وابستگی: <code>G0</code> · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a></div>
     <p>تبدیل قرارداد pure core به مسیر واقعی یادگیری در هر دو اپ: یک واحد authored و human-reviewed در سطح B1 برای هر زبان؛ مسیر کامل <code dir="ltr">content → daily plan → learner response → evaluation → evidence → local event</code>؛ یک تلاش نوشتاری و یک تلاش گفتاری با صدای واقعی.</p>
     <p>Conversation Studio: <code dir="ltr">Listen/Recall → Record → Replay → Review transcript → Correct → Improve → Save</code>. transcript و evaluation واقعی؛ هیچ پاسخ hard-coded یا demo evidence پذیرفته نیست.</p>
     <div class="exit-box">
@@ -589,6 +590,16 @@ flowchart LR
         <li>delayed recall و novel transfer به‌صورت event جدا قابل ثبت باشند</li>
         <li>خطای provider با وضعیت unavailable دیده شود، نه موفقیت جعلی</li>
       </ul>
+    </div>
+    <div class="callout final" style="margin-top:14px;">
+      <span class="label">پیشرفت تأییدشدهٔ فعلی</span>
+      <ul>
+        <li>PR آلمانی <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از typecheck، lint، unit/integration، installer، schema، build و ۱۵ E2E merge شد؛ ۲ تست اختیاری PWA skip شدند</li>
+        <li><code>learning-core</code> برای هر دو زبان ledger محلی نسخه‌دار می‌سازد و speaking بدون audio را <code>unverified</code> نگه می‌دارد</li>
+        <li>commit <code>a0e5642</code> خروجی هر دو اپ را به envelope شامل <code>learnerState</code> و <code>learningEvidence</code> ارتقا داد؛ E2E دانلود واقعی هر دو زبان پاس شد</li>
+        <li>build تولیدی هر دو اپ پاس شد و لینک‌های محلی دوباره HTTP 200 هستند</li>
+      </ul>
+      <p style="margin:0;"><strong>N/A — هنوز به‌اندازهٔ کافی تأیید نشده:</strong> microphone واقعی و provider خارجی. مسیر B1 دو زبان، invalidation پس از re-record و eventهای مستقل delayed recall / novel transfer هنوز باید یکجا در Issue #14 اثبات شوند؛ بنابراین G1 بسته نشده است.</p>
     </div>
   </section>
 
@@ -777,7 +788,7 @@ flowchart LR
       <thead><tr><th class="mono" style="text-align:center">#</th><th>محدوده</th><th>Issue</th><th>شرط شروع</th></tr></thead>
       <tbody>
         <tr><td class="mono" style="text-align:center">1</td><td>Adherence core + mirrors + CI</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/3" class="mono">#3</a></td><td>اکنون، پس از جداسازی worktree</td></tr>
-        <tr><td class="mono" style="text-align:center">2</td><td>Runtime evidence slice EN/DE</td><td>issue جدا</td><td>merge شدن #3</td></tr>
+        <tr><td class="mono" style="text-align:center">2</td><td>Runtime evidence slice EN/DE</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a></td><td>merge شدن #3؛ در حال انجام</td></tr>
         <tr><td class="mono" style="text-align:center">3</td><td>Measurement contracts و local export</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G1</td></tr>
         <tr><td class="mono" style="text-align:center">4</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a></td><td>G2</td></tr>
         <tr><td class="mono" style="text-align:center">5</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>#6 و consent</td></tr>
@@ -820,7 +831,7 @@ flowchart LR
 
   <div class="callout final">
     <span class="label">اقدام بعدی واحد</span>
-    <p style="margin:0;">فقط review و merge فاز ۰ را کامل کنید: Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> را merge کنید. سپس PR آلمانی <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> را روی base نهایی بازبینی کنید و یک issue مستقل برای Runtime Evidence Slice کامل انگلیسی/آلمانی باز کنید. تا عبور آن slice، AI، دیتاست runtime و rollout یادگیری متوقف می‌مانند.</p>
+    <p style="margin:0;">فقط Issue <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a> را کامل کنید: برای یک واحد B1 در هر زبان، writing و speaking دارای audio را از content تا ledger و export در E2E اثبات کنید؛ re-record باید شواهد قبلی را نامعتبر کند، provider unavailable نباید موفقیت بسازد و delayed recall / novel transfer باید eventهای جدا داشته باشند. تا عبور کامل G1، AI، ingestion دیتاست و rollout یادگیری متوقف می‌مانند.</p>
   </div>
 
   <footer class="note">

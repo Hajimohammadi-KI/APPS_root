@@ -1,7 +1,7 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.2
+**نسخه:** 1.3
 
 **تاریخ:** 2026-08-21  
 **دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)  
@@ -27,14 +27,15 @@
 
 | بخش | وضعیت 2026-08-21 | مدرک |
 |---|---|---|
-| هستهٔ مشترک learning-core | در commit `c666175` و Draft PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11)؛ هنوز merge نشده | `shared/learning-core` |
-| SKILL-001 Adherence Core | remote و قابل بازبینی؛ shadow flag پیش‌فرض خاموش؛ هنوز released نیست | `shared/learning-core/src/adherence` |
+| هستهٔ مشترک learning-core | PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) پس از بازبینی مستقل و CI سبز merge شد | merge `ed7e73f` و `shared/learning-core` |
+| SKILL-001 Adherence Core | روی `main` ادغام شده؛ shadow flag پیش‌فرض خاموش است؛ هنوز در release کاربر نهایی فعال نشده | `shared/learning-core/src/adherence` |
 | تست اختصاصی adherence | تأییدشده در این بررسی: 21 تست، 60,185 assertion | `bun run test:adherence-core` |
-| کل تست learning-core | تأییدشده در این بررسی: 27 تست، 60,200 assertion | `bun run test` |
+| کل تست learning-core | تأییدشده پس از افزودن export شواهد: 28 تست، 60,205 assertion | `bun run test` |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
-| CI اختصاصی | هر دو workflow روی commit `c666175` سبز؛ review/merge باقی است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
-| اصلاح runtime و مسیرهای آلمانی | Draft PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) با CI لینوکس سبز؛ آلمانی‌محور و stacked است، پس به‌تنهایی G1 را نمی‌بندد | [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
-| ادغام runtime در هر دو اپ | کامل و مستقل اثبات نشده | **Gate G1 باز است** |
+| CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
+| اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
+| ادغام runtime در هر دو اپ | ledger مشترک، gate صوت و export نسخه‌دار موجود است؛ مسیر B1 کامل هنوز مستقل اثبات نشده | **Gate G1 در [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) در حال انجام است** |
+| export محلی شواهد | انگلیسی و آلمانی اکنون `learnerState` و `learningEvidence` را در envelope نسخه‌دار صادر می‌کنند | commit `a0e5642`؛ E2E دانلود هر دو زبان پاس شد |
 | AI و دیتاست runtime | نباید آغاز شود | وابسته به G1 و G2 |
 | اثرگذاری روی زبان‌آموز واقعی | دادهٔ کافی وجود ندارد | **N/A تا اجرای پایلوت** |
 
@@ -101,10 +102,10 @@ flowchart LR
 ## فاز 0 — تفکیک و merge کردن Vertical Slice 1
 
 **برآورد:** 1 تا 2 روز کاری  
-**وضعیت:** commit و Draft PR ساخته شده و CI سبز است؛ review و merge باقی است
+**وضعیت:** کامل؛ review، CI و merge انجام شد
 
 **Issue:** [#3 — Local-first adherence core](https://github.com/Hajimohammadi-KI/APPS_root/issues/3)
-**PR:** [#11 — Vertical Slice 1 core, mirrors, and CI gate](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) (`c666175`)
+**PR:** [#11 — Vertical Slice 1 core, mirrors, and CI gate](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) (`c666175` → merge `ed7e73f`)
 
 فقط این چهار مسیر وارد PR نخست شوند:
 
@@ -125,13 +126,14 @@ flowchart LR
 - [x] PR مستقل فقط محدودهٔ source/mirrors/CI و lockfileهای workspace لازم را دارد؛
 - [x] CI روی PR سبز است؛
 - [x] فایل‌های نامرتبط worktree وارد commit نشده‌اند؛
-- [ ] review و merge PR #11 انجام شود؛
-- [ ] تا پیش از merge، SKILL-001 «remote verified» است، نه «released».
+- [x] review و merge PR #11 انجام شد؛
+- [x] SKILL-001 روی `main` ادغام شد؛ فعال‌سازی محصولی آن همچنان تابع G2 و G3 است.
 
 ## فاز 1 — Vertical Slice واقعی در English و Deutsch
 
 **برآورد:** 1 sprint  
 **وابستگی:** G0  
+**وضعیت:** در حال انجام در [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14)
 **هدف:** تبدیل قرارداد pure core به مسیر واقعی یادگیری در هر دو اپ.
 
 ### محدوده
@@ -151,6 +153,23 @@ flowchart LR
 - پاسخ اشتباه، completion یا تایمر 60 ثانیه status automatic ندهد؛
 - delayed recall و novel transfer به‌صورت event جدا قابل ثبت باشند؛
 - خطای provider با وضعیت unavailable دیده شود، نه موفقیت جعلی.
+
+### پیشرفت تأییدشدهٔ فعلی
+
+- PR آلمانی [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) با تست‌های
+  typecheck، lint، unit/integration، installer، schema، build و 15 E2E (به‌علاوهٔ
+  2 تست اختیاری PWA که skip شدند) merge شده است؛
+- `learning-core` برای تلاش‌های انگلیسی و آلمانی ledger محلی نسخه‌دار می‌سازد و
+  speaking بدون audio را `unverified` نگه می‌دارد؛
+- commit `a0e5642` خروجی تنظیمات هر دو اپ را اصلاح کرد تا `learnerState` و
+  `learningEvidence` را با `schemaVersion: 1.0.0` صادر کند؛ تست دانلود واقعی
+  مرورگر در هر دو زبان پاس شد؛
+- build تولیدی هر دو اپ پاس شد و سرویس‌های محلی دوباره با HTTP 200 بالا آمدند.
+
+این موارد پیشرفت G1 هستند، نه عبور کامل آن. آزمون مستقل microphone واقعی و
+provider خارجی در این مرحله **N/A — هنوز به‌اندازهٔ کافی تأیید نشده** است؛ مسیر
+B1 دو زبان، invalidation شواهد پس از re-record و eventهای مستقل delayed recall / novel
+transfer هنوز باید در Issue #14 یکجا اثبات شوند.
 
 ## فاز 2 — قرارداد سنجش، حریم خصوصی و Baseline
 
@@ -362,7 +381,7 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | ترتیب | محدوده | Issue | شرط شروع |
 |---:|---|---|---|
 | 1 | Adherence core + mirrors + CI | [#3](https://github.com/Hajimohammadi-KI/APPS_root/issues/3) | اکنون، پس از جداسازی worktree |
-| 2 | Runtime evidence slice EN/DE | issue جدا ایجاد شود | merge شدن #3 |
+| 2 | Runtime evidence slice EN/DE | [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) | merge شدن #3؛ در حال انجام |
 | 3 | Measurement contracts و local export | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G1 |
 | 4 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) | G2 |
 | 5 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) | #6 و consent |
@@ -400,8 +419,9 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## اقدام بعدی واحد
 
-**فقط review و merge فاز 0 را کامل کنید:** Draft PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11)
-را بازبینی و merge کنید. سپس PR آلمانی [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13)
-را روی base نهایی بازبینی کنید و یک issue مستقل برای Runtime Evidence Slice
-کامل انگلیسی/آلمانی باز کنید. تا عبور آن slice، AI، دیتاست runtime و rollout
+**فقط Issue [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) را کامل کنید:**
+برای یک واحد B1 در هر زبان، writing و speaking دارای audio را از content تا
+ledger و export در E2E اثبات کنید؛ re-record باید شواهد قبلی را نامعتبر کند،
+provider unavailable نباید موفقیت بسازد و delayed recall / novel transfer باید
+eventهای جدا داشته باشند. تا عبور کامل G1، AI، ingestion دیتاست و rollout
 یادگیری متوقف می‌مانند.

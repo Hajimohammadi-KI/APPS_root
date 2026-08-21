@@ -148,6 +148,41 @@ export type LearningDomainEvent =
         readonly verificationStatus: EvidenceVerificationStatus;
         readonly masteryEligible: boolean;
       };
+    }
+  | {
+      readonly schemaVersion: typeof LEARNING_SCHEMA_VERSION;
+      readonly id: string;
+      readonly type: "learning.evidence.invalidated.v1";
+      readonly occurredAt: string;
+      readonly payload: {
+        readonly evidenceId: string;
+        readonly responseId: string;
+        readonly contentUnitId: string;
+        readonly reason: "superseded-by-rerecord";
+        readonly supersedingResponseId: string;
+      };
+    }
+  | {
+      readonly schemaVersion: typeof LEARNING_SCHEMA_VERSION;
+      readonly id: string;
+      readonly type: "learning.delayed-recall.recorded.v1";
+      readonly occurredAt: string;
+      readonly payload: {
+        readonly evidenceId: string;
+        readonly responseId: string;
+        readonly contentUnitId: string;
+      };
+    }
+  | {
+      readonly schemaVersion: typeof LEARNING_SCHEMA_VERSION;
+      readonly id: string;
+      readonly type: "learning.novel-transfer.recorded.v1";
+      readonly occurredAt: string;
+      readonly payload: {
+        readonly evidenceId: string;
+        readonly responseId: string;
+        readonly contentUnitId: string;
+      };
     };
 
 export interface LearningEvidenceBundle {
@@ -181,6 +216,12 @@ export interface AttemptVerticalSliceInput {
   readonly audioReferenceId?: string;
   readonly fromDueReview?: boolean;
   readonly sourceId?: string;
+}
+
+export interface EvidenceInvalidationInput {
+  readonly evidenceId: string;
+  readonly occurredAt: string;
+  readonly supersedingResponseId: string;
 }
 
 export interface LearningEvidenceLedger {
@@ -225,6 +266,12 @@ export const LEARNING_EVIDENCE_STORAGE_KEY =
   "automaticity:learning-evidence:v1" as const;
 
 export const DAILY_SESSION_OPTIONS = [15, 30, 45] as const;
+
+export function normalizeDailySessionMinutes(value: number): DailySessionMinutes {
+  if (value >= 45) return 45;
+  if (value >= 30) return 30;
+  return 15;
+}
 
 const DAILY_AUTOMATICITY_MINUTES: Record<
   DailySessionMinutes,
@@ -401,7 +448,7 @@ export function buildAttemptVerticalSlice(
     // A single route attempt is evidence, never proof of automaticity.
     automaticityClaim: "insufficient-longitudinal-evidence",
   };
-  const events: readonly LearningDomainEvent[] = [
+  const events: LearningDomainEvent[] = [
     {
       schemaVersion: LEARNING_SCHEMA_VERSION,
       id: `${input.attemptId}:response-submitted`,
@@ -429,6 +476,25 @@ export function buildAttemptVerticalSlice(
       },
     },
   ];
+
+  if (input.fromDueReview === true) {
+    events.push({
+      schemaVersion: LEARNING_SCHEMA_VERSION,
+      id: `${input.attemptId}:delayed-recall-recorded`,
+      type: "learning.delayed-recall.recorded.v1",
+      occurredAt: input.occurredAt,
+      payload: { evidenceId, responseId, contentUnitId },
+    });
+  }
+  if (input.mode === "transfer" && input.fromDueReview === true) {
+    events.push({
+      schemaVersion: LEARNING_SCHEMA_VERSION,
+      id: `${input.attemptId}:novel-transfer-recorded`,
+      type: "learning.novel-transfer.recorded.v1",
+      occurredAt: input.occurredAt,
+      payload: { evidenceId, responseId, contentUnitId },
+    });
+  }
 
   return { contentUnit, dailyPlan, response, evidence, events };
 }
@@ -496,6 +562,47 @@ export function appendLearningEvidenceBundleToStorage(
   );
   storage.setItem(key, JSON.stringify(next));
   return next;
+}
+
+export function appendEvidenceInvalidationToStorage(
+  storage: KeyValueStorage,
+  input: EvidenceInvalidationInput,
+  key = LEARNING_EVIDENCE_STORAGE_KEY,
+): LearningEvidenceLedger {
+  const current = readLearningEvidenceLedger(storage, key);
+  const evidence = current.evidence.find((row) => row.id === input.evidenceId);
+  if (!evidence || !isEvidenceActive(current, input.evidenceId)) return current;
+
+  const event: LearningDomainEvent = {
+    schemaVersion: LEARNING_SCHEMA_VERSION,
+    id: `${input.evidenceId}:invalidated:${input.supersedingResponseId}`,
+    type: "learning.evidence.invalidated.v1",
+    occurredAt: input.occurredAt,
+    payload: {
+      evidenceId: evidence.id,
+      responseId: evidence.responseId,
+      contentUnitId: evidence.contentUnitId,
+      reason: "superseded-by-rerecord",
+      supersedingResponseId: input.supersedingResponseId,
+    },
+  };
+  const next: LearningEvidenceLedger = {
+    ...current,
+    events: upsertById(current.events, event, 2_000),
+  };
+  storage.setItem(key, JSON.stringify(next));
+  return next;
+}
+
+export function isEvidenceActive(
+  ledger: LearningEvidenceLedger,
+  evidenceId: string,
+): boolean {
+  return !ledger.events.some(
+    (event) =>
+      event.type === "learning.evidence.invalidated.v1" &&
+      event.payload.evidenceId === evidenceId,
+  );
 }
 
 function upsertById<T extends { readonly id: string }>(

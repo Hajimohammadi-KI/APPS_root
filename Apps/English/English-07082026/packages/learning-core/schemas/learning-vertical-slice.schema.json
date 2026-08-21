@@ -151,7 +151,10 @@
         "type": {
           "enum": [
             "learning.response.submitted.v1",
-            "learning.evidence.recorded.v1"
+            "learning.evidence.recorded.v1",
+            "learning.evidence.invalidated.v1",
+            "learning.delayed-recall.recorded.v1",
+            "learning.novel-transfer.recorded.v1"
           ]
         },
         "occurredAt": { "type": "string", "format": "date-time" },

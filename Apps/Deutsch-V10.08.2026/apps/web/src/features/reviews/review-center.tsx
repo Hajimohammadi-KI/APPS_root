@@ -19,6 +19,12 @@ import {
   REVIEW_INTERVAL_DAYS,
   type MasteryMode,
 } from "@grammar/domain";
+import {
+  appendLearningEvidenceBundleToStorage,
+  buildAttemptVerticalSlice,
+  normalizeDailySessionMinutes,
+  type CefrLevel,
+} from "@automaticity/learning-core";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -148,7 +154,37 @@ export function ReviewCenter() {
           ? "repair"
           : selected.reviewMode === "timed"
             ? "recognition"
-            : "writing";
+            : selected.reviewMode === "mixed"
+              ? "transfer"
+              : "writing";
+      const occurredAt = new Date().toISOString();
+      appendLearningEvidenceBundleToStorage(
+        window.localStorage,
+        buildAttemptVerticalSlice({
+          attemptId: crypto.randomUUID(),
+          occurredAt,
+          language: "de",
+          cefrLevel: grammar.level as CefrLevel,
+          contentVersion: `20.8.23-${grammar.level.toLowerCase()}-runtime`,
+          topic: selected.topic,
+          targetForm: grammar.rule,
+          prompt: `Übertrage „${selected.topic}“ ohne Nachschlagen in einen neuen Kontext.`,
+          mode,
+          inputText: answer.trim(),
+          correctedText: result.corrected,
+          targetHit: exact && result.targetHit,
+          accuracyScore: exact ? 100 : 40,
+          attemptVerified: true,
+          assessedBy: state.learner.allowOnlineAI
+            ? "online"
+            : "deterministic",
+          sessionMinutes: normalizeDailySessionMinutes(
+            state.settings.dailyStudyMinutes,
+          ),
+          fromDueReview: true,
+          sourceId: "deutsch-authored-grammar-curriculum-v20",
+        }),
+      );
       recordAttempt({
         topic: selected.topic,
         mode,

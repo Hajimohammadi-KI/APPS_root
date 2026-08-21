@@ -13,6 +13,9 @@ export interface ConversationTopic {
   readonly topic: string;
   readonly task: string;
   readonly goal: string;
+  readonly targetForm: string;
+  readonly contentVersion: string;
+  readonly sourceId: string;
 }
 
 const levels = new Set<CefrLevel>(["A1", "A2", "B1", "B2", "C1", "C2"]);
@@ -32,6 +35,12 @@ export const conversationTopics: readonly ConversationTopic[] = curriculumTopics
     topic: topic.topic,
     task: topic.task,
     goal: `Complete this ${topic.level} can-do task independently and use the target language accurately: ${topic.targetGrammar}.`,
+    targetForm:
+      topic.targetGrammar === topic.level
+        ? `${topic.level} ${topic.skill} can-do production`
+        : topic.targetGrammar,
+    contentVersion: `27.3.13-${topic.level.toLowerCase()}-runtime`,
+    sourceId: "english-authored-conversation-curriculum-v27",
   };
 });
 

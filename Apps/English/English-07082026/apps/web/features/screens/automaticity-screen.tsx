@@ -14,6 +14,12 @@ import {
   Volume2,
 } from "lucide-react";
 import { grammarUnits, type GrammarUnit } from "@grammar/content";
+import {
+  appendLearningEvidenceBundleToStorage,
+  buildAttemptVerticalSlice,
+  normalizeDailySessionMinutes,
+  type CefrLevel,
+} from "@automaticity/learning-core";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -209,6 +215,13 @@ export function AutomaticityScreen({
     grammarUnits.find((unit) => unit.level === selectedLevel) ??
     defaultGrammar;
   const topic = grammar.title;
+  const dueReview = state.reviews.find(
+    (review) =>
+      review.status === "pending" &&
+      review.sourceType === "grammar_topic" &&
+      review.sourceId === topic &&
+      review.dueAt <= Date.now(),
+  );
   const key = lessonKey(grammar);
   const exercises = lessonExercises(grammar);
   const modelText = lessonModel(grammar);
@@ -218,6 +231,9 @@ export function AutomaticityScreen({
   const [journal, setJournal] = React.useState("");
   const [transcript, setTranscript] = React.useState("");
   const [journalAnalysis, setJournalAnalysis] =
+    React.useState<AutomaticityAnalysis | null>(null);
+  const [delayedTransfer, setDelayedTransfer] = React.useState("");
+  const [delayedTransferAnalysis, setDelayedTransferAnalysis] =
     React.useState<AutomaticityAnalysis | null>(null);
   const [speechAnalysis, setSpeechAnalysis] =
     React.useState<AutomaticityAnalysis | null>(null);
@@ -435,6 +451,7 @@ export function AutomaticityScreen({
 
   async function saveWriting() {
     const analysis = await analyzeLessonOutput(journal, 4);
+    const occurredAt = new Date().toISOString();
     setJournalAnalysis(analysis);
     writePlan(`${key}:journal`, journal);
     recordAttempt({
@@ -449,12 +466,93 @@ export function AutomaticityScreen({
       passed: analysis.targetHit,
       verified: false,
     });
+    appendLearningEvidenceBundleToStorage(
+      window.localStorage,
+      buildAttemptVerticalSlice({
+        attemptId: crypto.randomUUID(),
+        occurredAt,
+        language: "en",
+        cefrLevel: grammar.level as CefrLevel,
+        contentVersion: `27.3.13-${grammar.level.toLowerCase()}-runtime`,
+        topic,
+        targetForm: grammar.rule,
+        prompt: `Write four original sentences using ${topic}.`,
+        mode: "writing",
+        inputText: journal,
+        correctedText: journal,
+        targetHit: analysis.targetHit,
+        accuracyScore: analysis.score,
+        attemptVerified: true,
+        assessedBy: "deterministic",
+        sessionMinutes: normalizeDailySessionMinutes(missionMinutes),
+        sourceId: "english-authored-grammar-curriculum-v27",
+      }),
+    );
     addIssuesToErrorWorkshop(analysis, journal);
     if (analysis.targetHit) writePlan(`${key}:writing`, "done");
     setMessage(
       analysis.targetHit
         ? `Journal saved. You have created real ${topic} output.`
         : `Draft saved. Use the feedback to produce complete, accurate ${topic} sentences.`,
+    );
+  }
+
+  async function saveDelayedTransfer() {
+    if (!dueReview) {
+      setMessage("No delayed review is due for this lesson yet.");
+      return;
+    }
+    const analysis = await analyzeLessonOutput(delayedTransfer, 4);
+    const occurredAt = new Date().toISOString();
+    setDelayedTransferAnalysis(analysis);
+    appendLearningEvidenceBundleToStorage(
+      window.localStorage,
+      buildAttemptVerticalSlice({
+        attemptId: crypto.randomUUID(),
+        occurredAt,
+        language: "en",
+        cefrLevel: grammar.level as CefrLevel,
+        contentVersion: `27.3.13-${grammar.level.toLowerCase()}-runtime`,
+        topic,
+        targetForm: grammar.rule,
+        prompt: `Recall ${topic} after a delay and transfer it to a new context.`,
+        mode: "transfer",
+        inputText: delayedTransfer,
+        correctedText: delayedTransfer,
+        targetHit: analysis.targetHit,
+        accuracyScore: analysis.score,
+        attemptVerified: true,
+        assessedBy: "deterministic",
+        sessionMinutes: normalizeDailySessionMinutes(missionMinutes),
+        fromDueReview: true,
+        sourceId: "english-authored-grammar-curriculum-v27",
+      }),
+    );
+    recordAttempt({
+      grammarTitle: topic,
+      mode: "transfer",
+      inputText: delayedTransfer,
+      correctedText: delayedTransfer,
+      targetHit: analysis.targetHit,
+      accuracyScore: analysis.score,
+      fluencyScore: 0,
+      latencyMs: null,
+      passed: analysis.targetHit,
+      verified: false,
+    });
+    if (analysis.targetHit) {
+      mutate((draft) => {
+        const review = draft.reviews.find((row) => row.id === dueReview.id);
+        if (!review) return;
+        review.status = "done";
+        review.successStreak += 1;
+        review.stabilityScore = Math.min(100, review.stabilityScore + 20);
+      });
+    }
+    setMessage(
+      analysis.targetHit
+        ? "Delayed recall and novel transfer saved as separate evidence events."
+        : "Transfer saved, but the target form still needs repair before this review can pass.",
     );
   }
 
@@ -716,6 +814,30 @@ export function AutomaticityScreen({
               Recall the same form again in a later review.
             </p>
           </div>
+        </CardContent>
+      </Card> : null}
+
+      {!embedded && dueReview ? <Card className="border-emerald-200" id="delayed-transfer">
+        <CardHeader>
+          <CardTitle>Delayed recall and novel transfer</CardTitle>
+          <CardDescription>
+            Recall {topic} without copying your earlier answer, then use it in
+            a genuinely new situation. These are saved as two separate events.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Textarea
+            aria-label={`Delayed ${topic} transfer`}
+            onChange={(event) => setDelayedTransfer(event.target.value)}
+            placeholder="Write a new context from your life…"
+            value={delayedTransfer}
+          />
+          <Button onClick={() => void saveDelayedTransfer()}>
+            <RotateCcw className="size-4" /> Save delayed transfer
+          </Button>
+          {delayedTransferAnalysis ? (
+            <Feedback analysis={delayedTransferAnalysis} />
+          ) : null}
         </CardContent>
       </Card> : null}
 

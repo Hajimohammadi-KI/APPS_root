@@ -3,6 +3,12 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  appendEvidenceInvalidationToStorage,
+  appendLearningEvidenceBundleToStorage,
+  buildAttemptVerticalSlice,
+  normalizeDailySessionMinutes,
+} from "@automaticity/learning-core";
+import {
   conversationTopics,
   copy,
   speechLocale,
@@ -152,6 +158,8 @@ export default function Home() {
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const audioBlobRef = useRef<Blob | null>(null);
+  const attemptIdRef = useRef<string | null>(null);
+  const savedEvidenceIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -285,6 +293,8 @@ export default function Home() {
     setSeconds(0);
     setMessage(null);
     audioBlobRef.current = null;
+    attemptIdRef.current = null;
+    savedEvidenceIdRef.current = null;
     setHasAudioBlob(false);
     setAudioUrl(null);
     window.speechSynthesis?.cancel();
@@ -366,6 +376,16 @@ export default function Home() {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: true, noiseSuppression: true },
       });
+      const nextAttemptId = crypto.randomUUID();
+      if (savedEvidenceIdRef.current) {
+        appendEvidenceInvalidationToStorage(window.localStorage, {
+          evidenceId: savedEvidenceIdRef.current,
+          occurredAt: new Date().toISOString(),
+          supersedingResponseId: `${nextAttemptId}:response`,
+        });
+      }
+      attemptIdRef.current = nextAttemptId;
+      savedEvidenceIdRef.current = null;
       streamRef.current = stream;
       chunksRef.current = [];
       audioBlobRef.current = null;
@@ -380,8 +400,8 @@ export default function Home() {
           type: recorder.mimeType || "audio/webm",
         });
         audioBlobRef.current = blob;
-        setHasAudioBlob(true);
-        setAudioUrl(URL.createObjectURL(blob));
+        setHasAudioBlob(blob.size > 0);
+        setAudioUrl(blob.size > 0 ? URL.createObjectURL(blob) : null);
         stream.getTracks().forEach((track) => track.stop());
         setRecordingState("idle");
         setActive(2);
@@ -510,11 +530,12 @@ export default function Home() {
       );
       return;
     }
-    const id = crypto.randomUUID();
+    const id = attemptIdRef.current ?? crypto.randomUUID();
+    const occurredAt = new Date().toISOString();
     try {
       await saveConversationSession({
         id,
-        createdAt: new Date().toISOString(),
+        createdAt: occurredAt,
         language,
         topicId: selected.id,
         transcript: evaluation.original,
@@ -527,6 +548,33 @@ export default function Home() {
         issues: evaluation.issues,
         audio: audioBlobRef.current,
       });
+      const bundle = buildAttemptVerticalSlice({
+        attemptId: id,
+        occurredAt,
+        language,
+        cefrLevel: selected.level,
+        contentVersion: selected.contentVersion,
+        topic: selected.topic,
+        targetForm: selected.targetForm,
+        prompt: selected.task,
+        mode: "speaking",
+        inputText: evaluation.original,
+        correctedText: evaluation.corrected,
+        targetHit: evaluation.issues.length === 0,
+        accuracyScore: Math.max(0, 100 - evaluation.issues.length * 10),
+        fluencyScore: Math.min(100, wordsPerMinute),
+        latencyMs: seconds * 1_000,
+        attemptVerified: true,
+        assessedBy: "online",
+        sessionMinutes: normalizeDailySessionMinutes(
+          state.settings.dailyStudyMinutes,
+        ),
+        audioCaptured: audioBlobRef.current.size > 0,
+        audioReferenceId: id,
+        sourceId: selected.sourceId,
+      });
+      appendLearningEvidenceBundleToStorage(window.localStorage, bundle);
+      savedEvidenceIdRef.current = bundle.evidence.id;
       setSavedId(id);
       setMessage(text.saved);
       finishDailyActivity();

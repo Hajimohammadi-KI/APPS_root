@@ -10,6 +10,7 @@ import {
   Smartphone,
 } from "lucide-react";
 
+import { buildLearningDataExport } from "@automaticity/learning-core";
 import type { LearnerSettings } from "@grammar/domain";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,15 @@ export function SettingsScreen() {
   }
 
   function exportData() {
-    const blob = new Blob([JSON.stringify(state, null, 2)], {
+    // Export the normalized evidence ledger alongside the legacy learner state.
+    // Otherwise versioned responses, evidence, and events are silently omitted.
+    const exportEnvelope = buildLearningDataExport({
+      language: "de",
+      exportedAt: new Date().toISOString(),
+      learnerState: state,
+      storage: window.localStorage,
+    });
+    const blob = new Blob([JSON.stringify(exportEnvelope, null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);

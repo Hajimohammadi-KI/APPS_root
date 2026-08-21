@@ -12,6 +12,7 @@
     "test:e2e": "bun ../../scripts/run-playwright.ts"
   },
   "dependencies": {
+    "@automaticity/learning-core": "workspace:*",
     "@base-ui/react": "^1.6.0",
     "@grammar/content": "workspace:*",
     "@grammar/contracts": "workspace:*",

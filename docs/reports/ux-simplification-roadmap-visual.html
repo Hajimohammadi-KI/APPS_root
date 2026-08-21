@@ -2,31 +2,33 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
   :root {
-    --bg: #eef1f4;
+    --bg: #f7f5fb;
     --surface: #ffffff;
-    --surface-2: #f5f7f9;
-    --line: #dbe2e8;
-    --line-strong: #c1cbd3;
-    --ink: #17212b;
-    --ink-dim: #56636f;
-    --ink-faint: #8894a0;
-    --accent: #2b4c7e;
-    --accent-strong: #1c3457;
-    --accent-soft: #e3eaf3;
-    --track-en: #a8641f;
-    --track-en-soft: #f6ead8;
-    --track-de: #17715f;
-    --track-de-soft: #dcf1ea;
-    --done: #1f7a6c;
-    --done-soft: #e1f3ef;
-    --active: #2b4c7e;
-    --active-soft: #e3eaf3;
+    --surface-2: #f8f7fc;
+    --line: #e4dff1;
+    --line-strong: #cfc5e6;
+    --ink: #171331;
+    --ink-dim: #5f5975;
+    --ink-faint: #8e879e;
+    --accent: #5b36c7;
+    --accent-strong: #3a1b91;
+    --accent-soft: #eee9ff;
+    --track-en: #5b36c7;
+    --track-en-soft: #eee9ff;
+    --track-de: #23745f;
+    --track-de-soft: #e1f4ed;
+    --done: #16816a;
+    --done-soft: #e3f5ef;
+    --active: #5b36c7;
+    --active-soft: #eee9ff;
     --pending: #7c8792;
     --pending-soft: #eef1f3;
     --blocked: #ad2b21;
     --blocked-soft: #fbeae8;
-    --shadow: 0 1px 2px rgba(23, 33, 43, 0.06), 0 10px 28px rgba(23, 33, 43, 0.07);
-    --radius: 14px;
+    --warning: #a45618;
+    --warning-soft: #fff4e7;
+    --shadow: 0 1px 2px rgba(52, 27, 110, 0.04), 0 14px 34px rgba(52, 27, 110, 0.08);
+    --radius: 18px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -39,21 +41,23 @@
       --ink: #e8edf2;
       --ink-dim: #a2aebb;
       --ink-faint: #71808f;
-      --accent: #7fa5d6;
-      --accent-strong: #9dbce4;
-      --accent-soft: #203450;
+      --accent: #b59cff;
+      --accent-strong: #d4c7ff;
+      --accent-soft: #302456;
       --track-en: #d69a52;
       --track-en-soft: #3a2c18;
       --track-de: #4fc0a4;
       --track-de-soft: #123329;
       --done: #4fc0a4;
       --done-soft: #123329;
-      --active: #7fa5d6;
-      --active-soft: #203450;
+      --active: #b59cff;
+      --active-soft: #302456;
       --pending: #8894a0;
       --pending-soft: #232f3b;
       --blocked: #e5766a;
       --blocked-soft: #3a1e1a;
+      --warning: #f0b268;
+      --warning-soft: #3d2a17;
       --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.32);
     }
   }
@@ -67,21 +71,23 @@
     --ink: #e8edf2;
     --ink-dim: #a2aebb;
     --ink-faint: #71808f;
-    --accent: #7fa5d6;
-    --accent-strong: #9dbce4;
-    --accent-soft: #203450;
+    --accent: #b59cff;
+    --accent-strong: #d4c7ff;
+    --accent-soft: #302456;
     --track-en: #d69a52;
     --track-en-soft: #3a2c18;
     --track-de: #4fc0a4;
     --track-de-soft: #123329;
     --done: #4fc0a4;
     --done-soft: #123329;
-    --active: #7fa5d6;
-    --active-soft: #203450;
+    --active: #b59cff;
+    --active-soft: #302456;
     --pending: #8894a0;
     --pending-soft: #232f3b;
     --blocked: #e5766a;
     --blocked-soft: #3a1e1a;
+    --warning: #f0b268;
+    --warning-soft: #3d2a17;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.32);
   }
 
@@ -104,7 +110,7 @@
   }
 
   .wrap {
-    max-width: 980px;
+    max-width: 1120px;
     margin: 0 auto;
     padding: 40px 24px 80px;
   }
@@ -201,6 +207,9 @@
   .tracker {
     display: flex;
     overflow-x: auto;
+    direction: ltr;
+    max-width: 100%;
+    contain: inline-size;
     gap: 0;
     padding: 4px 2px 18px;
     margin-bottom: 8px;
@@ -215,6 +224,7 @@
     text-align: center;
     position: relative;
     padding-top: 30px;
+    text-decoration: none;
   }
 
   .tnode::before {
@@ -248,6 +258,8 @@
     font-size: 12px;
     color: var(--ink-dim);
     line-height: 1.4;
+    direction: rtl;
+    unicode-bidi: plaintext;
   }
 
   .tnode .tphase {
@@ -268,6 +280,57 @@
     padding: 22px 24px;
     margin-bottom: 16px;
   }
+
+  details.phase {
+    padding: 0;
+    overflow: clip;
+  }
+
+  details.phase > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 20px 24px;
+    outline: none;
+  }
+
+  details.phase > summary::-webkit-details-marker { display: none; }
+
+  details.phase > summary:focus-visible {
+    box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+
+  details.phase[open] > summary {
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(135deg, var(--surface), var(--accent-soft));
+  }
+
+  details.phase.priority {
+    border-color: color-mix(in srgb, var(--accent) 48%, var(--line));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent), var(--shadow);
+  }
+
+  .phase-summary-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-faint);
+    font-size: 12.5px;
+    margin-top: 7px;
+  }
+
+  .chevron {
+    width: 24px;
+    height: 24px;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--accent);
+    font-family: "IBM Plex Mono", monospace;
+    transition: transform 160ms ease;
+  }
+
+  details[open] .chevron { transform: rotate(180deg); }
 
   .phase-head {
     display: flex;
@@ -326,7 +389,7 @@
   }
 
   .phase-body {
-    margin-top: 12px;
+    padding: 20px 24px 24px;
     color: var(--ink-dim);
     font-size: 14.5px;
   }
@@ -334,8 +397,103 @@
   .phase-body p { margin: 0 0 10px; }
   .phase-body p:last-child { margin-bottom: 0; }
 
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .info-block {
+    min-width: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    padding: 15px 16px;
+  }
+
+  .info-block.full { grid-column: 1 / -1; }
+
+  .info-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--ink);
+    font-size: 12.5px;
+    font-weight: 800;
+    margin-bottom: 7px;
+  }
+
+  .info-label::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 3px;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  .info-block p,
+  .info-block ul,
+  .info-block ol { margin: 0; }
+
+  .info-block ul,
+  .info-block ol { padding-right: 20px; }
+
+  .info-block li + li { margin-top: 5px; }
+
+  .north-star {
+    margin: 14px 0;
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+    background: linear-gradient(135deg, var(--accent-soft), var(--surface));
+    border-radius: 14px;
+    padding: 16px 18px;
+    color: var(--accent-strong);
+    font-weight: 700;
+  }
+
+  .notice {
+    border: 1px solid color-mix(in srgb, var(--warning) 32%, var(--line));
+    background: var(--warning-soft);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: var(--ink-dim);
+    margin-top: 12px;
+  }
+
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 2px 0 24px;
+  }
+
+  .principle {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 6px 20px rgba(52, 27, 110, 0.05);
+  }
+
+  .principle strong {
+    display: block;
+    color: var(--ink);
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+
+  .principle span { color: var(--ink-dim); font-size: 12.5px; }
+
+  [dir="ltr"] {
+    text-align: left;
+    unicode-bidi: isolate;
+  }
+
   .table-scroll {
     overflow-x: auto;
+    direction: ltr;
+    max-width: 100%;
+    contain: inline-size;
     margin-top: 12px;
     border: 1px solid var(--line);
     border-radius: 10px;
@@ -344,6 +502,7 @@
   table {
     border-collapse: collapse;
     width: 100%;
+    direction: rtl;
     font-size: 13.5px;
     min-width: 480px;
   }
@@ -430,6 +589,7 @@
   .hist-entry {
     display: flex;
     gap: 12px;
+    align-items: flex-start;
     font-size: 13.5px;
     color: var(--ink-dim);
     padding: 6px 0;
@@ -441,6 +601,8 @@
     color: var(--ink-faint);
     flex: 0 0 auto;
   }
+
+  .hist-entry > span:last-child { min-width: 0; overflow-wrap: anywhere; }
 
   .src-note {
     font-size: 12.5px;
@@ -458,6 +620,36 @@
     padding: 1px 6px;
     font-size: 12.5px;
     color: var(--accent-strong);
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  @media (max-width: 820px) {
+    .wrap { padding: 24px 14px 56px; }
+    .principles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .phase-grid { grid-template-columns: 1fr; }
+    .info-block.full { grid-column: auto; }
+    details.phase > summary,
+    .phase-body { padding-right: 18px; padding-left: 18px; }
+  }
+
+  @media (max-width: 520px) {
+    .principles { grid-template-columns: 1fr; }
+    .phase-head { align-items: stretch; }
+    .chip { align-self: flex-start; }
+    .tracker { margin-inline: 0; padding-inline: 0; }
+    table { min-width: 100%; table-layout: fixed; }
+    th, td { padding: 8px 7px; white-space: normal; overflow-wrap: anywhere; }
+    .hist-entry { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .progress-row { align-items: stretch; flex-direction: column; gap: 8px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
   }
 </style>
 
@@ -466,10 +658,10 @@
     <div class="eyebrow">UX SIMPLIFICATION ROADMAP · 2026-08-20</div>
     <h1>رودمپ ساده‌سازی تجربهٔ کاربری</h1>
     <p class="lede">
-      برای اپ‌های آموزش انگلیسی و آلمانی. مشکل اصلی رنگ یا زیبایی نیست —
-      تعداد انتخاب‌ها، تکرار تصمیم‌ها و چند نقطهٔ شروع موازی است. این سند
-      زنده است: هر تغییر مرتبط در کد، وضعیت فاز مربوطه را همین‌جا به‌روز
-      می‌کند.
+      برای اپ‌های آموزش انگلیسی و آلمانی. این نسخه علاوه بر سادگی رابط،
+      اثر یادگیری را هم محور قرار می‌دهد: تولید واقعی، میانجی‌گری، کیفیت
+      محتوا، پایداری استفاده و سنجش مستقل. کد نمونه یا برآورد پژوهشی تا
+      زمان پیاده‌سازی و آزمون، «قابلیت تأییدشده» محسوب نمی‌شود.
     </p>
     <div class="app-tags">
       <span class="app-tag en"><span class="dot"></span>English-07082026</span>
@@ -477,11 +669,18 @@
     </div>
     <div class="progress-row">
       <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-      <div class="progress-label" id="progress-label">1 / 10 فاز انجام‌شده</div>
+      <div class="progress-label" id="progress-label">4 / 10 فاز انجام‌شده</div>
     </div>
   </header>
 
   <nav class="tracker" id="tracker" aria-label="نقشهٔ فازها"></nav>
+
+  <section class="principles" aria-label="اصول تصمیم‌گیری نقشه‌راه">
+    <div class="principle"><strong>اول شواهد، بعد AI</strong><span>Rule Engine و قرارداد داده پیش از مدل.</span></div>
+    <div class="principle"><strong>محتوای گزینش‌شده</strong><span>دیتاست خام وارد درس یا Installer نمی‌شود.</span></div>
+    <div class="principle"><strong>تولید، نه فقط تشخیص</strong><span>Mediation و Forced Output در هر دو زبان.</span></div>
+    <div class="principle"><strong>اثر واقعی</strong><span>Retention و Transfer به‌جای XP و تعداد کلیک.</span></div>
+  </section>
 
   <main id="phases"></main>
 
@@ -503,13 +702,32 @@
       <span class="hist-date">2026-08-21 00:20</span>
       <span>فاز ۱ کامل شد: Today کنار Home دائمی، ۴ گروه منو ساده‌نام‌گذاری شد (هر دو اپ). فاز ۲ تصحیح شد — تخصیص per-بخش از قبل کامل پیاده بود. فاز ۳ کامل شد: glossary آلمانی با Nachweise/Beherrschung/Abdeckung/Genauigkeit تکمیل شد. همه با typecheck+test تأیید و push شدند.</span>
     </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-20</span>
+      <span>رودمپ بر اساس نقد پداگوژیک بازطراحی شد: Foundation Gate به ابتدا منتقل شد، Mediation و Forced Output اضافه شدند، Content QA و Adherence مستقل شدند و سنجش واقعی بر retention/transfer متمرکز شد. فازهای جدید قابلیت پیاده‌شده محسوب نمی‌شوند.</span>
+    </div>
     <div class="src-note">
-      منبع متنی همراه: <code class="path">docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md</code>
+      منبع متنی همراه: <code class="path">docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md</code><br>
+      منبع: نقد پداگوژیک و محتوایی ارائه‌شده توسط کاربر
     </div>
   </footer>
 </div>
 
 <script>
+  const infoBlock = (label, content, full = false) => `
+    <section class="info-block${full ? " full" : ""}">
+      <div class="info-label">${label}</div>
+      ${content}
+    </section>`;
+
+  const structuredPhase = ({ effect, technical, dependency, acceptance, extra = "" }) => `
+    <div class="phase-grid">
+      ${infoBlock("اثر برای زبان‌آموز", effect)}
+      ${infoBlock("وابستگی", dependency)}
+      ${infoBlock("کار فنی", technical, true)}
+      ${infoBlock("معیار پذیرش", acceptance, true)}
+    </div>${extra}`;
+
   const phases = [
     {
       id: "p0", phase: "فاز ۰", title: "نقد پایه", status: "done", when: "۲۰۲۶-۰۸-۲۰ — انجام‌شده",
@@ -562,6 +780,9 @@
       بین Grammar/Studio/Review/Mixed تصمیم نمی‌گیرد. نسخهٔ ۴۵ دقیقه
       فقط کشیده‌شدهٔ نسخهٔ ۱۵ دقیقه نیست — گفتار طولانی‌تر، نوشتن مستقل، دو زمینهٔ جدید. ارتقای سطح بر پایهٔ
       کیفیت شواهد باشد نه تعداد دقیقه.</p>
+      <div class="notice"><strong>تصحیح پداگوژیک:</strong> کامل‌بودن کد، اثرگذاری را ثابت نمی‌کند. در برنامهٔ
+      ۱۵ دقیقه‌ای فقط ۴ دقیقه به Conversation Studio می‌رسد؛ این برای usable شدن مفید است اما برای ادعای
+      automaticity کافی و مستقل اعتبارسنجی نشده است. Forced Output Booster در فاز ۶ این شکاف را هدف می‌گیرد.</div>
       <div class="table-scroll"><table>
         <thead><tr><th>بخش روزانه</th><th class="num">۱۵ دقیقه</th><th class="num">۳۰ دقیقه</th><th class="num">۴۵ دقیقه</th></tr></thead>
         <tbody>
@@ -581,53 +802,80 @@
       («Nachweise») در glossary نبود؛ اضافه شد به‌همراه Beherrschung، Abdeckung، Genauigkeit.</p>`,
     },
     {
-      id: "p4", phase: "فاز ۴", title: "schema واحد محتوا", status: "pending", when: "۲ تا ۴ هفته",
-      body: `<p>schema مشترک (zod) برای واحد محتوایی: سطح CEFR، مثال، صوت، ترجمه،
-      recognition/writing/speaking/repair/transfer. انتقال باقیماندهٔ محتوای انگلیسی از آرایهٔ TS دستی
-      (<code class="path">packages/content/src/authored/*.ts</code>) به همان الگوی JSON اعتبارسنجی‌شده
-      که آلمانی تا حدی دارد (<code class="path">data/grammar.json</code>).</p>`,
+      id: "p4", phase: "فاز ۴", title: "Foundation Gate مشترک", status: "pending", when: "۱ تا ۲ هفته",
+      summary: "schema، evidence، event و telemetry پیش از ادغام runtime دیتاست و AI",
+      body: structuredPhase({
+        effect: `<p>رفتار پایهٔ هر دو اپ یکسان می‌شود و محتوا یا شواهد میان صفحه‌ها گم و متناقض نمی‌ماند.</p>`,
+        dependency: `<p>دروازهٔ اجباری برای <strong>ادغام runtime</strong> و تصمیم‌های یادگیری در فازهای ۵ تا ۹. بررسی read-only منبع و مجوز، ساخت manifest/schema و seed آزمایشیِ کوچک و قابل‌برگشت می‌تواند موازی انجام شود؛ اما دانلود حجیم، آموزش یا fine-tune، ingestion در محصول، ارسال دادهٔ زبان‌آموز به provider و هر تصمیم mastery مبتنی بر AI تا عبور vertical slice ممنوع است.</p>`,
+        technical: `<ul><li><code class="path">packages/learning-core</code> حداقلی، نه مهاجرت بزرگ و یک‌باره</li><li><bdi dir="ltr">ContentUnit + EvidenceRecord + DomainEvents</bdi></li><li>provenance، مجوز، نسخه و وضعیت بازبینی</li><li>اعتبارسنجی Zod/JSON در CI و قرارداد telemetry</li><li>Accessibility baseline در Definition of Done هر PR</li></ul>`,
+        acceptance: `<p>یک واحد B1 انگلیسی و یک واحد B1 آلمانی از مسیر کامل
+        <bdi dir="ltr">content → daily plan → response → evidence → analytics event</bdi>
+        با یک schema و بدون مدل موازی عبور کنند.</p>`
+      }),
     },
     {
-      id: "p5", phase: "فاز ۵", title: "ادغام دیتاست‌های باز", status: "pending", when: "۱ تا ۲ ماه",
-      body: `<p>کاتالوگ فعلی فقط metadata است، دانلود/آموزش واقعی انجام نشده. به‌عنوان seed ادغام شود،
-      نه در Installer:</p>
-      <div class="table-scroll"><table>
-        <thead><tr><th>دیتاست</th><th>کاربرد</th><th>محدودیت</th></tr></thead>
-        <tbody>
-          <tr><td>Tatoeba CC0</td><td>جملهٔ کوتاه دوزبانه — Reading/Transformation</td><td>صوت هر فایل مجوز جدا دارد</td></tr>
-          <tr><td>Mozilla Common Voice</td><td>تنوع گویندگان برای ارزیابی ASR</td><td>معیار تلفظ زبان‌آموز نیست</td></tr>
-          <tr><td>MERLIN</td><td>خطای واقعی زبان‌آموز آلمانی + سطح CEFR</td><td>مجوز CC BY-SA</td></tr>
-          <tr><td>UD English EWT / German GSD</td><td>نقش کلمه، حالت، ترتیب کلمات</td><td>برچسب CEFR ندارد</td></tr>
-          <tr><td>FLEURS</td><td>Benchmark مقایسه‌ای ASR</td><td>برای محتوای آموزشی مناسب نیست</td></tr>
-          <tr><td>W&amp;I + LOCNESS, C4 200M GEC</td><td>پیش‌آموزش تصحیح خطای نوشتاری</td><td>بررسی مجوز قبل از استفادهٔ تجاری</td></tr>
-        </tbody>
-      </table></div>`,
+      id: "p5", phase: "فاز ۵", title: "کیفیت محتوا و پایلوت دیتاست", status: "pending", when: "۲ تا ۵ هفته",
+      summary: "دادهٔ خام وارد درس یا Installer نمی‌شود",
+      body: structuredPhase({
+        effect: `<p>جمله‌ها طبیعی، سطح‌بندی‌شده و قابل اعتمادند؛ کاربر محتوای خام یا نامناسب نمی‌بیند.</p>`,
+        dependency: `<p>schema، provenance و QA status از فاز ۴.</p>`,
+        technical: `<p>برای هر زبان یک پایلوت کوچک و human-reviewed، نه bulk download:</p>
+          <div class="table-scroll"><table>
+            <thead><tr><th>دیتاست</th><th>کاربرد پایلوت</th><th>تصمیم/محدودیت</th></tr></thead>
+            <tbody>
+              <tr><td dir="ltr">Tatoeba CC0</td><td>Reading / Transformation</td><td>صوت مجوز جدا؛ متن تأییدشده</td></tr>
+              <tr><td dir="ltr">Mozilla Common Voice</td><td>robustness ترنسکریپت</td><td>معیار تلفظ یا درس نیست</td></tr>
+              <tr><td dir="ltr">MERLIN</td><td>خطای واقعی آلمانی + CEFR</td><td dir="ltr">CC BY-SA</td></tr>
+              <tr><td dir="ltr">UD English EWT</td><td>تحلیل نحوی انگلیسی</td><td>CEFR ندارد؛ feature کمکی</td></tr>
+              <tr><td dir="ltr">UD German GSD</td><td>حالت و ترتیب کلمه</td><td>CEFR ندارد؛ feature کمکی</td></tr>
+              <tr><td dir="ltr">FLEURS</td><td>benchmark مقایسه‌ای ASR</td><td>محتوای آموزشی نیست</td></tr>
+              <tr><td dir="ltr">W&amp;I + LOCNESS</td><td>پژوهش GEC</td><td>مجوز تجاری جدا بررسی شود</td></tr>
+              <tr><td dir="ltr">C4 200M GEC</td><td>آزمایش پژوهشی GEC</td><td>از W&amp;I/LOCNESS جداست</td></tr>
+            </tbody>
+          </table></div>`,
+        acceptance: `<p>تمام آیتم‌های پایلوت schema/provenance معتبر داشته باشند؛ ۱۰٪ نمونه‌گیری طبقه‌بندی‌شده با دو داور انجام شود؛ هیچ <bdi dir="ltr">QA-failed</bdi> وارد برنامهٔ روزانه نشود. ICC فقط با دادهٔ واقعی گزارش شود.</p>`
+      }),
     },
     {
-      id: "p6", phase: "فاز ۶", title: "پایپ‌لاین ترکیبی هوش مصنوعی", status: "pending", when: "۱ تا ۲ ماه، موازی با فاز ۵",
-      body: `<p><strong>Rule Engine</strong> برای زمان‌بندی و تصمیم تسلط · <strong>Whisper</strong> فقط برای
-      transcript، نه نمرهٔ تلفظ · <strong>LanguageTool + UD</strong> فقط پیشنهاد، نه جایگزینی خودکار ·
-      <strong>LLM</strong> فقط تولید تمرین/توضیح با خروجی JSON · <strong>FSRS</strong> برای زمان‌بندی مرور ·
-      IndexedDB محلی با صف همگام‌سازی برای PWA آفلاین‌محور.</p>`,
+      id: "p6", phase: "فاز ۶", title: "Mediation و Forced Output", status: "pending", when: "۳ تا ۸ هفته",
+      summary: "پوشش CEFR کامل‌تر و دوز تولید واقعی زیر فشار زمان",
+      body: structuredPhase({
+        effect: `<p>زبان‌آموز علاوه بر گرامر، اطلاعات را خلاصه، بازگو یا توضیح می‌دهد و ساختار هدف را زیر فشار زمانی تولید می‌کند.</p>`,
+        dependency: `<p>محتوای QA-passed فاز ۵ و قرارداد evidence فاز ۴.</p>`,
+        technical: `<ul><li>چهار بُعد CEFR-CV: Reception، Production، Interaction، Mediation</li><li>vertical slice: چهار descriptor در B1، هرکدام guided و independent، برای هر زبان</li><li>Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای در برنامه‌های ۱۵/۳۰/۴۵ دقیقه</li><li>fallback تایپ همیشه موجود؛ ASR فقط transcript و سیگنال قابل اندازه‌گیری</li></ul>`,
+        acceptance: `<p>پاسخ واقعی ذخیره شود و latency نخستین کلمه، استفادهٔ درست از ساختار، self-repair و novel transfer سنجیده شود. اثر Booster تا مطالعهٔ مقایسه‌ای، ادعای اثبات‌شده نیست.</p>`
+      }),
     },
     {
-      id: "p7", phase: "فاز ۷", title: "پکیج مشترک واقعی", status: "pending", when: "بلندمدت",
-      body: `<p>الان English و Deutsch معماری تقریباً یکسان دارند ولی فقط با کپی +
-      <code class="path">check-duplicated-files.mjs</code> سازگار می‌مانند — هر باگ دوبار fix می‌شود.
-      هدف: <code class="path">packages/learning-core</code> واقعی شامل مدل CEFR/automaticity، schema
-      محتوا، منطق وضعیت (به سبک بازسازی امروز Tracker با
-      <code class="path">lib/study-progress.ts</code>) و توکن‌های طراحی مشترک واقعی.</p>`,
+      id: "p7", phase: "فاز ۷", title: "Hybrid Coach و Adherence", status: "pending", when: "۴ تا ۹ هفته",
+      summary: "بازخورد قابل توضیح + مسیر بازگشت پس از افت",
+      body: structuredPhase({
+        effect: `<p>بازخورد روشن می‌گیرد و در روز کم‌انرژی به‌جای ترک کامل، جلسه‌ای کوچک و معنی‌دار دارد.</p>`,
+        dependency: `<p>event contract فاز ۴ و سیگنال‌های گفتار/محتوای معتبر فازهای ۵ و ۶.</p>`,
+        technical: `<ol><li>Rule Engine + FSRS برای زمان‌بندی و تصمیم شواهد</li><li>LanguageTool + قواعد اختصاصی + UD برای پیشنهاد</li><li>ASR فقط transcript</li><li>LLM فقط generation/explanation با خروجی JSON؛ نه mastery</li><li>Implementation Intentions، micro-goal پنج‌دقیقه‌ای، comeback و nudge روز ۳/۷/۱۴ با opt-in</li><li>IndexedDB و صف همگام‌سازی برای PWA آفلاین‌محور</li></ol>`,
+        acceptance: `<p>تصمیم ارتقای سطح deterministic و audit-able باشد؛ خروجی LLM قابل ردکردن و schema-valid باشد؛ نوتیفیکیشن بدون رضایت ارسال نشود؛ conversion نوتیفیکیشن جدا از outcome یادگیری گزارش شود.</p>`
+      }),
     },
     {
-      id: "p8", phase: "فاز ۸", title: "QA تعاملی دسترس‌پذیری", status: "pending", when: "بلندمدت",
-      body: `<p>از روی اسکرین‌شات قابل تأیید نیست: WCAG 2.2، ترتیب فوکوس کیبورد، Screen Reader، عملکرد
-      میکروفون، بازیابی خطا. حداقل برای وب: reflow در عرض ۳۲۰px، فوکوس آشکار، هدف‌های لمسی مناسب.</p>`,
+      id: "p8", phase: "فاز ۸", title: "Shared & Accessible Scale", status: "pending", when: "مستمر پس از vertical slice",
+      summary: "گسترش تدریجی هستهٔ مشترک، نه big-bang rewrite",
+      body: structuredPhase({
+        effect: `<p>English و Deutsch تجربهٔ سازگار دارند و وب در ویندوز، تبلت و اندروید قابل استفاده می‌ماند.</p>`,
+        dependency: `<p>فقط قابلیت‌هایی که در هر دو زبان با vertical slice ثابت شده‌اند مشترک می‌شوند.</p>`,
+        technical: `<ul><li>انتقال تدریجی domain logic و UI primitives به learning-core</li><li>design tokens به‌صورت import، نه دو کپی CSS</li><li>reflow در ۳۲۰px، focus visible، ترتیب کیبورد و touch target حداقل ۴۴×۴۴</li><li>label میکروفون، recovery خطا و Screen Reader</li><li>LTR برای English/Deutsch و RTL برای فارسی</li></ul>`,
+        acceptance: `<p>parity contract هر دو اپ، E2E در سه viewport و آزمون دستی Screen Reader/میکروفون روی سخت‌افزار واقعی. مورد آزمون‌نشده N/A گزارش می‌شود.</p>`
+      }),
     },
     {
-      id: "p9", phase: "فاز ۹", title: "معیارهای موفقیت واقعی", status: "pending", when: "مستمر",
-      body: `<p>جایگزین تعداد کلیک/XP: زمان تا اولین پاسخ گفتاری، بازیابی درست بدون دیدن جواب، توانایی
-      صحبت‌کردن ۴۵ تا ۶۰ ثانیه، اصلاح مستقل خطا، استفاده از همان ساختار بعد از ۱/۳/۷ روز، انتقال به موضوع
-      جدید، نرخ خطای کاذب Grammar/ASR.</p>`,
+      id: "p9", phase: "فاز ۹", title: "Independent Measurement & Beta", status: "pending", when: "مستمر، حداقل ۹۰ روز",
+      summary: "Retention و Transfer به‌جای کلیک و XP",
+      body: structuredPhase({
+        effect: `<p>پیشرفت واقعی از حفظ‌کردن پاسخ یا طولانی‌کردن زمان استفاده جدا می‌شود.</p>`,
+        dependency: `<p>telemetry فاز ۴، محتوای ثابت فاز ۵ و taskهای productive فاز ۶.</p>`,
+        technical: `<div class="north-star">North Star: درصد زبان‌آموزان هفتگی که هفت روز بعد، بدون دیدن جواب، ساختار هدف را در موضوع یا موقعیت تازه به‌درستی در گفتار یا نوشتار به‌کار می‌برند.</div>
+          <ul><li><bdi dir="ltr">time_to_first_valid_speech</bdi></li><li>بازیابی تلاش اول بدون hint/model</li><li>اصلاح مستقل حداکثر در دو تلاش</li><li>retention در روزهای ۱، ۳ و ۷</li><li>novel transfer با موضوع/واژگان/موقعیت تازه</li><li>false-positive rate جدا برای زبان، CEFR، لهجه و دستگاه</li><li>کوهرت‌های ۱۵/۳۰/۴۵ دقیقه جدا؛ زمان بیشتر برابر mastery نیست</li></ul>`,
+        acceptance: `<p>کوهرت بتا با رضایت آگاهانه، baseline، pre/post، retention و export قابل تحلیل. C-test مکمل است و جای productive transfer را نمی‌گیرد. تا پیش از دادهٔ واقعی هیچ درصد موفقیت محصول اعلام نمی‌شود.</p>`
+      }),
     },
   ];
 
@@ -642,29 +890,48 @@
   const phasesEl = document.getElementById("phases");
 
   phases.forEach((p) => {
-    const node = document.createElement("div");
+    const node = document.createElement("a");
     node.className = "tnode " + p.status;
+    node.href = `#${p.id}`;
     node.innerHTML = `<span class="pip"></span><span class="tlabel"><span class="tphase">${p.id}</span>${p.title}</span>`;
     trackerEl.appendChild(node);
 
-    const card = document.createElement("section");
-    card.className = "phase";
+    const card = document.createElement("details");
+    card.className = "phase" + (p.id === "p4" ? " priority" : "");
     card.id = p.id;
+    card.open = p.id === "p4";
     const meta = statusMeta[p.status];
     card.innerHTML = `
-      <div class="phase-head">
-        <div>
-          <div class="phase-title-row">
-            <span class="phase-id">${p.id}</span>
-            <h2>${p.title}</h2>
+      <summary>
+        <div class="phase-head">
+          <div>
+            <div class="phase-title-row">
+              <span class="phase-id">${p.id}</span>
+              <h2>${p.title}</h2>
+            </div>
+            <div class="phase-when">${p.phase} · ${p.when}</div>
+            <div class="phase-summary-line"><span class="chevron" aria-hidden="true">⌄</span>${p.summary || "برای مشاهدهٔ جزئیات باز کنید"}</div>
           </div>
-          <div class="phase-when">${p.phase} · ${p.when}</div>
+          <span class="chip ${meta.chip}"><span class="dot"></span>${meta.label}</span>
         </div>
-        <span class="chip ${meta.chip}"><span class="dot"></span>${meta.label}</span>
-      </div>
+      </summary>
       <div class="phase-body">${p.body}</div>
     `;
     phasesEl.appendChild(card);
+
+    card.addEventListener("toggle", () => {
+      if (!card.open) return;
+      phasesEl.querySelectorAll("details.phase[open]").forEach((other) => {
+        if (other !== card) other.open = false;
+      });
+    });
+
+    node.addEventListener("click", () => {
+      phasesEl.querySelectorAll("details.phase[open]").forEach((other) => {
+        if (other !== card) other.open = false;
+      });
+      card.open = true;
+    });
   });
 
   const done = phases.filter((p) => p.status === "done").length;

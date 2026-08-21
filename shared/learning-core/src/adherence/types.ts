@@ -36,16 +36,10 @@ export interface StreakStateV1 {
 }
 
 export type ImplementationIntentionTrigger =
-  | "time"
-  | "after_event"
-  | "context"
-  | "feeling";
+  "time" | "after_event" | "context" | "feeling";
 
 export type ImplementationIntentionAction =
-  | "full_session"
-  | "review_only"
-  | "booster"
-  | "skip_ok";
+  "full_session" | "review_only" | "booster" | "skip_ok";
 
 export interface ImplementationIntention {
   readonly id: string;

@@ -6,11 +6,7 @@ export type LearningLanguage = "en" | "de";
 export type CefrLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
 export type DailySessionMinutes = 15 | 30 | 45;
 export type LearningMode =
-  | "recognition"
-  | "writing"
-  | "speaking"
-  | "repair"
-  | "transfer";
+  "recognition" | "writing" | "speaking" | "repair" | "transfer";
 
 const LEARNING_MODES: ReadonlySet<string> = new Set([
   "recognition",

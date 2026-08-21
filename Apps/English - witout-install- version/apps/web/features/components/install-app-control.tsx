@@ -214,7 +214,9 @@ export function InstallAppControl() {
             <form method="dialog">
               <Button
                 aria-label="Close installation guide"
+                onClick={() => dialogRef.current?.close()}
                 size="icon"
+                type="button"
                 variant="ghost"
               >
                 <X aria-hidden className="size-5" />

@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
     useTypeScriptCli: true,
   },
   reactStrictMode: true,
-  transpilePackages: ["@grammar/content"],
+  transpilePackages: ["@automaticity/learning-core", "@grammar/content"],
 };
 
 export default nextConfig;

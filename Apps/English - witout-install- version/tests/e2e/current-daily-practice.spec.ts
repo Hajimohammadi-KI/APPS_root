@@ -1,23 +1,25 @@
 import { expect, test } from "@playwright/test";
 
 test("current home and active daily route show one truthful learner state", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.getByRole("heading", { name: /Good (morning|afternoon|evening), Learner/ })).toBeVisible();
-  await expect(page.getByText("Your chart will begin after your first saved practice.")).toBeVisible();
-  await expect(page.getByText("Local app service ready")).toBeVisible();
+	await page.goto("/");
+	await expect(page.getByRole("heading", { name: /Good (morning|afternoon|evening), Learner/ })).toBeVisible();
+	await expect(page.getByRole("region", { name: /Verb be: am\/is\/are · A1/ })).toBeVisible();
+	await expect(page.getByRole("button", { name: "Start today's mission" })).toBeVisible();
 
   // /daily used to be rewritten (next.config.ts) to a static HTML mockup --
   // a fixed 7-item list with hardcoded "0 of 7 activities"/"0% verified
   // mastery" stats no script ever updated, and its own separate
-  // localStorage key that could never agree with Home above. The rewrite
-  // is gone; /daily now renders the same real, mastery-safe Mission
-  // component /progress uses, so this is now "one truthful learner state"
-  // for real, not just in this test's name.
-  await page.goto("/daily");
-  await expect(
-    page.getByRole("heading", { level: 1, name: "Automaticity Mission" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Start evidence practice" }),
-  ).toBeVisible();
+	// localStorage key that could never agree with Home above. The rewrite
+	// is gone; /daily now renders the real adaptive five-module program and
+	// reads the same store as Home.
+	await page.goto("/daily");
+	await expect(
+		page.getByRole("heading", {
+			level: 1,
+			name: "Your complete daily automaticity program",
+		}),
+	).toBeVisible();
+	await expect(
+		page.getByRole("link", { name: "Start 15-minute program" }),
+	).toBeVisible();
 });

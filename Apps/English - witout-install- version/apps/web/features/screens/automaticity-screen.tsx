@@ -1049,7 +1049,9 @@ export function AutomaticityScreen({
       });
     });
     const willSaveAudio = state.settings.saveAudio && Boolean(audioRef.current);
-    const audioId = willSaveAudio ? makeId("automaticity-audio") : undefined;
+    const requestedAudioId = willSaveAudio
+      ? makeId("automaticity-audio")
+      : undefined;
     // Real, audio-derived fluency when a recording is available to analyze
     // (independent of whether it's being *persisted* -- analysis just needs
     // the in-memory blob, not long-term storage). If there's no audio to
@@ -1073,6 +1075,25 @@ export function AutomaticityScreen({
     const hasValidAudioEvidence =
       Boolean(audioFluency) &&
       audioFluency!.activeSpeechSeconds >= MIN_ACTIVE_SPEECH_SECONDS_FOR_VERIFIED;
+    let audioId: string | undefined;
+    if (requestedAudioId && audioRef.current) {
+      try {
+        await putAudio({
+          id: requestedAudioId,
+          blob: audioRef.current,
+          createdAt: new Date().toISOString(),
+          grammarTitle: topic,
+          topic: `${topic} transfer`,
+          transcript,
+          corrected: transcript,
+          repetitionStatus: "new",
+        });
+        audioId = requestedAudioId;
+      } catch {
+        // The attempt remains valid in memory, but must not point at audio
+        // that IndexedDB failed to persist.
+      }
+    }
     recordAttempt({
       grammarTitle: topic,
       mode: "speaking",
@@ -1084,6 +1105,7 @@ export function AutomaticityScreen({
       latencyMs: null,
       passed: analysis.targetHit && seconds >= 45 && hasValidAudioEvidence,
       verified: analysis.online && hasValidAudioEvidence,
+      audioCaptured: Boolean(audioRef.current),
       audioId,
       rawTranscript: rawTranscriptRef.current || transcript,
       assessedBy: analysis.online ? "online" : "offline",
@@ -1096,18 +1118,6 @@ export function AutomaticityScreen({
     // previous `|| !audioRef.current` bypass allowed.
     if (analysis.targetHit && seconds >= 45 && audioRef.current) {
       writePlan(`${key}:speaking`, "done");
-    }
-    if (willSaveAudio && audioRef.current && audioId) {
-      await putAudio({
-        id: audioId,
-        blob: audioRef.current,
-        createdAt: new Date().toISOString(),
-        grammarTitle: topic,
-        topic: `${topic} transfer`,
-        transcript,
-        corrected: transcript,
-        repetitionStatus: "new",
-      });
     }
     setMessage(
       "Speaking evidence saved locally. Repeat once after reviewing the feedback.",

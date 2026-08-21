@@ -1,6 +1,6 @@
 {
 	"name": "@grammar/web",
-	"version": "27.3.13",
+	"version": "27.3.14",
 	"private": true,
 	"scripts": {
 		"dev": "node ../../node_modules/next/dist/bin/next dev --turbopack",
@@ -10,6 +10,7 @@
 		"lint": "node node_modules/@biomejs/biome/bin/biome lint ."
 	},
 	"dependencies": {
+		"@automaticity/learning-core": "workspace:*",
 		"@base-ui/react": "^1.6.0",
 		"@grammar/content": "workspace:*",
 		"class-variance-authority": "0.7.1",

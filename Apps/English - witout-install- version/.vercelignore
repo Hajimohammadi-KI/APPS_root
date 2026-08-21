@@ -1,0 +1,15 @@
+distribution/build/
+distribution/windows-desktop/node_modules/
+distribution/windows-modern/.staging/
+artifacts/
+test-results/
+playwright-report/
+node_modules/
+apps/api/dist/
+apps/web/.next/
+EnglishGrammar-Setup.exe
+EnglishGrammar-Setup.exe.sha256
+apps/web/public/downloads/EnglishGrammar-Setup.exe
+apps/web/public/downloads/EnglishGrammar-Setup.exe.sha256
+.tmp/
+*.log

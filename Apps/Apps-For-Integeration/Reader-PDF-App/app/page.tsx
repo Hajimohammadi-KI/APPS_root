@@ -199,6 +199,12 @@ export default function Home() {
   const dragStart = useRef<{ x: number; width: number } | null>(null);
   const selectionMenuRef = useRef<HTMLDivElement>(null);
   const requestedPage = useRef<number | null>(null);
+  // Drive/Original/Export used to sit permanently in the toolbar alongside
+  // the controls used on every single page turn (prev/next/zoom/panel) --
+  // 9 always-visible buttons. Those three are used far less often, so they
+  // move behind a "More tools" menu: progressive disclosure, not removal.
+  const [toolsMenuOpen, setToolsMenuOpen] = useState(false);
+  const toolsMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -467,7 +473,11 @@ export default function Home() {
     };
     setMarks((current) => [next, ...current]);
     setSelectedMarkId(id);
-    showToast(nextNote ? "Kommentar gespeichert" : `${toneLabels[nextTone]} gespeichert`);
+    showToast(
+      nextNote
+        ? "Kommentar gespeichert -- unter Notizen"
+        : `${toneLabels[nextTone]} gespeichert -- unter Notizen`,
+    );
     return true;
   };
 
@@ -591,7 +601,7 @@ export default function Home() {
     }, ...current]);
     setSelectedMarkId(id);
     setNote("");
-    showToast("Notiz gespeichert");
+    showToast("Notiz gespeichert -- unter Notizen");
   };
 
   const startEditingMark = (mark: Mark) => {
@@ -957,6 +967,23 @@ export default function Home() {
     };
   }, [closeSelectionMenu, selectionMenu]);
 
+  useEffect(() => {
+    if (!toolsMenuOpen) return;
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (event.target instanceof Node && toolsMenuRef.current?.contains(event.target)) return;
+      setToolsMenuOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setToolsMenuOpen(false);
+    };
+    window.addEventListener("pointerdown", closeOnOutsidePointer);
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      window.removeEventListener("pointerdown", closeOnOutsidePointer);
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [toolsMenuOpen]);
+
   return (
     <main className={`app-shell pdf-reader-root ${embed ? "embed" : ""}`}>
       <ReadingRuler enabled={readingRuler} onToggle={setReadingRuler} zoom={zoom} />
@@ -1006,9 +1033,23 @@ export default function Home() {
             <button onClick={() => setZoom((value) => Math.min(1.8, value + 0.1))}>＋</button>
             <span className="toolbar-spacer" />
             <label className="upload-button">Datei öffnen<input type="file" accept="application/pdf,.pdf" onChange={(event) => void importLocalPdf(event.target.files?.[0])} /></label>
-            <button onClick={() => setSettingsOpen(true)}>Drive</button>
-            <button className="toolbar-secondary" onClick={downloadOriginal} disabled={!pdfBytes}>Original</button>
-            <button className="toolbar-secondary" onClick={() => void exportAnnotatedPdf()} disabled={!pdfBytes}>PDF exportieren</button>
+            <div className="tools-menu" ref={toolsMenuRef}>
+              <button
+                className="toolbar-secondary"
+                aria-haspopup="menu"
+                aria-expanded={toolsMenuOpen}
+                onClick={() => setToolsMenuOpen((value) => !value)}
+              >
+                Weitere Werkzeuge ▾
+              </button>
+              {toolsMenuOpen && (
+                <div className="tools-menu-popover" role="menu" aria-label="Weitere Werkzeuge">
+                  <button role="menuitem" onClick={() => { setToolsMenuOpen(false); setSettingsOpen(true); }}>Drive</button>
+                  <button role="menuitem" onClick={() => { setToolsMenuOpen(false); downloadOriginal(); }} disabled={!pdfBytes}>Original herunterladen</button>
+                  <button role="menuitem" onClick={() => { setToolsMenuOpen(false); void exportAnnotatedPdf(); }} disabled={!pdfBytes}>PDF exportieren</button>
+                </div>
+              )}
+            </div>
             <button className="panel-toggle" onClick={() => setPanelOpen((value) => !value)}>{panelOpen ? "Panel schließen" : "Panel öffnen"}</button>
           </div>
 

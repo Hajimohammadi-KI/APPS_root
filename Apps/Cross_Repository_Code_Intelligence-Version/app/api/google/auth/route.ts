@@ -66,10 +66,15 @@ export async function GET(request: Request) {
   auth.searchParams.set("response_type", "code");
   auth.searchParams.set("access_type", "offline");
   // Google only returns a refresh token on an explicit consent, so ask for one
-  // the first time and stay silent on every later reconnect.
+  // the first time. Also re-prompt whenever a newly requested scope wasn't
+  // part of what was previously granted -- otherwise Google silently
+  // reissues a token limited to the old scope set with no visible error, and
+  // the newly requested service quietly never connects.
   const owner = requestOwner(request);
   const existing = owner ? await getProviderSecret<GoogleTokens>(owner, "google_tokens") : null;
-  if (!existing?.refreshToken) auth.searchParams.set("prompt", "consent");
+  const grantedScopes = new Set((existing?.scope || "").split(/\s+/).filter(Boolean));
+  const missingScope = scopes.some((scope) => !grantedScopes.has(scope));
+  if (!existing?.refreshToken || missingScope) auth.searchParams.set("prompt", "consent");
   auth.searchParams.set("include_granted_scopes", "true");
   auth.searchParams.set("state", state);
   auth.searchParams.set("code_challenge", challenge);

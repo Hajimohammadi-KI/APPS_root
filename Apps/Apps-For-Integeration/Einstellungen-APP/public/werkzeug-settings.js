@@ -2,7 +2,7 @@
   "use strict";
 
   var script = document.currentScript;
-  var baseUrl = script && script.src ? new URL(script.src).origin : "https://werkzeug-study-tools.education-hajimohamm.chatgpt.site";
+  var baseUrl = script && script.src ? new URL(script.src).origin : "http://127.0.0.1:4323";
   var frame = null;
   var listeners = new Set();
   var pending = new Map();

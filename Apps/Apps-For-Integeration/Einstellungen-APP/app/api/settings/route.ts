@@ -1,4 +1,4 @@
-import { DEFAULT_WERKZEUG_SETTINGS, normalizeWerkzeugSettings } from "../../../lib/werkzeug-settings";
+import { DEFAULT_WERKZEUG_SETTINGS, isTrustedOrigin, normalizeWerkzeugSettings, settingsForClient } from "../../../lib/werkzeug-settings";
 import { isSameOriginMutation, requestUserKey } from "../../../lib/server-user";
 
 type Database = {
@@ -19,18 +19,48 @@ async function database() {
   return db;
 }
 
+// Cross-origin callers only ever get the sections their registered client
+// grant covers (same enforcement the postMessage/iframe embed protocol
+// already applies via settingsForClient) -- this REST route previously
+// skipped that check entirely and returned the full settings object,
+// including every other app's grant-restricted sections, to any caller
+// with a valid auth identity. Same-origin (the settings UI itself) and
+// requests with no Origin header (server-side, not bound by this check)
+// keep getting the full object, since there is no cross-origin caller to
+// scope against in those cases.
+function scopeToCaller(request: Request, settings: ReturnType<typeof normalizeWerkzeugSettings>) {
+  const origin = request.headers.get("origin");
+  const ownOrigin = new URL(request.url).origin;
+  if (!origin || origin === ownOrigin) return settings;
+  if (!isTrustedOrigin(settings, origin, ownOrigin)) return null;
+  return settingsForClient(settings, origin);
+}
+
 export async function GET(request: Request) {
   const user = await requestUserKey(request);
   if (!user) return Response.json({ message: "Bitte melde dich an, um deine Einstellungen zu laden." }, { status: 401 });
   const db = await database();
-  if (!db) return Response.json({ settings: DEFAULT_WERKZEUG_SETTINGS, revision: 0, persistent: false });
+  if (!db) {
+    const scoped = scopeToCaller(request, DEFAULT_WERKZEUG_SETTINGS);
+    if (!scoped) return Response.json({ message: "Diese App ist nicht als vertrauenswürdige Verbindung eingetragen." }, { status: 403 });
+    return Response.json({ settings: scoped, revision: 0, persistent: false });
+  }
   const result = await db.prepare("SELECT settings_json, revision, updated_at FROM app_settings WHERE owner = ?").bind(user).all();
   const row = (result.results?.[0] || null) as Record<string, unknown> | null;
-  if (!row) return Response.json({ settings: DEFAULT_WERKZEUG_SETTINGS, revision: 0, persistent: true });
+  if (!row) {
+    const scoped = scopeToCaller(request, DEFAULT_WERKZEUG_SETTINGS);
+    if (!scoped) return Response.json({ message: "Diese App ist nicht als vertrauenswürdige Verbindung eingetragen." }, { status: 403 });
+    return Response.json({ settings: scoped, revision: 0, persistent: true });
+  }
   try {
-    return Response.json({ settings: normalizeWerkzeugSettings(JSON.parse(String(row.settings_json))), revision: Number(row.revision || 0), persistent: true });
+    const settings = normalizeWerkzeugSettings(JSON.parse(String(row.settings_json)));
+    const scoped = scopeToCaller(request, settings);
+    if (!scoped) return Response.json({ message: "Diese App ist nicht als vertrauenswürdige Verbindung eingetragen." }, { status: 403 });
+    return Response.json({ settings: scoped, revision: Number(row.revision || 0), persistent: true });
   } catch {
-    return Response.json({ settings: DEFAULT_WERKZEUG_SETTINGS, revision: Number(row.revision || 0), persistent: true, repaired: true });
+    const scoped = scopeToCaller(request, DEFAULT_WERKZEUG_SETTINGS);
+    if (!scoped) return Response.json({ message: "Diese App ist nicht als vertrauenswürdige Verbindung eingetragen." }, { status: 403 });
+    return Response.json({ settings: scoped, revision: Number(row.revision || 0), persistent: true, repaired: true });
   }
 }
 

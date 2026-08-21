@@ -1,0 +1,940 @@
+<title>رودمپ ساده‌سازی UX</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #f7f5fb;
+    --surface: #ffffff;
+    --surface-2: #f8f7fc;
+    --line: #e4dff1;
+    --line-strong: #cfc5e6;
+    --ink: #171331;
+    --ink-dim: #5f5975;
+    --ink-faint: #8e879e;
+    --accent: #5b36c7;
+    --accent-strong: #3a1b91;
+    --accent-soft: #eee9ff;
+    --track-en: #5b36c7;
+    --track-en-soft: #eee9ff;
+    --track-de: #23745f;
+    --track-de-soft: #e1f4ed;
+    --done: #16816a;
+    --done-soft: #e3f5ef;
+    --active: #5b36c7;
+    --active-soft: #eee9ff;
+    --pending: #7c8792;
+    --pending-soft: #eef1f3;
+    --blocked: #ad2b21;
+    --blocked-soft: #fbeae8;
+    --warning: #a45618;
+    --warning-soft: #fff4e7;
+    --shadow: 0 1px 2px rgba(52, 27, 110, 0.04), 0 14px 34px rgba(52, 27, 110, 0.08);
+    --radius: 18px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10161d;
+      --surface: #182230;
+      --surface-2: #1e2a3a;
+      --line: #2c3a49;
+      --line-strong: #3c4d5e;
+      --ink: #e8edf2;
+      --ink-dim: #a2aebb;
+      --ink-faint: #71808f;
+      --accent: #b59cff;
+      --accent-strong: #d4c7ff;
+      --accent-soft: #302456;
+      --track-en: #d69a52;
+      --track-en-soft: #3a2c18;
+      --track-de: #4fc0a4;
+      --track-de-soft: #123329;
+      --done: #4fc0a4;
+      --done-soft: #123329;
+      --active: #b59cff;
+      --active-soft: #302456;
+      --pending: #8894a0;
+      --pending-soft: #232f3b;
+      --blocked: #e5766a;
+      --blocked-soft: #3a1e1a;
+      --warning: #f0b268;
+      --warning-soft: #3d2a17;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.32);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #10161d;
+    --surface: #182230;
+    --surface-2: #1e2a3a;
+    --line: #2c3a49;
+    --line-strong: #3c4d5e;
+    --ink: #e8edf2;
+    --ink-dim: #a2aebb;
+    --ink-faint: #71808f;
+    --accent: #b59cff;
+    --accent-strong: #d4c7ff;
+    --accent-soft: #302456;
+    --track-en: #d69a52;
+    --track-en-soft: #3a2c18;
+    --track-de: #4fc0a4;
+    --track-de-soft: #123329;
+    --done: #4fc0a4;
+    --done-soft: #123329;
+    --active: #b59cff;
+    --active-soft: #302456;
+    --pending: #8894a0;
+    --pending-soft: #232f3b;
+    --blocked: #e5766a;
+    --blocked-soft: #3a1e1a;
+    --warning: #f0b268;
+    --warning-soft: #3d2a17;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.32);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
+    direction: rtl;
+    line-height: 1.65;
+  }
+
+  .mono {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  header.top {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    text-align: right;
+    unicode-bidi: isolate;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 800;
+    margin: 0;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  .lede {
+    color: var(--ink-dim);
+    font-size: 15.5px;
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .app-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .app-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .app-tag.en { background: var(--track-en-soft); color: var(--track-en); }
+  .app-tag.de { background: var(--track-de-soft); color: var(--track-de); }
+
+  .app-tag .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 6px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--done));
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-size: 13px;
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+
+  /* metro tracker */
+  .tracker {
+    display: flex;
+    overflow-x: auto;
+    direction: ltr;
+    max-width: 100%;
+    contain: inline-size;
+    gap: 0;
+    padding: 4px 2px 18px;
+    margin-bottom: 8px;
+  }
+
+  .tracker::-webkit-scrollbar { height: 6px; }
+  .tracker::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+
+  .tnode {
+    flex: 0 0 auto;
+    width: 108px;
+    text-align: center;
+    position: relative;
+    padding-top: 30px;
+    text-decoration: none;
+  }
+
+  .tnode::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--line-strong);
+  }
+
+  .tnode:first-child::before { display: none; }
+
+  .tnode .pip {
+    position: absolute;
+    top: 2px;
+    right: calc(50% - 8px);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--pending);
+    z-index: 1;
+  }
+
+  .tnode.done .pip { background: var(--done); border-color: var(--done); }
+  .tnode.active .pip { background: var(--active-soft); border-color: var(--active); box-shadow: 0 0 0 4px var(--active-soft); }
+
+  .tnode .tlabel {
+    font-size: 12px;
+    color: var(--ink-dim);
+    line-height: 1.4;
+    direction: rtl;
+    unicode-bidi: plaintext;
+  }
+
+  .tnode .tphase {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-size: 11px;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* phase cards */
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 24px;
+    margin-bottom: 16px;
+  }
+
+  details.phase {
+    padding: 0;
+    overflow: clip;
+  }
+
+  details.phase > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 20px 24px;
+    outline: none;
+  }
+
+  details.phase > summary::-webkit-details-marker { display: none; }
+
+  details.phase > summary:focus-visible {
+    box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+
+  details.phase[open] > summary {
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(135deg, var(--surface), var(--accent-soft));
+  }
+
+  details.phase.priority {
+    border-color: color-mix(in srgb, var(--accent) 48%, var(--line));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent), var(--shadow);
+  }
+
+  .phase-summary-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-faint);
+    font-size: 12.5px;
+    margin-top: 7px;
+  }
+
+  .chevron {
+    width: 24px;
+    height: 24px;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--accent);
+    font-family: "IBM Plex Mono", monospace;
+    transition: transform 160ms ease;
+  }
+
+  details[open] .chevron { transform: rotate(180deg); }
+
+  .phase-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .phase-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .phase-id {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1px 7px;
+  }
+
+  .phase h2 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .chip.done { background: var(--done-soft); color: var(--done); }
+  .chip.active { background: var(--active-soft); color: var(--active); }
+  .chip.pending { background: var(--pending-soft); color: var(--pending); }
+  .chip.blocked { background: var(--blocked-soft); color: var(--blocked); }
+
+  .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .phase-when {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin-top: 4px;
+  }
+
+  .phase-body {
+    padding: 20px 24px 24px;
+    color: var(--ink-dim);
+    font-size: 14.5px;
+  }
+
+  .phase-body p { margin: 0 0 10px; }
+  .phase-body p:last-child { margin-bottom: 0; }
+
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .info-block {
+    min-width: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    padding: 15px 16px;
+  }
+
+  .info-block.full { grid-column: 1 / -1; }
+
+  .info-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--ink);
+    font-size: 12.5px;
+    font-weight: 800;
+    margin-bottom: 7px;
+  }
+
+  .info-label::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 3px;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  .info-block p,
+  .info-block ul,
+  .info-block ol { margin: 0; }
+
+  .info-block ul,
+  .info-block ol { padding-right: 20px; }
+
+  .info-block li + li { margin-top: 5px; }
+
+  .north-star {
+    margin: 14px 0;
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+    background: linear-gradient(135deg, var(--accent-soft), var(--surface));
+    border-radius: 14px;
+    padding: 16px 18px;
+    color: var(--accent-strong);
+    font-weight: 700;
+  }
+
+  .notice {
+    border: 1px solid color-mix(in srgb, var(--warning) 32%, var(--line));
+    background: var(--warning-soft);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: var(--ink-dim);
+    margin-top: 12px;
+  }
+
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 2px 0 24px;
+  }
+
+  .principle {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 6px 20px rgba(52, 27, 110, 0.05);
+  }
+
+  .principle strong {
+    display: block;
+    color: var(--ink);
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+
+  .principle span { color: var(--ink-dim); font-size: 12.5px; }
+
+  [dir="ltr"] {
+    text-align: left;
+    unicode-bidi: isolate;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    direction: ltr;
+    max-width: 100%;
+    contain: inline-size;
+    margin-top: 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    direction: rtl;
+    font-size: 13.5px;
+    min-width: 480px;
+  }
+
+  th, td {
+    padding: 9px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  th {
+    background: var(--surface-2);
+    color: var(--ink-dim);
+    font-weight: 600;
+    font-size: 12.5px;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td.num, th.num { text-align: center; font-family: "IBM Plex Mono", monospace; }
+
+  /* menu architecture diagram (phase 1) */
+  .menu-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .menu-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .menu-box {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 8px 14px;
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+
+  .menu-box.top {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent-strong);
+    font-weight: 700;
+  }
+
+  .menu-children {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-right: 26px;
+    border-right: 2px dashed var(--line-strong);
+    margin-right: 12px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  .menu-children .menu-box {
+    font-size: 13px;
+    color: var(--ink-dim);
+    font-weight: 500;
+  }
+
+  footer.hist {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  footer.hist h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    margin: 0 0 12px;
+  }
+
+  .hist-entry {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13.5px;
+    color: var(--ink-dim);
+    padding: 6px 0;
+  }
+
+  .hist-date {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    color: var(--ink-faint);
+    flex: 0 0 auto;
+  }
+
+  .hist-entry > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+
+  .src-note {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin-top: 6px;
+  }
+
+  code.path {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    unicode-bidi: isolate;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-size: 12.5px;
+    color: var(--accent-strong);
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  @media (max-width: 820px) {
+    .wrap { padding: 24px 14px 56px; }
+    .principles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .phase-grid { grid-template-columns: 1fr; }
+    .info-block.full { grid-column: auto; }
+    details.phase > summary,
+    .phase-body { padding-right: 18px; padding-left: 18px; }
+  }
+
+  @media (max-width: 520px) {
+    .principles { grid-template-columns: 1fr; }
+    .phase-head { align-items: stretch; }
+    .chip { align-self: flex-start; }
+    .tracker { margin-inline: 0; padding-inline: 0; }
+    table { min-width: 100%; table-layout: fixed; }
+    th, td { padding: 8px 7px; white-space: normal; overflow-wrap: anywhere; }
+    .hist-entry { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .progress-row { align-items: stretch; flex-direction: column; gap: 8px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">UX SIMPLIFICATION ROADMAP · 2026-08-20</div>
+    <h1>رودمپ ساده‌سازی تجربهٔ کاربری</h1>
+    <p class="lede">
+      برای اپ‌های آموزش انگلیسی و آلمانی. این نسخه علاوه بر سادگی رابط،
+      اثر یادگیری را هم محور قرار می‌دهد: تولید واقعی، میانجی‌گری، کیفیت
+      محتوا، پایداری استفاده و سنجش مستقل. کد نمونه یا برآورد پژوهشی تا
+      زمان پیاده‌سازی و آزمون، «قابلیت تأییدشده» محسوب نمی‌شود.
+    </p>
+    <div class="app-tags">
+      <span class="app-tag en"><span class="dot"></span>English-07082026</span>
+      <span class="app-tag de"><span class="dot"></span>Deutsch-V10.08.2026</span>
+    </div>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">4 / 10 فاز انجام‌شده</div>
+    </div>
+  </header>
+
+  <nav class="tracker" id="tracker" aria-label="نقشهٔ فازها"></nav>
+
+  <section class="principles" aria-label="اصول تصمیم‌گیری نقشه‌راه">
+    <div class="principle"><strong>اول شواهد، بعد AI</strong><span>Rule Engine و قرارداد داده پیش از مدل.</span></div>
+    <div class="principle"><strong>محتوای گزینش‌شده</strong><span>دیتاست خام وارد درس یا Installer نمی‌شود.</span></div>
+    <div class="principle"><strong>تولید، نه فقط تشخیص</strong><span>Mediation و Forced Output در هر دو زبان.</span></div>
+    <div class="principle"><strong>اثر واقعی</strong><span>Retention و Transfer به‌جای XP و تعداد کلیک.</span></div>
+  </section>
+
+  <main id="phases"></main>
+
+  <footer class="hist">
+    <h3>تاریخچهٔ به‌روزرسانی</h3>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-20</span>
+      <span>ایجاد سند. نقد پایه (فاز ۰) با بررسی بصری Codex + بررسی کد Claude انجام شد. فازهای ۱ تا ۹ هنوز شروع نشده‌اند.</span>
+    </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-20 23:20</span>
+      <span>کاربر ضرب‌الاجل فردا (۲۰۲۶-۰۸-۲۱) برای فاز ۱ تعیین کرد. مشاهده شد Codex از قبل روی فایل‌های ناوبری/Home هر دو اپ کار می‌کند (uncommitted). چک‌لیست مشترک ایجاد شد: <code class="path">docs/roadmaps/PHASE-1-HANDOFF-2026-08-20.md</code>.</span>
+    </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-20 23:50</span>
+      <span>Codex کار خود را commit کرد (<code class="path">Fix</code>, <code class="path">Fix3</code>). Claude بررسی و تست مستقیم انجام داد: فاز ۱ ✅ (CTA واحد + parity رفع مشکل Conversation Studio)، فاز ۲ اسکلتش پیاده شده 🟡. typecheck و test هر دو اپ سبز (English 144، Deutsch 91 تست). Commit و push شد.</span>
+    </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-21 00:20</span>
+      <span>فاز ۱ کامل شد: Today کنار Home دائمی، ۴ گروه منو ساده‌نام‌گذاری شد (هر دو اپ). فاز ۲ تصحیح شد — تخصیص per-بخش از قبل کامل پیاده بود. فاز ۳ کامل شد: glossary آلمانی با Nachweise/Beherrschung/Abdeckung/Genauigkeit تکمیل شد. همه با typecheck+test تأیید و push شدند.</span>
+    </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-20</span>
+      <span>رودمپ بر اساس نقد پداگوژیک بازطراحی شد: Foundation Gate به ابتدا منتقل شد، Mediation و Forced Output اضافه شدند، Content QA و Adherence مستقل شدند و سنجش واقعی بر retention/transfer متمرکز شد. فازهای جدید قابلیت پیاده‌شده محسوب نمی‌شوند.</span>
+    </div>
+    <div class="src-note">
+      منبع متنی همراه: <code class="path">docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md</code><br>
+      منبع: نقد پداگوژیک و محتوایی ارائه‌شده توسط کاربر
+    </div>
+  </footer>
+</div>
+
+<script>
+  const infoBlock = (label, content, full = false) => `
+    <section class="info-block${full ? " full" : ""}">
+      <div class="info-label">${label}</div>
+      ${content}
+    </section>`;
+
+  const structuredPhase = ({ effect, technical, dependency, acceptance, extra = "" }) => `
+    <div class="phase-grid">
+      ${infoBlock("اثر برای زبان‌آموز", effect)}
+      ${infoBlock("وابستگی", dependency)}
+      ${infoBlock("کار فنی", technical, true)}
+      ${infoBlock("معیار پذیرش", acceptance, true)}
+    </div>${extra}`;
+
+  const phases = [
+    {
+      id: "p0", phase: "فاز ۰", title: "نقد پایه", status: "done", when: "۲۰۲۶-۰۸-۲۰ — انجام‌شده",
+      body: `<p>بررسی بصری (Codex، با اسکرین‌شات از هر دو اپ) + بررسی مستقیم کد (Claude) کامل شد.
+      یافتهٔ مشترک: Conversation Studio گیج‌کننده‌ترین صفحه است — فیلتر، حالت، مرحله و آمار هم‌زمان دیده
+      می‌شوند و طراحی‌اش با بقیهٔ اپ فرق دارد. کد مشترک واقعی بین English و Deutsch صفر است؛ فقط با
+      <code class="path">shared/check-duplicated-files.mjs</code> سازگار نگه داشته می‌شوند.</p>`,
+    },
+    {
+      id: "p1", phase: "فاز ۱", title: "ساده‌سازی معماری منو", status: "done", when: "کامل شد ۲۰۲۶-۰۸-۲۱ ~۰۰:۲۰",
+      body: `<p><strong>کامل شد و تأیید شد (typecheck + test + اسکرین‌شات از dev serverهای زنده).</strong> Codex بخش
+      اصلی را پیاده کرد: یک CTA غالب در Home، رفع «دو Sidebar» در Conversation Studio. Claude باقی‌مانده را کامل کرد:
+      Today's Practice / Heutiges Training کنار Home به‌صورت دکمهٔ دائمی (نه داخل گروه)، و نام‌گذاری ۴ گروه ساده شد:
+      Practice/Learn/Progress/Settings (Praxis/Lernen/Fortschritt/Einstellungen).</p>
+      <div class="menu-tree">
+        <div class="menu-row"><span class="menu-box top">Start / Startseite</span></div>
+        <div class="menu-row"><span class="menu-box top">Today / Heute</span></div>
+        <div class="menu-row">
+          <span class="menu-box">Practice ▾</span>
+          <div class="menu-children">
+            <span class="menu-box">Mixed Training</span>
+            <span class="menu-box">Conversation Studio</span>
+            <span class="menu-box">Review</span>
+          </div>
+        </div>
+        <div class="menu-row">
+          <span class="menu-box">Learn ▾</span>
+          <div class="menu-children">
+            <span class="menu-box">Grammar</span>
+            <span class="menu-box">Vocabulary</span>
+            <span class="menu-box">PDF Reader</span>
+          </div>
+        </div>
+        <div class="menu-row">
+          <span class="menu-box">Progress ▾</span>
+          <div class="menu-children">
+            <span class="menu-box">Learning Evidence</span>
+            <span class="menu-box">Repair Items</span>
+            <span class="menu-box">Statistics</span>
+          </div>
+        </div>
+        <div class="menu-row"><span class="menu-box">Settings ▾</span></div>
+      </div>`,
+    },
+    {
+      id: "p2", phase: "فاز ۲", title: "موتور جلسهٔ روزانهٔ یکپارچه", status: "done", when: "تأیید شد ۲۰۲۶-۰۸-۲۱ ~۰۰:۲۰",
+      body: `<p><strong>کامپوننت <code class="path">DailyAutomaticityProgram</code> در هر دو اپ کامل پیاده و تست‌شده است</strong>
+      (انتخاب دقیقه + تخصیص واقعی دقیقه/تعداد آیتم per-بخش در <code class="path">adaptive-daily-plan.ts</code>).
+      تصحیح یک اشتباه قبلی: قبلاً گفته شد این تخصیص پیاده نشده — بدون خواندن فایل. بعد از انتخاب زمان، کاربر دیگر
+      بین Grammar/Studio/Review/Mixed تصمیم نمی‌گیرد. نسخهٔ ۴۵ دقیقه
+      فقط کشیده‌شدهٔ نسخهٔ ۱۵ دقیقه نیست — گفتار طولانی‌تر، نوشتن مستقل، دو زمینهٔ جدید. ارتقای سطح بر پایهٔ
+      کیفیت شواهد باشد نه تعداد دقیقه.</p>
+      <div class="notice"><strong>تصحیح پداگوژیک:</strong> کامل‌بودن کد، اثرگذاری را ثابت نمی‌کند. در برنامهٔ
+      ۱۵ دقیقه‌ای فقط ۴ دقیقه به Conversation Studio می‌رسد؛ این برای usable شدن مفید است اما برای ادعای
+      automaticity کافی و مستقل اعتبارسنجی نشده است. Forced Output Booster در فاز ۶ این شکاف را هدف می‌گیرد.</div>
+      <div class="table-scroll"><table>
+        <thead><tr><th>بخش روزانه</th><th class="num">۱۵ دقیقه</th><th class="num">۳۰ دقیقه</th><th class="num">۴۵ دقیقه</th></tr></thead>
+        <tbody>
+          <tr><td>Wiederholen / Recall</td><td class="num">۳</td><td class="num">۵</td><td class="num">۷</td></tr>
+          <tr><td>Mixed Training</td><td class="num">۳</td><td class="num">۶</td><td class="num">۱۰</td></tr>
+          <tr><td>Conversation Studio</td><td class="num">۴</td><td class="num">۸</td><td class="num">۱۲</td></tr>
+          <tr><td>Grammar &amp; Repair</td><td class="num">۲</td><td class="num">۵</td><td class="num">۷</td></tr>
+          <tr><td>Transfer به موقعیت جدید</td><td class="num">۳</td><td class="num">۶</td><td class="num">۹</td></tr>
+          <tr><td><strong>مجموع</strong></td><td class="num"><strong>۱۵</strong></td><td class="num"><strong>۳۰</strong></td><td class="num"><strong>۴۵</strong></td></tr>
+        </tbody>
+      </table></div>`,
+    },
+    {
+      id: "p3", phase: "فاز ۳", title: "توضیح ساده برای اصطلاحات فنی", status: "done", when: "کامل شد ۲۰۲۶-۰۸-۲۱ ~۰۰:۴۰",
+      body: `<p>English از قبل یک glossary خودکار hover-help داشت (evidence، automaticity، mastery، coverage،
+      accuracy...) — چیزی که از روی اسکرین‌شات ثابت قابل دیدن نبود. در Deutsch دقیقاً همان کلمه‌ای که Codex نام برد
+      («Nachweise») در glossary نبود؛ اضافه شد به‌همراه Beherrschung، Abdeckung، Genauigkeit.</p>`,
+    },
+    {
+      id: "p4", phase: "فاز ۴", title: "Foundation Gate مشترک", status: "pending", when: "۱ تا ۲ هفته",
+      summary: "schema، evidence، event و telemetry پیش از ادغام runtime دیتاست و AI",
+      body: structuredPhase({
+        effect: `<p>رفتار پایهٔ هر دو اپ یکسان می‌شود و محتوا یا شواهد میان صفحه‌ها گم و متناقض نمی‌ماند.</p>`,
+        dependency: `<p>دروازهٔ اجباری برای <strong>ادغام runtime</strong> و تصمیم‌های یادگیری در فازهای ۵ تا ۹. بررسی read-only منبع و مجوز، ساخت manifest/schema و seed آزمایشیِ کوچک و قابل‌برگشت می‌تواند موازی انجام شود؛ اما دانلود حجیم، آموزش یا fine-tune، ingestion در محصول، ارسال دادهٔ زبان‌آموز به provider و هر تصمیم mastery مبتنی بر AI تا عبور vertical slice ممنوع است.</p>`,
+        technical: `<ul><li><code class="path">packages/learning-core</code> حداقلی، نه مهاجرت بزرگ و یک‌باره</li><li><bdi dir="ltr">ContentUnit + EvidenceRecord + DomainEvents</bdi></li><li>provenance، مجوز، نسخه و وضعیت بازبینی</li><li>اعتبارسنجی Zod/JSON در CI و قرارداد telemetry</li><li>Accessibility baseline در Definition of Done هر PR</li></ul>`,
+        acceptance: `<p>یک واحد B1 انگلیسی و یک واحد B1 آلمانی از مسیر کامل
+        <bdi dir="ltr">content → daily plan → response → evidence → analytics event</bdi>
+        با یک schema و بدون مدل موازی عبور کنند.</p>`
+      }),
+    },
+    {
+      id: "p5", phase: "فاز ۵", title: "کیفیت محتوا و پایلوت دیتاست", status: "pending", when: "۲ تا ۵ هفته",
+      summary: "دادهٔ خام وارد درس یا Installer نمی‌شود",
+      body: structuredPhase({
+        effect: `<p>جمله‌ها طبیعی، سطح‌بندی‌شده و قابل اعتمادند؛ کاربر محتوای خام یا نامناسب نمی‌بیند.</p>`,
+        dependency: `<p>schema، provenance و QA status از فاز ۴.</p>`,
+        technical: `<p>برای هر زبان یک پایلوت کوچک و human-reviewed، نه bulk download:</p>
+          <div class="table-scroll"><table>
+            <thead><tr><th>دیتاست</th><th>کاربرد پایلوت</th><th>تصمیم/محدودیت</th></tr></thead>
+            <tbody>
+              <tr><td dir="ltr">Tatoeba CC0</td><td>Reading / Transformation</td><td>صوت مجوز جدا؛ متن تأییدشده</td></tr>
+              <tr><td dir="ltr">Mozilla Common Voice</td><td>robustness ترنسکریپت</td><td>معیار تلفظ یا درس نیست</td></tr>
+              <tr><td dir="ltr">MERLIN</td><td>خطای واقعی آلمانی + CEFR</td><td dir="ltr">CC BY-SA</td></tr>
+              <tr><td dir="ltr">UD English EWT</td><td>تحلیل نحوی انگلیسی</td><td>CEFR ندارد؛ feature کمکی</td></tr>
+              <tr><td dir="ltr">UD German GSD</td><td>حالت و ترتیب کلمه</td><td>CEFR ندارد؛ feature کمکی</td></tr>
+              <tr><td dir="ltr">FLEURS</td><td>benchmark مقایسه‌ای ASR</td><td>محتوای آموزشی نیست</td></tr>
+              <tr><td dir="ltr">W&amp;I + LOCNESS</td><td>پژوهش GEC</td><td>مجوز تجاری جدا بررسی شود</td></tr>
+              <tr><td dir="ltr">C4 200M GEC</td><td>آزمایش پژوهشی GEC</td><td>از W&amp;I/LOCNESS جداست</td></tr>
+            </tbody>
+          </table></div>`,
+        acceptance: `<p>تمام آیتم‌های پایلوت schema/provenance معتبر داشته باشند؛ ۱۰٪ نمونه‌گیری طبقه‌بندی‌شده با دو داور انجام شود؛ هیچ <bdi dir="ltr">QA-failed</bdi> وارد برنامهٔ روزانه نشود. ICC فقط با دادهٔ واقعی گزارش شود.</p>`
+      }),
+    },
+    {
+      id: "p6", phase: "فاز ۶", title: "Mediation و Forced Output", status: "pending", when: "۳ تا ۸ هفته",
+      summary: "پوشش CEFR کامل‌تر و دوز تولید واقعی زیر فشار زمان",
+      body: structuredPhase({
+        effect: `<p>زبان‌آموز علاوه بر گرامر، اطلاعات را خلاصه، بازگو یا توضیح می‌دهد و ساختار هدف را زیر فشار زمانی تولید می‌کند.</p>`,
+        dependency: `<p>محتوای QA-passed فاز ۵ و قرارداد evidence فاز ۴.</p>`,
+        technical: `<ul><li>چهار بُعد CEFR-CV: Reception، Production، Interaction، Mediation</li><li>vertical slice: چهار descriptor در B1، هرکدام guided و independent، برای هر زبان</li><li>Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای در برنامه‌های ۱۵/۳۰/۴۵ دقیقه</li><li>fallback تایپ همیشه موجود؛ ASR فقط transcript و سیگنال قابل اندازه‌گیری</li></ul>`,
+        acceptance: `<p>پاسخ واقعی ذخیره شود و latency نخستین کلمه، استفادهٔ درست از ساختار، self-repair و novel transfer سنجیده شود. اثر Booster تا مطالعهٔ مقایسه‌ای، ادعای اثبات‌شده نیست.</p>`
+      }),
+    },
+    {
+      id: "p7", phase: "فاز ۷", title: "Hybrid Coach و Adherence", status: "pending", when: "۴ تا ۹ هفته",
+      summary: "بازخورد قابل توضیح + مسیر بازگشت پس از افت",
+      body: structuredPhase({
+        effect: `<p>بازخورد روشن می‌گیرد و در روز کم‌انرژی به‌جای ترک کامل، جلسه‌ای کوچک و معنی‌دار دارد.</p>`,
+        dependency: `<p>event contract فاز ۴ و سیگنال‌های گفتار/محتوای معتبر فازهای ۵ و ۶.</p>`,
+        technical: `<ol><li>Rule Engine + FSRS برای زمان‌بندی و تصمیم شواهد</li><li>LanguageTool + قواعد اختصاصی + UD برای پیشنهاد</li><li>ASR فقط transcript</li><li>LLM فقط generation/explanation با خروجی JSON؛ نه mastery</li><li>Implementation Intentions، micro-goal پنج‌دقیقه‌ای، comeback و nudge روز ۳/۷/۱۴ با opt-in</li><li>IndexedDB و صف همگام‌سازی برای PWA آفلاین‌محور</li></ol>`,
+        acceptance: `<p>تصمیم ارتقای سطح deterministic و audit-able باشد؛ خروجی LLM قابل ردکردن و schema-valid باشد؛ نوتیفیکیشن بدون رضایت ارسال نشود؛ conversion نوتیفیکیشن جدا از outcome یادگیری گزارش شود.</p>`
+      }),
+    },
+    {
+      id: "p8", phase: "فاز ۸", title: "Shared & Accessible Scale", status: "pending", when: "مستمر پس از vertical slice",
+      summary: "گسترش تدریجی هستهٔ مشترک، نه big-bang rewrite",
+      body: structuredPhase({
+        effect: `<p>English و Deutsch تجربهٔ سازگار دارند و وب در ویندوز، تبلت و اندروید قابل استفاده می‌ماند.</p>`,
+        dependency: `<p>فقط قابلیت‌هایی که در هر دو زبان با vertical slice ثابت شده‌اند مشترک می‌شوند.</p>`,
+        technical: `<ul><li>انتقال تدریجی domain logic و UI primitives به learning-core</li><li>design tokens به‌صورت import، نه دو کپی CSS</li><li>reflow در ۳۲۰px، focus visible، ترتیب کیبورد و touch target حداقل ۴۴×۴۴</li><li>label میکروفون، recovery خطا و Screen Reader</li><li>LTR برای English/Deutsch و RTL برای فارسی</li></ul>`,
+        acceptance: `<p>parity contract هر دو اپ، E2E در سه viewport و آزمون دستی Screen Reader/میکروفون روی سخت‌افزار واقعی. مورد آزمون‌نشده N/A گزارش می‌شود.</p>`
+      }),
+    },
+    {
+      id: "p9", phase: "فاز ۹", title: "Independent Measurement & Beta", status: "pending", when: "مستمر، حداقل ۹۰ روز",
+      summary: "Retention و Transfer به‌جای کلیک و XP",
+      body: structuredPhase({
+        effect: `<p>پیشرفت واقعی از حفظ‌کردن پاسخ یا طولانی‌کردن زمان استفاده جدا می‌شود.</p>`,
+        dependency: `<p>telemetry فاز ۴، محتوای ثابت فاز ۵ و taskهای productive فاز ۶.</p>`,
+        technical: `<div class="north-star">North Star: درصد زبان‌آموزان هفتگی که هفت روز بعد، بدون دیدن جواب، ساختار هدف را در موضوع یا موقعیت تازه به‌درستی در گفتار یا نوشتار به‌کار می‌برند.</div>
+          <ul><li><bdi dir="ltr">time_to_first_valid_speech</bdi></li><li>بازیابی تلاش اول بدون hint/model</li><li>اصلاح مستقل حداکثر در دو تلاش</li><li>retention در روزهای ۱، ۳ و ۷</li><li>novel transfer با موضوع/واژگان/موقعیت تازه</li><li>false-positive rate جدا برای زبان، CEFR، لهجه و دستگاه</li><li>کوهرت‌های ۱۵/۳۰/۴۵ دقیقه جدا؛ زمان بیشتر برابر mastery نیست</li></ul>`,
+        acceptance: `<p>کوهرت بتا با رضایت آگاهانه، baseline، pre/post، retention و export قابل تحلیل. C-test مکمل است و جای productive transfer را نمی‌گیرد. تا پیش از دادهٔ واقعی هیچ درصد موفقیت محصول اعلام نمی‌شود.</p>`
+      }),
+    },
+  ];
+
+  const statusMeta = {
+    done: { label: "انجام‌شده", chip: "done" },
+    active: { label: "در حال انجام", chip: "active" },
+    pending: { label: "شروع‌نشده", chip: "pending" },
+    blocked: { label: "مسدود", chip: "blocked" },
+  };
+
+  const trackerEl = document.getElementById("tracker");
+  const phasesEl = document.getElementById("phases");
+
+  phases.forEach((p) => {
+    const node = document.createElement("a");
+    node.className = "tnode " + p.status;
+    node.href = `#${p.id}`;
+    node.innerHTML = `<span class="pip"></span><span class="tlabel"><span class="tphase">${p.id}</span>${p.title}</span>`;
+    trackerEl.appendChild(node);
+
+    const card = document.createElement("details");
+    card.className = "phase" + (p.id === "p4" ? " priority" : "");
+    card.id = p.id;
+    card.open = p.id === "p4";
+    const meta = statusMeta[p.status];
+    card.innerHTML = `
+      <summary>
+        <div class="phase-head">
+          <div>
+            <div class="phase-title-row">
+              <span class="phase-id">${p.id}</span>
+              <h2>${p.title}</h2>
+            </div>
+            <div class="phase-when">${p.phase} · ${p.when}</div>
+            <div class="phase-summary-line"><span class="chevron" aria-hidden="true">⌄</span>${p.summary || "برای مشاهدهٔ جزئیات باز کنید"}</div>
+          </div>
+          <span class="chip ${meta.chip}"><span class="dot"></span>${meta.label}</span>
+        </div>
+      </summary>
+      <div class="phase-body">${p.body}</div>
+    `;
+    phasesEl.appendChild(card);
+
+    card.addEventListener("toggle", () => {
+      if (!card.open) return;
+      phasesEl.querySelectorAll("details.phase[open]").forEach((other) => {
+        if (other !== card) other.open = false;
+      });
+    });
+
+    node.addEventListener("click", () => {
+      phasesEl.querySelectorAll("details.phase[open]").forEach((other) => {
+        if (other !== card) other.open = false;
+      });
+      card.open = true;
+    });
+  });
+
+  const done = phases.filter((p) => p.status === "done").length;
+  document.getElementById("progress-fill").style.width = (done / phases.length) * 100 + "%";
+  document.getElementById("progress-label").textContent = `${done} / ${phases.length} فاز انجام‌شده`;
+</script>

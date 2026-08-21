@@ -6,6 +6,7 @@ import { chromium } from "playwright-core";
 const baseUrl = (process.argv[2] ?? "https://cross-repository-code-intelligence.vercel.app").replace(/\/$/, "");
 const chromePath = process.env.CHROME_PATH ?? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const verifyPersistence = process.env.VERIFY_PERSISTENCE !== "0";
+const allowLocalApiFailures = process.env.ALLOW_LOCAL_API_FAILURES === "1";
 const outputDirectory = fileURLToPath(new URL("../outputs/vercel-verification/", import.meta.url));
 
 await mkdir(outputDirectory, { recursive: true });
@@ -15,8 +16,19 @@ const checks = [];
 
 try {
   for (const profile of [
-    { name: "desktop", viewport: { width: 1440, height: 1000 } },
-    { name: "mobile", viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+    { name: "desktop-1440", viewport: { width: 1440, height: 1000 } },
+    { name: "compact-946", viewport: { width: 946, height: 900 } },
+    { name: "laptop-1024", viewport: { width: 1024, height: 900 } },
+    { name: "tablet-768", viewport: { width: 768, height: 1024 }, hasTouch: true },
+    { name: "mobile-390", viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+    {
+      name: "android-pixel-412",
+      viewport: { width: 412, height: 915 },
+      isMobile: true,
+      hasTouch: true,
+      userAgent: "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+    },
+    { name: "mobile-375", viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true },
   ]) {
     const context = await browser.newContext(profile);
     const page = await context.newPage();
@@ -31,7 +43,7 @@ try {
       if (response.status() >= 400) failedResponses.push({ status: response.status(), url: response.url() });
     });
 
-    for (const route of ["/", "/settings", "/pdf-reader"]) {
+    for (const route of ["/", "/nlp-lab", "/settings", "/pdf-reader"]) {
       const response = await page.goto(`${baseUrl}${route}`, { waitUntil: "domcontentloaded", timeout: 45_000 });
       await page.waitForLoadState("load", { timeout: 15_000 });
       await page.waitForTimeout(1_500);
@@ -53,6 +65,33 @@ try {
       });
     }
 
+    await page.getByRole("button", { name: "Bibliothek", exact: true }).click();
+    const researchLibrary = page.getByRole("region", { name: "Bibliotheksübersicht" });
+    await researchLibrary.waitFor({ state: "visible" });
+    const libraryLayout = await page.evaluate(() => {
+      const panel = document.querySelector(".study-panel")?.getBoundingClientRect();
+      return {
+        panelWidth: panel?.width ?? 0,
+        panelRight: panel?.right ?? 0,
+        viewportWidth: window.innerWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        hasMetadataAction: [...document.querySelectorAll("button")].some((button) => button.textContent?.includes("Metadaten bearbeiten")),
+        hasJsonBackup: [...document.querySelectorAll("button")].some((button) => button.textContent?.includes("Backup JSON")),
+      };
+    });
+    await page.screenshot({ path: join(outputDirectory, `${profile.name}-pdf-research-library.png`), fullPage: false });
+    checks.push({
+      kind: "pdf-research-library",
+      profile: profile.name,
+      ...libraryLayout,
+      passed: libraryLayout.panelWidth > 0
+        && libraryLayout.panelRight <= libraryLayout.viewportWidth + 1
+        && libraryLayout.scrollWidth <= libraryLayout.viewportWidth + 1
+        && libraryLayout.hasMetadataAction
+        && libraryLayout.hasJsonBackup,
+    });
+
+    await page.getByRole("button", { name: "Panel schließen", exact: true }).last().click();
     await page.getByRole("button", { name: "Einstellungen", exact: true }).click();
     const codeEditor = page.getByRole("textbox", { name: "Editierbarer Embed-Code" });
     await codeEditor.waitFor({ state: "visible" });
@@ -129,10 +168,16 @@ try {
 
 const failures = checks.filter((check) =>
   ("status" in check && (check.status !== 200 || check.textLength === 0 || check.hasErrorOverlay || check.horizontalOverflow))
-  || ("pageErrors" in check && (check.pageErrors.length > 0 || check.consoleErrors.length > 0))
+  || ("pageErrors" in check && (check.pageErrors.length > 0 || (!allowLocalApiFailures && check.consoleErrors.length > 0)))
   || (check.kind === "reader-readability" && !check.passed)
+  || (check.kind === "pdf-research-library" && !check.passed)
   || (check.kind === "persistence" && (!check.progressPersisted || !check.focusPersisted || !check.settingPersisted)),
 );
 
-console.log(JSON.stringify({ baseUrl, checks, passed: failures.length === 0 }, null, 2));
+console.log(JSON.stringify({
+  baseUrl,
+  checks,
+  apiFailurePolicy: allowLocalApiFailures ? "reported-but-not-responsive-gating" : "gating",
+  passed: failures.length === 0,
+}, null, 2));
 if (failures.length > 0) process.exitCode = 1;

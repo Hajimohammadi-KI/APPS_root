@@ -7,7 +7,9 @@ import PdfDocument, {
   type PdfSelection,
   type PdfSelectionMenuPosition,
 } from "./components/PdfDocument";
+import ResearchLibrary from "./components/ResearchLibrary";
 import { isPdfProviderFailureMessage, upsertPdfMark, validatePdfMarks, type PdfAnchor, type PdfMark, type PdfMarkVisual } from "../../lib/pdf-marks";
+import { type PdfLibraryItem, type PdfLibrarySource } from "../../lib/pdf-library";
 import { sanitizePdfReaderStateStore, type PdfReaderState } from "../../lib/pdf-reader-state";
 import { DEFAULT_OPENAI_MODEL } from "../model-config";
 import type { ReaderConnectionStatus } from "@cross-repo/contracts";
@@ -27,8 +29,14 @@ import {
   writeDeviceSessions,
 } from "../../lib/device-session-store";
 import { DEVICE_ONLY_STORAGE } from "../../lib/storage-mode";
+import { planWeeks } from "../plan-data";
 
-type Tab = "ai" | "translate" | "notes";
+// Real week titles from the study plan, not a generic free-text tag --
+// so a highlight can be linked to the actual project/Exposé section it
+// belongs to, the way the backlog item asked for.
+const PROJECT_SECTIONS = planWeeks.map((week) => `W${week.number} · ${week.title}`);
+
+type Tab = "ai" | "translate" | "notes" | "library";
 type Tone = PdfMarkVisual["tone"];
 type MarkType = PdfMarkVisual["type"];
 type Mark = PdfMark;
@@ -217,15 +225,20 @@ export default function Home() {
   const [translation, setTranslation] = useState("");
   const [translationError, setTranslationError] = useState("");
   const [note, setNote] = useState("");
+  const [reviewMode, setReviewMode] = useState(false);
+  const [revealedMarkIds, setRevealedMarkIds] = useState<Set<string>>(new Set());
   const [editingMarkId, setEditingMarkId] = useState<string | null>(null);
   const [editingComment, setEditingComment] = useState("");
   const [editingTranslation, setEditingTranslation] = useState("");
+  const [editingProjectSection, setEditingProjectSection] = useState("");
   const [busy, setBusy] = useState(false);
   const [driveBusy, setDriveBusy] = useState(false);
   const [tone, setTone] = useState<Tone>("yellow");
   const [markType, setMarkType] = useState<MarkType>("highlight");
   const [marks, setMarks] = useState<Mark[]>([]);
   const [documentId, setDocumentId] = useState("sample");
+  const [documentSource, setDocumentSource] = useState<PdfLibrarySource>({ kind: "sample" });
+  const [libraryCollection, setLibraryCollection] = useState("");
   const [storageReady, setStorageReady] = useState(false);
   const [query, setQuery] = useState("");
   const [toneFilter, setToneFilter] = useState<Tone | "all">("all");
@@ -293,6 +306,12 @@ export default function Home() {
       setEmbed(params.get("embed") === "1");
       const savedWidth = Number(localStorage.getItem("pdf-studio-panel-width"));
       if (savedWidth) setPanelWidth(Math.min(760, Math.max(360, savedWidth)));
+      // Restore the panel's open/closed state from the last session, but never
+      // on a phone-width viewport -- the compact-viewport effect above forces
+      // it closed there on purpose so it doesn't cover the whole screen.
+      if (localStorage.getItem("pdf-studio-panel-open") === "1" && !window.matchMedia("(max-width: 720px)").matches) {
+        setPanelOpen(true);
+      }
       setGoogleClientId(localStorage.getItem("pdf-studio-google-client-id") || "");
       setTargetLanguage(localStorage.getItem("pdf-studio-target-language") || "DE");
       const savedZoom = Number(localStorage.getItem("pdf-studio-zoom"));
@@ -435,6 +454,11 @@ export default function Home() {
 
   useEffect(() => {
     if (!storageReady) return;
+    localStorage.setItem("pdf-studio-panel-open", panelOpen ? "1" : "0");
+  }, [panelOpen, storageReady]);
+
+  useEffect(() => {
+    if (!storageReady) return;
     const store = readMarkStore();
     store[documentId] = marks;
     localStorage.setItem(MARK_STORE, JSON.stringify(store));
@@ -498,7 +522,7 @@ export default function Home() {
     window.setTimeout(() => setToast(""), 3_200);
   };
 
-  const applyPdf = async (bytes: ArrayBuffer, name: string) => {
+  const applyPdf = async (bytes: ArrayBuffer, name: string, source: PdfLibrarySource = { kind: "local" }) => {
     if (bytes.byteLength > MAX_PDF_BYTES) throw new Error("Die PDF ist größer als 200 MB.");
     const signature = new TextDecoder().decode(bytes.slice(0, 5));
     if (signature !== "%PDF-") throw new Error("Die ausgewählte Datei ist keine gültige PDF.");
@@ -507,6 +531,7 @@ export default function Home() {
     setPdfBytes(bytes);
     setReaderError(null);
     setDocumentId(id);
+    setDocumentSource(source);
     setMarks(readMarkStore()[id] ?? []);
     setPdfName(name.replace(/\.pdf$/i, ""));
     setSelectedText(savedReaderState?.selectedText ?? "");
@@ -585,7 +610,7 @@ export default function Home() {
       }
       const bytes = await response.arrayBuffer();
       if (cancelled) return;
-      await applyPdf(bytes, fileName);
+      await applyPdf(bytes, fileName, { kind: "bundled", locator: BUNDLED_EXPOSE_URL });
       if (!cancelled) {
         showToast(custom
           ? "Dein aktuelles Exposé im PDF Reader geöffnet"
@@ -631,7 +656,7 @@ export default function Home() {
       setPdfName(requestedName.replace(/\.pdf$/i, ""));
       try {
         if (cancelled) return;
-        await applyPdf(await fetchDrivePdf(driveId), requestedName);
+        await applyPdf(await fetchDrivePdf(driveId), requestedName, { kind: "drive", locator: driveId });
         if (cancelled) return;
         setConnections((value) => ({ ...value, drive: true }));
         showToast(`${requestedName} aus Google Drive geöffnet`);
@@ -676,7 +701,7 @@ export default function Home() {
           throw new Error(payload.message || "Die ausgewählte PDF konnte nicht geöffnet werden.");
         }
         if (cancelled) return;
-        await applyPdf(await response.arrayBuffer(), requestedName);
+        await applyPdf(await response.arrayBuffer(), requestedName, { kind: "url", locator: originalSourceUrl || sourceUrl });
         if (!cancelled) showToast(`${requestedName} im PDF Reader geöffnet`);
       } catch (error) {
         if (!cancelled) {
@@ -696,10 +721,44 @@ export default function Home() {
   const importLocalPdf = async (file?: File) => {
     if (!file) return;
     try {
-      await applyPdf(await file.arrayBuffer(), file.name);
+      await applyPdf(await file.arrayBuffer(), file.name, { kind: "local" });
       showToast(`${file.name} geöffnet`);
     } catch (error) {
       showToast(error instanceof Error ? error.message : "Die PDF konnte nicht geöffnet werden.");
+    }
+  };
+
+  const openLibraryItem = async (item: PdfLibraryItem) => {
+    if (item.id === documentId) {
+      showToast("Dieses Dokument ist bereits geöffnet.");
+      return;
+    }
+    const locator = item.source.locator?.trim();
+    if (item.source.kind === "local" || item.source.kind === "sample" || !locator) {
+      showToast("Für eine lokale PDF bitte „PDF öffnen“ wählen. Metadaten und Notizen bleiben erhalten.");
+      return;
+    }
+    setDriveBusy(true);
+    try {
+      if (item.source.kind === "drive") {
+        await applyPdf(await fetchDrivePdf(locator), item.fileName, item.source);
+      } else if (item.source.kind === "url") {
+        const response = await fetch(`/api/pdf/public?url=${encodeURIComponent(locator)}`, { cache: "no-store" });
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({})) as { message?: string };
+          throw new Error(payload.message || "Die gespeicherte PDF konnte nicht geladen werden.");
+        }
+        await applyPdf(await response.arrayBuffer(), item.fileName, item.source);
+      } else {
+        const response = await fetch(locator, { cache: "no-store" });
+        if (!response.ok) throw new Error("Die gespeicherte PDF konnte nicht geladen werden.");
+        await applyPdf(await response.arrayBuffer(), item.fileName, item.source);
+      }
+      showToast(`${item.title} geöffnet`);
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "Die gespeicherte PDF konnte nicht geöffnet werden.");
+    } finally {
+      setDriveBusy(false);
     }
   };
 
@@ -788,21 +847,25 @@ export default function Home() {
     setEditingMarkId(mark.id);
     setEditingComment(mark.note ?? "");
     setEditingTranslation(mark.translation ?? "");
+    setEditingProjectSection(mark.projectSection ?? "");
   };
 
   const cancelEditingMark = () => {
     setEditingMarkId(null);
     setEditingComment("");
     setEditingTranslation("");
+    setEditingProjectSection("");
   };
 
   const saveEditedMark = (id: string) => {
     const nextComment = editingComment.trim();
     const nextTranslation = editingTranslation.trim();
+    const nextProjectSection = editingProjectSection.trim();
     setMarks((current) => current.map((mark) => mark.id === id ? {
       ...mark,
       note: nextComment || undefined,
       translation: nextTranslation || undefined,
+      projectSection: nextProjectSection || undefined,
     } : mark));
     cancelEditingMark();
     showToast("Kommentar aktualisiert");
@@ -940,7 +1003,7 @@ export default function Home() {
     if (target.kind !== "file") return showToast("Bitte einen gültigen Google-Drive-Dateilink oder eine Datei-ID eingeben.");
     setDriveBusy(true);
     try {
-      await applyPdf(await fetchDrivePdf(target.id), `Google-Drive-${target.id}.pdf`);
+      await applyPdf(await fetchDrivePdf(target.id), `Google-Drive-${target.id}.pdf`, { kind: "drive", locator: target.id });
       setConnections((value) => ({ ...value, drive: true }));
       setSettingsOpen(false);
       showToast("Öffentliche Drive-PDF geöffnet");
@@ -1000,7 +1063,7 @@ export default function Home() {
         const data = (await response.json().catch(() => ({}))) as { message?: string };
         throw new Error(friendlyGoogleDriveError(data.message || "Die ausgewählte Drive-PDF konnte nicht heruntergeladen werden."));
       }
-      await applyPdf(await response.arrayBuffer(), file.name);
+      await applyPdf(await response.arrayBuffer(), file.name, { kind: "drive", locator: file.id });
       setSettingsOpen(false);
       showToast(`${file.name} geöffnet`);
     } catch (error) {
@@ -1336,10 +1399,10 @@ export default function Home() {
 
       <section className="workspace">
         <nav className="sidebar">
-          <button className="nav-item active">▥ <span>Bibliothek</span></button>
-          <button className="nav-item">◷ <span>Heute lesen</span></button>
+          <button className={`nav-item ${tab === "library" && panelOpen ? "active" : ""}`} onClick={() => { setLibraryCollection(""); setTab("library"); setPanelOpen(true); }}>▥ <span>Bibliothek</span></button>
+          <button className="nav-item" onClick={() => { setLibraryCollection(""); setTab("library"); setPanelOpen(true); }}>◷ <span>Heute lesen</span></button>
           <p className="nav-label">SAMMLUNGEN</p>
-          {["Dissertation", "Methoden", "Literatur", "Sprachen"].map((label) => <button className="nav-item" key={label}>□ <span>{label}</span></button>)}
+          {["Dissertation", "Methoden", "Literatur", "Sprachen"].map((label) => <button className={`nav-item ${tab === "library" && panelOpen && libraryCollection === label ? "active" : ""}`} key={label} onClick={() => { setLibraryCollection(label); setTab("library"); setPanelOpen(true); }}>□ <span>{label}</span></button>)}
           <div className="nav-bottom">
             <button className="nav-item" onClick={() => { setTab("notes"); setPanelOpen(true); }}>◇ <span>Markierungen</span></button>
             <button className="nav-item" onClick={() => setSettingsOpen(true)}>⚙ <span>Reader-Einstellungen</span></button>
@@ -1385,6 +1448,7 @@ export default function Home() {
             <button onClick={() => setSettingsOpen(true)}>Drive</button>
             <button className="toolbar-secondary" onClick={downloadOriginal} disabled={!pdfBytes}>Original</button>
             <button className="toolbar-secondary" onClick={() => void exportAnnotatedPdf()} disabled={!pdfBytes}>PDF exportieren</button>
+            <button className="toolbar-library" onClick={() => { setLibraryCollection(""); setTab("library"); setPanelOpen(true); }}>Bibliothek</button>
             <button className="panel-toggle" onClick={() => setPanelOpen((value) => !value)}>{panelOpen ? "Panel schließen" : "Panel öffnen"}</button>
           </div>
 
@@ -1511,6 +1575,7 @@ export default function Home() {
               <button className={tab === "ai" ? "active" : ""} onClick={() => setTab("ai")}>✦ KI</button>
               <button className={tab === "translate" ? "active" : ""} onClick={() => setTab("translate")}>◎ Übersetzung</button>
               <button className={tab === "notes" ? "active" : ""} onClick={() => setTab("notes")}>▤ Notizen</button>
+              <button className={tab === "library" ? "active" : ""} onClick={() => setTab("library")}>▥ Bibliothek</button>
               <button className="panel-size-button" onClick={() => setPanelMode((value) => value === "normal" ? "wide" : "normal")} title="Panelgröße wechseln">{panelMode === "normal" ? "⤢" : "⤡"}</button>
               <button className="panel-close-button" onClick={() => setPanelOpen(false)} aria-label="Panel schließen" title="Panel schließen">×</button>
             </div>
@@ -1543,17 +1608,51 @@ export default function Home() {
               <textarea className="note-editor" value={note} onChange={(event) => setNote(event.target.value)} placeholder="Deine Notiz …" />
               <button className="primary" onClick={saveNote}>Notiz speichern</button>
               <div className="filters"><button className={toneFilter === "all" ? "picked" : ""} onClick={() => setToneFilter("all")}>Alle</button>{(Object.keys(toneLabels) as Tone[]).map((color) => <button className={`filter-dot ${color} ${toneFilter === color ? "selected" : ""}`} key={color} onClick={() => setToneFilter(color)} title={toneLabels[color]} />)}</div>
-              <div className="bulk-actions"><button onClick={deletePageMarks}>Seite {currentPage} leeren</button><button className="danger-link" onClick={deleteAllMarks}>Alle löschen</button></div>
-              <div className="note-list">{filteredMarks.length ? filteredMarks.map((item) => <article className={`note-card ${item.tone}`} key={item.id} onClick={() => { if (editingMarkId !== item.id) jumpToMark(item); }}>
-                <div><span className={`mini-dot ${item.tone}`} /><b>Seite {item.page}</b><span>{item.type === "highlight" ? "Highlight" : item.type === "underline" ? "Unterstrichen" : "Durchgestrichen"}</span><button className="edit-mark" title="Kommentar bearbeiten" aria-label="Kommentar bearbeiten" onClick={(event) => { event.stopPropagation(); startEditingMark(item); }}>Bearbeiten</button><button className="delete-mark" title="Markierung löschen" aria-label="Markierung löschen" onClick={(event) => { event.stopPropagation(); deleteMark(item.id); }}>Löschen</button></div>
-                <p dir={textDirection(item.text)}>{item.text}</p>
-                {editingMarkId === item.id ? <form className="note-edit-form" onClick={(event) => event.stopPropagation()} onSubmit={(event) => { event.preventDefault(); saveEditedMark(item.id); }}>
-                  <label>Kommentar<textarea value={editingComment} onChange={(event) => setEditingComment(event.target.value)} dir={textDirection(editingComment)} placeholder="Kommentar hinzufügen …" /></label>
-                  <label>Übersetzung<textarea value={editingTranslation} onChange={(event) => setEditingTranslation(event.target.value)} dir={textDirection(editingTranslation)} placeholder="Übersetzung ergänzen …" /></label>
-                  <div><button type="button" onClick={cancelEditingMark}>Abbrechen</button><button type="submit" className="primary">Änderungen speichern</button></div>
-                </form> : <>{item.translation && <small dir={textDirection(item.translation)}><b>Übersetzung:</b> {item.translation}</small>}{item.note && <small dir={textDirection(item.note)}><b>Kommentar:</b> {item.note}</small>}</>}
-              </article>) : <div className="empty-notes">Keine passenden Markierungen gefunden.</div>}</div>
+              <div className="bulk-actions">
+                <button
+                  className={reviewMode ? "primary" : ""}
+                  onClick={() => { setReviewMode((value) => !value); setRevealedMarkIds(new Set()); }}
+                  title="Erst selbst erinnern, dann die Quelle zeigen"
+                >
+                  {reviewMode ? "✓ Testmodus" : "Testmodus"}
+                </button>
+                <button onClick={deletePageMarks}>Seite {currentPage} leeren</button>
+                <button className="danger-link" onClick={deleteAllMarks}>Alle löschen</button>
+              </div>
+              <div className="note-list">{filteredMarks.length ? filteredMarks.map((item) => {
+                const revealed = !reviewMode || revealedMarkIds.has(item.id);
+                return <article className={`note-card ${item.tone}`} key={item.id} onClick={() => { if (editingMarkId !== item.id && revealed) jumpToMark(item); }}>
+                <div><span className={`mini-dot ${item.tone}`} /><b>Seite {item.page}</b><span>{item.type === "highlight" ? "Highlight" : item.type === "underline" ? "Unterstrichen" : "Durchgestrichen"}</span>{revealed && <button className="edit-mark" title="Kommentar bearbeiten" aria-label="Kommentar bearbeiten" onClick={(event) => { event.stopPropagation(); startEditingMark(item); }}>Bearbeiten</button>}<button className="delete-mark" title="Markierung löschen" aria-label="Markierung löschen" onClick={(event) => { event.stopPropagation(); deleteMark(item.id); }}>Löschen</button></div>
+                {item.projectSection && <span className="project-section-tag">▱ {item.projectSection}</span>}
+                {!revealed ? <>
+                  <p className="review-prompt">{item.note ? <span dir={textDirection(item.note)}>{item.note}</span> : "Was stand an dieser Stelle? Versuch dich zu erinnern, bevor du die Quelle zeigst."}</p>
+                  <button type="button" className="secondary" onClick={(event) => { event.stopPropagation(); setRevealedMarkIds((current) => new Set(current).add(item.id)); }}>Quelle zeigen</button>
+                </> : <>
+                  <p dir={textDirection(item.text)}>{item.text}</p>
+                  {editingMarkId === item.id ? <form className="note-edit-form" onClick={(event) => event.stopPropagation()} onSubmit={(event) => { event.preventDefault(); saveEditedMark(item.id); }}>
+                    <label>Kommentar<textarea value={editingComment} onChange={(event) => setEditingComment(event.target.value)} dir={textDirection(editingComment)} placeholder="Kommentar hinzufügen …" /></label>
+                    <label>Übersetzung<textarea value={editingTranslation} onChange={(event) => setEditingTranslation(event.target.value)} dir={textDirection(editingTranslation)} placeholder="Übersetzung ergänzen …" /></label>
+                    <label>Projekt-Abschnitt<select value={editingProjectSection} onChange={(event) => setEditingProjectSection(event.target.value)}>
+                      <option value="">— Keinem Abschnitt zugeordnet —</option>
+                      {PROJECT_SECTIONS.map((section) => <option key={section} value={section}>{section}</option>)}
+                    </select></label>
+                    <div><button type="button" onClick={cancelEditingMark}>Abbrechen</button><button type="submit" className="primary">Änderungen speichern</button></div>
+                  </form> : <>{item.translation && <small dir={textDirection(item.translation)}><b>Übersetzung:</b> {item.translation}</small>}{item.note && <small dir={textDirection(item.note)}><b>Kommentar:</b> {item.note}</small>}</>}
+                </>}
+              </article>;
+              }) : <div className="empty-notes">Keine passenden Markierungen gefunden.</div>}</div>
             </div>}
+
+            {tab === "library" && <ResearchLibrary
+              documentId={documentId}
+              documentName={pdfName}
+              documentSource={documentSource}
+              pageCount={pageCount}
+              markCount={marks.length}
+              collectionIntent={libraryCollection}
+              onOpen={(item) => void openLibraryItem(item)}
+              onToast={showToast}
+            />}
           </aside>
         </>}
       </section>

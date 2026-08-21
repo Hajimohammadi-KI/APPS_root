@@ -2,7 +2,10 @@
   [ValidateSet("Menu", "Install", "Update", "Repair", "Uninstall")]
   [string]$Action = "Menu",
   [switch]$NoDialogs,
-  [string]$ScriptRoot = ""
+  [string]$ScriptRoot = "",
+  [string]$InstallRootOverride = "",
+  [string]$SavedDataRootOverride = "",
+  [switch]$SkipShortcuts
 )
 
 Set-StrictMode -Version Latest
@@ -15,8 +18,16 @@ $AppName = "Cross Repository Code Intelligence"
 $MinimumNodeVersion = [Version]"22.13.0"
 $EffectiveScriptRoot = if ([string]::IsNullOrWhiteSpace($ScriptRoot)) { $PSScriptRoot } else { $ScriptRoot }
 $SourceRoot = [IO.Path]::GetFullPath((Join-Path $EffectiveScriptRoot ".."))
-$InstallRoot = Join-Path $env:LOCALAPPDATA "CrossRepositoryCodeIntelligence"
-$SavedDataRoot = Join-Path $env:LOCALAPPDATA "CrossRepositoryCodeIntelligence-UserData"
+$InstallRoot = if ([string]::IsNullOrWhiteSpace($InstallRootOverride)) {
+  Join-Path $env:LOCALAPPDATA "CrossRepositoryCodeIntelligence"
+} else {
+  [IO.Path]::GetFullPath($InstallRootOverride)
+}
+$SavedDataRoot = if ([string]::IsNullOrWhiteSpace($SavedDataRootOverride)) {
+  Join-Path $env:LOCALAPPDATA "CrossRepositoryCodeIntelligence-UserData"
+} else {
+  [IO.Path]::GetFullPath($SavedDataRootOverride)
+}
 $StartBatch = Join-Path $InstallRoot "STARTEN-WINDOWS.bat"
 $SetupBatch = Join-Path $InstallRoot "SETUP-WINDOWS.bat"
 $IconPath = Join-Path $InstallRoot "public\app-icon.ico"
@@ -134,6 +145,7 @@ function Copy-ApplicationFiles {
     ".wrangler",
     ".npm-cache",
     ".git",
+    "outputs",
     "/XF",
     ".env.local",
     "*.log",
@@ -264,9 +276,58 @@ function Install-Dependencies($Prerequisites) {
         -not (Test-Path -LiteralPath (Join-Path $InstallRoot "apps\api\dist\main.js"))) {
       throw "Die kompilierten Programmdateien sind unvollständig. Bitte das Installationsprotokoll prüfen: $SetupLog"
     }
+
+    Initialize-WslCopy
   }
   finally {
     Pop-Location
+  }
+}
+
+function Initialize-WslCopy {
+  # The web server ("wrangler dev" / workerd) crashes natively on Windows on
+  # this machine, so it runs inside WSL instead (see
+  # docs/reports/WSL2-DEV-ENVIRONMENT-2026-08-13.md and scripts/wsl/*.md).
+  # This prepares that WSL-side copy here, at install time, so the first
+  # "Jetzt starten" doesn't have to do a slow first-time `bun install`
+  # inside WSL within Wait-ForAppReady's timeout.
+  $wslCheck = & wsl.exe -d Ubuntu -u root -- echo ok 2>$null
+  if ($LASTEXITCODE -ne 0 -or $wslCheck -ne "ok") {
+    Add-Content -LiteralPath $SetupLog -Value "`r`nWSL2 (Ubuntu) wurde nicht gefunden -- der Webserver kann später nicht gestartet werden." -Encoding UTF8
+    return
+  }
+  # Backslashes get silently eaten somewhere in the PowerShell -> wsl.exe ->
+  # wslpath argument-passing chain (confirmed: "D:\APPS_root\..." arrives at
+  # wslpath as "D:APPS_root..."). Forward slashes sidestep the ambiguity.
+  $prepareScript = Join-Path $InstallRoot "scripts\wsl\prepare-wsl.sh"
+  $wslInstallRoot = (& wsl.exe wslpath -a "$($InstallRoot.Replace('\', '/'))") 2>$null
+  if (-not $wslInstallRoot) {
+    Add-Content -LiteralPath $SetupLog -Value "`r`nDer Installationspfad konnte nicht für WSL umgewandelt werden." -Encoding UTF8
+    return
+  }
+  $wslInstallRoot = $wslInstallRoot.Trim()
+  $prepareScriptWsl = (& wsl.exe wslpath -a "$($prepareScript.Replace('\', '/'))") 2>$null
+  if ($prepareScriptWsl) { $prepareScriptWsl = $prepareScriptWsl.Trim() }
+  $prepareArguments = @("-d", "Ubuntu", "-u", "root", "--", "bash", $prepareScriptWsl, $wslInstallRoot)
+  if ([string]::IsNullOrWhiteSpace($InstallRootOverride)) {
+    $prepareArguments += "--migrate-legacy"
+  }
+  $previousPreference = $ErrorActionPreference
+  try {
+    # Bun writes normal install progress to stderr. Capture it as diagnostic
+    # text without letting PowerShell turn a successful WSL run into an error.
+    $ErrorActionPreference = "Continue"
+    $output = & wsl.exe @prepareArguments 2>&1
+    $wslExitCode = $LASTEXITCODE
+  }
+  finally {
+    $ErrorActionPreference = $previousPreference
+  }
+  foreach ($line in $output) {
+    Add-Content -LiteralPath $SetupLog -Value $line.ToString() -Encoding UTF8
+  }
+  if ($wslExitCode -ne 0) {
+    throw "Die WSL-Umgebung für den lokalen Webserver konnte nicht vorbereitet werden.`r`n`r`nLetzte Meldungen:`r`n$($output -join "`r`n")`r`n`r`nVollständiges Protokoll:`r`n$SetupLog"
   }
 }
 
@@ -285,12 +346,18 @@ function New-Shortcut([string]$Path, [string]$Target, [string]$Description) {
 }
 
 function Create-Shortcuts {
+  if ($SkipShortcuts) {
+    return
+  }
   New-Shortcut $DesktopShortcut $StartBatch "$AppName starten"
   New-Shortcut $StartShortcut $StartBatch "$AppName starten"
   New-Shortcut $SetupShortcut $SetupBatch "$AppName aktualisieren, reparieren oder deinstallieren"
 }
 
 function Remove-Shortcuts {
+  if ($SkipShortcuts) {
+    return
+  }
   foreach ($shortcut in @($DesktopShortcut, $StartShortcut, $SetupShortcut)) {
     if (Test-Path -LiteralPath $shortcut) {
       Remove-Item -LiteralPath $shortcut -Force
@@ -315,10 +382,17 @@ function Save-UserData {
 }
 
 function Start-App {
-  if (-not (Test-Path -LiteralPath $StartBatch)) {
-    throw "Die Startdatei fehlt: $StartBatch"
+  $supervisor = Join-Path $InstallRoot "scripts\start-local-app.ps1"
+  if (-not (Test-Path -LiteralPath $supervisor)) {
+    throw "Die Startdatei fehlt: $supervisor"
   }
-  return Start-Process -FilePath $StartBatch -WorkingDirectory $InstallRoot -PassThru
+  $arguments = @(
+    "-NoProfile",
+    "-ExecutionPolicy", "Bypass",
+    "-File", ('"{0}"' -f $supervisor),
+    "-NoBrowser"
+  )
+  return Start-Process -FilePath "powershell.exe" -ArgumentList $arguments -WorkingDirectory $InstallRoot -WindowStyle Hidden -PassThru
 }
 
 function Open-DeepLBrowserExtensionPage {
@@ -440,7 +514,7 @@ Remove-Item -LiteralPath $PSCommandPath -Force -ErrorAction SilentlyContinue
 
 function Stop-LocalAppProcesses {
   $escapedRoot = [Regex]::Escape($InstallRoot)
-  $processNames = @("bun.exe", "node.exe", "workerd.exe", "wrangler.exe", "esbuild.exe", "cmd.exe", "npm.exe", "powershell.exe")
+  $processNames = @("bun.exe", "node.exe", "workerd.exe", "wrangler.exe", "esbuild.exe", "cmd.exe", "npm.exe", "powershell.exe", "wsl.exe")
   $protectedIds = [Collections.Generic.HashSet[int]]::new()
   $currentId = $PID
   while ($currentId -gt 0 -and $protectedIds.Add($currentId)) {
@@ -567,7 +641,7 @@ function Invoke-Menu {
   $brandKicker = New-UiLabel "FORSCHEN · VERSTEHEN · BAUEN" 34 116 224 22 8.5 ([System.Drawing.FontStyle]::Bold) ([System.Drawing.Color]::FromArgb(216, 200, 233))
   $brandTitle = New-UiLabel "Cross Repository`nCode Intelligence" 34 148 224 72 19 ([System.Drawing.FontStyle]::Bold) $white
   $brandCopy = New-UiLabel "Ihr lokales Lernstudio für Forschungsplanung, PDF-Arbeit und Fokuszeit." 34 232 218 72 10 ([System.Drawing.FontStyle]::Regular) ([System.Drawing.Color]::FromArgb(237, 228, 245))
-  $brandFooter = New-UiLabel "LOKALE INSTALLATION`nVersion2 0.5.0 · Daten bleiben auf diesem PC" 34 510 224 48 8.5 ([System.Drawing.FontStyle]::Regular) ([System.Drawing.Color]::FromArgb(216, 200, 233))
+  $brandFooter = New-UiLabel "LOKALE INSTALLATION`nVersion2 0.5.7 · Daten bleiben auf diesem PC" 34 510 224 48 8.5 ([System.Drawing.FontStyle]::Regular) ([System.Drawing.Color]::FromArgb(216, 200, 233))
   $brandPanel.Controls.AddRange(@($iconBox, $brandKicker, $brandTitle, $brandCopy, $brandFooter))
 
   $content = New-Object System.Windows.Forms.Panel

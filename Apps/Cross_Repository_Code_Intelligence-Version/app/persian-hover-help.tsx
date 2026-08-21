@@ -6,6 +6,7 @@ type TooltipState = {
   text: string;
   top: number;
   left: number;
+  placement: "above" | "below";
 };
 
 const exactHelp: Record<string, string> = {
@@ -58,14 +59,15 @@ export default function PersianHoverHelp() {
     const show = (element: HTMLElement) => {
       const rect = element.getBoundingClientRect();
       const text = element.dataset.persianTooltip || helpFor(element);
+      const tooltipWidth = Math.min(320, Math.max(180, window.innerWidth - 24));
+      const halfWidth = tooltipWidth / 2;
       const left = Math.min(
-        Math.max(12, rect.left + rect.width / 2),
-        window.innerWidth - 12,
+        Math.max(12 + halfWidth, rect.left + rect.width / 2),
+        window.innerWidth - 12 - halfWidth,
       );
-      const top = rect.bottom + 12 > window.innerHeight - 90
-        ? Math.max(12, rect.top - 12)
-        : rect.bottom + 12;
-      setTooltip({ text, top, left });
+      const placement = rect.bottom + 110 > window.innerHeight ? "above" : "below";
+      const top = placement === "above" ? Math.max(12, rect.top - 10) : rect.bottom + 10;
+      setTooltip({ text, top, left, placement });
     };
 
     const targetFrom = (event: Event) =>
@@ -125,6 +127,7 @@ export default function PersianHoverHelp() {
       className="persian-hover-tooltip"
       lang="fa"
       role="tooltip"
+      data-placement={tooltip.placement}
       style={{ left: tooltip.left, top: tooltip.top }}
     >
       {tooltip.text}

@@ -3,7 +3,7 @@
 .paper .journal { text-align: center; font-style: italic; font-size: 12px; color: #59606a; }
 .paper h1 { text-align: center; font-size: 27px; margin: 30px 0 18px; }
 .paper h2 { font-size: 18px; margin-top: 32px; }
-.authors { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 24px; text-align: center; font-size: 12px; margin-bottom: 35px; }
+.authors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; text-align: center; font-size: 12px; margin-bottom: 35px; }
 .empty-reader-callout { border: 1px solid #d2c0e6; background: linear-gradient(135deg, #f4effa, #fffaf0); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 9px; margin-bottom: 35px; font-family: Inter, sans-serif; }
 .empty-reader-callout span { color: #5d6d7d; font-size: 13px; line-height: 1.55; }
 .empty-reader-callout .upload-button { align-self: flex-start; color: white; background: #675080; border: 1px solid #45345f; font-weight: 750; }

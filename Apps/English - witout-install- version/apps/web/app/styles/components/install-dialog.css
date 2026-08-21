@@ -1,0 +1,248 @@
+.install-guide-button {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+}
+
+.install-dialog {
+  width: min(900px, calc(100vw - 28px));
+  max-width: none;
+  max-height: calc(100vh - 28px);
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--foreground);
+}
+
+.install-dialog::backdrop {
+  background: rgba(10, 21, 40, 0.66);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.install-dialog-panel {
+  max-height: calc(100vh - 28px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 28px;
+  background:
+    radial-gradient(
+      circle at 92% 0%,
+      rgba(23, 96, 223, 0.12),
+      transparent 18rem
+    ),
+    white;
+  padding: clamp(18px, 3vw, 30px);
+  box-shadow: 0 36px 90px rgba(5, 18, 40, 0.34);
+}
+
+.install-dialog[open] .install-dialog-panel {
+  animation: install-dialog-enter 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes install-dialog-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.install-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.install-dialog-header h2 {
+  margin: 10px 0 6px;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+}
+
+.install-dialog-header p {
+  max-width: 64ch;
+  margin: 0;
+  color: var(--muted-foreground);
+  line-height: 1.55;
+}
+
+.install-setup-card {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+  border: 1px solid rgba(137, 159, 228, 0.35);
+  border-radius: 20px;
+  background: #f8f9ff;
+  padding: 16px;
+}
+
+.install-setup-heading {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.install-setup-heading h3,
+.install-step-heading h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.install-setup-heading p,
+.install-step-heading p {
+  margin: 4px 0 0;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.install-folder-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-radius: 15px;
+  background: white;
+  padding: 12px;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.install-folder-status {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  color: var(--primary);
+}
+
+.install-folder-status span {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.install-folder-status strong {
+  color: var(--foreground);
+  font-size: 13px;
+}
+
+.install-folder-status small {
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.install-location-note {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.install-step-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.install-platform-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.install-platform-card {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-content: start;
+  gap: 10px;
+  min-height: 230px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(247, 250, 254, 0.88);
+  padding: 16px;
+}
+
+.install-platform-card[data-current="true"] {
+  border-color: #b9c9ff;
+  background: #f5f8ff;
+  box-shadow: 0 10px 28px rgba(23, 96, 223, 0.11);
+}
+
+.install-platform-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 13px;
+  background: #eaf2ff;
+  color: #155edf;
+}
+
+.install-platform-title {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.install-platform-title h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.install-platform-card ol {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #54647a;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.install-platform-card li + li {
+  margin-top: 7px;
+}
+
+.install-dialog-footer {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+  border: 1px solid #dce6f5;
+  border-radius: 17px;
+  background: #f4f8ff;
+  padding: 12px 14px;
+  color: #4e6078;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.install-browser-hint {
+  color: var(--muted-foreground);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.mobile-menu {
+  display: none;
+}
+

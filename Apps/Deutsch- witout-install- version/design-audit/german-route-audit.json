@@ -1,0 +1,226 @@
+{
+  "capturedAt": "2026-08-19T23:14:22.550Z",
+  "viewport": [1280, 720],
+  "rows": [
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/",
+      "smallTargets": [],
+      "title": "DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/analytics",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/analytics",
+      "smallTargets": [],
+      "title": "Seitenanalyse · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/audio",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/audio",
+      "smallTargets": [],
+      "title": "Audio-Bibliothek · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/einstellungen",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/einstellungen",
+      "smallTargets": [],
+      "title": "Einstellungen · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/fehler",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/fehler",
+      "smallTargets": [],
+      "title": "Fehlermotor · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/fertigkeiten",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/fertigkeiten",
+      "smallTargets": [],
+      "title": "Integrierte Fertigkeiten A1–C2 · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/fortschritt",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/fortschritt",
+      "smallTargets": [],
+      "title": "Fortschritt & Nachweise · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/gemischtes-training",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/gemischtes-training",
+      "smallTargets": [],
+      "title": "DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/grammatik",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/grammatik",
+      "smallTargets": [],
+      "title": "DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/heute",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/heute",
+      "smallTargets": [],
+      "title": "DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/kasus-trainer",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/kasus-trainer",
+      "smallTargets": [],
+      "title": "Kasus-Trainer · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/lehrkraft",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/lehrkraft",
+      "smallTargets": [],
+      "title": "DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/offline",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/offline",
+      "smallTargets": [],
+      "title": "Offline · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/privacy",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/privacy",
+      "smallTargets": [],
+      "title": "Datenschutz · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/ressourcen",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/ressourcen",
+      "smallTargets": [],
+      "title": "Online-Ressourcen · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "Inter, Arial, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/studio",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/studio",
+      "smallTargets": [],
+      "title": "Konversationsstudio | Deutsch Automaticity · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/support",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/support",
+      "smallTargets": [],
+      "title": "Support · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/vokabelkarten",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/vokabelkarten",
+      "smallTargets": [],
+      "title": "DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/wiederholungen",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/wiederholungen",
+      "smallTargets": [],
+      "title": "Wiederholungen · DeutschFlow",
+      "viewport": [1280, 720]
+    },
+    {
+      "bodyFont": "GeistSans, \"GeistSans Fallback\", system-ui, sans-serif",
+      "finalUrl": "http://127.0.0.1:3311/deutsch-mit-marija/uebung/idiom-day-1",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/deutsch-mit-marija/uebung/idiom-day-1",
+      "smallTargets": [],
+      "title": "Quellenübung · DeutschFlow",
+      "viewport": [1280, 720]
+    }
+  ]
+}

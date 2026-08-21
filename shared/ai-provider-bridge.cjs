@@ -211,6 +211,19 @@ function promptFor(request) {
   if (request?.purpose === "follow-up") {
     return `You generate one short follow-up question for a controlled ${language} speaking lesson. Stay strictly inside the supplied topic and target language. Adapt to the learner's answer, but do not replace the catalog topic, introduce a new lesson, score the learner, or quote a textbook. Return exactly one original question, no answer, no explanation, no markdown, and no more than 25 words.\n\nControlled topic: ${topic}\nLesson boundaries: ${content}${learnerInput ? `\nLearner answer: ${learnerInput}` : ""}`;
   }
+  if (request?.purpose === "language-analysis") {
+    return `You are an evidence-conscious ${language} language coach. Use only the supplied lesson context, learner input, and rule-based NLP observations. Treat every NLP metric as a diagnostic signal, not a score. Distinguish direct observation from inference. Never award CEFR, mastery, automaticity, comprehension, or pronunciation. A transcript is not audio evidence. Preserve the learner's intended meaning and never silently replace their text.
+
+Return exactly these three short sections in ${language}:
+Observed — cite one concrete pattern and state uncertainty where needed.
+Repair — propose one explicit edit for the learner to accept, reject, or revise.
+Transfer — ask for one new-context response that cannot be copied from the source.
+
+Do not invent missing source text, audio, timing, provider checks, or learner history.
+
+Topic: ${topic}
+Diagnostic context: ${content}${learnerInput ? `\nLearner input: ${learnerInput}` : ""}`;
+  }
   return `You are a careful ${language} language teacher. Explain the grammar clearly, preserve the learner's meaning, and never invent a verified score.\n\nTopic: ${topic}\nLesson content: ${content}${learnerInput ? `\nLearner input: ${learnerInput}` : ""}`;
 }
 

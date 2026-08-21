@@ -203,7 +203,7 @@ export const DEFAULT_WERKZEUG_SETTINGS: WerkzeugSettings = {
     planPausedAt: "",
     dailyWorkMode: "light",
     totalPlanWeeks: 25,
-    dailyCapacityMinutes: 240,
+    dailyCapacityMinutes: 70,
     weeklyGoalMinutes: 1200,
     workdayStart: "09:00",
     restDays: [0, 6],

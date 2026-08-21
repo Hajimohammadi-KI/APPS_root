@@ -1,6 +1,6 @@
 {
   "name": "cross-repository-study-tracker",
-  "version": "0.5.0-version2",
+  "version": "0.5.7-version2",
   "private": true,
   "packageManager": "bun@1.3.14",
   "workspaces": [
@@ -20,13 +20,14 @@
     "build:vercel": "bun run prepare:pdf-worker && next build",
     "build:api": "bun run --cwd apps/api build",
     "build:all": "bun run build && bun run build:api",
-    "start": "wrangler dev dist/server/index.js --config dist/server/wrangler.json --persist-to .wrangler/state --port 4312 --ip 127.0.0.1 --log-level warn",
+    "start": "node scripts/fix-wrangler-config.mjs && wrangler dev dist/server/index.js --config dist/server/wrangler.json --persist-to .wrangler/state --port 4312 --ip 127.0.0.1 --log-level warn",
     "start:web": "vinext start --hostname 127.0.0.1 --port 4312",
     "start:vercel": "next start",
     "start:api": "bun run --cwd apps/api start",
-    "test": "bun run build && bun test tests/*.test.ts && node --test tests/*.test.mjs",
+    "test": "bun run build && bun test --cwd tests && node --test tests/*.test.mjs",
     "validate:artifact": "node --input-type=module -e \"import('./dist/server/index.js').then(m=>{if(typeof m.default?.fetch!=='function')process.exit(1)})\"",
     "verify:vercel": "node scripts/verify-vercel.mjs",
+    "verify:responsive": "node scripts/verify-local-responsive.mjs",
     "check:duplicates": "node ../../shared/check-duplicated-files.mjs",
     "lint": "node ../../shared/check-duplicated-files.mjs && eslint app components db lib packages tests --ignore-pattern dist --ignore-pattern .next",
     "typecheck": "node node_modules/typescript7/lib/tsc.js --noEmit --incremental false && bun run --cwd apps/api typecheck",
@@ -50,7 +51,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",
-    "@cloudflare/workers-types": "^4.20260702.1",
+    "@cloudflare/workers-types": "^5.20260811.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
@@ -69,7 +70,7 @@
     "vercel": "58.7.1",
     "vinext": "0.0.50",
     "vite": "8.0.13",
-    "wrangler": "4.92.0"
+    "wrangler": "^4.122.0"
   },
   "type": "module",
   "displayName": "Cross Repository Code Intelligence Study Tracker – Version2"

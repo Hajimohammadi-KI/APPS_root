@@ -11,6 +11,7 @@ export type PdfMark = PdfMarkVisual & {
   text: string;
   note?: string;
   translation?: string;
+  projectSection?: string;
   createdAt: string;
 };
 
@@ -71,6 +72,12 @@ function optionalResult(value: unknown) {
   return result;
 }
 
+function optionalPlainText(value: unknown, maxLength = 200) {
+  if (typeof value !== "string") return undefined;
+  const result = value.trim().slice(0, maxLength);
+  return result || undefined;
+}
+
 function normalizedText(value: string) {
   return value.trim().replace(/\s+/g, " ").toLocaleLowerCase();
 }
@@ -92,6 +99,7 @@ function mergeMark(primary: PdfMark, secondary: PdfMark): PdfMark {
     id: primary.id,
     note: primary.note ?? secondary.note,
     translation: primary.translation ?? secondary.translation,
+    projectSection: primary.projectSection ?? secondary.projectSection,
     createdAt: primary.createdAt || secondary.createdAt,
   };
 }
@@ -126,6 +134,7 @@ export function validatePdfMarks(value: unknown): PdfMark[] {
       type,
       note: optionalResult(item.note),
       translation: optionalResult(item.translation),
+      projectSection: optionalPlainText(item.projectSection),
       anchor: sanitizeAnchor(item.anchor),
       createdAt: typeof item.createdAt === "string" ? item.createdAt : new Date().toISOString(),
     }];

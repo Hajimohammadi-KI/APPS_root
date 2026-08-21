@@ -8,6 +8,17 @@ const appLauncher = await readFile(new URL("../STARTEN-WINDOWS.bat", import.meta
 const localSupervisor = await readFile(new URL("../scripts/start-local-app.ps1", import.meta.url), "utf8");
 const uninstallLauncher = await readFile(new URL("../DEINSTALLIEREN-WINDOWS.bat", import.meta.url), "utf8");
 const localEnvGenerator = await readFile(new URL("../scripts/generate-local-env.mjs", import.meta.url), "utf8");
+const runWebScript = await readFile(new URL("../scripts/wsl/run-web.sh", import.meta.url), "utf8");
+const prepareWslScript = await readFile(new URL("../scripts/wsl/prepare-wsl.sh", import.meta.url), "utf8");
+const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+const packageLock = JSON.parse(await readFile(new URL("../package-lock.json", import.meta.url), "utf8"));
+
+test("release version is synchronized across package and Windows setup", () => {
+  assert.equal(packageJson.version, "0.5.7-version2");
+  assert.equal(packageLock.version, packageJson.version);
+  assert.equal(packageLock.packages[""].version, packageJson.version);
+  assert.match(setup, /Version2 0\.5\.7/);
+});
 
 test("Windows setup exposes install, update, repair, and uninstall", () => {
   for (const action of ["Install", "Update", "Repair", "Uninstall"]) {
@@ -110,15 +121,38 @@ test("Windows setup preserves local data during update and repair", () => {
   assert.match(setup, /Restore-SavedData/);
 });
 
+test("Windows setup excludes audit-only screenshots from the installed payload", () => {
+  assert.match(setup, /"outputs"/);
+});
+
+test("Windows setup supports an isolated lifecycle verification target", () => {
+  assert.match(setup, /InstallRootOverride/);
+  assert.match(setup, /SavedDataRootOverride/);
+  assert.match(setup, /SkipShortcuts/);
+  assert.match(runWebScript, /APP_KEY=.*sha256sum/);
+  assert.match(runWebScript, /windows install root in WSL notation is required/);
+  assert.match(setup, /--migrate-legacy/);
+  assert.match(setup, /\$ErrorActionPreference = "Continue"[\s\S]*\$wslExitCode = \$LASTEXITCODE/);
+  assert.match(localSupervisor, /\$RunWebScriptWsl, \$AppRootWsl/);
+  assert.match(prepareWslScript, /for attempt in 1 2/);
+});
+
 test("Windows setup automatically restarts the app after a successful operation", () => {
   assert.match(setup, /Create-Shortcuts\s+\$verb = switch/);
   assert.match(setup, /\$launcherProcess = Start-App/);
+  assert.match(setup, /scripts\\start-local-app\.ps1/);
+  assert.match(setup, /Start-Process -FilePath "powershell\.exe"[\s\S]*-WindowStyle Hidden -PassThru/);
   assert.match(setup, /Wait-ForAppReady \$launcherProcess/);
   assert.match(setup, /http:\/\/127\.0\.0\.1:4312\/api\/state/);
   assert.match(setup, /http:\/\/127\.0\.0\.1:4313\/v1\/health/);
   assert.match(setup, /Show-Info \"\$AppName wurde erfolgreich/);
   assert.match(setup, /Die App wurde automatisch gestartet/);
   assert.doesNotMatch(setup, /App jetzt starten\?/);
+});
+
+test("Windows update also stops the WSL web host before replacing files", () => {
+  assert.match(setup, /processNames\s*=\s*@\([^\n]*"wsl\.exe"/);
+  assert.match(setup, /CommandLine\s+-match\s+\$escapedRoot/);
 });
 
 test("Windows setup closes itself after the launched app is ready", () => {
@@ -143,11 +177,28 @@ test("Windows launcher supervises compiled web and API without development watch
   assert.doesNotMatch(appLauncher, /dev:all/);
   assert.match(localSupervisor, /\$MaxAttempts = 3/);
   assert.match(localSupervisor, /@\("run", "--cwd", "apps\/api", "start"\)/);
-  assert.match(localSupervisor, /@\("run", "start"\)/);
   assert.match(localSupervisor, /http:\/\/127\.0\.0\.1:4312\/api\/state/);
   assert.match(localSupervisor, /http:\/\/127\.0\.0\.1:4313\/v1\/health/);
   assert.match(localSupervisor, /function Stop-ProcessTree/);
   assert.match(localSupervisor, /runtime-startup\.log/);
+});
+
+// The web process does not run natively on Windows (workerd crashes on
+// this machine, see run-web.sh's own comment) -- it launches through WSL
+// instead, via run-web.sh, and this test suite never actually covered
+// that indirection: the previous version of the test above still
+// asserted a literal `bun run start` PowerShell array that predates the
+// WSL-relay architecture and doesn't appear anywhere in the current
+// launch path, so it was failing for the right reason (a real
+// architecture change) but with the wrong fix (there is no `bun run
+// start` to find -- the equivalent command now lives inside run-web.sh
+// as `wrangler dev`, invoked over WSL, not PowerShell).
+test("Windows launcher starts the web process inside WSL via run-web.sh", () => {
+  assert.match(localSupervisor, /wsl\.exe/);
+  assert.match(localSupervisor, /run-web\.sh/);
+  assert.match(localSupervisor, /ConvertTo-WslPath/);
+  assert.match(runWebScript, /wrangler dev/);
+  assert.match(runWebScript, /tcp-relay\.mjs/);
 });
 
 test("Windows setup creates desktop and Start menu shortcuts with an icon", async () => {

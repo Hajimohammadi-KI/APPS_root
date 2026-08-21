@@ -1,0 +1,275 @@
+{
+  "capturedAt": "2026-08-19T23:13:44.197Z",
+  "viewport": [
+    1536,
+    1024
+  ],
+  "rows": [
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/analytics",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/analytics",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/automatization",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/automatization",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/daily",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/daily",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/errors",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/errors",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/flashcards",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/flashcards",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/grammar",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/grammar",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/integrated-skills",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/integrated-skills",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/library",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/library",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/offline",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/offline",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/practice",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/practice",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/privacy",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/privacy",
+      "smallTargets": [],
+      "title": "Privacy | English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/progress",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/progress",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/resources",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/resources",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/settings",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/settings",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/studio",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/studio",
+      "smallTargets": [],
+      "title": "Conversation Studio | English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/support",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/support",
+      "smallTargets": [],
+      "title": "Support | English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/task-lifecycle-monitoring",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/task-lifecycle-monitoring",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "bodyFont": "Arial, Verdana, Tahoma, sans-serif",
+      "finalUrl": "http://127.0.0.1:3302/teacher",
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/teacher",
+      "smallTargets": [],
+      "title": "English Automaticity",
+      "viewport": [
+        1536,
+        1024
+      ]
+    }
+  ]
+}

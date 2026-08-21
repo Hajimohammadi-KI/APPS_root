@@ -1,0 +1,62 @@
+[
+  {
+    "route": "/",
+    "clientWidth": 1265,
+    "h1": 1,
+    "main": 1,
+    "overflow": false,
+    "scrollWidth": 1265,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  {
+    "route": "/daily",
+    "clientWidth": 1265,
+    "h1": 1,
+    "main": 1,
+    "overflow": false,
+    "scrollWidth": 1265,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  {
+    "route": "/grammar",
+    "clientWidth": 1265,
+    "h1": 1,
+    "main": 1,
+    "overflow": false,
+    "scrollWidth": 1265,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  {
+    "route": "/studio",
+    "clientWidth": 1265,
+    "h1": 1,
+    "main": 1,
+    "overflow": false,
+    "scrollWidth": 1265,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  {
+    "route": "/progress",
+    "clientWidth": 1265,
+    "h1": 1,
+    "main": 1,
+    "overflow": false,
+    "scrollWidth": 1265,
+    "viewport": [
+      1280,
+      720
+    ]
+  }
+]

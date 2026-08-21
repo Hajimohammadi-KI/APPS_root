@@ -234,6 +234,13 @@
 .daily-mode-control > summary span { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; font-weight: 800; }
 .daily-mode-control > summary strong { color: var(--teal-950); font-size: 13px; text-align: right; }
 .daily-mode-control > p { margin: 0 0 10px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.daily-mode-control > .daily-mode-budget {
+  border-inline-start: 3px solid var(--teal-700);
+  border-radius: 8px;
+  background: var(--mint-50);
+  color: var(--ink);
+  padding: 8px 10px;
+}
 .daily-mode-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; padding-bottom: 12px; }
 .daily-mode-options button {
   display: grid;
@@ -268,6 +275,15 @@
 .today-progress > span { position: relative; overflow: hidden; height: 5px; flex: 1; border-radius: 999px; background: #ebe5f1; }
 .today-progress i { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: var(--teal-700); transition: width 220ms cubic-bezier(.23, 1, .32, 1); }
 .today-progress small { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.today-optional-note {
+  margin: 9px 0 0;
+  border-radius: 9px;
+  background: #f5f3f6;
+  color: var(--muted);
+  padding: 7px 9px;
+  font-size: 11px;
+  line-height: 1.5;
+}
 
 .today-actions { display: flex; min-width: 0; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px 16px; margin-top: 12px; }
 .focus-start-button,
@@ -300,6 +316,52 @@
 .dashboard-metrics > * > span:last-child { display: grid; }
 .dashboard-metrics small { color: var(--muted); font-size: 12px; }
 .dashboard-metrics strong { font-size: 23px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+
+.critical-path-card {
+  border: 1px solid #d8cbea;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #fff 0%, #f8f4fc 100%);
+  padding: 14px 18px;
+  box-shadow: 0 8px 28px rgba(54, 42, 78, .05);
+}
+.critical-path-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.critical-path-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fff;
+  padding: 10px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.critical-path-list b {
+  border-radius: 7px;
+  background: var(--mint-100);
+  color: var(--teal-950);
+  padding: 3px 6px;
+}
+.critical-path-list .is-gate { border-color: #9c6cc1; background: #faf4ff; }
+.critical-path-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
 
 .rhythm-card,
 .journey-card { padding: 16px 20px; }
@@ -483,7 +545,7 @@
 .journey-actions .button { min-height: 44px; font-size: 12px; }
 .journey-track { position: relative; display: grid; grid-template-columns: repeat(5, minmax(130px, 1fr)); gap: 32px; overflow-x: auto; margin-top: 13px; padding: 4px 0; }
 .journey-track::before { position: absolute; top: 40px; right: 7%; left: 7%; border-top: 1px dashed #afa3bd; content: ""; }
-.journey-track button { position: relative; z-index: 1; display: grid; min-width: 130px; grid-template-columns: auto 1fr; gap: 0 10px; align-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 14px; color: inherit; cursor: pointer; text-align: left; transition: border-color 160ms ease, transform 140ms cubic-bezier(.23, 1, .32, 1), box-shadow 160ms ease; }
+.journey-track button { position: relative; z-index: 1; display: grid; min-width: 130px; grid-template-columns: auto minmax(0, 1fr); gap: 0 10px; align-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 14px; color: inherit; cursor: pointer; text-align: left; transition: border-color 160ms ease, transform 140ms cubic-bezier(.23, 1, .32, 1), box-shadow 160ms ease; }
 .journey-track button:hover { border-color: var(--teal-500); box-shadow: var(--shadow-sm); }
 .journey-track button.current { border: 2px solid var(--teal-700); }
 .journey-track button.complete { background: var(--mint-50); }
@@ -531,3 +593,26 @@
 /* Wiederholungskarte ("Recall Check") unter den Kennzahlen. Die Karte selbst
    bringt ihre Tailwind-Klassen mit; hier wird nur der Abstand gesetzt. */
 .dashboard-recall { display: block; }
+
+.plan-version-banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #d8cbea;
+  background: linear-gradient(135deg, #f1ebf8, #faf7fd);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.plan-version-banner > div { min-width: 0; }
+.plan-version-banner strong { display: block; margin-bottom: 6px; }
+.plan-version-banner button { flex: 0 0 auto; white-space: nowrap; }
+.plan-version-entry { font-size: 13px; line-height: 1.6; color: #494258; margin-top: 6px; }
+.plan-version-entry p { margin: 2px 0; }
+.plan-version-entry em { color: #675080; font-style: normal; font-weight: 700; }
+.plan-version-empty { color: #8a8f98; font-style: italic; }
+.plan-changelog-disclosure { border: 1px solid var(--line); border-radius: 13px; background: var(--paper); margin-bottom: 14px; overflow: hidden; }
+.plan-changelog-disclosure > summary { padding: 12px 15px; font-weight: 750; cursor: pointer; }
+.plan-changelog-list { padding: 0 15px 15px; display: grid; gap: 12px; }
+.plan-changelog-list article { border-top: 1px solid var(--line); padding-top: 10px; }

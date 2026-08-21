@@ -1,4 +1,5 @@
 import { requestUserKey } from "../../../lib/server-user";
+import { migrateLegacyId } from "../../plan-data";
 
 const MAX_BODY_BYTES = 70_000;
 const MAX_NOTE_LENGTH = 20_000;
@@ -216,11 +217,83 @@ export async function GET(request: Request) {
     const noteRows = (notesResult.results ?? []) as DayNoteRow[];
     const settingsRow = (settingsResult.results?.[0] ?? null) as SettingsRow | null;
 
+    const progressMigrations = progressRows.filter(
+      (row) => migrateLegacyId(row.task_id) !== row.task_id,
+    );
+    const noteMigrations = noteRows.filter(
+      (row) => migrateLegacyId(row.day_id) !== row.day_id,
+    );
+    const migrationStatements = [
+      ...progressMigrations.flatMap((row) => {
+        const nextId = migrateLegacyId(row.task_id);
+        return [
+          db
+            .prepare(`
+              INSERT INTO tracker_task_progress (user_key, task_id, completed, updated_at)
+              VALUES (?, ?, ?, ?)
+              ON CONFLICT(user_key, task_id) DO UPDATE SET
+                completed = MAX(tracker_task_progress.completed, excluded.completed),
+                updated_at = MAX(tracker_task_progress.updated_at, excluded.updated_at)
+            `)
+            .bind(userKey, nextId, row.completed, row.updated_at),
+          db
+            .prepare(
+              "DELETE FROM tracker_task_progress WHERE user_key = ? AND task_id = ?",
+            )
+            .bind(userKey, row.task_id),
+        ];
+      }),
+      ...noteMigrations.flatMap((row) => {
+        const nextId = migrateLegacyId(row.day_id);
+        return [
+          db
+            .prepare(`
+              INSERT INTO tracker_day_notes (user_key, day_id, note, updated_at)
+              VALUES (?, ?, ?, ?)
+              ON CONFLICT(user_key, day_id) DO UPDATE SET
+                note = CASE
+                  WHEN excluded.updated_at > tracker_day_notes.updated_at THEN excluded.note
+                  ELSE tracker_day_notes.note
+                END,
+                updated_at = MAX(tracker_day_notes.updated_at, excluded.updated_at)
+            `)
+            .bind(userKey, nextId, row.note, row.updated_at),
+          db
+            .prepare(
+              "DELETE FROM tracker_day_notes WHERE user_key = ? AND day_id = ?",
+            )
+            .bind(userKey, row.day_id),
+        ];
+      }),
+    ];
+    if (migrationStatements.length > 0) {
+      await db.batch(migrationStatements);
+    }
+    const migratedProgress = new Map<string, boolean>();
+    for (const row of progressRows) {
+      const id = migrateLegacyId(row.task_id);
+      migratedProgress.set(
+        id,
+        (migratedProgress.get(id) ?? false) || Boolean(row.completed),
+      );
+    }
+    const migratedNotes = new Map<
+      string,
+      { note: string; updatedAt: string }
+    >();
+    for (const row of noteRows) {
+      const id = migrateLegacyId(row.day_id);
+      const current = migratedNotes.get(id);
+      if (!current || row.updated_at > current.updatedAt) {
+        migratedNotes.set(id, { note: row.note, updatedAt: row.updated_at });
+      }
+    }
+
     return json({
-      progress: Object.fromEntries(
-        progressRows.map((row) => [row.task_id, Boolean(row.completed)]),
+      progress: Object.fromEntries(migratedProgress),
+      notes: Object.fromEntries(
+        Array.from(migratedNotes, ([id, value]) => [id, value.note]),
       ),
-      notes: Object.fromEntries(noteRows.map((row) => [row.day_id, row.note])),
       settings: parseStoredSettings(settingsRow?.data),
       updatedAt: {
         progress: progressRows.reduce<string | null>(

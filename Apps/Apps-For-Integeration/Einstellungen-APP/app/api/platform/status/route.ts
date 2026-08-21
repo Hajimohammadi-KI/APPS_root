@@ -8,7 +8,11 @@ const DEVICE_ONLY_STORAGE = process.env.NEXT_PUBLIC_STORAGE_MODE === "device";
 const COMPAT_DATABASE: PlatformStatusResponse["database"] = {
   provider: "local-d1",
   configured: false,
-  reachable: true,
+  // The Next.js compatibility route and browser localStorage remain usable,
+  // but neither is proof that the real database health check succeeded.
+  // Report the database honestly as unreachable when the Nest health request
+  // above failed; the UI labels device storage separately.
+  reachable: false,
   message: DEVICE_ONLY_STORAGE
     ? "Einstellungen werden sicher in diesem Browser gespeichert. Cloud-Synchronisierung ist nicht aktiv."
     : "Lokaler Speicher ist aktiv. Ein optionaler NestJS-Dienst kann separat mit Bun laufen.",

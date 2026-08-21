@@ -9,7 +9,7 @@
 .selection-color-dot:hover { transform: scale(1.1); }
 .selection-color-dot.selected { border-color: #2d2440; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #bda4d6; }
 .selection-context-divider { height: 1px; margin: 7px 2px; background: #e5deeb; }
-.selection-menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.selection-menu-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 5px; }
 .selection-menu-actions button, .selection-comment-actions button { min-height: 34px; border: 1px solid #ddd5e7; border-radius: 8px; background: #fff; color: #332942; padding: 7px 8px; font-size: 12px; font-weight: 700; text-align: left; cursor: pointer; transition: transform 140ms ease, background 140ms ease, border-color 140ms ease; }
 .selection-menu-actions button:hover, .selection-comment-actions button:hover { border-color: #a68ac4; background: #f6f1fb; }
 .selection-menu-actions button:active, .selection-comment-actions button:active, .selection-color-dot:active { transform: scale(.97); }

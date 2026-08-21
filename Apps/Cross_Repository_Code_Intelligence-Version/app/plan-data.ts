@@ -4,6 +4,19 @@ export type SourceDefinition = {
   href?: string;
   driveName?: string;
   priority: "core" | "important" | "support" | "optional" | "course";
+  // How this source is actually meant to be used when the thesis text gets
+  // written, per the three-bucket strategy explained by a friend already
+  // writing a thesis: most sources are never "improved on" -- they are read
+  // once for background, or named in Related Work as prior art without a
+  // direct-contribution claim. Undefined means "not a literature source for
+  // Related Work sorting" (e.g. the expose, the frozen corpus, technical docs,
+  // or NLP-course-only material never entering the thesis' own citation pool).
+  //   "cite"          - work this thesis directly improves on / builds on
+  //                      ("I extend X's approach"); expect only 1-2 of these.
+  //   "background"    - read once for context/understanding, rarely cited.
+  //   "related-work"  - named in Related Work as prior work in the area,
+  //                      without a direct-contribution claim.
+  thesisRole?: "cite" | "background" | "related-work";
 };
 
 export type DaySpec = {
@@ -16,6 +29,7 @@ export type DaySpec = {
   module: string;
   deliverable: string;
   kind?: "course" | "project" | "evaluation" | "writing" | "buffer";
+  optionalDuringCourse?: boolean;
 };
 
 export type PlannedDay = DaySpec & {
@@ -43,27 +57,95 @@ export type PlanWeek = {
   days: PlannedDay[];
 };
 
+export type SessionReadingDeliverable = {
+  id: string;
+  title: string;
+  readingIds: string[];
+  mode: "DEEP" | "TARGET" | "COMPARE" | "SYNTHESIS";
+  acceptance: string;
+};
+
+export type SessionReadingPlan = {
+  required: string[];
+  reuse: string[];
+  optional: string[];
+  deliverables: SessionReadingDeliverable[];
+};
+
 export type NlpCourseSession = {
   number: number;
   date: string;
-  berlinTime: "17:30–19:10";
-  iranTime: "19:00–20:40";
+  berlinTime: "19:30–21:10";
+  iranTime: "21:00–22:40";
   title: string;
   topics: string[];
   projectQuestion: string;
   useCase: string;
-  sourceIds: string[];
-  softwareEngineering: string[];
-  deliverables: string[];
-  definitionOfDone: string;
+  readingIds: string[];
+  readingPlan?: SessionReadingPlan;
+  readingFocus: [string, string, string];
+  projectConnection: string;
+  extractionGoal: string;
+  classQuestionsFa: [string, string, string];
+  whyThisMattersFa: string;
+  plannedActionFa: string;
+  relatedDayTitles: string[];
 };
+
+export type CourseTransferPlan = {
+  sessionNumber: number;
+  relevance: "core" | "experiment" | "scope";
+  noteDue: string;
+  artifactDue: string;
+  maxMinutes: number;
+  artifact: string;
+  acceptance: string;
+  replacesDailyOutput: true;
+};
+
+export const nlpCourseMeta = {
+  name: "Advanced Deep Learning – Natural Language Processing",
+  instructor: "Farshid Shirafkan",
+  platform: "Google Meet",
+  schedule: "Saturday, Monday, and Wednesday",
+  berlinTime: "19:30–21:10",
+  iranTime: "21:00–22:40",
+  sessionCount: 10,
+  sessionMinutes: 100,
+  startDate: "2026-08-17",
+  endDate: "2026-09-07",
+} as const;
+
+export type ReadingMode = "DEEP" | "TARGET" | "REVIEW" | "RELATED";
+
+export type ArticleReading = {
+  id: `reading-${number}`;
+  courseOrder: number;
+  order: number;
+  sourceId: string;
+  fileName: string;
+  mode: ReadingMode;
+  status: "in_progress" | "planned";
+  sessionNumbers: number[];
+  readingFocus: [string, string, string];
+  projectConnection: string;
+};
+
+export const extractionSections = [
+  "Problem",
+  "Method",
+  "Data / Evaluation",
+  "Findings",
+  "Limitations",
+  "Verbindung mit RQ / Projektarchitektur",
+] as const;
 
 export const defaultSettings = {
   projectName: "Cross_Repository_Code_Intelligence",
   planName: "Cross Repository Code Intelligence – 25-Wochen-Lernplan",
-  planStartDate: "2026-08-07",
-  planEndDate: "2027-02-13",
-  planStatus: "not_started" as "not_started" | "running" | "paused",
+  planStartDate: "2026-08-14",
+  planEndDate: "2027-02-20",
+  planStatus: "running" as "not_started" | "running" | "paused",
   planPausedAt: "",
   dailyWorkMode: "light" as "rescue" | "light" | "full",
   dailyStart: "09:00",
@@ -116,92 +198,203 @@ export const sources: Record<string, SourceDefinition> = {
     label: "Hevner et al. 2004: Design Science in IS Research",
     href: "https://drive.google.com/file/d/1HSYD3dBut18RlbXnO_ufdlT8lHXkg0am/view",
     driveName:
-      "01_★★★★★_CORE_R01_Hevner_2004_Design_Science_in_Information_Systems.pdf",
+      "01_DEEP_Read-Framework-Guidelines-Eval_★★★★★_CORE_R01_Hevner_2004_Design_Science_in_Information_Systems__DEEP_Read-Framework-Guidelines-Evaluation.pdf",
     priority: "core",
+    thesisRole: "cite",
   },
   nagy: {
     id: "nagy",
     label: "Nagy et al. 2015: Where Was This SQL Query Executed?",
     href: "https://drive.google.com/file/d/1wCjThO0mfOJXrYpWZUUgJEX5ohs0wDOc/view",
     driveName:
-      "04_★★★★★_CORE_R06_Nagy_2015_Where_Was_This_SQL_Query_Executed.pdf",
+      "04_DEEP_Read-StaticSQL-Method-Eval_★★★★★_CORE_R06_Nagy_2015_Where_Was_This_SQL_Query_Executed__DEEP_Read-StaticSQL-Method-Evaluation.pdf",
     priority: "core",
+    thesisRole: "cite",
   },
   shatnawi: {
     id: "shatnawi",
     label: "Shatnawi et al. 2019: Static Analysis of Multilanguage Systems",
     href: "https://drive.google.com/file/d/14rdyqlM40QBIXIb0KtrvKBFAMTQ6KYRO/view",
     driveName:
-      "05_★★★★★_CORE_R04_Shatnawi_2019_Static_Analysis_of_Multilanguage_Systems.pdf",
+      "05_DEEP_Read-Multilang-Method-Limits_★★★★★_CORE_R04_Shatnawi_2019_Static_Analysis_of_Multilanguage_Systems__DEEP_Read-Multilanguage-Method-Limitations.pdf",
     priority: "core",
+    thesisRole: "background",
   },
   yamaguchi: {
     id: "yamaguchi",
     label: "Yamaguchi et al. 2014: Code Property Graphs",
     href: "https://drive.google.com/file/d/1SGWMjZA8Im9fXsuZxr6KnKdgijDH4o8r/view",
-    driveName: "07_★★★★★_CORE_R02_Yamaguchi_2014_Code_Property_Graphs.pdf",
+    driveName:
+      "07_DEEP_Read-CPG-Model-Construction_★★★★★_CORE_R02_Yamaguchi_2014_Code_Property_Graphs__DEEP_Read-CPG-Model-Graph-Construction.pdf",
     priority: "core",
+    thesisRole: "background",
   },
   logiclens: {
     id: "logiclens",
     label: "Usai et al. 2026: LogicLens",
     href: "https://drive.google.com/file/d/1_yzTxjxahfnOH-Q_ZaehvmHN6xxi-3QE/view",
     driveName:
-      "03_★★★★★_CORE_R09_Usai_2026_LogicLens_Multi_Repository_Semantic_Code_Graph.pdf",
+      "03_DEEP_Read-MultiRepo-Graph-Eval_★★★★★_CORE_R09_Usai_2026_LogicLens_Multi_Repository_Semantic_Code_Graph__DEEP_Read-MultiRepository-Graph-Evaluation.pdf",
     priority: "core",
+    thesisRole: "related-work",
   },
   codefuse: {
     id: "codefuse",
     label: "Xie et al. 2026: CodeFuse Query",
     href: "https://drive.google.com/file/d/1cfU7FbjkIRSamwvWKbL3pTH_EC0V-ObB/view",
     driveName:
-      "10_★★★★★_CORE_R05_Xie_2026_CodeFuse_Query_Large_Scale_Code_Analysis.pdf",
+      "10_TARGET_Read-Data-Metrics-Threats_★★★★★_CORE_R05_Xie_2026_CodeFuse_Query_Large_Scale_Code_Analysis__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "core",
+    thesisRole: "related-work",
   },
   sweqa: {
     id: "sweqa",
     label: "Peng et al. 2026: SWE-QA",
     href: "https://drive.google.com/file/d/15eGjHmpQ_YDfCnJBy535PoKQ-TEyWtpj/view",
     driveName:
-      "02_★★★★☆_IMPORTANT_R29_Peng_2026_SWE_QA_Repository_Level_Code_Questions.pdf",
+      "02_DEEP_Read-Dataset-Metrics-Threats_★★★★☆_IMPORTANT_R29_Peng_2026_SWE_QA_Repository_Level_Code_Questions__DEEP_Read-Dataset-Metrics-Threats.pdf",
     priority: "important",
+    thesisRole: "related-work",
   },
   alshemaimri: {
     id: "alshemaimri",
     label: "Alshemaimri et al. 2021: Database Code Fragments Survey",
     href: "https://onlinelibrary.wiley.com/doi/full/10.1002/eng2.12441",
     priority: "important",
+    thesisRole: "related-work",
   },
   allamanis: {
     id: "allamanis",
     label: "Allamanis et al. 2018: Learning to Represent Programs with Graphs",
     href: "https://arxiv.org/pdf/1711.00740",
     driveName:
-      "06_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs.pdf",
+      "06-C07_TARGET_Read-Data-Metrics-Threats_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "core",
+    thesisRole: "background",
   },
   kilt: {
     id: "kilt",
     label: "Petroni et al. 2021: KILT",
     href: "https://arxiv.org/pdf/2009.02252",
     driveName:
-      "08_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks.pdf",
+      "08-C04_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
+    thesisRole: "related-work",
   },
   draco: {
     id: "draco",
     label: "Cheng et al. 2024: DraCo",
     href: "https://arxiv.org/pdf/2405.19782",
     driveName:
-      "09_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval.pdf",
+      "09-C02_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
     priority: "important",
+    thesisRole: "related-work",
   },
   graphcodebert: {
     id: "graphcodebert",
     label: "Guo et al. 2021: GraphCodeBERT",
     href: "https://arxiv.org/pdf/2009.08366",
-    driveName: "11_★★☆☆☆_OPTIONAL_R44_Guo_2021_GraphCodeBERT_Data_Flow.pdf",
+    driveName:
+      "11-C09_TARGET_Read-Data-Metrics-Threats_★★☆☆☆_Guo_2021_GraphCodeBERT_Data_Flow__RELATED_Read-Abstract-Method-Conclusion.pdf",
     priority: "optional",
+    thesisRole: "background",
+  },
+  gandhiRetrieval: {
+    id: "gandhiRetrieval",
+    label: "Gandhi et al. 2025: Repository-Level Code Search",
+    driveName:
+      "20-C03_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R10_Gandhi_2025_Repository_Level_Code_Search_Neural_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    priority: "important",
+    thesisRole: "related-work",
+  },
+  codebert: {
+    id: "codebert",
+    label: "Feng et al. 2020: CodeBERT",
+    href: "https://aclanthology.org/2020.findings-emnlp.139/",
+    driveName:
+      "33-C08_REVIEW_Read-Taxonomy-Limits_★★★☆☆_NEW_BASELINE_CodeBERT_Pretrained_Model_for_Code_and_Natural_Language__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    priority: "important",
+    thesisRole: "background",
+  },
+  zhangLlmSurvey: {
+    id: "zhangLlmSurvey",
+    label: "Zhang et al. 2024: Survey on LLMs for Software Engineering",
+    driveName:
+      "32-C10_REVIEW_Read-Taxonomy-Limits_★★☆☆☆_Zhang_2024_Survey_on_LLMs_for_Software_Engineering__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    priority: "support",
+    thesisRole: "background",
+  },
+  houLlmReview: {
+    id: "houLlmReview",
+    label: "Hou et al. 2024: LLMs for Software Engineering Review",
+    driveName:
+      "31-C11_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R24_Hou_2024_LLMs_for_Software_Engineering_Systematic_Review__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    priority: "support",
+    thesisRole: "related-work",
+  },
+  oleaPrompting: {
+    id: "oleaPrompting",
+    label: "Olea et al. 2024: Persona Prompting for Question Answering",
+    driveName:
+      "35-C16_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R23_Olea_2024_Persona_Prompting_for_Question_Answering__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    priority: "important",
+    thesisRole: "related-work",
+  },
+  abeduKgQa: {
+    id: "abeduKgQa",
+    label: "Abedu et al. 2025: LLM + Knowledge Graph Repository QA",
+    driveName:
+      "22-C17_DEEP_Read-KG-QA-Pipeline-Eval_★★★★★_CORE_R15_Abedu_2025_LLM_Knowledge_Graph_Repository_QA__DEEP_Read-KG-QA-Pipeline-Evaluation.pdf",
+    priority: "core",
+    thesisRole: "related-work",
+  },
+  repocoder: {
+    id: "repocoder",
+    label: "Zhang et al. 2023: RepoCoder",
+    driveName:
+      "21-C05_TARGET_Read-Method-Eval_★★★☆☆_SUPPORT_R11_Zhang_2023_RepoCoder_Iterative_Retrieval_and_Generation__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    priority: "support",
+    thesisRole: "related-work",
+  },
+  ranger: {
+    id: "ranger",
+    label: "Shah et al. 2025: RANGER",
+    driveName:
+      "23-C06_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R17_Shah_2025_RANGER_Graph_Enhanced_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    priority: "important",
+    thesisRole: "related-work",
+  },
+  ragCodeSurvey: {
+    id: "ragCodeSurvey",
+    label: "Tao et al. 2026: Retrieval-Augmented Code Generation Survey",
+    driveName:
+      "19-C13_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R27_Tao_2026_Retrieval_Augmented_Code_Generation_Survey__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    priority: "support",
+    thesisRole: "related-work",
+  },
+  codeGraphModel: {
+    id: "codeGraphModel",
+    label: "Tao et al. 2025: Code Graph Model",
+    driveName:
+      "34-C14_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R16_Tao_2025_Code_Graph_Model_CGM_NeurIPS__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    priority: "support",
+    thesisRole: "related-work",
+  },
+  codebadger: {
+    id: "codebadger",
+    label: "Lekssays 2026: Bridging CPGs and Language Models",
+    driveName:
+      "13-C18_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R13_Lekssays_2026_Bridging_CPGs_and_Language_Models__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    priority: "important",
+    thesisRole: "related-work",
+  },
+  llmxCpg: {
+    id: "llmxCpg",
+    label: "Lekssays 2025: LLMxCPG",
+    driveName:
+      "14-C15_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R14_Lekssays_2025_LLMxCPG_Context_Aware_Program_Analysis__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    priority: "support",
+    thesisRole: "related-work",
   },
   roslynWorkspace: {
     id: "roslynWorkspace",
@@ -349,6 +542,117 @@ export const sources: Record<string, SourceDefinition> = {
   },
 };
 
+export const articleReadings: ArticleReading[] = [
+  {
+    id: "reading-06", courseOrder: 1, order: 6, sourceId: "logiclens", mode: "DEEP", status: "in_progress", sessionNumbers: [8, 9, 10],
+    fileName: "06-C01_DEEP_Read-MultiRepo-Graph-Eval_★★★★★_CORE_R09_Usai_2026_LogicLens_Multi_Repository_Semantic_Code_Graph__DEEP_Read-MultiRepository-Graph-Evaluation (2).pdf",
+    readingFocus: ["Semantic code graph and cross-repository links", "Provenance and evaluation design", "Differences from Evidence Record and Evidence Path"],
+    projectConnection: "RQ1/RQ2: compare LogicLens multi-repository graphs and provenance with the thesis Evidence Record, Evidence Path, and answerability boundary.",
+  },
+  {
+    id: "reading-07", courseOrder: 2, order: 7, sourceId: "draco", mode: "TARGET", status: "planned", sessionNumbers: [1, 2, 8, 10],
+    fileName: "09-C02_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R43_Cheng_2024_DraCo_Dataflow_Guided_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    readingFocus: ["Data-flow-aware token and context selection", "Retrieval method and metrics", "Threats and repository-level limits"],
+    projectConnection: "RQ2: supplies a data-flow-guided retrieval comparison point and clarifies which structural signals belong in Graph rather than Flat Retrieval.",
+  },
+  {
+    id: "reading-08", courseOrder: 3, order: 8, sourceId: "gandhiRetrieval", mode: "TARGET", status: "planned", sessionNumbers: [2, 4, 9],
+    fileName: "20-C03_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R10_Gandhi_2025_Repository_Level_Code_Search_Neural_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    readingFocus: ["Lexical baseline", "Neural reranking", "Repository-level evaluation metrics"],
+    projectConnection: "RQ2: anchors the Flat lexical baseline and the optional neural-reranking comparison without weakening evidence traceability.",
+  },
+  {
+    id: "reading-09", courseOrder: 7, order: 9, sourceId: "allamanis", mode: "TARGET", status: "planned", sessionNumbers: [3, 4, 5, 8],
+    fileName: "06-C07_TARGET_Read-Data-Metrics-Threats_★★★★★_CORE_R41_Allamanis_2018_Learning_to_Represent_Programs_with_Graphs__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    readingFocus: ["Sequential versus graph code representation", "Embedding and message passing", "Evaluation limits"],
+    projectConnection: "RQ1/RQ2: explains why token sequences alone cannot replace explicit code structure and Evidence Paths.",
+  },
+  {
+    id: "reading-10", courseOrder: 8, order: 10, sourceId: "codebert", mode: "REVIEW", status: "planned", sessionNumbers: [1, 4, 8, 9],
+    fileName: "33-C08_REVIEW_Read-Taxonomy-Limits_★★★☆☆_NEW_BASELINE_CodeBERT_Pretrained_Model_for_Code_and_Natural_Language__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    readingFocus: ["Natural-language/code pretraining", "Encoder embeddings", "Code-search use and limits"],
+    projectConnection: "RQ2: provides a Transformer encoder baseline for matching questions to code candidates; verification still requires Evidence Records.",
+  },
+  {
+    id: "reading-11", courseOrder: 10, order: 11, sourceId: "zhangLlmSurvey", mode: "REVIEW", status: "planned", sessionNumbers: [5, 6, 9, 10],
+    fileName: "32-C10_REVIEW_Read-Taxonomy-Limits_★★☆☆☆_Zhang_2024_Survey_on_LLMs_for_Software_Engineering__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    readingFocus: ["Model taxonomy", "Fine-tuning and prompting", "Software-engineering limitations"],
+    projectConnection: "Positions the thesis against LLM-based software engineering and helps justify a retrieval-and-evidence architecture rather than model-only answers.",
+  },
+  {
+    id: "reading-12", courseOrder: 11, order: 12, sourceId: "houLlmReview", mode: "REVIEW", status: "planned", sessionNumbers: [5, 6, 9, 10],
+    fileName: "31-C11_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R24_Hou_2024_LLMs_for_Software_Engineering_Systematic_Review__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    readingFocus: ["RNN/LSTM/GRU position", "LLM use in software engineering", "Validity and open problems"],
+    projectConnection: "Defines why recurrent models are course context, not thesis core, and supports the limitations discussion for RQ2.",
+  },
+  {
+    id: "reading-13", courseOrder: 12, order: 13, sourceId: "rag", mode: "TARGET", status: "planned", sessionNumbers: [7, 10],
+    fileName: "18-C12_TARGET_Read-Method-Eval_★★★☆☆_SUPPORT_R03_Lewis_2020_Retrieval_Augmented_Generation__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    readingFocus: ["Seq2Seq RAG architecture", "Parametric versus retrieved memory", "Evaluation setup"],
+    projectConnection: "RQ2: motivates separating retrieval evidence from parametric generation and keeping answerability dependent on retrieved Evidence IDs.",
+  },
+  {
+    id: "reading-14", courseOrder: 9, order: 14, sourceId: "graphcodebert", mode: "TARGET", status: "planned", sessionNumbers: [4, 8, 9],
+    fileName: "11-C09_TARGET_Read-Data-Metrics-Threats_★★☆☆☆_Guo_2021_GraphCodeBERT_Data_Flow__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    readingFocus: ["Data-flow-guided self-attention", "Encoder representation", "Code-search evaluation"],
+    projectConnection: "RQ2: shows how structural data flow can guide attention while remaining distinct from a verifiable Evidence Path.",
+  },
+  {
+    id: "reading-15", courseOrder: 4, order: 15, sourceId: "kilt", mode: "TARGET", status: "planned", sessionNumbers: [2, 7, 10],
+    fileName: "08-C04_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R42_Petroni_2021_KILT_Knowledge_Intensive_Language_Tasks__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    readingFocus: ["Provenance requirements", "Seq2Seq knowledge tasks", "Retrieval versus generation metrics"],
+    projectConnection: "RQ2/Answerability: supports provenance-aware evaluation and explains why BLEU/ROUGE cannot replace retrieval and evidence metrics.",
+  },
+  {
+    id: "reading-16", courseOrder: 16, order: 16, sourceId: "oleaPrompting", mode: "TARGET", status: "planned", sessionNumbers: [9, 10],
+    fileName: "35-C16_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R23_Olea_2024_Persona_Prompting_for_Question_Answering__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    readingFocus: ["Persona prompt design", "QA evaluation", "Role effects and threats"],
+    projectConnection: "Supports role-specific Developer, Architect, and QA prompts while preserving a shared evidence and answerability contract.",
+  },
+  {
+    id: "reading-17", courseOrder: 17, order: 17, sourceId: "abeduKgQa", mode: "DEEP", status: "planned", sessionNumbers: [9, 10],
+    fileName: "22-C17_DEEP_Read-KG-QA-Pipeline-Eval_★★★★★_CORE_R15_Abedu_2025_LLM_Knowledge_Graph_Repository_QA__DEEP_Read-KG-QA-Pipeline-Evaluation.pdf",
+    readingFocus: ["Repository QA pipeline", "Knowledge-graph grounding", "Prompting and evaluation"],
+    projectConnection: "Closest RQ2 comparison: repository QA over a Knowledge Graph, evaluated against the thesis Evidence Path and refusal boundary.",
+  },
+  {
+    id: "reading-18", courseOrder: 5, order: 18, sourceId: "repocoder", mode: "TARGET", status: "planned", sessionNumbers: [2, 7, 10],
+    fileName: "21-C05_TARGET_Read-Method-Eval_★★★☆☆_SUPPORT_R11_Zhang_2023_RepoCoder_Iterative_Retrieval_and_Generation__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    readingFocus: ["Iterative retrieval", "Repository context", "Retrieval-generation feedback"],
+    projectConnection: "RQ2: provides an iterative repository-level retrieval comparison while the thesis keeps generation outside evidence verification.",
+  },
+  {
+    id: "reading-19", courseOrder: 6, order: 19, sourceId: "ranger", mode: "TARGET", status: "planned", sessionNumbers: [2, 8, 10],
+    fileName: "23-C06_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R17_Shah_2025_RANGER_Graph_Enhanced_Repository_Retrieval__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    readingFocus: ["Graph-enhanced retrieval", "Flat/Graph comparison", "Data, metrics, and threats"],
+    projectConnection: "Directly informs the RQ2 comparison between Flat Retrieval and Graph Retrieval on the same frozen questions and evidence corpus.",
+  },
+  {
+    id: "reading-20", courseOrder: 13, order: 20, sourceId: "ragCodeSurvey", mode: "REVIEW", status: "planned", sessionNumbers: [7, 10],
+    fileName: "19-C13_REVIEW_Read-Taxonomy-Limits_★★★☆☆_SUPPORT_R27_Tao_2026_Retrieval_Augmented_Code_Generation_Survey__REVIEW_Read-Taxonomy-Comparison-Limitations.pdf",
+    readingFocus: ["RAG-for-code taxonomy", "Retrieval and generation stages", "Open limitations"],
+    projectConnection: "Frames the thesis within retrieval-augmented code systems and sharpens the boundary between candidate retrieval and answer verification.",
+  },
+  {
+    id: "reading-21", courseOrder: 14, order: 21, sourceId: "codeGraphModel", mode: "RELATED", status: "planned", sessionNumbers: [8, 9, 10],
+    fileName: "34-C14_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R16_Tao_2025_Code_Graph_Model_CGM_NeurIPS__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    readingFocus: ["Graph-aware attention", "Adapter strategy", "PEFT/QLoRA boundary"],
+    projectConnection: "RQ2: supplies graph-aware neural context and helps keep adapter tuning optional rather than a prerequisite for Evidence Paths.",
+  },
+  {
+    id: "reading-22", courseOrder: 18, order: 22, sourceId: "codebadger", mode: "TARGET", status: "planned", sessionNumbers: [9, 10],
+    fileName: "13-C18_TARGET_Read-Data-Metrics-Threats_★★★★☆_IMPORTANT_R13_Lekssays_2026_Bridging_CPGs_and_Language_Models__TARGET_Read-Method-Evaluation-Limitations.pdf",
+    readingFocus: ["CPG-constrained context", "Language-model integration", "Traceability and evaluation"],
+    projectConnection: "RQ1/RQ2: shows how CPG structure can constrain context and improve traceability without treating generated text as evidence.",
+  },
+  {
+    id: "reading-23", courseOrder: 15, order: 23, sourceId: "llmxCpg", mode: "RELATED", status: "planned", sessionNumbers: [8, 9, 10],
+    fileName: "14-C15_RELATED_Read-Abstract-Method-Conclusion_★★★☆☆_SUPPORT_R14_Lekssays_2025_LLMxCPG_Context_Aware_Program_Analysis__RELATED_Read-Abstract-Method-Conclusion.pdf",
+    readingFocus: ["LLM and CPG integration", "Multi-function context", "Method result and limits"],
+    projectConnection: "RQ1/RQ2: connects multi-function CPG context to Graph Retrieval and explicit Evidence Paths across repository boundaries.",
+  },
+];
+
 export const nlpLabDefinition = {
   name: "NLP Retrieval Lab",
   route: "/nlp-lab",
@@ -356,37 +660,34 @@ export const nlpLabDefinition = {
   courseEnd: "2026-09-07",
   surgeryDate: "2026-09-10",
   problem:
-    "Given a natural-language question about one or more C# repositories, produce reproducible top-k code candidates and an answerability decision whose claims reference verifiable Evidence IDs.",
+    "Read the course-aligned thesis literature and extract reusable evidence about retrieval, code graphs, provenance, prompting, and answerability.",
   projectFit:
-    "The lab supplies the Flat retrieval baseline and optional neural experiments for RQ2. It does not replace Roslyn extraction, the evidence model, graph traversal, or the verifier.",
+    "The course is a guided literature-extraction window for RQ1 and RQ2. Coding outputs are optional until 7 September and do not create backlog, reduce progress, or break the streak.",
   core: [
-    "Code-aware preprocessing and tokenization",
-    "Bag of Words, TF-IDF, cosine ranking, and deterministic top-k",
-    "A versioned RetrievalRun JSON contract",
-    "Recall@k, MRR, latency, and reproducible fixtures",
-    "Claim, Evidence ID, and NOT_ANSWERABLE output boundaries",
+    "Read the assigned paper sections according to DEEP, TARGET, REVIEW, or RELATED mode",
+    "Extract Problem, Method, Data/Evaluation, Findings, and Limitations",
+    "Connect each paper explicitly to RQ1/RQ2, Evidence Record, Evidence Path, Flat/Graph Retrieval, and Answerability",
+    "Keep article numbers 06–23 stable and preserve the original PDF files",
   ],
   deferred: [
-    "Training a production RNN, LSTM, GRU, BERT, or GPT model",
-    "LoRA or QLoRA fine-tuning without a frozen evaluated dataset",
-    "Using attention weights as evidence",
-    "Cloud deployment, multi-user accounts, or automatic repository upload",
+    "All dated technical implementation tasks from 19 August through 7 September",
+    "Training RNN, LSTM, GRU, BERT, or GPT models",
+    "LoRA or QLoRA fine-tuning and production RAG implementation",
+    "Treating attention, generated text, or model confidence as verified evidence",
   ],
   actors: ["Researcher", "Developer", "Architect", "QA reviewer"],
   useCases: [
-    "UC-01 Build a code-aware lexical index from a frozen repository corpus",
-    "UC-02 Retrieve deterministic top-k candidates for a natural-language question",
-    "UC-03 Compare Flat retrieval with Graph retrieval on the same questions",
-    "UC-04 Inspect every candidate's score, source location, and Evidence IDs",
-    "UC-05 Refuse an answer when required evidence is missing or conflicting",
-    "UC-06 Export a versioned RetrievalRun for evaluation and the Cross app",
+    "Identify a paper's research problem and method",
+    "Record its dataset, evaluation design, and metrics",
+    "Separate findings from limitations and threats",
+    "Map usable claims to RQ1 or RQ2",
+    "Decide whether the paper informs Flat Retrieval, Graph Retrieval, Evidence Path, or Answerability",
+    "Carry the extracted evidence into the thesis literature matrix",
   ],
   integrationContract: {
-    input: "CorpusManifest + QuestionContract + RetrievalConfig",
-    output:
-      "RetrievalRun { runId, queryId, candidates[], metrics, evidenceIds[], answerStatus }",
-    boundary:
-      "The lab may propose candidates; only the Cross app verifier may approve claims.",
+    input: "Course session + ArticleReading + current Exposé",
+    output: "Six-section extraction note with an explicit RQ/architecture connection",
+    boundary: "A paper can motivate a design choice; only project Evidence Records and Evidence Paths can verify repository claims.",
   },
 } as const;
 
@@ -394,144 +695,295 @@ export const nlpCourseSessions: NlpCourseSession[] = [
   {
     number: 1,
     date: "2026-08-17",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "Preprocessing and code-aware tokenization",
-    topics: ["Preprocessing", "Tokenization", "camelCase", "snake_case"],
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "Introduction to NLP, preprocessing, and tokenization",
+    topics: ["Introduction to Natural Language Processing", "Text Preprocessing", "Basic Text Representation", "Tokenization"],
     projectQuestion: "Which code tokens must remain searchable without destroying source evidence?",
-    useCase: "UC-01 · Build a code-aware lexical index",
-    sourceIds: ["roslynSyntax", "allamanis"],
-    softwareEngineering: ["Tokenizer contract", "Input/output examples", "Failure taxonomy"],
-    deliverables: ["tokenizer-rules.md", "tokenizer.schema.json", "12 tokenizer unit tests"],
-    definitionOfDone: "Twelve fixtures pass and every produced token keeps its source span.",
+    useCase: "Read how code and natural language are tokenized for retrieval",
+    readingIds: ["reading-07", "reading-10"],
+    readingFocus: ["Tokenization choices", "Code and natural-language representation", "Effect on retrieval context"],
+    projectConnection: "Links input representation to Flat Retrieval while source spans remain in the Evidence Record.",
+    extractionGoal: "Extract tokenization decisions and their likely effects on recall, context length, and traceability.",
+    classQuestionsFa: [
+      "برای کدهای camelCase و snake_case چه نوع توکنیزیشنی مناسب‌تر است؟",
+      "چگونه هنگام پیش‌پردازش، SourceLocation و مرز دقیق کد را حفظ کنم؟",
+      "کدام خطاهای توکنیزیشن بیشترین کاهش Recall را در بازیابی کد ایجاد می‌کنند؟",
+    ],
+    whyThisMattersFa: "چون کیفیت توکنیزیشن تعیین می‌کند کدام بخش‌های کد قابل جست‌وجو بمانند، بدون اینکه مسیر شواهد و محل منبع از بین برود.",
+    plannedActionFa: "یک tokenizer آگاه از ساختار کد می‌سازم، spanها را حفظ می‌کنم و آن را با fixtureهای ثابت آزمایش می‌کنم.",
+    relatedDayTitles: ["Kursartefakte prüfen und einfrieren", "Code-Aware Tokenizer implementieren"],
   },
   {
     number: 2,
     date: "2026-08-19",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "Bag of Words, TF-IDF, and cosine ranking",
-    topics: ["Bag of Words", "TF-IDF", "Vector space", "Cosine similarity"],
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "Bag-of-Words, TF-IDF, vector space, and cosine similarity",
+    topics: ["Bag-of-Words Model", "TF-IDF", "Vector Space Models", "Cosine Similarity"],
     projectQuestion: "What is the simplest reproducible Flat baseline for RQ2?",
-    useCase: "UC-02 · Retrieve deterministic top-k candidates",
-    sourceIds: ["tfidf", "cosine", "sweqa"],
-    softwareEngineering: ["Retriever interface", "Deterministic tie-break ADR", "Golden fixture"],
-    deliverables: ["tfidf-config-v1.json", "flat-retriever contract", "top-k golden test"],
-    definitionOfDone: "The same corpus and config always return the same ordered top-k list.",
+    useCase: "Compare lexical, iterative, and graph-enhanced repository retrieval",
+    readingIds: ["reading-07", "reading-08", "reading-15", "reading-18", "reading-19"],
+    readingFocus: ["Lexical baseline", "Retrieval metrics and provenance", "Flat versus graph-enhanced ranking"],
+    projectConnection: "Direct RQ2 basis for the Flat/Graph Retrieval comparison and provenance-aware evaluation.",
+    extractionGoal: "Extract comparable retrieval methods, datasets, metrics, and threats for the RQ2 evaluation table.",
+    classQuestionsFa: [
+      "برای corpus کوچک پایان‌نامه، پارامترهای TF-IDF را چگونه انتخاب و ثابت کنم؟",
+      "در cosine similarity با بردار صفر و امتیازهای مساوی چه رفتاری درست و قابل بازتولید است؟",
+      "برای مقایسه baseline با بازیابی گرافی، Recall@k و MRR را چگونه گزارش کنم؟",
+    ],
+    whyThisMattersFa: "چون TF-IDF و cosine ساده‌ترین baseline قابل بازتولید برای پاسخ به RQ2 و مقایسه منصفانه با روش گرافی هستند.",
+    plannedActionFa: "یک index نسخه‌بندی‌شده و ranker پایدار می‌سازم و baseline را با Recall@k، MRR و زمان اجرا ثبت می‌کنم.",
+    relatedDayTitles: ["TF-IDF Index bauen", "Cosine Ranker und top-k stabilisieren", "RetrievalRun-Vertrag implementieren", "Flat Baseline Release Gate"],
   },
   {
     number: 3,
     date: "2026-08-22",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "Word embeddings and the experiment boundary",
-    topics: ["Word2Vec", "GloVe", "FastText", "Keras Embedding"],
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "Word2Vec, CBOW, and Skip-Gram",
+    topics: ["Word2Vec", "Continuous Bag-of-Words (CBOW)", "Skip-Gram"],
     projectQuestion: "Can subword semantics improve code retrieval enough to justify added cost?",
-    useCase: "UC-03 · Compare an optional semantic candidate generator",
-    sourceIds: ["embeddings", "graphcodebert", "allamanis"],
-    softwareEngineering: ["Experiment ADR", "Baseline parity rules", "Cost and data constraints"],
-    deliverables: ["embedding-mini-lab.ipynb", "ADR-004-embedding-baseline.md", "comparison table"],
-    definitionOfDone: "The table records quality, latency, data, and reproducibility against TF-IDF.",
+    useCase: "Understand learned code representations without implementing a model",
+    readingIds: ["reading-09"],
+    readingFocus: ["Token embeddings", "Context learning", "Loss of explicit graph structure"],
+    projectConnection: "Clarifies why learned embeddings may rank candidates but cannot replace an explicit Evidence Path.",
+    extractionGoal: "Extract how the paper represents programs and where sequential embedding assumptions break down.",
+    classQuestionsFa: [
+      "برای واژه‌ها و شناسه‌های کد، CBOW بهتر است یا Skip-gram و چرا؟",
+      "حداقل اندازه corpus برای یادگیری embedding قابل اتکا چقدر است؟",
+      "چگونه Word2Vec را منصفانه و با همان داده‌ها با TF-IDF مقایسه کنم؟",
+    ],
+    whyThisMattersFa: "چون embedding ممکن است شباهت معنایی را بهتر پیدا کند، اما باید نشان دهد هزینه اضافه‌اش نسبت به baseline واقعاً ارزش دارد.",
+    plannedActionFa: "یک آزمایش کوچک با seed و corpus ثابت اجرا می‌کنم و نتیجه را فقط در صورت بهبود قابل اندازه‌گیری نگه می‌دارم.",
+    relatedDayTitles: ["Embedding-Experiment reproduzieren", "Semantic Experiment Gate"],
   },
   {
     number: 4,
     date: "2026-08-24",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "RNN and vanishing gradients",
-    topics: ["RNN", "Hidden state", "Vanishing gradient"],
-    projectQuestion: "Why is sequence memory not equivalent to a repository evidence path?",
-    useCase: "UC-03 · Reject an unjustified sequence-model dependency",
-    sourceIds: ["rnn", "lstm"],
-    softwareEngineering: ["Scope decision", "Model-risk note", "Entry criteria for neural experiments"],
-    deliverables: ["rnn-concept-note.md", "vanishing-gradient-one-page.md", "scope decision"],
-    definitionOfDone: "Core, optional experiment, and future work are separated without ambiguity.",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "GloVe, FastText, and embedding layers in Keras",
+    topics: ["GloVe", "FastText", "Using Embedding Layers in Keras"],
+    projectQuestion: "Which embedding representations are useful retrieval baselines for code and text?",
+    useCase: "Compare word, subword, code-language, and graph-aware embeddings",
+    readingIds: ["reading-08", "reading-09", "reading-10", "reading-14"],
+    readingFocus: ["Embedding input and objective", "Subword and code structure", "Code-search evaluation"],
+    projectConnection: "RQ2 comparison point for optional semantic ranking while Evidence Records remain the verification source.",
+    extractionGoal: "Extract representation choices, evaluation setup, and the architectural boundary between embedding and evidence.",
+    classQuestionsFa: [
+      "FastText برای شناسه‌های ناآشنا و زیرواژه‌های کد چه مزیتی دارد؟",
+      "ورودی، خروجی و روش آموزش لایه Embedding در Keras دقیقاً چگونه تعریف می‌شود؟",
+      "GloVe، FastText و embeddingهای مخصوص کد را با چه معیار مشترکی مقایسه کنم؟",
+    ],
+    whyThisMattersFa: "چون انتخاب نوع embedding روی پوشش شناسه‌های ناشناخته، هزینه اجرا و کیفیت بازیابی معنایی اثر مستقیم دارد.",
+    plannedActionFa: "نمایش‌های مختلف را از نظر داده، هزینه و معیار ارزیابی مقایسه می‌کنم و برای ادامه یا توقف یک تصمیم مستند می‌نویسم.",
+    relatedDayTitles: ["Embedding-Experiment reproduzieren", "BERT/GraphCodeBERT Go-No-Go"],
   },
   {
     number: 5,
     date: "2026-08-26",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "LSTM and GRU architecture comparison",
-    topics: ["LSTM", "GRU", "Gates", "Sequence state"],
-    projectQuestion: "What evidence would be required before a recurrent model enters the project?",
-    useCase: "UC-03 · Evaluate but do not promote an optional model",
-    sourceIds: ["lstm", "gru"],
-    softwareEngineering: ["Quality-attribute scenario", "Dataset gate", "Reproducibility checklist"],
-    deliverables: ["lstm-vs-gru-table.md", "neural-entry-gate.yaml", "risk register update"],
-    definitionOfDone: "A measurable go/no-go gate exists; no model is added only because it is taught.",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "Recurrent neural networks and the vanishing-gradient problem",
+    topics: ["Recurrent Neural Networks (RNNs)", "The Vanishing Gradient Problem"],
+    projectQuestion: "Why is recurrent sequence memory outside the thesis core?",
+    useCase: "Place recurrent architectures within the software-engineering model taxonomy",
+    readingIds: ["reading-09", "reading-11", "reading-12"],
+    readingFocus: ["Sequential model assumptions", "Software-engineering uses", "Limitations versus graph structure"],
+    projectConnection: "Supports the scope decision that repository Evidence Paths need explicit structure rather than hidden recurrent state.",
+    extractionGoal: "Extract evidence for treating RNNs as background rather than a required project component.",
+    classQuestionsFa: [
+      "محو شدن گرادیان در RNN دقیقاً چگونه حافظه توالی‌های بلند را محدود می‌کند؟",
+      "RNN در چه نوع مسئله‌ای از تحلیل مخزن کد واقعاً مناسب است؟",
+      "برای وارد کردن RNN به دامنه پایان‌نامه چه شواهد و داده‌ای لازم دارم؟",
+    ],
+    whyThisMattersFa: "چون باید روشن کنم آیا حافظه توالی‌دار برای RQهای پایان‌نامه ضروری است یا فقط دانش زمینه‌ای محسوب می‌شود.",
+    plannedActionFa: "دامنه و هزینه RNN را در یک تصمیم معماری ثبت می‌کنم و بدون داده کافی آن را به کار اجباری تبدیل نمی‌کنم.",
+    relatedDayTitles: ["RNN/LSTM/GRU Scope Audit", "Semantic Experiment Gate"],
   },
   {
     number: 6,
     date: "2026-08-29",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "Sentiment pipeline and Seq2Seq contracts",
-    topics: ["LSTM sentiment project", "Seq2Seq", "Encoder", "Decoder"],
-    projectQuestion: "How can a natural-language question become a constrained JSON QuestionContract?",
-    useCase: "UC-02 · Parse a question without allowing invented structural claims",
-    sourceIds: ["sentiment", "seq2seq", "kilt"],
-    softwareEngineering: ["QuestionContract schema", "Validation errors", "Three sequence examples"],
-    deliverables: ["nl-to-contract-schema.json", "three-question-fixture.json", "pipeline map"],
-    definitionOfDone: "Valid questions parse; unsupported fields and malformed output are rejected.",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "LSTM, GRU, and sentiment analysis",
+    topics: ["Advanced Recurrent Architectures: LSTM and GRU", "Sentiment Analysis Project Using LSTM"],
+    projectQuestion: "What does the recurrent-model literature contribute to scope and limitations?",
+    useCase: "Distinguish course examples from thesis-relevant architecture",
+    readingIds: ["reading-11", "reading-12"],
+    readingFocus: ["LSTM/GRU positioning", "Task-specific evaluation", "Why the thesis does not train them"],
+    projectConnection: "Creates a defensible scope boundary: reading is required, recurrent-model implementation is optional and not backlog.",
+    extractionGoal: "Extract taxonomy and limitations only; do not create a mandatory sentiment-analysis implementation.",
+    classQuestionsFa: [
+      "برای داده محدود، تفاوت عملی LSTM و GRU در دقت، سرعت و overfitting چیست؟",
+      "مثال تحلیل احساسات از نظر نوع label چه تفاوتی با داده‌های پایان‌نامه من دارد؟",
+      "چه آزمایشی ثابت می‌کند یک مدل بازگشتی ارزش اضافه شدن به پروژه را دارد؟",
+    ],
+    whyThisMattersFa: "چون مثال کلاسی تحلیل احساسات مفید است، اما مسئله و برچسب‌های آن با شواهد ساختاری مخزن کد یکسان نیست.",
+    plannedActionFa: "LSTM و GRU را فقط از نظر تناسب با مسئله مقایسه می‌کنم و در صورت نبود داده مناسب، آن‌ها را خارج از هسته پروژه نگه می‌دارم.",
+    relatedDayTitles: ["RNN/LSTM/GRU Scope Audit", "BERT/GraphCodeBERT Go-No-Go"],
   },
   {
     number: 7,
     date: "2026-08-31",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "Self-attention and evidence",
-    topics: ["Self-Attention", "Multi-Head Attention", "Q/K/V"],
-    projectQuestion: "Where does attention help retrieval, and why can it never certify evidence?",
-    useCase: "UC-04 · Inspect model signals separately from verified evidence",
-    sourceIds: ["attention", "yamaguchi", "allamanis"],
-    softwareEngineering: ["Trust-boundary diagram", "Claim policy", "Attention-vs-evidence ADR"],
-    deliverables: ["attention-vs-evidence.md", "trust-boundary.mmd", "claim-policy.yaml"],
-    definitionOfDone: "The design cannot expose an attention score as an Evidence ID.",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "Sequence-to-Sequence and introduction to Transformers",
+    topics: ["Sequence-to-Sequence Architecture (Seq2Seq)", "Introduction to the Transformer Architecture"],
+    projectQuestion: "How should retrieval remain separated from parametric generation?",
+    useCase: "Trace the transition from Seq2Seq generation to retrieval-augmented systems",
+    readingIds: ["reading-13", "reading-15", "reading-18", "reading-20"],
+    readingFocus: ["Seq2Seq architecture", "Parametric and retrieved memory", "Iterative repository retrieval"],
+    projectConnection: "RQ2/Answerability: generation may consume retrieved context, but only Evidence Records can support a repository claim.",
+    extractionGoal: "Extract the retrieval-generation boundary, provenance expectations, and evaluation limitations.",
+    classQuestionsFa: [
+      "در Seq2Seq و Transformer مرز encoder و decoder دقیقاً چه مسئولیتی دارد؟",
+      "چگونه سؤال طبیعی را به JSON معتبر و قابل کنترل تبدیل کنم؟",
+      "هنگام تولید پاسخ، منبع و شناسه evidence را چگونه بدون تغییر حفظ کنم؟",
+    ],
+    whyThisMattersFa: "چون سامانه باید سؤال طبیعی را به قرارداد قابل اعتبارسنجی تبدیل کند و تولید متن را از شواهد بازیابی‌شده جدا نگه دارد.",
+    plannedActionFa: "QuestionContract و fixtureها را می‌سازم و مرز روشن retrieval، verification و generation را تعریف می‌کنم.",
+    relatedDayTitles: ["QuestionContract finalisieren", "Question-to-JSON Fixtures", "RAG-Orchestrierung ohne Halluzination"],
   },
   {
     number: 8,
     date: "2026-09-02",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "Positional encoding, encoder, and decoder",
-    topics: ["Positional Encoding", "Encoder", "Decoder", "Transformer flow"],
-    projectQuestion: "How does Transformer flow differ from explicit graph traversal and provenance?",
-    useCase: "UC-04 · Present candidate provenance beside neural ranking",
-    sourceIds: ["attention", "draco"],
-    softwareEngineering: ["Sequence diagram", "Component boundary", "Data-flow comparison"],
-    deliverables: ["transformer-flow-notes.md", "graph-vs-transformer.mmd", "component update"],
-    definitionOfDone: "The diagrams show where ranking ends and verification begins.",
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "Self-attention, multi-head attention, and positional encoding",
+    topics: ["Self-Attention", "Multi-Head Attention", "Positional Encoding"],
+    projectQuestion: "How can attention use structure without becoming evidence?",
+    useCase: "Compare graph-aware attention with explicit graph traversal and provenance",
+    readingIds: ["reading-06", "reading-07", "reading-09", "reading-14", "reading-19", "reading-21", "reading-23"],
+    readingFocus: ["Attention and data-flow signals", "Graph-aware context", "Provenance versus latent weights"],
+    projectConnection: "RQ1/RQ2: relates attention-guided retrieval to Graph Retrieval while preserving explicit Evidence Paths.",
+    extractionGoal: "Extract where graph or data-flow structure enters attention and where traceability is lost or preserved.",
+    classQuestionsFa: [
+      "وزن‌های attention چه چیزی را نشان می‌دهند و چه چیزی را اثبات نمی‌کنند؟",
+      "Positional Encoding چگونه با ساختار گراف و جریان داده کد تفاوت دارد؟",
+      "چرا attention به‌تنهایی نمی‌تواند جای Evidence Path قابل بررسی را بگیرد؟",
+    ],
+    whyThisMattersFa: "چون attention می‌تواند بازیابی را هدایت کند، اما وزن پنهان آن نباید به‌عنوان مدرک یک ادعای ساختاری تلقی شود.",
+    plannedActionFa: "attention و مسیر گراف صریح را مقایسه می‌کنم و verifier را طوری می‌سازم که فقط evidence قابل حل را بپذیرد.",
+    relatedDayTitles: ["BERT/GraphCodeBERT Go-No-Go", "Claim-Evidence-Vertrag", "Verifier-Grenze implementieren"],
   },
   {
     number: 9,
     date: "2026-09-05",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "BERT, GPT, and role-safe prompting",
-    topics: ["BERT", "GPT", "Prompt Engineering", "Developer/Architect/QA roles"],
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "Transformer encoder/decoder, BERT, and GPT",
+    topics: ["Transformer Encoder and Decoder", "BERT Family—Encoder-Based Models", "GPT Family—Decoder-Based Models"],
     projectQuestion: "How can optional neural retrieval and answer wording remain role-aware and grounded?",
-    useCase: "UC-05 · Produce a role-specific answer or refuse it",
-    sourceIds: ["googleLlmCrashCourse", "bert", "gpt", "graphcodebert", "sweqa"],
-    softwareEngineering: ["Role prompt contract", "Output schema", "Adversarial refusal tests"],
-    deliverables: ["bert-retrieval-adr.md", "role-prompts-v1.yaml", "refusal-tests.json"],
-    definitionOfDone: "Every answer contains claim, Evidence IDs, role, and answerability status.",
+    useCase: "Position encoder retrieval, decoder generation, role prompts, and graph context",
+    readingIds: ["reading-08", "reading-10", "reading-11", "reading-12", "reading-14", "reading-16", "reading-17", "reading-21", "reading-22", "reading-23"],
+    readingPlan: {
+      required: ["reading-17", "reading-22", "reading-10", "reading-14"],
+      reuse: [],
+      optional: ["reading-08", "reading-11", "reading-12", "reading-16", "reading-21", "reading-23"],
+      deliverables: [
+        {
+          id: "session-09-kg-qa-note",
+          title: "DEEP-Notiz: Knowledge-Graph Repository QA",
+          readingIds: ["reading-17"],
+          mode: "DEEP",
+          acceptance: "Pipeline, Graph-Grounding, Evaluationsaufbau und Abgrenzung zur Evidence-Path-Prüfung sind festgehalten.",
+        },
+        {
+          id: "session-09-cpg-lm-note",
+          title: "TARGET-Notiz: CPG-beschränkter LLM-Kontext",
+          readingIds: ["reading-22"],
+          mode: "TARGET",
+          acceptance: "CPG-Kontext, Traceability, Evaluationsgrenze und Bezug zu RQ1/RQ2 sind als sechs Abschnitte extrahiert.",
+        },
+        {
+          id: "session-09-encoder-go-no-go",
+          title: "Go/No-Go: CodeBERT gegenüber GraphCodeBERT",
+          readingIds: ["reading-10", "reading-14"],
+          mode: "COMPARE",
+          acceptance: "Eine begründete Entscheidung nennt Nutzen, Messkriterien, Kosten und die unveränderte Evidence-Record-Grenze.",
+        },
+      ],
+    },
+    readingFocus: ["Encoder versus decoder role", "Code/repository QA", "Role-aware grounded answers"],
+    projectConnection: "RQ2/Answerability: encoders may retrieve and decoders may phrase answers, but both remain downstream of verifiable evidence.",
+    extractionGoal: "Extract architecture comparisons, QA pipelines, prompting effects, and limitations relevant to role-specific answers.",
+    classQuestionsFa: [
+      "برای retrieval چه زمانی encoderهایی مثل BERT مناسب‌تر از decoder هستند؟",
+      "GPT را چگونه فقط برای بیان پاسخ و نه ساختن evidence به کار ببرم؟",
+      "چگونه پاسخ Developer، Architect و QA متفاوت باشد ولی ادعاها و شواهد یکسان بمانند؟",
+    ],
+    whyThisMattersFa: "چون نقش encoder در بازیابی و decoder در نگارش پاسخ باید از منبع شواهد جدا و قابل کنترل باقی بماند.",
+    plannedActionFa: "برای BERT/GraphCodeBERT تصمیم Go/No-Go می‌گیرم و خروجی نقش‌ها را روی یک RetrievalRun و evidence مشترک می‌سازم.",
+    relatedDayTitles: ["BERT/GraphCodeBERT Go-No-Go", "Rollenformat für Developer, Architect und QA", "Cross-App Integration Gate"],
   },
   {
     number: 10,
     date: "2026-09-07",
-    berlinTime: "17:30–19:10",
-    iranTime: "19:00–20:40",
-    title: "PEFT, RAG, and evaluation boundary",
-    topics: ["LoRA", "QLoRA", "RAG", "ROUGE", "BLEU"],
+    berlinTime: "19:30–21:10", iranTime: "21:00–22:40",
+    title: "Prompt engineering, PEFT, RAG, BLEU, and ROUGE",
+    topics: ["Prompt Engineering", "Parameter-Efficient Fine-Tuning (PEFT)", "LoRA and QLoRA", "Retrieval-Augmented Generation (RAG)", "BLEU and ROUGE"],
     projectQuestion: "Which parts belong in the thesis core, optional experiments, and future work?",
-    useCase: "UC-06 · Export and compare a complete RetrievalRun",
-    sourceIds: ["lora", "qlora", "rag", "bleu", "kilt"],
-    softwareEngineering: ["RetrievalRun schema", "Evaluation protocol", "Integration ADR"],
-    deliverables: ["retrieval-run.schema.json", "rag-metrics-boundary.md", "integration-readiness-report.md"],
-    definitionOfDone: "The Flat baseline runs end-to-end; deferred neural work has explicit entry criteria.",
+    useCase: "Synthesize retrieval, graph grounding, prompting, provenance, and evaluation",
+    readingIds: ["reading-06", "reading-07", "reading-11", "reading-12", "reading-13", "reading-15", "reading-16", "reading-17", "reading-18", "reading-19", "reading-20", "reading-21", "reading-22", "reading-23"],
+    readingPlan: {
+      required: ["reading-15", "reading-19", "reading-13"],
+      reuse: ["reading-06", "reading-17", "reading-22"],
+      optional: ["reading-07", "reading-11", "reading-12", "reading-16", "reading-18", "reading-20", "reading-21", "reading-23"],
+      deliverables: [
+        {
+          id: "session-10-provenance-contract",
+          title: "KILT-Vertrag: Provenance und Evaluation",
+          readingIds: ["reading-15"],
+          mode: "TARGET",
+          acceptance: "Recall@k, MRR, Evidence Coverage und korrekte Ablehnung sind Primärmetriken; BLEU/ROUGE bleiben sekundär.",
+        },
+        {
+          id: "session-10-flat-graph-protocol",
+          title: "RANGER-Protokoll: Flat gegen Graph Retrieval",
+          readingIds: ["reading-19"],
+          mode: "COMPARE",
+          acceptance: "Beide Retriever verwenden dieselben eingefrorenen Fragen, denselben Corpus und dieselben Evidence-IDs.",
+        },
+        {
+          id: "session-10-rag-refusal-contract",
+          title: "RAG-Vertrag: Grounding und NOT_ANSWERABLE",
+          readingIds: ["reading-13"],
+          mode: "SYNTHESIS",
+          acceptance: "Generierung startet erst nach Retrieval und Verifikation; bei unzureichender Evidenz endet der Ablauf mit NOT_ANSWERABLE.",
+        },
+      ],
+    },
+    readingFocus: ["RAG and PEFT boundaries", "Retrieval and generation metrics", "Grounding, provenance, and answerability"],
+    projectConnection: "Synthesizes RQ1/RQ2 and fixes the boundary: BLEU/ROUGE assess generated text, not retrieval completeness or Evidence Path validity.",
+    extractionGoal: "Complete the six-section notes and record a final architecture decision for each paper: core, comparison, background, or future work.",
+    classQuestionsFa: [
+      "چه زمانی LoRA یا QLoRA برای این پروژه واقعاً توجیه دارد؟",
+      "RAG در نبود evidence کافی چگونه باید پاسخ ندادن درست را اجرا کند؟",
+      "محدودیت BLEU و ROUGE برای سنجش درستی ادعا و کامل بودن شواهد چیست؟",
+    ],
+    whyThisMattersFa: "چون هسته پروژه باید پاسخ grounded و قابل ردگیری بدهد؛ معیار شباهت متن یا fine-tuning به‌تنهایی درستی evidence را تضمین نمی‌کند.",
+    plannedActionFa: "قرارداد RAG grounded و refusal را پیاده می‌کنم، مرز معیارها را ثبت می‌کنم و PEFT را فقط با منفعت سنجش‌پذیر به آینده یا آزمایش اختیاری می‌برم.",
+    relatedDayTitles: ["RAG-Orchestrierung ohne Halluzination", "Rollenformat für Developer, Architect und QA", "Evaluationsgrenze ROUGE/BLEU", "Cross-App Integration Gate"],
   },
 ];
+
+// The later technical plan still contains the production-grade implementation.
+// These small transfer outputs prevent a 3+ month knowledge gap after the live
+// course. They replace one normal daily output; they never add a fourth output
+// or create backlog.
+export const nlpCourseTransferPlans: readonly CourseTransferPlan[] = [
+  { sessionNumber: 1, relevance: "core", noteDue: "2026-08-18", artifactDue: "2026-08-24", maxMinutes: 45, artifact: "nlp-tokenization-decision.md", acceptance: "Code-aware Tokenisierung gegen die Anforderungen des Repository-Corpus abgrenzen.", replacesDailyOutput: true },
+  { sessionNumber: 2, relevance: "core", noteDue: "2026-08-20", artifactDue: "2026-08-26", maxMinutes: 45, artifact: "tfidf-baseline-contract.md", acceptance: "Input, top-k, Cosine-Metrik und einen NOT_ANSWERABLE-Fall festhalten.", replacesDailyOutput: true },
+  { sessionNumber: 3, relevance: "experiment", noteDue: "2026-08-23", artifactDue: "2026-08-29", maxMinutes: 30, artifact: "word2vec-go-no-go.md", acceptance: "Nur Nutzen, Messgröße und Abbruchkriterium dokumentieren; kein Modelltraining als Pflicht.", replacesDailyOutput: true },
+  { sessionNumber: 4, relevance: "experiment", noteDue: "2026-08-25", artifactDue: "2026-08-31", maxMinutes: 30, artifact: "embedding-layer-relevance.md", acceptance: "GloVe, FastText und trainierbare Embeddings als Core, Extension oder Future einstufen.", replacesDailyOutput: true },
+  { sessionNumber: 5, relevance: "scope", noteDue: "2026-08-27", artifactDue: "2026-09-02", maxMinutes: 20, artifact: "rnn-scope-decision.md", acceptance: "Begründen, warum RNN für die Thesis Kern, Vergleich oder außerhalb des Scope ist.", replacesDailyOutput: true },
+  { sessionNumber: 6, relevance: "scope", noteDue: "2026-08-30", artifactDue: "2026-09-05", maxMinutes: 20, artifact: "lstm-gru-scope-decision.md", acceptance: "Eine prüfbare Scope-Entscheidung ohne zusätzliche Implementierung treffen.", replacesDailyOutput: true },
+  { sessionNumber: 7, relevance: "core", noteDue: "2026-09-01", artifactDue: "2026-09-07", maxMinutes: 45, artifact: "question-contract-v0.md", acceptance: "Eine reale Repository-Frage mit erwarteter Evidenz und Refusal-Fall definieren.", replacesDailyOutput: true },
+  { sessionNumber: 8, relevance: "core", noteDue: "2026-09-03", artifactDue: "2026-09-09", maxMinutes: 45, artifact: "attention-to-evidence-note.md", acceptance: "Attention nicht als Provenance missverstehen und die Evidence-Grenze explizit machen.", replacesDailyOutput: true },
+  { sessionNumber: 9, relevance: "core", noteDue: "2026-09-06", artifactDue: "2026-09-12", maxMinutes: 45, artifact: "codebert-graphcodebert-go-no-go.md", acceptance: "Nutzen, Messkriterien, Kosten und unveränderte Evidence-Record-Grenze dokumentieren.", replacesDailyOutput: true },
+  { sessionNumber: 10, relevance: "core", noteDue: "2026-09-08", artifactDue: "2026-09-14", maxMinutes: 45, artifact: "rag-refusal-contract-v0.md", acceptance: "Retrieval, Verifier, Generator und NOT_ANSWERABLE als testbaren Vertrag festhalten.", replacesDailyOutput: true },
+];
+
+export function courseTransferForSession(sessionNumber: number) {
+  return nlpCourseTransferPlans.find((plan) => plan.sessionNumber === sessionNumber) ?? null;
+}
+
+export function nlpSessionsRelatedToPlanDay(dayTitle: string) {
+  return nlpCourseSessions.filter((session) => session.relatedDayTitles.includes(dayTitle));
+}
 
 const d = (
   title: string,
@@ -794,7 +1246,7 @@ const technicalWeekSpecs: Array<{
     days: [
       d("Entwurf des Methodenkapitels", ["proposal", "hevner"], "Die Methode muss Corpus, Extractor, Goldstandard und Experiment reproduzierbar erklären.", ["Beschreibe Ein- und Ausgabe jeder Stufe", "Dokumentiere Stop-Regeln und Unsicherheit", "Versioniere die Konfigurationen"], ["11 bis 13", "21"], "Thesis / Method", "method-draft.md", "writing"),
       d("Entwurf des Ergebniskapitels", ["proposal"], "Ergebnisse werden ohne zusätzliche Interpretation und in festen Tabellen berichtet.", ["Tabelliere die RQ1-Metriken", "Tabelliere RQ2 Experiment A und B", "Ergänze Fallstudien mit Evidenzpfad"], ["14", "21"], "Thesis / Results", "results-draft.md", "writing"),
-      d("Entwurf der Diskussion", ["proposal", "logiclens"], "Die Diskussion führt zu Forschungsfragen, Related Work und Validität zurück.", ["Beantworte jede Forschungsfrage direkt", "Beschreibe Gemeinsamkeiten und Unterschiede zu verwandten Systemen", "Begrenze Scope und Generalisierung"], ["4 bis 7", "15 bis 18"], "Thesis / Discussion", "discussion-draft.md", "writing"),
+      d("Entwurf der Diskussion", ["proposal", "logiclens", "nagy", "hevner", "sweqa"], "Die Diskussion führt zu Forschungsfragen, Related Work und Validität zurück; Related Work braucht vor dem Schreiben eine sortierte Quellenliste statt loser Zitate.", ["Sortiere jede gelesene Quelle in genau einen Eimer: „zitiert als Grundlage“ (thesisRole cite — direkt ausgebaute Vorarbeit, meist nur ein bis zwei Quellen), „Hintergrundlektüre“ (thesisRole background — einmal gelesen, selten zitiert) oder „Related-Work-Erwähnung“ (thesisRole related-work — „bisherige Arbeiten haben X getan“, ohne Ausbau-Anspruch)", "Beschreibe für jede cite-Quelle in einem Satz, was diese Arbeit konkret ausbaut oder verbessert; beantworte jede Forschungsfrage direkt", "Begrenze Scope und Generalisierung anhand der related-work- und background-Quellen"], ["4 bis 7", "15 bis 18"], "Thesis / Discussion", "discussion-draft.md + source-bucket-map.md", "writing"),
       d("Replikationspaket", ["proposal", "codefuse"], "Andere Forschende müssen den Lauf reproduzieren können.", ["Führe Build- und Run-Anweisungen aus", "Prüfe Konfiguration, Hash und Output-Manifest", "Reduziere fehlende Abhängigkeiten auf null"], ["11.3", "17", "38.11"], "Release", "replication-package-v1.zip", "writing"),
       d("Demo und Präsentation", ["proposal"], "Der Wert des Artefakts muss an einem kurzen realen Pfad sichtbar werden.", ["Zeige Problem→Evidenz→Antwort", "Zeige eine korrekte Ablehnung", "Nenne Grenzen auf der Schlussfolie"], ["24", "32"], "Presentation", "demo-script-fa-de-en.md", "writing"),
       d("Finaler Reproduktionslauf", ["proposal", "danphe"], "Die Abgabe ist erst nach einem sauberen, erfolgreichen Lauf valide.", ["Führe den Lauf aus einem sauberen Checkout aus", "Dokumentiere alle Output-Hashes", "Bereite Release Tag und Changelog vor"], ["17", "20.2", "38.11"], "Release", "release-candidate-1", "writing"),
@@ -833,6 +1285,12 @@ const technicalWeekSpecs: Array<{
 type ScheduledWeekSpec = (typeof technicalWeekSpecs)[number] & {
   startDate?: string;
   technicalIndex?: number;
+  // Explicit per-day ISO dates, one per entry in `days`. Used instead of the
+  // startDate-derived 6-consecutive-working-day window for weeks that must
+  // interleave with the live NLP course's fixed class calendar (Aug 17 - Sep
+  // 7, Mon/Wed/Sat) -- those days are covered by nlpCourseSessions, not this
+  // plan, so this week's day-tasks land only on the free days in between.
+  dates?: string[];
 };
 
 const designWeekSpecs: ScheduledWeekSpec[] = [
@@ -840,8 +1298,8 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phase: "Design 1: Problem und Anforderungen",
     phaseId: "design-requirements",
     title: "Problem, Stakeholder und vertretbarer Scope",
-    goal: "Vor dem Coding werden Problem, Nutzende, Anforderungen und Projektgrenzen präzise und testbar.",
-    startDate: "2026-08-04",
+    goal: "Vor dem Coding werden Problem, Nutzende, Anforderungen und Projektgrenzen präzise und testbar. Läuft parallel zum Live-NLP-Kurs (17. Aug – 7. Sept) -- diese Woche belegt nur die kursfreien Tage, nicht Montag/Mittwoch/Samstag.",
+    dates: ["2026-08-18", "2026-08-20", "2026-08-21", "2026-08-23", "2026-08-25", "2026-08-27"],
     days: [
       d("Problemstellung und Projektwert", ["proposal", "hevner"], "Ohne präzises Problem zerfallen Architektur und Implementierung in unverbundene Funktionen.", ["Formuliere das Kernproblem der Cross-Repository-Analyse in einem Satz", "Kläre den Unterschied zwischen Evidenz und Textähnlichkeit", "Beschreibe den Artefaktwert für drei Rollen getrennt"], ["1", "6", "7"], "Design / Problem Framing", "problem-statement-v1.md"),
       d("Stakeholder und Personas", ["proposal", "sweqa"], "Developer, Architect und QA benötigen unterschiedliche Fragen und Evidenzstufen.", ["Extrahiere das Ziel jeder Persona", "Bestimme die Entscheidung, die jede Rolle mit der Antwort trifft", "Dokumentiere Informationen, die einer Rolle nicht gezeigt werden dürfen"], ["1.6", "25", "26"], "Design / Stakeholders", "stakeholders-and-personas.md"),
@@ -855,8 +1313,8 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phase: "Design 2: Systemarchitektur",
     phaseId: "design-architecture",
     title: "C4, Datenfluss und Modulgrenzen",
-    goal: "Systemstruktur von Context bis Component sowie Modulverträge werden vor der Implementierung fixiert.",
-    startDate: "2026-08-11",
+    goal: "Systemstruktur von Context bis Component sowie Modulverträge werden vor der Implementierung fixiert. Läuft weiterhin parallel zum Live-NLP-Kurs -- nur kursfreie Tage.",
+    dates: ["2026-08-28", "2026-08-30", "2026-09-01", "2026-09-03", "2026-09-04", "2026-09-06"],
     days: [
       d("System Context Diagram", ["c4", "proposal"], "Das Diagramm zeigt die Beziehungen zu Nutzenden, GitHub/lokalen Repositories, Neo4j und LLM.", ["Bestimme externe Personen und Softwaresysteme", "Definiere Vertrauen und Eigentum jeder Boundary", "Entferne Technologiedetails aus dem Context"], ["1.6", "3", "9"], "Architecture / C4", "c4-context.dsl"),
       d("Container Diagram", ["c4", "arc42"], "Container trennen Ausführung, Speicherung und Benutzeroberfläche.", ["Grenze CLI/API, Extractor, Graph Store und UI ab", "Beschreibe Protokoll und übertragene Daten jeder Beziehung", "Definiere jeden Container als stateful oder stateless"], ["3", "10", "38.2"], "Architecture / C4", "c4-containers.dsl"),
@@ -870,15 +1328,15 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phase: "Design 3: Domänen- und Evidenzmodell",
     phaseId: "design-evidence-model",
     title: "Gemeinsame Sprache, Program Graph und Provenance",
-    goal: "Entitäten, Beziehungen, Evidenz und Unsicherheitsstatus werden schriftlich und in JSON-Beispielen fixiert.",
-    startDate: "2026-08-18",
+    goal: "Entitäten, Beziehungen, Evidenz und Unsicherheitsstatus werden schriftlich und in JSON-Beispielen fixiert. Beginnt am ersten Tag nach dem letzten NLP-Kurstermin (7. September); ab hier läuft der Plan wieder auf normalem Wochentakt.",
+    startDate: "2026-09-08",
     days: [
       d("Domänenglossar", ["proposal", "allamanis"], "Gemeinsame Begriffe verhindern Bedeutungsunterschiede zwischen Text, Code und Graph.", ["Definiere Fact, Evidence, Claim und Path getrennt", "Präzisiere Repository, Project, File, Type und Method", "Operationalisiere READ, WRITE und Persistence"], ["2", "3.2", "3.3"], "Domain Model", "domain-glossary.md"),
       d("Node Types des Program Graph", ["allamanis", "yamaguchi"], "Nodes sollen Projektfragen dienen und nicht den gesamten AST kopieren.", ["Liste Nodes von Repository bis Table", "Bestimme notwendige Identität und Properties jedes Nodes", "Entferne Nodes ohne Nutzen für die Forschungsfragen"], ["3.3", "10.3"], "Graph Model", "node-catalog-v1.yaml"),
       d("Relationship Types", ["yamaguchi", "nagy"], "Jede Kante benötigt klare Richtung, Bedeutung, Quelle und Erzeugungsregel.", ["Definiere DEFINES, INVOKES und MAPS_TO", "Definiere MUTATES, PERSISTS, READS_FROM und WRITES_TO", "Kennzeichne jede Beziehung als DIRECT oder DERIVED"], ["3.3", "10.3", "38.5"], "Graph Model", "relationship-catalog-v1.yaml"),
       d("EvidenceRecord und SourceLocation", ["proposal", "shatnawi"], "Ohne Datei, Zeile und Regel ist kein Claim prüfbar.", ["Bestimme die Felder des EvidenceRecord", "Mache Repository, Commit, File und Line verpflichtend", "Ergänze RuleId, RuleVersion und ExtractorVersion"], ["3.2", "38.4 bis 38.6"], "Evidence Model", "evidence-record.schema.json"),
       d("Unsicherheit und Answer Status", ["proposal", "kilt"], "Das System muss Nichtwissen modellieren und erfundene Antworten verhindern.", ["Definiere OBSERVED, DERIVED, UNRESOLVED und CONFLICTING", "Definiere SUPPORTED, PARTIALLY_SUPPORTED und NOT_ANSWERABLE", "Formuliere die Regel von Evidenz zu Answer Status"], ["3.6", "14.3", "27"], "Verifier / Status Model", "evidence-and-answer-status.yaml"),
-      d("Vertical Slice auf Papier", ["proposal", "danphe"], "Ein Beispielpfad zeigt Modellfehler vor dem Coding.", ["Wähle einen realen Pfad Controller→Service→Repository", "Schreibe alle Nodes, Edges und Evidenzelemente manuell", "Markiere Lücken in Schema und Contract"], ["10.2", "12", "26"], "Design / Walkthrough", "manual-vertical-slice.json"),
+      d("Ausführbarer Vertical Slice", ["proposal", "danphe", "roslynSyntax"], "Ein früher ausführbarer Pfad zeigt Modell- und Integrationsfehler, bevor sechs reine Designwochen vergehen.", ["Extrahiere einen realen Controller→Service→Repository-Pfad mit Roslyn", "Schreibe EvidenceRecord und SourceLocation deterministisch als JSONL", "Führe einen Golden Test aus und markiere Lücken in Schema und Contract"], ["10.2", "12", "17", "26"], "Walking Skeleton / Evidence", "vertical-slice-v0.jsonl + golden test"),
     ],
   },
   {
@@ -886,7 +1344,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-evaluation",
     title: "Goldstandard, RQ1/RQ2 und Teststrategie",
     goal: "Vor dem Bau des Artefakts wird die Messung von Erfolg und Scheitern vollständig definiert.",
-    startDate: "2026-08-25",
+    startDate: "2026-09-15",
     days: [
       d("Akzeptanzkriterien des Gesamtsystems", ["proposal", "hevner"], "Die Definition of Done muss von Evidenz und Forschungsfragen abhängen, nicht vom guten Eindruck einer Demo.", ["Extrahiere die Erfolgskriterien des Artefakts", "Trenne verpflichtende und sekundäre Metriken", "Markiere Schwellenwerte, die Betreuungsgenehmigung benötigen"], ["16", "17", "20"], "Evaluation / Acceptance", "system-acceptance-criteria.md"),
       d("Annotationsprotokoll entwerfen", ["proposal", "sweqa"], "Der Goldstandard ist nur mit stabiler Annotationseinheit und Anleitung valide.", ["Definiere die Einheiten Method, Table und Relation", "Definiere Positive, Negative und Hard Negative", "Beschreibe Disagreement- und Zweitprüfungsprozess"], ["12", "13.3", "29.4"], "Evaluation / Gold", "annotation-guideline-v1.md"),
@@ -901,7 +1359,7 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phaseId: "design-delivery-plan",
     title: "Corpus, Repository-Struktur und technisches Backlog",
     goal: "Das Design wird in einen versionierten, planbaren und eindeutigen Umsetzungsplan überführt.",
-    startDate: "2026-09-01",
+    startDate: "2026-09-22",
     days: [
       d("Corpus Manifest und Freeze Plan", ["danphe", "proposal"], "Eine feste Eingabe ist Voraussetzung für reproduzierbare Ergebnisse.", ["Dokumentiere den festen Danphe-Commit", "Bestimme Solutions und Projects im Scope", "Dokumentiere Lizenz, Build und Ausschlüsse"], ["9.2 bis 9.3", "11.3"], "Delivery / Corpus", "corpus-manifest-v1.yaml"),
       d("Repository- und Ordnerstruktur", ["arc42", "proposal"], "Die Dateistruktur muss Architekturgrenzen und Testzyklus widerspiegeln.", ["Entwirf src, tests, corpus, gold und reports", "Ordne jedem Ordner ein verantwortliches Modul zu", "Trenne generierte Ausgabe vom Quellcode"], ["10", "11", "17"], "Delivery / Repository", "repository-layout.md"),
@@ -915,11 +1373,11 @@ const designWeekSpecs: ScheduledWeekSpec[] = [
     phase: "Design 6: Finalisierung",
     phaseId: "design-freeze",
     title: "Traceability, Baseline und Oktober-Bereitschaft",
-    goal: "Bis 9. September wird das Design versioniert; danach sind nur kontrollierte Änderungen erlaubt.",
-    startDate: "2026-09-08",
+    goal: "Bis 30. September wird das Design versioniert; danach sind nur kontrollierte Änderungen erlaubt. (Verschoben von ursprünglich 19. September, weil Design 1-2 durch den Live-NLP-Kurs auf kursfreie Tage verteilt wurden.)",
+    startDate: "2026-09-29",
     days: [
       d("Vollständige Traceability Matrix", ["proposal", "hevner"], "Keine Anforderung, kein Modul, kein Test und keine Forschungsfrage darf unverbunden bleiben.", ["Verbinde Requirement→Component", "Verbinde Component→Test/Metric", "Verbinde Metric→RQ/Thesis Section"], ["7", "16", "21"], "Design / Traceability", "traceability-matrix.csv"),
-      d("Design Freeze und Readiness Gate", ["proposal", "adr", "arc42"], "Der 9. September beendet das Design; die Ergebnisse müssen für den unabhängigen Start am 1. Oktober ausreichen.", ["Schließe alle Design-Checklisten", "Versioniere ADRs und erlaubte offene Punkte", "Bereite den ersten technischen Oktobertag und seine Eingaben vor"], ["16", "20", "37"], "Design / Baseline", "design-baseline-2026-09-09.zip"),
+      d("Design Freeze und Readiness Gate", ["proposal", "adr", "arc42"], "Der 30. September beendet das Design; die Ergebnisse müssen für den unabhängigen Start am 11. Oktober ausreichen (nur noch 11 statt ursprünglich rund 21 Puffertage -- bei Bedarf den 11. Oktober selbst verschieben).", ["Schließe alle Design-Checklisten", "Versioniere ADRs und erlaubte offene Punkte", "Bereite den ersten technischen Oktobertag und seine Eingaben vor"], ["16", "20", "37"], "Design / Baseline", "design-baseline-2026-09-30.zip"),
     ],
   },
 ];
@@ -970,16 +1428,21 @@ function addUtcDays(date: Date, days: number) {
 }
 
 export const planWeeks: PlanWeek[] = scheduledWeekSpecs.map((week, weekIndex) => {
-  const weekStart = week.startDate
-    ? new Date(`${week.startDate}T12:00:00Z`)
-    : addUtcDays(
-        new Date("2026-10-01T12:00:00Z"),
-        (week.technicalIndex ?? 0) * 7,
-      );
-  const dates: Date[] = [];
-  for (let offset = 0; offset < 7; offset += 1) {
-    const candidate = addUtcDays(weekStart, offset);
-    if (candidate.getUTCDay() !== 0) dates.push(candidate);
+  let dates: Date[];
+  if (week.dates) {
+    dates = week.dates.map((iso) => new Date(`${iso}T12:00:00Z`));
+  } else {
+    const weekStart = week.startDate
+      ? new Date(`${week.startDate}T12:00:00Z`)
+      : addUtcDays(
+          new Date("2026-10-11T12:00:00Z"),
+          (week.technicalIndex ?? 0) * 7,
+        );
+    dates = [];
+    for (let offset = 0; offset < 7; offset += 1) {
+      const candidate = addUtcDays(weekStart, offset);
+      if (candidate.getUTCDay() !== 0) dates.push(candidate);
+    }
   }
 
   const days = week.days.map((spec, dayIndex) => {
@@ -1006,10 +1469,25 @@ export const planWeeks: PlanWeek[] = scheduledWeekSpecs.map((week, weekIndex) =>
       ] as [string, string, string],
     ];
     const taskTitles = ["1. Finden und verstehen", "2. Mit dem Projekt verbinden", "3. Ergebnis erstellen"];
+    // Stable, date-independent id: earlier this session the plan's start
+    // date was recalculated to today, which shifted every day's computed
+    // date -- and until now day/task/item ids were literally that date
+    // string, so the recalculation silently orphaned every completed/
+    // notes/attachments entry keyed under the old dates. w<N>-d<N> only
+    // changes if the day's actual position in the schedule changes, not
+    // when the calendar dates it falls on shift.
+    const stableId = `w${weekIndex + 1}-d${dayIndex + 1}`;
 
     return {
       ...spec,
-      id: date,
+      // Revision 2 product decision: 2026-08-19..2026-09-07 is reading-only
+      // for the live NLP course, so every non-course day in that window is
+      // optional and must not create backlog, streak loss, or block the
+      // required-progress% (see docs/NLP-RETRIEVAL-LAB.md).
+      optionalDuringCourse:
+        spec.optionalDuringCourse ??
+        (spec.kind !== "course" && date >= "2026-08-19" && date <= "2026-09-07"),
+      id: stableId,
       date,
       week: weekIndex + 1,
       phase: week.phase,
@@ -1017,11 +1495,11 @@ export const planWeeks: PlanWeek[] = scheduledWeekSpecs.map((week, weekIndex) =>
       weekTitle: week.title,
       taskMinutes,
       tasks: taskTitles.map((title, taskIndex) => ({
-        id: `${date}-task-${taskIndex + 1}`,
+        id: `${stableId}-task-${taskIndex + 1}`,
         title,
         minutes: taskMinutes[taskIndex],
         items: taskItems[taskIndex].map((label, itemIndex) => ({
-          id: `${date}-t${taskIndex + 1}-i${itemIndex + 1}`,
+          id: `${stableId}-t${taskIndex + 1}-i${itemIndex + 1}`,
           label,
         })),
       })),
@@ -1043,12 +1521,134 @@ export const allTaskItems = allDays.flatMap((day) =>
   day.tasks.flatMap((task) => task.items),
 );
 
+// Read-side compatibility map from the old date-based ids (day.id used to
+// equal day.date) to the new stable ids, so completed/notes/attachments
+// already stored under a date-based id from before this fix stay
+// readable instead of silently vanishing. Built from the *current*
+// schedule, so it is only valid for data saved under this exact schedule
+// generation -- not a general-purpose id history across every past
+// recalculation, which cannot be reconstructed without knowing what
+// those past schedules were.
+export const LEGACY_ID_MIGRATION: ReadonlyMap<string, string> = new Map(
+  allDays.flatMap((day) => {
+    const entries: [string, string][] = [[day.date, day.id]];
+    for (const [taskIndex, task] of day.tasks.entries()) {
+      entries.push([`${day.date}-task-${taskIndex + 1}`, task.id]);
+      for (const [itemIndex, item] of task.items.entries()) {
+        entries.push([
+          `${day.date}-t${taskIndex + 1}-i${itemIndex + 1}`,
+          item.id,
+        ]);
+      }
+    }
+    return entries;
+  }),
+);
+
+export function migrateLegacyId(id: string): string {
+  return LEGACY_ID_MIGRATION.get(id) ?? id;
+}
+
+export function migrateLegacyIds(ids: Iterable<string>): Set<string> {
+  return new Set(Array.from(ids, migrateLegacyId));
+}
+
+// Plan versioning: when the professor changes the project's direction and
+// the plan itself has to change, this is the record of *that it changed,
+// why, when it took effect, and exactly which tasks were removed, moved to
+// a different week, or newly added* -- instead of silently overwriting the
+// previous plan with no trace of what used to be there. This does NOT
+// The separate LEGACY_ID_MIGRATION above migrates completed items and notes
+// from the former date-based ids to stable schedule-position ids. What this
+// version log adds is visibility: a changelog entry per revision, and a
+// one-time "the plan changed" notice the next time the app opens after a
+// new version ships.
+export interface PlanVersionEntry {
+  readonly version: number;
+  readonly effectiveDate: string;
+  readonly reason: string;
+  readonly tasksRemoved: readonly string[];
+  readonly tasksMoved: readonly string[];
+  readonly tasksAdded: readonly string[];
+}
+
+export const PLAN_VERSION_HISTORY: readonly PlanVersionEntry[] = [
+  {
+    version: 1,
+    effectiveDate: "2026-08-14",
+    reason:
+      "Erster 25-Wochen-Plan generiert und auf den heutigen Starttag datiert.",
+    tasksRemoved: [],
+    tasksMoved: [],
+    tasksAdded: [],
+  },
+  {
+    version: 2,
+    effectiveDate: "2026-08-19",
+    reason:
+      "Der Advanced-Deep-Learning-Kurs dient bis 7. September ausschließlich dem Lesen relevanter Artikel und dem Extrahieren von Thesis-Belegen; technische Kursaufgaben sind optional.",
+    tasksRemoved: [
+      "Verpflichtende NLP-Implementierungen, Notebooks und Modelltrainings während des Kurses",
+      "Rückstands- und Streak-Abzug für technische Aufgaben vom 19. August bis 7. September",
+    ],
+    tasksMoved: [
+      "Technische Aufgaben vom 19. August bis 7. September bleiben sichtbar, zählen aber als optional",
+    ],
+    tasksAdded: [
+      "Doppelte Artikelnummerierung: aktuelle Kursreihenfolge C01 bis C18 und erhaltene Originalnummer O06 bis O23",
+      "Sechsteiliger Extraktionsbogen für Problem, Method, Data/Evaluation, Findings, Limitations und Projektbezug",
+      "Explizite Zuordnung jeder Lektüre zu RQ1/RQ2, Evidence Record, Evidence Path, Flat/Graph Retrieval und Answerability",
+    ],
+  },
+  {
+    version: 3,
+    effectiveDate: "2026-08-20",
+    reason:
+      "Die Artikel der Sitzungen 9 und 10 sind jetzt nach Pflichtlektüre, wiederverwendbaren Notizen und optionalem Related Work priorisiert; jede Sitzung hat genau drei prüfbare Ergebnisse.",
+    tasksRemoved: [
+      "Undifferenzierte Pflichtannahme für alle 10 beziehungsweise 14 zugeordneten Artikel",
+      "Erneutes Lesen von LogicLens, Abedu und Lekssays in Sitzung 10",
+    ],
+    tasksMoved: [
+      "Nicht zentrale Übersichts-, Prompting- und Related-Work-Artikel der Sitzungen 9 und 10 in den optionalen Bereich",
+    ],
+    tasksAdded: [
+      "Drei verbindliche Ergebnisse für Sitzung 9: KG-QA-Notiz, CPG-LM-Notiz und CodeBERT/GraphCodeBERT-Go-No-Go",
+      "Drei verbindliche Ergebnisse für Sitzung 10: Provenance-Vertrag, Flat/Graph-Protokoll und RAG-Refusal-Vertrag",
+      "Explizite Wiederverwendung vorhandener Notizen ohne erneute Lektüre",
+    ],
+  },
+  {
+    version: 4,
+    effectiveDate: "2026-08-20",
+    reason:
+      "Der Plan ist jetzt ausgabeorientiert: maximal drei Tagesergebnisse, ein echter Leichtmodus, Kurs-Transfer binnen 24 Stunden beziehungsweise sieben Tagen und ein ausführbarer Vertical Slice in Designwoche 3.",
+    tasksRemoved: [
+      "Neun gleichwertige Pflicht-Häkchen pro Tag",
+      "Drei Monate Wartezeit bis zur ersten Anwendung zentraler Kurskonzepte",
+      "Sechs reine Designwochen ohne ausführbaren technischen Beleg",
+    ],
+    tasksMoved: [
+      "Detail-Checklisten dienen als Qualitätsleitfaden unter höchstens drei Tagesergebnissen",
+      "Kurs-Mikroartefakte ersetzen ein Tagesergebnis und erzeugen keine zusätzliche Aufgabe",
+    ],
+    tasksAdded: [
+      "Rettungsmodus mit einem und Leichtmodus mit zwei verpflichtenden Tagesergebnissen",
+      "Zehn unmittelbare Kurs-Transferpläne mit 24-Stunden-Notiz und Sieben-Tage-Artefakt",
+      "Ausführbarer Roslyn→EvidenceRecord→JSONL-Vertical-Slice mit Golden Test in Woche 3",
+    ],
+  },
+];
+
+export const PLAN_VERSION =
+  PLAN_VERSION_HISTORY[PLAN_VERSION_HISTORY.length - 1]?.version ?? 1;
+
 export const planMeta = {
-  start: "2026-08-04",
-  designEnd: "2026-09-09",
-  restStart: "2026-09-10",
-  restEnd: "2026-09-30",
-  technicalStart: "2026-10-01",
+  start: "2026-08-14",
+  designEnd: "2026-09-30",
+  restStart: "2026-10-01",
+  restEnd: "2026-10-10",
+  technicalStart: "2026-10-11",
   end: allDays[allDays.length - 1]?.date ?? "2027-02-10",
   designDays: planWeeks
     .filter((week) => week.phaseId.startsWith("design-"))

@@ -1,0 +1,141 @@
+/* Daily Practice responsive containment fix.
+   Intentionally unlayered so it wins over the legacy inline layout rules.
+
+   FIXED: this file previously rendered every activity description as a
+   vertical column of single letters ("W r i t e  a n d ..."). Two causes,
+   both in this file:
+
+   1. `.act-body` was given `grid-template-columns: minmax(0,auto) minmax(0,1fr)`.
+      `.act-body` holds THREE stacked children -- `.act-head`, `.desc` and
+      `.act-foot` -- so a two-column grid put the head in column 1 and
+      squeezed the description into a column only a few pixels wide.
+   2. `overflow-wrap: anywhere` on `p`/`span` then allowed that squeezed text
+      to break after every single character instead of overflowing visibly.
+
+   The description is a plain stacked block, so `.act-body` stays a
+   single-column stack at every width; only the outer card grid collapses
+   responsively.
+
+   Also corrected: the selectors below targeted `.cards-two`, `.cards-three`,
+   `.act-footer`, `.activity-actions` and `.activity-meta`, none of which
+   exist in daily.html. The real classes are `.cards.two`, `.cards.three` and
+   `.act-foot`, so every containment rule in this file was silently dead
+   while the two rules that did match were the ones breaking the layout. */
+
+body:has(.phase) .shell,
+body:has(.phase) .main,
+body:has(.phase) .phase,
+body:has(.phase) .activity,
+body:has(.phase) .act-body,
+body:has(.phase) .aside {
+  min-width: 0;
+}
+
+body:has(.phase) .cards.two,
+body:has(.phase) .cards.three {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+
+body:has(.phase) .cards.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body:has(.phase) .cards.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body:has(.phase) .activity {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+body:has(.phase) .activity > *,
+body:has(.phase) .act-body > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Vertical stack: head, description, footer. Never a multi-column grid --
+   that is what produced the one-letter-per-line description. */
+body:has(.phase) .act-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+body:has(.phase) .act-foot {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: auto;
+}
+
+body:has(.phase) .cards.three .act-foot {
+  grid-template-columns: 1fr auto;
+  row-gap: 8px;
+}
+
+body:has(.phase) .cards.three .act-foot .open {
+  grid-column: 1 / -1;
+}
+
+body:has(.phase) .activity button,
+body:has(.phase) .activity .button,
+body:has(.phase) .activity [role="button"] {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* break-word, not `anywhere`: `anywhere` permits a break at every character,
+   which is what turned a narrow column into a letter-per-line stack. This
+   only breaks a word when it genuinely cannot fit. */
+body:has(.phase) .activity h2,
+body:has(.phase) .activity h3,
+body:has(.phase) .activity p,
+body:has(.phase) .activity span {
+  overflow-wrap: break-word;
+}
+
+body:has(.phase) .aside,
+body:has(.phase) .aside button,
+body:has(.phase) .aside [role="button"] {
+  max-width: 100%;
+}
+
+@media (max-width: 1320px) {
+  body:has(.phase) .cards.three {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  body:has(.phase) .cards.two,
+  body:has(.phase) .cards.three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body:has(.phase) .act-foot {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+@media (max-width: 760px) {
+  body:has(.phase) .activity button,
+  body:has(.phase) .activity .button,
+  body:has(.phase) .activity [role="button"] {
+    width: 100%;
+    justify-content: center;
+    white-space: normal;
+  }
+
+  body:has(.phase) .act-foot {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

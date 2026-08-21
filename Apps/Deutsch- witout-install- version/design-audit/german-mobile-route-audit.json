@@ -1,0 +1,186 @@
+{
+  "capturedAt": "2026-08-19T23:02:50.496Z",
+  "requestedViewport": [412, 915],
+  "rows": [
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/",
+      "scrollWidth": 397,
+      "title": "DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/analytics",
+      "scrollWidth": 397,
+      "title": "Seitenanalyse · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/audio",
+      "scrollWidth": 412,
+      "title": "Audio-Bibliothek · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/einstellungen",
+      "scrollWidth": 397,
+      "title": "Einstellungen · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/fehler",
+      "scrollWidth": 397,
+      "title": "Fehlermotor · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/fertigkeiten",
+      "scrollWidth": 397,
+      "title": "Integrierte Fertigkeiten A1–C2 · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/fortschritt",
+      "scrollWidth": 412,
+      "title": "Fortschritt & Nachweise · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/gemischtes-training",
+      "scrollWidth": 412,
+      "title": "DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/grammatik",
+      "scrollWidth": 397,
+      "title": "DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/heute",
+      "scrollWidth": 397,
+      "title": "DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/kasus-trainer",
+      "scrollWidth": 397,
+      "title": "Kasus-Trainer · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/lehrkraft",
+      "scrollWidth": 397,
+      "title": "DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/offline",
+      "scrollWidth": 412,
+      "title": "Offline · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/privacy",
+      "scrollWidth": 397,
+      "title": "Datenschutz · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/ressourcen",
+      "scrollWidth": 397,
+      "title": "Online-Ressourcen · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/studio",
+      "scrollWidth": 397,
+      "title": "Konversationsstudio | Deutsch Automaticity · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/support",
+      "scrollWidth": 397,
+      "title": "Support · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/vokabelkarten",
+      "scrollWidth": 397,
+      "title": "DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/wiederholungen",
+      "scrollWidth": 397,
+      "title": "Wiederholungen · DeutschFlow",
+      "viewport": [412, 915]
+    },
+    {
+      "h1": 1,
+      "horizontalOverflow": false,
+      "main": 1,
+      "route": "/deutsch-mit-marija/uebung/idiom-day-1",
+      "scrollWidth": 397,
+      "title": "Quellenübung · DeutschFlow",
+      "viewport": [412, 915]
+    }
+  ]
+}

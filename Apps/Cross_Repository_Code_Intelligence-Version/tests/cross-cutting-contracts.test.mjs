@@ -5,6 +5,8 @@ import test from "node:test";
 const tracker = await readFile(new URL("../app/study-tracker.tsx", import.meta.url), "utf8");
 const pdfPage = await readFile(new URL("../app/pdf-reader/page.tsx", import.meta.url), "utf8");
 const pdfDocument = await readFile(new URL("../app/pdf-reader/components/PdfDocument.tsx", import.meta.url), "utf8");
+const researchLibrary = await readFile(new URL("../app/pdf-reader/components/ResearchLibrary.tsx", import.meta.url), "utf8");
+const pdfLibrary = await readFile(new URL("../lib/pdf-library.ts", import.meta.url), "utf8");
 const navigation = await readFile(new URL("../app/local-navigation.tsx", import.meta.url), "utf8");
 const rootLayout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
 const cssFiles = [
@@ -48,7 +50,9 @@ test("plan lifecycle and daily work mode are synchronized with central settings"
   assert.match(tracker, /planPausedAt: nextSettings\.planPausedAt/);
   assert.match(tracker, /dailyWorkMode: nextSettings\.dailyWorkMode/);
   assert.match(tracker, /setDailyWorkMode/);
-  assert.match(tracker, /12 Minuten Rettungsmodus/);
+  assert.match(tracker, /12 Minuten für genau ein Tagesergebnis/);
+  assert.match(tracker, /70 Minuten für zwei Tagesergebnisse/);
+  assert.match(tracker, /Planergebnisse/);
 });
 
 test("an unstarted or paused plan cannot record task or focus progress", () => {
@@ -68,6 +72,22 @@ test("PDF selection and annotation persistence are wired", () => {
   assert.match(pdfPage, /localStorage\.getItem\(MARK_STORE/);
   assert.match(pdfPage, /READER_STATE_STORE/);
   assert.match(pdfPage, /sanitizePdfReaderStateStore/);
+});
+
+test("PDF reader includes a device-safe research library with citation and backup workflows", () => {
+  assert.match(pdfPage, /tab === "library"/);
+  assert.match(pdfPage, /<ResearchLibrary/);
+  assert.match(pdfPage, /openLibraryItem/);
+  assert.match(researchLibrary, /PDF_LIBRARY_STORE/);
+  assert.match(researchLibrary, /Backup JSON/);
+  assert.match(researchLibrary, /Backup importieren/);
+  assert.match(researchLibrary, /APA kopieren/);
+  assert.match(researchLibrary, /BibTeX kopieren/);
+  assert.match(pdfLibrary, /research-pdf-studio:library:v1/);
+  assert.match(pdfLibrary, /formatApaCitation/);
+  assert.match(pdfLibrary, /formatBibTeX/);
+  assert.match(pdfCss, /\.library-editor-grid/);
+  assert.match(pdfCss, /repeat\(4, minmax\(0, 1fr\)\)/);
 });
 
 test("PDF.js worker is compatible with local Vinext and Next.js builds", () => {

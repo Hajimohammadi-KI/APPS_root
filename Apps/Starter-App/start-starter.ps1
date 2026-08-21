@@ -26,15 +26,25 @@ if (-not $alreadyRunning) {
     -RedirectStandardError (Join-Path $logRoot 'starter.error.log')
 
   $ready = $false
-  for ($attempt = 0; $attempt -lt 40; $attempt++) {
+  for ($attempt = 0; $attempt -lt 120; $attempt++) {
     Start-Sleep -Milliseconds 250
     try {
-      $response = Invoke-WebRequest -Uri "$starterUrl/api/status" -UseBasicParsing -TimeoutSec 1
+      $response = Invoke-WebRequest -Uri "$starterUrl/api/health" -UseBasicParsing -TimeoutSec 1
       if ($response.StatusCode -eq 200) { $ready = $true; break }
     } catch { }
   }
-  if (-not $ready) { throw 'The App Starter could not start. Check Apps\Starter-App\logs\starter.error.log.' }
+  if (-not $ready) {
+    $errorLog = Join-Path $logRoot 'starter.error.log'
+    $details = if (Test-Path -LiteralPath $errorLog) { (Get-Content -LiteralPath $errorLog -Tail 20 -ErrorAction SilentlyContinue) -join "`r`n" } else { '' }
+    Add-Type -AssemblyName PresentationFramework
+    [System.Windows.MessageBox]::Show(
+      "The App Starter could not start.`n`n$details",
+      'App Starter',
+      'OK',
+      'Error'
+    ) | Out-Null
+    throw 'The App Starter could not start.'
+  }
 }
 
 Start-Process $starterUrl
-

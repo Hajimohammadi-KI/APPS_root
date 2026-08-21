@@ -2,7 +2,7 @@ import { requestOwner } from "./server-user";
 import { DEFAULT_OPENAI_MODEL } from "./model-config";
 
 export type ProviderName = "google" | "google_tokens" | "openai" | "deepl";
-export type ConnectionState = "not_configured" | "untested" | "connected" | "expired" | "quota_exhausted" | "error";
+export type ConnectionState = "not_configured" | "untested" | "connected" | "expired" | "quota_exhausted" | "invalid_key" | "unreachable" | "error";
 
 type Database = {
   prepare: (sql: string) => {

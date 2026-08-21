@@ -1,7 +1,7 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.3
+**نسخه:** 1.4
 
 **تاریخ:** 2026-08-21  
 **دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)  
@@ -35,7 +35,7 @@
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
 | ادغام runtime در هر دو اپ | ledger مشترک، gate صوت و export نسخه‌دار موجود است؛ مسیر B1 کامل هنوز مستقل اثبات نشده | **Gate G1 در [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) در حال انجام است** |
-| export محلی شواهد | انگلیسی و آلمانی اکنون `learnerState` و `learningEvidence` را در envelope نسخه‌دار صادر می‌کنند | commit `a0e5642`؛ E2E دانلود هر دو زبان پاس شد |
+| export محلی شواهد | انگلیسی و آلمانی اکنون `learnerState` و `learningEvidence` را در envelope نسخه‌دار صادر می‌کنند؛ فعلاً روی PR بزرگ و conflicted شمارهٔ 2 است، نه `main` | commit `a0e5642`؛ E2E دانلود هر دو زبان پاس شد؛ استخراج در [Issue #15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) |
 | AI و دیتاست runtime | نباید آغاز شود | وابسته به G1 و G2 |
 | اثرگذاری روی زبان‌آموز واقعی | دادهٔ کافی وجود ندارد | **N/A تا اجرای پایلوت** |
 
@@ -133,7 +133,7 @@ flowchart LR
 
 **برآورد:** 1 sprint  
 **وابستگی:** G0  
-**وضعیت:** در حال انجام در [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14)
+**وضعیت:** در حال انجام در [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14)؛ ادغام تغییرات فعلی وابسته به پاک‌سازی شاخه در [Issue #15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) است
 **هدف:** تبدیل قرارداد pure core به مسیر واقعی یادگیری در هر دو اپ.
 
 ### محدوده
@@ -165,6 +165,11 @@ flowchart LR
   `learningEvidence` را با `schemaVersion: 1.0.0` صادر کند؛ تست دانلود واقعی
   مرورگر در هر دو زبان پاس شد؛
 - build تولیدی هر دو اپ پاس شد و سرویس‌های محلی دوباره با HTTP 200 بالا آمدند.
+- بررسی GitHub نشان داد PR قدیمی [#2](https://github.com/Hajimohammadi-KI/APPS_root/pull/2)
+  با `main` فعلی mergeable نیست و 18 مسیر conflicted دارد. تلاش cherry-pick مستقل نیز
+  نشان داد `main` هنوز مسیر `/settings` انگلیسی را به اپ جدا هدایت می‌کند، در حالی
+  که export انگلیسی فعلی به صفحهٔ in-app روی PR #2 وابسته است. برای جلوگیری از
+  merge کور یا بازگرداندن معماری حذف‌شده، تفکیک baseline در Issue #15 ثبت شد.
 
 این موارد پیشرفت G1 هستند، نه عبور کامل آن. آزمون مستقل microphone واقعی و
 provider خارجی در این مرحله **N/A — هنوز به‌اندازهٔ کافی تأیید نشده** است؛ مسیر
@@ -381,15 +386,16 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | ترتیب | محدوده | Issue | شرط شروع |
 |---:|---|---|---|
 | 1 | Adherence core + mirrors + CI | [#3](https://github.com/Hajimohammadi-KI/APPS_root/issues/3) | اکنون، پس از جداسازی worktree |
-| 2 | Runtime evidence slice EN/DE | [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) | merge شدن #3؛ در حال انجام |
-| 3 | Measurement contracts و local export | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G1 |
-| 4 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) | G2 |
-| 5 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) | #6 و consent |
-| 6 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) | G2 و authored content |
-| 7 | FSRS shadow migration | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) | G2 |
-| 8 | Mediation pilot + QA | [#8](https://github.com/Hajimohammadi-KI/APPS_root/issues/8) | G1 و content schema |
-| 9 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
-| 10 | Consented pilot analytics | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G5 و دادهٔ چندکاربره |
+| 2 | تفکیک baseline اپ‌ها از PR conflicted شمارهٔ 2 | [#15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) | اکنون؛ پیش‌نیاز ادغام امن G1 |
+| 3 | Runtime evidence slice EN/DE | [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) | merge شدن baseline لازم از #15؛ اجرای محلی در حال انجام |
+| 4 | Measurement contracts و local export | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G1 |
+| 5 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) | G2 |
+| 6 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) | #6 و consent |
+| 7 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) | G2 و authored content |
+| 8 | FSRS shadow migration | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) | G2 |
+| 9 | Mediation pilot + QA | [#8](https://github.com/Hajimohammadi-KI/APPS_root/issues/8) | G1 و content schema |
+| 10 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
+| 11 | Consented pilot analytics | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G5 و دادهٔ چندکاربره |
 
 ## کارهایی که فعلاً نباید انجام شوند
 
@@ -419,9 +425,10 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## اقدام بعدی واحد
 
-**فقط Issue [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) را کامل کنید:**
-برای یک واحد B1 در هر زبان، writing و speaking دارای audio را از content تا
-ledger و export در E2E اثبات کنید؛ re-record باید شواهد قبلی را نامعتبر کند،
-provider unavailable نباید موفقیت بسازد و delayed recall / novel transfer باید
-eventهای جدا داشته باشند. تا عبور کامل G1، AI، ingestion دیتاست و rollout
-یادگیری متوقف می‌مانند.
+**ابتدا Issue [#15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) را کامل کنید:**
+baseline لازم انگلیسی را از PR بزرگ شمارهٔ 2 در یک PR کوچک و قابل بازبینی روی
+`main` استخراج کنید؛ تعارض‌ها نباید با انتخاب کور یک سمت حل شوند. سپس Issue
+[#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) باید مسیر B1،
+writing/speaking دارای audio، ledger/export، re-record invalidation، provider
+unavailable و eventهای جدا delayed recall / novel transfer را یکجا اثبات کند.
+تا عبور کامل G1، AI، ingestion دیتاست و rollout یادگیری متوقف می‌مانند.

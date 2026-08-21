@@ -440,7 +440,7 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.3 · 2026-08-21</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.4 · 2026-08-21</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
       <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
@@ -472,7 +472,7 @@
         <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
         <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از تست کامل محلی و CI لینوکس merge شد</td><td>merge <code>b3fbc07</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
         <tr><td>ادغام runtime در هر دو اپ</td><td>ledger مشترک، gate صوت و export نسخه‌دار موجود است؛ مسیر B1 کامل هنوز مستقل اثبات نشده</td><td><strong style="color:var(--active)">Gate G1 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">Issue #14</a> در حال انجام است</strong></td></tr>
-        <tr><td>export محلی شواهد</td><td>انگلیسی و آلمانی اکنون <code>learnerState</code> و <code>learningEvidence</code> را در envelope نسخه‌دار صادر می‌کنند</td><td>commit <code>a0e5642</code>؛ E2E دانلود هر دو زبان پاس شد</td></tr>
+        <tr><td>export محلی شواهد</td><td>انگلیسی و آلمانی اکنون <code>learnerState</code> و <code>learningEvidence</code> را در envelope نسخه‌دار صادر می‌کنند؛ فعلاً روی PR بزرگ و conflicted شمارهٔ ۲ است، نه <code>main</code></td><td>commit <code>a0e5642</code>؛ E2E پاس؛ استخراج در <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a></td></tr>
         <tr><td>AI و دیتاست runtime</td><td>نباید آغاز شود</td><td>وابسته به G1 و G2</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
       </tbody>
@@ -578,7 +578,7 @@ flowchart LR
       <div class="phase-title-row"><span class="phase-num">۱</span><h3>Vertical Slice واقعی در English و Deutsch</h3></div>
       <span class="chip active"><span class="dot"></span>در حال انجام</span>
     </div>
-    <div class="phase-tags">برآورد: ۱ sprint · وابستگی: <code>G0</code> · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a></div>
+    <div class="phase-tags">برآورد: ۱ sprint · وابستگی: <code>G0</code> · Runtime: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a> · تفکیک branch: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a></div>
     <p>تبدیل قرارداد pure core به مسیر واقعی یادگیری در هر دو اپ: یک واحد authored و human-reviewed در سطح B1 برای هر زبان؛ مسیر کامل <code dir="ltr">content → daily plan → learner response → evaluation → evidence → local event</code>؛ یک تلاش نوشتاری و یک تلاش گفتاری با صدای واقعی.</p>
     <p>Conversation Studio: <code dir="ltr">Listen/Recall → Record → Replay → Review transcript → Correct → Improve → Save</code>. transcript و evaluation واقعی؛ هیچ پاسخ hard-coded یا demo evidence پذیرفته نیست.</p>
     <div class="exit-box">
@@ -598,6 +598,7 @@ flowchart LR
         <li><code>learning-core</code> برای هر دو زبان ledger محلی نسخه‌دار می‌سازد و speaking بدون audio را <code>unverified</code> نگه می‌دارد</li>
         <li>commit <code>a0e5642</code> خروجی هر دو اپ را به envelope شامل <code>learnerState</code> و <code>learningEvidence</code> ارتقا داد؛ E2E دانلود واقعی هر دو زبان پاس شد</li>
         <li>build تولیدی هر دو اپ پاس شد و لینک‌های محلی دوباره HTTP 200 هستند</li>
+        <li>PR قدیمی <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/2" class="mono">#2</a> با <code>main</code> فعلی mergeable نیست و ۱۸ مسیر conflicted دارد. <code>main</code> هنوز <code>/settings</code> انگلیسی را به اپ جدا هدایت می‌کند؛ بنابراین export انگلیسی فعلی را نمی‌توان بدون تصمیم معماری یا بازگرداندن صفحهٔ حذف‌شده مستقل cherry-pick کرد. تفکیک امن baseline در <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a> ثبت شد</li>
       </ul>
       <p style="margin:0;"><strong>N/A — هنوز به‌اندازهٔ کافی تأیید نشده:</strong> microphone واقعی و provider خارجی. مسیر B1 دو زبان، invalidation پس از re-record و eventهای مستقل delayed recall / novel transfer هنوز باید یکجا در Issue #14 اثبات شوند؛ بنابراین G1 بسته نشده است.</p>
     </div>
@@ -788,15 +789,16 @@ flowchart LR
       <thead><tr><th class="mono" style="text-align:center">#</th><th>محدوده</th><th>Issue</th><th>شرط شروع</th></tr></thead>
       <tbody>
         <tr><td class="mono" style="text-align:center">1</td><td>Adherence core + mirrors + CI</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/3" class="mono">#3</a></td><td>اکنون، پس از جداسازی worktree</td></tr>
-        <tr><td class="mono" style="text-align:center">2</td><td>Runtime evidence slice EN/DE</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a></td><td>merge شدن #3؛ در حال انجام</td></tr>
-        <tr><td class="mono" style="text-align:center">3</td><td>Measurement contracts و local export</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G1</td></tr>
-        <tr><td class="mono" style="text-align:center">4</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a></td><td>G2</td></tr>
-        <tr><td class="mono" style="text-align:center">5</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>#6 و consent</td></tr>
-        <tr><td class="mono" style="text-align:center">6</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></td><td>G2 و authored content</td></tr>
-        <tr><td class="mono" style="text-align:center">7</td><td>FSRS shadow migration</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></td><td>G2</td></tr>
-        <tr><td class="mono" style="text-align:center">8</td><td>Mediation pilot + QA</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a></td><td>G1 و content schema</td></tr>
-        <tr><td class="mono" style="text-align:center">9</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>
-        <tr><td class="mono" style="text-align:center">10</td><td>Consented pilot analytics</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G5 و دادهٔ چندکاربره</td></tr>
+        <tr><td class="mono" style="text-align:center">2</td><td>تفکیک baseline اپ‌ها از PR conflicted شمارهٔ ۲</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a></td><td>اکنون؛ پیش‌نیاز ادغام امن G1</td></tr>
+        <tr><td class="mono" style="text-align:center">3</td><td>Runtime evidence slice EN/DE</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a></td><td>merge شدن baseline لازم از #15؛ اجرای محلی در حال انجام</td></tr>
+        <tr><td class="mono" style="text-align:center">4</td><td>Measurement contracts و local export</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G1</td></tr>
+        <tr><td class="mono" style="text-align:center">5</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a></td><td>G2</td></tr>
+        <tr><td class="mono" style="text-align:center">6</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>#6 و consent</td></tr>
+        <tr><td class="mono" style="text-align:center">7</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></td><td>G2 و authored content</td></tr>
+        <tr><td class="mono" style="text-align:center">8</td><td>FSRS shadow migration</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></td><td>G2</td></tr>
+        <tr><td class="mono" style="text-align:center">9</td><td>Mediation pilot + QA</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a></td><td>G1 و content schema</td></tr>
+        <tr><td class="mono" style="text-align:center">10</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>
+        <tr><td class="mono" style="text-align:center">11</td><td>Consented pilot analytics</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G5 و دادهٔ چندکاربره</td></tr>
       </tbody>
     </table>
   </div>
@@ -831,7 +833,7 @@ flowchart LR
 
   <div class="callout final">
     <span class="label">اقدام بعدی واحد</span>
-    <p style="margin:0;">فقط Issue <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a> را کامل کنید: برای یک واحد B1 در هر زبان، writing و speaking دارای audio را از content تا ledger و export در E2E اثبات کنید؛ re-record باید شواهد قبلی را نامعتبر کند، provider unavailable نباید موفقیت بسازد و delayed recall / novel transfer باید eventهای جدا داشته باشند. تا عبور کامل G1، AI، ingestion دیتاست و rollout یادگیری متوقف می‌مانند.</p>
+    <p style="margin:0;">ابتدا Issue <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a> را کامل کنید: baseline لازم انگلیسی را از PR بزرگ شمارهٔ ۲ در یک PR کوچک و قابل بازبینی روی <code>main</code> استخراج کنید؛ تعارض‌ها نباید با انتخاب کور یک سمت حل شوند. سپس Issue <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a> باید مسیر B1، writing/speaking دارای audio، ledger/export، re-record invalidation، provider unavailable و eventهای جدا delayed recall / novel transfer را یکجا اثبات کند. تا عبور کامل G1، AI، ingestion دیتاست و rollout یادگیری متوقف می‌مانند.</p>
   </div>
 
   <footer class="note">

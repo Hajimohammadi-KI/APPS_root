@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const sourceRoot = resolve(dirname(fileURLToPath(import.meta.url)));
 const repositoryRoot = resolve(sourceRoot, "../..");
+const appsRoot = resolve(repositoryRoot, "Apps");
 const targets = [
   resolve(
     repositoryRoot,
@@ -34,7 +35,12 @@ function digest(path) {
 }
 
 for (const targetRoot of targets) {
-  if (!targetRoot.startsWith(`${repositoryRoot}\\Apps\\`)) {
+  const relativeTarget = relative(appsRoot, targetRoot);
+  if (
+    relativeTarget === "" ||
+    relativeTarget.startsWith("..") ||
+    isAbsolute(relativeTarget)
+  ) {
     throw new Error(`Refusing to sync outside app workspaces: ${targetRoot}`);
   }
   for (const relativePath of files) {

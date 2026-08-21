@@ -1,9 +1,131 @@
 .settings-row {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
-  align-items: center;
-  gap: 14px;
+  align-items: start;
+  gap: 8px 14px;
   border-bottom: 1px solid var(--border);
   padding: 13px 0;
+  min-width: 0;
+}
+
+.settings-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.settings-section > .settings-row:last-child {
+  border-bottom: none;
+}
+
+fieldset.settings-row {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.settings-row > legend,
+.settings-row > span:first-child {
+  padding: 0;
+  color: var(--foreground);
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.settings-section {
+  display: grid;
+  gap: 4px;
+}
+
+.settings-choice-group {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.settings-choice {
+  display: flex;
+  flex: 1 1 200px;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--background);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.settings-choice:has(input:checked) {
+  border-color: #6d28d9;
+  background: color-mix(in srgb, #6d28d9 8%, var(--background));
+}
+
+.settings-choice:focus-within,
+.settings-toggle:focus-within {
+  border-radius: 10px;
+  outline: 3px solid rgb(109 40 217 / 35%);
+  outline-offset: 2px;
+}
+
+.settings-choice input,
+.settings-toggle input {
+  flex-shrink: 0;
+  margin-top: 3px;
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #6d28d9;
+}
+
+.settings-choice span,
+.settings-toggle span {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.settings-choice small,
+.settings-toggle small {
+  color: var(--muted-foreground);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.settings-toggle {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.settings-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.settings-export-status {
+  margin-top: 10px;
+  font-weight: 700;
+}
+
+@media (max-width: 560px) {
+  .settings-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .settings-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-choice {
+    flex-basis: 100%;
+  }
 }
 

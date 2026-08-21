@@ -1,4 +1,6 @@
 export const LEARNING_SCHEMA_VERSION = "1.0.0" as const;
+export const LEARNING_DATA_EXPORT_KIND =
+  "automaticity.learning-data-export" as const;
 
 export * from "./adherence";
 
@@ -188,6 +190,30 @@ export interface LearningEvidenceLedger {
   readonly responses: readonly LearnerResponse[];
   readonly evidence: readonly EvidenceRecord[];
   readonly events: readonly LearningDomainEvent[];
+}
+
+/**
+ * Portable, versioned learner backup shared by both language apps.
+ *
+ * The legacy exports contained only each app's UI state, which silently
+ * dropped the normalized evidence ledger. Keeping the app state and ledger
+ * as separate fields preserves backwards-readable data while making the
+ * evidence schema explicit for later validation or migration.
+ */
+export interface LearningDataExport<TLearnerState = unknown> {
+  readonly kind: typeof LEARNING_DATA_EXPORT_KIND;
+  readonly schemaVersion: typeof LEARNING_SCHEMA_VERSION;
+  readonly exportedAt: string;
+  readonly language: LearningLanguage;
+  readonly learnerState: TLearnerState;
+  readonly learningEvidence: LearningEvidenceLedger;
+}
+
+export interface BuildLearningDataExportInput<TLearnerState> {
+  readonly language: LearningLanguage;
+  readonly exportedAt: string;
+  readonly learnerState: TLearnerState;
+  readonly storage: KeyValueStorage;
 }
 
 export interface KeyValueStorage {
@@ -444,6 +470,19 @@ export function readLearningEvidenceLedger(
   } catch {
     return emptyLearningEvidenceLedger();
   }
+}
+
+export function buildLearningDataExport<TLearnerState>(
+  input: BuildLearningDataExportInput<TLearnerState>,
+): LearningDataExport<TLearnerState> {
+  return {
+    kind: LEARNING_DATA_EXPORT_KIND,
+    schemaVersion: LEARNING_SCHEMA_VERSION,
+    exportedAt: input.exportedAt,
+    language: input.language,
+    learnerState: input.learnerState,
+    learningEvidence: readLearningEvidenceLedger(input.storage),
+  };
 }
 
 export function appendLearningEvidenceBundleToStorage(

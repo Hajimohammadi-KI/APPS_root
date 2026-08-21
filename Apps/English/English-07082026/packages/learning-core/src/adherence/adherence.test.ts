@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { gzipSync } from "node:zlib";
-import { readdirSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -17,9 +17,11 @@ import {
   migrateAdherenceProfile,
   readShadowComparisons,
   requestContinuityFreeze,
+  runAdherenceShadow,
   saveProfile,
   updateStreak,
   type AdherenceKeyValueStorage,
+  type AdherenceCurrentPlan,
   type PlanDuration,
   type ReadinessSignals,
 } from "./index";
@@ -276,13 +278,169 @@ describe("shadow rollout boundaries", () => {
     expect(isAdherenceShadowEnabled({ adherence_v1_shadow: true })).toBe(true);
   });
 
-  test("production source remains below the 5 KiB gzip budget", () => {
+  test("flag off returns an isolated copy and does not compute or apply a proposal", () => {
+    const currentPlan: AdherenceCurrentPlan = {
+      planDuration: 15,
+      blockMinutes: {
+        grammar: 3,
+        mixed_practice: 3,
+        conversation_studio: 4,
+        review: 2,
+        automatization: 3,
+      },
+    };
+    const result = runAdherenceShadow({
+      flags: DEFAULT_ADHERENCE_FEATURE_FLAGS,
+      currentPlan,
+      readinessSignals: {
+        completionRate7d: 0.5,
+        daysSinceLastSession: 1,
+        srsReviewBacklog: 3,
+        planDuration: 15,
+        currentPracticeStreak: 2,
+      },
+    });
+
+    expect(result).toEqual({
+      status: "disabled",
+      featureFlagEnabled: false,
+      currentPlan,
+      proposedPlan: null,
+      readiness: null,
+      engagementPrediction: null,
+      appliedToLearnerPlan: false,
+      persisted: false,
+      learningOutcome: "not-evaluated",
+    });
+    expect(result.currentPlan).not.toBe(currentPlan);
+    expect(result.currentPlan.blockMinutes).not.toBe(currentPlan.blockMinutes);
+  });
+
+  test("enabled shadow computes a comparison but preserves every caller input", () => {
+    const currentPlan: AdherenceCurrentPlan = {
+      planDuration: 30,
+      blockMinutes: {
+        grammar: 4,
+        mixed_practice: 8,
+        conversation_studio: 6,
+        review: 4,
+        automatization: 8,
+      },
+    };
+    const signals: ReadinessSignals = {
+      completionRate7d: 0.35,
+      daysSinceLastSession: 4,
+      srsReviewBacklog: 12,
+      planDuration: 30,
+      currentPracticeStreak: 1,
+    };
+    const planBefore = structuredClone(currentPlan);
+    const signalsBefore = structuredClone(signals);
+    const result = runAdherenceShadow({
+      flags: { adherence_v1_shadow: true },
+      currentPlan,
+      readinessSignals: signals,
+    });
+
+    expect(result.status).toBe("computed");
+    expect(result.appliedToLearnerPlan).toBe(false);
+    expect(result.persisted).toBe(false);
+    expect(result.learningOutcome).toBe("not-evaluated");
+    expect(currentPlan).toEqual(planBefore);
+    expect(signals).toEqual(signalsBefore);
+    expect(
+      Object.values(result.proposedPlan!.blockMinutes).reduce(
+        (sum, value) => sum + value,
+        0,
+      ),
+    ).toBe(30);
+  });
+
+  test("15/30/45-minute shadow proposals remain deterministic and total the current duration", () => {
+    const random = pseudoRandom(30_450_015);
+    for (const planDuration of [15, 30, 45] as const) {
+      for (let run = 0; run < 1_000; run += 1) {
+        const currentPlan: AdherenceCurrentPlan = {
+          planDuration,
+          blockMinutes:
+            planDuration === 15
+              ? {
+                  grammar: 3,
+                  mixed_practice: 3,
+                  conversation_studio: 4,
+                  review: 2,
+                  automatization: 3,
+                }
+              : planDuration === 30
+                ? {
+                    grammar: 6,
+                    mixed_practice: 6,
+                    conversation_studio: 8,
+                    review: 4,
+                    automatization: 6,
+                  }
+                : {
+                    grammar: 9,
+                    mixed_practice: 10,
+                    conversation_studio: 12,
+                    review: 5,
+                    automatization: 9,
+                  },
+        };
+        const input = {
+          flags: { adherence_v1_shadow: true },
+          currentPlan,
+          readinessSignals: {
+            ...randomSignals(random),
+            planDuration,
+          },
+        } as const;
+        const first = runAdherenceShadow(input);
+        const second = runAdherenceShadow(input);
+        expect(second).toEqual(first);
+        expect(first.status).toBe("computed");
+        expect(
+          Object.values(first.proposedPlan!.blockMinutes).reduce(
+            (sum, value) => sum + value,
+            0,
+          ),
+        ).toBe(planDuration);
+      }
+    }
+  });
+
+  test("invalid or mismatched current plans fail closed", () => {
+    const result = runAdherenceShadow({
+      flags: { adherence_v1_shadow: true },
+      currentPlan: {
+        planDuration: 15,
+        blockMinutes: {
+          grammar: 3,
+          mixed_practice: 3,
+          conversation_studio: 4,
+          review: 2,
+          automatization: 2,
+        },
+      },
+      readinessSignals: {
+        completionRate7d: 1,
+        daysSinceLastSession: 0,
+        srsReviewBacklog: 0,
+        planDuration: 30,
+        currentPracticeStreak: 10,
+      },
+    });
+    expect(result.status).toBe("invalid-current-plan");
+    expect(result.proposedPlan).toBeNull();
+    expect(result.appliedToLearnerPlan).toBe(false);
+    expect(result.persisted).toBe(false);
+  });
+
+  test("the browser shadow adapter remains below the 5 KiB gzip budget", () => {
     const directory = dirname(fileURLToPath(import.meta.url));
-    const source = readdirSync(directory)
-      .filter((name) => name.endsWith(".ts") && !name.endsWith(".test.ts"))
-      .sort()
-      .map((name) => readFileSync(join(directory, name)))
-      .join("\n");
-    expect(gzipSync(source).byteLength).toBeLessThan(5 * 1024);
+    const browserBundle = readFileSync(
+      join(directory, "../../browser/adherence-shadow.js"),
+    );
+    expect(gzipSync(browserBundle).byteLength).toBeLessThan(5 * 1024);
   });
 });

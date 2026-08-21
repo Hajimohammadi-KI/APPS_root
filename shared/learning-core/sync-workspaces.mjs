@@ -25,16 +25,49 @@ const files = [
   "src/adherence/index.ts",
   "src/adherence/plan-adjustment.ts",
   "src/adherence/readiness.ts",
+  "src/adherence/shadow-runner.ts",
+  "src/adherence/browser-entry.ts",
   "src/adherence/storage.ts",
   "src/adherence/streak.ts",
   "src/adherence/types.ts",
   "schemas/learning-vertical-slice.schema.json",
   "schemas/measurement-contract.schema.json",
+  "browser/adherence-shadow.js",
+];
+const browserTargets = [
+  resolve(
+    repositoryRoot,
+    "Apps/English/English-07082026/apps/web/public/learning-core/adherence-shadow.js",
+  ),
+  resolve(
+    repositoryRoot,
+    "Apps/Deutsch-V10.08.2026/apps/web/public/learning-core/adherence-shadow.js",
+  ),
 ];
 const checkOnly = process.argv.includes("--check");
 
 function digest(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
+}
+
+const browserSource = join(sourceRoot, "browser/adherence-shadow.js");
+for (const target of browserTargets) {
+  const relativeTarget = relative(appsRoot, target);
+  if (
+    relativeTarget === "" ||
+    relativeTarget.startsWith("..") ||
+    isAbsolute(relativeTarget)
+  ) {
+    throw new Error(`Refusing to sync outside app workspaces: ${target}`);
+  }
+  if (checkOnly) {
+    if (!existsSync(target) || digest(browserSource) !== digest(target)) {
+      throw new Error(`Browser adherence bundle is stale: ${target}`);
+    }
+    continue;
+  }
+  mkdirSync(dirname(target), { recursive: true });
+  copyFileSync(browserSource, target);
 }
 
 for (const targetRoot of targets) {

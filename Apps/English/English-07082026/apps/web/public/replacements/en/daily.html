@@ -51,6 +51,7 @@
       </div><div class="current"><div class="current-top">◷ <span>Your current plan:<br><b id="plan-min">15 minutes</b></span></div></div></section></aside>
   </div></div><div class="toast" id="toast" role="status"></div>
 </div>
+<script src="/learning-core/adherence-shadow.js"></script>
 <script>
   const focusByLevel={A1:'Verb be: am/is/are',A2:'Present simple and everyday routines',B1:'Present perfect for experience and results',B2:'Conditionals and precise explanations',C1:'Advanced clause control',C2:'Nuanced register and style'};
   let detectedLevel='A1';
@@ -66,7 +67,7 @@
   const skillLabels=['Grammar','Read aloud','Coach conversation','Controlled practice','Writing','Shadowing','Review'];
   function applyPlan(value){const selected=plans[value]?Number(value):15;document.querySelectorAll('#time-choices .choice').forEach(x=>x.classList.toggle('active',Number(x.dataset.min)===selected));document.querySelectorAll('.activity .minutes').forEach((x,i)=>{x.textContent=`${skillLabels[i]} · ${plans[selected][i]} min`;x.classList.add('activity-time-label')});document.getElementById('plan-min').textContent=selected+' minutes';document.getElementById('time-summary').textContent=selected+' minutes';document.querySelector('.hero-copy h1').textContent=`Today's ${selected}-minute learning mission`;document.querySelector('.meta span:last-child').textContent=`About ${selected} minutes`;localStorage.setItem('english-daily-minutes',String(selected))}
   applyPlan(localStorage.getItem('english-daily-minutes')||'15');
-  document.querySelectorAll('#time-choices .choice').forEach(el=>el.addEventListener('click',()=>{applyPlan(el.dataset.min);notify(el.dataset.min+'-minute target selected')}));
+  document.querySelectorAll('#time-choices .choice').forEach(el=>el.addEventListener('click',()=>{applyPlan(el.dataset.min);refreshAdherenceShadow(Number(el.dataset.min));notify(el.dataset.min+'-minute target selected')}));
   const l1Text={en:{name:'English',guide:'First understand the goal. Then complete the task in English.',step1:'Step 1: give the requested written or spoken response.',step2:'Step 2: check the target form, word order and pronunciation.'},de:{name:'Deutsch',guide:'Verstehe zuerst das Ziel. Bearbeite die Aufgabe danach auf Englisch.',step1:'Schritt 1: Gib die verlangte schriftliche oder mündliche Antwort.',step2:'Schritt 2: Prüfe Zielform, Wortstellung und Aussprache.'},fa:{name:'فارسی',guide:'ابتدا هدف تمرین را بفهم؛ سپس پاسخ را به انگلیسی تولید کن.',step1:'قدم ۱: پاسخ نوشتاری یا گفتاریِ خواسته‌شده را ارائه کن.',step2:'قدم ۲: ساختار هدف، ترتیب واژه‌ها و تلفظ بررسی می‌شود.'}};
   const targetPrompts=['Use the target grammar in one personal sentence.','Listen, read aloud and record the corrected English sentence.','Answer the English prompt freely without reading.','Study the English rule, then complete the controlled task.','Write connected English sentences from your own life.','Listen to the English model, shadow it, then retell it.','Review your English evidence and schedule the next recall.'];
   document.querySelectorAll('.activity').forEach((card,index)=>{card.insertAdjacentHTML('beforeend',`<details class="scaffold"><summary>Guidance before the English task</summary><div class="scaffold-copy"><p class="l1-guide"></p><p class="l1-step1"></p><p class="l1-step2"></p><p class="target-language"><b>English task:</b> ${targetPrompts[index]}</p></div></details>`)});
@@ -81,12 +82,26 @@
   document.querySelectorAll('[data-route]').forEach(button=>button.addEventListener('click',()=>{location.href=button.dataset.route}));
   const dailySessionKey='english-automaticity:daily-session:v1';
   const readDailySession=()=>{try{return JSON.parse(localStorage.getItem(dailySessionKey)||'{}')}catch{return {}}};
+  const shadowFlagEnabled=()=>new URLSearchParams(location.search).get('adherence-shadow')==='1';
+  const daysSince=(value)=>{const time=Date.parse(value||'');return Number.isFinite(time)?Math.max(0,Math.floor((Date.now()-time)/86400000)):365};
+  function refreshAdherenceShadow(value){
+    const selected=Number(value),activityMinutes=plans[selected],runner=window.AutomaticityAdherenceShadow?.runAdherenceShadow;
+    if(!runner||![15,30,45].includes(selected)||!activityMinutes){
+      Object.defineProperty(window,'__automaticityAdherenceShadow',{configurable:true,writable:true,value:{status:'unsupported-duration',featureFlagEnabled:shadowFlagEnabled(),proposedPlan:null,appliedToLearnerPlan:false,persisted:false,learningOutcome:'not-evaluated'}});
+      return;
+    }
+    const session=readDailySession(),completed=Array.isArray(session.completedActivities)?session.completedActivities.length:0;
+    const currentPlan={planDuration:selected,blockMinutes:{grammar:activityMinutes[3],mixed_practice:activityMinutes[0]+activityMinutes[4],conversation_studio:activityMinutes[2],review:activityMinutes[6],automatization:activityMinutes[1]+activityMinutes[5]}};
+    const result=runner({flags:{adherence_v1_shadow:shadowFlagEnabled()},currentPlan,readinessSignals:{completionRate7d:Math.min(1,completed/7),daysSinceLastSession:daysSince(session.startedAt),srsReviewBacklog:Array.isArray(session.mistakes)?session.mistakes.length:0,planDuration:selected,currentPracticeStreak:0}});
+    Object.defineProperty(window,'__automaticityAdherenceShadow',{configurable:true,writable:true,value:result});
+  }
   const refreshDailyProgress=()=>{
     const session=readDailySession(),completed=new Set(session.completedActivities||[]),cards=[...document.querySelectorAll('.activity')];
     cards.forEach((card,index)=>{const done=completed.has(index+1);card.classList.toggle('done',done);const tag=card.querySelector('.tag');if(done){tag.textContent='Completed';tag.className='tag green';card.querySelector('.bar span').style.width='100%'}});
     const percent=Math.round((completed.size/cards.length)*100);document.getElementById('activity-summary').textContent=`${completed.size} of ${cards.length} activities complete`;document.getElementById('progress-value').innerHTML=`${percent}<span>%</span>`;document.getElementById('progress-ring').style.setProperty('--value',percent);
   };
   refreshDailyProgress();
+  refreshAdherenceShadow(Number(localStorage.getItem('english-daily-minutes')||'15'));
   window.addEventListener('pageshow',refreshDailyProgress);
   document.querySelectorAll('.activity .open').forEach((button,index)=>button.addEventListener('click',()=>{
     const activity=index+1,level=levelSelect.value,topic=focusByLevel[level]||focusByLevel.A1;

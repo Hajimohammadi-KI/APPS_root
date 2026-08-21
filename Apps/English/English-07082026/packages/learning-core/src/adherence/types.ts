@@ -77,6 +77,44 @@ export interface AdherenceFeatureFlags {
   readonly adherence_v1_shadow?: boolean;
 }
 
+export interface AdherenceBlockMinutes {
+  readonly grammar: number;
+  readonly mixed_practice: number;
+  readonly conversation_studio: number;
+  readonly review: number;
+  readonly automatization: number;
+}
+
+export interface AdherenceCurrentPlan {
+  readonly planDuration: PlanDuration;
+  readonly blockMinutes: AdherenceBlockMinutes;
+}
+
+export interface AdherenceShadowInput {
+  readonly flags: AdherenceFeatureFlags;
+  readonly currentPlan: AdherenceCurrentPlan;
+  readonly readinessSignals: ReadinessSignals;
+}
+
+export type AdherenceShadowStatus =
+  "disabled" | "computed" | "invalid-current-plan";
+
+/**
+ * A comparison-only result. It cannot represent a learner-visible plan change,
+ * a persistence operation, or evidence of a learning outcome.
+ */
+export interface AdherenceShadowResult {
+  readonly status: AdherenceShadowStatus;
+  readonly featureFlagEnabled: boolean;
+  readonly currentPlan: AdherenceCurrentPlan;
+  readonly proposedPlan: AdherenceCurrentPlan | null;
+  readonly readiness: number | null;
+  readonly engagementPrediction: "less-likely" | "more-likely" | null;
+  readonly appliedToLearnerPlan: false;
+  readonly persisted: false;
+  readonly learningOutcome: "not-evaluated";
+}
+
 export interface AdherenceKeyValueStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;

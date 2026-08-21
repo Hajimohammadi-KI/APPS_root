@@ -1,7 +1,12 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.5.5/schema.json",
 	"files": {
-		"includes": ["**", "!**/.next", "!**/node_modules"]
+		"includes": [
+			"**",
+			"!**/.next",
+			"!**/node_modules",
+			"!public/learning-core"
+		]
 	},
 	"css": {
 		"parser": {

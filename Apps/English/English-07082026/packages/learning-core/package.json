@@ -10,6 +10,7 @@
     "./measurement-schema": "./schemas/measurement-contract.schema.json"
   },
   "scripts": {
+    "build:browser": "bun build src/adherence/browser-entry.ts --target=browser --format=iife --global-name=AutomaticityAdherenceShadow --outfile=browser/adherence-shadow.js --minify",
     "test": "bun test",
     "test:adherence-core": "bun test src/adherence/adherence.test.ts",
     "typecheck": "bunx -p typescript@5.9.2 tsc --noEmit -p tsconfig.json"

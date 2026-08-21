@@ -8,6 +8,12 @@
 نسخهٔ تصویری: `docs/reports/ux-simplification-roadmap-visual.html` (منتشرشده
 به‌عنوان Artifact، همان لینک با هر آپدیت دوباره deploy می‌شود).
 
+**نسخهٔ وب فعال و قابل بازشدن روی تبلت:**
+https://automaticity-ux-roadmap-elahe.vercel.app
+Alias قدیمی `automaticity-ux-roadmap.vercel.app` در یک Scope دیگر Vercel است و
+حساب فعلی اجازهٔ به‌روزرسانی یا انتقال آن را ندارد؛ بنابراین منبع معتبرِ نسخهٔ
+۲۰۲۶-۰۸-۲۲ آدرس بالا است.
+
 نمادهای وضعیت: ⬜ شروع‌نشده · 🟡 در حال انجام · ✅ انجام‌شده · 🔴 مسدود
 
 ## منشأ
@@ -288,5 +294,6 @@ viewport و تست دستی Screen Reader/میکروفون روی سخت‌اف�
 
 - **۲۰۲۶-۰۸-۲۰**: ایجاد سند، فاز ۰ انجام‌شده ثبت شد، فازهای ۱ تا ۹ ⬜.
 - **۲۰۲۶-۰۸-۲۱ ۰۰:۲۰–۰۰:۴۰**: Claude فازهای ۱ تا ۳ را کامل و با typecheck/test/اسکرین‌شات تأیید کرد (جزئیات در بخش‌های بالا).
-- **۲۰۲۶-۰۸-۲۱ (بعد از ظهر)**: فازهای ۴ تا ۹ توسط Codex بازطراحی و غنی‌سازی شدند — Foundation Gate قبل از ادغام runtime دیتاست/AI، Quality Gate با نمونه‌گیری دو-داور، پوشش Mediation طبق CEFR Companion Volume، و دروازهٔ اندازه‌گیری صریح («تا دادهٔ کاربر واقعی هیچ درصد automaticity اعلام نشود»). منبع سوم («نقد پداگوژیک») به همین دلیل به بخش منشأ اضافه شد. نسخهٔ تصویری (این فایل + HTML) هم‌زمان با `automaticity-ux-roadmap.vercel.app` به‌روز است — آن دیپلوی با دسترسی Vercel جدا از Claude انجام شده.
+- **۲۰۲۶-۰۸-۲۱ (بعد از ظهر)**: فازهای ۴ تا ۹ توسط Codex بازطراحی و غنی‌سازی شدند — Foundation Gate قبل از ادغام runtime دیتاست/AI، Quality Gate با نمونه‌گیری دو-داور، پوشش Mediation طبق CEFR Companion Volume، و دروازهٔ اندازه‌گیری صریح («تا دادهٔ کاربر واقعی هیچ درصد automaticity اعلام نشود»). منبع سوم («نقد پداگوژیک») به همین دلیل به بخش منشأ اضافه شد. این نسخه ابتدا روی Alias قدیمی `automaticity-ux-roadmap.vercel.app` منتشر شده بود که اکنون در Scope قابل‌دسترسی حساب فعلی نیست.
 - **۲۰۲۶-۰۸-۲۲**: G1 در PR #17 (`b452e3e`) با CI سبز عبور کرد؛ مسیر B1 نوشتن/گفتار، audio gate، re-record invalidation، provider-unavailable و delayed/novel events برای هر دو زبان ادغام شد. فاز ۴ به 🟡 تغییر کرد و ادامهٔ Foundation Gate به Issue #18 (consent، baseline، data quality) منتقل شد. میکروفون سخت‌افزاری واقعی و provider زنده همچنان N/A هستند.
+- **۲۰۲۶-۰۸-۲۲ ۰۰:۳۲ CEST**: نسخهٔ جدید روی `automaticity-ux-roadmap-elahe.vercel.app` با وضعیت Vercel Ready منتشر شد. Alias قدیمی به‌دلیل مالکیت Scope دیگر قابل انتقال نبود و محتوای قدیمی آن به‌عنوان نسخهٔ جاری معرفی نمی‌شود.

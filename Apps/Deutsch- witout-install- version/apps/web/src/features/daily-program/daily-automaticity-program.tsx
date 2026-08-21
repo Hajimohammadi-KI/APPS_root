@@ -29,7 +29,7 @@ const PROGRAM_CONTENT: Record<
     readonly href:
       | "/grammatik"
       | "/gemischtes-training"
-      | "/studio?from=daily"
+      | "/studio"
       | "/wiederholungen"
       | "/automatik";
     readonly icon: LucideIcon;
@@ -56,7 +56,7 @@ const PROGRAM_CONTENT: Record<
   conversation_studio: {
     title: "Gesprächsstudio",
     description: "Produziere das Muster laut in einem echten Kontext.",
-    href: "/studio?from=daily",
+    href: "/studio",
     icon: MessagesSquare,
     unitSingular: "Runde",
     unitPlural: "Runden",
@@ -99,7 +99,8 @@ export function DailyAutomaticityProgram() {
       minutes: String(block.minutes),
       units: String(block.practiceUnits),
     });
-    return `${content.href}?${params.toString()}` as Route;
+    const separator = content.href.includes("?") ? "&" : "?";
+    return `${content.href}${separator}${params.toString()}` as Route;
   };
   const firstBlock = program.blocks.find((block) => block.id === "grammar");
 

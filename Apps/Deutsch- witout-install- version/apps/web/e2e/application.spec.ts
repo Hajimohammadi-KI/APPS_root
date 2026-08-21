@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
 
+async function waitForHydration(page: import("@playwright/test").Page) {
+  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
+}
+
 // These journeys intentionally use roles and current learner-visible copy.
 // They gate the SelectMenu/Accordion UI rather than the retired native-select
 // and legacy iframe implementation.
@@ -21,7 +25,7 @@ test("all product and compatibility routes render successfully", async ({
   page,
 }) => {
   for (const route of routes) {
-    const response = await page.goto(route);
+    const response = await page.goto(route, { waitUntil: "domcontentloaded" });
 
     expect(response?.ok(), `${route} should return a successful response`).toBe(
       true,
@@ -62,13 +66,17 @@ test("dashboard exposes the current learning journey and migrates legacy state",
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: "Willkommen, Lernende" }),
+    page.getByRole("heading", {
+      name: /Guten (Morgen|Tag|Abend), Lernende/,
+    }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Dein Lernfortschritt" }),
+    page.getByRole("region", { name: "Personalpronomen und sein · A1" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Lernweg auswählen" }),
+    page.getByRole("region", {
+      name: "Zeit wählen und alle fünf Schritte bearbeiten",
+    }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Hilfe zur Benutzung öffnen" })
@@ -84,11 +92,11 @@ test("dashboard exposes the current learning journey and migrates legacy state",
     page.getByRole("button", { name: "Windows-App installieren" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: /Starke Grammatik aufbauen/i }),
-  ).toHaveAttribute("href", "/grammatik");
+    page.getByRole("link", { name: /Grammatik-Labor/ }).first(),
+  ).toHaveAttribute("href", /\/grammatik\?from=daily/);
   await expect(
-    page.getByRole("link", { name: /Alltagsgespräche sicher meistern/i }),
-  ).toHaveAttribute("href", "/studio");
+    page.getByRole("link", { name: /Gesprächsstudio/ }).first(),
+  ).toHaveAttribute("href", /\/studio\?from=daily&step=3/);
   await expect
     .poll(() =>
       page.evaluate(() => {
@@ -108,6 +116,7 @@ test("grammar lab uses a single-open vertical unit menu and selects an advanced 
   page,
 }) => {
   await page.goto("/grammatik");
+  await waitForHydration(page);
 
   const a1Trigger = page.getByRole("button", { name: "A1 · 24 Einheiten" });
   const a2Trigger = page.getByRole("button", { name: "A2 · 24 Einheiten" });
@@ -217,7 +226,7 @@ test("studio resets stale transcript evidence when the topic changes", async ({
 }) => {
   await page.goto("/studio?topic=12");
 
-  const topicMenu = page.getByRole("button", { name: /^Thema / });
+  const topicMenu = page.getByRole("combobox", { name: "Thema" });
   await expect(topicMenu).toBeVisible();
   const transcript = page.getByLabel("Dein Transkript");
   await transcript.fill("Dieser Entwurf gehört nur zum ersten Thema.");
@@ -371,17 +380,17 @@ test("resources remain complete and the old topic route opens the studio", async
     }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Lernbereich Grammatik" }),
-  ).toBeVisible();
-  const levelMenu = page.getByRole("button", { name: "Niveau A1" });
+    page.getByRole("combobox", { name: "Lernbereich" }),
+  ).toContainText(/Lernbereich\s*Grammatik/);
+  const levelMenu = page.getByRole("combobox", { name: "Niveau" });
   await expect(levelMenu).toBeVisible();
-  await expect(page.getByRole("button", { name: "Thema Alle" })).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Thema" })).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Erklärung & Übungen öffnen" }).first(),
   ).toBeVisible();
   await levelMenu.click();
   await page.getByRole("option", { name: "A2", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Niveau A2" })).toBeVisible();
+  await expect(levelMenu).toContainText(/Niveau\s*A2/);
   await expect(page.getByText(/genaue Themen/)).toBeVisible();
 
   await page.goto("/themen");
@@ -389,7 +398,7 @@ test("resources remain complete and the old topic route opens the studio", async
   await expect(
     page.getByRole("heading", { name: "Gesprächsstudio" }),
   ).toBeVisible();
-  await expect(page.getByRole("button", { name: /^Thema / })).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Thema" })).toBeVisible();
 });
 
 test("private course routes redirect to learner-facing practice", async ({
@@ -408,7 +417,7 @@ test("private course routes redirect to learner-facing practice", async ({
   ).toBeVisible();
 });
 
-test("settings route reports an unavailable companion without changing learner data", async ({
+test("settings route stays local without changing learner data", async ({
   page,
 }) => {
   await page.addInitScript(() =>
@@ -416,32 +425,31 @@ test("settings route reports an unavailable companion without changing learner d
   );
   await page.goto("/einstellungen");
   await expect(
-    page.getByRole("heading", {
-      name: "Die Einstellungen sind gerade nicht erreichbar",
-    }),
+    page.getByRole("heading", { name: "Einstellungen" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Erneut prüfen" }),
-  ).toHaveAttribute("href", "/einstellungen");
-  await expect(
-    page.getByText(/Lerndaten bleiben auf diesem Gerät erhalten/),
+    page.getByText(/ohne separates Einstellungsmodul/),
   ).toBeVisible();
   expect(
     await page.evaluate(() => localStorage.getItem("settings-route-marker")),
   ).toBe("preserve");
 });
 
-test("settings fallback explains its verified local target and never blind-redirects", async ({
-  page,
-}) => {
+test("settings controls persist locally after reload", async ({ page }) => {
   await page.goto("/einstellungen");
+  await waitForHydration(page);
 
   await expect(page).toHaveURL(/\/einstellungen$/);
-  await page.getByText("Hilfe für die lokale Einrichtung").click();
+  await page.getByRole("radio", { name: /125 %/ }).check();
+  await page
+    .getByRole("checkbox", { name: "Leselineal auf Seiten anzeigen" })
+    .check();
+  await page.reload();
+  await waitForHydration(page);
+  await expect(page.getByRole("radio", { name: /125 %/ })).toBeChecked();
   await expect(
-    page.getByText(/Erwartete Adresse: http:\/\/127\.0\.0\.1:4323/),
-  ).toBeVisible();
-  await expect(page.getByText(/höchstens zwei Sekunden/)).toBeVisible();
+    page.getByRole("checkbox", { name: "Leselineal auf Seiten anzeigen" }),
+  ).toBeChecked();
 });
 
 test("retired v20.8 route returns to the maintained dashboard", async ({
@@ -450,7 +458,9 @@ test("retired v20.8 route returns to the maintained dashboard", async ({
   await page.goto("/klassik");
   await expect(page).toHaveURL(/\/$/);
   await expect(
-    page.getByRole("heading", { name: "Willkommen, Lernende" }),
+    page.getByRole("heading", {
+      name: /Guten (Morgen|Tag|Abend), Lernende/,
+    }),
   ).toBeVisible();
   await expect(page.locator("iframe")).toHaveCount(0);
 });
@@ -503,7 +513,9 @@ test("production PWA installs its worker and reloads offline", async ({
   await context.setOffline(true);
   await page.reload({ waitUntil: "domcontentloaded" });
   await expect(
-    page.getByRole("heading", { name: "Willkommen, Lernende" }),
+    page.getByRole("heading", {
+      name: /Guten (Morgen|Tag|Abend), Lernende/,
+    }),
   ).toBeVisible();
   await context.setOffline(false);
 });
@@ -518,31 +530,31 @@ test("mobile navigation opens and changes route", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/heute$/);
   await expect(
-    page.getByRole("heading", { name: "Automatik-Mission" }),
+    page.getByRole("heading", {
+      name: "Dein vollständiges tägliches Automatikprogramm",
+    }),
   ).toBeVisible();
-  await expect(page.getByText("Personalpronomen und sein · A1")).toBeVisible();
+  await expect(
+    page.getByRole("region", {
+      name: "Zeit wählen und alle fünf Schritte bearbeiten",
+    }),
+  ).toBeVisible();
 });
 
-test("daily path exposes all three evidence stages and keeps the selected level", async ({
+test("daily path exposes all five modules with valid deep links", async ({
   page,
 }) => {
   await page.goto("/heute");
-  await expect(page.getByText("Personalpronomen und sein · A1")).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: /1\. Aktivieren & korrekt anwenden/ }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: /2\. Automatisieren & schreiben/ }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: /3\. Frei sprechen & übertragen/ }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
-    .click();
-  await expect(
-    page.getByText("Grammatik-Tagebuch", { exact: true }),
-  ).toBeVisible();
+  const modules = page.locator(".daily-auto-program__grid > li");
+  await expect(modules).toHaveCount(5);
+  const studioLink = page
+    .getByRole("link", { name: /Gesprächsstudio/ })
+    .first();
+  await expect(studioLink).toHaveAttribute(
+    "href",
+    /\/studio\?from=daily&step=3&session=15&minutes=4&units=1/,
+  );
+  expect(await studioLink.getAttribute("href")).not.toContain("?from=daily?");
 });
 
 test("vocabulary adds, recalls, reschedules, and restores a card", async ({

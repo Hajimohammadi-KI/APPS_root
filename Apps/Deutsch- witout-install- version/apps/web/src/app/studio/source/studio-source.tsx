@@ -17,6 +17,7 @@ import { SelectMenu } from "@/components/ui/select-menu";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import {
   analyzeAudioFluency,
+  scoreFromActiveSpeech,
   type AudioFluencyAnalysis,
 } from "@/lib/audio-fluency";
 import { normalizePracticeAnswer } from "@/features/automaticity/automaticity-analysis";
@@ -119,6 +120,7 @@ export default function Home() {
     state: learnerState,
     hydrated: learnerHydrated,
     addFlashcard,
+    recordAttempt,
   } = useLearnerState();
   const [path] = useState<(typeof paths)[number]>(paths[0]);
   const language: StudioLanguage = "de";
@@ -663,6 +665,40 @@ export default function Home() {
         checkedAt: evaluation.checkedAt,
         issues: evaluation.issues,
         audio: audioBlobRef.current,
+      });
+      const requiredSeconds =
+        selected.level === "A1" || selected.level === "A2" ? 20 : 30;
+      const requiredWords =
+        selected.level === "A1" || selected.level === "A2" ? 12 : 20;
+      const targetHit =
+        evaluation.issues.length === 0 &&
+        seconds >= requiredSeconds &&
+        wordCount >= requiredWords;
+      recordAttempt({
+        topic: `Gespräch: ${selected.topic}`,
+        mode: "speaking",
+        inputText: evaluation.original,
+        correctedText: evaluation.corrected,
+        targetHit,
+        verified: true,
+        accuracyScore: Math.max(
+          0,
+          Math.round(
+            100 - (evaluation.issues.length / Math.max(1, wordCount)) * 100,
+          ),
+        ),
+        fluencyScore: audioFluencyResult
+          ? scoreFromActiveSpeech(
+              wordCount,
+              audioFluencyResult.activeSpeechSeconds,
+            )
+          : 0,
+        latencyMs: seconds * 1_000,
+        audioPath: id,
+        audioCaptured: true,
+        rawTranscript: evaluation.original,
+        contentVersion: "20.8.24",
+        assessedBy: "online",
       });
       setSavedId(id);
       setMessage(

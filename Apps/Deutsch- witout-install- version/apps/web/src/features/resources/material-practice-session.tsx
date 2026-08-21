@@ -233,6 +233,8 @@ export function MaterialPracticeSession({
       correctedText: combinedCorrection,
       targetHit: score >= 67,
       verified: true,
+      assessedBy: "deterministic",
+      contentVersion: "20.8.24",
       accuracyScore: score,
     });
     markActivity(10);

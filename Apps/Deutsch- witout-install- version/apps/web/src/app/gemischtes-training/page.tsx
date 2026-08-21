@@ -110,7 +110,7 @@ export default function GemischtesTrainingPage() {
       inputText: answer,
       correctedText: current.expected,
       targetHit: isCorrect,
-      verified: isCorrect,
+      verified: true,
       accuracyScore: isCorrect ? 100 : 0,
     });
   }

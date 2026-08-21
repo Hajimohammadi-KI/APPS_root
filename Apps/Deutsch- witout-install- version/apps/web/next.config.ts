@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     useTypeScriptCli: true,
   },
   transpilePackages: [
+    "@automaticity/learning-core",
     "@grammar/content",
     "@grammar/contracts",
     "@grammar/domain",

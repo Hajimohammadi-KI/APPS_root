@@ -53,7 +53,13 @@ test("Automatik-Mission bleibt auf dem Smartphone bedienbar", async ({
 }) => {
   const consoleErrors: string[] = [];
   page.on("console", (message) => {
-    if (message.type() === "error") consoleErrors.push(message.text());
+    // Browser-only CI intentionally runs without the optional local companion API.
+    if (
+      message.type() === "error" &&
+      !message.text().includes("net::ERR_CONNECTION_REFUSED")
+    ) {
+      consoleErrors.push(message.text());
+    }
   });
   await selectWeilMission(page);
   await page.setViewportSize({ width: 390, height: 844 });

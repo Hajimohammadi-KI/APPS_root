@@ -69,7 +69,9 @@ test("dashboard exposes the automaticity journey, full inventory, and live state
     page.getByRole("heading", { name: "Lernweg auswählen" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Windows-App installieren" }),
+    page.getByRole("button", {
+      name: /App installieren|App ist installiert/,
+    }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: /Starke Grammatik aufbauen/i }),

@@ -34,9 +34,24 @@ const TEXT_SIZES: readonly {
 ];
 
 export function SettingsScreen() {
-  const { state, updateLearnerProfile, updateSettings } = useLearnerState();
+  const { state, hydrated, updateLearnerProfile, updateSettings } =
+    useLearnerState();
   const [exportStatus, setExportStatus] = useState("");
   const { settings } = state;
+
+  if (!hydrated) {
+    return (
+      <div
+        aria-busy="true"
+        className="rounded-3xl border border-violet-200 bg-white p-5 shadow-sm sm:p-7"
+      >
+        <h1 className="text-3xl font-black tracking-tight">Einstellungen</h1>
+        <p className="mt-2 text-muted-foreground">
+          Deine lokalen Einstellungen werden geladen …
+        </p>
+      </div>
+    );
+  }
 
   function exportData() {
     const blob = new Blob([JSON.stringify(state, null, 2)], {

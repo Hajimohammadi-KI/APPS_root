@@ -40,5 +40,8 @@ jobs:
       - name: Verify API over HTTP
         run: bun run test:integration
 
+      - name: Install Playwright Chromium
+        run: bunx playwright install --with-deps chromium
+
       - name: Verify browser flows
         run: bun run test:e2e

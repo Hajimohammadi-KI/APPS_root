@@ -47,6 +47,7 @@
       <section class="panel plan"><h3>Flexibler Plan</h3><small>Wähle deine Übungszeit</small><div class="times"><button class="time active" data-min="15">15<span>min</span></button><button class="time" data-min="30">30<span>min</span></button><button class="time" data-min="45">45<span>min</span></button></div><div class="current"><div class="current-top">◷ <span>Dein aktueller Plan:<br><b id="plan-min">15 Minuten</b></span></div><button class="adjust action" data-action="Plan angepasst">⚙　Plan anpassen</button></div></section></aside>
   </div></div><div class="toast" id="toast" role="status"></div>
 </div>
+<script src="/learning-core/adherence-shadow.js"></script>
 <script>
   try {
     const state=JSON.parse(localStorage.getItem('german-automaticity:v20')||localStorage.getItem('grammar-automaticity:de')||'{}');
@@ -71,6 +72,19 @@ const durationPlans={
 };
 const readDailySession=()=>{try{return JSON.parse(localStorage.getItem(dailySessionKey)||'{}')}catch{return {}}};
 const readLearnerState=()=>{try{return JSON.parse(localStorage.getItem(learnerStateKey)||localStorage.getItem('german-automaticity:v20')||localStorage.getItem('grammar-automaticity:de')||'{}')}catch{return {}}};
+const shadowFlagEnabled=()=>new URLSearchParams(location.search).get('adherence-shadow')==='1';
+const daysSince=(value)=>{const time=Date.parse(value||'');return Number.isFinite(time)?Math.max(0,Math.floor((Date.now()-time)/86400000)):365};
+function refreshAdherenceShadow(minutes){
+  const selected=Number(minutes),plan=durationPlans[selected],runner=window.AutomaticityAdherenceShadow?.runAdherenceShadow;
+  if(!runner||![15,30,45].includes(selected)||!plan){
+    Object.defineProperty(window,'__automaticityAdherenceShadow',{configurable:true,writable:true,value:{status:'unsupported-duration',featureFlagEnabled:shadowFlagEnabled(),proposedPlan:null,appliedToLearnerPlan:false,persisted:false,learningOutcome:'not-evaluated'}});
+    return;
+  }
+  const session=readDailySession(),completed=Array.isArray(session.completedActivities)?session.completedActivities.length:0;
+  const currentPlan={planDuration:selected,blockMinutes:{grammar:plan.minutes[3],mixed_practice:plan.minutes[0]+plan.minutes[4],conversation_studio:plan.minutes[2],review:plan.minutes[6],automatization:plan.minutes[1]+plan.minutes[5]}};
+  const result=runner({flags:{adherence_v1_shadow:shadowFlagEnabled()},currentPlan,readinessSignals:{completionRate7d:Math.min(1,completed/7),daysSinceLastSession:daysSince(session.startedAt),srsReviewBacklog:Array.isArray(session.mistakes)?session.mistakes.length:0,planDuration:selected,currentPracticeStreak:0}});
+  Object.defineProperty(window,'__automaticityAdherenceShadow',{configurable:true,writable:true,value:result});
+}
 const focusByLevel={A1:'sein: bin/ist/sind',A2:'Perfekt im Alltag',B1:'Nebensätze und sichere Wortstellung',B2:'Konjunktiv II und präzise Erklärungen',C1:'Komplexer Satzbau und Register',C2:'Nuancierte Stil- und Registerwahl'};
 const currentLevel=()=>{const state=readLearnerState();return state?.learningLevel||state?.learner?.selfDeclaredLevel||localStorage.getItem('german-cefr-level')||'A1'};
 let selectedDuration=15;
@@ -101,9 +115,10 @@ const applyDailyDuration=(minutes,persist=false)=>{
 };
 const storedDuration=Number(localStorage.getItem(dailyDurationKey)||readLearnerState()?.settings?.dailyStudyMinutes||15);
 applyDailyDuration(storedDuration);
-document.querySelectorAll('.time').forEach(button=>button.addEventListener('click',()=>applyDailyDuration(Number(button.dataset.min),true)));
+document.querySelectorAll('.time').forEach(button=>button.addEventListener('click',()=>{applyDailyDuration(Number(button.dataset.min),true);refreshAdherenceShadow(Number(button.dataset.min))}));
 const refreshDailyProgress=()=>{const session=readDailySession(),completed=new Set(session.completedActivities||[]),cards=[...document.querySelectorAll('.activity')];cards.forEach((card,index)=>{const done=completed.has(index+1);card.classList.toggle('done',done);const tag=card.querySelector('.tag');if(done){tag.textContent='Abgeschlossen';tag.className='tag green';card.querySelector('.bar span').style.width='100%'}})};
 refreshDailyProgress();window.addEventListener('pageshow',refreshDailyProgress);
+refreshAdherenceShadow(selectedDuration);
 document.querySelectorAll('.activity .open').forEach((button,index)=>button.addEventListener('click',()=>{
   const activity=index+1;
   const card=button.closest('.activity');

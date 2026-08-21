@@ -46,5 +46,12 @@ jobs:
       - name: Run complete learning-core tests
         run: bun run test
 
+      - name: Rebuild browser shadow adapter
+        run: bun run build:browser
+
+      - name: Reject stale generated browser adapter
+        working-directory: .
+        run: git diff --exit-code -- shared/learning-core/browser/adherence-shadow.js
+
       - name: Reject stale app mirrors
         run: node sync-workspaces.mjs --check

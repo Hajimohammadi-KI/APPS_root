@@ -10,6 +10,8 @@ import {
 } from "react";
 
 import {
+  appendLearningEvidenceBundleToStorage,
+  buildAttemptVerticalSlice,
   canCompleteDailyStep,
   completeDailyPlanStep,
   createInitialLearnerState,
@@ -19,6 +21,7 @@ import {
   getReviewProgressAfterResult,
   REVIEW_INTERVAL_DAYS,
   getTodayKey,
+  isLearningMode,
   LEGACY_STORAGE_KEY,
   migrateLegacyLearnerState,
   normalizeLearnerState,
@@ -56,6 +59,8 @@ import {
   readLearnerProfile,
   type EvidenceSummary,
 } from "@/lib/learner-profile";
+
+const GERMAN_CONTENT_VERSION = "20.8.24";
 
 interface CreateErrorInput {
   readonly topic: string;
@@ -976,12 +981,14 @@ export function LearnerStateProvider({
 
   const recordAttempt = useCallback(
     (attempt: Omit<UserAttempt, "id" | "date">) => {
+      const id = createId("attempt");
+      const date = new Date().toISOString();
       setState((current) => {
-        const now = Date.now();
+        const now = new Date(date).getTime();
         const row: UserAttempt = {
           ...attempt,
-          id: createId("attempt"),
-          date: new Date(now).toISOString(),
+          id,
+          date,
         };
         // Only verified evaluations (e.g. confirmed online) may progress
         // mastery. Unverified/offline attempts are still recorded for
@@ -1010,8 +1017,64 @@ export function LearnerStateProvider({
               : { ...current.mastery, [attempt.topic]: nextMasteryForTopic },
         };
       });
+      if (typeof window !== "undefined" && isLearningMode(attempt.mode)) {
+        try {
+          const grammar = grammarUnits.find(
+            (unit) => unit.title === attempt.topic,
+          );
+          appendLearningEvidenceBundleToStorage(
+            window.localStorage,
+            buildAttemptVerticalSlice({
+              attemptId: id,
+              occurredAt: date,
+              language: "de",
+              ...(grammar
+                ? {
+                    cefrLevel: grammar.level as
+                      "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
+                  }
+                : {}),
+              contentVersion: attempt.contentVersion ?? GERMAN_CONTENT_VERSION,
+              topic: attempt.topic,
+              targetForm: attempt.topic,
+              prompt: `Produziere ${attempt.topic} selbstständig auf Deutsch.`,
+              mode: attempt.mode,
+              inputText: attempt.inputText,
+              correctedText: attempt.correctedText,
+              targetHit: attempt.targetHit,
+              accuracyScore: attempt.accuracyScore,
+              ...(attempt.fluencyScore === undefined
+                ? {}
+                : { fluencyScore: attempt.fluencyScore }),
+              ...(attempt.latencyMs === undefined
+                ? {}
+                : { latencyMs: attempt.latencyMs }),
+              attemptVerified: attempt.verified === true,
+              assessedBy:
+                attempt.assessedBy === "online" ||
+                attempt.assessedBy === "deterministic"
+                  ? attempt.assessedBy
+                  : attempt.mode === "recognition"
+                    ? "deterministic"
+                    : "offline",
+              sessionMinutes: state.settings.dailyStudyMinutes,
+              audioCaptured:
+                attempt.audioCaptured === true || Boolean(attempt.audioPath),
+              ...(attempt.audioPath
+                ? { audioReferenceId: attempt.audioPath }
+                : {}),
+              ...(attempt.fromDueReview === undefined
+                ? {}
+                : { fromDueReview: attempt.fromDueReview }),
+              sourceId: "german-authored-content",
+            }),
+          );
+        } catch {
+          // Learning remains usable if storage is unavailable or full.
+        }
+      }
     },
-    [],
+    [state.settings.dailyStudyMinutes],
   );
 
   const scheduleReview = useCallback(

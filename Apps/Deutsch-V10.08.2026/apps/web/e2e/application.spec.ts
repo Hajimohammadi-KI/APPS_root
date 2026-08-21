@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
 
+async function waitForHydration(page: import("@playwright/test").Page) {
+  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
+}
+
 // These journeys intentionally use roles and current learner-visible copy.
 // They gate the SelectMenu/Accordion UI rather than the retired native-select
 // and legacy iframe implementation.
@@ -21,7 +25,7 @@ test("all product and compatibility routes render successfully", async ({
   page,
 }) => {
   for (const route of routes) {
-    const response = await page.goto(route);
+    const response = await page.goto(route, { waitUntil: "domcontentloaded" });
 
     expect(response?.ok(), `${route} should return a successful response`).toBe(
       true,
@@ -112,6 +116,7 @@ test("grammar lab uses a single-open vertical unit menu and selects an advanced 
   page,
 }) => {
   await page.goto("/grammatik");
+  await waitForHydration(page);
 
   const a1Trigger = page.getByRole("button", { name: "A1 · 24 Einheiten" });
   const a2Trigger = page.getByRole("button", { name: "A2 · 24 Einheiten" });
@@ -432,6 +437,7 @@ test("settings route stays local without changing learner data", async ({
 
 test("settings controls persist locally after reload", async ({ page }) => {
   await page.goto("/einstellungen");
+  await waitForHydration(page);
 
   await expect(page).toHaveURL(/\/einstellungen$/);
   await page.getByRole("radio", { name: /125 %/ }).check();
@@ -439,6 +445,7 @@ test("settings controls persist locally after reload", async ({ page }) => {
     .getByRole("checkbox", { name: "Leselineal auf Seiten anzeigen" })
     .check();
   await page.reload();
+  await waitForHydration(page);
   await expect(page.getByRole("radio", { name: /125 %/ })).toBeChecked();
   await expect(
     page.getByRole("checkbox", { name: "Leselineal auf Seiten anzeigen" }),

@@ -285,7 +285,7 @@ export function AutomatizationTrainer() {
         targetHit: hit,
         // Deterministic exact-match check, same basis automaticity-lab's
         // checkPractice() already uses to mark exact-match rounds verified.
-        verified: hit,
+        verified: true,
         accuracyScore: hit ? 100 : 0,
         latencyMs,
       });
@@ -338,7 +338,7 @@ export function AutomatizationTrainer() {
         inputText: formulaicAnswers[index] ?? "",
         correctedText: item.phrase,
         targetHit: hit,
-        verified: hit,
+        verified: true,
         accuracyScore: hit ? 100 : 0,
         latencyMs,
       });
@@ -474,6 +474,8 @@ export function AutomatizationTrainer() {
         // free-production exercise in this app uses) -- verified tracks
         // "the evaluator actually ran", not "and passed".
         verified: analysis.online,
+        assessedBy: analysis.online ? "online" : "offline",
+        contentVersion: "20.8.24",
         accuracyScore: analysis.score,
         latencyMs,
       });

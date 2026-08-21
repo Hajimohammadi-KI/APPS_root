@@ -1,9 +1,14 @@
 import { expect, test } from "@playwright/test";
 
+async function waitForHydration(page: import("@playwright/test").Page) {
+  await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
+}
+
 test("Tagesprogramm speichert die gewählte Lernzeit dauerhaft", async ({
   page,
 }) => {
   await page.goto("/heute");
+  await waitForHydration(page);
   await page.getByRole("button", { name: "30 Min." }).click();
   await expect(page.getByRole("button", { name: "30 Min." })).toHaveAttribute(
     "aria-pressed",
@@ -11,6 +16,7 @@ test("Tagesprogramm speichert die gewählte Lernzeit dauerhaft", async ({
   );
 
   await page.reload();
+  await waitForHydration(page);
   await expect(page.getByRole("button", { name: "30 Min." })).toHaveAttribute(
     "aria-pressed",
     "true",

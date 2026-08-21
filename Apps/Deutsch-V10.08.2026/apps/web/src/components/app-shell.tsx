@@ -26,7 +26,7 @@ export function AppShell({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
-  const { state, updateSettings } = useLearnerState();
+  const { state, hydrated, updateSettings } = useLearnerState();
   const [readingSettingsOpen, setReadingSettingsOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState({
     practice: false,
@@ -149,7 +149,7 @@ export function AppShell({
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" data-hydrated={hydrated ? "true" : "false"}>
       <a className="skip-link" href="#main-content">
         Zum Hauptinhalt
       </a>

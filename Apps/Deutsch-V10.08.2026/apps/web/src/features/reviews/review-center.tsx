@@ -175,9 +175,7 @@ export function ReviewCenter() {
           targetHit: exact && result.targetHit,
           accuracyScore: exact ? 100 : 40,
           attemptVerified: true,
-          assessedBy: state.learner.allowOnlineAI
-            ? "online"
-            : "deterministic",
+          assessedBy: state.learner.allowOnlineAI ? "online" : "deterministic",
           sessionMinutes: normalizeDailySessionMinutes(
             state.settings.dailyStudyMinutes,
           ),

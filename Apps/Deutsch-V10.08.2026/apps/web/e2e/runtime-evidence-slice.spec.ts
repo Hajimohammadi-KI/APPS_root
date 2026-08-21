@@ -31,9 +31,9 @@ async function installSyntheticAudioCapture(page: Page) {
       stop() {
         this.state = "inactive";
         const wavHeader = new Uint8Array([
-          82, 73, 70, 70, 36, 0, 0, 0, 87, 65, 86, 69, 102, 109, 116, 32,
-          16, 0, 0, 0, 1, 0, 1, 0, 64, 31, 0, 0, 128, 62, 0, 0, 2, 0, 16,
-          0, 100, 97, 116, 97, 0, 0, 0, 0,
+          82, 73, 70, 70, 36, 0, 0, 0, 87, 65, 86, 69, 102, 109, 116, 32, 16, 0,
+          0, 0, 1, 0, 1, 0, 64, 31, 0, 0, 128, 62, 0, 0, 2, 0, 16, 0, 100, 97,
+          116, 97, 0, 0, 0, 0,
         ]);
         this.ondataavailable?.({
           data: new Blob([wavHeader], { type: this.mimeType }),
@@ -51,7 +51,10 @@ async function installSyntheticAudioCapture(page: Page) {
         this.state = "recording";
       }
 
-      addEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+      addEventListener(
+        type: string,
+        listener: EventListenerOrEventListenerObject,
+      ) {
         if (type !== "stop") return;
         this.stopListeners.push(
           typeof listener === "function"
@@ -68,7 +71,9 @@ async function installSyntheticAudioCapture(page: Page) {
   });
 }
 
-test("B1 writing reaches the versioned local evidence ledger", async ({ page }) => {
+test("B1 writing reaches the versioned local evidence ledger", async ({
+  page,
+}) => {
   await page.addInitScript(() => {
     localStorage.setItem(
       "GrammarAutomaticityV11_de",
@@ -86,8 +91,7 @@ test("B1 writing reaches the versioned local evidence ledger", async ({ page }) 
             stage: 2,
             topic: "Präteritum in Erzählungen",
             original: "Übertrage das Präteritum in eine neue kurze Erzählung.",
-            corrected:
-              "Am Morgen öffnete ich das Fenster und sah die Sonne.",
+            corrected: "Am Morgen öffnete ich das Fenster und sah die Sonne.",
             sourceType: "grammar_topic",
             sourceId: "Präteritum in Erzählungen",
             successStreak: 1,
@@ -157,9 +161,7 @@ test("B1 writing reaches the versioned local evidence ledger", async ({ page }) 
 
   await page.goto("/einstellungen");
   const downloadPromise = page.waitForEvent("download");
-  await page
-    .getByRole("button", { name: "Lerndaten exportieren" })
-    .click();
+  await page.getByRole("button", { name: "Lerndaten exportieren" }).click();
   const download = await downloadPromise;
   const downloadPath = await download.path();
   expect(downloadPath).not.toBeNull();
@@ -218,7 +220,9 @@ test("B1 Gesprächsstudio persists audio evidence, reports provider failure, and
   await page.getByRole("button", { name: /Stop/ }).click();
   await page.getByLabel("Dein Transkript").fill(TRANSCRIPT);
   await page.getByRole("button", { name: /Antwort auswerten/ }).click();
-  await expect(page.getByText(/LanguageTool ist nicht erreichbar/)).toBeVisible();
+  await expect(
+    page.getByText(/LanguageTool ist nicht erreichbar/),
+  ).toBeVisible();
   expect(
     await page.evaluate(() =>
       localStorage.getItem("automaticity:learning-evidence:v1"),
@@ -227,18 +231,26 @@ test("B1 Gesprächsstudio persists audio evidence, reports provider failure, and
 
   providerAvailable = true;
   await page.getByRole("button", { name: /Antwort auswerten/ }).click();
-  await expect(page.getByRole("heading", { name: "Prüfe deine Antwort" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Prüfe deine Antwort" }),
+  ).toBeVisible();
   await page.locator(".steps button").filter({ hasText: "Replay" }).click();
   await expect(
     page.getByRole("heading", { name: "Höre deine echte Aufnahme" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Review →", exact: true }).click();
-  await page.getByRole("button", { name: "Corrections →", exact: true }).click();
-  await expect(page.getByText("LanguageTool hat keine Textfehler erkannt.")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Corrections →", exact: true })
+    .click();
+  await expect(
+    page.getByText("LanguageTool hat keine Textfehler erkannt."),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Improve →", exact: true }).click();
   await expect(page.getByText("Ehrliche Grenze")).toBeVisible();
   await page.locator(".steps button").filter({ hasText: "Speichern" }).click();
-  await page.getByRole("button", { name: "✓ Save session", exact: true }).click();
+  await page
+    .getByRole("button", { name: "✓ Save session", exact: true })
+    .click();
   await expect(page.getByRole("status")).toHaveText(
     "Sitzung wurde auf diesem Gerät gespeichert.",
   );
@@ -301,7 +313,9 @@ test("B1 Gesprächsstudio persists audio evidence, reports provider failure, and
       page.evaluate(() => {
         const ledger = JSON.parse(
           localStorage.getItem("automaticity:learning-evidence:v1") ?? "{}",
-        ) as { events?: Array<{ type?: string; payload?: { evidenceId?: string } }> };
+        ) as {
+          events?: Array<{ type?: string; payload?: { evidenceId?: string } }>;
+        };
         return ledger.events?.find(
           (event) => event.type === "learning.evidence.invalidated.v1",
         )?.payload?.evidenceId;

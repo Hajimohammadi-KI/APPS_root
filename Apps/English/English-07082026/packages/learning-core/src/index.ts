@@ -267,7 +267,9 @@ export const LEARNING_EVIDENCE_STORAGE_KEY =
 
 export const DAILY_SESSION_OPTIONS = [15, 30, 45] as const;
 
-export function normalizeDailySessionMinutes(value: number): DailySessionMinutes {
+export function normalizeDailySessionMinutes(
+  value: number,
+): DailySessionMinutes {
   if (value >= 45) return 45;
   if (value >= 30) return 30;
   return 15;

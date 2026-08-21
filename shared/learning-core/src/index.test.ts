@@ -239,10 +239,7 @@ describe("shared automaticity vertical slice", () => {
     expect(exported.learningEvidence.evidence[0]?.masteryEligible).toBe(true);
     expect(exported.learningEvidence.contentUnits[0]?.version).toBe("27.3.13");
     expect(exported.learningEvidence.events.map((event) => event.type)).toEqual(
-      [
-        "learning.response.submitted.v1",
-        "learning.evidence.recorded.v1",
-      ],
+      ["learning.response.submitted.v1", "learning.evidence.recorded.v1"],
     );
   });
 });

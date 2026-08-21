@@ -14,7 +14,7 @@
     },
     "apps/api": {
       "name": "@grammar/api",
-      "version": "27.3.7",
+      "version": "27.3.14",
       "dependencies": {
         "@nestjs/common": "11.1.28",
         "@nestjs/core": "11.1.28",
@@ -32,8 +32,9 @@
     },
     "apps/web": {
       "name": "@grammar/web",
-      "version": "27.3.7",
+      "version": "27.3.14",
       "dependencies": {
+        "@automaticity/learning-core": "workspace:*",
         "@base-ui/react": "^1.6.0",
         "@grammar/content": "workspace:*",
         "class-variance-authority": "0.7.1",
@@ -62,7 +63,7 @@
     },
     "packages/content": {
       "name": "@grammar/content",
-      "version": "27.3.7",
+      "version": "27.3.14",
       "devDependencies": {
         "@types/bun": "1.3.5",
         "typescript": "7.0.2",
@@ -70,15 +71,21 @@
     },
     "packages/evidence-domain": {
       "name": "@grammar/evidence-domain",
-      "version": "27.3.7",
+      "version": "27.3.14",
       "devDependencies": {
         "@types/bun": "1.3.5",
         "typescript": "7.0.2",
       },
     },
+    "packages/learning-core": {
+      "name": "@automaticity/learning-core",
+      "version": "0.1.0",
+    },
   },
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
+
+    "@automaticity/learning-core": ["@automaticity/learning-core@workspace:packages/learning-core"],
 
     "@babel/code-frame": ["@babel/code-frame@7.29.7", "", { "dependencies": { "@babel/helper-validator-identifier": "^7.29.7", "js-tokens": "^4.0.0", "picocolors": "^1.1.1" } }, "sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw=="],
 

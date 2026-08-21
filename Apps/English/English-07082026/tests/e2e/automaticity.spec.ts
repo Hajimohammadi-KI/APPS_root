@@ -60,8 +60,10 @@ test("automaticity mission saves writing evidence and restores it", async ({
 	await expect(
 		page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
 	).toBeVisible();
-  const evidence = page;
-  await expect(evidence.getByText("Present perfect", { exact: true })).toBeVisible();
+	const evidence = page;
+	await expect(evidence.getByRole("combobox", { name: "Unit" })).toContainText(
+		"Present perfect",
+	);
 
   // Controlled practice now starts in a study phase with the rule and
   // examples on screen -- and every expected answer is printed in them, so a
@@ -116,18 +118,20 @@ test("automaticity mission saves writing evidence and restores it", async ({
     .click();
   await expect(evidence.getByText("Journal saved.")).toBeVisible();
 
-  await page.reload();
-  const restoredEvidence = page;
-  // The Mission always reopens on step 1 (controlled practice) regardless
-  // of what was last completed -- it doesn't remember which step was open,
-  // only what evidence was saved.
+	await page.reload();
+	const restoredEvidence = page;
+	await expect(
+		restoredEvidence.getByRole("combobox", { name: "Unit" }),
+	).toContainText("Present perfect");
+	// The open step is intentionally not persisted, so select the saved
+	// writing step after the stored topic has hydrated.
   await restoredEvidence
     .getByRole("button", { name: /2\. Automate & write/ })
     .click();
-  await expect(restoredEvidence.getByLabel("Present perfect journal")).toHaveValue(
-    journal,
-  );
-  await expect(restoredEvidence.getByText("67% complete")).toBeVisible();
+	await expect(restoredEvidence.getByLabel("Present perfect journal")).toHaveValue(
+		journal,
+	);
+	await expect(restoredEvidence.getByText(/2 of 3 finished/)).toBeVisible();
 });
 
 test("automaticity mission remains usable on a phone viewport", async ({

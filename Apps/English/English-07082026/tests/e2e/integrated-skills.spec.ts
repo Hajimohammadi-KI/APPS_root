@@ -55,7 +55,7 @@ test("keeps the daily mission readable on a narrow mobile screen", async ({
 test("plays original listening and opens the exact speaking lesson in the studio", async ({
   page,
 }) => {
-  await page.addInitScript(() => {
+  await page.evaluate(() => {
     class TestUtterance {
       lang = "";
       onend: (() => void) | null = null;
@@ -70,18 +70,29 @@ test("plays original listening and opens the exact speaking lesson in the studio
     });
     Object.defineProperty(window, "speechSynthesis", {
       configurable: true,
-      value: {
-        cancel: () => undefined,
-        speak: (utterance: TestUtterance) => utterance.onstart?.(),
-      },
-    });
+		value: {
+			cancel: () => undefined,
+			speak: (utterance: TestUtterance) => {
+				(
+					window as typeof window & { __lastSpokenText?: string }
+				).__lastSpokenText = utterance.text;
+				utterance.onstart?.();
+			},
+		},
+	});
   });
-  await page.goto("/integrated-skills");
-
-  await page
-    .getByRole("button", { name: "Play original listening" })
-    .click();
-  await expect(page.getByText(/Original listening is playing/)).toBeVisible();
+	await page
+		.getByRole("button", { name: "Play original listening" })
+		.click();
+	await expect
+		.poll(() =>
+			page.evaluate(
+				() =>
+					(window as typeof window & { __lastSpokenText?: string })
+						.__lastSpokenText,
+			),
+		)
+		.toContain("Hello, my name is Mina");
 
   await page.getByRole("button", { name: /Speaking/ }).first().click();
   await page

@@ -3,8 +3,8 @@ import { expect, test } from "@playwright/test";
 test("current home and active daily route show one truthful learner state", async ({ page }) => {
 	await page.goto("/");
 	await expect(page.getByRole("heading", { name: /Good (morning|afternoon|evening), Learner/ })).toBeVisible();
-	await expect(page.getByRole("heading", { name: "Performance chart" })).toBeVisible();
-	await expect(page.getByText("Local app service ready")).toBeVisible();
+	await expect(page.getByRole("region", { name: /Verb be: am\/is\/are · A1/ })).toBeVisible();
+	await expect(page.getByRole("button", { name: "Start today's mission" })).toBeVisible();
 
   // /daily used to be rewritten (next.config.ts) to a static HTML mockup --
   // a fixed 7-item list with hardcoded "0 of 7 activities"/"0% verified

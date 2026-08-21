@@ -54,6 +54,14 @@ export default function GrammarPage() {
 			"",
 	);
 	React.useEffect(() => {
+		const persistedUnit = grammarUnits.find(
+			(unit) => unit.title === selectedTitle,
+		);
+		if (!persistedUnit) return;
+		setLevel(persistedUnit.level);
+		setUnitTitle(persistedUnit.title);
+	}, [selectedTitle]);
+	React.useEffect(() => {
 		if (!unitsForLevel.some((unit) => unit.title === unitTitle)) {
 			setUnitTitle(unitsForLevel[0]?.title ?? "");
 		}

@@ -1,0 +1,848 @@
+<title>رودمپ اتوماتیک‌شدن و شواهد</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #eef2f4;
+    --surface: #ffffff;
+    --surface-2: #f4f7f8;
+    --line: #d9e1e5;
+    --line-strong: #bcc8ce;
+    --ink: #16232b;
+    --ink-dim: #55666e;
+    --ink-faint: #869197;
+    --accent: #1f5f75;
+    --accent-strong: #133f4e;
+    --accent-soft: #e2eef2;
+    --track-en: #a8641f;
+    --track-en-soft: #f6ead8;
+    --track-de: #17715f;
+    --track-de-soft: #dcf1ea;
+    --pass: #1f7a6c;
+    --pass-soft: #e1f3ef;
+    --active: #1f5f75;
+    --active-soft: #e2eef2;
+    --open: #ad2b21;
+    --open-soft: #fbeae8;
+    --pending: #7c8792;
+    --pending-soft: #eef1f3;
+    --warn: #8a5a00;
+    --warn-soft: #fbf0d9;
+    --shadow: 0 1px 2px rgba(22, 35, 43, 0.06), 0 10px 26px rgba(22, 35, 43, 0.07);
+    --radius: 14px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f171b;
+      --surface: #17232a;
+      --surface-2: #1d2b33;
+      --line: #2b3c44;
+      --line-strong: #3b4f58;
+      --ink: #e7edf0;
+      --ink-dim: #a1b0b7;
+      --ink-faint: #71828a;
+      --accent: #7fbdd4;
+      --accent-strong: #a3d3e4;
+      --accent-soft: #1c3944;
+      --track-en: #d69a52;
+      --track-en-soft: #3a2c18;
+      --track-de: #4fc0a4;
+      --track-de-soft: #123329;
+      --pass: #4fc0a4;
+      --pass-soft: #123329;
+      --active: #7fbdd4;
+      --active-soft: #1c3944;
+      --open: #e5766a;
+      --open-soft: #3a1e1a;
+      --pending: #8894a0;
+      --pending-soft: #232f3b;
+      --warn: #e0b34d;
+      --warn-soft: #3a2f10;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 30px rgba(0, 0, 0, 0.32);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0f171b;
+    --surface: #17232a;
+    --surface-2: #1d2b33;
+    --line: #2b3c44;
+    --line-strong: #3b4f58;
+    --ink: #e7edf0;
+    --ink-dim: #a1b0b7;
+    --ink-faint: #71828a;
+    --accent: #7fbdd4;
+    --accent-strong: #a3d3e4;
+    --accent-soft: #1c3944;
+    --track-en: #d69a52;
+    --track-en-soft: #3a2c18;
+    --track-de: #4fc0a4;
+    --track-de-soft: #123329;
+    --pass: #4fc0a4;
+    --pass-soft: #123329;
+    --active: #7fbdd4;
+    --active-soft: #1c3944;
+    --open: #e5766a;
+    --open-soft: #3a1e1a;
+    --pending: #8894a0;
+    --pending-soft: #232f3b;
+    --warn: #e0b34d;
+    --warn-soft: #3a2f10;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 30px rgba(0, 0, 0, 0.32);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
+    direction: rtl;
+    line-height: 1.7;
+  }
+
+  .mono {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  a { color: var(--accent-strong); }
+
+  code {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    unicode-bidi: isolate;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-size: 0.85em;
+    color: var(--accent-strong);
+  }
+
+  /* top bar */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .topbar-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    overflow-x: auto;
+  }
+
+  .topbar-title {
+    font-weight: 800;
+    font-size: 14px;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .topbar-nav {
+    display: flex;
+    gap: 4px;
+    flex: 1 1 auto;
+  }
+
+  .topbar-nav a {
+    flex: 0 0 auto;
+    text-decoration: none;
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-size: 12px;
+    color: var(--ink-dim);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px 10px;
+    white-space: nowrap;
+  }
+
+  .topbar-nav a:hover { border-color: var(--accent); color: var(--accent-strong); }
+
+  .wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 24px 90px;
+  }
+
+  header.hero {
+    padding-bottom: 26px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 30px;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    text-align: right;
+    unicode-bidi: isolate;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 800;
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-bottom: 16px;
+  }
+
+  .meta-row b { color: var(--ink); font-weight: 600; }
+
+  .principles {
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+  }
+
+  .principles p:first-child { margin-top: 0; }
+  .principles p:last-child { margin-bottom: 0; }
+  .principles ol { margin: 10px 0 0; padding-inline-start: 22px; }
+  .principles li { margin-bottom: 6px; }
+  .principles strong { color: var(--accent-strong); }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 44px 0 14px;
+    scroll-margin-top: 60px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  h2 .num {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-size: 13px;
+    color: var(--ink-faint);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 2px 8px;
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 20px 0 8px;
+    color: var(--ink-dim);
+  }
+
+  p { margin: 0 0 12px; }
+
+  .table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin: 10px 0 18px;
+  }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 480px; }
+  th, td { padding: 9px 12px; text-align: right; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--surface-2); color: var(--ink-dim); font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  td code, th code { white-space: nowrap; }
+
+  /* status chip */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: 0 0 auto; }
+  .chip.pass { background: var(--pass-soft); color: var(--pass); }
+  .chip.active { background: var(--active-soft); color: var(--active); }
+  .chip.open { background: var(--open-soft); color: var(--open); }
+  .chip.pending { background: var(--pending-soft); color: var(--pending); }
+
+  /* gate rail */
+  .gate-rail {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 10px 0 18px;
+  }
+
+  .gate-card {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: var(--surface);
+  }
+
+  .gate-card .gid {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .gate-card .gname { font-weight: 700; font-size: 13.5px; display: block; margin-bottom: 8px; }
+
+  /* phase timeline */
+  .phase {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+
+  .phase-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+
+  .phase-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+  .phase-num {
+    font-family: "IBM Plex Mono", monospace;
+    direction: ltr;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--accent-strong);
+    background: var(--accent-soft);
+    border-radius: 7px;
+    padding: 2px 9px;
+  }
+
+  .phase h3 { margin: 0; font-size: 16.5px; font-weight: 800; color: var(--ink); }
+
+  .phase-tags { font-size: 12.5px; color: var(--ink-faint); margin-bottom: 10px; }
+  .phase-tags .mono { color: var(--ink-dim); }
+
+  .phase ul { margin: 8px 0; padding-inline-start: 20px; }
+  .phase li { margin-bottom: 5px; }
+
+  .exit-box {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border-radius: 9px;
+    border-inline-start: 3px solid var(--pass);
+  }
+  .exit-box .label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--pass);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .exit-box ul { margin: 0; padding-inline-start: 18px; }
+
+  .callout {
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 14px 0;
+    border: 1px solid var(--line);
+  }
+  .callout.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+  .callout.warn .label { color: var(--warn); }
+  .callout.final { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+  .callout.final .label { color: var(--accent-strong); }
+  .callout .label { font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 8px; }
+  .callout ul { margin: 0; padding-inline-start: 20px; }
+  .callout li { margin-bottom: 5px; }
+
+  .dod-grid {
+    display: grid;
+    gap: 8px;
+  }
+  .dod-grid .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+  }
+  .dod-grid .item svg { flex: 0 0 auto; margin-top: 3px; color: var(--pass); }
+
+  .mermaid {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    overflow-x: auto;
+    margin: 10px 0 18px;
+  }
+
+  footer.note {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+  }
+</style>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="topbar-title">🔬 رودمپ شواهد</span>
+    <nav class="topbar-nav">
+      <a href="#gates">Gates</a>
+      <a href="#p0">۰</a>
+      <a href="#p1">۱</a>
+      <a href="#p2">۲</a>
+      <a href="#p3">۳</a>
+      <a href="#p4">۴</a>
+      <a href="#p5">۵</a>
+      <a href="#p6">۶</a>
+      <a href="#p7">۷</a>
+      <a href="#p8">۸</a>
+      <a href="#p9">۹</a>
+      <a href="#dod">DoD</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.6 · 2026-08-22</div>
+    <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
+    <div class="meta-row">
+      <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
+      <span><b>منبع:</b> نقد پداگوژیک، اثرگذاری و محتوا + وضعیت واقعی مخزن</span>
+      <span><b>نسخهٔ وب:</b> <a href="https://automaticity-evidence-roadmap.vercel.app" class="mono">automaticity-evidence-roadmap.vercel.app</a></span>
+    </div>
+
+    <div class="principles">
+      <p>هدف محصول «تمام‌کردن درس» یا افزایش XP نیست. هدف، تولید مستقل، صحیح و روان در گفتار و نوشتار، بازیابی با تأخیر، اصلاح خطا و انتقال به موقعیت جدید است.</p>
+      <ol>
+        <li><strong>اول یک vertical slice واقعی، بعد AI و دیتاست.</strong></li>
+        <li><strong>Rule Engine</strong> دربارهٔ شواهد و ارتقای سطح تصمیم می‌گیرد؛ LLM فقط کمک می‌کند.</li>
+        <li>تکمیل تمرین معادل <strong>mastery یا automaticity</strong> نیست.</li>
+        <li>هر ادعای اثرگذاری باید <strong>baseline، سنجش مستقل و عدم‌قطعیت</strong> داشته باشد.</li>
+      </ol>
+      <p style="margin-top:12px; color:var(--ink-dim); font-size:13.5px;">این سند جایگزین رودمپ UX نیست — ساده‌سازی منو در <code>UX-SIMPLIFICATION-ROADMAP-2026-08-20.md</code> دنبال می‌شود؛ این سند مسیر شواهد یادگیری، پایداری استفاده، محتوا و ارزیابی را مشخص می‌کند.</p>
+    </div>
+  </header>
+
+  <h2><span class="num">status</span> وضعیت واقعی در نقطهٔ شروع</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>بخش</th><th>وضعیت تا 2026-08-22</th><th>مدرک</th></tr></thead>
+      <tbody>
+        <tr><td>هستهٔ مشترک learning-core</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز merge شد</td><td>merge <code>ed7e73f</code> و <code>shared/learning-core</code></td></tr>
+        <tr><td>SKILL-001 Adherence Core</td><td>روی <code>main</code> ادغام شده؛ shadow flag پیش‌فرض خاموش است؛ هنوز در release کاربر نهایی فعال نشده</td><td><code>shared/learning-core/src/adherence</code></td></tr>
+        <tr><td>تست اختصاصی adherence</td><td>۲۱ تست، ۶۰٬۱۸۵ assertion</td><td><code>bun run test:adherence-core</code></td></tr>
+        <tr><td>کل تست learning-core</td><td>۳۴ تست، ۶۰٬۲۲۰ assertion پس از G1</td><td><code>bun run test</code></td></tr>
+        <tr><td>TypeScript و mirror parity</td><td>تأییدشده</td><td><code>bun run typecheck</code></td></tr>
+        <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
+        <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از تست کامل محلی و CI لینوکس merge شد</td><td>merge <code>b3fbc07</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
+        <tr><td>ادغام runtime در هر دو اپ</td><td>مسیر B1 نوشتن/گفتار، audio gate، invalidation، provider-unavailable و eventهای جدا در هر دو زبان ادغام شد</td><td><strong style="color:var(--pass)">G1 عبور کرد: <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/17" class="mono">PR #17</a> · merge <code>b452e3e</code></strong></td></tr>
+        <tr><td>export محلی شواهد</td><td>صفحهٔ Settings انگلیسی و export نسخه‌دار هر دو زبان روی <code>main</code> ادغام شد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/16" class="mono">PR #16</a> · merge <code>17341f7</code> · E2E دانلود واقعی</td></tr>
+        <tr><td>CI مربوط به G1</td><td>Learning Core و German Automaticity هر دو سبز</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317547" class="mono">Core 32532317547</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317531" class="mono">German 32532317531</a></td></tr>
+        <tr><td>AI و دیتاست runtime</td><td>هنوز نباید وارد runtime یا تصمیم mastery شود</td><td>G1 عبور کرده؛ وابسته به G2 و G4</td></tr>
+        <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="color:var(--ink-dim); font-size:13.5px;">سبزشدن تست‌های pure TypeScript فقط صحت قراردادها و invariants را نشان می‌دهد؛ این نتیجه، به‌تنهایی اثبات نمی‌کند که کاربر واقعاً زبان را اتوماتیک می‌کند.</p>
+
+  <h2><span class="num">runtime</span> لینک‌های اجرای محلی تأییدشده در 2026-08-21</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>سرویس</th><th>لینک ویندوز</th><th>تبلت/Android در همان Wi-Fi</th><th>وضعیت</th></tr></thead>
+      <tbody>
+        <tr><td>App Starter</td><td><a href="http://127.0.0.1:4300/" class="mono">127.0.0.1:4300</a></td><td>فقط میزبان ویندوز</td><td>HTTP 200؛ health سریع و بدون خطای کاذب startup</td></tr>
+        <tr><td>English Automaticity</td><td><a href="http://127.0.0.1:3202/" class="mono">127.0.0.1:3202</a></td><td><a href="http://192.168.178.24:3202/" class="mono">192.168.178.24:3202</a></td><td>HTTP 200 و browser smoke test</td></tr>
+        <tr><td>DeutschFlow</td><td><a href="http://127.0.0.1:3210/" class="mono">127.0.0.1:3210</a></td><td><a href="http://192.168.178.24:3210/" class="mono">192.168.178.24:3210</a></td><td>HTTP 200 و browser smoke test</td></tr>
+        <tr><td>Cross Repository Tracker</td><td><a href="http://127.0.0.1:4312/" class="mono">127.0.0.1:4312</a></td><td>هنوز روی LAN منتشر نشده</td><td>HTTP 200 روی ویندوز؛ WSL relay لازم است</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="color:var(--ink-dim); font-size:13.5px;">این جدول فقط دسترس‌پذیری runtime محلی را ثبت می‌کند و مدرک عبور G1، اثرگذاری یادگیری یا چرخهٔ انتشار G6 نیست. پس از restart ویندوز، <code>START-APPS.cmd</code> باید اجرا شود؛ اگر IP داخلی WSL تغییر کند، Windows ممکن است برای اصلاح bridge یک UAC تأییدشده درخواست کند.</p>
+
+  <h2><span class="num">map</span> نقشهٔ وابستگی</h2>
+  <pre class="mermaid">
+flowchart LR
+    P0["فاز ۰: PR تمیز و CI"] --> P1["فاز ۱: Runtime Vertical Slice EN/DE"]
+    P1 --> P2["فاز ۲: قرارداد سنجش و Baseline"]
+    P2 --> P3["فاز ۳: Adherence در Shadow"]
+    P2 --> P4["فاز ۴: Forced Output Booster"]
+    P2 --> P5["فاز ۵: FSRS در Shadow"]
+    P1 --> P6["فاز ۶: Content QA و Mediation"]
+    P3 --> P7["فاز ۷: سنجش مستقل"]
+    P4 --> P7
+    P5 --> P7
+    P6 --> P7
+    P7 --> P8["فاز ۸: پایلوت و تحلیل"]
+    P8 --> P9["فاز ۹: Release تدریجی"]
+
+    style P0 fill:#e2eef2,stroke:#1f5f75
+    style P7 fill:#fff0bd,stroke:#e8a302
+    style P9 fill:#cdf4d3,stroke:#66d575
+  </pre>
+  <p style="color:var(--ink-dim); font-size:13.5px;">فازهای ۳، ۴، ۵ و بخش authoring فاز ۶ پس از عبور G1 و G2 می‌توانند در شاخه‌های جدا پیش بروند؛ هیچ‌کدام نباید در یک PR بزرگ با دیگری ادغام شود.</p>
+
+  <h2 id="gates"><span class="num">gates</span> دروازه‌های اجباری</h2>
+  <div class="gate-rail">
+    <div class="gate-card"><span class="gid">G0</span><span class="gname">Source Gate</span><span class="chip pass"><span class="dot"></span>عبور کرده</span></div>
+    <div class="gate-card"><span class="gid">G1</span><span class="gname">Runtime Evidence Slice</span><span class="chip pass"><span class="dot"></span>عبور کرد · PR #17</span></div>
+    <div class="gate-card"><span class="gid">G2</span><span class="gname">Measurement Contract</span><span class="chip active"><span class="dot"></span>در حال انجام · #18</span></div>
+    <div class="gate-card"><span class="gid">G3</span><span class="gname">Shadow Safety</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
+    <div class="gate-card"><span class="gid">G4</span><span class="gname">Content Quality</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
+    <div class="gate-card"><span class="gid">G5</span><span class="gname">Learning Evidence</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
+    <div class="gate-card"><span class="gid">G6</span><span class="gname">Release Lifecycle</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Gate</th><th>شرط عبور</th><th>اگر عبور نکرد</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">G0</td><td>چهار مسیر SKILL-001 در PR جدا، review و CI سبز</td><td>هیچ فاز وابسته merge نشود</td></tr>
+        <tr><td class="mono">G1</td><td>✅ در PR #17 عبور کرد: یک واحد B1 انگلیسی و آلمانی از content تا evidence و export عبور می‌کند</td><td>microphone سخت‌افزاری و provider زنده N/A است و در G6/پایلوت بررسی می‌شود</td></tr>
+        <tr><td class="mono">G2</td><td>event schema، consent، privacy، baseline و data-quality checks تصویب شوند</td><td>هیچ ادعای بهبود یا A/B test منتشر نشود</td></tr>
+        <tr><td class="mono">G3</td><td>خروجی جدید در shadow با رفتار فعلی مقایسه شود و دادهٔ کاربر را تغییر ندهد</td><td>feature flag خاموش بماند</td></tr>
+        <tr><td class="mono">G4</td><td>provenance، مجوز، بازبینی انسانی و rubric برای همهٔ آیتم‌های پایلوت</td><td>آیتم وارد برنامهٔ روزانه نشود</td></tr>
+        <tr><td class="mono">G5</td><td>pre/post مستقل، delayed recall و novel transfer با دادهٔ واقعی</td><td>واژهٔ «automatic» فقط هدف محصول باشد، نه نتیجهٔ اثبات‌شده</td></tr>
+        <tr><td class="mono">G6</td><td>build، E2E، responsive، Install/Update/Repair و حفظ داده پاس شوند</td><td>installer یا نسخهٔ وب منتشر نشود</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout final">
+    <span class="label">چرا G1 فقط روی یک سطح (B1) است، نه همهٔ سطوح؟</span>
+    <p style="margin:0;">هدف G1 اثبات درستی مسیر فنی (pipeline) است، نه پوشش محتوا — سطح فقط metadata روی <code>ContentUnit</code> است و منطق pipeline را تغییر نمی‌دهد. با هر شش سطح هم‌زمان، هر باگ ممکن است از معماری باشد یا از محتوای همان سطح — قابل تفکیک نیست. B1 هم انتخاب شده چون اولین سطحی است که زبان‌آموز متن به‌هم‌پیوسته تولید می‌کند، پس موتور ارزیابی (delayed recall، novel transfer، speaking) را واقعی‌تر از A1 زیر فشار می‌گذارد. پس از عبور G1، همان مسیر برای A1 تا C2 هم کار می‌کند؛ آنچه می‌ماند نوشتن و بازبینی محتوای آن سطوح است — دقیقاً کار فاز ۶ و Gate G4، نه یک محدودیت دائمی.</p>
+  </div>
+
+  <h2 id="p0"><span class="num">phase</span> فازهای اجرایی</h2>
+
+  <section class="phase">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۰</span><h3>تفکیک و merge کردن Vertical Slice 1</h3></div>
+      <span class="chip pass"><span class="dot"></span>کامل</span>
+    </div>
+    <div class="phase-tags">برآورد: ۱ تا ۲ روز کاری · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/3" class="mono">#3</a></div>
+    <p>پیاده‌سازی commit <code>c666175</code> در PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز با merge <code>ed7e73f</code> وارد <code>main</code> شد. محدودهٔ اصلی این چهار مسیر است:</p>
+    <ul>
+      <li><code>shared/learning-core</code></li>
+      <li><code>Apps/English/English-07082026/packages/learning-core</code></li>
+      <li><code>Apps/Deutsch-V10.08.2026/packages/learning-core</code></li>
+      <li><code>.github/workflows/learning-core-adherence-ci.yml</code></li>
+    </ul>
+    <p>خروجی: یک source of truth و دو mirror قابل کنترل؛ adherence pure TypeScript بدون UI/backend/push/LLM؛ feature flag پیش‌فرض <code>false</code>.</p>
+    <div class="exit-box">
+      <span class="label">معیار خروج</span>
+      <ul>
+        <li>✓ PR مستقل فقط محدودهٔ source/mirrors/CI و lockfileهای workspace لازم را دارد</li>
+        <li>✓ CI روی PR سبز است و فایل‌های نامرتبط worktree وارد commit نشده‌اند</li>
+        <li>✓ review و merge PR #11 انجام شد</li>
+        <li>✓ SKILL-001 روی <code>main</code> ادغام شد؛ فعال‌سازی محصولی آن تابع G2 و G3 است</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="phase" id="p1">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۱</span><h3>Vertical Slice واقعی در English و Deutsch</h3></div>
+      <span class="chip pass"><span class="dot"></span>کامل · G1 عبور کرد</span>
+    </div>
+    <div class="phase-tags">برآورد: ۱ sprint · وابستگی: <code>G0</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14 بسته</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/17" class="mono">PR #17</a> · merge <code>b452e3e</code></div>
+    <p>تبدیل قرارداد pure core به مسیر واقعی یادگیری در هر دو اپ: یک واحد authored و human-reviewed در سطح B1 برای هر زبان؛ مسیر کامل <code dir="ltr">content → daily plan → learner response → evaluation → evidence → local event</code>؛ یک تلاش نوشتاری و یک تلاش گفتاری با صدای واقعی.</p>
+    <p>Conversation Studio: <code dir="ltr">Listen/Recall → Record → Replay → Review transcript → Correct → Improve → Save</code>. transcript و evaluation واقعی؛ هیچ پاسخ hard-coded یا demo evidence پذیرفته نیست.</p>
+    <div class="exit-box">
+      <span class="label">معیار خروج</span>
+      <ul>
+        <li>E2E برای EN و DE نشان دهد با re-record، evidence قبلی باطل می‌شود</li>
+        <li>speaking بدون audio معتبر، mastery-eligible نشود</li>
+        <li>پاسخ اشتباه، completion یا تایمر ۶۰ ثانیه status automatic ندهد</li>
+        <li>delayed recall و novel transfer به‌صورت event جدا قابل ثبت باشند</li>
+        <li>خطای provider با وضعیت unavailable دیده شود، نه موفقیت جعلی</li>
+      </ul>
+    </div>
+    <div class="callout final" style="margin-top:14px;">
+      <span class="label">خروجی تأییدشده</span>
+      <ul>
+        <li>PR آلمانی <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از typecheck، lint، unit/integration، installer، schema، build و ۱۵ E2E merge شد؛ ۲ تست اختیاری PWA skip شدند</li>
+        <li><code>learning-core</code> برای هر دو زبان ledger محلی نسخه‌دار می‌سازد و speaking بدون audio را <code>unverified</code> نگه می‌دارد</li>
+        <li>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/16" class="mono">#16</a> خروجی هر دو اپ را به envelope نسخه‌دار شامل <code>learnerState</code> و <code>learningEvidence</code> ارتقا داد و در merge <code>17341f7</code> وارد <code>main</code> شد</li>
+        <li>build تولیدی هر دو اپ پاس شد و لینک‌های محلی دوباره HTTP 200 هستند</li>
+        <li>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/17" class="mono">#17</a> مسیر واقعی EN/DE را با ۳۴ تست هسته، ۴ E2E انگلیسی و ۲ E2E آلمانی کامل کرد</li>
+        <li>re-record، evidence قبلی را با <code>learning.evidence.invalidated.v1</code> باطل می‌کند و delayed recall / novel transfer رویدادهای مستقل دارند</li>
+        <li>خطای provider evidence موفق ذخیره نمی‌کند و completion یا تایمر ۶۰ ثانیه هیچ ادعای automaticity نمی‌سازد</li>
+        <li>reflow در ۳۲۰px، صفحه‌کلید و reduced motion در E2E متمرکز پوشش داده شد</li>
+      </ul>
+      <p style="margin:0;"><strong>مرز صادقانهٔ شواهد:</strong> تست مرورگر از WAV مصنوعیِ غیرخالی و provider intercept‌شده استفاده کرد. microphone سخت‌افزاری واقعی و provider خارجی زنده <strong>N/A — هنوز به‌اندازهٔ کافی تأیید نشده</strong> هستند و به‌عنوان VERIFIED گزارش نمی‌شوند؛ این محدودیت در G6/پایلوت باقی می‌ماند.</p>
+    </div>
+  </section>
+
+  <section class="phase" id="p2">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۲</span><h3>قرارداد سنجش، حریم خصوصی و Baseline</h3></div>
+      <span class="chip active"><span class="dot"></span>در حال انجام · #18</span>
+    </div>
+    <div class="phase-tags">برآورد: ۱ sprint · وابستگی: <code>G1</code> (عبور کرده) · <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/18" class="mono">Issue #18</a> · سپس <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a> و <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></div>
+    <p>نسخه‌گذاری event/content schema؛ رضایت آگاهانه، retention، export و deletion؛ ثبت baseline قبل از هر intervention؛ جداسازی متریک engagement از learning outcome؛ rubric انسانی برای گفتار و نوشتار.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>نوع</th><th>متریک</th><th>تفسیر درست</th></tr></thead>
+        <tbody>
+          <tr><td>تولید</td><td class="mono">first_attempt_valid_rate</td><td>تلاش اول بدون hint/model answer</td></tr>
+          <tr><td>گفتار</td><td class="mono">time_to_first_valid_speech</td><td>زمان تا اولین صدای ارزیابی‌پذیر، نه تا کلیک Start</td></tr>
+          <tr><td>بازیابی</td><td class="mono">delayed_recall_rate</td><td>موفقیت روی محتوای جدا و با تأخیر</td></tr>
+          <tr><td>انتقال</td><td class="mono">novel_transfer_rate</td><td>استفادهٔ صحیح در موضوع یا موقعیت تازه</td></tr>
+          <tr><td>اصلاح</td><td class="mono">independent_repair_rate</td><td>اصلاح بدون نمایش جواب کامل</td></tr>
+          <tr><td>پایداری</td><td class="mono">return_after_gap_rate</td><td>بازگشت پس از وقفه؛ جدا از outcome</td></tr>
+          <tr><td>ایمنی</td><td class="mono">false_positive_rate</td><td>نمونهٔ انسانی‌برچسب‌خورده، جدا برای زبان/سطح/دستگاه</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-dim); font-size:13px;">هدف عددی پیش از baseline تعیین نمی‌شود. پس از baseline، target باید همراه با بازهٔ عدم‌قطعیت و guardrail کیفیت یادگیری تصویب شود.</p>
+  </section>
+
+  <section class="phase" id="p3">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۳</span><h3>Adherence Engineering در Shadow</h3></div>
+      <span class="chip pending"><span class="dot"></span>در انتظار G2</span>
+    </div>
+    <div class="phase-tags">برآورد: ۱ تا ۲ sprint · وابستگی: <code>G2</code> · Issues: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a>، <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></div>
+    <ul>
+      <li>اتصال SKILL-001 به برنامهٔ ۱۵/۳۰/۴۵ دقیقه فقط در shadow</li>
+      <li>ذخیرهٔ اختیاری implementation intention در onboarding</li>
+      <li>micro-goal پنج‌دقیقه‌ای برای روزهای کم‌انرژی، بدون حذف کامل productive output</li>
+      <li>comeback flow بدون شرم‌دادن یا صفرکردن دستاورد واقعی</li>
+      <li>فقط in-app prompt با consent و cooldown؛ push/email در این فاز ممنوع</li>
+    </ul>
+    <div class="exit-box">
+      <span class="label">معیار خروج</span>
+      <ul>
+        <li>خاموش‌کردن flag رفتار قبلی را دقیقاً برگرداند</li>
+        <li>timezone، چند session در یک روز، gap، freeze و comeback deterministic باشند</li>
+        <li><code dir="ltr">nudge → session</code> جدا از <code dir="ltr">session → learning gain</code> گزارش شود</li>
+        <li>adherence به‌تنهایی mastery یا automaticity نسازد</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="phase" id="p4">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۴</span><h3>Forced Output Booster</h3></div>
+      <span class="chip pending"><span class="dot"></span>در انتظار G2</span>
+    </div>
+    <div class="phase-tags">برآورد: ۱ تا ۲ sprint · وابستگی: <code>G2</code> + محتوای authored معتبر · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></div>
+    <ul>
+      <li>۳ تا ۶ دور کوتاه ۳۰ تا ۶۰ ثانیه‌ای، پشت feature flag — دورهای Recall، Automate Aloud و Transfer</li>
+      <li>fallback تایپ برای نبود میکروفون یا نیاز دسترس‌پذیری</li>
+      <li>برنامهٔ ۴۵ دقیقه‌ای فقط نسخهٔ کشیدهٔ ۱۵ دقیقه‌ای نباشد: گفتار طولانی‌تر، نوشتن مستقل و بیش از یک زمینهٔ انتقال</li>
+      <li>سختی و حجم بر اساس مدت انتخابی تغییر کند، اما سطح فقط با کیفیت شواهد ارتقا یابد</li>
+    </ul>
+    <div class="exit-box">
+      <span class="label">معیار خروج</span>
+      <ul>
+        <li>تلاش واقعی ذخیره شود؛ latency اولین کلمه و self-repair قابل ثبت باشد</li>
+        <li>واژهٔ کلیدی به‌تنهایی جواب غلط را قبول نکند</li>
+        <li>هیچ ادعای «صدها تکرار لازم است» به‌عنوان آستانهٔ جهانی در کد hard-code نشود</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="phase" id="p5">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۵</span><h3>مهاجرت FSRS در Shadow</h3></div>
+      <span class="chip pending"><span class="dot"></span>در انتظار G2</span>
+    </div>
+    <div class="phase-tags">برآورد: ۱ تا ۲ sprint · وابستگی: <code>G2</code> · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></div>
+    <ul>
+      <li>نگاشت دادهٔ scheduler فعلی به Difficulty، Stability و Retrievability</li>
+      <li>محاسبهٔ due date فعلی و FSRS در کنار هم، بدون تغییر برنامهٔ کاربر</li>
+      <li>استفاده از پیاده‌سازی معتبر FSRS؛ نه الگوریتم مبتنی بر <code>ease factor</code> و نه invariant نامعتبر <code dir="ltr">stability >= difficulty</code></li>
+    </ul>
+    <div class="exit-box">
+      <span class="label">معیار خروج</span>
+      <ul>
+        <li>حداقل یک دورهٔ واقعی shadow بدون از دست‌رفتن review history</li>
+        <li>migration رفت‌وبرگشت‌پذیر و idempotent</li>
+        <li>فعال‌سازی تدریجی فقط پس از بررسی retention، workload و overdue burden</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="phase" id="p6">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۶</span><h3>Content QA، Mediation و پایلوت دیتاست</h3></div>
+      <span class="chip pending"><span class="dot"></span>در انتظار G2/G4</span>
+    </div>
+    <div class="phase-tags">برآورد: ۲ تا ۳ sprint · وابستگی: <code>G1</code>؛ ingestion runtime وابسته به <code>G2</code>/<code>G4</code> · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a></div>
+    <p>هر <code>ContentUnit</code> باید language، CEFR، version، source/license، reviewer status و حداقل یکی از modeهای recognition، writing، speaking، repair، transfer یا mediation را داشته باشد.</p>
+    <p><strong>پایلوت Mediation:</strong> ابتدا B1، خلاصه‌کردن، بازگویی، توضیح برای مخاطب دیگر و انتقال اطلاعات؛ Reception، Production، Interaction و Mediation جدا گزارش شوند.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>منبع</th><th>استفادهٔ مجاز</th><th>استفادهٔ غیرمجاز</th></tr></thead>
+        <tbody>
+          <tr><td>Tatoeba CC0</td><td>candidate متن کوتاه پس از QA</td><td>ورود خودکار صوت یا جملهٔ تأییدنشده</td></tr>
+          <tr><td>Common Voice</td><td>robustness ترنسکریپت EN/DE</td><td>نمرهٔ قطعی تلفظ زبان‌آموز</td></tr>
+          <tr><td>FLEURS</td><td>benchmark ثابت ASR</td><td>محتوای آموزشی یا mastery evidence</td></tr>
+          <tr><td>MERLIN</td><td>نمونهٔ خطای واقعی آلمانی و CEFR</td><td>استفاده بدون رعایت CC BY-SA</td></tr>
+          <tr><td>UD English EWT / German GSD</td><td>ویژگی نحوی کمکی</td><td>ادعای CEFR یا خطای زبان‌آموز</td></tr>
+          <tr><td>W&amp;I + LOCNESS / C4 200M GEC</td><td>پژوهش GEC پس از بررسی مجوز</td><td>seed مستقیم Installer یا evidence تسلط</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-dim); font-size:13px;">دانلود حجیم، fine-tune و افزودن داده به installer تا عبور G2/G4 انجام نمی‌شود. کاتالوگ metadata-only به معنی «دیتاست استفاده‌شده در مدل» نیست.</p>
+    <div class="exit-box">
+      <span class="label">معیار خروج</span>
+      <ul>
+        <li>۱۰۰٪ آیتم‌های پایلوت provenance، مجوز و version داشته باشند</li>
+        <li>نمونه‌گیری طبقه‌بندی‌شده و دو بازبین مستقل برای naturalness و CEFR alignment</li>
+        <li>هیچ آیتم QA-failed در برنامهٔ روزانه schedule نشود</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="phase" id="p7">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۷</span><h3>سنجش مستقل automaticity</h3></div>
+      <span class="chip pending"><span class="dot"></span>در انتظار G3/G4</span>
+    </div>
+    <div class="phase-tags">برآورد: ۱ تا ۲ sprint برای ابزار، سپس اجرای مطالعه · وابستگی: <code>G3</code>، <code>G4</code> · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></div>
+    <ul>
+      <li>pre-test و post-test جدا از محتوای تمرین روزانه؛ تلاش اول بدون دیدن جواب، سپس delayed recall و novel transfer</li>
+      <li>speaking با audio واقعی و writing با متن مستقل؛ دو ارزیاب یا adjudication برای نمونهٔ اختلاف‌دار</li>
+      <li>C-test فقط شاخص کمکی proficiency عمومی است، نه مدرک automaticity</li>
+    </ul>
+    <div class="exit-box">
+      <span class="label">معیار خروج</span>
+      <ul>
+        <li>rubric و scorer agreement مستند؛ false positive/negative با مجموعهٔ انسانی‌برچسب‌خورده</li>
+        <li>retention بعد از تأخیر سنجیده شود</li>
+        <li>نتیجه با confidence interval و محدودیت‌ها گزارش شود، نه درصد قطعی تبلیغاتی</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="phase" id="p8">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۸</span><h3>پایلوت رضایت‌محور و Analytics</h3></div>
+      <span class="chip pending"><span class="dot"></span>در انتظار G5</span>
+    </div>
+    <div class="phase-tags">برآورد: ۴ تا ۸ هفته جمع‌آوری داده · وابستگی: <code>G5</code> · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></div>
+    <p>ابتدا internal، سپس cohort کوچک با رضایت آگاهانه؛ rollout ترتیبی <code dir="ltr">control → shadow → opt-in intervention</code>. اگر فقط یک کاربر یا یک دستگاه وجود دارد، فقط descriptive local analytics مجاز است؛ Kaplan-Meier، AUC یا ادعای cohort ساخته نمی‌شود.</p>
+    <div class="exit-box">
+      <span class="label">تصمیم Go/No-Go — Intervention فقط وقتی گسترش می‌یابد که</span>
+      <ul>
+        <li>learning outcome بدتر نشده باشد و false positive افزایش معنادار نداشته باشد</li>
+        <li>completion صرف، علت ظاهری موفقیت نباشد</li>
+        <li>consent، export و deletion کار کنند</li>
+        <li>اثر برای حداقل یکی از delayed recall یا novel transfer دیده شود</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="phase" id="p9">
+    <div class="phase-head">
+      <div class="phase-title-row"><span class="phase-num">۹</span><h3>انتشار تدریجی وب، PWA و Windows</h3></div>
+      <span class="chip pending"><span class="dot"></span>در انتظار G6</span>
+    </div>
+    <div class="phase-tags">برآورد: در پایان هر بستهٔ تغییر substantive · وابستگی: <code>G6</code></div>
+    <p>برای هر دو اپ، Definition of Done انتشار شامل:</p>
+    <ul>
+      <li>typecheck، lint، unit/integration و E2E؛ تست real runtime و HTTP، نه فقط build</li>
+      <li>Windows، تبلت و Android browser در viewportهای بحرانی؛ reflow در ۳۲۰px، keyboard focus، Screen Reader، target حداقل ۴۴×۴۴ و <code dir="ltr">prefers-reduced-motion</code></li>
+      <li>LTR برای انگلیسی/آلمانی، RTL برای فارسی و <code dir="ltr">dir="auto"</code> برای محتوای متغیر</li>
+      <li>Offline/PWA و recovery پس از قطع شبکه؛ بازسازی Install/Update/Repair و payload</li>
+      <li>fresh install، startup، update، repair، uninstall و حفظ دادهٔ کاربر</li>
+      <li>microphone و provider خارجی که واقعاً آزموده نشده‌اند با <code>N/A</code> یا <code>BLOCKED</code> گزارش شوند</li>
+    </ul>
+  </section>
+
+  <h2><span class="num">order</span> ترتیب PRها و Issueها</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th class="mono" style="text-align:center">#</th><th>محدوده</th><th>Issue</th><th>شرط شروع</th></tr></thead>
+      <tbody>
+        <tr><td class="mono" style="text-align:center">1</td><td>Adherence core + mirrors + CI</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/3" class="mono">#3</a></td><td>اکنون، پس از جداسازی worktree</td></tr>
+        <tr><td class="mono" style="text-align:center">2</td><td>تفکیک baseline اپ‌ها از PR conflicted شمارهٔ ۲</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/16" class="mono">PR #16</a></td><td>✅ merge <code>17341f7</code></td></tr>
+        <tr><td class="mono" style="text-align:center">3</td><td>Runtime evidence slice EN/DE</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/17" class="mono">PR #17</a></td><td>✅ merge <code>b452e3e</code>؛ G1 عبور کرد</td></tr>
+        <tr><td class="mono" style="text-align:center">4</td><td>Measurement contract، consent، baseline و data quality</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/18" class="mono">#18</a></td><td>🟡 اکنون؛ G1 عبور کرده</td></tr>
+        <tr><td class="mono" style="text-align:center">5</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a></td><td>G2</td></tr>
+        <tr><td class="mono" style="text-align:center">6</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>#6 و consent</td></tr>
+        <tr><td class="mono" style="text-align:center">7</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></td><td>G2 و authored content</td></tr>
+        <tr><td class="mono" style="text-align:center">8</td><td>FSRS shadow migration</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></td><td>G2</td></tr>
+        <tr><td class="mono" style="text-align:center">9</td><td>Mediation pilot + QA</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a></td><td>G1 و content schema</td></tr>
+        <tr><td class="mono" style="text-align:center">10</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>
+        <tr><td class="mono" style="text-align:center">11</td><td>Consented pilot analytics</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G5 و دادهٔ چندکاربره</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warn">
+    <span class="label">کارهایی که فعلاً نباید انجام شوند</span>
+    <ul>
+      <li>ساخت مدل بزرگ یا fine-tune قبل از vertical slice و baseline</li>
+      <li>دانلود انبوه دیتاست یا قراردادن آن در installer</li>
+      <li>استفاده از LLM/ASR برای تصمیم نهایی mastery</li>
+      <li>default-on کردن Booster، Nudges یا FSRS</li>
+      <li>ارسال push/email بدون consent و scheduler قابل‌اعتماد</li>
+      <li>محاسبهٔ cohort survival از یک کاربر یا یک دستگاه</li>
+      <li>استفاده از completion، XP، تایمر یا keyword match به‌عنوان proof</li>
+      <li>PR بزرگ شامل چند skill، تغییر UI، دیتاست و backend</li>
+      <li>انتشار نسخه بدون چرخهٔ Install/Update/Repair و حفظ داده</li>
+    </ul>
+  </div>
+
+  <h2 id="dod"><span class="num">DoD</span> Definition of Done کل برنامه</h2>
+  <p style="color:var(--ink-dim); font-size:13.5px;">رودمپ فقط زمانی به هدف می‌رسد که همهٔ موارد زیر شواهد قابل بازبینی داشته باشند:</p>
+  <div class="dod-grid">
+    <div class="item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/></svg><span>مسیر واقعی speaking و writing در هر دو زبان</span></div>
+    <div class="item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/></svg><span>delayed recall، novel transfer و independent repair</span></div>
+    <div class="item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/></svg><span>محتوای natural، CEFR-aligned، دارای provenance و human review</span></div>
+    <div class="item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/></svg><span>adherence intervention با رضایت، rollback و جداسازی outcome از engagement</span></div>
+    <div class="item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/></svg><span>ارزیابی مستقل pre/post و retention؛ عدم‌قطعیت و محدودیت‌ها در گزارش</span></div>
+    <div class="item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/></svg><span>parity انگلیسی/آلمانی، دسترس‌پذیری و responsive بودن</span></div>
+    <div class="item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/></svg><span>PWA و Windows installer با حفظ داده</span></div>
+    <div class="item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/></svg><span>هیچ critical journey آزموده‌نشده‌ای با عنوان <code>VERIFIED</code> گزارش نشود</span></div>
+  </div>
+
+  <div class="callout final">
+    <span class="label">اقدام بعدی واحد</span>
+    <p style="margin:0;">Gate G2 را فقط در <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/18" class="mono">Issue #18</a> و یک PR کوچک پیاده کنید: event schema نسخه‌دار، consent/revoke/delete، baseline پیش از intervention، data-quality checks، جداسازی engagement از learning outcome و rubric provenance. تا عبور G2، AI، ingestion runtime دیتاست، A/B test و هر ادعای بهبود متوقف می‌مانند؛ محتوای پایلوت نیز بدون G4 وارد برنامهٔ روزانه نمی‌شود.</p>
+  </div>
+
+  <footer class="note">
+    منبع متنی همراه: <code>docs/roadmaps/AUTOMATICITY-EVIDENCE-ROADMAP-2026-08-21.md</code> — نسخهٔ وب: <a href="https://automaticity-evidence-roadmap.vercel.app" class="mono">automaticity-evidence-roadmap.vercel.app</a> — به‌روزرسانی‌های بعدی هر دو فایل را هم‌زمان تغییر می‌دهد.
+  </footer>
+
+</div>

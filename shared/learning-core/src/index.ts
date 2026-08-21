@@ -3,6 +3,7 @@ export const LEARNING_DATA_EXPORT_KIND =
   "automaticity.learning-data-export" as const;
 
 export * from "./adherence";
+export * from "./measurement";
 
 export type LearningLanguage = "en" | "de";
 export type CefrLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";

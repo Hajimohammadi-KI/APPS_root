@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Download,
   Eye,
@@ -8,9 +8,25 @@ import {
   MonitorDown,
   ShieldCheck,
   Smartphone,
+  Trash2,
 } from "lucide-react";
 
-import { buildLearningDataExport } from "@automaticity/learning-core";
+import {
+  buildLearningDataExport,
+  buildPrivacySafeMeasurementExport,
+  captureMeasurementBaseline,
+  deleteLocalMeasurementData,
+  enforceMeasurementRetention,
+  grantMeasurementConsent,
+  normalizeDailySessionMinutes,
+  readLearningEvidenceLedger,
+  readMeasurementBaseline,
+  readMeasurementConsent,
+  revokeMeasurementConsent,
+  validatePrivacySafeMeasurementExport,
+  type MeasurementBaseline,
+  type MeasurementConsent,
+} from "@automaticity/learning-core";
 import type { LearnerSettings } from "@grammar/domain";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,11 +50,26 @@ const TEXT_SIZES: readonly {
   { value: 125, label: "125 %", hint: "Größte Darstellung" },
 ];
 
+const MEASUREMENT_APP_VERSION = "20.8.23";
+const MEASUREMENT_FILE_NAME = "automaticity-messdaten-de.json";
+
 export function SettingsScreen() {
   const { state, hydrated, updateLearnerProfile, updateSettings } =
     useLearnerState();
   const [exportStatus, setExportStatus] = useState("");
+  const [measurementConsent, setMeasurementConsent] =
+    useState<MeasurementConsent | null>(null);
+  const [measurementBaseline, setMeasurementBaseline] =
+    useState<MeasurementBaseline | null>(null);
+  const [measurementStatus, setMeasurementStatus] = useState("");
   const { settings } = state;
+
+  useEffect(() => {
+    if (!hydrated) return;
+    enforceMeasurementRetention(window.localStorage, new Date().toISOString());
+    setMeasurementConsent(readMeasurementConsent(window.localStorage));
+    setMeasurementBaseline(readMeasurementBaseline(window.localStorage));
+  }, [hydrated]);
 
   if (!hydrated) {
     return (
@@ -51,6 +82,101 @@ export function SettingsScreen() {
           Deine lokalen Einstellungen werden geladen …
         </p>
       </div>
+    );
+  }
+
+  function updateMeasurementConsent(checked: boolean) {
+    const now = new Date().toISOString();
+    if (!checked) {
+      const revoked = revokeMeasurementConsent(window.localStorage, now);
+      setMeasurementConsent(revoked);
+      setMeasurementStatus(
+        "Einwilligung widerrufen. Ohne erneute Zustimmung kann kein Messdatenexport erstellt werden.",
+      );
+      return;
+    }
+
+    const participantId =
+      measurementConsent?.participantId ?? `participant-${crypto.randomUUID()}`;
+    const consent = grantMeasurementConsent(window.localStorage, {
+      id: `consent-${crypto.randomUUID()}`,
+      participantId,
+      grantedAt: now,
+    });
+    const baselineResult = captureMeasurementBaseline(window.localStorage, {
+      id: `baseline-${crypto.randomUUID()}`,
+      capturedAt: now,
+      language: "de",
+      appVersion: MEASUREMENT_APP_VERSION,
+      sessionMinutes: normalizeDailySessionMinutes(settings.dailyStudyMinutes),
+      interventionFlags: {
+        experimentalScheduling: false,
+        aiIntervention: false,
+      },
+      ledger: readLearningEvidenceLedger(window.localStorage),
+    });
+    setMeasurementConsent(consent);
+    if (baselineResult.status === "captured") {
+      setMeasurementBaseline(baselineResult.baseline);
+      setMeasurementStatus(
+        baselineResult.reused
+          ? "Einwilligung erteilt. Die vorhandene Ausgangsmessung bleibt aktiv."
+          : "Einwilligung erteilt und Ausgangsmessung vor einer Intervention lokal erfasst.",
+      );
+    } else {
+      setMeasurementStatus(
+        "Die Einwilligung wurde gespeichert, aber eine Ausgangsmessung vor der Intervention war nicht möglich.",
+      );
+    }
+  }
+
+  function exportMeasurementData() {
+    const result = buildPrivacySafeMeasurementExport({
+      language: "de",
+      appVersion: MEASUREMENT_APP_VERSION,
+      exportedAt: new Date().toISOString(),
+      storage: window.localStorage,
+      ledger: readLearningEvidenceLedger(window.localStorage),
+    });
+    if (result.status !== "ready") {
+      setMeasurementStatus(
+        result.reason === "consent-required"
+          ? "Bitte zuerst ausdrücklich einwilligen."
+          : "Vor dem Export muss eine Ausgangsmessung erfasst werden.",
+      );
+      return;
+    }
+    const quality = validatePrivacySafeMeasurementExport(
+      result.data,
+      new Date().toISOString(),
+    );
+    if (quality.status === "failed") {
+      setMeasurementStatus(
+        "Der Export wurde wegen eines Datenschutz- oder Datenqualitätsfehlers gestoppt.",
+      );
+      return;
+    }
+    downloadJson(MEASUREMENT_FILE_NAME, result.data);
+    setMeasurementStatus(
+      quality.status === "insufficient-data"
+        ? "Datenschutzsicherer Export heruntergeladen. Lernergebnisse: N/A, weil noch keine Stichprobe vorliegt."
+        : `Datenschutzsicherer Export mit ${quality.sampleSize} Lernergebnis(se/n) heruntergeladen.`,
+    );
+  }
+
+  function deleteMeasurementData() {
+    if (
+      !window.confirm(
+        "Lokale Einwilligung und Ausgangsmessung löschen? Lernfortschritt und private Sicherungen bleiben erhalten.",
+      )
+    ) {
+      return;
+    }
+    deleteLocalMeasurementData(window.localStorage);
+    setMeasurementConsent(null);
+    setMeasurementBaseline(null);
+    setMeasurementStatus(
+      "Lokale Messdaten gelöscht. Der Lernfortschritt wurde beibehalten.",
     );
   }
 
@@ -224,6 +350,84 @@ export function SettingsScreen() {
         <CardHeader>
           <CardTitle>
             <h2 className="flex items-center gap-2">
+              <ShieldCheck className="size-5 text-emerald-700" />
+              Optionale Wirksamkeitsmessung
+            </h2>
+          </CardTitle>
+          <CardDescription>
+            Getrennter, widerrufbarer Forschungs-Export für Sprech- und
+            Schreibresultate. Es wird nichts automatisch hochgeladen.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="settings-controls">
+          <label className="settings-toggle">
+            <input
+              checked={measurementConsent?.status === "granted"}
+              onChange={(event) =>
+                updateMeasurementConsent(event.target.checked)
+              }
+              type="checkbox"
+            />
+            <span>
+              <strong>
+                Ich willige in die optionale Wirksamkeitsmessung ein
+              </strong>
+              <small>
+                Enthalten: zufällige lokale Teilnehmer-ID, Ereignis- und
+                Nachweis-IDs, Zeitstempel, Versionen, Scores, Gates und – falls
+                vorhanden – Herkunft einer menschlichen Bewertung.
+                Ausgeschlossen: Antworttext, Transkript, Audio, E-Mail,
+                Hardware-ID und freie Absichten.
+              </small>
+            </span>
+          </label>
+          <div className="settings-measurement-summary">
+            <p>
+              Nur lokal auf diesem Gerät, höchstens 365 Tage. Eine Übertragung
+              erfolgt nur durch deinen manuellen Download. Widerruf stoppt den
+              Export.
+            </p>
+            <p>
+              Ausgangsmessung:{" "}
+              {measurementBaseline ? "erfasst" : "nicht erfasst"}.
+              Kohortenstatistik: N/A — keine Produktionstelemetrie verbunden.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              disabled={
+                measurementConsent?.status !== "granted" || !measurementBaseline
+              }
+              onClick={exportMeasurementData}
+            >
+              <Download />
+              Datenschutzsichere Messdaten herunterladen
+            </Button>
+            <Button
+              disabled={!measurementConsent && !measurementBaseline}
+              onClick={deleteMeasurementData}
+              variant="outline"
+            >
+              <Trash2 />
+              Messdaten löschen
+            </Button>
+          </div>
+          {measurementStatus ? (
+            <p
+              aria-live="polite"
+              className="text-sm font-semibold"
+              role="status"
+            >
+              {measurementStatus}
+            </p>
+          ) : null}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <h2 className="flex items-center gap-2">
               <MonitorDown className="size-5 text-violet-700" />
               Auf deinem Gerät installieren
             </h2>
@@ -336,4 +540,16 @@ function Toggle({
       <span>{label}</span>
     </label>
   );
+}
+
+function downloadJson(fileName: string, data: unknown) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = fileName;
+  anchor.click();
+  URL.revokeObjectURL(url);
 }

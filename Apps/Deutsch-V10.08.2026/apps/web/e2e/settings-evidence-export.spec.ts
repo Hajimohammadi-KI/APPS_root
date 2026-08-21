@@ -39,3 +39,80 @@ test("settings export includes the normalized learning-evidence ledger", async (
   expect(backup.learningEvidence?.evidence).toEqual([]);
   expect(backup.learningEvidence?.events).toEqual([]);
 });
+
+test("optionale Messung ist eingewilligt, datensparsam, widerrufbar und löschbar", async ({
+  page,
+}) => {
+  await page.goto("/einstellungen");
+  await page.evaluate(() => {
+    window.localStorage.setItem("learner-progress-sentinel", "keep-me");
+  });
+
+  const consent = page.getByRole("checkbox", {
+    name: "Ich willige in die optionale Wirksamkeitsmessung ein",
+  });
+  await consent.check();
+  await expect(
+    page.getByText(
+      "Einwilligung erteilt und Ausgangsmessung vor einer Intervention lokal erfasst.",
+    ),
+  ).toBeVisible();
+
+  const downloadPromise = page.waitForEvent("download");
+  await page
+    .getByRole("button", {
+      name: "Datenschutzsichere Messdaten herunterladen",
+    })
+    .click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe("automaticity-messdaten-de.json");
+  const downloadPath = await download.path();
+  expect(downloadPath).not.toBeNull();
+  const contents = await readFile(downloadPath!, "utf8");
+  const measurement = JSON.parse(contents) as {
+    kind?: string;
+    language?: string;
+    consent?: { status?: string; purpose?: string };
+    baseline?: { capturedBeforeIntervention?: boolean };
+    cohortStatistics?: { status?: string; reason?: string };
+    outcomes?: unknown[];
+  };
+
+  expect(measurement.kind).toBe("automaticity.privacy-safe-measurement-export");
+  expect(measurement.language).toBe("de");
+  expect(measurement.consent).toMatchObject({
+    status: "granted",
+    purpose: "product-effectiveness-research",
+  });
+  expect(measurement.baseline?.capturedBeforeIntervention).toBe(true);
+  expect(measurement.cohortStatistics).toEqual({
+    status: "not-computed",
+    reason: "production-telemetry-unavailable",
+  });
+  expect(measurement.outcomes).toEqual([]);
+  expect(contents).not.toMatch(
+    /"(?:inputText|correctedText|prompt|transcript|audio|email|hardwareId|freeform|intention)"/i,
+  );
+
+  await consent.uncheck();
+  await expect(
+    page.getByRole("button", {
+      name: "Datenschutzsichere Messdaten herunterladen",
+    }),
+  ).toBeDisabled();
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Messdaten löschen" }).click();
+  const localState = await page.evaluate(() => ({
+    consent: window.localStorage.getItem("automaticity:measurement-consent:v1"),
+    baseline: window.localStorage.getItem(
+      "automaticity:measurement-baseline:v1",
+    ),
+    progress: window.localStorage.getItem("learner-progress-sentinel"),
+  }));
+  expect(localState).toEqual({
+    consent: null,
+    baseline: null,
+    progress: "keep-me",
+  });
+});

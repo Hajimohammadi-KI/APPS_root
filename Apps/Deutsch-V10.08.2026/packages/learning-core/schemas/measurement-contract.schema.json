@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://automaticity.local/schemas/measurement-contract-1.0.0.json",
+  "title": "Automaticity privacy-safe measurement export",
+  "description": "A consent-gated, identifier-and-metrics-only export. Raw learner text, transcripts, audio, email, hardware identifiers, and free-form intentions are not permitted.",
+  "type": "object",
+  "required": [
+    "kind",
+    "schemaVersion",
+    "exportedAt",
+    "language",
+    "appVersion",
+    "consent",
+    "retentionPolicy",
+    "baseline",
+    "events",
+    "outcomes",
+    "metricDefinitions",
+    "cohortStatistics"
+  ],
+  "properties": {
+    "kind": {
+      "const": "automaticity.privacy-safe-measurement-export"
+    },
+    "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+    "exportedAt": { "type": "string", "format": "date-time" },
+    "language": { "$ref": "#/$defs/language" },
+    "appVersion": { "type": "string", "minLength": 1 },
+    "consent": { "$ref": "#/$defs/consent" },
+    "retentionPolicy": { "$ref": "#/$defs/retentionPolicy" },
+    "baseline": { "$ref": "#/$defs/baseline" },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/event" }
+    },
+    "outcomes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/outcome" }
+    },
+    "metricDefinitions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/metricDefinition" }
+    },
+    "cohortStatistics": {
+      "type": "object",
+      "required": ["status", "reason"],
+      "properties": {
+        "status": { "const": "not-computed" },
+        "reason": { "const": "production-telemetry-unavailable" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "schemaVersion": { "const": "1.0.0" },
+    "language": { "enum": ["en", "de"] },
+    "mode": {
+      "enum": ["recognition", "writing", "speaking", "repair", "transfer"]
+    },
+    "identifier": { "type": "string", "minLength": 1 },
+    "consent": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "id",
+        "participantId",
+        "purpose",
+        "dataCategories",
+        "policyVersion",
+        "status",
+        "grantedAt",
+        "revokedAt"
+      ],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "id": { "$ref": "#/$defs/identifier" },
+        "participantId": { "$ref": "#/$defs/identifier" },
+        "purpose": { "const": "product-effectiveness-research" },
+        "dataCategories": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "identifier-metadata",
+              "learning-outcomes",
+              "engagement-events",
+              "human-rating-provenance"
+            ]
+          }
+        },
+        "policyVersion": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["granted", "revoked"] },
+        "grantedAt": { "type": "string", "format": "date-time" },
+        "revokedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "retentionPolicy": {
+      "type": "object",
+      "required": [
+        "version",
+        "storage",
+        "maximumDays",
+        "exportTransfer",
+        "deletion"
+      ],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "storage": { "const": "local-device-only" },
+        "maximumDays": { "type": "integer", "minimum": 1 },
+        "exportTransfer": { "const": "user-initiated-download-only" },
+        "deletion": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "baselineSummary": {
+      "type": "object",
+      "required": [
+        "attemptCount",
+        "verifiedEvidenceCount",
+        "masteryEligibleCount",
+        "delayedRecallCount",
+        "novelTransferCount"
+      ],
+      "properties": {
+        "attemptCount": { "type": "integer", "minimum": 0 },
+        "verifiedEvidenceCount": { "type": "integer", "minimum": 0 },
+        "masteryEligibleCount": { "type": "integer", "minimum": 0 },
+        "delayedRecallCount": { "type": "integer", "minimum": 0 },
+        "novelTransferCount": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "baseline": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "id",
+        "participantId",
+        "capturedAt",
+        "language",
+        "appVersion",
+        "sessionMinutes",
+        "capturedBeforeIntervention",
+        "interventionFlags",
+        "summary"
+      ],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "id": { "$ref": "#/$defs/identifier" },
+        "participantId": { "$ref": "#/$defs/identifier" },
+        "capturedAt": { "type": "string", "format": "date-time" },
+        "language": { "$ref": "#/$defs/language" },
+        "appVersion": { "type": "string", "minLength": 1 },
+        "sessionMinutes": { "enum": [15, 30, 45] },
+        "capturedBeforeIntervention": { "const": true },
+        "interventionFlags": {
+          "type": "object",
+          "additionalProperties": { "const": false }
+        },
+        "summary": { "$ref": "#/$defs/baselineSummary" }
+      },
+      "additionalProperties": false
+    },
+    "references": {
+      "type": "object",
+      "required": [
+        "responseId",
+        "evidenceId",
+        "contentUnitId",
+        "dailyPlanId",
+        "supersedingResponseId"
+      ],
+      "properties": {
+        "responseId": { "type": ["string", "null"] },
+        "evidenceId": { "type": ["string", "null"] },
+        "contentUnitId": { "type": ["string", "null"] },
+        "dailyPlanId": { "type": ["string", "null"] },
+        "supersedingResponseId": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "event": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "sourceEventType",
+        "occurredAt",
+        "language",
+        "appVersion",
+        "contentVersion",
+        "metricClass",
+        "references"
+      ],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "eventId": { "$ref": "#/$defs/identifier" },
+        "sourceEventType": {
+          "enum": [
+            "learning.response.submitted.v1",
+            "learning.evidence.recorded.v1",
+            "learning.evidence.invalidated.v1",
+            "learning.delayed-recall.recorded.v1",
+            "learning.novel-transfer.recorded.v1"
+          ]
+        },
+        "occurredAt": { "type": "string", "format": "date-time" },
+        "language": { "$ref": "#/$defs/language" },
+        "appVersion": { "type": "string", "minLength": 1 },
+        "contentVersion": { "type": ["string", "null"] },
+        "metricClass": { "enum": ["learning-outcome", "engagement"] },
+        "references": { "$ref": "#/$defs/references" }
+      },
+      "additionalProperties": false
+    },
+    "humanRating": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["status"],
+          "properties": { "status": { "const": "not-collected" } },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["status", "rubricVersion", "raterId", "ratedAt"],
+          "properties": {
+            "status": { "const": "human-rated" },
+            "rubricVersion": { "$ref": "#/$defs/identifier" },
+            "raterId": { "$ref": "#/$defs/identifier" },
+            "ratedAt": { "type": "string", "format": "date-time" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "outcome": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "evidenceId",
+        "responseId",
+        "contentUnitId",
+        "occurredAt",
+        "mode",
+        "verificationStatus",
+        "verificationProvider",
+        "targetHit",
+        "accuracyScore",
+        "fluencyScore",
+        "realProduction",
+        "delayedRecall",
+        "novelTransfer",
+        "repairCompleted",
+        "masteryEligible",
+        "humanRating"
+      ],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "evidenceId": { "$ref": "#/$defs/identifier" },
+        "responseId": { "$ref": "#/$defs/identifier" },
+        "contentUnitId": { "$ref": "#/$defs/identifier" },
+        "occurredAt": { "type": "string", "format": "date-time" },
+        "mode": { "$ref": "#/$defs/mode" },
+        "verificationStatus": { "enum": ["verified", "unverified"] },
+        "verificationProvider": {
+          "enum": ["deterministic", "online", "offline"]
+        },
+        "targetHit": { "type": "boolean" },
+        "accuracyScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "fluencyScore": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "realProduction": { "type": "boolean" },
+        "delayedRecall": { "type": "boolean" },
+        "novelTransfer": { "type": "boolean" },
+        "repairCompleted": { "type": "boolean" },
+        "masteryEligible": { "type": "boolean" },
+        "humanRating": { "$ref": "#/$defs/humanRating" }
+      },
+      "additionalProperties": false
+    },
+    "metricDefinition": {
+      "type": "object",
+      "required": [
+        "id",
+        "metricClass",
+        "unit",
+        "numerator",
+        "denominator",
+        "minimumSampleSize",
+        "humanLabelsRequired",
+        "timezone"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "first_attempt_valid_rate",
+            "time_to_first_valid_speech",
+            "delayed_recall_rate",
+            "novel_transfer_rate",
+            "independent_repair_rate",
+            "return_after_gap_rate",
+            "false_positive_rate"
+          ]
+        },
+        "metricClass": { "enum": ["learning-outcome", "engagement"] },
+        "unit": { "enum": ["rate", "milliseconds"] },
+        "numerator": { "type": "string", "minLength": 1 },
+        "denominator": { "type": "string", "minLength": 1 },
+        "minimumSampleSize": { "type": "integer", "minimum": 1 },
+        "humanLabelsRequired": { "type": "boolean" },
+        "timezone": { "const": "UTC" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

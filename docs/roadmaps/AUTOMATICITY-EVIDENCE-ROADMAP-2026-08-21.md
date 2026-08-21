@@ -31,14 +31,16 @@
 | هستهٔ مشترک learning-core | PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) پس از بازبینی مستقل و CI سبز merge شد | merge `ed7e73f` و `shared/learning-core` |
 | SKILL-001 Adherence Core | روی `main` ادغام شده؛ shadow flag پیش‌فرض خاموش است؛ هنوز در release کاربر نهایی فعال نشده | `shared/learning-core/src/adherence` |
 | تست اختصاصی adherence | تأییدشده: 21 تست، 60,185 assertion | `bun run test:adherence-core` |
-| کل تست learning-core | تأییدشده پس از G1: 34 تست و 60,220 assertion | `bun run test` |
+| کل تست learning-core | تأییدشده پس از G2: 43 تست و 60,263 assertion | `bun run test` |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
 | ادغام runtime در هر دو اپ | مسیر B1 نوشتن/گفتار، audio gate، invalidation، provider-unavailable و eventهای جدا در هر دو زبان ادغام شد | **Gate G1 عبور کرد:** [PR #17](https://github.com/Hajimohammadi-KI/APPS_root/pull/17)، merge `b452e3e`، [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) بسته |
 | export محلی شواهد | صفحهٔ Settings انگلیسی و export نسخه‌دار هر دو زبان روی `main` ادغام شد | [PR #16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16)، merge `17341f7`؛ E2E دانلود واقعی هر دو زبان پاس شد |
 | CI مربوط به G1 | Learning Core و German Automaticity هر دو سبز | [Core run 32532317547](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317547) و [German run 32532317531](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317531) |
-| AI و دیتاست runtime | هنوز نباید وارد runtime یا تصمیم mastery شود | G1 عبور کرده؛ اکنون وابسته به G2 و G4 است |
+| قرارداد سنجش و حریم خصوصی | رضایت نسخه‌دار، baseline پیش از intervention، export امن، revoke/delete، retention و data-quality در هر دو اپ ادغام شد | **Gate G2 عبور کرد:** [PR #21](https://github.com/Hajimohammadi-KI/APPS_root/pull/21)، merge `032ad14`، [Issue #18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18) بسته |
+| CI مربوط به G2 | Learning Core و German Automaticity هر دو سبز؛ Settings E2E در انگلیسی و آلمانی پاس شد | [Core run 32535274524](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32535274524) و [German run 32535274583](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32535274583) |
+| AI و دیتاست runtime | هنوز نباید وارد runtime یا تصمیم mastery شود | G1 و G2 عبور کرده‌اند؛ ingestion محتوای پایلوت وابسته به G4 است |
 | اثرگذاری روی زبان‌آموز واقعی | دادهٔ کافی وجود ندارد | **N/A تا اجرای پایلوت** |
 
 > سبزشدن تست‌های pure TypeScript فقط صحت قراردادها و invariants را نشان می‌دهد؛
@@ -85,7 +87,7 @@ flowchart LR
 |---|---|---|
 | **G0 — Source Gate** | چهار مسیر SKILL-001 در PR جدا، review و CI سبز | هیچ فاز وابسته merge نشود |
 | **G1 — Runtime Evidence Slice** | ✅ در PR #17 عبور کرد: یک واحد B1 انگلیسی و آلمانی از content تا evidence و export عبور می‌کند | میکروفون سخت‌افزاری و provider زنده همچنان N/A و در G6/پایلوت بررسی شوند |
-| **G2 — Measurement Contract** | event schema، consent، privacy، baseline و data-quality checks تصویب شوند | هیچ ادعای بهبود یا A/B test منتشر نشود |
+| **G2 — Measurement Contract** | ✅ در PR #21 عبور کرد: event schema، consent، privacy، baseline، retention و data-quality checks در هسته و هر دو اپ ادغام شدند | اثرگذاری روی زبان‌آموز واقعی همچنان N/A تا پایلوت است |
 | **G3 — Shadow Safety** | خروجی جدید در shadow با رفتار فعلی مقایسه شود و دادهٔ کاربر را تغییر ندهد | feature flag خاموش بماند |
 | **G4 — Content Quality** | provenance، مجوز، بازبینی انسانی و rubric برای همهٔ آیتم‌های پایلوت | آیتم وارد برنامهٔ روزانه نشود |
 | **G5 — Learning Evidence** | pre/post مستقل، delayed recall و novel transfer با دادهٔ واقعی | واژهٔ «automatic» فقط هدف محصول باشد، نه نتیجهٔ اثبات‌شده |
@@ -188,8 +190,8 @@ flowchart LR
 
 **برآورد:** 1 sprint
 **وابستگی:** G1
-**وضعیت:** 🟡 شروع شده؛ Scope مستقل در [Issue #18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18) ثبت شد
-**Issues:** [#18 — Measurement Contract](https://github.com/Hajimohammadi-KI/APPS_root/issues/18)، سپس [#9 — Independent assessment](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) و [#10 — Learning analytics](https://github.com/Hajimohammadi-KI/APPS_root/issues/10)
+**وضعیت:** ✅ کامل؛ [Issue #18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18) با [PR #21](https://github.com/Hajimohammadi-KI/APPS_root/pull/21) و merge `032ad14` بسته شد
+**گام‌های بعدی:** [#9 — Independent assessment](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) و [#10 — Learning analytics](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) پس از Gateهای وابسته
 
 ### کارها
 
@@ -214,6 +216,14 @@ flowchart LR
 
 هدف عددی پیش از baseline تعیین نمی‌شود. پس از baseline، target باید همراه با
 بازهٔ عدم‌قطعیت و guardrail کیفیت یادگیری تصویب شود.
+
+### خروجی تأییدشدهٔ G2
+
+- رضایت opt-in نسخه‌دار، revoke، حذف دادهٔ سنجش و retention محلی 365روزه در هستهٔ مشترک پیاده شد؛
+- baseline فقط با رضایت معتبر و پیش از هر intervention ثبت می‌شود؛
+- export پژوهشی allowlist دارد و متن خام، صوت، ایمیل و شناسهٔ مستقیم را خارج نمی‌کند؛ backup کامل یادگیری جدا باقی مانده است؛
+- گزارش کیفیت completeness، uniqueness، validity، time/version و privacy leakage را deterministic بررسی می‌کند؛ نبود نمونه با `N/A` گزارش می‌شود؛
+- 43 تست هسته و E2E واقعی Settings برای هر دو زبان پاس شد؛ دادهٔ cohort واقعی و اثر یادگیری همچنان `N/A` است.
 
 ## فاز 3 — Adherence Engineering در Shadow
 
@@ -284,7 +294,7 @@ flowchart LR
 ## فاز 6 — Content QA، Mediation و پایلوت دیتاست
 
 **برآورد:** 2 تا 3 sprint
-**وابستگی:** G1؛ ingestion runtime وابسته به G2 و G4
+**وابستگی:** G1؛ G2 عبور کرده و ingestion runtime اکنون وابسته به G4 است
 **Issue:** [#8 — CEFR mediation pilot](https://github.com/Hajimohammadi-KI/APPS_root/issues/8)
 
 ### ContentUnit مشترک
@@ -312,7 +322,7 @@ flowchart LR
 | UD English EWT / German GSD | ویژگی نحوی کمکی | ادعای CEFR یا خطای زبان‌آموز |
 | W&I + LOCNESS / C4 200M GEC | پژوهش GEC پس از بررسی مجوز | seed مستقیم Installer یا evidence تسلط |
 
-دانلود حجیم، fine-tune و افزودن داده به installer تا عبور G2/G4 انجام
+دانلود حجیم، fine-tune و افزودن داده به installer تا عبور G4 انجام
 نمی‌شود. کاتالوگ metadata-only به معنی «دیتاست استفاده‌شده در مدل» نیست.
 
 ### معیار خروج
@@ -397,8 +407,8 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | 1 | Adherence core + mirrors + CI | [#3](https://github.com/Hajimohammadi-KI/APPS_root/issues/3) | اکنون، پس از جداسازی worktree |
 | 2 | تفکیک baseline اپ‌ها از PR conflicted شمارهٔ 2 | [#15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) و [PR #16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) | ✅ merge `17341f7` |
 | 3 | Runtime evidence slice EN/DE | [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) و [PR #17](https://github.com/Hajimohammadi-KI/APPS_root/pull/17) | ✅ merge `b452e3e`؛ G1 عبور کرد |
-| 4 | Measurement contract، consent، baseline و data quality | [#18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18) | 🟡 اکنون؛ G1 عبور کرده |
-| 5 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) | G2 |
+| 4 | Measurement contract، consent، baseline و data quality | [#18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18) و [PR #21](https://github.com/Hajimohammadi-KI/APPS_root/pull/21) | ✅ merge `032ad14`؛ G2 عبور کرد |
+| 5 | Implementation intentions و Shadow Safety | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) | 🟡 اقدام بعدی؛ G2 عبور کرده |
 | 6 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) | #6 و consent |
 | 7 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) | G2 و authored content |
 | 8 | FSRS shadow migration | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) | G2 |
@@ -434,8 +444,8 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## اقدام بعدی واحد
 
-**Gate G2 را فقط در [Issue #18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18)
-پیاده‌سازی و در یک PR کوچک merge کنید:** event schema نسخه‌دار، consent/revoke/delete،
-baseline پیش از intervention، data-quality checks، جداسازی engagement از learning
-outcome و rubric provenance. تا عبور G2، AI، ingestion runtime دیتاست، A/B test و
-هر ادعای بهبود متوقف می‌مانند؛ محتوای پایلوت نیز بدون G4 وارد برنامهٔ روزانه نمی‌شود.
+**Gate G3 را در یک Issue و PR کوچک پیاده کنید:** خروجی adherence جدید فقط در shadow
+محاسبه و با برنامهٔ فعلی مقایسه شود، هیچ داده یا برنامهٔ کاربر را تغییر ندهد، flag
+پیش‌فرض خاموش بماند و rollback دقیقاً رفتار قبلی را برگرداند. engagement از learning
+outcome جدا می‌ماند؛ AI، ingestion runtime دیتاست و هر ادعای اثرگذاری تا Gateهای
+مربوطه متوقف هستند.

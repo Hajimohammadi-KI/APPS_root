@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 async function waitForHydration(page: import("@playwright/test").Page) {
   await expect(page.locator('[data-hydrated="true"]')).toBeVisible();
@@ -450,6 +451,38 @@ test("settings controls persist locally after reload", async ({ page }) => {
   await expect(
     page.getByRole("checkbox", { name: "Leselineal auf Seiten anzeigen" }),
   ).toBeChecked();
+});
+
+test("settings exports the versioned learner state and evidence ledger", async ({
+  page,
+}) => {
+  await page.goto("/einstellungen");
+  await waitForHydration(page);
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Lerndaten exportieren" }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(
+    /^DeutschFlow-Lerndaten-\d{4}-\d{2}-\d{2}\.json$/,
+  );
+  const downloadPath = await download.path();
+  expect(downloadPath).not.toBeNull();
+  const exported = JSON.parse(await readFile(downloadPath!, "utf8")) as {
+    kind?: string;
+    schemaVersion?: string;
+    language?: string;
+    learnerState?: { version?: number };
+    learningEvidence?: { evidence?: unknown[]; events?: unknown[] };
+  };
+  expect(exported.kind).toBe("automaticity.learning-data-export");
+  expect(exported.schemaVersion).toBe("1.0.0");
+  expect(exported.language).toBe("de");
+  expect(exported.learnerState?.version).toBe(2);
+  expect(exported.learningEvidence?.evidence).toEqual([]);
+  expect(exported.learningEvidence?.events).toEqual([]);
+  await expect(
+    page.getByText("Die lokale Sicherungsdatei wurde heruntergeladen."),
+  ).toBeVisible();
 });
 
 test("retired v20.8 route returns to the maintained dashboard", async ({

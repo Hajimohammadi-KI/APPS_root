@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Download, Eye, Gauge, ShieldCheck } from "lucide-react";
+import { buildLearningDataExport } from "@automaticity/learning-core";
 import type { LearnerSettings } from "@grammar/domain";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,16 @@ export function SettingsScreen() {
   const { settings } = state;
 
   function exportData() {
-    const blob = new Blob([JSON.stringify(state, null, 2)], {
+    // Der Export enthaelt bewusst auch das normalisierte Evidence-Ledger.
+    // Der fruehere Download enthielt nur den UI-State und liess damit alle
+    // versionierten Antworten, Nachweise und Events unbemerkt weg.
+    const exportEnvelope = buildLearningDataExport({
+      language: "de",
+      exportedAt: new Date().toISOString(),
+      learnerState: state,
+      storage: window.localStorage,
+    });
+    const blob = new Blob([JSON.stringify(exportEnvelope, null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
@@ -181,7 +191,7 @@ export function SettingsScreen() {
           </CardTitle>
           <CardDescription>
             Online-KI bleibt optional. Der Export enthält die aktuell lokal
-            gespeicherten Lerndaten.
+            gespeicherten Lerndaten und das versionierte Nachweis-Ledger.
           </CardDescription>
         </CardHeader>
         <CardContent className="settings-controls">

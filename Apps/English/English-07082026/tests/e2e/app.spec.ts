@@ -471,10 +471,17 @@ test("writes progress backups to the folder selected during setup", async ({
       "grammar-automaticity-v27-backup.json",
     );
     return JSON.parse(await (await handle.getFile()).text()) as {
-      version?: number;
+      kind?: string;
+      schemaVersion?: string;
+      learnerState?: { version?: number };
+      learningEvidence?: { evidence?: unknown[]; events?: unknown[] };
     };
   });
-  expect(backup.version).toBe(27);
+  expect(backup.kind).toBe("automaticity.learning-data-export");
+  expect(backup.schemaVersion).toBe("1.0.0");
+  expect(backup.learnerState?.version).toBe(27);
+  expect(backup.learningEvidence?.evidence).toEqual([]);
+  expect(backup.learningEvidence?.events).toEqual([]);
 });
 
 // Confirms the browser's own Back/Forward buttons work correctly across

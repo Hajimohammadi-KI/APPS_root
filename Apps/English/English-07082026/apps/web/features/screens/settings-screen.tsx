@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Download, Eye, PenLine, Sparkles, Wand2 } from "lucide-react";
+import { buildLearningDataExport } from "@automaticity/learning-core";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,8 +53,20 @@ export function SettingsScreen() {
   async function exportData() {
     setExporting(true);
     setExportStatus("");
+    // Export the normalized evidence ledger as well as the legacy app state.
+    // Previously the learner-facing backup silently omitted every versioned
+    // response/evidence/event written by the automaticity routes.
+    const contents = JSON.stringify(
+      buildLearningDataExport({
+        language: "en",
+        exportedAt: new Date().toISOString(),
+        learnerState: state,
+        storage: window.localStorage,
+      }),
+      null,
+      2,
+    );
     try {
-      const contents = JSON.stringify(state, null, 2);
       const hasDirectoryPicker = supportsBackupDirectoryPicker();
       const savedDirectory = hasDirectoryPicker
         ? await getBackupDirectory()
@@ -73,7 +86,7 @@ export function SettingsScreen() {
         setExportStatus(
           "No backup folder is available yet. Downloading the file instead.",
         );
-        downloadBackup(JSON.stringify(state, null, 2));
+        downloadBackup(contents);
       } else {
         setExportStatus(
           error instanceof Error ? error.message : "Backup export failed.",
@@ -305,8 +318,9 @@ export function SettingsScreen() {
             Backup your progress
           </CardTitle>
           <CardDescription>
-            Save a readable copy of your progress, settings, and saved errors
-            to a folder you choose, or download it directly.
+            Save a readable, versioned copy of your progress, settings, saved
+            errors, responses, and learning evidence to a folder you choose,
+            or download it directly.
           </CardDescription>
         </CardHeader>
         <CardContent className="settings-section">

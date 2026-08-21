@@ -1,8 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import {
+  appendLearningEvidenceBundleToStorage,
   buildAttemptVerticalSlice,
   buildDailyAutomaticityProgram,
+  buildLearningDataExport,
   emptyLearningEvidenceLedger,
+  LEARNING_DATA_EXPORT_KIND,
   mergeLearningEvidenceBundle,
   validateContentUnit,
 } from "./index";
@@ -97,5 +100,47 @@ describe("shared automaticity vertical slice", () => {
     expect(JSON.stringify(ledger.events)).not.toContain("Wenn ich Zeit");
     expect(ledger.responses).toHaveLength(1);
     expect(validateContentUnit(bundle.contentUnit)).toEqual([]);
+  });
+
+  test("exports learner state together with the versioned local evidence ledger", () => {
+    const values = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+    };
+    const bundle = buildAttemptVerticalSlice({
+      attemptId: "attempt-export-1",
+      occurredAt: "2026-08-21T09:00:00.000Z",
+      language: "en",
+      cefrLevel: "B1",
+      contentVersion: "27.3.14",
+      topic: "Present perfect",
+      mode: "writing",
+      inputText: "I have completed the task.",
+      correctedText: "I have completed the task.",
+      targetHit: true,
+      accuracyScore: 100,
+      attemptVerified: true,
+      assessedBy: "online",
+      sessionMinutes: 30,
+    });
+    // Exercise the same persistence path used by the English and German UI.
+    appendLearningEvidenceBundleToStorage(storage, bundle);
+
+    const exported = buildLearningDataExport({
+      language: "en",
+      exportedAt: "2026-08-21T09:05:00.000Z",
+      learnerState: { version: 27, selectedLevel: "B1" },
+      storage,
+    });
+
+    expect(exported.kind).toBe(LEARNING_DATA_EXPORT_KIND);
+    expect(exported.schemaVersion).toBe("1.0.0");
+    expect(exported.learnerState).toEqual({
+      version: 27,
+      selectedLevel: "B1",
+    });
+    expect(exported.learningEvidence.responses).toHaveLength(1);
+    expect(exported.learningEvidence.evidence[0]?.masteryEligible).toBe(true);
   });
 });

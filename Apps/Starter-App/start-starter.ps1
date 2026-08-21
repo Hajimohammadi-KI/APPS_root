@@ -29,7 +29,7 @@ if (-not $alreadyRunning) {
   for ($attempt = 0; $attempt -lt 120; $attempt++) {
     Start-Sleep -Milliseconds 250
     try {
-      $response = Invoke-WebRequest -Uri "$starterUrl/api/status" -UseBasicParsing -TimeoutSec 1
+      $response = Invoke-WebRequest -Uri "$starterUrl/api/health" -UseBasicParsing -TimeoutSec 1
       if ($response.StatusCode -eq 200) { $ready = $true; break }
     } catch { }
   }
@@ -48,4 +48,3 @@ if (-not $alreadyRunning) {
 }
 
 Start-Process $starterUrl
-

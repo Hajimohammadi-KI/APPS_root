@@ -12,12 +12,19 @@
 #
 # Both steps require Administrator rights. If not already elevated, this
 # re-launches itself elevated (one UAC prompt) and waits for it to finish.
-# Ports are fixed rather than parameterized: passing an int[] through a
-# self-relaunch via `-File` round-trips as a single comma-joined string,
-# which PowerShell does not reliably re-split back into an array.
+# The caller passes a CSV string rather than an int array so elevation can
+# round-trip the requested ports reliably through PowerShell's `-File` mode.
+
+param(
+  [string]$PortsCsv = "4312,4322,4323"
+)
 
 $ErrorActionPreference = "Stop"
-$Ports = @(4312, 4313, 4322, 4323)
+$AllowedPorts = @(4312, 4322, 4323)
+$Ports = @($PortsCsv.Split(",", [StringSplitOptions]::RemoveEmptyEntries) | ForEach-Object { [int]$_.Trim() })
+if ($Ports.Count -eq 0 -or @($Ports | Where-Object { $_ -notin $AllowedPorts }).Count -gt 0) {
+  throw "Unsupported portproxy request: $PortsCsv"
+}
 $RuleName = "WSL2 Local Apps (Tracker/PDF/Settings)"
 
 function Test-Admin {
@@ -26,19 +33,34 @@ function Test-Admin {
   return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
-if (-not (Test-Admin)) {
-  $scriptPath = $MyInvocation.MyCommand.Path
-  $proc = Start-Process powershell -ArgumentList @(
-    "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$scriptPath`""
-  ) -Verb RunAs -Wait -PassThru
-  exit $proc.ExitCode
-}
-
 $wslIp = (wsl -d Ubuntu -u root -- hostname -I 2>$null)
 if ($wslIp) { $wslIp = $wslIp.Trim().Split(" ")[0] }
 if (-not $wslIp) {
   Write-Error "Could not determine WSL VM IP -- is the Ubuntu distro running? Try 'wsl -d Ubuntu' once first."
   exit 1
+}
+
+# Avoid a needless UAC prompt when the required bridges already target the
+# current DHCP-assigned WSL address. HTTP readiness is checked separately by
+# Starter-App, so this only validates the bridge configuration itself.
+$proxyTable = (netsh interface portproxy show v4tov4 | Out-String)
+$escapedWslIp = [regex]::Escape($wslIp)
+$allCurrent = $true
+foreach ($port in $Ports) {
+  $mappingPattern = "(?m)^\s*127\.0\.0\.1\s+$port\s+$escapedWslIp\s+$port\s*$"
+  if ($proxyTable -notmatch $mappingPattern) { $allCurrent = $false; break }
+}
+if ($allCurrent) {
+  Write-Output "OK: existing portproxy already points at $wslIp for ports $($Ports -join ', ')"
+  exit 0
+}
+
+if (-not (Test-Admin)) {
+  $scriptPath = $MyInvocation.MyCommand.Path
+  $proc = Start-Process powershell -ArgumentList @(
+    "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$scriptPath`"", "-PortsCsv", "`"$PortsCsv`""
+  ) -Verb RunAs -Wait -PassThru
+  exit $proc.ExitCode
 }
 
 if (-not (Get-NetFirewallRule -DisplayName $RuleName -ErrorAction SilentlyContinue)) {

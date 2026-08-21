@@ -526,7 +526,11 @@
       const params = new URLSearchParams(location.search);
       const dailyContext = params.get('from') === 'daily' ? { activity:Number(params.get('activity')||1), level:params.get('level')||'A1', topic:params.get('topic')||'', returnTo:params.get('return')||'/daily' } : null;
       const findDailyTopic = (level, requested) => { const topics=curriculum[level]||curriculum.A1; const needle=(requested||'').toLowerCase(); return topics.find(topic=>needle.includes(topic.toLowerCase())||topic.toLowerCase().includes(needle.split(' for ')[0]))||topics[0]; };
-      const progress = { completed: Array.isArray(saved.completed) ? saved.completed : [], activeLevel: dailyContext?.level || saved.activeLevel || 'A1', activeTopic: dailyContext ? findDailyTopic(dailyContext.level,dailyContext.topic) : (saved.activeTopic || 'Verb be: am/is/are'), taskIndex: dailyContext ? 0 : (Number.isInteger(saved.taskIndex) ? saved.taskIndex : 0) };
+      const requestedTopic = params.get('topic');
+      const requestedLesson = requestedTopic
+        ? Object.entries(curriculum).flatMap(([level, topics]) => topics.map(topic => ({ level, topic }))).find(({ topic }) => topic.toLowerCase() === requestedTopic.toLowerCase())
+        : null;
+      const progress = { completed: Array.isArray(saved.completed) ? saved.completed : [], activeLevel: dailyContext?.level || requestedLesson?.level || saved.activeLevel || 'A1', activeTopic: dailyContext ? findDailyTopic(dailyContext.level,dailyContext.topic) : (requestedLesson?.topic || saved.activeTopic || 'Verb be: am/is/are'), taskIndex: dailyContext || requestedLesson ? 0 : (Number.isInteger(saved.taskIndex) ? saved.taskIndex : 0) };
       const completedSet = new Set(progress.completed);
       const saveProgress = () => localStorage.setItem(progressKey, JSON.stringify({ ...progress, completed: [...completedSet] }));
       const topicKey = (level, topic, index) => `${level}::${topic}::${index}`;
@@ -786,6 +790,36 @@
       });
       ruler.addEventListener('mousemove', event => { ruler.style.top = `${Math.max(0, event.clientY - 26)}px`; });
       $('[data-action="use-today"]').addEventListener('click', event => {
+        const appStateKey = 'grammar-automaticity:v27';
+        let appState = {};
+        try { appState = JSON.parse(localStorage.getItem(appStateKey) || '{}'); } catch {}
+        const reviews = Array.isArray(appState.reviews) ? [...appState.reviews] : [];
+        if (!reviews.some(review => review.sourceType === 'grammar_topic' && review.sourceId === progress.activeTopic && review.status === 'pending')) {
+          const lesson = lessonProfile(progress.activeTopic);
+          reviews.push({
+            id: `review-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
+            sourceType: 'grammar_topic',
+            sourceId: progress.activeTopic,
+            topic: progress.activeTopic,
+            original: lesson.rule,
+            corrected: lesson.rule,
+            intervalDays: 1,
+            dueAt: Date.now() + 86400000,
+            successStreak: 0,
+            stabilityScore: 0,
+            mode: 'production',
+            status: 'pending'
+          });
+        }
+        localStorage.setItem(appStateKey, JSON.stringify({
+          ...appState,
+          reviews,
+          todayGrammar: {
+            title: progress.activeTopic,
+            level: progress.activeLevel,
+            date: new Date().toISOString().slice(0, 10)
+          }
+        }));
         event.currentTarget.innerHTML = '<svg class="icon" style="vertical-align:middle;margin-right:6px"><use href="#i-check"/></svg>Added today';
         notify('This grammar lesson was added to today’s practice plan.');
       });

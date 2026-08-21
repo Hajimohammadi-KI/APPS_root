@@ -25,6 +25,12 @@ import {
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { grammarUnits } from "@grammar/content";
+import {
+  appendLearningEvidenceBundleToStorage,
+  buildAttemptVerticalSlice,
+  normalizeDailySessionMinutes,
+  type CefrLevel,
+} from "@automaticity/learning-core";
 import { saveAudio } from "@/features/audio/audio-repository";
 import {
   analyzeWeilClause,
@@ -360,6 +366,7 @@ export function AutomaticityLab({
 
   async function saveWriting() {
     const analysis = await analyzeLessonOutput(journal, 4);
+    const occurredAt = new Date().toISOString();
     setJournalAnalysis(analysis);
     setDailyAnswer(`${KEY}:journal`, journal);
     recordAttempt({
@@ -371,6 +378,28 @@ export function AutomaticityLab({
       verified: false,
       accuracyScore: analysis.score,
     });
+    appendLearningEvidenceBundleToStorage(
+      window.localStorage,
+      buildAttemptVerticalSlice({
+        attemptId: crypto.randomUUID(),
+        occurredAt,
+        language: "de",
+        cefrLevel: grammar.level as CefrLevel,
+        contentVersion: `20.8.23-${grammar.level.toLowerCase()}-runtime`,
+        topic: TOPIC,
+        targetForm: grammar.rule,
+        prompt: `Schreibe vier eigene Sätze mit ${TOPIC}.`,
+        mode: "writing",
+        inputText: journal,
+        correctedText: journal,
+        targetHit: analysis.targetHit,
+        accuracyScore: analysis.score,
+        attemptVerified: true,
+        assessedBy: "deterministic",
+        sessionMinutes: normalizeDailySessionMinutes(missionMinutes),
+        sourceId: "deutsch-authored-grammar-curriculum-v20",
+      }),
+    );
     saveDetectedErrors(analysis, journal);
     if (analysis.targetHit) setDailyAnswer(`${KEY}:writing`, "done");
     markActivity(1);

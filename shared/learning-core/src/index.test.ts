@@ -1,16 +1,28 @@
 import { describe, expect, test } from "bun:test";
 import {
+  appendEvidenceInvalidationToStorage,
   appendLearningEvidenceBundleToStorage,
   buildAttemptVerticalSlice,
   buildDailyAutomaticityProgram,
   buildLearningDataExport,
   emptyLearningEvidenceLedger,
   LEARNING_DATA_EXPORT_KIND,
+  isEvidenceActive,
   mergeLearningEvidenceBundle,
+  normalizeDailySessionMinutes,
   validateContentUnit,
 } from "./index";
 
 describe("shared automaticity vertical slice", () => {
+  test.each([
+    [15, 15],
+    [30, 30],
+    [45, 45],
+    [60, 45],
+  ] as const)("normalizes %i legacy minutes to %i", (input, expected) => {
+    expect(normalizeDailySessionMinutes(input)).toBe(expected);
+  });
+
   test.each([15, 30, 45] as const)(
     "%i-minute plans allocate the exact selected time",
     (sessionMinutes) => {
@@ -74,6 +86,40 @@ describe("shared automaticity vertical slice", () => {
     expect(bundle.evidence.masteryEligible).toBe(false);
   });
 
+  test("completion and a 60-second timer never claim automaticity", () => {
+    const completedProgram = buildDailyAutomaticityProgram(15);
+    expect(completedProgram.blocks.every((block) => block.minutes > 0)).toBe(
+      true,
+    );
+    expect("automaticityClaim" in completedProgram).toBe(false);
+
+    const timedAttempt = buildAttemptVerticalSlice({
+      attemptId: "attempt-speaking-60-seconds",
+      occurredAt: "2026-08-21T08:00:00.000Z",
+      language: "en",
+      cefrLevel: "B1",
+      contentVersion: "27.3.13",
+      topic: "Present perfect",
+      mode: "speaking",
+      inputText: "I have completed a full minute of independent speaking.",
+      correctedText: "I have completed a full minute of independent speaking.",
+      targetHit: true,
+      accuracyScore: 100,
+      fluencyScore: 80,
+      latencyMs: 60_000,
+      attemptVerified: true,
+      assessedBy: "online",
+      sessionMinutes: 15,
+      audioCaptured: true,
+      audioReferenceId: "audio-60-seconds",
+    });
+
+    expect(timedAttempt.evidence.masteryEligible).toBe(true);
+    expect(timedAttempt.evidence.automaticityClaim).toBe(
+      "insufficient-longitudinal-evidence",
+    );
+  });
+
   test("events remain identifier-only while responses stay in the local ledger", () => {
     const bundle = buildAttemptVerticalSlice({
       attemptId: "attempt-transfer-1",
@@ -97,9 +143,59 @@ describe("shared automaticity vertical slice", () => {
     );
 
     expect(bundle.evidence.gates.novelTransfer).toBe(true);
+    expect(bundle.events.map((event) => event.type)).toContain(
+      "learning.delayed-recall.recorded.v1",
+    );
+    expect(bundle.events.map((event) => event.type)).toContain(
+      "learning.novel-transfer.recorded.v1",
+    );
     expect(JSON.stringify(ledger.events)).not.toContain("Wenn ich Zeit");
     expect(ledger.responses).toHaveLength(1);
     expect(validateContentUnit(bundle.contentUnit)).toEqual([]);
+  });
+
+  test("re-recording invalidates the superseded speaking evidence", () => {
+    const values = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+    };
+    const bundle = buildAttemptVerticalSlice({
+      attemptId: "speaking-first",
+      occurredAt: "2026-08-21T09:00:00.000Z",
+      language: "en",
+      cefrLevel: "B1",
+      contentVersion: "27.3.13",
+      topic: "Present perfect",
+      mode: "speaking",
+      inputText: "I have completed the first recording.",
+      correctedText: "I have completed the first recording.",
+      targetHit: true,
+      accuracyScore: 100,
+      fluencyScore: 80,
+      attemptVerified: true,
+      assessedBy: "online",
+      sessionMinutes: 30,
+      audioCaptured: true,
+      audioReferenceId: "audio-first",
+    });
+    const first = appendLearningEvidenceBundleToStorage(storage, bundle);
+    expect(isEvidenceActive(first, bundle.evidence.id)).toBe(true);
+
+    const invalidated = appendEvidenceInvalidationToStorage(storage, {
+      evidenceId: bundle.evidence.id,
+      occurredAt: "2026-08-21T09:02:00.000Z",
+      supersedingResponseId: "speaking-second:response",
+    });
+
+    expect(isEvidenceActive(invalidated, bundle.evidence.id)).toBe(false);
+    expect(invalidated.events.at(-1)).toMatchObject({
+      type: "learning.evidence.invalidated.v1",
+      payload: {
+        evidenceId: "speaking-first:evidence",
+        supersedingResponseId: "speaking-second:response",
+      },
+    });
   });
 
   test("a local export includes learner state and the normalized evidence ledger", () => {
@@ -141,5 +237,9 @@ describe("shared automaticity vertical slice", () => {
     });
     expect(exported.learningEvidence.responses).toHaveLength(1);
     expect(exported.learningEvidence.evidence[0]?.masteryEligible).toBe(true);
+    expect(exported.learningEvidence.contentUnits[0]?.version).toBe("27.3.13");
+    expect(exported.learningEvidence.events.map((event) => event.type)).toEqual(
+      ["learning.response.submitted.v1", "learning.evidence.recorded.v1"],
+    );
   });
 });

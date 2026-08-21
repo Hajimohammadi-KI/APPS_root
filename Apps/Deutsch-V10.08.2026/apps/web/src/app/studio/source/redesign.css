@@ -164,10 +164,17 @@ header p {
 }
 .steps {
   margin-top: 0;
-  height: 78px;
+  min-height: 78px;
+  height: auto;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 .steps button {
+  min-width: 0;
   font-size: 11px;
+}
+.steps button span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .steps button .icon {
   font-size: 19px;

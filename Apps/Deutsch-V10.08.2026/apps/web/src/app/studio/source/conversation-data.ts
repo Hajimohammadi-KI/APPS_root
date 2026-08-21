@@ -13,6 +13,9 @@ export interface ConversationTopic {
   readonly topic: string;
   readonly task: string;
   readonly goal: string;
+  readonly targetForm: string;
+  readonly contentVersion: string;
+  readonly sourceId: string;
 }
 
 const levels = new Set<CefrLevel>(["A1", "A2", "B1", "B2", "C1", "C2"]);
@@ -37,6 +40,9 @@ export const conversationTopics: readonly ConversationTopic[] =
       topic: topic.topic,
       task: topic.task,
       goal: `Bewältige diese Kann-Aufgabe auf Niveau ${normalizedLevel} selbstständig und verwende die Zielsprache korrekt: ${topic.targetGrammar}.`,
+      targetForm: topic.targetGrammar,
+      contentVersion: `20.8.23-${normalizedLevel.toLowerCase()}-runtime`,
+      sourceId: "deutsch-authored-conversation-curriculum-v20",
     };
   });
 

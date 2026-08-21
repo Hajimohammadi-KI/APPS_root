@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
@@ -40,8 +42,37 @@ jobs:
       - name: Verify API over HTTP
         run: bun run test:integration
 
+      - name: Detect German product runtime changes
+        id: product-changes
+        shell: bash
+        working-directory: .
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+          else
+            base_sha="${{ github.event.before }}"
+          fi
+
+          if [[ -z "$base_sha" || "$base_sha" =~ ^0+$ ]]; then
+            echo "run_e2e=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          changed_files="$(git diff --name-only "$base_sha" "$GITHUB_SHA" -- "Apps/Deutsch-V10.08.2026")"
+          runtime_files="$(printf '%s\n' "$changed_files" | grep -Ev '^Apps/Deutsch-V10\.08\.2026/(packages/learning-core/|bun\.lock$)' || true)"
+
+          if [[ -n "$runtime_files" ]]; then
+            printf 'German runtime files changed:\n%s\n' "$runtime_files"
+            echo "run_e2e=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Only the shadow-off learning-core mirror and its generated lock entry changed."
+            echo "run_e2e=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Install Playwright Chromium
+        if: steps.product-changes.outputs.run_e2e == 'true'
         run: bunx playwright install --with-deps chromium
 
       - name: Verify browser flows
+        if: steps.product-changes.outputs.run_e2e == 'true'
         run: bun run test:e2e

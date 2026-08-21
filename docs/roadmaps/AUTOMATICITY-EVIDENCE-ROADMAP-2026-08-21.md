@@ -1,11 +1,12 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.4
+**نسخه:** 1.5
 
 **تاریخ:** 2026-08-21  
 **دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)  
 **منبع:** فایل «نقد پداگوژیک، اثرگذاری و محتوا» و وضعیت واقعی مخزن
+**نسخهٔ وب:** https://automaticity-evidence-roadmap.vercel.app
 
 ## تصمیم اصلی
 
@@ -35,7 +36,7 @@
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
 | ادغام runtime در هر دو اپ | ledger مشترک، gate صوت و export نسخه‌دار موجود است؛ مسیر B1 کامل هنوز مستقل اثبات نشده | **Gate G1 در [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) در حال انجام است** |
-| export محلی شواهد | انگلیسی و آلمانی اکنون `learnerState` و `learningEvidence` را در envelope نسخه‌دار صادر می‌کنند؛ فعلاً روی PR بزرگ و conflicted شمارهٔ 2 است، نه `main` | commit `a0e5642`؛ E2E دانلود هر دو زبان پاس شد؛ استخراج در [Issue #15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) |
+| export محلی شواهد | Draft PR [#16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) روی `main` فعلی، صفحهٔ Settings انگلیسی و export نسخه‌دار هر دو زبان را مستقل کرده است؛ هنوز merge و release نشده | commits `c79d5f2` و `e5dbd28`؛ E2E دانلود واقعی هر دو زبان پاس شد |
 | AI و دیتاست runtime | نباید آغاز شود | وابسته به G1 و G2 |
 | اثرگذاری روی زبان‌آموز واقعی | دادهٔ کافی وجود ندارد | **N/A تا اجرای پایلوت** |
 
@@ -161,15 +162,15 @@ flowchart LR
   2 تست اختیاری PWA که skip شدند) merge شده است؛
 - `learning-core` برای تلاش‌های انگلیسی و آلمانی ledger محلی نسخه‌دار می‌سازد و
   speaking بدون audio را `unverified` نگه می‌دارد؛
-- commit `a0e5642` خروجی تنظیمات هر دو اپ را اصلاح کرد تا `learnerState` و
-  `learningEvidence` را با `schemaVersion: 1.0.0` صادر کند؛ تست دانلود واقعی
-  مرورگر در هر دو زبان پاس شد؛
+- Draft PR [#16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) با commits
+  `c79d5f2` و `e5dbd28` خروجی هر دو اپ را اصلاح کرد تا `learnerState` و
+  `learningEvidence` را با envelope نسخه‌دار صادر کند؛ تست دانلود واقعی مرورگر
+  در هر دو زبان پاس شد؛
 - build تولیدی هر دو اپ پاس شد و سرویس‌های محلی دوباره با HTTP 200 بالا آمدند.
-- بررسی GitHub نشان داد PR قدیمی [#2](https://github.com/Hajimohammadi-KI/APPS_root/pull/2)
-  با `main` فعلی mergeable نیست و 18 مسیر conflicted دارد. تلاش cherry-pick مستقل نیز
-  نشان داد `main` هنوز مسیر `/settings` انگلیسی را به اپ جدا هدایت می‌کند، در حالی
-  که export انگلیسی فعلی به صفحهٔ in-app روی PR #2 وابسته است. برای جلوگیری از
-  merge کور یا بازگرداندن معماری حذف‌شده، تفکیک baseline در Issue #15 ثبت شد.
+- PR قدیمی [#2](https://github.com/Hajimohammadi-KI/APPS_root/pull/2) همچنان
+  conflicted و غیرقابل ادغام است. baseline لازم بدون حل کور تعارض‌ها در Draft PR
+  [#16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) استخراج شد و اکنون
+  منتظر CI، review و merge است.
 
 این موارد پیشرفت G1 هستند، نه عبور کامل آن. آزمون مستقل microphone واقعی و
 provider خارجی در این مرحله **N/A — هنوز به‌اندازهٔ کافی تأیید نشده** است؛ مسیر
@@ -386,8 +387,8 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | ترتیب | محدوده | Issue | شرط شروع |
 |---:|---|---|---|
 | 1 | Adherence core + mirrors + CI | [#3](https://github.com/Hajimohammadi-KI/APPS_root/issues/3) | اکنون، پس از جداسازی worktree |
-| 2 | تفکیک baseline اپ‌ها از PR conflicted شمارهٔ 2 | [#15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) | اکنون؛ پیش‌نیاز ادغام امن G1 |
-| 3 | Runtime evidence slice EN/DE | [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) | merge شدن baseline لازم از #15؛ اجرای محلی در حال انجام |
+| 2 | تفکیک baseline اپ‌ها از PR conflicted شمارهٔ 2 | [#15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) و [PR #16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) | Draft ساخته شد؛ منتظر CI، review و merge |
+| 3 | Runtime evidence slice EN/DE | [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) | merge شدن PR #16؛ اجرای محلی در حال انجام |
 | 4 | Measurement contracts و local export | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G1 |
 | 5 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) | G2 |
 | 6 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) | #6 و consent |
@@ -425,9 +426,7 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## اقدام بعدی واحد
 
-**ابتدا Issue [#15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) را کامل کنید:**
-baseline لازم انگلیسی را از PR بزرگ شمارهٔ 2 در یک PR کوچک و قابل بازبینی روی
-`main` استخراج کنید؛ تعارض‌ها نباید با انتخاب کور یک سمت حل شوند. سپس Issue
+**ابتدا CI و review مربوط به Draft PR [#16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) تکمیل و baseline مستقل آن merge شود.** سپس Issue
 [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) باید مسیر B1،
 writing/speaking دارای audio، ledger/export، re-record invalidation، provider
 unavailable و eventهای جدا delayed recall / novel transfer را یکجا اثبات کند.

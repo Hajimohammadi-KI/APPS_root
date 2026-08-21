@@ -440,11 +440,12 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.4 · 2026-08-21</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.5 · 2026-08-21</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
       <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
       <span><b>منبع:</b> نقد پداگوژیک، اثرگذاری و محتوا + وضعیت واقعی مخزن</span>
+      <span><b>نسخهٔ وب:</b> <a href="https://automaticity-evidence-roadmap.vercel.app" class="mono">automaticity-evidence-roadmap.vercel.app</a></span>
     </div>
 
     <div class="principles">
@@ -472,7 +473,7 @@
         <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
         <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از تست کامل محلی و CI لینوکس merge شد</td><td>merge <code>b3fbc07</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
         <tr><td>ادغام runtime در هر دو اپ</td><td>ledger مشترک، gate صوت و export نسخه‌دار موجود است؛ مسیر B1 کامل هنوز مستقل اثبات نشده</td><td><strong style="color:var(--active)">Gate G1 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">Issue #14</a> در حال انجام است</strong></td></tr>
-        <tr><td>export محلی شواهد</td><td>انگلیسی و آلمانی اکنون <code>learnerState</code> و <code>learningEvidence</code> را در envelope نسخه‌دار صادر می‌کنند؛ فعلاً روی PR بزرگ و conflicted شمارهٔ ۲ است، نه <code>main</code></td><td>commit <code>a0e5642</code>؛ E2E پاس؛ استخراج در <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a></td></tr>
+        <tr><td>export محلی شواهد</td><td>Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/16" class="mono">#16</a> روی <code>main</code> فعلی، صفحهٔ Settings انگلیسی و export نسخه‌دار هر دو زبان را مستقل کرده است؛ هنوز merge و release نشده</td><td>commits <code>c79d5f2</code> و <code>e5dbd28</code>؛ E2E دانلود واقعی هر دو زبان پاس شد</td></tr>
         <tr><td>AI و دیتاست runtime</td><td>نباید آغاز شود</td><td>وابسته به G1 و G2</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
       </tbody>
@@ -596,9 +597,9 @@ flowchart LR
       <ul>
         <li>PR آلمانی <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از typecheck، lint، unit/integration، installer، schema، build و ۱۵ E2E merge شد؛ ۲ تست اختیاری PWA skip شدند</li>
         <li><code>learning-core</code> برای هر دو زبان ledger محلی نسخه‌دار می‌سازد و speaking بدون audio را <code>unverified</code> نگه می‌دارد</li>
-        <li>commit <code>a0e5642</code> خروجی هر دو اپ را به envelope شامل <code>learnerState</code> و <code>learningEvidence</code> ارتقا داد؛ E2E دانلود واقعی هر دو زبان پاس شد</li>
+        <li>Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/16" class="mono">#16</a> با commits <code>c79d5f2</code> و <code>e5dbd28</code> خروجی هر دو اپ را به envelope نسخه‌دار شامل <code>learnerState</code> و <code>learningEvidence</code> ارتقا داد؛ E2E دانلود واقعی هر دو زبان پاس شد</li>
         <li>build تولیدی هر دو اپ پاس شد و لینک‌های محلی دوباره HTTP 200 هستند</li>
-        <li>PR قدیمی <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/2" class="mono">#2</a> با <code>main</code> فعلی mergeable نیست و ۱۸ مسیر conflicted دارد. <code>main</code> هنوز <code>/settings</code> انگلیسی را به اپ جدا هدایت می‌کند؛ بنابراین export انگلیسی فعلی را نمی‌توان بدون تصمیم معماری یا بازگرداندن صفحهٔ حذف‌شده مستقل cherry-pick کرد. تفکیک امن baseline در <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a> ثبت شد</li>
+        <li>PR قدیمی <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/2" class="mono">#2</a> همچنان conflicted و غیرقابل ادغام است؛ baseline لازم بدون حل کور تعارض‌ها در Draft PR کوچک <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/16" class="mono">#16</a> استخراج شد و اکنون منتظر CI، review و merge است</li>
       </ul>
       <p style="margin:0;"><strong>N/A — هنوز به‌اندازهٔ کافی تأیید نشده:</strong> microphone واقعی و provider خارجی. مسیر B1 دو زبان، invalidation پس از re-record و eventهای مستقل delayed recall / novel transfer هنوز باید یکجا در Issue #14 اثبات شوند؛ بنابراین G1 بسته نشده است.</p>
     </div>
@@ -789,8 +790,8 @@ flowchart LR
       <thead><tr><th class="mono" style="text-align:center">#</th><th>محدوده</th><th>Issue</th><th>شرط شروع</th></tr></thead>
       <tbody>
         <tr><td class="mono" style="text-align:center">1</td><td>Adherence core + mirrors + CI</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/3" class="mono">#3</a></td><td>اکنون، پس از جداسازی worktree</td></tr>
-        <tr><td class="mono" style="text-align:center">2</td><td>تفکیک baseline اپ‌ها از PR conflicted شمارهٔ ۲</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a></td><td>اکنون؛ پیش‌نیاز ادغام امن G1</td></tr>
-        <tr><td class="mono" style="text-align:center">3</td><td>Runtime evidence slice EN/DE</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a></td><td>merge شدن baseline لازم از #15؛ اجرای محلی در حال انجام</td></tr>
+        <tr><td class="mono" style="text-align:center">2</td><td>تفکیک baseline اپ‌ها از PR conflicted شمارهٔ ۲</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/16" class="mono">PR #16</a></td><td>Draft ساخته شد؛ منتظر CI، review و merge</td></tr>
+        <tr><td class="mono" style="text-align:center">3</td><td>Runtime evidence slice EN/DE</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a></td><td>merge شدن PR #16؛ اجرای محلی در حال انجام</td></tr>
         <tr><td class="mono" style="text-align:center">4</td><td>Measurement contracts و local export</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G1</td></tr>
         <tr><td class="mono" style="text-align:center">5</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a></td><td>G2</td></tr>
         <tr><td class="mono" style="text-align:center">6</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>#6 و consent</td></tr>
@@ -833,11 +834,11 @@ flowchart LR
 
   <div class="callout final">
     <span class="label">اقدام بعدی واحد</span>
-    <p style="margin:0;">ابتدا Issue <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a> را کامل کنید: baseline لازم انگلیسی را از PR بزرگ شمارهٔ ۲ در یک PR کوچک و قابل بازبینی روی <code>main</code> استخراج کنید؛ تعارض‌ها نباید با انتخاب کور یک سمت حل شوند. سپس Issue <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a> باید مسیر B1، writing/speaking دارای audio، ledger/export، re-record invalidation، provider unavailable و eventهای جدا delayed recall / novel transfer را یکجا اثبات کند. تا عبور کامل G1، AI، ingestion دیتاست و rollout یادگیری متوقف می‌مانند.</p>
+    <p style="margin:0;">ابتدا CI و review مربوط به Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/16" class="mono">#16</a> تکمیل و baseline مستقل آن merge شود. سپس Issue <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a> باید مسیر B1، writing/speaking دارای audio، ledger/export، re-record invalidation، provider unavailable و eventهای جدا delayed recall / novel transfer را یکجا اثبات کند. تا عبور کامل G1، AI، ingestion دیتاست و rollout یادگیری متوقف می‌مانند.</p>
   </div>
 
   <footer class="note">
-    منبع متنی همراه: <code>docs/roadmaps/AUTOMATICITY-EVIDENCE-ROADMAP-2026-08-21.md</code> — این صفحه یک نسخهٔ تصویری غیرتعاملی از همان سند است؛ به‌روزرسانی‌های بعدی هر دو فایل را هم‌زمان تغییر می‌دهد.
+    منبع متنی همراه: <code>docs/roadmaps/AUTOMATICITY-EVIDENCE-ROADMAP-2026-08-21.md</code> — نسخهٔ وب: <a href="https://automaticity-evidence-roadmap.vercel.app" class="mono">automaticity-evidence-roadmap.vercel.app</a> — به‌روزرسانی‌های بعدی هر دو فایل را هم‌زمان تغییر می‌دهد.
   </footer>
 
 </div>

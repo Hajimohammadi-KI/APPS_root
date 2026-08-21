@@ -114,6 +114,13 @@ fieldset.settings-row {
   font-weight: 700;
 }
 
+.settings-measurement-summary {
+  display: grid;
+  gap: 6px;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+
 @media (max-width: 560px) {
   .settings-heading {
     align-items: stretch;

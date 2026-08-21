@@ -18,6 +18,8 @@ const files = [
   "tsconfig.json",
   "src/index.ts",
   "src/index.test.ts",
+  "src/measurement.ts",
+  "src/measurement.test.ts",
   "src/adherence/feature-flags.ts",
   "src/adherence/adherence.test.ts",
   "src/adherence/index.ts",
@@ -27,6 +29,7 @@ const files = [
   "src/adherence/streak.ts",
   "src/adherence/types.ts",
   "schemas/learning-vertical-slice.schema.json",
+  "schemas/measurement-contract.schema.json",
 ];
 const checkOnly = process.argv.includes("--check");
 

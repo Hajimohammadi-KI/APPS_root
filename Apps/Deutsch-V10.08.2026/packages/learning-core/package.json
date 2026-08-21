@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./adherence": "./src/adherence/index.ts",
-    "./schema": "./schemas/learning-vertical-slice.schema.json"
+    "./schema": "./schemas/learning-vertical-slice.schema.json",
+    "./measurement-schema": "./schemas/measurement-contract.schema.json"
   },
   "scripts": {
     "test": "bun test",

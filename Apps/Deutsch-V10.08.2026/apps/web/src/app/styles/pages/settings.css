@@ -59,6 +59,8 @@
 
 .settings-choice span,
 .settings-choice small,
+.settings-toggle span,
+.settings-toggle small,
 .settings-number span,
 .settings-number small,
 .settings-device-grid h3,
@@ -72,10 +74,18 @@
 }
 
 .settings-choice small,
+.settings-toggle small,
 .settings-number small,
 .settings-device-grid p {
   color: var(--muted-foreground);
   font-size: 0.75rem;
+}
+
+.settings-measurement-summary {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--muted-foreground);
+  line-height: 1.5;
 }
 
 .settings-number {

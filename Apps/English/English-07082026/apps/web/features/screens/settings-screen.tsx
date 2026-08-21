@@ -2,8 +2,31 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Download, Eye, House, PenLine, Wand2 } from "lucide-react";
-import { buildLearningDataExport } from "@automaticity/learning-core";
+import {
+	Download,
+	Eye,
+	House,
+	PenLine,
+	ShieldCheck,
+	Trash2,
+	Wand2,
+} from "lucide-react";
+import {
+	buildLearningDataExport,
+	buildPrivacySafeMeasurementExport,
+	captureMeasurementBaseline,
+	deleteLocalMeasurementData,
+	enforceMeasurementRetention,
+	grantMeasurementConsent,
+	normalizeDailySessionMinutes,
+	readLearningEvidenceLedger,
+	readMeasurementBaseline,
+	readMeasurementConsent,
+	revokeMeasurementConsent,
+	validatePrivacySafeMeasurementExport,
+	type MeasurementBaseline,
+	type MeasurementConsent,
+} from "@automaticity/learning-core";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -32,6 +55,9 @@ const TEXT_SCALE_OPTIONS: Array<{
 	{ value: 125, label: "125%", hint: "Largest text for maximum ease" },
 ];
 
+const MEASUREMENT_APP_VERSION = "27.3.13";
+const MEASUREMENT_FILE_NAME = "automaticity-measurement-en.json";
+
 export function SettingsScreen() {
 	const { state, mutate } = useAppStore();
 	const { settings } = state;
@@ -39,11 +65,114 @@ export function SettingsScreen() {
 	const [exporting, setExporting] = React.useState(false);
 	const [folderPickerSupported, setFolderPickerSupported] =
 		React.useState(false);
+	const [measurementConsent, setMeasurementConsent] =
+		React.useState<MeasurementConsent | null>(null);
+	const [measurementBaseline, setMeasurementBaseline] =
+		React.useState<MeasurementBaseline | null>(null);
+	const [measurementStatus, setMeasurementStatus] = React.useState("");
 
 	React.useEffect(() => {
 		// This browser-only capability must be detected after hydration.
 		setFolderPickerSupported(supportsBackupDirectoryPicker());
+		enforceMeasurementRetention(window.localStorage, new Date().toISOString());
+		setMeasurementConsent(readMeasurementConsent(window.localStorage));
+		setMeasurementBaseline(readMeasurementBaseline(window.localStorage));
 	}, []);
+
+	function updateMeasurementConsent(checked: boolean) {
+		const now = new Date().toISOString();
+		if (!checked) {
+			const revoked = revokeMeasurementConsent(window.localStorage, now);
+			setMeasurementConsent(revoked);
+			setMeasurementStatus(
+				"Consent revoked. No measurement export can be created unless you opt in again.",
+			);
+			return;
+		}
+
+		const participantId =
+			measurementConsent?.participantId ?? `participant-${crypto.randomUUID()}`;
+		const consent = grantMeasurementConsent(window.localStorage, {
+			id: `consent-${crypto.randomUUID()}`,
+			participantId,
+			grantedAt: now,
+		});
+		const baselineResult = captureMeasurementBaseline(window.localStorage, {
+			id: `baseline-${crypto.randomUUID()}`,
+			capturedAt: now,
+			language: "en",
+			appVersion: MEASUREMENT_APP_VERSION,
+			sessionMinutes: normalizeDailySessionMinutes(settings.dailyStudyMinutes),
+			interventionFlags: {
+				experimentalScheduling: false,
+				aiIntervention: false,
+			},
+			ledger: readLearningEvidenceLedger(window.localStorage),
+		});
+		setMeasurementConsent(consent);
+		if (baselineResult.status === "captured") {
+			setMeasurementBaseline(baselineResult.baseline);
+			setMeasurementStatus(
+				baselineResult.reused
+					? "Consent granted. Your existing pre-intervention baseline remains active."
+					: "Consent granted and a pre-intervention baseline was captured locally.",
+			);
+		} else {
+			setMeasurementStatus(
+				"Consent was saved, but the baseline could not be captured before an intervention.",
+			);
+		}
+	}
+
+	function exportMeasurementData() {
+		const result = buildPrivacySafeMeasurementExport({
+			language: "en",
+			appVersion: MEASUREMENT_APP_VERSION,
+			exportedAt: new Date().toISOString(),
+			storage: window.localStorage,
+			ledger: readLearningEvidenceLedger(window.localStorage),
+		});
+		if (result.status !== "ready") {
+			setMeasurementStatus(
+				result.reason === "consent-required"
+					? "Opt in before creating a measurement export."
+					: "Capture a baseline before creating a measurement export.",
+			);
+			return;
+		}
+		const quality = validatePrivacySafeMeasurementExport(
+			result.data,
+			new Date().toISOString(),
+		);
+		if (quality.status === "failed") {
+			setMeasurementStatus(
+				"Export stopped because the privacy or data-quality checks failed.",
+			);
+			return;
+		}
+		downloadJson(MEASUREMENT_FILE_NAME, result.data);
+		setMeasurementStatus(
+			quality.status === "insufficient-data"
+				? "Privacy-safe export downloaded. Learning outcomes are N/A because the sample is still empty."
+				: `Privacy-safe export downloaded with ${quality.sampleSize} learning outcome(s).`,
+		);
+	}
+
+	function deleteMeasurementData() {
+		if (
+			!window.confirm(
+				"Delete the local measurement consent and baseline? Your learning progress and private backups will not be deleted.",
+			)
+		) {
+			return;
+		}
+		deleteLocalMeasurementData(window.localStorage);
+		setMeasurementConsent(null);
+		setMeasurementBaseline(null);
+		setMeasurementStatus(
+			"Local measurement consent and baseline deleted. Learning progress was kept.",
+		);
+	}
 
 	async function exportData() {
 		setExporting(true);
@@ -107,7 +236,7 @@ export function SettingsScreen() {
 					<h1>Settings</h1>
 					<p>
 						Reading, focus, grammar-accuracy, and local backup preferences.
-						 Changes apply immediately and stay on this device.
+						Changes apply immediately and stay on this device.
 					</p>
 				</div>
 				<Button asChild variant="outline">
@@ -209,12 +338,90 @@ export function SettingsScreen() {
 			<Card>
 				<CardHeader>
 					<CardTitle>
+						<ShieldCheck aria-hidden className="mr-2 inline size-5" />
+						Optional effectiveness measurement
+					</CardTitle>
+					<CardDescription>
+						A separate, revocable research export for evaluating speaking and
+						writing outcomes. Nothing is uploaded automatically.
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="settings-section">
+					<div className="settings-row">
+						<span>Purpose and consent</span>
+						<label className="settings-toggle">
+							<input
+								checked={measurementConsent?.status === "granted"}
+								onChange={(event) =>
+									updateMeasurementConsent(event.target.checked)
+								}
+								type="checkbox"
+							/>
+							<span>
+								<strong>I consent to optional effectiveness measurement</strong>
+								<small>
+									Included: a random local participant ID, event/evidence IDs,
+									timestamps, versions, scores, gates, and human-rating
+									provenance if a human rating exists. Excluded: response text,
+									transcripts, audio, email, hardware IDs, and free-form
+									intentions.
+								</small>
+							</span>
+						</label>
+					</div>
+					<div className="settings-row">
+						<span>Retention and baseline</span>
+						<div className="settings-measurement-summary">
+							<p>
+								Stored only on this device for up to 365 days; transfer happens
+								only when you download a file. Revocation stops export.
+							</p>
+							<p>
+								Baseline: {measurementBaseline ? "captured" : "not captured"}.
+								Cohort statistics: N/A — no production telemetry is connected.
+							</p>
+						</div>
+					</div>
+					<div className="settings-export-actions">
+						<Button
+							disabled={
+								measurementConsent?.status !== "granted" || !measurementBaseline
+							}
+							onClick={exportMeasurementData}
+						>
+							<Download aria-hidden className="size-4" />
+							Download privacy-safe measurement
+						</Button>
+						<Button
+							disabled={!measurementConsent && !measurementBaseline}
+							onClick={deleteMeasurementData}
+							variant="outline"
+						>
+							<Trash2 aria-hidden className="size-4" />
+							Delete measurement data
+						</Button>
+					</div>
+					{measurementStatus ? (
+						<p
+							aria-live="polite"
+							className="settings-export-status"
+							role="status"
+						>
+							{measurementStatus}
+						</p>
+					) : null}
+				</CardContent>
+			</Card>
+
+			<Card>
+				<CardHeader>
+					<CardTitle>
 						<PenLine aria-hidden className="mr-2 inline size-5" />
 						Grammar accuracy
 					</CardTitle>
 					<CardDescription>
 						Spelling feedback remains visible without silently blocking grammar
-						 mastery.
+						mastery.
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="settings-section">
@@ -225,14 +432,17 @@ export function SettingsScreen() {
 								checked={settings.spellingAffectsMastery}
 								onChange={(event) =>
 									mutate((draft) => {
-										draft.settings.spellingAffectsMastery = event.target.checked;
+										draft.settings.spellingAffectsMastery =
+											event.target.checked;
 									})
 								}
 								type="checkbox"
 							/>
 							<span>
 								<strong>Require correct spelling for grammar mastery</strong>
-								<small>Off by default; enable it only for a spelling goal.</small>
+								<small>
+									Off by default; enable it only for a spelling goal.
+								</small>
 							</span>
 						</label>
 					</div>
@@ -279,7 +489,7 @@ export function SettingsScreen() {
 					</CardTitle>
 					<CardDescription>
 						Export learner state together with versioned responses, evidence,
-						 and domain events.
+						and domain events.
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="settings-section">
@@ -299,7 +509,11 @@ export function SettingsScreen() {
 						) : null}
 					</div>
 					{exportStatus ? (
-						<p aria-live="polite" className="settings-export-status" role="status">
+						<p
+							aria-live="polite"
+							className="settings-export-status"
+							role="status"
+						>
 							{exportStatus}
 						</p>
 					) : null}
@@ -307,4 +521,16 @@ export function SettingsScreen() {
 			</Card>
 		</div>
 	);
+}
+
+function downloadJson(fileName: string, data: unknown) {
+	const blob = new Blob([JSON.stringify(data, null, 2)], {
+		type: "application/json",
+	});
+	const url = URL.createObjectURL(blob);
+	const anchor = document.createElement("a");
+	anchor.href = url;
+	anchor.download = fileName;
+	anchor.click();
+	URL.revokeObjectURL(url);
 }

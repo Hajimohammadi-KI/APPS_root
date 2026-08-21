@@ -718,6 +718,10 @@
       <span>G2 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/21">PR #21</a> با merge <code class="path">032ad14</code> و CI سبز عبور کرد: consent نسخه‌دار، baseline پیش از intervention، export پژوهشی امن، revoke/delete، retention و data-quality در هر دو زبان. فاز ۴ فقط برای Accessibility baseline تکرارپذیر باز است؛ اثر یادگیری روی cohort واقعی N/A است.</span>
     </div>
     <div class="hist-entry">
+      <span class="hist-date">2026-08-22</span>
+      <span>G3 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24">PR #24</a> با merge <code class="path">ea3d25c</code> و دو CI سبز عبور کرد: Shadow Safety به برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ متصل شد، اما default-off، نامرئی و بدون تغییر یا ذخیرهٔ دادهٔ زبان‌آموز باقی ماند. E2E هر دو زبان حفظ learner/evidence را تأیید کرد؛ اثر یادگیری واقعی همچنان N/A است.</span>
+    </div>
+    <div class="hist-entry">
       <span class="hist-date">2026-08-22 00:32 CEST</span>
       <span>این نسخه با وضعیت Vercel Ready روی <a href="https://automaticity-ux-roadmap-elahe.vercel.app">automaticity-ux-roadmap-elahe.vercel.app</a> منتشر شد. Alias قدیمی در Scope دیگری است و حساب فعلی امکان انتقال آن را ندارد.</span>
     </div>
@@ -818,15 +822,15 @@
       («Nachweise») در glossary نبود؛ اضافه شد به‌همراه Beherrschung، Abdeckung، Genauigkeit.</p>`,
     },
     {
-      id: "p4", phase: "فاز ۴", title: "Foundation Gate مشترک", status: "active", when: "G1 و G2 کامل · Accessibility baseline باقی است",
+      id: "p4", phase: "فاز ۴", title: "Foundation Gate مشترک", status: "active", when: "G1، G2 و G3 کامل · Accessibility baseline باقی است",
       summary: "schema، evidence، event و telemetry پیش از ادغام runtime دیتاست و AI",
       body: structuredPhase({
-        effect: `<p>رفتار پایهٔ هر دو اپ یکسان می‌شود و محتوا یا شواهد میان صفحه‌ها گم و متناقض نمی‌ماند.</p><p><strong>وضعیت:</strong> هسته، provenance، EvidenceRecord، رویدادهای شناسه‌محور، JSON Schema و مسیر B1 دو زبان در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/17">PR #17</a> روی <code class="path">main</code> هستند. قرارداد measurement/consent/baseline نیز در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/21">PR #21</a> با merge <code class="path">032ad14</code> ادغام شد و Settings E2E هر دو زبان پاس شد.</p>`,
+        effect: `<p>رفتار پایهٔ هر دو اپ یکسان می‌شود و محتوا یا شواهد میان صفحه‌ها گم و متناقض نمی‌ماند.</p><p><strong>وضعیت:</strong> هسته، provenance، EvidenceRecord، رویدادهای شناسه‌محور، JSON Schema و مسیر B1 دو زبان در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/17">PR #17</a> روی <code class="path">main</code> هستند. قرارداد measurement/consent/baseline در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/21">PR #21</a> ادغام شد. Shadow Safety نیز در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24">PR #24</a> با merge <code class="path">ea3d25c</code> و E2E هر دو زبان عبور کرد.</p>`,
         dependency: `<p>دروازهٔ اجباری برای <strong>ادغام runtime</strong> و تصمیم‌های یادگیری در فازهای ۵ تا ۹. بررسی read-only منبع و مجوز، ساخت manifest/schema و seed آزمایشیِ کوچک و قابل‌برگشت می‌تواند موازی انجام شود؛ اما دانلود حجیم، آموزش یا fine-tune، ingestion در محصول، ارسال دادهٔ زبان‌آموز به provider و هر تصمیم mastery مبتنی بر AI تا عبور vertical slice ممنوع است.</p>`,
         technical: `<ul><li><code class="path">packages/learning-core</code> حداقلی، نه مهاجرت بزرگ و یک‌باره</li><li><bdi dir="ltr">ContentUnit + EvidenceRecord + DomainEvents</bdi></li><li>provenance، مجوز، نسخه و وضعیت بازبینی</li><li>اعتبارسنجی Zod/JSON در CI و قرارداد telemetry</li><li>Accessibility baseline در Definition of Done هر PR</li></ul>`,
         acceptance: `<p>یک واحد B1 انگلیسی و یک واحد B1 آلمانی از مسیر کامل
         <bdi dir="ltr">content → daily plan → response → evidence → analytics event</bdi>
-        با یک schema و بدون مدل موازی عبور کنند.</p><p>مسیر تا local domain event و export در G1 تأیید شد؛ analytics رضایت‌محور و baseline در G2 تأیید شدند. فقط Accessibility baseline قابل تکرار برای بستن کامل فاز باقی مانده است.</p>`
+        با یک schema و بدون مدل موازی عبور کنند.</p><p>مسیر تا local domain event و export در G1، analytics رضایت‌محور و baseline در G2، و shadow default-off بدون mutation در G3 تأیید شدند. فقط Accessibility baseline قابل تکرار برای بستن کامل فاز باقی مانده است.</p>`
       }),
     },
     {

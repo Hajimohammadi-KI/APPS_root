@@ -466,9 +466,9 @@
       <thead><tr><th>بخش</th><th>وضعیت تا 2026-08-22</th><th>مدرک</th></tr></thead>
       <tbody>
         <tr><td>هستهٔ مشترک learning-core</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز merge شد</td><td>merge <code>ed7e73f</code> و <code>shared/learning-core</code></td></tr>
-        <tr><td>SKILL-001 Adherence Core</td><td>روی <code>main</code> ادغام شده؛ shadow flag پیش‌فرض خاموش است؛ هنوز در release کاربر نهایی فعال نشده</td><td><code>shared/learning-core/src/adherence</code></td></tr>
-        <tr><td>تست اختصاصی adherence</td><td>۲۱ تست، ۶۰٬۱۸۵ assertion</td><td><code>bun run test:adherence-core</code></td></tr>
-        <tr><td>کل تست learning-core</td><td>۴۳ تست، ۶۰٬۲۶۳ assertion پس از G2</td><td><code>bun run test</code></td></tr>
+        <tr><td>SKILL-001 Adherence Core</td><td>روی <code>main</code> ادغام و فقط به‌صورت shadow به برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز اعمال/ذخیره نمی‌شود</td><td><code>shared/learning-core/src/adherence/shadow-runner.ts</code></td></tr>
+        <tr><td>تست اختصاصی adherence</td><td>۲۵ تست، ۶۹٬۱۹۹ assertion پس از G3</td><td><code>bun run test:adherence-core</code></td></tr>
+        <tr><td>کل تست learning-core</td><td>۴۷ تست، ۶۹٬۲۷۷ assertion پس از G3</td><td><code>bun run test</code></td></tr>
         <tr><td>TypeScript و mirror parity</td><td>تأییدشده</td><td><code>bun run typecheck</code></td></tr>
         <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
         <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از تست کامل محلی و CI لینوکس merge شد</td><td>merge <code>b3fbc07</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
@@ -477,6 +477,8 @@
         <tr><td>CI مربوط به G1</td><td>Learning Core و German Automaticity هر دو سبز</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317547" class="mono">Core 32532317547</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317531" class="mono">German 32532317531</a></td></tr>
         <tr><td>قرارداد سنجش و حریم خصوصی</td><td>رضایت نسخه‌دار، baseline پیش از intervention، export امن، revoke/delete، retention و data-quality در هر دو اپ ادغام شد</td><td><strong style="color:var(--pass)">G2 عبور کرد: <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/21" class="mono">PR #21</a> · merge <code>032ad14</code></strong></td></tr>
         <tr><td>CI مربوط به G2</td><td>Learning Core و German Automaticity هر دو سبز؛ Settings E2E در انگلیسی و آلمانی پاس شد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32535274524" class="mono">Core 32535274524</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32535274583" class="mono">German 32535274583</a></td></tr>
+        <tr><td>Shadow Safety در هر دو اپ</td><td>adapter خالص و default-off، مقایسهٔ ۱۵/۳۰/۴۵ دقیقه، fail-closed، عدم persistence و E2E حفظ داده در انگلیسی و آلمانی ادغام شد</td><td><strong style="color:var(--pass)">G3 عبور کرد: <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24" class="mono">PR #24</a> · merge <code>ea3d25c</code></strong></td></tr>
+        <tr><td>CI مربوط به G3</td><td>Learning Core و German Automaticity هر دو سبز؛ browser adapter در هر سه کپی hash-identical و زیر بودجهٔ ۵ KiB gzip است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261291" class="mono">Core 32537261291</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261468" class="mono">German 32537261468</a></td></tr>
         <tr><td>AI و دیتاست runtime</td><td>هنوز نباید وارد runtime یا تصمیم mastery شود</td><td>G1 و G2 عبور کرده‌اند؛ ingestion محتوای پایلوت وابسته به G4 است</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
       </tbody>
@@ -525,7 +527,7 @@ flowchart LR
     <div class="gate-card"><span class="gid">G0</span><span class="gname">Source Gate</span><span class="chip pass"><span class="dot"></span>عبور کرده</span></div>
     <div class="gate-card"><span class="gid">G1</span><span class="gname">Runtime Evidence Slice</span><span class="chip pass"><span class="dot"></span>عبور کرد · PR #17</span></div>
     <div class="gate-card"><span class="gid">G2</span><span class="gname">Measurement Contract</span><span class="chip pass"><span class="dot"></span>عبور کرد · PR #21</span></div>
-    <div class="gate-card"><span class="gid">G3</span><span class="gname">Shadow Safety</span><span class="chip active"><span class="dot"></span>اقدام بعدی</span></div>
+    <div class="gate-card"><span class="gid">G3</span><span class="gname">Shadow Safety</span><span class="chip pass"><span class="dot"></span>عبور کرد · PR #24</span></div>
     <div class="gate-card"><span class="gid">G4</span><span class="gname">Content Quality</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
     <div class="gate-card"><span class="gid">G5</span><span class="gname">Learning Evidence</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
     <div class="gate-card"><span class="gid">G6</span><span class="gname">Release Lifecycle</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
@@ -537,7 +539,7 @@ flowchart LR
         <tr><td class="mono">G0</td><td>چهار مسیر SKILL-001 در PR جدا، review و CI سبز</td><td>هیچ فاز وابسته merge نشود</td></tr>
         <tr><td class="mono">G1</td><td>✅ در PR #17 عبور کرد: یک واحد B1 انگلیسی و آلمانی از content تا evidence و export عبور می‌کند</td><td>microphone سخت‌افزاری و provider زنده N/A است و در G6/پایلوت بررسی می‌شود</td></tr>
         <tr><td class="mono">G2</td><td>✅ در PR #21 عبور کرد: event schema، consent، privacy، baseline، retention و data-quality checks در هسته و هر دو اپ ادغام شدند</td><td>اثرگذاری روی زبان‌آموز واقعی همچنان N/A تا پایلوت است</td></tr>
-        <tr><td class="mono">G3</td><td>خروجی جدید در shadow با رفتار فعلی مقایسه شود و دادهٔ کاربر را تغییر ندهد</td><td>feature flag خاموش بماند</td></tr>
+        <tr><td class="mono">G3</td><td>✅ در PR #24 عبور کرد: خروجی جدید کنار برنامهٔ فعلی محاسبه می‌شود؛ E2E هر دو زبان ثابت می‌کند UI و دادهٔ learner/evidence تغییر نمی‌کنند</td><td>flag پیش‌فرض خاموش می‌ماند؛ اثر یادگیری همچنان N/A است</td></tr>
         <tr><td class="mono">G4</td><td>provenance، مجوز، بازبینی انسانی و rubric برای همهٔ آیتم‌های پایلوت</td><td>آیتم وارد برنامهٔ روزانه نشود</td></tr>
         <tr><td class="mono">G5</td><td>pre/post مستقل، delayed recall و novel transfer با دادهٔ واقعی</td><td>واژهٔ «automatic» فقط هدف محصول باشد، نه نتیجهٔ اثبات‌شده</td></tr>
         <tr><td class="mono">G6</td><td>build، E2E، responsive، Install/Update/Repair و حفظ داده پاس شوند</td><td>installer یا نسخهٔ وب منتشر نشود</td></tr>
@@ -640,7 +642,7 @@ flowchart LR
         <li>baseline فقط با رضایت معتبر و پیش از هر intervention ثبت می‌شود</li>
         <li>export پژوهشی allowlist دارد و متن خام، صوت، ایمیل و شناسهٔ مستقیم را خارج نمی‌کند؛ backup کامل یادگیری جدا باقی مانده است</li>
         <li>گزارش کیفیت completeness، uniqueness، validity، time/version و privacy leakage را deterministic بررسی می‌کند؛ نبود نمونه با <code>N/A</code> گزارش می‌شود</li>
-        <li>۴۳ تست هسته و E2E واقعی Settings برای هر دو زبان پاس شد؛ دادهٔ cohort واقعی و اثر یادگیری همچنان <code>N/A</code> است</li>
+        <li>۴۷ تست هسته، E2E واقعی Settings و Shadow Safety برای هر دو زبان پاس شد؛ دادهٔ cohort واقعی و اثر یادگیری همچنان <code>N/A</code> است</li>
       </ul>
     </div>
   </section>
@@ -648,9 +650,10 @@ flowchart LR
   <section class="phase" id="p3">
     <div class="phase-head">
       <div class="phase-title-row"><span class="phase-num">۳</span><h3>Adherence Engineering در Shadow</h3></div>
-      <span class="chip active"><span class="dot"></span>آماده · G2 عبور کرد</span>
+      <span class="chip active"><span class="dot"></span>در حال انجام · G3 safety عبور کرد</span>
     </div>
     <div class="phase-tags">برآورد: ۱ تا ۲ sprint · وابستگی: <code>G2</code> · Issues: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a>، <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></div>
+    <div class="callout final"><span class="label">خروجی تأییدشدهٔ G3</span><p>Shadow Safety در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24" class="mono">PR #24</a> با merge <code>ea3d25c</code> و دو CI سبز کامل شد: اتصال default-off به برنامهٔ روزانهٔ هر دو زبان، مقایسهٔ deterministic برای ۱۵/۳۰/۴۵ دقیقه، fail-closed، عدم تغییر UI و حفظ دادهٔ learner/evidence با E2E. implementation intention و nudge هنوز قابلیت پیاده‌شده نیستند.</p></div>
     <ul>
       <li>اتصال SKILL-001 به برنامهٔ ۱۵/۳۰/۴۵ دقیقه فقط در shadow</li>
       <li>ذخیرهٔ اختیاری implementation intention در onboarding</li>
@@ -809,13 +812,14 @@ flowchart LR
         <tr><td class="mono" style="text-align:center">2</td><td>تفکیک baseline اپ‌ها از PR conflicted شمارهٔ ۲</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/15" class="mono">#15</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/16" class="mono">PR #16</a></td><td>✅ merge <code>17341f7</code></td></tr>
         <tr><td class="mono" style="text-align:center">3</td><td>Runtime evidence slice EN/DE</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/17" class="mono">PR #17</a></td><td>✅ merge <code>b452e3e</code>؛ G1 عبور کرد</td></tr>
         <tr><td class="mono" style="text-align:center">4</td><td>Measurement contract، consent، baseline و data quality</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/18" class="mono">#18</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/21" class="mono">PR #21</a></td><td>✅ merge <code>032ad14</code>؛ G2 عبور کرد</td></tr>
-        <tr><td class="mono" style="text-align:center">5</td><td>Implementation intentions و Shadow Safety</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a></td><td>🟡 اقدام بعدی؛ G2 عبور کرده</td></tr>
-        <tr><td class="mono" style="text-align:center">6</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>#6 و consent</td></tr>
-        <tr><td class="mono" style="text-align:center">7</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></td><td>G2 و authored content</td></tr>
-        <tr><td class="mono" style="text-align:center">8</td><td>FSRS shadow migration</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></td><td>G2</td></tr>
-        <tr><td class="mono" style="text-align:center">9</td><td>Mediation pilot + QA</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a></td><td>G1 و content schema</td></tr>
-        <tr><td class="mono" style="text-align:center">10</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>
-        <tr><td class="mono" style="text-align:center">11</td><td>Consented pilot analytics</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G5 و دادهٔ چندکاربره</td></tr>
+        <tr><td class="mono" style="text-align:center">5</td><td>Shadow Safety در برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/23" class="mono">#23</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24" class="mono">PR #24</a></td><td>✅ merge <code>ea3d25c</code>؛ G3 عبور کرد</td></tr>
+        <tr><td class="mono" style="text-align:center">6</td><td>Content QA و Mediation pilot</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a></td><td>🟡 اقدام بعدی؛ G4</td></tr>
+        <tr><td class="mono" style="text-align:center">7</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a></td><td>G3 و consent</td></tr>
+        <tr><td class="mono" style="text-align:center">8</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>#6 و consent</td></tr>
+        <tr><td class="mono" style="text-align:center">9</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></td><td>G2 و authored content</td></tr>
+        <tr><td class="mono" style="text-align:center">10</td><td>FSRS shadow migration</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></td><td>G2</td></tr>
+        <tr><td class="mono" style="text-align:center">11</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>
+        <tr><td class="mono" style="text-align:center">12</td><td>Consented pilot analytics</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G5 و دادهٔ چندکاربره</td></tr>
       </tbody>
     </table>
   </div>
@@ -850,7 +854,7 @@ flowchart LR
 
   <div class="callout final">
     <span class="label">اقدام بعدی واحد</span>
-    <p style="margin:0;">Gate G3 را در یک Issue و PR کوچک پیاده کنید: خروجی adherence جدید فقط در shadow محاسبه و با برنامهٔ فعلی مقایسه شود، هیچ داده یا برنامهٔ کاربر را تغییر ندهد، flag پیش‌فرض خاموش بماند و rollback دقیقاً رفتار قبلی را برگرداند. engagement از learning outcome جدا می‌ماند؛ AI، ingestion runtime دیتاست و هر ادعای اثرگذاری تا Gateهای مربوطه متوقف هستند.</p>
+    <p style="margin:0;">Gate G4 را با یک پایلوت کوچک و human-reviewed شروع کنید: schema و provenance فعلی را برای مجموعه‌ای محدود از آیتم‌های انگلیسی و آلمانی به‌کار ببرید، rubric و بازبینی انسانی را ثبت کنید و mediation را وارد محتوای authored کنید. دادهٔ خام وارد برنامهٔ روزانه یا Installer نشود؛ AI، ingestion حجیم و هر ادعای اثرگذاری تا Gateهای مربوطه متوقف می‌مانند.</p>
   </div>
 
   <footer class="note">

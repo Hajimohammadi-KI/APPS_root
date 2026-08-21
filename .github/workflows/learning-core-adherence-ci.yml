@@ -1,0 +1,50 @@
+name: Learning Core Adherence CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "shared/learning-core/**"
+      - "Apps/English/English-07082026/packages/learning-core/**"
+      - "Apps/Deutsch-V10.08.2026/packages/learning-core/**"
+      - ".github/workflows/learning-core-adherence-ci.yml"
+  pull_request:
+    paths:
+      - "shared/learning-core/**"
+      - "Apps/English/English-07082026/packages/learning-core/**"
+      - "Apps/Deutsch-V10.08.2026/packages/learning-core/**"
+      - ".github/workflows/learning-core-adherence-ci.yml"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: shared/learning-core
+
+jobs:
+  adherence-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Type-check pure TypeScript core
+        run: bun run typecheck
+
+      - name: Run adherence property and scenario tests
+        run: bun run test:adherence-core
+
+      - name: Run complete learning-core tests
+        run: bun run test
+
+      - name: Reject stale app mirrors
+        run: node sync-workspaces.mjs --check

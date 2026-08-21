@@ -23,7 +23,7 @@ test("all product and compatibility routes render successfully", async ({
     expect(response?.ok(), `${route} should return a successful response`).toBe(
       true,
     );
-    await expect(page.locator("main h1").first()).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   }
 });
 
@@ -59,36 +59,15 @@ test("dashboard exposes the automaticity journey, full inventory, and live state
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: "Sicher und automatisch sprechen" }),
+    page.getByRole("heading", { name: "Willkommen, Lernende" }),
+  ).toBeVisible();
+  await expect(page.getByText("Persönliches Lern-Dashboard")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Leistungsdiagramm" }),
   ).toBeVisible();
   await expect(
-    page.getByAltText(
-      "Eine Lernende entwickelt sich vom Grammatiklernen über das Sprechen bis zur sicheren Präsentation",
-    ),
+    page.getByRole("heading", { name: "Lernweg auswählen" }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Sicher und automatisch sprechen" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Vom Abruf zum sicheren Sprechen" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "In drei Schritten sicher starten" }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Hilfe zur Benutzung öffnen" })
-    .click();
-  const help = page.getByRole("dialog", {
-    name: "So benutzt du DeutschFlow",
-  });
-  await expect(help).toBeVisible();
-  await expect(
-    help.getByText(
-      "Dein Fortschritt wird automatisch auf diesem Gerät gespeichert.",
-    ),
-  ).toBeVisible();
-  await help.getByRole("button", { name: "Schließen" }).click();
-  await expect(help).not.toBeVisible();
   await expect(
     page.getByRole("button", { name: "Windows-App installieren" }),
   ).toBeVisible();
@@ -98,7 +77,6 @@ test("dashboard exposes the automaticity journey, full inventory, and live state
   await expect(
     page.getByRole("link", { name: /Alltagsgespräche sicher meistern/i }),
   ).toHaveAttribute("href", "/studio");
-  await expect(page.getByText(/1 Fehlerdatensätze/)).toBeVisible();
 });
 
 test("grammar lab exposes all 144 CEFR units and working search", async ({
@@ -127,7 +105,7 @@ test("grammar lab exposes all 144 CEFR units and working search", async ({
     "Modalität und Evidentialität",
   );
   await expect(page).toHaveURL(
-    /topic=Modalit%C3%A4t\+und\+Evidentialit%C3%A4t/,
+    /topic=Modalit%C3%A4t(?:%20|\+)und(?:%20|\+)Evidentialit%C3%A4t/,
   );
 });
 
@@ -152,9 +130,10 @@ test("studio supports topic selection, sessions, and minimum-word gate", async (
   await page.goto("/studio?topic=12");
 
   await expect(page.getByLabel("Thema")).toBeVisible();
-  await page.getByRole("button", { name: "Sitzung starten" }).click();
   await page.getByLabel("Dein Transkript").fill("Zu kurz");
-  const evaluateButton = page.getByRole("button", { name: "Auswerten" });
+  const evaluateButton = page.getByRole("button", {
+    name: "Antwort auswerten",
+  });
   await expect(evaluateButton).toBeEnabled();
   await evaluateButton.click();
   await expect(page.getByText(/2\/12 Wörter/)).toBeVisible();
@@ -163,7 +142,7 @@ test("studio supports topic selection, sessions, and minimum-word gate", async (
   await expect(page.getByLabel("Dein Transkript")).toHaveValue("");
   await expect(
     page.getByText(
-      "Thema geändert. Starte eine neue Sitzung vor der Aufnahme.",
+      "Thema geändert. Die vorige Antwort wurde verworfen; es wird keine alte Bewertung übernommen.",
     ),
   ).toBeVisible();
 });
@@ -215,16 +194,20 @@ test("settings persist in the legacy-compatible local state", async ({
 }) => {
   await page.goto("/einstellungen");
   await page.getByLabel("Mindestwörter pro Gesprächsantwort").fill("18");
-  await page.getByRole("button", { name: "Einstellungen speichern" }).click();
-  await expect(page.getByText("Einstellungen gespeichert.")).toBeVisible();
-
-  const storedMinWords = await page.evaluate(() => {
-    const state = JSON.parse(
-      localStorage.getItem("GrammarAutomaticityV11_de") ?? "{}",
-    ) as { settings?: { minWords?: number } };
-    return state.settings?.minWords;
-  });
-  expect(storedMinWords).toBe(18);
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const state = JSON.parse(
+          localStorage.getItem("GrammarAutomaticityV11_de") ?? "{}",
+        ) as { settings?: { minWords?: number } };
+        return state.settings?.minWords;
+      }),
+    )
+    .toBe(18);
+  await page.reload();
+  await expect(
+    page.getByLabel("Mindestwörter pro Gesprächsantwort"),
+  ).toHaveValue("18");
 });
 
 test("settings explain installation on every supported device family", async ({
@@ -232,11 +215,6 @@ test("settings explain installation on every supported device family", async ({
 }) => {
   await page.goto("/einstellungen");
 
-  await expect(
-    page.getByText(
-      /Slack, Vercel, kostenpflichtige Software und separate Entwicklerwerkzeuge sind nicht nötig/,
-    ),
-  ).toBeVisible();
   await expect(page.locator('a[href*="slack.com"]')).toHaveCount(0);
   await expect(
     page.getByRole("heading", { name: "Auf deinem Gerät installieren" }),
@@ -254,22 +232,16 @@ test("settings explain installation on every supported device family", async ({
       .first(),
   ).toBeVisible();
   await expect(page.getByText(/Safari öffnen/)).toBeVisible();
-  await expect(
-    page.getByText(/Windows fragt im Setup nach dem Installationsordner/),
-  ).toBeVisible();
+  await expect(page.getByText(/Im Browser „App installieren“/)).toBeVisible();
 });
 
-test("exact v20.8 fallback remains fully loaded", async ({ page }) => {
+test("retired classic route returns to the supported dashboard", async ({
+  page,
+}) => {
   await page.goto("/klassik");
-  const legacy = page.frameLocator(
-    'iframe[title="Deutsch Grammatik-Automatik v20.8"]',
-  );
-  await expect(
-    legacy.getByRole("heading", { name: "Dashboard" }),
-  ).toBeVisible();
-  await legacy.getByRole("button", { name: /Gesprächsstudio/ }).click();
-  await expect(legacy.getByText("79 Gesprächsthemen").first()).toBeVisible();
-  await expect(legacy.getByText("84 Grammatikthemen").first()).toBeVisible();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("heading", { name: /Willkommen/ })).toBeVisible();
+  await expect(page.locator("iframe")).toHaveCount(0);
 });
 
 test("production PWA installs its worker and reloads offline", async ({
@@ -336,36 +308,54 @@ test("mobile navigation opens and changes route", async ({ page }) => {
   await expect(page).toHaveURL(/\/heute$/);
   await expect(
     page.getByRole("heading", {
-      name: "Mit welchem Niveau möchtest du starten?",
+      name: "Deine heutige 15-Minuten-Lernmission",
     }),
   ).toBeVisible();
-  await page.getByRole("button", { name: /^A1/ }).click();
-  await expect(page.getByText("Heutiges Training · 15 Minuten")).toBeVisible();
-});
-
-test("daily path offers every CEFR start level", async ({ page }) => {
-  await page.goto("/heute");
-
-  for (const level of ["A1", "A2", "B1", "B2", "C1", "C2"]) {
+  for (const duration of [15, 30, 45]) {
     await expect(
-      page.getByRole("button", { name: new RegExp(`^${level}`) }),
+      page.getByRole("button", { name: new RegExp(`^${duration}`) }),
     ).toBeVisible();
   }
+});
 
-  await page.getByRole("button", { name: /^B2/ }).click();
+test("daily path scales and persists the workload", async ({ page }) => {
+  await page.goto("/heute");
+
+  await expect(page.locator(".activity")).toHaveCount(7);
+  await page.getByRole("button", { name: /^45/ }).click();
   await expect(
-    page.getByRole("heading", { name: "Heutige Lernmission: 15 Minuten" }),
+    page.getByRole("heading", {
+      name: "Deine heutige 45-Minuten-Lernmission",
+    }),
   ).toBeVisible();
-  await expect(page.locator(".daily-overview-hero h2")).toContainText("B2");
-  await expect
-    .poll(() =>
-      page.evaluate(() => {
-        const raw = localStorage.getItem("GrammarAutomaticityV11_de");
-        if (!raw) {
-          return null;
-        }
-        return (JSON.parse(raw) as { learningLevel?: string }).learningLevel;
-      }),
-    )
-    .toBe("B2");
+  const workload = await page.locator(".activity").evaluateAll((cards) => ({
+    minutes: cards.reduce(
+      (sum, card) => sum + Number((card as HTMLElement).dataset.minutes),
+      0,
+    ),
+    units: cards.reduce(
+      (sum, card) => sum + Number((card as HTMLElement).dataset.units),
+      0,
+    ),
+  }));
+  expect(workload).toEqual({ minutes: 45, units: 21 });
+
+  await page.reload();
+  await expect(
+    page.getByRole("heading", {
+      name: "Deine heutige 45-Minuten-Lernmission",
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: /^45/ })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+
+  const writingCard = page.locator(".activity", {
+    hasText: "Tägliches Schreiben",
+  });
+  await writingCard.getByRole("button", { name: "Übung öffnen" }).click();
+  await expect(page).toHaveURL(
+    /\/automatik\?from=daily&activity=5&session=45&minutes=6&units=3/,
+  );
 });

@@ -1,27 +1,51 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+const JOURNAL =
+  "Ich übe heute, weil ich sicherer sprechen möchte. Ich schreibe Beispiele, weil ich die Regel behalten will. Ich höre zu, weil gute Aussprache wichtig ist. Ich wiederhole den Text, weil mir das Rhythmus gibt. Danach spreche ich frei. Morgen mache ich weiter.";
+
+async function selectWeilMission(page: Page) {
+  await page.addInitScript(() => {
+    if (localStorage.getItem("GrammarAutomaticityV11_de")) return;
+    localStorage.setItem(
+      "GrammarAutomaticityV11_de",
+      JSON.stringify({
+        learningLevel: "A2",
+        todayGrammar: {
+          date: new Date().toISOString().slice(0, 10),
+          level: "A2",
+          title: "Nebensatz mit weil",
+        },
+      }),
+    );
+  });
+}
 
 test("Automatik-Mission speichert den Schreibnachweis dauerhaft", async ({
   page,
 }) => {
-  await page.goto("/heute");
-  await page.getByRole("button", { name: /^A1/ }).click();
-  await page
-    .getByRole("button", { name: "Öffnen: Tägliches Schreiben" })
-    .click();
+  await selectWeilMission(page);
+  await page.goto("/automatik");
 
-  const journal =
-    "Ich übe heute, weil ich sicherer sprechen möchte. Ich schreibe Beispiele, weil ich die Regel behalten will. Ich höre zu, weil gute Aussprache wichtig ist. Ich wiederhole den Text, weil mir das Rhythmus gibt. Danach spreche ich frei. Morgen mache ich weiter.";
-  await page.getByLabel("weil-Tagebuch").fill(journal);
+  await expect(
+    page.getByRole("heading", { name: "Automatik-Mission" }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
+    .click();
+  await page.getByLabel("Nebensatz mit weil-Tagebuch").fill(JOURNAL);
   await page
     .getByRole("button", { name: "Schreiben analysieren und speichern" })
     .click();
-  await expect(page.getByText("100%", { exact: true })).toBeVisible();
+  await expect(page.getByText("100%", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText(/Tagebuch gespeichert/)).toBeVisible();
 
   await page.reload();
   await page
-    .getByRole("button", { name: "Wiederholen: Tägliches Schreiben" })
+    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
     .click();
-  await expect(page.getByLabel("weil-Tagebuch")).toHaveValue(journal);
+  await expect(page.getByLabel("Nebensatz mit weil-Tagebuch")).toHaveValue(
+    JOURNAL,
+  );
 });
 
 test("Automatik-Mission bleibt auf dem Smartphone bedienbar", async ({
@@ -31,20 +55,20 @@ test("Automatik-Mission bleibt auf dem Smartphone bedienbar", async ({
   page.on("console", (message) => {
     if (message.type() === "error") consoleErrors.push(message.text());
   });
+  await selectWeilMission(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/automatik");
 
-  await expect(page).toHaveURL(/\/heute$/);
-  await page
-    .getByText("Vertiefender Automatik-Nachweis", { exact: true })
-    .click();
+  await expect(page).toHaveURL(/\/automatik$/);
   await expect(
-    page.getByRole("heading", { name: "Vertiefender Nachweis" }),
+    page.getByRole("heading", { name: "Automatik-Mission" }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Nachweis starten" }),
   ).toBeVisible();
-  await expect(page.getByLabel("weil-Tagebuch")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /2\. Automatisieren & schreiben/ }),
+  ).toBeVisible();
   await expect(
     page.locator(
       "[data-nextjs-dialog], .vite-error-overlay, #webpack-dev-server-client-overlay",

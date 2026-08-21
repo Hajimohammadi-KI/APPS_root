@@ -35,15 +35,21 @@ export function MobileNavigation() {
     ...libraryNavigation,
     ...secondaryNavigation,
   ];
+  // Titles simplified and "/heute" moved out of "practice" to match the
+  // cross-app UX roadmap's 6-item IA (Start/Today/Practice/Learn/Progress/
+  // Settings) -- see docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md
+  // and the identical change in app-shell.tsx (desktop sidebar).
+  const todayNavigationItem = coreNavigation.find(
+    (item) => item.href === "/heute",
+  )!;
   const groups = [
     {
       id: "practice",
-      title: "Tägliche Praxis",
-      caption: "Heute üben und sprechen",
+      title: "Praxis",
+      caption: "Gemischtes Training, Gespräch und Wiederholung",
       icon: Clock3,
       items: allNavigation.filter((item) =>
         [
-          "/heute",
           "/gemischtes-training",
           "/studio",
           "/wiederholungen",
@@ -53,7 +59,7 @@ export function MobileNavigation() {
     },
     {
       id: "learning",
-      title: "Lernpfade",
+      title: "Lernen",
       caption: "Grammatik und Deutsch lernen",
       icon: BookOpenText,
       items: allNavigation.filter((item) =>
@@ -68,7 +74,7 @@ export function MobileNavigation() {
     },
     {
       id: "evidence",
-      title: "Lernnachweise",
+      title: "Fortschritt",
       caption: "Fehler und Aufnahmen",
       icon: Clock3,
       items: allNavigation.filter((item) =>
@@ -77,7 +83,7 @@ export function MobileNavigation() {
     },
     {
       id: "settings",
-      title: "App und Einstellungen",
+      title: "Einstellungen",
       caption: "Speicher und persönliche Optionen",
       icon: Folder,
       items: allNavigation.filter((item) =>
@@ -128,7 +134,7 @@ export function MobileNavigation() {
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-3 py-4">
           <AppNavigation
-            items={coreNavigation.slice(0, 1)}
+            items={[coreNavigation[0]!, todayNavigationItem]}
             label="Startseite Navigation"
             onNavigate={() => setOpen(false)}
           />

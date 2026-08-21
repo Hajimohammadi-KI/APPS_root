@@ -784,6 +784,8 @@ export function AutomaticityLab({
       // pull the score down like recordMasteryAttempt's capped-score logic
       // (targetHit false -> score capped at 59) already does correctly.
       verified: analysis.online,
+      assessedBy: analysis.online ? "online" : "offline",
+      contentVersion: "20.8.24",
       accuracyScore: analysis.score,
       ...(latencyMs === undefined ? {} : { latencyMs }),
     });
@@ -819,6 +821,8 @@ export function AutomaticityLab({
         // check ran," not "and passed," or every genuinely-checked
         // failure gets silently discarded instead of scored.
         verified: analysis.online,
+        assessedBy: analysis.online ? "online" : "offline",
+        contentVersion: "20.8.24",
         accuracyScore: analysis.score,
         ...(latencyMs === undefined ? {} : { latencyMs }),
       });
@@ -983,6 +987,27 @@ export function AutomaticityLab({
     // Re-checking raw analysis.issues.length here would re-introduce a
     // spelling-only block, so we rely on targetHit alone.
     const speakingReady = analysis.targetHit;
+    const requestedAudioPath = state.settings.saveAudio
+      ? `automatik-audio-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`
+      : undefined;
+    let audioPath: string | undefined;
+    if (requestedAudioPath && audioRef.current) {
+      try {
+        await saveAudio({
+          id: requestedAudioPath,
+          date: new Date().toISOString(),
+          topic: `${TOPIC} im Alltag`,
+          transcript,
+          correctedTranscript: transcript,
+          targetGrammar: TOPIC,
+          blob: audioRef.current,
+        });
+        audioPath = requestedAudioPath;
+      } catch {
+        // Keep the in-memory speaking evidence, but never persist a dangling
+        // reference when IndexedDB could not retain the recording.
+      }
+    }
 
     recordAttempt({
       topic: TOPIC,
@@ -997,26 +1022,18 @@ export function AutomaticityLab({
       // discarded every genuinely-checked failed speaking attempt instead
       // of letting recordMasteryAttempt's capped-score logic score it.
       verified: analysis.online,
+      assessedBy: analysis.online ? "online" : "offline",
+      contentVersion: "20.8.24",
       accuracyScore: analysis.score,
       fluencyScore,
       // Feeds calculateMasteryStatus's median-latency gate
       // (AUTOMATICITY_LATENCY_THRESHOLD_MS) -- previously never passed here,
       // so that gate could never be satisfied by Mission speaking attempts.
       latencyMs: seconds * 1_000,
+      audioCaptured: Boolean(audioRef.current),
+      ...(audioPath ? { audioPath } : {}),
     });
     saveDetectedErrors(analysis, transcript);
-
-    if (state.settings.saveAudio && audioRef.current) {
-      await saveAudio({
-        id: `automatik-audio-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
-        date: new Date().toISOString(),
-        topic: `${TOPIC} im Alltag`,
-        transcript,
-        correctedTranscript: transcript,
-        targetGrammar: TOPIC,
-        blob: audioRef.current,
-      });
-    }
 
     if (!speakingReady) {
       setMessage(

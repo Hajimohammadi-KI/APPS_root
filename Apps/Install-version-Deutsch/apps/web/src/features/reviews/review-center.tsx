@@ -192,6 +192,8 @@ export function ReviewCenter() {
         // still complete the review below, but must not count toward
         // "stable"/"automatic" status.
         verified: result.verified,
+        assessedBy: result.verified ? "online" : "offline",
+        contentVersion: "20.8.24",
         accuracyScore: exact ? 100 : 40,
         ...(isTransferCheckpoint ? { fromDueReview: true } : {}),
         ...(timedActive ? { latencyMs: (8 - secondsLeft) * 1_000 } : {}),

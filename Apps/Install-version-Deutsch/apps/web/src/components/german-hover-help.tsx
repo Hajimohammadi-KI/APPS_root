@@ -172,6 +172,45 @@ const definitions: ReadonlyArray<
       clue: "Rufe ein kurzes Muster an mehreren Tagen mit neuen Wörtern aus dem Gedächtnis ab.",
     },
   },
+  // UX-Audit 2026-08-20: "Nachweise" stand ohne Erklärung auf der
+  // Fortschritt-Seite (siehe docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-
+  // 2026-08-20.md, Phase 3). Übersetzt aus der englischen App
+  // (contextual-hover-help.tsx), damit beide Apps dieselben Begriffe
+  // gleich erklären.
+  {
+    aliases: ["nachweis", "nachweise", "abschrift", "bewertung"],
+    entry: {
+      term: "Lernnachweis",
+      meaning:
+        "Eine Aufnahme, ein Text oder eine unabhängige Antwort, die eine Fähigkeit zeigt.",
+      clue: "Eine Übung abzuschließen ist noch kein Nachweis, solange du die Fähigkeit nicht zeigen kannst.",
+    },
+  },
+  {
+    aliases: ["beherrschung", "meistern", "gemeistert"],
+    entry: {
+      term: "Beherrschung",
+      meaning:
+        "Eine Fähigkeit selbstständig in einer neuen Situation einsetzen, nicht nur eine Lektion abschließen.",
+      clue: "Prüfe die Fähigkeit nach einer Pause und ohne Hilfen noch einmal.",
+    },
+  },
+  {
+    aliases: ["abdeckung"],
+    entry: {
+      term: "Abdeckung",
+      meaning: "Wie viel vom Kursinhalt du bereits gesehen hast.",
+      clue: "Abdeckung ist nützlich, aber nicht dasselbe wie Beherrschung oder sicherer Gebrauch.",
+    },
+  },
+  {
+    aliases: ["genauigkeit", "genau"],
+    entry: {
+      term: "Genauigkeit",
+      meaning: "Richtige Wortwahl, Grammatik, Rechtschreibung und Aussprache.",
+      clue: "Repariere jeweils einen wiederkehrenden Fehler, damit die Aufgabe machbar bleibt.",
+    },
+  },
 ];
 
 const controlHelp: ReadonlyArray<readonly [string, string]> = [

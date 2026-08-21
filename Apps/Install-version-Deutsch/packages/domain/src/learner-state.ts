@@ -226,6 +226,12 @@ export interface UserAttempt {
   readonly fluencyScore?: number;
   readonly latencyMs?: number;
   readonly audioPath?: string;
+  /** True when a real recording existed even if privacy settings prevented persistence. */
+  readonly audioCaptured?: boolean;
+  /** Browser speech-to-text before any learner correction, when available. */
+  readonly rawTranscript?: string;
+  readonly contentVersion?: string;
+  readonly assessedBy?: "deterministic" | "online" | "offline";
   /** True only for a mode:"transfer" attempt recorded by the delayed-review
    * flow (review-center.tsx) rather than a same-session Mission step. Feeds
    * MasteryRecord.hasDelayedTransferEvidence -- see mastery.ts. */
@@ -516,6 +522,21 @@ function normalizeAttempts(value: unknown): readonly UserAttempt[] {
           ? { latencyMs: Math.max(0, Math.round(row.latencyMs)) }
           : {}),
         ...(isString(row.audioPath) ? { audioPath: row.audioPath } : {}),
+        ...(typeof row.audioCaptured === "boolean"
+          ? { audioCaptured: row.audioCaptured }
+          : {}),
+        ...(isString(row.rawTranscript)
+          ? { rawTranscript: row.rawTranscript }
+          : {}),
+        ...(isString(row.contentVersion)
+          ? { contentVersion: row.contentVersion }
+          : {}),
+        ...(row.assessedBy === "deterministic" ||
+        row.assessedBy === "online" ||
+        row.assessedBy === "offline"
+          ? { assessedBy: row.assessedBy }
+          : {}),
+        ...(row.fromDueReview === true ? { fromDueReview: true } : {}),
       },
     ];
   });

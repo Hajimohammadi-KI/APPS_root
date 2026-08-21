@@ -15,6 +15,23 @@ export {
   type DailySessionMinutes,
   DAILY_SESSION_OPTIONS,
 } from "./adaptive-daily-plan";
+
+export {
+  appendLearningEvidenceBundleToStorage,
+  buildAttemptVerticalSlice,
+  isLearningMode,
+  LEARNING_EVIDENCE_STORAGE_KEY,
+  LEARNING_SCHEMA_VERSION,
+  readLearningEvidenceLedger,
+  type AttemptVerticalSliceInput,
+  type ContentUnit,
+  type DailyPracticePlan,
+  type EvidenceRecord,
+  type LearnerResponse,
+  type LearningDomainEvent,
+  type LearningEvidenceBundle,
+  type LearningEvidenceLedger,
+} from "@automaticity/learning-core";
 export {
   REVIEW_INTERVAL_DAYS,
   getNextReviewDate,

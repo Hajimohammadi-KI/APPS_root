@@ -3,6 +3,11 @@
 import * as React from "react";
 import { produce } from "immer";
 import {
+	appendLearningEvidenceBundleToStorage,
+	buildAttemptVerticalSlice,
+	isLearningMode,
+} from "@automaticity/learning-core";
+import {
 	grammarUnits,
 	type CefrLevel,
 	type GrammarUnit,
@@ -34,7 +39,7 @@ export type MasteryStatus =
 // BY automaticity-screen.tsx -- importing it back the other way would be a
 // circular dependency. Re-exported from automaticity-screen.tsx below for
 // its existing importers.
-export const EVIDENCE_CONTENT_VERSION = "27.3.13";
+export const EVIDENCE_CONTENT_VERSION = "27.3.14";
 export type AttemptMode =
 	| "recognition"
 	| "writing"
@@ -125,6 +130,8 @@ export interface Attempt {
 	// learners don't edit); what matters is that editing one never
 	// overwrites the other.
 	audioId?: string;
+	/** True when a real recording was captured even if privacy settings prevent persistence. */
+	audioCaptured?: boolean;
 	rawTranscript?: string;
 	// Provenance for the `verified` claim: which content package produced the
 	// grammar/exercises being assessed (packages/content's version, so old
@@ -1635,11 +1642,13 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 
 	const recordAttempt = React.useCallback(
 		(attempt: Omit<Attempt, "id" | "createdAt">) => {
+			const id = makeId("attempt");
+			const createdAt = new Date().toISOString();
 			mutate((draft) => {
 				draft.attempts.push({
 					...attempt,
-					id: makeId("attempt"),
-					createdAt: new Date().toISOString(),
+					id,
+					createdAt,
 				});
 				draft.activity[todayKey()] = Math.max(
 					1,
@@ -1647,8 +1656,51 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 				);
 				recalculateMastery(draft, attempt.grammarTitle);
 			});
+			if (typeof window !== "undefined" && isLearningMode(attempt.mode)) {
+				try {
+					const grammar = grammarUnits.find(
+						(unit) => unit.title === attempt.grammarTitle,
+					);
+					appendLearningEvidenceBundleToStorage(
+						window.localStorage,
+						buildAttemptVerticalSlice({
+							attemptId: id,
+							occurredAt: createdAt,
+							language: "en",
+							...(grammar ? { cefrLevel: grammar.level } : {}),
+							contentVersion:
+								attempt.contentVersion ?? EVIDENCE_CONTENT_VERSION,
+							topic: attempt.grammarTitle,
+							targetForm: attempt.grammarTitle,
+							prompt: `Produce ${attempt.grammarTitle} independently in English.`,
+							mode: attempt.mode,
+							inputText: attempt.inputText,
+							correctedText: attempt.correctedText,
+							targetHit: attempt.targetHit,
+							accuracyScore: attempt.accuracyScore,
+							fluencyScore: attempt.fluencyScore,
+							latencyMs: attempt.latencyMs,
+							attemptVerified: attempt.verified === true,
+							assessedBy:
+								attempt.assessedBy === "online"
+									? "online"
+									: attempt.mode === "recognition"
+										? "deterministic"
+										: "offline",
+							sessionMinutes: state.settings.dailyStudyMinutes,
+							audioCaptured:
+								attempt.audioCaptured === true || Boolean(attempt.audioId),
+							audioReferenceId: attempt.audioId,
+							fromDueReview: attempt.fromDueReview,
+							sourceId: "english-authored-content",
+						}),
+					);
+				} catch {
+					// Learning remains usable if storage is unavailable or full.
+				}
+			}
 		},
-		[mutate],
+		[mutate, state.settings.dailyStudyMinutes],
 	);
 
 	const setTodayGrammar = React.useCallback(

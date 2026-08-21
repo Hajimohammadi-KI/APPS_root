@@ -114,7 +114,7 @@ export default function MixedPracticePage() {
       fluencyScore: 0,
       latencyMs: null,
       passed: isCorrect,
-      verified: isCorrect,
+      verified: true,
       assessedBy: "offline",
       contentVersion: EVIDENCE_CONTENT_VERSION,
     });

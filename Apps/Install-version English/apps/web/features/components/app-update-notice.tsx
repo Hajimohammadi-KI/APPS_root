@@ -11,7 +11,7 @@ interface ReleaseManifest {
 }
 
 const fallbackRelease: ReleaseManifest = {
-  version: "27.3.13",
+  version: "27.3.14",
 	changes: [
 		"Notebook & PDF Reader now opens a real responsive web reader with Home and full-screen controls on Windows and Android tablets",
 		"Page analytics now separates requested entries from rendered pages, validates local data, and uses compact accessible dropdowns",

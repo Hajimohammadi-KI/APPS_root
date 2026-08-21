@@ -143,10 +143,12 @@ body {
     flex-wrap: wrap;
   }
 
-  .topbar-actions {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
+	.topbar-actions {
+		width: 100%;
+		min-width: 0;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+	}
 
   .daily-overview,
   .home-v2-grid,
@@ -253,7 +255,8 @@ body {
     padding-inline: 10px;
   }
 
-  .topbar-actions { gap: 5px; }
+	.topbar-actions { gap: 5px; }
+	.topbar-actions { justify-content: flex-start; }
 
   .daily-overview-main { padding: 10px; }
   .daily-overview-hero { grid-template-columns: 1fr; padding: 17px 14px; }

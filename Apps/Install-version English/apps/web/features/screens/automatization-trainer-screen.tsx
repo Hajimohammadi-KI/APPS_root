@@ -131,7 +131,7 @@ function RetrievalModule({ grammar, roundSize }: { grammar: GrammarUnit; roundSi
       fluencyScore: 0,
       latencyMs,
       passed: isCorrect,
-      verified: isCorrect,
+      verified: true,
       assessedBy: "offline",
       contentVersion: EVIDENCE_CONTENT_VERSION,
     });
@@ -236,7 +236,7 @@ function FormulaicModule({ grammar }: { grammar: GrammarUnit }) {
       fluencyScore: 0,
       latencyMs,
       passed: isCorrect,
-      verified: isCorrect,
+      verified: true,
       assessedBy: "offline",
       contentVersion: EVIDENCE_CONTENT_VERSION,
     });

@@ -1,5 +1,5 @@
 {
-	"version": "27.3.13",
+	"version": "27.3.14",
 	"publishedAt": "2026-08-20",
 	"changes": [
 		"All desktop, tablet, and mobile navigation groups now use one clean single-open dropdown pattern; Home stays first and selection menus share the same accessible visual language",

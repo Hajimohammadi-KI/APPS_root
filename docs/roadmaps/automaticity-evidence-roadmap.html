@@ -440,7 +440,7 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.1 · 2026-08-21</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.2 · 2026-08-21</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
       <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
@@ -464,12 +464,13 @@
     <table>
       <thead><tr><th>بخش</th><th>وضعیت 2026-08-21</th><th>مدرک</th></tr></thead>
       <tbody>
-        <tr><td>هستهٔ مشترک learning-core</td><td>موجود در worktree، هنوز merge نشده</td><td><code>shared/learning-core</code></td></tr>
-        <tr><td>SKILL-001 Adherence Core</td><td>پیاده‌سازی محلی و shadow flag پیش‌فرض خاموش</td><td><code>shared/learning-core/src/adherence</code></td></tr>
+        <tr><td>هستهٔ مشترک learning-core</td><td>در commit <code>c666175</code> و Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a>؛ هنوز merge نشده</td><td><code>shared/learning-core</code></td></tr>
+        <tr><td>SKILL-001 Adherence Core</td><td>remote و قابل بازبینی؛ shadow flag پیش‌فرض خاموش؛ هنوز released نیست</td><td><code>shared/learning-core/src/adherence</code></td></tr>
         <tr><td>تست اختصاصی adherence</td><td>۲۱ تست، ۶۰٬۱۸۵ assertion</td><td><code>bun run test:adherence-core</code></td></tr>
         <tr><td>کل تست learning-core</td><td>۲۷ تست، ۶۰٬۲۰۰ assertion</td><td><code>bun run test</code></td></tr>
         <tr><td>TypeScript و mirror parity</td><td>تأییدشده</td><td><code>bun run typecheck</code></td></tr>
-        <tr><td>CI اختصاصی</td><td>فایل محلی موجود، اجرای GitHub نیازمند PR/merge</td><td><code>learning-core-adherence-ci.yml</code></td></tr>
+        <tr><td>CI اختصاصی</td><td>هر دو workflow روی <code>c666175</code> سبز؛ review/merge باقی است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
+        <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> با CI لینوکس سبز؛ آلمانی‌محور و stacked است، پس به‌تنهایی G1 را نمی‌بندد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
         <tr><td>ادغام runtime در هر دو اپ</td><td>کامل و مستقل اثبات نشده</td><td><strong style="color:var(--open)">Gate G1 باز است</strong></td></tr>
         <tr><td>AI و دیتاست runtime</td><td>نباید آغاز شود</td><td>وابسته به G1 و G2</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
@@ -477,6 +478,20 @@
     </table>
   </div>
   <p style="color:var(--ink-dim); font-size:13.5px;">سبزشدن تست‌های pure TypeScript فقط صحت قراردادها و invariants را نشان می‌دهد؛ این نتیجه، به‌تنهایی اثبات نمی‌کند که کاربر واقعاً زبان را اتوماتیک می‌کند.</p>
+
+  <h2><span class="num">runtime</span> لینک‌های اجرای محلی تأییدشده در 2026-08-21</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>سرویس</th><th>لینک ویندوز</th><th>تبلت/Android در همان Wi-Fi</th><th>وضعیت</th></tr></thead>
+      <tbody>
+        <tr><td>App Starter</td><td><a href="http://127.0.0.1:4300/" class="mono">127.0.0.1:4300</a></td><td>فقط میزبان ویندوز</td><td>HTTP 200؛ health سریع و بدون خطای کاذب startup</td></tr>
+        <tr><td>English Automaticity</td><td><a href="http://127.0.0.1:3202/" class="mono">127.0.0.1:3202</a></td><td><a href="http://192.168.178.24:3202/" class="mono">192.168.178.24:3202</a></td><td>HTTP 200 و browser smoke test</td></tr>
+        <tr><td>DeutschFlow</td><td><a href="http://127.0.0.1:3210/" class="mono">127.0.0.1:3210</a></td><td><a href="http://192.168.178.24:3210/" class="mono">192.168.178.24:3210</a></td><td>HTTP 200 و browser smoke test</td></tr>
+        <tr><td>Cross Repository Tracker</td><td><a href="http://127.0.0.1:4312/" class="mono">127.0.0.1:4312</a></td><td>هنوز روی LAN منتشر نشده</td><td>HTTP 200 روی ویندوز؛ WSL relay لازم است</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="color:var(--ink-dim); font-size:13.5px;">این جدول فقط دسترس‌پذیری runtime محلی را ثبت می‌کند و مدرک عبور G1، اثرگذاری یادگیری یا چرخهٔ انتشار G6 نیست. پس از restart ویندوز، <code>START-APPS.cmd</code> باید اجرا شود؛ اگر IP داخلی WSL تغییر کند، Windows ممکن است برای اصلاح bridge یک UAC تأییدشده درخواست کند.</p>
 
   <h2><span class="num">map</span> نقشهٔ وابستگی</h2>
   <pre class="mermaid">
@@ -502,7 +517,7 @@ flowchart LR
 
   <h2 id="gates"><span class="num">gates</span> دروازه‌های اجباری</h2>
   <div class="gate-rail">
-    <div class="gate-card"><span class="gid">G0</span><span class="gname">Source Gate</span><span class="chip active"><span class="dot"></span>در حال انجام</span></div>
+    <div class="gate-card"><span class="gid">G0</span><span class="gname">Source Gate</span><span class="chip active"><span class="dot"></span>CI سبز؛ merge مانده</span></div>
     <div class="gate-card"><span class="gid">G1</span><span class="gname">Runtime Evidence Slice</span><span class="chip open"><span class="dot"></span>باز</span></div>
     <div class="gate-card"><span class="gid">G2</span><span class="gname">Measurement Contract</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
     <div class="gate-card"><span class="gid">G3</span><span class="gname">Shadow Safety</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
@@ -538,7 +553,7 @@ flowchart LR
       <span class="chip active"><span class="dot"></span>در حال انجام</span>
     </div>
     <div class="phase-tags">برآورد: ۱ تا ۲ روز کاری · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/3" class="mono">#3</a></div>
-    <p>پیاده‌سازی محلی تأیید شده؛ commit/PR/CI remote هنوز تکمیل نشده. فقط این چهار مسیر وارد PR نخست شوند:</p>
+    <p>پیاده‌سازی در commit <code>c666175</code> و Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> ثبت شده و CI سبز است؛ review و merge باقی است. محدودهٔ اصلی این چهار مسیر است:</p>
     <ul>
       <li><code>shared/learning-core</code></li>
       <li><code>Apps/English/English-07082026/packages/learning-core</code></li>
@@ -549,9 +564,10 @@ flowchart LR
     <div class="exit-box">
       <span class="label">معیار خروج</span>
       <ul>
-        <li>diff مرحله‌بندی‌شده فقط همین چهار مسیر را نشان دهد</li>
-        <li>CI روی PR سبز شود؛ worktree آلودهٔ فعلی وارد commit نشود</li>
-        <li>تا پیش از merge، SKILL-001 «local verified» است، نه «released»</li>
+        <li>✓ PR مستقل فقط محدودهٔ source/mirrors/CI و lockfileهای workspace لازم را دارد</li>
+        <li>✓ CI روی PR سبز است و فایل‌های نامرتبط worktree وارد commit نشده‌اند</li>
+        <li>□ review و merge PR #11 انجام شود</li>
+        <li>تا پیش از merge، SKILL-001 «remote verified» است، نه «released»</li>
       </ul>
     </div>
   </section>
@@ -804,7 +820,7 @@ flowchart LR
 
   <div class="callout final">
     <span class="label">اقدام بعدی واحد</span>
-    <p style="margin:0;">فقط فاز ۰ را کامل کنید: چهار مسیر SKILL-001 را در یک PR تمیز قرار دهید، CI را سبز کنید و پس از merge، یک issue مستقل برای Runtime Evidence Slice انگلیسی/آلمانی باز کنید. تا عبور آن slice، AI، دیتاست runtime و rollout یادگیری متوقف می‌مانند.</p>
+    <p style="margin:0;">فقط review و merge فاز ۰ را کامل کنید: Draft PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> را merge کنید. سپس PR آلمانی <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> را روی base نهایی بازبینی کنید و یک issue مستقل برای Runtime Evidence Slice کامل انگلیسی/آلمانی باز کنید. تا عبور آن slice، AI، دیتاست runtime و rollout یادگیری متوقف می‌مانند.</p>
   </div>
 
   <footer class="note">

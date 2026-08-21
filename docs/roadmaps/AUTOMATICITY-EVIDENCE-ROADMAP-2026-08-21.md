@@ -1,7 +1,8 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.1  
+**نسخه:** 1.2
+
 **تاریخ:** 2026-08-21  
 **دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)  
 **منبع:** فایل «نقد پداگوژیک، اثرگذاری و محتوا» و وضعیت واقعی مخزن
@@ -26,18 +27,33 @@
 
 | بخش | وضعیت 2026-08-21 | مدرک |
 |---|---|---|
-| هستهٔ مشترک learning-core | موجود در worktree، هنوز merge نشده | `shared/learning-core` |
-| SKILL-001 Adherence Core | پیاده‌سازی محلی و shadow flag پیش‌فرض خاموش | `shared/learning-core/src/adherence` |
+| هستهٔ مشترک learning-core | در commit `c666175` و Draft PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11)؛ هنوز merge نشده | `shared/learning-core` |
+| SKILL-001 Adherence Core | remote و قابل بازبینی؛ shadow flag پیش‌فرض خاموش؛ هنوز released نیست | `shared/learning-core/src/adherence` |
 | تست اختصاصی adherence | تأییدشده در این بررسی: 21 تست، 60,185 assertion | `bun run test:adherence-core` |
 | کل تست learning-core | تأییدشده در این بررسی: 27 تست، 60,200 assertion | `bun run test` |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
-| CI اختصاصی | فایل محلی موجود، اجرای GitHub هنوز نیازمند PR/merge است | `.github/workflows/learning-core-adherence-ci.yml` |
+| CI اختصاصی | هر دو workflow روی commit `c666175` سبز؛ review/merge باقی است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
+| اصلاح runtime و مسیرهای آلمانی | Draft PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) با CI لینوکس سبز؛ آلمانی‌محور و stacked است، پس به‌تنهایی G1 را نمی‌بندد | [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
 | ادغام runtime در هر دو اپ | کامل و مستقل اثبات نشده | **Gate G1 باز است** |
 | AI و دیتاست runtime | نباید آغاز شود | وابسته به G1 و G2 |
 | اثرگذاری روی زبان‌آموز واقعی | دادهٔ کافی وجود ندارد | **N/A تا اجرای پایلوت** |
 
 > سبزشدن تست‌های pure TypeScript فقط صحت قراردادها و invariants را نشان می‌دهد؛
 > این نتیجه، به‌تنهایی اثبات نمی‌کند که کاربر واقعاً زبان را اتوماتیک می‌کند.
+
+## لینک‌های اجرای محلی تأییدشده در 2026-08-21
+
+| سرویس | لینک ویندوز | لینک تبلت/Android در همان Wi-Fi | وضعیت |
+|---|---|---|---|
+| App Starter | [127.0.0.1:4300](http://127.0.0.1:4300/) | فقط میزبان ویندوز | HTTP 200؛ health سریع و بدون خطای کاذب startup |
+| English Automaticity | [127.0.0.1:3202](http://127.0.0.1:3202/) | [192.168.178.24:3202](http://192.168.178.24:3202/) | HTTP 200 و browser smoke test |
+| DeutschFlow | [127.0.0.1:3210](http://127.0.0.1:3210/) | [192.168.178.24:3210](http://192.168.178.24:3210/) | HTTP 200 و browser smoke test |
+| Cross Repository Tracker | [127.0.0.1:4312](http://127.0.0.1:4312/) | هنوز روی LAN منتشر نشده | HTTP 200 روی ویندوز؛ WSL relay لازم است |
+
+این جدول فقط **دسترس‌پذیری runtime محلی** را ثبت می‌کند و مدرک عبور G1، اثرگذاری
+یادگیری یا چرخهٔ انتشار G6 نیست. پس از restart ویندوز، `START-APPS.cmd` باید اجرا
+شود؛ اگر IP داخلی WSL تغییر کرده باشد، Windows ممکن است برای اصلاح bridge یک
+UAC تأییدشده درخواست کند.
 
 ## نقشهٔ وابستگی
 
@@ -85,8 +101,10 @@ flowchart LR
 ## فاز 0 — تفکیک و merge کردن Vertical Slice 1
 
 **برآورد:** 1 تا 2 روز کاری  
-**وضعیت:** پیاده‌سازی محلی تأیید شده؛ commit/PR/CI remote هنوز تکمیل نشده  
+**وضعیت:** commit و Draft PR ساخته شده و CI سبز است؛ review و merge باقی است
+
 **Issue:** [#3 — Local-first adherence core](https://github.com/Hajimohammadi-KI/APPS_root/issues/3)
+**PR:** [#11 — Vertical Slice 1 core, mirrors, and CI gate](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) (`c666175`)
 
 فقط این چهار مسیر وارد PR نخست شوند:
 
@@ -104,10 +122,11 @@ flowchart LR
 
 ### معیار خروج
 
-- diff مرحله‌بندی‌شده فقط همین چهار مسیر را نشان دهد؛
-- CI روی PR سبز شود؛
-- worktree آلودهٔ فعلی وارد commit نشود؛
-- تا پیش از merge، SKILL-001 «local verified» است، نه «released».
+- [x] PR مستقل فقط محدودهٔ source/mirrors/CI و lockfileهای workspace لازم را دارد؛
+- [x] CI روی PR سبز است؛
+- [x] فایل‌های نامرتبط worktree وارد commit نشده‌اند؛
+- [ ] review و merge PR #11 انجام شود؛
+- [ ] تا پیش از merge، SKILL-001 «remote verified» است، نه «released».
 
 ## فاز 1 — Vertical Slice واقعی در English و Deutsch
 
@@ -381,7 +400,8 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## اقدام بعدی واحد
 
-**فقط فاز 0 را کامل کنید:** چهار مسیر SKILL-001 را در یک PR تمیز قرار دهید،
-CI را سبز کنید و پس از merge، یک issue مستقل برای Runtime Evidence Slice
-انگلیسی/آلمانی باز کنید. تا عبور آن slice، AI، دیتاست runtime و rollout
+**فقط review و merge فاز 0 را کامل کنید:** Draft PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11)
+را بازبینی و merge کنید. سپس PR آلمانی [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13)
+را روی base نهایی بازبینی کنید و یک issue مستقل برای Runtime Evidence Slice
+کامل انگلیسی/آلمانی باز کنید. تا عبور آن slice، AI، دیتاست runtime و rollout
 یادگیری متوقف می‌مانند.

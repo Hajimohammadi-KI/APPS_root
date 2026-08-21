@@ -1,10 +1,9 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.0  
+**نسخه:** 1.1  
 **تاریخ:** 2026-08-21  
-**دامنهٔ اصلی:** English Automaticity و DeutschFlow  
-**دامنهٔ موازی:** پروژهٔ لیسانس Cross Repository Code Intelligence  
+**دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)  
 **منبع:** فایل «نقد پداگوژیک، اثرگذاری و محتوا» و وضعیت واقعی مخزن
 
 ## تصمیم اصلی
@@ -328,29 +327,6 @@ Intervention فقط وقتی گسترش می‌یابد که:
 - گزارش نسخه، مسیر دقیق installer و checksum؛
 - microphone و provider خارجی که واقعاً آزموده نشده‌اند با `N/A` یا `BLOCKED`
   گزارش شوند.
-
-## مسیر موازی پروژهٔ لیسانس
-
-پروژهٔ Cross Repository Code Intelligence از همین اصل «شواهد قبل از ادعا»
-استفاده می‌کند، اما با داده و runtime جدا. این مسیر نباید با eventهای یادگیری
-یا دیتاست‌های زبان در یک schema مخلوط شود.
-
-### ترتیب اجرایی
-
-1. تثبیت vertical slice:
-   `C# method → Roslyn extraction → EF READ/WRITE → EvidenceRecord با file/line → queryable path`؛
-2. حفظ provenance و source location در تمام تبدیل‌ها؛
-3. ساخت Code-Database Evidence Graph؛
-4. retrieval فقط برای یافتن candidate؛
-5. Evidence Path برای بررسی claim؛
-6. ارزیابی extraction جدا از retrieval با Recall@k، MRR و خطای provenance؛
-7. سپس embedding، graph retrieval و LLM explanation در shadow.
-
-### مرز ادعا
-
-Embedding یا RAG سند را پیدا می‌کند؛ درست‌بودن claim را تضمین نمی‌کند. پایان‌نامه
-زمانی شواهد کافی دارد که مسیر منبع تا claim بازتولیدپذیر باشد و baselineهای
-flat و graph با مجموعهٔ برچسب‌خورده مقایسه شوند.
 
 ## ترتیب PRها و Issueها
 

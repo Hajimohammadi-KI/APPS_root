@@ -432,7 +432,6 @@
       <a href="#p7">۷</a>
       <a href="#p8">۸</a>
       <a href="#p9">۹</a>
-      <a href="#thesis">تز</a>
       <a href="#dod">DoD</a>
     </nav>
   </div>
@@ -441,11 +440,10 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.0 · 2026-08-21</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.1 · 2026-08-21</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
-      <span><b>دامنهٔ اصلی:</b> English Automaticity و DeutschFlow</span>
-      <span><b>دامنهٔ موازی:</b> پروژهٔ لیسانس Cross Repository Code Intelligence</span>
+      <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
       <span><b>منبع:</b> نقد پداگوژیک، اثرگذاری و محتوا + وضعیت واقعی مخزن</span>
     </div>
 
@@ -751,18 +749,6 @@ flowchart LR
       <li>microphone و provider خارجی که واقعاً آزموده نشده‌اند با <code>N/A</code> یا <code>BLOCKED</code> گزارش شوند</li>
     </ul>
   </section>
-
-  <h2 id="thesis"><span class="num">thesis</span> مسیر موازی پروژهٔ لیسانس</h2>
-  <p>پروژهٔ Cross Repository Code Intelligence از همین اصل «شواهد قبل از ادعا» استفاده می‌کند، اما با داده و runtime جدا. این مسیر نباید با eventهای یادگیری یا دیتاست‌های زبان در یک schema مخلوط شود.</p>
-  <h3>ترتیب اجرایی</h3>
-  <ul>
-    <li>تثبیت vertical slice: <code dir="ltr">C# method → Roslyn extraction → EF READ/WRITE → EvidenceRecord (file/line) → queryable path</code></li>
-    <li>حفظ provenance و source location در تمام تبدیل‌ها؛ ساخت Code-Database Evidence Graph</li>
-    <li>retrieval فقط برای یافتن candidate؛ Evidence Path برای بررسی claim</li>
-    <li>ارزیابی extraction جدا از retrieval با Recall@k، MRR و خطای provenance</li>
-    <li>سپس embedding، graph retrieval و LLM explanation — در shadow</li>
-  </ul>
-  <p style="color:var(--ink-dim); font-size:13.5px;"><strong style="color:var(--ink);">مرز ادعا:</strong> embedding یا RAG سند را پیدا می‌کند؛ درست‌بودن claim را تضمین نمی‌کند. پایان‌نامه زمانی شواهد کافی دارد که مسیر منبع تا claim بازتولیدپذیر باشد و baselineهای flat و graph با مجموعهٔ برچسب‌خورده مقایسه شوند.</p>
 
   <h2><span class="num">order</span> ترتیب PRها و Issueها</h2>
   <div class="table-scroll">

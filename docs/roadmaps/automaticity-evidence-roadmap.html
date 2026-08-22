@@ -448,7 +448,7 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.12 · 2026-08-22</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.13 · 2026-08-22</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
       <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
@@ -476,7 +476,7 @@
         <tr><td>هستهٔ مشترک learning-core</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز merge شد</td><td>merge <code>ed7e73f</code> و <code>shared/learning-core</code></td></tr>
         <tr><td>SKILL-001 Adherence Core</td><td>روی <code>main</code> ادغام و فقط به‌صورت shadow به برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز اعمال/ذخیره نمی‌شود</td><td><code>shared/learning-core/src/adherence/shadow-runner.ts</code></td></tr>
         <tr><td>تست اختصاصی adherence</td><td>۳۶ تست، ۶۹٬۲۶۲ assertion پس از Guarded Nudges</td><td><code>bun run test:adherence-core</code></td></tr>
-        <tr><td>کل تست learning-core</td><td>۸۶ تست، ۷۱٬۶۵۷ assertion پس از PR #34</td><td><code>bun run test</code></td></tr>
+        <tr><td>کل تست learning-core</td><td>۸۷ تست، ۷۱٬۶۶۰ assertion پس از PR #36</td><td><code>bun run test</code></td></tr>
         <tr><td>تست اختصاصی Forced Output Booster</td><td>۱۰ تست و ۲٬۲۶۹ assertion؛ E2E انگلیسی ۲/۲ و آلمانی ۲/۲</td><td><code>bun run test:booster</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126" class="mono">run 32544972126</a></td></tr>
         <tr><td>TypeScript و mirror parity</td><td>تأییدشده</td><td><code>bun run typecheck</code></td></tr>
         <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
@@ -494,6 +494,7 @@
         <tr><td>Guarded in-app nudges</td><td>در هر دو اپ با opt-in صریح و پیش‌فرض خاموش، ترتیب guard قطعی، quiet hours، cooldown، سقف روزانه/هفتگی، رویداد محلی کمینه و متن EN/DE/FA ادغام شد؛ push/email و ادعای outcome وجود ندارد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/30" class="mono">PR #30</a> · merge <code>4e08775</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941048" class="mono">Core/Content CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941037" class="mono">Browser CI</a> · Issue #7 بسته</td></tr>
         <tr><td>Forced Output Booster</td><td>در هر دو اپ با <code>booster_mode</code> پیش‌فرض خاموش، ۳ تا ۵ دور ۳۰ تا ۹۰ ثانیه‌ای فقط از سهم <code>automatization</code>، ضبط واقعی یا fallback تایپ، metadata کمینه و منع قطعی mastery/automaticity ادغام شد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/32" class="mono">PR #32</a> · merge <code>1c6fb95</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126" class="mono">Core/Browser CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972169" class="mono">German CI</a> · Issue #4 بسته</td></tr>
         <tr><td>FSRS-6 Shadow</td><td><code>ts-fsrs@5.4.1</code> و FSRS-6.0 ثابت؛ ۱۲ تست و ۳۵ assertion، بردار رسمی، بازپخش ۱٬۰۰۰ تاریخچه، due-count، rollback و گزارش migration-loss</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/34" class="mono">PR #34</a> · merge <code>00998b9</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150383" class="mono">Core/App CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150384" class="mono">German verify</a> · Issue #5 بسته</td></tr>
+        <tr><td>مسیرهای canonical و E2E آلمانی</td><td>مالکیت <code>/heute</code>، <code>/grammatik</code>، <code>/studio</code>، <code>/einstellungen</code> و <code>/klassik</code> مستند شد؛ Shell تکراری Studio حذف بصری، CSS محدود به Studio، چیدمان container-responsive و انتظار PWA آفلاین به UI فعلی اصلاح شد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/36" class="mono">PR #36</a> · merge <code>463a82d</code> · ۲۵ تست non-opt-in پاس و ۲ تست opt-in جدا · PWA production/offline پاس · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32547665744" class="mono">German CI</a></td></tr>
         <tr><td>AI و دیتاست runtime</td><td>هنوز نباید وارد runtime یا تصمیم mastery شود</td><td>ingestion محتوای پایلوت وابسته به تکمیل بازبینی انسانی G4 است</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
       </tbody>
@@ -840,8 +841,9 @@ flowchart LR
         <tr><td class="mono" style="text-align:center">8</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/30" class="mono">PR #30</a></td><td>✅ merge <code>4e08775</code>؛ Issue #7 بسته، consent/cooldown و hard caps در CI تأیید شد</td></tr>
         <tr><td class="mono" style="text-align:center">9</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/32" class="mono">PR #32</a></td><td>✅ merge <code>1c6fb95</code>؛ Issue #4 بسته و شش check سبز</td></tr>
         <tr><td class="mono" style="text-align:center">10</td><td>FSRS shadow evaluation</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/34" class="mono">PR #34</a></td><td>✅ merge <code>00998b9</code>؛ زیرساخت shadow کامل و Issue #5 بسته؛ rollout واقعی هنوز N/A</td></tr>
-        <tr><td class="mono" style="text-align:center">11</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>
-        <tr><td class="mono" style="text-align:center">12</td><td>Consented pilot analytics</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G5 و دادهٔ چندکاربره</td></tr>
+        <tr><td class="mono" style="text-align:center">11</td><td>Canonical German routes و Chromium E2E</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/12" class="mono">#12</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/36" class="mono">PR #36</a></td><td>✅ merge <code>463a82d</code>؛ Issue #12 بسته، E2E و PWA آفلاین پاس</td></tr>
+        <tr><td class="mono" style="text-align:center">12</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>
+        <tr><td class="mono" style="text-align:center">13</td><td>Consented pilot analytics</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G5 و دادهٔ چندکاربره</td></tr>
       </tbody>
     </table>
   </div>
@@ -876,7 +878,7 @@ flowchart LR
 
   <div class="callout final">
     <span class="label">اقدام بعدی واحد</span>
-    <p style="margin:0;">کار اجرایی فنی بعدی <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/12" class="mono">Issue #12</a> است: انتظارهای E2E قدیمی DeutschFlow باید با routeهای replacement فعلی آشتی داده شوند تا failure واقعی از تست stale جدا شود. هم‌زمان G4 بدون دو بازبین انسانی مستقل قابل عبور نیست؛ Issues #8، #9 و #10 تا دریافت review/پایلوت/دادهٔ واقعی نباید موفق گزارش شوند و learning outcome برابر N/A باقی می‌ماند.</p>
+    <p style="margin:0;">اقدام بعدی واقعی عبور G4 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">Issue #8</a> است: دو بازبین انسانی مستقل باید هر دو واحد mediation پایلوت را با rubric نسخه‌دار بررسی کنند و agreement/adjudication واقعی ثبت شود. Issue #12 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/36" class="mono">PR #36</a> بسته شد و دیگر کار فنی مستقلِ مجاز پیش از G4 باقی نمانده است. Issues #9 و #10 تا دریافت review، پایلوت و دادهٔ واقعی نباید موفق گزارش شوند و learning outcome برابر N/A باقی می‌ماند.</p>
   </div>
 
   <footer class="note">

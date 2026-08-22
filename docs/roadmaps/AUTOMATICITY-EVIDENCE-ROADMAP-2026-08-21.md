@@ -1,12 +1,15 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.13
+**نسخه:** 1.14
 
 **آخرین به‌روزرسانی:** 2026-08-22
 **دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)
 **منبع:** فایل «نقد پداگوژیک، اثرگذاری و محتوا» و وضعیت واقعی مخزن
-**نسخهٔ وب:** https://automaticity-evidence-roadmap.vercel.app
+**نسخهٔ عمومی تأییدشده:** https://hajimohammadi-ki.github.io/APPS_root/
+
+**Vercel قدیمی:** دامنه‌های قبلی آنلاین‌اند، اما حساب متصل فعلی به تیم مالک آن‌ها
+دسترسی ندارد و هنوز محتوای قدیمی نشان می‌دهند.
 
 ## تصمیم اصلی
 
@@ -35,6 +38,8 @@
 | تست اختصاصی Forced Output Booster | 10 تست و 2,269 assertion؛ E2E انگلیسی 2/2 و آلمانی 2/2 | `bun run test:booster` و [run 32544972126](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126) |
 | FSRS-6 Shadow | `ts-fsrs@5.4.1` و FSRS-6.0 ثابت؛ 12 تست و 35 assertion، بردار رسمی، بازپخش 1,000 تاریخچه، مقایسهٔ due-count، rollback و migration-loss | [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34)، merge `00998b9`؛ [Core/App CI 32546150383](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150383) و [German verify 32546150384](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150384) سبز؛ Issue #5 بسته |
 | مسیرهای canonical و E2E آلمانی | مالکیت `/heute`، `/grammatik`، `/studio`، `/einstellungen` و `/klassik` مستند شد؛ Shell تکراری Studio حذف بصری، CSS محدود به Studio، چیدمان container-responsive و انتظار PWA آفلاین به UI فعلی اصلاح شد | [PR #36](https://github.com/Hajimohammadi-KI/APPS_root/pull/36)، merge `463a82d`؛ 25 تست non-opt-in پاس و 2 تست opt-in جدا؛ PWA production/offline نیز پاس؛ [German CI 32547665744](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32547665744) |
+| انتشار DeutschFlow 20.8.25 | از `main` فعلی ساخته شد؛ نصب تازه، اجرای مستقیم دسکتاپ، وب/API واقعی، ارتقا از 20.8.24، repair پس از خرابی عمدی version marker، uninstall و حفظ دقیق دادهٔ ساختگی پاس شد | [PR #38](https://github.com/Hajimohammadi-KI/APPS_root/pull/38)، merge `6239e3c`؛ [CI 32548697753](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32548697753)؛ Setup SHA-256 `B95AA51EE28E91B3A8493A239C57E8BB08CBC8F422741112EBEAAA98FD313724`؛ payload SHA-256 `52A99AC6E0A99001A9891E113F00DE7F77E5273B198199B9C79092F8720321CA` |
+| انتشار عمومی رودمپ | همین HTML به‌صورت artifact محدود و عمومی در GitHub Pages منتشر شد؛ root و دو alias محتوای hash-identical می‌دهند و در viewport تبلت 800×1280 سرریز افقی یا خطای console ندارند | [PR #39](https://github.com/Hajimohammadi-KI/APPS_root/pull/39)، merge `be6bde6`؛ [Pages deploy 32548857892](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32548857892) |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
@@ -56,10 +61,11 @@
 > سبزشدن تست‌های pure TypeScript فقط صحت قراردادها و invariants را نشان می‌دهد؛
 > این نتیجه، به‌تنهایی اثبات نمی‌کند که کاربر واقعاً زبان را اتوماتیک می‌کند.
 
-## لینک‌های اجرای محلی تأییدشده در 2026-08-21
+## لینک‌های عمومی و اجرای محلی تأییدشده تا 2026-08-22
 
 | سرویس | لینک ویندوز | لینک تبلت/Android در همان Wi-Fi | وضعیت |
 |---|---|---|---|
+| رودمپ عمومی | [GitHub Pages](https://hajimohammadi-ki.github.io/APPS_root/) | [لینک مستقیم تبلت](https://hajimohammadi-ki.github.io/APPS_root/automaticity-ux-roadmap/) | HTTPS عمومی؛ HTTP 200؛ RTL؛ بدون سرریز افقی در 800×1280؛ deploy خودکار از همین فایل |
 | App Starter | [127.0.0.1:4300](http://127.0.0.1:4300/) | فقط میزبان ویندوز | HTTP 200؛ health سریع و بدون خطای کاذب startup |
 | English Automaticity | [127.0.0.1:3202](http://127.0.0.1:3202/) | [192.168.178.24:3202](http://192.168.178.24:3202/) | HTTP 200 و browser smoke test |
 | DeutschFlow | [127.0.0.1:3210](http://127.0.0.1:3210/) | [192.168.178.24:3210](http://192.168.178.24:3210/) | HTTP 200 و browser smoke test |
@@ -101,7 +107,7 @@ flowchart LR
 | **G3 — Shadow Safety** | ✅ در PR #24 عبور کرد: خروجی جدید کنار برنامهٔ فعلی محاسبه می‌شود؛ E2E هر دو زبان ثابت می‌کند UI و دادهٔ learner/evidence تغییر نمی‌کنند | flag پیش‌فرض خاموش می‌ماند؛ اثر یادگیری همچنان N/A است |
 | **G4 — Content Quality** | 🟡 زیرساخت در PR #26 ادغام شد؛ provenance، مجوز، rubric، quarantine و CI موجود است، اما دو بازبین انسانی واقعی و agreement هنوز N/A هستند | draftها وارد برنامهٔ روزانه نمی‌شوند و Issue #8 باز می‌ماند |
 | **G5 — Learning Evidence** | pre/post مستقل، delayed recall و novel transfer با دادهٔ واقعی | واژهٔ «automatic» فقط هدف محصول باشد، نه نتیجهٔ اثبات‌شده |
-| **G6 — Release Lifecycle** | build، E2E، responsive، Install/Update/Repair و حفظ داده پاس شوند | installer یا نسخهٔ وب منتشر نشود |
+| **G6 — Release Lifecycle** | build، E2E، responsive، Install/Update/Repair و حفظ داده پاس شوند؛ DeutschFlow 20.8.25 این چرخه را گذرانده، اما Gate سراسری تا release نهایی هر دو اپ پس از G4/G5 باز است | هیچ انتشار جدیدی بدون تکرار همین چرخه انجام نشود |
 
 > **چرا G1 فقط روی یک سطح (B1) تعریف شده، نه همهٔ سطوح؟** هدف G1 اثبات
 > درستی مسیر فنی (pipeline) است، نه پوشش محتوا — سطح فقط metadata روی
@@ -448,8 +454,9 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | 9 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) و [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32) | ✅ merge `1c6fb95`؛ Issue #4 بسته و شش check سبز |
 | 10 | FSRS shadow evaluation | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) و [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34) | ✅ merge `00998b9`؛ زیرساخت shadow کامل و Issue #5 بسته؛ rollout واقعی هنوز N/A |
 | 11 | Canonical German routes و Chromium E2E | [#12](https://github.com/Hajimohammadi-KI/APPS_root/issues/12) و [PR #36](https://github.com/Hajimohammadi-KI/APPS_root/pull/36) | ✅ merge `463a82d`؛ Issue #12 بسته، E2E و PWA آفلاین پاس |
-| 12 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
-| 13 | Consented pilot analytics | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G5 و دادهٔ چندکاربره |
+| 12 | DeutschFlow 20.8.25 و public roadmap mirror | [PR #38](https://github.com/Hajimohammadi-KI/APPS_root/pull/38) و [PR #39](https://github.com/Hajimohammadi-KI/APPS_root/pull/39) | ✅ installer lifecycle و Pages deploy پاس؛ این شواهد عبور G4/G5 نیست |
+| 13 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
+| 14 | Consented pilot analytics | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G5 و دادهٔ چندکاربره |
 
 ## کارهایی که فعلاً نباید انجام شوند
 
@@ -481,7 +488,8 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 **اقدام بعدی واقعی عبور G4 در Issue #8 است:** دو بازبین انسانی مستقل باید هر دو
 واحد mediation پایلوت را با rubric نسخه‌دار بررسی کنند و agreement/adjudication
-واقعی ثبت شود. Issue #12 در PR #36 بسته شد و دیگر کار فنی مستقلِ مجاز پیش از G4
-باقی نمانده است. Issues #9 و #10 تا دریافت review، پایلوت و دادهٔ واقعی نباید
-موفق گزارش شوند. release array خالی، دادهٔ خام خارج از برنامهٔ روزانه و Installer،
-و learning outcome برابر N/A باقی می‌ماند.
+واقعی ثبت شود. انتشار تأییدشدهٔ DeutschFlow 20.8.25 و mirror عمومی رودمپ، شواهد
+release هستند و جای human review یا outcome واقعی را نمی‌گیرند. Issues #9 و #10
+تا دریافت review، پایلوت و دادهٔ واقعی نباید موفق گزارش شوند. release array خالی،
+دادهٔ خام خارج از برنامهٔ روزانه و Installer، و learning outcome برابر N/A باقی
+می‌ماند.

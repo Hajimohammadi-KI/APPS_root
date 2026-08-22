@@ -131,6 +131,16 @@ test("studio supports topic selection, sessions, and minimum-word gate", async (
 }) => {
   await page.goto("/studio?topic=12");
 
+  // The shared application shell owns navigation and route controls. The
+  // imported studio prototype keeps only its page heading, not an overlapping
+  // sidebar or duplicate status/install controls.
+  await expect(page.locator(".app-shell > .sidebar")).toBeHidden();
+  await expect(
+    page.locator(".app-shell > main > header .header-actions"),
+  ).toBeHidden();
+  await expect(
+    page.getByRole("heading", { name: "Gesprächsstudio", level: 1 }),
+  ).toBeVisible();
   await expect(page.getByLabel("Thema")).toBeVisible();
   await page.getByLabel("Dein Transkript").fill("Zu kurz");
   const evaluateButton = page.getByRole("button", {
@@ -147,6 +157,27 @@ test("studio supports topic selection, sessions, and minimum-word gate", async (
       "Thema geändert. Die vorige Antwort wurde verworfen; es wird keine alte Bewertung übernommen.",
     ),
   ).toBeVisible();
+});
+
+test("studio controls stay reachable on a narrow mobile screen", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/studio?topic=12");
+
+  const dimensions = await page.locator("body").evaluate((body) => ({
+    clientWidth: body.clientWidth,
+    scrollWidth: body.scrollWidth,
+  }));
+  expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+
+  await page.getByLabel("Dein Transkript").fill("Zu kurz");
+  const evaluateButton = page.getByRole("button", {
+    name: "Antwort auswerten",
+  });
+  await evaluateButton.scrollIntoViewIfNeeded();
+  await evaluateButton.click();
+  await expect(page.getByText(/2\/12 Wörter/)).toBeVisible();
 });
 
 test("resources remain complete and the old topic route opens the studio", async ({
@@ -294,7 +325,7 @@ test("production PWA installs its worker and reloads offline", async ({
   await context.setOffline(true);
   await page.reload({ waitUntil: "domcontentloaded" });
   await expect(
-    page.getByRole("heading", { name: "Dein Dashboard" }),
+    page.getByRole("heading", { name: "Willkommen, Lernende" }),
   ).toBeVisible();
   await context.setOffline(false);
 });

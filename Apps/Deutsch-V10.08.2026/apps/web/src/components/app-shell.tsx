@@ -151,10 +151,7 @@ export function AppShell({
               />
               <UserGuideButton />
               <InstallAppButton surface="header" />
-              <Badge
-                variant="secondary"
-                className="hidden md:inline-flex xl:inline-flex"
-              >
+              <Badge variant="secondary" className="hidden xl:inline-flex">
                 v20.8 · aktuelle Version
               </Badge>
             </div>

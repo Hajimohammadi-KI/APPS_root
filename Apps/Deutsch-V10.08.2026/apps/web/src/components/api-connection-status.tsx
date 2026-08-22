@@ -46,7 +46,7 @@ export function ApiConnectionStatus() {
   return (
     <span
       aria-live="polite"
-      className="hidden min-h-9 items-center gap-2 rounded-full border border-border bg-card px-3 text-xs font-bold text-foreground sm:inline-flex"
+      className="hidden min-h-9 items-center gap-2 rounded-full border border-border bg-card px-3 text-xs font-bold text-foreground lg:inline-flex"
       title={`${statusCopy[status]} · Bestätigt nur den lokalen API-Dienst, nicht KI- oder Übersetzungsanbieter. · ${API_BASE_URL}`}
     >
       <span

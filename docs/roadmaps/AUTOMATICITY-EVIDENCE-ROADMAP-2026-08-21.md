@@ -1,7 +1,7 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.11
+**نسخه:** 1.12
 
 **آخرین به‌روزرسانی:** 2026-08-22
 **دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)
@@ -26,13 +26,14 @@
 
 ## وضعیت واقعی در نقطهٔ شروع
 
-| بخش | وضعیت 2026-08-21 | مدرک |
+| بخش | وضعیت تا 2026-08-22 | مدرک |
 |---|---|---|
 | هستهٔ مشترک learning-core | PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) پس از بازبینی مستقل و CI سبز merge شد | merge `ed7e73f` و `shared/learning-core` |
 | SKILL-001 Adherence Core | روی `main` ادغام و فقط به‌صورت shadow به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز روی برنامه یا دادهٔ زبان‌آموز اعمال/ذخیره نمی‌شود | `shared/learning-core/src/adherence/shadow-runner.ts` |
 | تست اختصاصی adherence | تأییدشده پس از Guarded Nudges: 36 تست، 69,262 assertion | `bun run test:adherence-core` |
-| کل تست learning-core | تأییدشده پس از PR #32: 75 تست و 71,625 assertion | `bun run test` |
+| کل تست learning-core | تأییدشده پس از PR #34: 86 تست و 71,657 assertion | `bun run test` |
 | تست اختصاصی Forced Output Booster | 10 تست و 2,269 assertion؛ E2E انگلیسی 2/2 و آلمانی 2/2 | `bun run test:booster` و [run 32544972126](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126) |
+| FSRS-6 Shadow | `ts-fsrs@5.4.1` و FSRS-6.0 ثابت؛ 12 تست و 35 assertion، بردار رسمی، بازپخش 1,000 تاریخچه، مقایسهٔ due-count، rollback و migration-loss | [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34)، merge `00998b9`؛ [Core/App CI 32546150383](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150383) و [German verify 32546150384](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150384) سبز؛ Issue #5 بسته |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
@@ -289,26 +290,31 @@ flowchart LR
   از یک Booster ساخته نمی‌شود؛
 - ✅ هیچ آستانهٔ جهانی «صدها تکرار» در کد hard-code نشده است.
 
-## فاز 5 — مهاجرت FSRS در Shadow
+## فاز 5 — ارزیابی FSRS در Shadow
 
-**برآورد:** 1 تا 2 sprint
+**وضعیت 2026-08-22:** زیرساخت فنی در [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34) با merge `00998b9` و هشت check سبز ادغام شد؛ Issue #5 بسته است. FSRS فقط با `fsrs_shadow_v1=true` فعال می‌شود، موعد واقعی زبان‌آموز را عوض نمی‌کند و `rolloutEligible=false` باقی می‌ماند. دورهٔ واقعی prospective، retention، workload و overdue burden هنوز **N/A — هنوز به‌اندازهٔ کافی تأیید نشده** هستند.
+
+**برآورد اولیه:** 1 تا 2 sprint
 **وابستگی:** G2
-**Issue:** [#5 — FSRS shadow migration](https://github.com/Hajimohammadi-KI/APPS_root/issues/5)
+**Issue/PR:** [#5 — FSRS shadow migration](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) و [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34)
 
 ### کارها
 
-- نگاشت دادهٔ scheduler فعلی به Difficulty، Stability و Retrievability؛
+- pin کردن `ts-fsrs@5.4.1`، FSRS-6.0 و commit رسمی upstream؛
+- تشخیص صریح اینکه دادهٔ قدیمی aggregate-only است و برای seed معتبر کافی نیست؛
+- جمع‌آوری آینده‌نگر rating و timestamp فقط پس از opt-in؛
 - محاسبهٔ due date فعلی و FSRS در کنار هم، بدون تغییر برنامهٔ کاربر؛
 - ثبت اختلاف زمان‌بندی و rollback metadata؛
-- تست property-based برای monotonicity و boundaryها؛
+- بازپخش قطعی 1,000 تاریخچه، due-count و benchmark latency؛
 - استفاده از پیاده‌سازی معتبر FSRS؛ نه الگوریتم مبتنی بر `ease factor` و نه
   invariant نامعتبر `stability >= difficulty`.
 
 ### معیار خروج
 
-- حداقل یک دورهٔ واقعی shadow بدون از دست‌رفتن review history؛
-- migration رفت‌وبرگشت‌پذیر و idempotent؛
-- فعال‌سازی تدریجی فقط پس از بررسی retention، workload و overdue burden.
+- ✅ بردار رسمی، بازپخش deterministic، idempotence، capacity و rollback پاس شده‌اند؛
+- ✅ scheduler فعلی source of truth مانده و خاموش‌کردن flag فقط دادهٔ shadow را کنار می‌گذارد؛
+- ⏳ حداقل یک دورهٔ واقعی prospective shadow هنوز اجرا نشده است؛
+- ⏳ فعال‌سازی learner-visible فقط پس از بررسی retention، workload و overdue burden ممکن است.
 
 ## فاز 6 — Content QA، Mediation و پایلوت دیتاست
 
@@ -439,7 +445,7 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | 7 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) و [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28) | ✅ merge `32e8a8c`؛ Issue #6 بسته |
 | 8 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) و [PR #30](https://github.com/Hajimohammadi-KI/APPS_root/pull/30) | ✅ merge `4e08775`؛ Issue #7 بسته، consent/cooldown و hard caps در CI تأیید شد |
 | 9 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) و [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32) | ✅ merge `1c6fb95`؛ Issue #4 بسته و شش check سبز |
-| 10 | FSRS shadow migration | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) | G2 |
+| 10 | FSRS shadow evaluation | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) و [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34) | ✅ merge `00998b9`؛ زیرساخت shadow کامل و Issue #5 بسته؛ rollout واقعی هنوز N/A |
 | 11 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
 | 12 | Consented pilot analytics | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G5 و دادهٔ چندکاربره |
 
@@ -471,8 +477,8 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## اقدام بعدی واحد
 
-**کار اجرایی بعدی Issue #5 است:** مهاجرت FSRS فقط در Shadow، با محاسبهٔ scheduler
-فعلی و FSRS در کنار هم، rollback metadata و بدون تغییر برنامهٔ واقعی کاربر.
-هم‌زمان G4 بدون دو بازبین انسانی مستقل قابل عبور نیست؛ تا دریافت آن reviewها،
-release array خالی، دادهٔ خام خارج از برنامهٔ روزانه و Installer، و learning
-outcome برابر N/A باقی می‌ماند.
+**کار اجرایی فنی بعدی Issue #12 است:** انتظارهای E2E قدیمی DeutschFlow باید با
+routeهای replacement فعلی آشتی داده شوند تا failure واقعی از تست stale جدا شود.
+هم‌زمان G4 بدون دو بازبین انسانی مستقل قابل عبور نیست؛ Issues #8، #9 و #10 تا
+دریافت review/پایلوت/دادهٔ واقعی نباید موفق گزارش شوند. release array خالی، دادهٔ
+خام خارج از برنامهٔ روزانه و Installer، و learning outcome برابر N/A باقی می‌ماند.

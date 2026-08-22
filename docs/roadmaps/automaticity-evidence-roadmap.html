@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>رودمپ اتوماتیک‌شدن و شواهد</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f5f75'/%3E%3Cpath d='M8 17l5 5L24 10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
   :root {
@@ -447,7 +448,7 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.11 · 2026-08-22</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.12 · 2026-08-22</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
       <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
@@ -475,7 +476,7 @@
         <tr><td>هستهٔ مشترک learning-core</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز merge شد</td><td>merge <code>ed7e73f</code> و <code>shared/learning-core</code></td></tr>
         <tr><td>SKILL-001 Adherence Core</td><td>روی <code>main</code> ادغام و فقط به‌صورت shadow به برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز اعمال/ذخیره نمی‌شود</td><td><code>shared/learning-core/src/adherence/shadow-runner.ts</code></td></tr>
         <tr><td>تست اختصاصی adherence</td><td>۳۶ تست، ۶۹٬۲۶۲ assertion پس از Guarded Nudges</td><td><code>bun run test:adherence-core</code></td></tr>
-        <tr><td>کل تست learning-core</td><td>۷۵ تست، ۷۱٬۶۲۵ assertion پس از PR #32</td><td><code>bun run test</code></td></tr>
+        <tr><td>کل تست learning-core</td><td>۸۶ تست، ۷۱٬۶۵۷ assertion پس از PR #34</td><td><code>bun run test</code></td></tr>
         <tr><td>تست اختصاصی Forced Output Booster</td><td>۱۰ تست و ۲٬۲۶۹ assertion؛ E2E انگلیسی ۲/۲ و آلمانی ۲/۲</td><td><code>bun run test:booster</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126" class="mono">run 32544972126</a></td></tr>
         <tr><td>TypeScript و mirror parity</td><td>تأییدشده</td><td><code>bun run typecheck</code></td></tr>
         <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
@@ -492,6 +493,7 @@
         <tr><td>Implementation Intentions</td><td>انتخاب اختیاری ۰ یا ۲ تا ۵ برنامهٔ زمان/مکان در Settings هر دو زبان، ذخیرهٔ local-only، متن EN/DE/FA و حذف/بازیابی پس از reload ادغام شد؛ هیچ nudge یا event ساخته نمی‌شود</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/28" class="mono">PR #28</a> · merge <code>32e8a8c</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173665" class="mono">Core CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173644" class="mono">German CI</a></td></tr>
         <tr><td>Guarded in-app nudges</td><td>در هر دو اپ با opt-in صریح و پیش‌فرض خاموش، ترتیب guard قطعی، quiet hours، cooldown، سقف روزانه/هفتگی، رویداد محلی کمینه و متن EN/DE/FA ادغام شد؛ push/email و ادعای outcome وجود ندارد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/30" class="mono">PR #30</a> · merge <code>4e08775</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941048" class="mono">Core/Content CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941037" class="mono">Browser CI</a> · Issue #7 بسته</td></tr>
         <tr><td>Forced Output Booster</td><td>در هر دو اپ با <code>booster_mode</code> پیش‌فرض خاموش، ۳ تا ۵ دور ۳۰ تا ۹۰ ثانیه‌ای فقط از سهم <code>automatization</code>، ضبط واقعی یا fallback تایپ، metadata کمینه و منع قطعی mastery/automaticity ادغام شد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/32" class="mono">PR #32</a> · merge <code>1c6fb95</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126" class="mono">Core/Browser CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972169" class="mono">German CI</a> · Issue #4 بسته</td></tr>
+        <tr><td>FSRS-6 Shadow</td><td><code>ts-fsrs@5.4.1</code> و FSRS-6.0 ثابت؛ ۱۲ تست و ۳۵ assertion، بردار رسمی، بازپخش ۱٬۰۰۰ تاریخچه، due-count، rollback و گزارش migration-loss</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/34" class="mono">PR #34</a> · merge <code>00998b9</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150383" class="mono">Core/App CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150384" class="mono">German verify</a> · Issue #5 بسته</td></tr>
         <tr><td>AI و دیتاست runtime</td><td>هنوز نباید وارد runtime یا تصمیم mastery شود</td><td>ingestion محتوای پایلوت وابسته به تکمیل بازبینی انسانی G4 است</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
       </tbody>
@@ -713,21 +715,23 @@ flowchart LR
 
   <section class="phase" id="p5">
     <div class="phase-head">
-      <div class="phase-title-row"><span class="phase-num">۵</span><h3>مهاجرت FSRS در Shadow</h3></div>
-      <span class="chip pending"><span class="dot"></span>آماده برای شاخهٔ مستقل</span>
+      <div class="phase-title-row"><span class="phase-num">۵</span><h3>ارزیابی FSRS در Shadow</h3></div>
+      <span class="chip pass"><span class="dot"></span>زیرساخت کامل · rollout بسته</span>
     </div>
-    <div class="phase-tags">برآورد: ۱ تا ۲ sprint · وابستگی: <code>G2</code> · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></div>
+    <div class="phase-tags">merge <code>00998b9</code> · هشت check سبز · وابستگی: <code>G2</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">Issue #5</a> بسته · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/34" class="mono">PR #34</a></div>
+    <div class="callout final"><span class="label">خروجی تأییدشدهٔ فاز ۵</span><p><code>ts-fsrs@5.4.1</code> و FSRS-6.0 با commit ثابت upstream ادغام شدند. flag <code>fsrs_shadow_v1</code> پیش‌فرض خاموش است؛ scheduler فعلی source of truth می‌ماند و دادهٔ قدیمی aggregate-only به‌اشتباه به تاریخچهٔ rating تبدیل نمی‌شود. ۱۲ تست، ۱٬۰۰۰ replay و build هر دو اپ پاس شدند. دورهٔ واقعی prospective، retention، workload و overdue burden همچنان <strong>N/A — هنوز به‌اندازهٔ کافی تأیید نشده</strong> هستند.</p></div>
     <ul>
-      <li>نگاشت دادهٔ scheduler فعلی به Difficulty، Stability و Retrievability</li>
+      <li>جمع‌آوری آینده‌نگر rating و timestamp پس از opt-in؛ بدون جعل تاریخچهٔ قدیمی</li>
       <li>محاسبهٔ due date فعلی و FSRS در کنار هم، بدون تغییر برنامهٔ کاربر</li>
       <li>استفاده از پیاده‌سازی معتبر FSRS؛ نه الگوریتم مبتنی بر <code>ease factor</code> و نه invariant نامعتبر <code dir="ltr">stability >= difficulty</code></li>
     </ul>
     <div class="exit-box">
       <span class="label">معیار خروج</span>
       <ul>
-        <li>حداقل یک دورهٔ واقعی shadow بدون از دست‌رفتن review history</li>
-        <li>migration رفت‌وبرگشت‌پذیر و idempotent</li>
-        <li>فعال‌سازی تدریجی فقط پس از بررسی retention، workload و overdue burden</li>
+        <li>✅ بردار رسمی، replay قطعی، idempotence، capacity و rollback پاس شده‌اند</li>
+        <li>✅ learner schedule هرگز اعمال نمی‌شود و <code>rolloutEligible=false</code> است</li>
+        <li>⏳ حداقل یک دورهٔ واقعی prospective shadow هنوز اجرا نشده است</li>
+        <li>⏳ فعال‌سازی تدریجی فقط پس از بررسی retention، workload و overdue burden</li>
       </ul>
     </div>
   </section>
@@ -835,7 +839,7 @@ flowchart LR
         <tr><td class="mono" style="text-align:center">7</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/28" class="mono">PR #28</a></td><td>✅ merge <code>32e8a8c</code>؛ Issue #6 بسته</td></tr>
         <tr><td class="mono" style="text-align:center">8</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/30" class="mono">PR #30</a></td><td>✅ merge <code>4e08775</code>؛ Issue #7 بسته، consent/cooldown و hard caps در CI تأیید شد</td></tr>
         <tr><td class="mono" style="text-align:center">9</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/32" class="mono">PR #32</a></td><td>✅ merge <code>1c6fb95</code>؛ Issue #4 بسته و شش check سبز</td></tr>
-        <tr><td class="mono" style="text-align:center">10</td><td>FSRS shadow migration</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></td><td>G2</td></tr>
+        <tr><td class="mono" style="text-align:center">10</td><td>FSRS shadow evaluation</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/34" class="mono">PR #34</a></td><td>✅ merge <code>00998b9</code>؛ زیرساخت shadow کامل و Issue #5 بسته؛ rollout واقعی هنوز N/A</td></tr>
         <tr><td class="mono" style="text-align:center">11</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>
         <tr><td class="mono" style="text-align:center">12</td><td>Consented pilot analytics</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G5 و دادهٔ چندکاربره</td></tr>
       </tbody>
@@ -872,7 +876,7 @@ flowchart LR
 
   <div class="callout final">
     <span class="label">اقدام بعدی واحد</span>
-    <p style="margin:0;">کار اجرایی بعدی <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">Issue #5</a> است: مهاجرت FSRS فقط در Shadow، با محاسبهٔ scheduler فعلی و FSRS در کنار هم، rollback metadata و بدون تغییر برنامهٔ واقعی کاربر. هم‌زمان G4 بدون دو بازبین انسانی مستقل قابل عبور نیست؛ تا دریافت آن reviewها، release array خالی و learning outcome برابر N/A باقی می‌ماند.</p>
+    <p style="margin:0;">کار اجرایی فنی بعدی <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/12" class="mono">Issue #12</a> است: انتظارهای E2E قدیمی DeutschFlow باید با routeهای replacement فعلی آشتی داده شوند تا failure واقعی از تست stale جدا شود. هم‌زمان G4 بدون دو بازبین انسانی مستقل قابل عبور نیست؛ Issues #8، #9 و #10 تا دریافت review/پایلوت/دادهٔ واقعی نباید موفق گزارش شوند و learning outcome برابر N/A باقی می‌ماند.</p>
   </div>
 
   <footer class="note">

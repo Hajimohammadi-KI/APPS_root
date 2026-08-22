@@ -1,0 +1,49 @@
+name: English Automaticity CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Apps/English/English-07082026/**"
+      - ".github/workflows/english-automaticity-ci.yml"
+  pull_request:
+    paths:
+      - "Apps/English/English-07082026/**"
+      - ".github/workflows/english-automaticity-ci.yml"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: Apps/English/English-07082026
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Install exact dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Verify types, tests, installer schema, and lint
+        run: bun run check
+
+      - name: Build production web and API artifacts
+        run: bun run build
+
+      - name: Install Playwright Chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: Verify browser flows
+        run: bun run test:e2e

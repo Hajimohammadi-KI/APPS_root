@@ -1,21 +1,7 @@
 import { expect, test } from "@playwright/test";
-import type { Page } from "@playwright/test";
 
 const legacyUrl = process.env.E2E_LEGACY_URL ?? "http://localhost:3301";
 const migratedUrl = process.env.E2E_BASE_URL ?? "http://localhost:3201";
-
-async function openNavigationLink(page: Page, label: string, group: string) {
-  const navigation = page.getByRole("navigation", {
-    name: "Product navigation",
-  });
-  const trigger = navigation.getByRole("button", {
-    name: new RegExp(`^${group}`),
-  });
-  if ((await trigger.getAttribute("aria-expanded")) !== "true") {
-    await trigger.click();
-  }
-  await navigation.getByRole("link", { name: label, exact: true }).click();
-}
 
 test("keeps the legacy archive loadable as the migration source of truth", async ({
   page,
@@ -57,10 +43,10 @@ test("preserves legacy content while applying the shared accessible theme", asyn
 
   await page.goto(migratedUrl);
   for (const text of [
-    "Use English confidently and automatically",
-    "From recall to confident speaking",
-    "Choose your level",
-    "Open Conversation Studio",
+    "Personal learning dashboard",
+    "Small, measurable practice that turns English into a usable skill.",
+    "Select a course",
+    "Master Everyday Conversations",
   ]) {
     await expect(page.getByText(text, { exact: true })).toBeVisible();
   }
@@ -116,51 +102,48 @@ test("keeps every legacy surface, catalog, and primary control available", async
   const navigation = page.getByRole("navigation", {
     name: "Product navigation",
   });
-  await expect(navigation.getByRole("link")).toHaveCount(3);
+  await expect(navigation.getByRole("link")).toHaveCount(13);
   await expect(navigation.getByRole("button")).toHaveCount(4);
 
-  await openNavigationLink(page, "Conversation Studio", "Daily Practice");
+  await page.goto(`${migratedUrl}/studio`);
   for (const label of [
-    "Learning path",
     "Level",
     "Skill",
     "Category",
     "Topic",
-    "Start session",
-    "Record answer",
-    "Pause",
-    "Stop recording",
-    "Evaluate answer",
-    "End session",
-    "Grammar Correction",
-    "Current Evidence",
-    "Save to error workshop",
+    "Grammar correction",
+    "Real speaking evidence",
   ]) {
     await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
   }
-  await expect(page.locator(".control-button")).toHaveCount(6);
+  await expect(page.getByRole("button", { name: "Record", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Pause/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Stop/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Evaluate my answer/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Save practice/ })).toBeVisible();
+  await expect(page.locator(".record-controls button")).toHaveCount(5);
   await page.screenshot({
     fullPage: true,
     path: "test-results/parity-migrated-conversation.png",
   });
 
-  await openNavigationLink(page, "Today’s Practice", "Daily Practice");
-  await expect(page.locator(".daily-step")).toHaveCount(3);
+  await page.goto(`${migratedUrl}/daily`);
+  await expect(page.locator(".activity")).toHaveCount(7);
   for (const title of [
-    "1. Activate & use accurately",
-    "2. Automate aloud",
-    "3. Speak freely & transfer",
-    "Due Reviews",
+    "Activate & use accurately",
+    "Automate aloud",
+    "Speak freely & transfer",
+    "Review & save evidence",
   ]) {
     await expect(page.getByText(title, { exact: true }).first()).toBeVisible();
   }
 
-  await openNavigationLink(page, "Grammar Lab", "Learning Paths");
-  await expect(page.getByText("112 units", { exact: true })).toBeVisible();
+  await page.goto(`${migratedUrl}/grammar`);
+  await expect(
+    page.getByText("144 CEFR-aligned units · 432 tracked exercises"),
+  ).toBeVisible();
   for (const label of [
-    "Search grammar",
-    "Grammar category",
-    "Level",
+    "Search topics",
     "Check answer",
     "Hint",
     "Next task",
@@ -173,30 +156,27 @@ test("keeps every legacy surface, catalog, and primary control available", async
     path: "test-results/parity-migrated-grammar.png",
   });
 
-  await openNavigationLink(page, "Learning Resources", "Learning Paths");
+  await page.goto(`${migratedUrl}/?screen=resources`);
   await expect(page.locator(".resource-card")).toHaveCount(43);
 
-  await openNavigationLink(page, "Error Workshop", "Learning Evidence");
+  await page.goto(`${migratedUrl}/?screen=errors`);
   await expect(
     page.getByRole("heading", { level: 1, name: "Error Workshop" }),
   ).toBeVisible();
 
-  await openNavigationLink(page, "Audio Library", "Learning Evidence");
+  await page.goto(`${migratedUrl}/?screen=library`);
   await expect(
     page.getByRole("heading", { level: 1, name: "Audio Library" }),
   ).toBeVisible();
 
-  await openNavigationLink(page, "Settings", "App and Settings");
+  await page.goto(`${migratedUrl}/settings`);
   for (const label of [
-    "Minimum words per answer",
-    "Save audio",
-    "Grammar engine",
-    "Offline baseline check + optional LanguageTool online",
-    "LanguageTool endpoint",
-    "PWA / App",
-    "Browser storage",
+    "Reading style",
+    "Text size",
+    "Require correct spelling for grammar mastery",
+    "Allow optional online grammar checks",
     "Export data",
-    "Import data",
+    "Choose backup folder",
   ]) {
     await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
   }

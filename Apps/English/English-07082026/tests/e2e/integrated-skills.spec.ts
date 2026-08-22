@@ -90,17 +90,18 @@ test("plays original listening and opens the exact speaking lesson in the studio
     })
     .click();
 
-  await expect(page).toHaveURL(/screen=studio/);
+  await expect(page).toHaveURL(/\/studio\?/);
   await expect(page).toHaveURL(/source=integrated-skills/);
   await expect(page).toHaveURL(/unit=a1-introductions/);
   await expect(
-    page.getByRole("heading", {
-      name: "A1 · Unit 1 · Introduce yourself clearly",
-    }),
+    page.getByText("A1 · Unit 1 · Introduce yourself clearly", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Introducing yourself" }),
   ).toBeVisible();
   await expect(
     page.getByRole("img", {
-      name: "Ava, your original animated English speaking coach",
+      name: "Ava, the speaking coach",
     }),
   ).toBeVisible();
 });

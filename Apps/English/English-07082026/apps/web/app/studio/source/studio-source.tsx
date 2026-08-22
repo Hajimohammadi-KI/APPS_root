@@ -16,13 +16,18 @@ import {
   type StudioLanguage,
 } from "./conversation-data";
 import {
+  integratedSkillsLevels,
+  type IntegratedSkillsUnit,
+} from "@grammar/content";
+import {
   saveConversationSession,
   type StoredEvaluationIssue,
 } from "./conversation-storage";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 
-const nav = ["Daily Practice", "Lessons", "Speaking Studio", "Review", "Progress", "Vocabulary", "Notebook"];
-const navRoutes = ["/daily", "/grammar", "/studio", "/?screen=errors", "/?screen=progress", "/flashcards", "/notebook"];
+const nav = ["Home", "Today’s Practice", "Lessons", "Speaking Studio", "Review", "Progress", "Vocabulary", "Notebook"];
+const navRoutes = ["/", "/daily", "/grammar", "/studio", "/?screen=errors", "/?screen=progress", "/flashcards", "/notebook"];
+const navIcons = ["⌂", "◷", "▤", "♩", "◴", "▥", "▧", "▣"];
 const paths = ["Complete English"] as const;
 
 type RecordingState = "idle" | "recording" | "paused";
@@ -117,6 +122,28 @@ function currentSessionMinutes(): DailySessionMinutes {
   }
 }
 
+function comparableTokens(value: string) {
+  const ignored = new Set(["a", "an", "and", "clearly", "the", "to", "your"]);
+  return value
+    .toLowerCase()
+    .match(/[a-z]+/g)
+    ?.map((token) => token.replace(/(ing|ed|es|s|e)$/u, ""))
+    .filter((token) => token.length > 2 && !ignored.has(token)) ?? [];
+}
+
+function topicForIntegratedUnit(level: string, unit: IntegratedSkillsUnit) {
+  const unitTokens = new Set(comparableTokens(`${unit.title} ${unit.outcome}`));
+  return conversationTopics
+    .filter((topic) => topic.level === level)
+    .map((topic) => ({
+      topic,
+      score: comparableTokens(`${topic.topic} ${topic.task}`).filter((token) =>
+        unitTokens.has(token),
+      ).length,
+    }))
+    .sort((left, right) => right.score - left.score)[0]?.topic;
+}
+
 export default function Home() {
   const [path, setPath] = useState<(typeof paths)[number]>(paths[0]);
   const language = currentStudioLanguage();
@@ -146,6 +173,11 @@ export default function Home() {
   const [dailyActivity, setDailyActivity] = useState<number | null>(null);
   const [dailyReturn, setDailyReturn] = useState("/daily");
   const [dailyComplete, setDailyComplete] = useState(false);
+  const [integratedContext, setIntegratedContext] = useState<{
+    level: string;
+    number: number;
+    title: string;
+  } | null>(null);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -157,6 +189,30 @@ export default function Home() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    if (params.get("source") === "integrated-skills") {
+      const requestedUnit = params.get("unit");
+      const requestedLevel = params.get("level");
+      const integratedLevel = integratedSkillsLevels.find(
+        (candidate) => !requestedLevel || candidate.cefr === requestedLevel,
+      );
+      const integratedUnit = integratedLevel?.units.find(
+        (candidate) => candidate.id === requestedUnit,
+      );
+      if (integratedLevel && integratedUnit) {
+        setLevel(integratedLevel.cefr);
+        const matching = topicForIntegratedUnit(
+          integratedLevel.cefr,
+          integratedUnit,
+        );
+        if (matching) setTopicId(matching.id);
+        setIntegratedContext({
+          level: integratedLevel.cefr,
+          number: integratedUnit.number,
+          title: integratedUnit.title,
+        });
+      }
+      return;
+    }
     if (params.get("from") !== "daily") return;
     const activity = Number(params.get("activity"));
     const requestedLevel = params.get("level");
@@ -503,7 +559,7 @@ export default function Home() {
       <aside className="sidebar">
         <div className="brand"><div className="brand-mark">{language === "de" ? "D" : "E"}</div><div><strong>{language === "de" ? <>Deutsch<br />Automaticity</> : <>English<br />Automaticity</>}</strong></div></div>
         <nav aria-label="Main navigation">
-          {nav.map((item, index) => <button key={item} className={index === 2 ? "nav-active" : ""} onClick={() => { window.location.href = navRoutes[index]!; }}><Icon>{["⌂", "▤", "♩", "◴", "▥", "▧", "▣"][index]}</Icon>{item}</button>)}
+          {nav.map((item, index) => <button key={item} className={index === 3 ? "nav-active" : ""} onClick={() => { window.location.href = navRoutes[index]!; }}><Icon>{navIcons[index]}</Icon>{item}</button>)}
         </nav>
         <div className="nav-divider" />
         <nav aria-label="Support navigation"><button onClick={() => { window.location.href = "/settings"; }}><Icon>⚙</Icon>Settings</button><button onClick={() => { window.location.href = "/support"; }}><Icon>?</Icon>Help & support</button></nav>
@@ -517,6 +573,7 @@ export default function Home() {
         </header>
 
         {dailyActivity !== null && <section className="daily-context-bar" aria-label="Today's practice navigation"><button onClick={() => active > 0 ? setActive((current) => current - 1) : window.location.assign(dailyReturn)}>← Previous</button><strong>Today’s speaking practice · activity {dailyActivity}</strong><button onClick={() => window.location.assign(dailyReturn)}>Return to Today’s Practice</button></section>}
+        {integratedContext !== null && <section className="daily-context-bar" aria-label="Integrated Skills navigation"><button onClick={() => window.location.assign("/?screen=integrated-skills")}>← Integrated Skills</button><strong>{integratedContext.level} · Unit {integratedContext.number} · {integratedContext.title}</strong><button onClick={() => window.location.assign("/?screen=integrated-skills")}>Return to lesson</button></section>}
 
         <section className="conversation-filter" aria-labelledby="filter-heading">
           <h2 id="filter-heading">{text.filterTitle}</h2>

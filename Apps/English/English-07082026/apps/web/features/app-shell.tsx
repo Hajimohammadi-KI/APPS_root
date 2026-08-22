@@ -195,7 +195,9 @@ const navigationGroups: NavigationGroup[] = [
 		caption: "Errors and recordings",
 		icon: Clock3,
 		items: navigation.filter((item) =>
-			["errors", "notebook", "flashcards"].includes(item.id),
+			["errors", "progress", "library", "notebook", "flashcards"].includes(
+				item.id,
+			),
 		),
 	},
 	{
@@ -228,6 +230,19 @@ const replacementRoutes: Partial<Record<ScreenId, string>> = {
 	teacher: "/teacher",
 };
 
+function replacementUrl(
+	target: ScreenId,
+	params: Iterable<readonly [string, string]>,
+) {
+	const route = replacementRoutes[target];
+	if (!route) return null;
+	const url = new URL(route, window.location.origin);
+	for (const [key, value] of params) {
+		if (key !== "screen") url.searchParams.set(key, value);
+	}
+	return `${url.pathname}${url.search}${url.hash}`;
+}
+
 export function AppShell() {
 	const { state, mutate } = useAppStore();
 	const [screen, setScreen] = React.useState<ScreenId>("home");
@@ -246,7 +261,8 @@ export function AppShell() {
 			const target =
 				requestedTarget === "automaticity" ? "daily" : requestedTarget;
 			if (isScreenId(target) && replacementRoutes[target]) {
-				window.location.replace(replacementRoutes[target]);
+				const targetUrl = replacementUrl(target, url.searchParams.entries());
+				window.location.replace(targetUrl ?? replacementRoutes[target]);
 				return;
 			}
 			if (isScreenId(target)) {
@@ -335,7 +351,12 @@ export function AppShell() {
 		(target: string, params: Record<string, string | null> = {}) => {
 			const canonicalTarget = target === "automaticity" ? "daily" : target;
 			if (!isScreenId(canonicalTarget)) return;
-			const replacementRoute = replacementRoutes[canonicalTarget];
+			const replacementRoute = replacementUrl(
+				canonicalTarget,
+				Object.entries(params).filter(
+					(entry): entry is [string, string] => entry[1] !== null,
+				),
+			);
 			if (replacementRoute) {
 				window.location.assign(replacementRoute);
 				return;

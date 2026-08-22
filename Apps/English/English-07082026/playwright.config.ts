@@ -17,7 +17,8 @@ export default defineConfig({
   use: {
     baseURL: webUrl,
     browserName: "chromium",
-    channel: "msedge",
+    channel:
+      process.env.PLAYWRIGHT_CHANNEL ?? (process.env.CI ? undefined : "msedge"),
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },

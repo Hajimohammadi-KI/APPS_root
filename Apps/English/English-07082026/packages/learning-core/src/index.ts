@@ -3,6 +3,7 @@ export const LEARNING_DATA_EXPORT_KIND =
   "automaticity.learning-data-export" as const;
 
 export * from "./adherence";
+export * from "./booster";
 export * from "./content-quality";
 export * from "./measurement";
 

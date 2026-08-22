@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - docs/roadmaps/automaticity-evidence-roadmap.html
+      - docs/reports/ux-simplification-roadmap-visual.html
       - .github/workflows/automaticity-roadmap-pages.yml
   workflow_dispatch:
 
@@ -33,8 +34,17 @@ jobs:
           mkdir -p _site/automaticity-ux-roadmap
           cp docs/roadmaps/automaticity-evidence-roadmap.html _site/index.html
           cp docs/roadmaps/automaticity-evidence-roadmap.html _site/automaticity-evidence-roadmap/index.html
-          cp docs/roadmaps/automaticity-evidence-roadmap.html _site/automaticity-ux-roadmap/index.html
+          cp docs/reports/ux-simplification-roadmap-visual.html _site/automaticity-ux-roadmap/index.html
           touch _site/.nojekyll
+
+      - name: Verify the published roadmap mapping
+        run: |
+          test -s _site/index.html
+          test -s _site/automaticity-evidence-roadmap/index.html
+          test -s _site/automaticity-ux-roadmap/index.html
+          cmp -s _site/index.html _site/automaticity-evidence-roadmap/index.html
+          ! cmp -s _site/automaticity-evidence-roadmap/index.html _site/automaticity-ux-roadmap/index.html
+          grep -q "UX SIMPLIFICATION ROADMAP" _site/automaticity-ux-roadmap/index.html
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

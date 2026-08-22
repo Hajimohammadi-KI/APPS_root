@@ -44,6 +44,7 @@ import {
 	supportsBackupDirectoryPicker,
 	writeBackupToDirectory,
 } from "@/lib/backup-directory";
+import { ImplementationIntentionsCard } from "@/features/settings/implementation-intentions-card";
 
 const TEXT_SCALE_OPTIONS: Array<{
 	value: Settings["textScale"];
@@ -334,6 +335,8 @@ export function SettingsScreen() {
 					</div>
 				</CardContent>
 			</Card>
+
+			<ImplementationIntentionsCard />
 
 			<Card>
 				<CardHeader>

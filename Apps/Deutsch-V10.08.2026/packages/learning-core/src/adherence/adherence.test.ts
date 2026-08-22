@@ -14,14 +14,19 @@ import {
   isAdherenceShadowEnabled,
   loadProfile,
   logShadowComparison,
+  matchIntention,
   migrateAdherenceProfile,
   readShadowComparisons,
+  replaceImplementationIntentions,
   requestContinuityFreeze,
   runAdherenceShadow,
   saveProfile,
   updateStreak,
+  validateImplementationIntentions,
+  IMPLEMENTATION_INTENTION_COPY,
   type AdherenceKeyValueStorage,
   type AdherenceCurrentPlan,
+  type ImplementationIntention,
   type PlanDuration,
   type ReadinessSignals,
 } from "./index";
@@ -267,6 +272,122 @@ describe("profile migration and isolated storage adapters", () => {
     expect(readShadowComparisons(storage)).toEqual([
       { ...base, predictedCompletion: true, actualCompletion: true },
     ]);
+  });
+});
+
+describe("optional implementation intentions", () => {
+  const intentions: readonly ImplementationIntention[] = [
+    {
+      id: "morning-plan",
+      trigger: "time",
+      triggerLabel: "08:30",
+      action: "full_session",
+      active: true,
+    },
+    {
+      id: "coffee-plan",
+      trigger: "after_event",
+      triggerLabel: "After breakfast",
+      action: "review_only",
+      active: true,
+    },
+  ];
+
+  test("accepts optional zero or two-to-five active plans, never one or six", () => {
+    expect(validateImplementationIntentions([])).toMatchObject({
+      valid: true,
+      activeCount: 0,
+    });
+    expect(validateImplementationIntentions(intentions)).toMatchObject({
+      valid: true,
+      activeCount: 2,
+    });
+    expect(
+      validateImplementationIntentions(intentions.slice(0, 1)),
+    ).toMatchObject({
+      valid: false,
+      code: "active-count",
+    });
+    expect(
+      validateImplementationIntentions(
+        Array.from({ length: 6 }, (_, index) => ({
+          ...intentions[0]!,
+          id: `plan-${index}`,
+        })),
+      ),
+    ).toMatchObject({ valid: false, code: "active-count" });
+  });
+
+  test("matches active time and normalized local labels without emitting anything", () => {
+    expect(
+      matchIntention(intentions[0]!, {
+        trigger: "time",
+        triggerLabel: "08:30",
+      }),
+    ).toBe(true);
+    expect(
+      matchIntention(intentions[1]!, {
+        trigger: "after_event",
+        triggerLabel: "  AFTER   BREAKFAST ",
+      }),
+    ).toBe(true);
+    expect(
+      matchIntention(
+        { ...intentions[1]!, active: false },
+        { trigger: "after_event", triggerLabel: "after breakfast" },
+      ),
+    ).toBe(false);
+    expect(
+      matchIntention(intentions[1]!, {
+        trigger: "context",
+        triggerLabel: "after breakfast",
+      }),
+    ).toBe(false);
+  });
+
+  test("rejects invalid times, duplicate IDs, and blank labels", () => {
+    expect(
+      validateImplementationIntentions([
+        { ...intentions[0]!, triggerLabel: "25:99" },
+        intentions[1]!,
+      ]),
+    ).toMatchObject({ valid: false, code: "invalid-label" });
+    expect(
+      validateImplementationIntentions([
+        intentions[0]!,
+        { ...intentions[1]!, id: intentions[0]!.id },
+      ]),
+    ).toMatchObject({ valid: false, code: "duplicate-id" });
+  });
+
+  test("replacement preserves streak and opt-in state and remains local-only", () => {
+    const profile = {
+      ...createDefaultAdherenceProfile({
+        now: "2026-08-22T08:00:00.000Z",
+        timeZone: "Europe/Berlin",
+      }),
+      nudgeOptIn: false,
+    };
+    const next = replaceImplementationIntentions(
+      profile,
+      intentions,
+      "2026-08-22T09:00:00.000Z",
+    );
+    expect(next.streak).toEqual(profile.streak);
+    expect(next.nudgeOptIn).toBe(false);
+    expect(next.intentions).toEqual(intentions);
+    expect(profile.intentions).toEqual([]);
+  });
+
+  test("English, German, and Persian copy is complete with correct direction", () => {
+    expect(IMPLEMENTATION_INTENTION_COPY.en.direction).toBe("ltr");
+    expect(IMPLEMENTATION_INTENTION_COPY.de.direction).toBe("ltr");
+    expect(IMPLEMENTATION_INTENTION_COPY.fa.direction).toBe("rtl");
+    for (const copy of Object.values(IMPLEMENTATION_INTENTION_COPY)) {
+      expect(Object.keys(copy.triggers)).toHaveLength(4);
+      expect(Object.keys(copy.actions)).toHaveLength(4);
+      expect(copy.privacy.length).toBeGreaterThan(20);
+    }
   });
 });
 

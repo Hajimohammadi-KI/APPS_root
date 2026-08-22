@@ -49,6 +49,24 @@ export interface ImplementationIntention {
   readonly active: boolean;
 }
 
+export interface ImplementationIntentionSignal {
+  readonly trigger: ImplementationIntentionTrigger;
+  /**
+   * A local, learner-supplied value. For time triggers this must be HH:MM;
+   * other trigger types use a normalized exact label match.
+   */
+  readonly triggerLabel: string;
+}
+
+export type ImplementationIntentionValidationCode =
+  "valid" | "active-count" | "duplicate-id" | "invalid-id" | "invalid-label";
+
+export interface ImplementationIntentionValidation {
+  readonly valid: boolean;
+  readonly code: ImplementationIntentionValidationCode;
+  readonly activeCount: number;
+}
+
 export interface AdherenceProfileV1 {
   readonly version: 1;
   readonly updatedAt: string;

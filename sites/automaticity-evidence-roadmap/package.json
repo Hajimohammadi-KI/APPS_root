@@ -1,0 +1,8 @@
+{
+  "name": "automaticity-evidence-roadmap-site",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node ../build-roadmap-site.mjs ../../docs/roadmaps/automaticity-evidence-roadmap.html \"EXECUTABLE ROADMAP\""
+  }
+}

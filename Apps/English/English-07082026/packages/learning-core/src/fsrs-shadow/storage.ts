@@ -162,7 +162,7 @@ export function recordFsrsShadowReview(
   ];
   const cardId = `${input.event.language}:${input.event.sourceId}`;
   const existingIndex = records.findIndex((record) => record.cardId === cardId);
-  const existing = existingIndex >= 0 ? records[existingIndex] : null;
+  const existing = existingIndex >= 0 ? (records[existingIndex] ?? null) : null;
   if (existing?.events.some((event) => event.eventId === input.event.eventId)) {
     return { status: "duplicate", persisted: true, record: existing };
   }

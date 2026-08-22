@@ -722,6 +722,10 @@
       <span>G3 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24">PR #24</a> با merge <code class="path">ea3d25c</code> و دو CI سبز عبور کرد: Shadow Safety به برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ متصل شد، اما default-off، نامرئی و بدون تغییر یا ذخیرهٔ دادهٔ زبان‌آموز باقی ماند. E2E هر دو زبان حفظ learner/evidence را تأیید کرد؛ اثر یادگیری واقعی همچنان N/A است.</span>
     </div>
     <div class="hist-entry">
+      <span class="hist-date">2026-08-22</span>
+      <span>زیرساخت G4 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/26">PR #26</a> با merge <code class="path">8edaba2</code> و دو CI سبز ادغام شد: schema mediation، rubric ثابت، weighted kappa، adjudication و quarantine برای draftهای B1 هر دو زبان. بازبینی انسانی و agreement هنوز N/A است؛ G4 عبور نکرده است.</span>
+    </div>
+    <div class="hist-entry">
       <span class="hist-date">2026-08-22 00:32 CEST</span>
       <span>این نسخه با وضعیت Vercel Ready روی <a href="https://automaticity-ux-roadmap-elahe.vercel.app">automaticity-ux-roadmap-elahe.vercel.app</a> منتشر شد. Alias قدیمی در Scope دیگری است و حساب فعلی امکان انتقال آن را ندارد.</span>
     </div>
@@ -834,10 +838,10 @@
       }),
     },
     {
-      id: "p5", phase: "فاز ۵", title: "کیفیت محتوا و پایلوت دیتاست", status: "pending", when: "۲ تا ۵ هفته",
+      id: "p5", phase: "فاز ۵", title: "کیفیت محتوا و پایلوت دیتاست", status: "active", when: "زیرساخت ادغام شد · human review باقی است",
       summary: "دادهٔ خام وارد درس یا Installer نمی‌شود",
       body: structuredPhase({
-        effect: `<p>جمله‌ها طبیعی، سطح‌بندی‌شده و قابل اعتمادند؛ کاربر محتوای خام یا نامناسب نمی‌بیند.</p>`,
+        effect: `<p>جمله‌ها طبیعی، سطح‌بندی‌شده و قابل اعتمادند؛ کاربر محتوای خام یا نامناسب نمی‌بیند.</p><p><strong>وضعیت:</strong> schema، release gate و draftهای B1 انگلیسی/آلمانی در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/26">PR #26</a> با merge <code class="path">8edaba2</code> ادغام شدند. هر دو draft هنوز <bdi dir="ltr">awaiting-human-review</bdi> هستند، release array خالی است و agreement/learning outcome برابر N/A است.</p>`,
         dependency: `<p>schema، provenance و QA status از فاز ۴.</p>`,
         technical: `<p>برای هر زبان یک پایلوت کوچک و human-reviewed، نه bulk download:</p>
           <div class="table-scroll"><table>
@@ -853,7 +857,7 @@
               <tr><td dir="ltr">C4 200M GEC</td><td>آزمایش پژوهشی GEC</td><td>از W&amp;I/LOCNESS جداست</td></tr>
             </tbody>
           </table></div>`,
-        acceptance: `<p>تمام آیتم‌های پایلوت schema/provenance معتبر داشته باشند؛ ۱۰٪ نمونه‌گیری طبقه‌بندی‌شده با دو داور انجام شود؛ هیچ <bdi dir="ltr">QA-failed</bdi> وارد برنامهٔ روزانه نشود. ICC فقط با دادهٔ واقعی گزارش شود.</p>`
+        acceptance: `<p>تمام آیتم‌های پایلوت schema/provenance معتبر داشته باشند؛ هر آیتم کوچک فعلی دقیقاً دو داور مستقل با پوشش native-speaker و language-pedagogy داشته باشد؛ quadratic weighted kappa حداقل ۰٫۶۰ باشد و اختلاف معنادار adjudication شود. هیچ <bdi dir="ltr">QA-failed</bdi> وارد برنامهٔ روزانه نشود؛ تا rating واقعی، agreement برابر N/A است.</p>`
       }),
     },
     {

@@ -3,20 +3,29 @@ export const LEARNING_DATA_EXPORT_KIND =
   "automaticity.learning-data-export" as const;
 
 export * from "./adherence";
+export * from "./content-quality";
 export * from "./measurement";
 
 export type LearningLanguage = "en" | "de";
 export type CefrLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
 export type DailySessionMinutes = 15 | 30 | 45;
 export type LearningMode =
-  "recognition" | "writing" | "speaking" | "repair" | "transfer";
+  | "recognition"
+  | "recall"
+  | "writing"
+  | "speaking"
+  | "repair"
+  | "transfer"
+  | "mediation";
 
 const LEARNING_MODES: ReadonlySet<string> = new Set([
   "recognition",
+  "recall",
   "writing",
   "speaking",
   "repair",
   "transfer",
+  "mediation",
 ]);
 
 export function isLearningMode(value: string): value is LearningMode {
@@ -217,6 +226,7 @@ export interface AttemptVerticalSliceInput {
   readonly audioReferenceId?: string;
   readonly fromDueReview?: boolean;
   readonly sourceId?: string;
+  readonly provenance?: ContentUnit["provenance"];
 }
 
 export interface EvidenceInvalidationInput {
@@ -382,11 +392,12 @@ export function buildAttemptVerticalSlice(
     targetForm: input.targetForm?.trim() || input.topic,
     prompt: input.prompt?.trim() || `Produce ${input.topic} independently.`,
     modes: [input.mode],
-    provenance: {
+    provenance: input.provenance ?? {
       kind: "authored",
       sourceId: input.sourceId ?? `${input.language}-app-authored-content`,
       license: "proprietary-authored",
-      humanReviewed: true,
+      // Runtime construction proves neither independent review nor approval.
+      humanReviewed: false,
     },
   };
   const dailyPlan: DailyPracticePlan = {

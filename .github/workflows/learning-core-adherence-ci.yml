@@ -1,4 +1,4 @@
-name: Learning Core Adherence CI
+name: Learning Core and Content Quality CI
 
 on:
   push:
@@ -8,12 +8,20 @@ on:
       - "shared/learning-core/**"
       - "Apps/English/English-07082026/packages/learning-core/**"
       - "Apps/Deutsch-V10.08.2026/packages/learning-core/**"
+      - "Apps/English/English-07082026/packages/content/**"
+      - "Apps/Deutsch-V10.08.2026/packages/content/**"
+      - "Apps/English/English-07082026/bun.lock"
+      - "Apps/Deutsch-V10.08.2026/bun.lock"
       - ".github/workflows/learning-core-adherence-ci.yml"
   pull_request:
     paths:
       - "shared/learning-core/**"
       - "Apps/English/English-07082026/packages/learning-core/**"
       - "Apps/Deutsch-V10.08.2026/packages/learning-core/**"
+      - "Apps/English/English-07082026/packages/content/**"
+      - "Apps/Deutsch-V10.08.2026/packages/content/**"
+      - "Apps/English/English-07082026/bun.lock"
+      - "Apps/Deutsch-V10.08.2026/bun.lock"
       - ".github/workflows/learning-core-adherence-ci.yml"
 
 permissions:
@@ -46,6 +54,9 @@ jobs:
       - name: Run complete learning-core tests
         run: bun run test
 
+      - name: Run content quality gate tests
+        run: bun run test:content-quality
+
       - name: Rebuild browser shadow adapter
         run: bun run build:browser
 
@@ -55,3 +66,34 @@ jobs:
 
       - name: Reject stale app mirrors
         run: node sync-workspaces.mjs --check
+
+  content-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - Apps/English/English-07082026
+          - Apps/Deutsch-V10.08.2026
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Install exact dependencies
+        working-directory: ${{ matrix.app }}
+        run: bun install --frozen-lockfile
+
+      - name: Type-check authored content
+        working-directory: ${{ matrix.app }}
+        run: bun run --cwd packages/content typecheck
+
+      - name: Verify authored content and release quarantine
+        working-directory: ${{ matrix.app }}
+        run: bun test packages/content/src/content.test.ts

@@ -20,10 +20,26 @@ import {
   grammarUnits,
   idiomDailyMaterials,
   speakingTopics,
+  germanMediationB1Pilot,
+  releasedGermanMediationB1,
 } from "./index";
+import { assessMediationContentRelease } from "@automaticity/learning-core";
 import { isRetiredGermanResource } from "./resource-links";
 
 describe("legacy content extraction", () => {
+  it("hält den B1-Mediationspiloten bis zur unabhängigen menschlichen Prüfung zurück", () => {
+    expect(germanMediationB1Pilot).toHaveLength(1);
+    expect(germanMediationB1Pilot[0]?.language).toBe("de");
+    expect(germanMediationB1Pilot[0]?.cefrLevel).toBe("B1");
+    expect(germanMediationB1Pilot[0]?.modes).toContain("mediation");
+    expect(germanMediationB1Pilot[0]?.modes).toContain("transfer");
+    expect(releasedGermanMediationB1).toEqual([]);
+    expect(
+      assessMediationContentRelease(germanMediationB1Pilot[0]!)
+        .readyForDailyPlan,
+    ).toBe(false);
+  });
+
   it("preserves the full v20.8 catalogs", () => {
     expect(catalogSummary.topicCount).toBe(79);
     expect(catalogSummary.grammarUnitCount).toBe(144);

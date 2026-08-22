@@ -40,6 +40,10 @@ export {
   type CefrCurriculumLevel,
   type CefrStufe,
 } from "./cefr-curriculum";
+export {
+  germanMediationB1Pilot,
+  releasedGermanMediationB1,
+} from "./mediation-b1-pilot";
 
 export {
   deutschMitMarijaSharedWithMeUrl,

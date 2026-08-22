@@ -57,6 +57,35 @@ describe("shared automaticity vertical slice", () => {
     expect(bundle.evidence.automaticityClaim).toBe(
       "insufficient-longitudinal-evidence",
     );
+    expect(bundle.contentUnit.provenance.humanReviewed).toBe(false);
+  });
+
+  test("records human review only when explicit provenance is supplied", () => {
+    const bundle = buildAttemptVerticalSlice({
+      attemptId: "attempt-reviewed-mediation-1",
+      occurredAt: "2026-08-22T08:00:00.000Z",
+      language: "en",
+      cefrLevel: "B1",
+      contentVersion: "1.0.0",
+      topic: "Relay a timetable change",
+      mode: "mediation",
+      inputText: "The class starts later, so we should arrive at ten.",
+      correctedText: "The class starts later, so we should arrive at ten.",
+      targetHit: true,
+      accuracyScore: 95,
+      attemptVerified: true,
+      assessedBy: "deterministic",
+      sessionMinutes: 15,
+      provenance: {
+        kind: "authored",
+        sourceId: "reviewed-mediation-en-b1",
+        license: "proprietary-authored",
+        humanReviewed: true,
+      },
+    });
+
+    expect(bundle.contentUnit.modes).toEqual(["mediation"]);
+    expect(bundle.contentUnit.provenance.humanReviewed).toBe(true);
   });
 
   test("speaking cannot be verified without captured audio", () => {

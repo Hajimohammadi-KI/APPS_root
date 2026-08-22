@@ -18,6 +18,8 @@ const files = [
   "tsconfig.json",
   "src/index.ts",
   "src/index.test.ts",
+  "src/content-quality.ts",
+  "src/content-quality.test.ts",
   "src/measurement.ts",
   "src/measurement.test.ts",
   "src/adherence/feature-flags.ts",
@@ -32,6 +34,7 @@ const files = [
   "src/adherence/types.ts",
   "schemas/learning-vertical-slice.schema.json",
   "schemas/measurement-contract.schema.json",
+  "schemas/mediation-content-pilot.schema.json",
   "browser/adherence-shadow.js",
 ];
 const browserTargets = [

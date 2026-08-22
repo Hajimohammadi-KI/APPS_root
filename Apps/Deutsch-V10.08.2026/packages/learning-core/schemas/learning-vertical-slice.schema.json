@@ -19,7 +19,15 @@
     "schemaVersion": { "const": "1.0.0" },
     "language": { "enum": ["en", "de"] },
     "mode": {
-      "enum": ["recognition", "writing", "speaking", "repair", "transfer"]
+      "enum": [
+        "recognition",
+        "recall",
+        "writing",
+        "speaking",
+        "repair",
+        "transfer",
+        "mediation"
+      ]
     },
     "contentUnit": {
       "type": "object",

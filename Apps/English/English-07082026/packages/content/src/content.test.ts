@@ -12,7 +12,10 @@ import {
   INTEGRATED_SKILLS,
   buildAutomaticitySteps,
   integratedSkillsLevels,
+  englishMediationB1Pilot,
+  releasedEnglishMediationB1,
 } from "./index";
+import { assessMediationContentRelease } from "@automaticity/learning-core";
 import { repairGrammarUnitLinks } from "./resource-links";
 
 function sliceBetween(source: string, start: string, end: string): string {
@@ -30,6 +33,19 @@ function evaluateCatalog<T>(source: string): T {
 }
 
 describe("legacy content parity", () => {
+  test("quarantines the B1 mediation pilot until independent human review", () => {
+    expect(englishMediationB1Pilot).toHaveLength(1);
+    expect(englishMediationB1Pilot[0]?.language).toBe("en");
+    expect(englishMediationB1Pilot[0]?.cefrLevel).toBe("B1");
+    expect(englishMediationB1Pilot[0]?.modes).toContain("mediation");
+    expect(englishMediationB1Pilot[0]?.modes).toContain("transfer");
+    expect(releasedEnglishMediationB1).toEqual([]);
+    expect(
+      assessMediationContentRelease(englishMediationB1Pilot[0]!)
+        .readyForDailyPlan,
+    ).toBe(false);
+  });
+
   test("keeps the original PWA source bundle complete and extractable", async () => {
     const root = resolve(import.meta.dir, "../../..");
     const requiredFiles = [
@@ -45,7 +61,9 @@ describe("legacy content parity", () => {
     ];
 
     for (const filename of requiredFiles) {
-      expect(await Bun.file(resolve(root, "legacy", filename)).exists()).toBe(true);
+      expect(await Bun.file(resolve(root, "legacy", filename)).exists()).toBe(
+        true,
+      );
     }
   });
 
@@ -181,7 +199,10 @@ describe("legacy content parity", () => {
         ]);
       }
     }
-    sources.push(["README.md", await Bun.file(resolve(root, "README.md")).text()]);
+    sources.push([
+      "README.md",
+      await Bun.file(resolve(root, "README.md")).text(),
+    ]);
     for (const filename of ["index.html", "service-worker.js"]) {
       sources.push([
         `legacy/${filename}`,

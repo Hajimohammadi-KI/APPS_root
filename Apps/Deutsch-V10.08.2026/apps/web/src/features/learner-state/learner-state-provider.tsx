@@ -37,6 +37,10 @@ import {
 } from "@grammar/domain";
 import { grammarUnits } from "@grammar/content";
 import {
+  fsrsShadowRatingFromResult,
+  recordFsrsShadowReview,
+} from "@automaticity/learning-core";
+import {
   learnerStateCalendarEvents,
   readDesktopCalendarStatus,
 } from "@/lib/desktop-calendar";
@@ -827,6 +831,19 @@ export function LearnerStateProvider({
       successful: boolean,
       confidence: ReviewConfidence = "good",
     ) => {
+      const reviewedAt = new Date();
+      const shadowEventId = `fsrs-shadow:${crypto.randomUUID()}`;
+      const selectedForShadow = state.reviews.find(
+        (review) => review.id === reviewId,
+      );
+      const shadowProgress = selectedForShadow
+        ? getReviewProgressAfterResult(
+            selectedForShadow.stage,
+            successful,
+            reviewedAt,
+            confidence,
+          )
+        : null;
       setState((current) => {
         const selected = current.reviews.find(
           (review) => review.id === reviewId,
@@ -834,7 +851,7 @@ export function LearnerStateProvider({
         if (!selected) {
           return current;
         }
-        const now = new Date();
+        const now = reviewedAt;
         const progress = getReviewProgressAfterResult(
           selected.stage,
           successful,
@@ -919,8 +936,59 @@ export function LearnerStateProvider({
           },
         };
       });
+      if (
+        selectedForShadow &&
+        shadowProgress &&
+        typeof window !== "undefined"
+      ) {
+        const nextSuccessStreak = successful
+          ? selectedForShadow.successStreak + 1
+          : 0;
+        const nextStabilityScore = Math.min(
+          100,
+          Math.max(
+            0,
+            selectedForShadow.stabilityScore +
+              (successful
+                ? confidence === "easy"
+                  ? 30
+                  : confidence === "hard"
+                    ? 10
+                    : 20
+                : -30),
+          ),
+        );
+        recordFsrsShadowReview({
+          storage: window.localStorage,
+          event: {
+            version: 1,
+            eventId: shadowEventId,
+            language: "de",
+            reviewId: selectedForShadow.id,
+            sourceId: selectedForShadow.sourceId,
+            reviewedAt: reviewedAt.toISOString(),
+            rating: fsrsShadowRatingFromResult(successful, confidence),
+            legacyBefore: {
+              dueAt: selectedForShadow.due,
+              state: `stage-${selectedForShadow.stage}`,
+              successStreak: selectedForShadow.successStreak,
+              stabilityScore: selectedForShadow.stabilityScore,
+              ...(selectedForShadow.lastSuccess !== undefined
+                ? { lastSuccessAt: selectedForShadow.lastSuccess }
+                : {}),
+            },
+            legacyAfter: {
+              dueAt: shadowProgress.dueAt?.getTime() ?? Number.MAX_SAFE_INTEGER,
+              state: `stage-${shadowProgress.stage}`,
+              successStreak: nextSuccessStreak,
+              stabilityScore: nextStabilityScore,
+              ...(successful ? { lastSuccessAt: reviewedAt.getTime() } : {}),
+            },
+          },
+        });
+      }
     },
-    [],
+    [state.reviews],
   );
 
   const advanceReview = useCallback(

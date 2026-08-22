@@ -8,6 +8,17 @@
 نسخهٔ تصویری: `docs/reports/ux-simplification-roadmap-visual.html` (منتشرشده
 به‌عنوان Artifact، همان لینک با هر آپدیت دوباره deploy می‌شود).
 
+**نسخهٔ وب فعال و قابل بازشدن روی تبلت:**
+https://automaticity-ux-roadmap.vercel.app
+دامنهٔ دقیق در انتشار v1.20 به artifact جاری منتقل شد و پاسخ HTTP 200 و برابری
+byte-for-byte و SHA-256 با خروجی canonical مخزن تأیید شد.
+
+**نسخه‌های عمومی محصول:**
+
+- English: https://english-grammar-automaticity-pwa.vercel.app/
+- Deutsch: https://deutschflow-grammar.vercel.app/
+- PDF Reader مشترک: https://research-pdf-studio.vercel.app/
+
 نمادهای وضعیت: ⬜ شروع‌نشده · 🟡 در حال انجام · ✅ انجام‌شده · 🔴 مسدود
 
 ## منشأ
@@ -138,7 +149,21 @@ glossary آلمانی نبود.** اضافه شد: `Nachweis(e)`، `Beherrschung
 `Genauigkeit` — ترجمهٔ همان تعریف‌های انگلیسی، برای هماهنگی دو اپ.
 typecheck + test اپ Deutsch سبز.
 
-## فاز ۴ — Foundation Gate مشترک ⬜
+## فاز ۴ — Foundation Gate مشترک 🟡
+
+**وضعیت ۲۰۲۶-۰۸-۲۲:** G0، G1، G2 و G3 این فاز عبور کرده‌اند. هستهٔ مشترک،
+`ContentUnit` دارای provenance/license/review، `EvidenceRecord`، رویدادهای شناسه‌محور،
+JSON Schema و Mirror CI روی `main` هستند. Gate G1 در
+[PR #17](https://github.com/Hajimohammadi-KI/APPS_root/pull/17) با merge
+`b452e3e` بسته شد. Gate G2 نیز در
+[PR #21](https://github.com/Hajimohammadi-KI/APPS_root/pull/21) با merge
+`032ad14` و CI سبز بسته شد: consent نسخه‌دار، baseline پیش از intervention، export
+پژوهشی امن، revoke/delete، retention و data-quality در هر دو زبان. Gate G3 نیز در
+[PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24) با merge
+`ea3d25c` و CI سبز بسته شد: Shadow Safety برای برنامهٔ 15/30/45 دقیقهٔ هر دو اپ
+default-off، نامرئی و بدون تغییر/ذخیرهٔ داده باقی می‌ماند و E2E حفظ learner/evidence
+را تأیید می‌کند. کل فاز هنوز ✅
+نیست، چون Accessibility baseline قابل تکرار باقی مانده است.
 
 **اثر برای زبان‌آموز:** رفتار پایهٔ هر دو اپ یکسان می‌شود؛ دادهٔ یادگیری،
 محتوا و شواهد بین صفحات گم یا متناقض نمی‌شوند.
@@ -160,9 +185,20 @@ mastery مبتنی بر AI تا عبور vertical slice ممنوع است.
 
 **معیار پذیرش:** یک واحد B1 انگلیسی و یک واحد B1 آلمانی از مسیر کامل
 `content → daily plan → learner response → evidence → analytics event`
-با schema معتبر و بدون دو مدل موازی عبور کنند.
+با schema معتبر و بدون دو مدل موازی عبور کنند. مسیر تا local domain event و export
+در G1 تأیید شد؛ قرارداد analytics رضایت‌محور و baseline در G2 و shadow بدون
+mutation در G3 تأیید شدند. فقط
+Accessibility baseline قابل تکرار برای بستن فاز باقی مانده است.
 
-## فاز ۵ — کیفیت محتوا و پایلوت گزینش‌شدهٔ دیتاست ⬜
+## فاز ۵ — کیفیت محتوا و پایلوت گزینش‌شدهٔ دیتاست 🟡
+
+**وضعیت ۲۰۲۶-۰۸-۲۲:** زیرساخت Content Quality، schema نسخه‌دار mediation،
+release gate و یک draft authored B1 برای هر زبان در
+[PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26) با merge
+`8edaba2` و دو CI سبز ادغام شد. هر دو draft با `humanReviewed=false` و
+`awaiting-human-review` قرنطینه‌اند و release array خالی است. بازبینی انسانی و
+agreement واقعی هنوز `N/A — not sufficiently verified` است؛ بنابراین فاز کامل
+نشده و Issue #8 باز می‌ماند.
 
 **اثر برای زبان‌آموز:** جمله‌ها طبیعی، سطح‌بندی‌شده و قابل اعتمادند؛ دادهٔ
 خام یا نمونهٔ نامناسب مستقیماً وارد درس نمی‌شود.
@@ -183,16 +219,19 @@ mastery مبتنی بر AI تا عبور vertical slice ممنوع است.
 | W&I + LOCNESS | پژوهش/پیش‌آموزش GEC | مجوز و استفادهٔ تجاری جداگانه بررسی شود |
 | C4 200M GEC | آزمایش پژوهشی GEC | با W&I/LOCNESS یک «دیتاست واحد» محسوب نشود |
 
-**Quality Gate:** حداقل ۱۰٪ نمونه‌گیری طبقه‌بندی‌شده بر اساس زبان، سطح و
-نوع تمرین؛ دو ارزیاب مستقل برای naturalness، CEFR alignment، cognitive
-load، authenticity و bias. عدد ICC≥0.75 فقط وقتی گزارش شود که واقعاً دو
-داور و دادهٔ کافی وجود داشته باشد.
+**Quality Gate پایلوت کوچک:** همهٔ آیتم‌های فعلی (یک English B1 و یک Deutsch
+B1) باید دقیقاً دو ارزیاب مستقل داشته باشند: پوشش native-speaker و
+language-pedagogy، امتیاز ۱ تا ۴ برای naturalness، CEFR fit، task validity و
+cultural safety، و adjudication برای اختلاف معنادار. روش از پیش تعیین‌شده
+quadratic weighted Cohen's kappa با آستانهٔ `0.60` است؛ تا ثبت rating واقعی،
+agreement برابر N/A است. در پایلوت بزرگ‌تر، طرح نمونه‌گیری باید پیش از ingestion
+نسخه‌گذاری شود.
 
 **معیار پذیرش:** ۱۰۰٪ آیتم‌های پایلوت schema/provenance معتبر داشته باشند؛
 هیچ آیتم QA-failed در برنامهٔ روزانه زمان‌بندی نشود؛ گزارش بازبینی قابل
 ردگیری به نسخهٔ محتوا باشد.
 
-## فاز ۶ — Mediation و Forced Output Booster ⬜
+## فاز ۶ — Mediation و Forced Output Booster 🟡
 
 **اثر برای زبان‌آموز:** علاوه بر گرامر، بتواند اطلاعات را خلاصه، بازگو،
 توضیح یا بین دو نفر/دو زبان منتقل کند و ساختار هدف را زیر فشار زمانی واقعاً
@@ -205,13 +244,19 @@ Production، Interaction و Mediation. ابتدا یک vertical slice کوچک �
 Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای اضافه شود؛ fallback تایپ همیشه
 موجود باشد.
 
+**وضعیت ۲۰۲۶-۰۸-۲۲:** Forced Output Booster در PR #32 (`1c6fb95`) برای
+هر دو زبان ادغام شد: پیش‌فرض خاموش، ۳ تا ۵ دور ۳۰ تا ۹۰ ثانیه‌ای فقط از
+سهم automatization، ضبط واقعی یا fallback تایپ، metadata کمینه و منع قطعی
+mastery/automaticity. بخش Mediation هنوز منتظر دو بازبین انسانی مستقل و
+agreement/adjudication است؛ بنابراین فاز کامل نشده و outcome برابر N/A است.
+
 **وابستگی:** schema و event/evidence فاز ۴، محتوای QA-passed فاز ۵.
 
 **معیار پذیرش:** پاسخ واقعی ذخیره شود؛ latency اولین کلمه، استفادهٔ درست از
 ساختار، self-repair و انتقال به زمینهٔ جدید اندازه‌گیری شود. «ASR سریع» یا
 «اثر Booster» تا آزمون روی دستگاه و مطالعهٔ مقایسه‌ای، ادعای تأییدشده نیست.
 
-## فاز ۷ — Hybrid Coach و Adherence Engineering ⬜
+## فاز ۷ — Hybrid Coach و Adherence Engineering 🟡
 
 **اثر برای زبان‌آموز:** بازخورد قابل توضیح می‌گیرد و در روزهای کم‌انرژی به
 جای ترک کامل، یک جلسهٔ کوچک و معنی‌دار دارد.
@@ -223,14 +268,24 @@ Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای اضاف
 3. ASR فقط برای transcript و شاخص‌های گفتار قابل اندازه‌گیری؛
 4. LLM فقط برای تولید/توضیح/بازنویسی ساختاریافته، نه تصمیم تسلط؛
 5. Implementation Intentions، micro-goal پنج‌دقیقه‌ای، comeback flow و
-   nudge روزهای ۳/۷/۱۴ با opt-in و cooldown؛
-6. IndexedDB محلی و صف همگام‌سازی برای وب آفلاین‌محور.
+   nudge رضایت‌محور با quiet hours، cooldown و سقف قطعی؛
+6. FSRS-6 فقط در shadow، default-off و با rollback؛
+7. IndexedDB محلی و صف همگام‌سازی برای وب آفلاین‌محور.
+
+**وضعیت 2026-08-22:** بخش Implementation Intentions در PR #28
+(`32e8a8c`) برای هر دو اپ ادغام و Issue #6 بسته شد. داده فقط محلی است، شروع
+خالی و اختیاری است و 0 یا 2 تا 5 قصد فعال پذیرفته می‌شود. Guarded in-app
+nudges در PR #30 (`4e08775`) با opt-in صریح، quiet hours، cooldown، hard cap،
+رویداد local-only و بدون push/email ادغام شد و Issue #7 بسته شد. FSRS-6 shadow
+نیز در PR #34 (`00998b9`) با بردار رسمی، ۱٬۰۰۰ replay، rollback و حفظ
+scheduler فعلی به‌عنوان source of truth ادغام شد. retention/workload واقعی
+و learning outcome همچنان N/A هستند.
 
 **معیار پذیرش:** همهٔ تصمیم‌های ارتقای سطح deterministic و قابل audit
 باشند؛ خروجی LLM schema-valid و قابل ردکردن باشد؛ نوتیفیکیشن بدون رضایت
 کاربر ارسال نشود؛ نرخ `nudge → session` جدا از یادگیری گزارش شود.
 
-## فاز ۸ — گسترش تدریجی هستهٔ مشترک و Accessibility Gate ⬜
+## فاز ۸ — گسترش تدریجی هستهٔ مشترک و Accessibility Gate 🟡
 
 **اثر برای زبان‌آموز:** انگلیسی و آلمانی تجربهٔ سازگار دارند و صفحه‌ها با
 کیبورد، Screen Reader، ویندوز، تبلت و اندروید وب قابل استفاده‌اند.
@@ -240,6 +295,14 @@ Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای اضاف
 شوند، نه با کپی فایل. دسترس‌پذیری در هر PR سنجیده شود: reflow در ۳۲۰px،
 ترتیب فوکوس، focus visible، touch target حداقل ۴۴×۴۴، label میکروفون،
 recovery خطا، LTR برای انگلیسی/آلمانی و RTL برای فارسی.
+
+**وضعیت ۲۰۲۶-۰۸-۲۲:** مسیرهای canonical آلمانی در PR #36 تثبیت شدند.
+Research PDF Studio و اتصال PDF/Notebook هر دو اپ در PR #50 (`02e8781`) روی
+Vercel عمومی شدند. ریشه و مسیرهای اصلی HTTP 200، redirectهای Reader برابر
+307 و QA مرورگر در viewport تبلت 800×1280 بدون overflow یا console error
+بود. probeهای loopback در وب عمومی متوقف و صفحات compatibility آلمانی با
+full navigation باز می‌شوند. تست دستی Screen Reader و میکروفون سخت‌افزاری
+واقعی هنوز N/A است، پس فاز کامل نیست.
 
 **معیار پذیرش:** parity contract هر دو اپ، تست E2E صفحه‌های بحرانی در سه
 viewport و تست دستی Screen Reader/میکروفون روی سخت‌افزار واقعی. موارد سخت‌افزار
@@ -278,4 +341,16 @@ viewport و تست دستی Screen Reader/میکروفون روی سخت‌اف�
 
 - **۲۰۲۶-۰۸-۲۰**: ایجاد سند، فاز ۰ انجام‌شده ثبت شد، فازهای ۱ تا ۹ ⬜.
 - **۲۰۲۶-۰۸-۲۱ ۰۰:۲۰–۰۰:۴۰**: Claude فازهای ۱ تا ۳ را کامل و با typecheck/test/اسکرین‌شات تأیید کرد (جزئیات در بخش‌های بالا).
-- **۲۰۲۶-۰۸-۲۱ (بعد از ظهر)**: فازهای ۴ تا ۹ توسط Codex بازطراحی و غنی‌سازی شدند — Foundation Gate قبل از ادغام runtime دیتاست/AI، Quality Gate با نمونه‌گیری دو-داور، پوشش Mediation طبق CEFR Companion Volume، و دروازهٔ اندازه‌گیری صریح («تا دادهٔ کاربر واقعی هیچ درصد automaticity اعلام نشود»). منبع سوم («نقد پداگوژیک») به همین دلیل به بخش منشأ اضافه شد. نسخهٔ تصویری (این فایل + HTML) هم‌زمان با `automaticity-ux-roadmap.vercel.app` به‌روز است — آن دیپلوی با دسترسی Vercel جدا از Claude انجام شده.
+- **۲۰۲۶-۰۸-۲۱ (بعد از ظهر)**: فازهای ۴ تا ۹ توسط Codex بازطراحی و غنی‌سازی شدند — Foundation Gate قبل از ادغام runtime دیتاست/AI، Quality Gate با نمونه‌گیری دو-داور، پوشش Mediation طبق CEFR Companion Volume، و دروازهٔ اندازه‌گیری صریح («تا دادهٔ کاربر واقعی هیچ درصد automaticity اعلام نشود»). منبع سوم («نقد پداگوژیک») به همین دلیل به بخش منشأ اضافه شد. این نسخه ابتدا روی Alias قدیمی `automaticity-ux-roadmap.vercel.app` منتشر شده بود که اکنون در Scope قابل‌دسترسی حساب فعلی نیست.
+- **۲۰۲۶-۰۸-۲۲**: G1 در PR #17 (`b452e3e`) با CI سبز عبور کرد؛ مسیر B1 نوشتن/گفتار، audio gate، re-record invalidation، provider-unavailable و delayed/novel events برای هر دو زبان ادغام شد. فاز ۴ به 🟡 تغییر کرد و ادامهٔ Foundation Gate به Issue #18 (consent، baseline، data quality) منتقل شد. میکروفون سخت‌افزاری واقعی و provider زنده همچنان N/A هستند.
+- **۲۰۲۶-۰۸-۲۲**: G2 در PR #21 (`032ad14`) با CI سبز عبور کرد؛ consent نسخه‌دار، baseline پیش از intervention، export پژوهشی امن، revoke/delete، retention و data-quality در هر دو زبان ادغام و با Settings E2E تأیید شد. فاز ۴ فقط برای Accessibility baseline قابل تکرار باز است؛ cohort واقعی و اثر یادگیری همچنان N/A است.
+- **۲۰۲۶-۰۸-۲۲**: G3 در PR #24 (`ea3d25c`) با دو CI سبز عبور کرد؛ Shadow Safety به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شد، اما default-off، نامرئی و بدون تغییر یا persistence دادهٔ زبان‌آموز باقی ماند. E2E انگلیسی و آلمانی حفظ learner/evidence را تأیید کرد؛ cohort واقعی و اثر یادگیری همچنان N/A است.
+- **۲۰۲۶-۰۸-۲۲**: زیرساخت G4 در PR #26 (`8edaba2`) با Core/Content CI و German CI سبز ادغام شد: schema mediation، rubric، weighted kappa، adjudication، جلوگیری از solution leakage و quarantine برای draftهای B1 هر دو زبان. بازبینی انسانی، agreement و اثر یادگیری هنوز N/A است؛ G4 عبور نکرده است.
+- **۲۰۲۶-۰۸-۲۲**: Implementation Intentions در PR #28 (`32e8a8c`) با دو CI سبز و Settings E2E هر دو زبان ادغام شد؛ Issue #6 بسته و Issue #7 برای nudge رضایت‌محور باز است. این قابلیت local-only است و هیچ nudge، telemetry یا ادعای mastery تولید نمی‌کند.
+- **۲۰۲۶-۰۸-۲۲**: Guarded Nudges در PR #30 (`4e08775`) با opt-in، quiet hours، cooldown و hard caps ادغام و Issue #7 بسته شد. Forced Output Booster در PR #32 (`1c6fb95`) برای هر دو زبان ادغام و Issue #4 بسته شد؛ completion همچنان mastery نیست.
+- **۲۰۲۶-۰۸-۲۲**: FSRS-6 shadow در PR #34 (`00998b9`) با replay و rollback ادغام شد و scheduler فعلی source of truth ماند. مسیرهای canonical و E2E آلمانی در PR #36 (`463a82d`) تثبیت شدند.
+- **۲۰۲۶-۰۸-۲۲**: DeutschFlow 20.8.25 در PR #38 و English 27.3.18 با Grammar canonical و PDF Reader یکپارچه در PR #47 چرخهٔ fresh/update/repair و حفظ داده را گذراندند؛ این شواهد release است، نه learning outcome.
+- **۲۰۲۶-۰۸-۲۲ ۱۵:۰۰ CEST**: در PR #50 (`02e8781`) Research PDF Studio به Vercel متصل و PDF/Notebook هر دو اپ وب به آن وصل شد. English CI 32574226422، German CI 32574226421 و Reader CI 32574226430 سبز شدند؛ QA تبلت 800×1280 بدون overflow یا console error پاس شد.
+- **۲۰۲۶-۰۸-۲۲ ۱۵:۰۵ CEST**: نسخهٔ v1.18 روی `automaticity-ux-roadmap-elahe.vercel.app` با وضعیت Vercel Ready و محتوای hash-identical منتشر شد. تلاش مستقیم برای Alias دقیق `automaticity-ux-roadmap.vercel.app` با خطای `already in use` رد شد؛ دامنهٔ قدیمی در Scope دیگری است و محتوای آن نسخهٔ جاری نیست.
+- **۲۰۲۶-۰۸-۲۲ ۱۵:۲۰ CEST**: نگاشت GitHub Pages در PR #52 (`abd77e4`) اصلاح شد؛ مسیر UX فایل واقعی UX را منتشر می‌کند و workflow برابری root/Evidence و تفاوت Evidence/UX را assert می‌کند. Pages run 32575429454 سبز، هر سه URL برابر HTTP 200 و QA تبلت UX بدون overflow یا log هشدار/خطا بود.
+- **۲۰۲۶-۰۸-۲۲**: نسخهٔ v1.20 روی دامنهٔ دقیق `automaticity-ux-roadmap.vercel.app` منتشر شد. دامنه از پروژهٔ legacy همان حساب به انتشار جاری منتقل شد؛ پاسخ عمومی HTTP 200 و محتوای دریافت‌شده byte-for-byte و SHA-256 برابر artifact محلی بود. بسته‌های مستقل Vercel در PR #54 (`40454da`) و اصلاح trace آلمانی در PR #55 (`f72210a`) با CI 32577961398 ادغام شدند.

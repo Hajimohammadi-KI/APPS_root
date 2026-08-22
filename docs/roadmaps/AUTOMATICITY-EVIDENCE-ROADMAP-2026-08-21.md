@@ -1,12 +1,17 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.5
+**نسخه:** 1.20
 
-**تاریخ:** 2026-08-21  
-**دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)  
+**آخرین به‌روزرسانی:** 2026-08-22
+**دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)
 **منبع:** فایل «نقد پداگوژیک، اثرگذاری و محتوا» و وضعیت واقعی مخزن
-**نسخهٔ وب:** https://automaticity-evidence-roadmap.vercel.app
+**نسخهٔ عمومی تأییدشده:** https://hajimohammadi-ki.github.io/APPS_root/
+
+**Vercel جاری:** Evidence روی https://automaticity-evidence-roadmap.vercel.app/
+و UX روی https://automaticity-ux-roadmap.vercel.app/ است. هر دو دامنهٔ دقیق در
+انتشار v1.20 با artifactهای canonical مخزن همسان‌سازی و با HTTP 200 و SHA-256
+یکسان تأیید شدند.
 
 ## تصمیم اصلی
 
@@ -26,27 +31,47 @@
 
 ## وضعیت واقعی در نقطهٔ شروع
 
-| بخش | وضعیت 2026-08-21 | مدرک |
+| بخش | وضعیت تا 2026-08-22 | مدرک |
 |---|---|---|
 | هستهٔ مشترک learning-core | PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) پس از بازبینی مستقل و CI سبز merge شد | merge `ed7e73f` و `shared/learning-core` |
-| SKILL-001 Adherence Core | روی `main` ادغام شده؛ shadow flag پیش‌فرض خاموش است؛ هنوز در release کاربر نهایی فعال نشده | `shared/learning-core/src/adherence` |
-| تست اختصاصی adherence | تأییدشده در این بررسی: 21 تست، 60,185 assertion | `bun run test:adherence-core` |
-| کل تست learning-core | تأییدشده پس از افزودن export شواهد: 28 تست، 60,205 assertion | `bun run test` |
+| SKILL-001 Adherence Core | روی `main` ادغام و فقط به‌صورت shadow به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز روی برنامه یا دادهٔ زبان‌آموز اعمال/ذخیره نمی‌شود | `shared/learning-core/src/adherence/shadow-runner.ts` |
+| تست اختصاصی adherence | تأییدشده پس از Guarded Nudges: 36 تست، 69,262 assertion | `bun run test:adherence-core` |
+| کل تست learning-core | تأییدشده پس از PR #36: 87 تست و 71,660 assertion | `bun run test` |
+| تست اختصاصی Forced Output Booster | 10 تست و 2,269 assertion؛ E2E انگلیسی 2/2 و آلمانی 2/2 | `bun run test:booster` و [run 32544972126](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126) |
+| FSRS-6 Shadow | `ts-fsrs@5.4.1` و FSRS-6.0 ثابت؛ 12 تست و 35 assertion، بردار رسمی، بازپخش 1,000 تاریخچه، مقایسهٔ due-count، rollback و migration-loss | [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34)، merge `00998b9`؛ [Core/App CI 32546150383](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150383) و [German verify 32546150384](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150384) سبز؛ Issue #5 بسته |
+| مسیرهای canonical و E2E آلمانی | مالکیت `/heute`، `/grammatik`، `/studio`، `/einstellungen` و `/klassik` مستند شد؛ Shell تکراری Studio حذف بصری، CSS محدود به Studio، چیدمان container-responsive و انتظار PWA آفلاین به UI فعلی اصلاح شد | [PR #36](https://github.com/Hajimohammadi-KI/APPS_root/pull/36)، merge `463a82d`؛ 25 تست non-opt-in پاس و 2 تست opt-in جدا؛ PWA production/offline نیز پاس؛ [German CI 32547665744](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32547665744) |
+| انتشار DeutschFlow 20.8.25 | از `main` فعلی ساخته شد؛ نصب تازه، اجرای مستقیم دسکتاپ، وب/API واقعی، ارتقا از 20.8.24، repair پس از خرابی عمدی version marker، uninstall و حفظ دقیق دادهٔ ساختگی پاس شد | [PR #38](https://github.com/Hajimohammadi-KI/APPS_root/pull/38)، merge `6239e3c`؛ [CI 32548697753](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32548697753)؛ Setup SHA-256 `B95AA51EE28E91B3A8493A239C57E8BB08CBC8F422741112EBEAAA98FD313724`؛ payload SHA-256 `52A99AC6E0A99001A9891E113F00DE7F77E5273B198199B9C79092F8720321CA` |
+| انتشار English Automaticity 27.3.18 | Grammar Lab همچنان از منبع canonical مؤلف‌شده تولید می‌شود: 112 واحد و دقیقاً 6 تمرین برای هر واحد، در مجموع 672 تمرین. Research PDF Studio اکنون همراه Installer روی پورت loopback اختصاصی 4332 نصب و از Notebook/PDF باز می‌شود. 31/31 تست E2E اپ، 7 تست Reader و 2/2 تست مرورگر Reader پاس شد؛ نصب تازه، startup، ارتقا از 27.3.17، repair پس از خرابی عمدی، uninstall و حفظ داده نیز تأیید شد | [PR #47](https://github.com/Hajimohammadi-KI/APPS_root/pull/47)، merge `0e91c8f`؛ [English CI](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32570722314)، [Reader CI](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32570722315) و [Core CI](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32570722323)؛ [Issue #43 بسته](https://github.com/Hajimohammadi-KI/APPS_root/issues/43)؛ Setup SHA-256 `CE6B6C998E713E1BA19380EBBD84FCC0AF97B503F94A5160D7D7BD744E9183FA`؛ payload SHA-256 `B7C92131DC9BEDD6122B85CC197B2DF2936F0BCC06B5C9E4618A392E95AC92C0` |
+| چرخهٔ یکپارچهٔ PDF Reader | health دقیق، بازکردن PDF واقعی با شناسهٔ SHA-256 بدون افشای مسیر فایل، render و انتخاب متن، highlight، comment، export و reload در نصب تازه و پس از repair آزمون شد. viewport تبلت 800×1280 و حفظ داده پس از update/repair/uninstall نیز پاس شد | **تأیید release lifecycle**؛ این مدرک فنی جای G4/G5 یا سنجش outcome زبان‌آموز را نمی‌گیرد |
+| وب عمومی انگلیسی، آلمانی و PDF Reader | در انتشار نهایی v1.20، هر دو اپ از `main` شامل PR #55 دوباره build و روی دامنه‌های production منتشر شدند؛ 12/12 مسیر انگلیسی و 20/20 مسیر آلمانی طبق قرارداد 200/307 پاس شدند. Home و Studio هر دو زبان در 800×1280 با `lang`/`dir` درست و بدون overflow تأیید شدند؛ Reader و `/api/health` نیز HTTP 200 و `ready=true` بودند | English deployment `dpl_GucT4dQJaSYFAycaCqmF3EyeWarS`؛ German deployment `dpl_EjiseWkNZ2zJkUetNdrFEimKsyEk`؛ [main CI 32577961398](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32577961398) |
+| انتشار صحیح Evidence و UX در GitHub Pages | Workflow فایل Evidence را فقط در root و مسیر Evidence، و فایل واقعی UX را در مسیر UX منتشر می‌کند؛ CI وجود هر سه artifact، برابری root/Evidence، تفاوت Evidence/UX و marker اختصاصی UX را کنترل می‌کند. هر سه URL HTTP 200 هستند و UX در 800×1280، RTL و بدون overflow یا log هشدار/خطا تأیید شد | [PR #52](https://github.com/Hajimohammadi-KI/APPS_root/pull/52)، merge `abd77e4` و [Pages deploy 32575429454](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32575429454) |
+| انتشار Vercel رودمپ v1.20 | دامنه‌های دقیق Evidence و UX به artifactهای canonical همین مخزن متصل شدند؛ هر دو URL HTTP 200 و محتوای دریافت‌شده byte-for-byte و SHA-256 برابر خروجی محلی بود. بسته‌های مستقل سایت و CI انتشار در PR #54 و اصلاح trace آلمانی با verify کامل در PR #55 وارد `main` شدند | [Evidence](https://automaticity-evidence-roadmap.vercel.app/)؛ [UX](https://automaticity-ux-roadmap.vercel.app/)؛ [PR #54](https://github.com/Hajimohammadi-KI/APPS_root/pull/54) `40454da`؛ [PR #55](https://github.com/Hajimohammadi-KI/APPS_root/pull/55) `f72210a`؛ [CI 32577961398](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32577961398) |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
-| ادغام runtime در هر دو اپ | ledger مشترک، gate صوت و export نسخه‌دار موجود است؛ مسیر B1 کامل هنوز مستقل اثبات نشده | **Gate G1 در [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) در حال انجام است** |
-| export محلی شواهد | Draft PR [#16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) روی `main` فعلی، صفحهٔ Settings انگلیسی و export نسخه‌دار هر دو زبان را مستقل کرده است؛ هنوز merge و release نشده | commits `c79d5f2` و `e5dbd28`؛ E2E دانلود واقعی هر دو زبان پاس شد |
-| AI و دیتاست runtime | نباید آغاز شود | وابسته به G1 و G2 |
+| ادغام runtime در هر دو اپ | مسیر B1 نوشتن/گفتار، audio gate، invalidation، provider-unavailable و eventهای جدا در هر دو زبان ادغام شد | **Gate G1 عبور کرد:** [PR #17](https://github.com/Hajimohammadi-KI/APPS_root/pull/17)، merge `b452e3e`، [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) بسته |
+| export محلی شواهد | صفحهٔ Settings انگلیسی و export نسخه‌دار هر دو زبان روی `main` ادغام شد | [PR #16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16)، merge `17341f7`؛ E2E دانلود واقعی هر دو زبان پاس شد |
+| CI مربوط به G1 | Learning Core و German Automaticity هر دو سبز | [Core run 32532317547](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317547) و [German run 32532317531](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317531) |
+| قرارداد سنجش و حریم خصوصی | رضایت نسخه‌دار، baseline پیش از intervention، export امن، revoke/delete، retention و data-quality در هر دو اپ ادغام شد | **Gate G2 عبور کرد:** [PR #21](https://github.com/Hajimohammadi-KI/APPS_root/pull/21)، merge `032ad14`، [Issue #18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18) بسته |
+| CI مربوط به G2 | Learning Core و German Automaticity هر دو سبز؛ Settings E2E در انگلیسی و آلمانی پاس شد | [Core run 32535274524](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32535274524) و [German run 32535274583](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32535274583) |
+| Shadow Safety در هر دو اپ | adapter خالص و default-off، مقایسهٔ 15/30/45 دقیقه، fail-closed، عدم persistence و E2E حفظ داده در انگلیسی و آلمانی ادغام شد | **Gate G3 عبور کرد:** [PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24)، merge `ea3d25c`، [Issue #23](https://github.com/Hajimohammadi-KI/APPS_root/issues/23) بسته |
+| CI مربوط به G3 | Learning Core و German Automaticity هر دو سبز؛ browser adapter در هر سه کپی hash-identical و زیر بودجهٔ 5 KiB gzip است | [Core run 32537261291](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261291) و [German run 32537261468](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261468) |
+| زیرساخت Content Quality | schema نسخه‌دار mediation، rubric ثابت، دو بازبین مستقل، weighted kappa، adjudication و quarantine محتوای تأییدنشده در هر دو زبان ادغام شد | [PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26)، merge `8edaba2`؛ [Core/Content run 32538983463](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983463) و [German run 32538983363](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983363) سبز |
+| بازبینی انسانی پایلوت G4 | هنوز انجام نشده؛ هر دو draft با `humanReviewed=false` و `awaiting-human-review` از daily plan حذف می‌شوند | **N/A — Gate G4 هنوز عبور نکرده است** |
+| Implementation Intentions | انتخاب اختیاری 0 یا 2 تا 5 برنامهٔ زمان/مکان در Settings هر دو زبان، ذخیرهٔ local-only، متن EN/DE/FA و حذف/بازیابی پس از reload ادغام شد؛ هیچ nudge یا event ساخته نمی‌شود | [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28)، merge `32e8a8c`؛ [Core run 32541173665](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173665) و [German run 32541173644](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173644) سبز؛ [Issue #6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) بسته |
+| Guarded in-app nudges | در هر دو اپ با opt-in صریح و پیش‌فرض خاموش، ترتیب guard قطعی، quiet hours، cooldown، سقف روزانه/هفتگی، رویداد محلی کمینه و متن EN/DE/FA ادغام شد؛ push/email و ادعای outcome وجود ندارد | [PR #30](https://github.com/Hajimohammadi-KI/APPS_root/pull/30)، merge `4e08775`؛ [Core/Content run 32542941048](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941048) و [Browser run 32542941037](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941037) سبز؛ [Issue #7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) بسته |
+| Forced Output Booster | در هر دو اپ با `booster_mode` پیش‌فرض خاموش، 3 تا 5 دور 30 تا 90 ثانیه‌ای فقط از سهم `automatization`، ضبط واقعی یا fallback تایپ، metadata کمینه و منع قطعی mastery/automaticity ادغام شد | [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32)، merge `1c6fb95`؛ [Core/Browser run 32544972126](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126) و [German run 32544972169](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972169) سبز؛ [Issue #4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) بسته |
+| AI و دیتاست runtime | هنوز نباید وارد runtime یا تصمیم mastery شود | ingestion محتوای پایلوت وابسته به تکمیل بازبینی انسانی G4 است |
 | اثرگذاری روی زبان‌آموز واقعی | دادهٔ کافی وجود ندارد | **N/A تا اجرای پایلوت** |
 
 > سبزشدن تست‌های pure TypeScript فقط صحت قراردادها و invariants را نشان می‌دهد؛
 > این نتیجه، به‌تنهایی اثبات نمی‌کند که کاربر واقعاً زبان را اتوماتیک می‌کند.
 
-## لینک‌های اجرای محلی تأییدشده در 2026-08-21
+## لینک‌های عمومی و اجرای محلی تأییدشده تا 2026-08-22
 
 | سرویس | لینک ویندوز | لینک تبلت/Android در همان Wi-Fi | وضعیت |
 |---|---|---|---|
+| رودمپ عمومی | [Evidence روی Vercel](https://automaticity-evidence-roadmap.vercel.app/) · [GitHub Pages](https://hajimohammadi-ki.github.io/APPS_root/) | [UX روی Vercel](https://automaticity-ux-roadmap.vercel.app/) · [UX روی Pages](https://hajimohammadi-ki.github.io/APPS_root/automaticity-ux-roadmap/) | HTTPS عمومی؛ HTTP 200؛ RTL؛ artifactهای Vercel در انتشار v1.20 با فایل‌های محلی hash-identical تأیید شدند |
 | App Starter | [127.0.0.1:4300](http://127.0.0.1:4300/) | فقط میزبان ویندوز | HTTP 200؛ health سریع و بدون خطای کاذب startup |
 | English Automaticity | [127.0.0.1:3202](http://127.0.0.1:3202/) | [192.168.178.24:3202](http://192.168.178.24:3202/) | HTTP 200 و browser smoke test |
 | DeutschFlow | [127.0.0.1:3210](http://127.0.0.1:3210/) | [192.168.178.24:3210](http://192.168.178.24:3210/) | HTTP 200 و browser smoke test |
@@ -83,12 +108,12 @@ flowchart LR
 | Gate | شرط عبور | اگر عبور نکرد |
 |---|---|---|
 | **G0 — Source Gate** | چهار مسیر SKILL-001 در PR جدا، review و CI سبز | هیچ فاز وابسته merge نشود |
-| **G1 — Runtime Evidence Slice** | یک واحد B1 انگلیسی و یک واحد B1 آلمانی از content تا evidence واقعی عبور کنند | AI، ingestion دیتاست و adaptive decisions متوقف بماند |
-| **G2 — Measurement Contract** | event schema، consent، privacy، baseline و data-quality checks تصویب شوند | هیچ ادعای بهبود یا A/B test منتشر نشود |
-| **G3 — Shadow Safety** | خروجی جدید در shadow با رفتار فعلی مقایسه شود و دادهٔ کاربر را تغییر ندهد | feature flag خاموش بماند |
-| **G4 — Content Quality** | provenance، مجوز، بازبینی انسانی و rubric برای همهٔ آیتم‌های پایلوت | آیتم وارد برنامهٔ روزانه نشود |
+| **G1 — Runtime Evidence Slice** | ✅ در PR #17 عبور کرد: یک واحد B1 انگلیسی و آلمانی از content تا evidence و export عبور می‌کند | میکروفون سخت‌افزاری و provider زنده همچنان N/A و در G6/پایلوت بررسی شوند |
+| **G2 — Measurement Contract** | ✅ در PR #21 عبور کرد: event schema، consent، privacy، baseline، retention و data-quality checks در هسته و هر دو اپ ادغام شدند | اثرگذاری روی زبان‌آموز واقعی همچنان N/A تا پایلوت است |
+| **G3 — Shadow Safety** | ✅ در PR #24 عبور کرد: خروجی جدید کنار برنامهٔ فعلی محاسبه می‌شود؛ E2E هر دو زبان ثابت می‌کند UI و دادهٔ learner/evidence تغییر نمی‌کنند | flag پیش‌فرض خاموش می‌ماند؛ اثر یادگیری همچنان N/A است |
+| **G4 — Content Quality** | 🟡 زیرساخت در PR #26 ادغام شد؛ provenance، مجوز، rubric، quarantine و CI موجود است، اما دو بازبین انسانی واقعی و agreement هنوز N/A هستند | draftها وارد برنامهٔ روزانه نمی‌شوند و Issue #8 باز می‌ماند |
 | **G5 — Learning Evidence** | pre/post مستقل، delayed recall و novel transfer با دادهٔ واقعی | واژهٔ «automatic» فقط هدف محصول باشد، نه نتیجهٔ اثبات‌شده |
-| **G6 — Release Lifecycle** | build، E2E، responsive، Install/Update/Repair و حفظ داده پاس شوند | installer یا نسخهٔ وب منتشر نشود |
+| **G6 — Release Lifecycle** | build، E2E، responsive، Install/Update/Repair و حفظ داده پاس شوند؛ DeutschFlow 20.8.25 و English 27.3.18، شامل PDF Reader متصل، چرخهٔ انتشار خود را گذرانده‌اند. Gate سراسری همچنان تا G4/G5 باز است | هیچ انتشار جدیدی بدون تکرار چرخه انجام نشود؛ شواهد release به‌جای human review یا outcome واقعی استفاده نشوند |
 
 > **چرا G1 فقط روی یک سطح (B1) تعریف شده، نه همهٔ سطوح؟** هدف G1 اثبات
 > درستی مسیر فنی (pipeline) است، نه پوشش محتوا — سطح فقط metadata روی
@@ -102,7 +127,7 @@ flowchart LR
 
 ## فاز 0 — تفکیک و merge کردن Vertical Slice 1
 
-**برآورد:** 1 تا 2 روز کاری  
+**برآورد:** 1 تا 2 روز کاری
 **وضعیت:** کامل؛ review، CI و merge انجام شد
 
 **Issue:** [#3 — Local-first adherence core](https://github.com/Hajimohammadi-KI/APPS_root/issues/3)
@@ -132,9 +157,10 @@ flowchart LR
 
 ## فاز 1 — Vertical Slice واقعی در English و Deutsch
 
-**برآورد:** 1 sprint  
-**وابستگی:** G0  
-**وضعیت:** در حال انجام در [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14)؛ ادغام تغییرات فعلی وابسته به پاک‌سازی شاخه در [Issue #15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) است
+**برآورد:** 1 sprint
+**وابستگی:** G0
+**وضعیت:** ✅ کامل؛ [Issue #14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) با merge شدن [PR #17](https://github.com/Hajimohammadi-KI/APPS_root/pull/17) در `b452e3e` بسته شد
+**CI:** [Learning Core 32532317547](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317547) و [German Automaticity 32532317531](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32532317531) سبز
 **هدف:** تبدیل قرارداد pure core به مسیر واقعی یادگیری در هر دو اپ.
 
 ### محدوده
@@ -155,33 +181,39 @@ flowchart LR
 - delayed recall و novel transfer به‌صورت event جدا قابل ثبت باشند؛
 - خطای provider با وضعیت unavailable دیده شود، نه موفقیت جعلی.
 
-### پیشرفت تأییدشدهٔ فعلی
+### خروجی تأییدشده
 
 - PR آلمانی [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) با تست‌های
   typecheck، lint، unit/integration، installer، schema، build و 15 E2E (به‌علاوهٔ
   2 تست اختیاری PWA که skip شدند) merge شده است؛
 - `learning-core` برای تلاش‌های انگلیسی و آلمانی ledger محلی نسخه‌دار می‌سازد و
   speaking بدون audio را `unverified` نگه می‌دارد؛
-- Draft PR [#16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) با commits
+- PR [#16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) با commits
   `c79d5f2` و `e5dbd28` خروجی هر دو اپ را اصلاح کرد تا `learnerState` و
   `learningEvidence` را با envelope نسخه‌دار صادر کند؛ تست دانلود واقعی مرورگر
-  در هر دو زبان پاس شد؛
+  در هر دو زبان پاس شد و در merge `17341f7` وارد `main` شد؛
 - build تولیدی هر دو اپ پاس شد و سرویس‌های محلی دوباره با HTTP 200 بالا آمدند.
-- PR قدیمی [#2](https://github.com/Hajimohammadi-KI/APPS_root/pull/2) همچنان
-  conflicted و غیرقابل ادغام است. baseline لازم بدون حل کور تعارض‌ها در Draft PR
-  [#16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) استخراج شد و اکنون
-  منتظر CI، review و merge است.
+- PR [#17](https://github.com/Hajimohammadi-KI/APPS_root/pull/17) مسیرهای واقعی EN/DE را با
+  34 تست هسته، 4 E2E متمرکز انگلیسی و 2 E2E متمرکز آلمانی کامل کرد؛
+- `learning.evidence.invalidated.v1` برای re-record و eventهای مستقل
+  `learning.delayed-recall.recorded.v1` و `learning.novel-transfer.recorded.v1`
+  در ledger/export ثبت می‌شوند؛
+- خطای provider evidence موفق ذخیره نمی‌کند و completion یا 60 ثانیه گفتار فقط
+  `insufficient-longitudinal-evidence` باقی می‌ماند؛
+- 320px reflow، فعال‌سازی با صفحه‌کلید و reduced motion در E2E متمرکز پوشش داده شد.
 
-این موارد پیشرفت G1 هستند، نه عبور کامل آن. آزمون مستقل microphone واقعی و
-provider خارجی در این مرحله **N/A — هنوز به‌اندازهٔ کافی تأیید نشده** است؛ مسیر
-B1 دو زبان، invalidation شواهد پس از re-record و eventهای مستقل delayed recall / novel
-transfer هنوز باید در Issue #14 یکجا اثبات شوند.
+**مرز صادقانهٔ شواهد:** تست مرورگر از WAV مصنوعیِ غیرخالی و provider intercept‌شده
+استفاده کرد. آزمون مستقل microphone سخت‌افزاری واقعی و provider خارجی زنده در این
+مرحله **N/A — هنوز به‌اندازهٔ کافی تأیید نشده** است و به‌عنوان `VERIFIED` گزارش
+نمی‌شود. این محدودیت در G6/پایلوت باقی می‌ماند، اما قرارداد deterministic لازم برای
+عبور G1 روی `main` ادغام و در CI اثبات شده است.
 
 ## فاز 2 — قرارداد سنجش، حریم خصوصی و Baseline
 
-**برآورد:** 1 sprint  
-**وابستگی:** G1  
-**Issues:** [#9 — Independent assessment](https://github.com/Hajimohammadi-KI/APPS_root/issues/9)، [#10 — Learning analytics](https://github.com/Hajimohammadi-KI/APPS_root/issues/10)
+**برآورد:** 1 sprint
+**وابستگی:** G1
+**وضعیت:** ✅ کامل؛ [Issue #18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18) با [PR #21](https://github.com/Hajimohammadi-KI/APPS_root/pull/21) و merge `032ad14` بسته شد
+**گام‌های بعدی:** [#9 — Independent assessment](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) و [#10 — Learning analytics](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) پس از Gateهای وابسته
 
 ### کارها
 
@@ -207,19 +239,29 @@ transfer هنوز باید در Issue #14 یکجا اثبات شوند.
 هدف عددی پیش از baseline تعیین نمی‌شود. پس از baseline، target باید همراه با
 بازهٔ عدم‌قطعیت و guardrail کیفیت یادگیری تصویب شود.
 
+### خروجی تأییدشدهٔ G2
+
+- رضایت opt-in نسخه‌دار، revoke، حذف دادهٔ سنجش و retention محلی 365روزه در هستهٔ مشترک پیاده شد؛
+- baseline فقط با رضایت معتبر و پیش از هر intervention ثبت می‌شود؛
+- export پژوهشی allowlist دارد و متن خام، صوت، ایمیل و شناسهٔ مستقیم را خارج نمی‌کند؛ backup کامل یادگیری جدا باقی مانده است؛
+- گزارش کیفیت completeness، uniqueness، validity، time/version و privacy leakage را deterministic بررسی می‌کند؛ نبود نمونه با `N/A` گزارش می‌شود؛
+- 43 تست هسته و E2E واقعی Settings برای هر دو زبان پاس شد؛ دادهٔ cohort واقعی و اثر یادگیری همچنان `N/A` است.
+
 ## فاز 3 — Adherence Engineering در Shadow
 
-**برآورد:** 1 تا 2 sprint  
-**وابستگی:** G2  
+**برآورد:** 1 تا 2 sprint
+**وابستگی:** G2
 **Issues:** [#6 — Implementation intentions](https://github.com/Hajimohammadi-KI/APPS_root/issues/6)، [#7 — Guarded nudges](https://github.com/Hajimohammadi-KI/APPS_root/issues/7)
+
+**وضعیت 2026-08-22:** Shadow Safety در [PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24)، Implementation Intentions در [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28) و Guarded Nudges در [PR #30](https://github.com/Hajimohammadi-KI/APPS_root/pull/30) با merge `4e08775` و چهار check سبز ادغام شدند. اعلان فقط پس از opt-in صریح و عبور guardهای قطعی داخل اپ ظاهر می‌شود؛ push/email ندارد، focus را جابه‌جا نمی‌کند و رویدادهایش learning outcome نیستند. Issues [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) و [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) بسته‌اند؛ micro-goal و comeback flow محصولی هنوز باقی است.
 
 ### ترتیب اجرا
 
 1. اتصال SKILL-001 به برنامهٔ 15/30/45 دقیقه فقط در shadow؛
-2. ذخیرهٔ اختیاری implementation intention در onboarding؛
+2. ✅ ذخیرهٔ اختیاری implementation intention در Settings هر دو اپ؛
 3. micro-goal پنج‌دقیقه‌ای برای روزهای کم‌انرژی، بدون حذف کامل productive output؛
 4. comeback flow بدون شرم‌دادن یا صفرکردن دستاورد واقعی؛
-5. فقط in-app prompt با consent و cooldown؛ push/email در این فاز ممنوع؛
+5. ✅ فقط in-app prompt با consent و cooldown؛ push/email در این فاز ممنوع؛
 6. مقایسهٔ پیشنهاد shadow با برنامهٔ واقعی، بدون تغییر تجربهٔ کاربر.
 
 ### معیار خروج
@@ -232,57 +274,78 @@ transfer هنوز باید در Issue #14 یکجا اثبات شوند.
 
 ## فاز 4 — Forced Output Booster
 
-**برآورد:** 1 تا 2 sprint  
-**وابستگی:** G2 و محتوای authored معتبر  
-**Issue:** [#4 — Forced-output booster](https://github.com/Hajimohammadi-KI/APPS_root/issues/4)
+**وضعیت 2026-08-22:** در [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32) با merge `1c6fb95` و شش check سبز ادغام شد؛ Issue #4 بسته است. feature flag پیش‌فرض خاموش است و فعال‌شدن به `booster_mode=true` همراه `?mode=booster` نیاز دارد. کیفیت میکروفون واقعی، latency سخت‌افزاری، ASR و اثر یادگیری همچنان **N/A — هنوز به‌اندازهٔ کافی تأیید نشده** هستند.
+
+**برآورد اولیه:** 1 تا 2 sprint
+**وابستگی:** G2 و محتوای authored معتبر
+**Issue/PR:** [#4 — Forced-output booster](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) و [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32)
 
 ### طراحی محصول
 
-- 3 تا 6 دور کوتاه 30 تا 60 ثانیه‌ای، پشت feature flag؛
-- دورهای Recall، Automate Aloud و Transfer؛
+- 3 تا 5 دور کوتاه 30 تا 90 ثانیه‌ای، پشت feature flag؛
+- picture description، situation reaction، continuation، transformation و mini-argument؛
 - fallback تایپ برای نبود میکروفون یا نیاز دسترس‌پذیری؛
+- ضبط با `MediaRecorder` و ذخیرهٔ Blob در IndexedDB؛ متن خام و صوت وارد
+  `localStorage` نمی‌شوند؛
+- زمان فقط از بلوک موجود `automatization` گرفته می‌شود و بلوک ششمی به برنامه
+  اضافه نمی‌شود؛
 - برنامهٔ 45 دقیقه‌ای فقط نسخهٔ کشیدهٔ 15 دقیقه‌ای نباشد: گفتار طولانی‌تر،
   نوشتن مستقل و بیش از یک زمینهٔ انتقال داشته باشد؛
 - سختی و حجم بر اساس مدت انتخابی تغییر کند، اما سطح فقط با کیفیت شواهد ارتقا یابد.
 
 ### معیار خروج
 
-- تلاش واقعی ذخیره شود؛ latency اولین کلمه و self-repair قابل ثبت باشد؛
-- واژهٔ کلیدی به‌تنهایی جواب غلط را قبول نکند؛
-- Booster قابل ردکردن و flag خاموش باشد؛
-- هیچ ادعای «صدها تکرار لازم است» به‌عنوان آستانهٔ جهانی در کد hard-code نشود.
+- ✅ تلاش واقعی با attempt/round/plan/target ID مرتبط ذخیره می‌شود؛ latency اولین
+  تولید و self-repair در قرارداد قابل ثبت است؛
+- ✅ واژهٔ کلیدی یا fragment ناقص به‌تنهایی structure use محسوب نمی‌شود؛
+- ✅ Booster قابل ردکردن و flag پیش‌فرض خاموش است؛
+- ✅ composite و اجزای آن در بازهٔ `0..1` می‌مانند و هیچ mastery یا ارتقای سطحی
+  از یک Booster ساخته نمی‌شود؛
+- ✅ هیچ آستانهٔ جهانی «صدها تکرار» در کد hard-code نشده است.
 
-## فاز 5 — مهاجرت FSRS در Shadow
+## فاز 5 — ارزیابی FSRS در Shadow
 
-**برآورد:** 1 تا 2 sprint  
-**وابستگی:** G2  
-**Issue:** [#5 — FSRS shadow migration](https://github.com/Hajimohammadi-KI/APPS_root/issues/5)
+**وضعیت 2026-08-22:** زیرساخت فنی در [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34) با merge `00998b9` و هشت check سبز ادغام شد؛ Issue #5 بسته است. FSRS فقط با `fsrs_shadow_v1=true` فعال می‌شود، موعد واقعی زبان‌آموز را عوض نمی‌کند و `rolloutEligible=false` باقی می‌ماند. دورهٔ واقعی prospective، retention، workload و overdue burden هنوز **N/A — هنوز به‌اندازهٔ کافی تأیید نشده** هستند.
+
+**برآورد اولیه:** 1 تا 2 sprint
+**وابستگی:** G2
+**Issue/PR:** [#5 — FSRS shadow migration](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) و [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34)
 
 ### کارها
 
-- نگاشت دادهٔ scheduler فعلی به Difficulty، Stability و Retrievability؛
+- pin کردن `ts-fsrs@5.4.1`، FSRS-6.0 و commit رسمی upstream؛
+- تشخیص صریح اینکه دادهٔ قدیمی aggregate-only است و برای seed معتبر کافی نیست؛
+- جمع‌آوری آینده‌نگر rating و timestamp فقط پس از opt-in؛
 - محاسبهٔ due date فعلی و FSRS در کنار هم، بدون تغییر برنامهٔ کاربر؛
 - ثبت اختلاف زمان‌بندی و rollback metadata؛
-- تست property-based برای monotonicity و boundaryها؛
+- بازپخش قطعی 1,000 تاریخچه، due-count و benchmark latency؛
 - استفاده از پیاده‌سازی معتبر FSRS؛ نه الگوریتم مبتنی بر `ease factor` و نه
   invariant نامعتبر `stability >= difficulty`.
 
 ### معیار خروج
 
-- حداقل یک دورهٔ واقعی shadow بدون از دست‌رفتن review history؛
-- migration رفت‌وبرگشت‌پذیر و idempotent؛
-- فعال‌سازی تدریجی فقط پس از بررسی retention، workload و overdue burden.
+- ✅ بردار رسمی، بازپخش deterministic، idempotence، capacity و rollback پاس شده‌اند؛
+- ✅ scheduler فعلی source of truth مانده و خاموش‌کردن flag فقط دادهٔ shadow را کنار می‌گذارد؛
+- ⏳ حداقل یک دورهٔ واقعی prospective shadow هنوز اجرا نشده است؛
+- ⏳ فعال‌سازی learner-visible فقط پس از بررسی retention، workload و overdue burden ممکن است.
 
 ## فاز 6 — Content QA، Mediation و پایلوت دیتاست
 
-**برآورد:** 2 تا 3 sprint  
-**وابستگی:** G1؛ ingestion runtime وابسته به G2 و G4  
+**برآورد:** 2 تا 3 sprint
+**وابستگی:** G1؛ G2 عبور کرده و ingestion runtime اکنون وابسته به G4 است
 **Issue:** [#8 — CEFR mediation pilot](https://github.com/Hajimohammadi-KI/APPS_root/issues/8)
+
+**وضعیت 2026-08-22:** زیرساخت و draft محدود در
+[PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26) با merge
+`8edaba2` و دو CI سبز ادغام شد. یک آیتم authored B1 برای هر زبان وجود دارد، اما
+هر دو `awaiting-human-review` هستند و release array آن‌ها خالی است. بازبینی
+native-speaker و language-pedagogy، adjudication احتمالی و agreement واقعی هنوز
+`N/A — not sufficiently verified` است؛ بنابراین G4 عبور نکرده است.
 
 ### ContentUnit مشترک
 
 هر واحد باید language، CEFR، version، source/license، reviewer status و حداقل
-یکی از modeهای recognition، writing، speaking، repair، transfer یا mediation
+یکی از modeهای recognition، recall، writing، speaking، repair، transfer یا mediation
 را داشته باشد. شناسهٔ فنی خودکار تولید شود؛ مدرس مجبور به واردکردن context key
 نباشد.
 
@@ -304,7 +367,7 @@ transfer هنوز باید در Issue #14 یکجا اثبات شوند.
 | UD English EWT / German GSD | ویژگی نحوی کمکی | ادعای CEFR یا خطای زبان‌آموز |
 | W&I + LOCNESS / C4 200M GEC | پژوهش GEC پس از بررسی مجوز | seed مستقیم Installer یا evidence تسلط |
 
-دانلود حجیم، fine-tune و افزودن داده به installer تا عبور G1/G2/G4 انجام
+دانلود حجیم، fine-tune و افزودن داده به installer تا عبور G4 انجام
 نمی‌شود. کاتالوگ metadata-only به معنی «دیتاست استفاده‌شده در مدل» نیست.
 
 ### معیار خروج
@@ -316,8 +379,8 @@ transfer هنوز باید در Issue #14 یکجا اثبات شوند.
 
 ## فاز 7 — سنجش مستقل automaticity
 
-**برآورد:** 1 تا 2 sprint برای ابزار، سپس اجرای مطالعه  
-**وابستگی:** G3 و G4  
+**برآورد:** 1 تا 2 sprint برای ابزار، سپس اجرای مطالعه
+**وابستگی:** G3 و G4
 **Issue:** [#9 — Independent assessment](https://github.com/Hajimohammadi-KI/APPS_root/issues/9)
 
 ### پروتکل
@@ -339,8 +402,8 @@ transfer هنوز باید در Issue #14 یکجا اثبات شوند.
 
 ## فاز 8 — پایلوت رضایت‌محور و Analytics
 
-**برآورد:** 4 تا 8 هفته جمع‌آوری داده پس از آماده‌شدن ابزار  
-**وابستگی:** G5  
+**برآورد:** 4 تا 8 هفته جمع‌آوری داده پس از آماده‌شدن ابزار
+**وابستگی:** G5
 **Issue:** [#10 — Learning analytics](https://github.com/Hajimohammadi-KI/APPS_root/issues/10)
 
 ### طراحی پایلوت
@@ -364,7 +427,7 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## فاز 9 — انتشار تدریجی وب، PWA و Windows
 
-**برآورد:** در پایان هر بستهٔ تغییر substantive  
+**برآورد:** در پایان هر بستهٔ تغییر substantive
 **وابستگی:** G6
 
 برای هر دو اپ، Definition of Done انتشار شامل موارد زیر است:
@@ -387,16 +450,19 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | ترتیب | محدوده | Issue | شرط شروع |
 |---:|---|---|---|
 | 1 | Adherence core + mirrors + CI | [#3](https://github.com/Hajimohammadi-KI/APPS_root/issues/3) | اکنون، پس از جداسازی worktree |
-| 2 | تفکیک baseline اپ‌ها از PR conflicted شمارهٔ 2 | [#15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) و [PR #16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) | Draft ساخته شد؛ منتظر CI، review و merge |
-| 3 | Runtime evidence slice EN/DE | [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) | merge شدن PR #16؛ اجرای محلی در حال انجام |
-| 4 | Measurement contracts و local export | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G1 |
-| 5 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) | G2 |
-| 6 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) | #6 و consent |
-| 7 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) | G2 و authored content |
-| 8 | FSRS shadow migration | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) | G2 |
-| 9 | Mediation pilot + QA | [#8](https://github.com/Hajimohammadi-KI/APPS_root/issues/8) | G1 و content schema |
-| 10 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
-| 11 | Consented pilot analytics | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G5 و دادهٔ چندکاربره |
+| 2 | تفکیک baseline اپ‌ها از PR conflicted شمارهٔ 2 | [#15](https://github.com/Hajimohammadi-KI/APPS_root/issues/15) و [PR #16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) | ✅ merge `17341f7` |
+| 3 | Runtime evidence slice EN/DE | [#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) و [PR #17](https://github.com/Hajimohammadi-KI/APPS_root/pull/17) | ✅ merge `b452e3e`؛ G1 عبور کرد |
+| 4 | Measurement contract، consent، baseline و data quality | [#18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18) و [PR #21](https://github.com/Hajimohammadi-KI/APPS_root/pull/21) | ✅ merge `032ad14`؛ G2 عبور کرد |
+| 5 | Shadow Safety در برنامهٔ 15/30/45 دقیقهٔ هر دو اپ | [#23](https://github.com/Hajimohammadi-KI/APPS_root/issues/23) و [PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24) | ✅ merge `ea3d25c`؛ G3 عبور کرد |
+| 6 | Content QA و Mediation pilot | [#8](https://github.com/Hajimohammadi-KI/APPS_root/issues/8) و [PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26) | 🟡 زیرساخت merge `8edaba2`؛ human review و agreement هنوز N/A |
+| 7 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) و [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28) | ✅ merge `32e8a8c`؛ Issue #6 بسته |
+| 8 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) و [PR #30](https://github.com/Hajimohammadi-KI/APPS_root/pull/30) | ✅ merge `4e08775`؛ Issue #7 بسته، consent/cooldown و hard caps در CI تأیید شد |
+| 9 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) و [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32) | ✅ merge `1c6fb95`؛ Issue #4 بسته و شش check سبز |
+| 10 | FSRS shadow evaluation | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) و [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34) | ✅ merge `00998b9`؛ زیرساخت shadow کامل و Issue #5 بسته؛ rollout واقعی هنوز N/A |
+| 11 | Canonical German routes و Chromium E2E | [#12](https://github.com/Hajimohammadi-KI/APPS_root/issues/12) و [PR #36](https://github.com/Hajimohammadi-KI/APPS_root/pull/36) | ✅ merge `463a82d`؛ Issue #12 بسته، E2E و PWA آفلاین پاس |
+| 12 | DeutschFlow 20.8.25، English 27.3.18 با PDF Reader و public roadmap mirror | [PR #38](https://github.com/Hajimohammadi-KI/APPS_root/pull/38)، [PR #47](https://github.com/Hajimohammadi-KI/APPS_root/pull/47) و [PR #39](https://github.com/Hajimohammadi-KI/APPS_root/pull/39) | ✅ چرخهٔ هر دو installer و Pages deploy پاس؛ اختلاف Grammar در #42 و lifecycle یکپارچهٔ PDF در #43 رفع و بسته شد. این‌ها شواهد release هستند، نه عبور G4/G5 |
+| 13 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
+| 14 | Consented pilot analytics | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G5 و دادهٔ چندکاربره |
 
 ## کارهایی که فعلاً نباید انجام شوند
 
@@ -426,8 +492,13 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## اقدام بعدی واحد
 
-**ابتدا CI و review مربوط به Draft PR [#16](https://github.com/Hajimohammadi-KI/APPS_root/pull/16) تکمیل و baseline مستقل آن merge شود.** سپس Issue
-[#14](https://github.com/Hajimohammadi-KI/APPS_root/issues/14) باید مسیر B1،
-writing/speaking دارای audio، ledger/export، re-record invalidation، provider
-unavailable و eventهای جدا delayed recall / novel transfer را یکجا اثبات کند.
-تا عبور کامل G1، AI، ingestion دیتاست و rollout یادگیری متوقف می‌مانند.
+**اقدام بعدی واقعی عبور G4 در Issue #8 است:** دو بازبین انسانی مستقل باید هر دو
+واحد mediation پایلوت را با rubric نسخه‌دار بررسی کنند و agreement/adjudication
+واقعی ثبت شود. اختلاف منبع Grammar در
+[#42](https://github.com/Hajimohammadi-KI/APPS_root/issues/42) و lifecycle یکپارچهٔ
+PDF Reader در [#43](https://github.com/Hajimohammadi-KI/APPS_root/issues/43) رفع و
+بسته شده‌اند. انتشارهای تأییدشدهٔ DeutschFlow 20.8.25 و English 27.3.18 و mirror
+عمومی رودمپ، شواهد release هستند و جای human
+review یا outcome واقعی را نمی‌گیرند. Issues #9 و #10 تا دریافت review، پایلوت و
+دادهٔ واقعی نباید موفق گزارش شوند. release array خالی، دادهٔ خام خارج از برنامهٔ
+روزانه و Installer، و learning outcome برابر N/A باقی می‌ماند.

@@ -14,7 +14,7 @@ async function findSourceRoot() {
 
   for (const candidate of candidates) {
     try {
-      if ((await stat(candidate)).isDirectory()) {
+      if ((await stat(/* turbopackIgnore: true */ candidate)).isDirectory()) {
         return candidate;
       }
     } catch {
@@ -52,10 +52,13 @@ export async function GET(
     );
   }
 
-  const path = join(/* turbopackIgnore: true */ sourceRoot, relativePath);
+  const materialPath = join(
+    /* turbopackIgnore: true */ sourceRoot,
+    relativePath,
+  );
   if (
-    !path.startsWith(`${sourceRoot}${sep}`) ||
-    !path.toLowerCase().endsWith(".pdf")
+    !materialPath.startsWith(`${sourceRoot}${sep}`) ||
+    !materialPath.toLowerCase().endsWith(".pdf")
   ) {
     return Response.json(
       { message: "Ungültiger Materialpfad." },
@@ -64,7 +67,7 @@ export async function GET(
   }
 
   try {
-    const info = await stat(path);
+    const info = await stat(/* turbopackIgnore: true */ materialPath);
     if (!info.isFile()) throw new Error("not-file");
     if (info.size > MAX_PDF_BYTES) {
       return Response.json(
@@ -72,7 +75,7 @@ export async function GET(
         { status: 413 },
       );
     }
-    const bytes = await readFile(path);
+    const bytes = await readFile(/* turbopackIgnore: true */ materialPath);
     if (bytes.subarray(0, 5).toString("utf8") !== "%PDF-") {
       return Response.json(
         { message: "Die Quelldatei ist keine gültige PDF." },

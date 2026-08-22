@@ -361,20 +361,29 @@ export default function Home() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    const localPdfId = params.get("localPdf")?.trim().toLowerCase() || "";
     const sourceUrl = params.get("sourceUrl")?.trim() || params.get("url")?.trim() || "";
-    if (!sourceUrl) return;
-    const requestedName = safeFileName(params.get("name")?.trim() || "Öffentliche-PDF.pdf");
+    if (!sourceUrl && !localPdfId) return;
+    const requestedName = safeFileName(
+      params.get("name")?.trim() || (localPdfId ? "Lokale-PDF.pdf" : "Öffentliche-PDF.pdf"),
+    );
     const requestedPageValue = Number(params.get("page"));
     requestedPage.current = Number.isFinite(requestedPageValue) && requestedPageValue > 0
       ? Math.floor(requestedPageValue)
       : null;
     let cancelled = false;
 
-    const openPublicPdf = async () => {
+    const openLinkedPdf = async () => {
       setDriveBusy(true);
       setPdfName(requestedName.replace(/\.pdf$/i, ""));
       try {
-        const response = await fetch(`/api/pdf/public?url=${encodeURIComponent(sourceUrl)}`, {
+        if (localPdfId && !/^[a-f0-9]{64}$/.test(localPdfId)) {
+          throw new Error("Die lokale PDF-Verknüpfung ist ungültig.");
+        }
+        const endpoint = localPdfId
+          ? `/api/local-pdf?id=${encodeURIComponent(localPdfId)}`
+          : `/api/pdf/public?url=${encodeURIComponent(sourceUrl)}`;
+        const response = await fetch(endpoint, {
           cache: "no-store",
         });
         if (!response.ok) {
@@ -393,7 +402,7 @@ export default function Home() {
       }
     };
 
-    void openPublicPdf();
+    void openLinkedPdf();
     return () => { cancelled = true; };
   }, []);
 

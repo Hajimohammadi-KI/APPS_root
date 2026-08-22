@@ -56,8 +56,13 @@ Never use `"*"` as the target origin in a production host. API keys are not incl
 
 ## Local development
 
-```bash
-npm ci
-npm run dev
+```powershell
+bun install --frozen-lockfile
+bun run build
+bun run start:local -- --hostname 127.0.0.1 --port 4332
 ```
+
+Use `/api/health` for readiness. Do not treat port 4332 alone as evidence that
+the Reader is available. The local-PDF endpoint is deliberately loopback-only;
+same-Wi-Fi clients may use the interface but must select their own PDF locally.
 

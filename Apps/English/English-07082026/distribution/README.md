@@ -42,6 +42,21 @@ redeploy before production rollout.
   macOS with Xcode. Distribute through TestFlight or the App Store. Apple does
   not permit a generally installable unsigned IPA.
 
+## Integrated local PDF Reader on Windows
+
+The modern Windows installer embeds the verified `Research PDF Studio` build
+beside the English web/API payload. The desktop launcher starts it on
+`127.0.0.1:4332`, requires the exact `/api/health` service contract, and opens
+Notebook links in a separate sandboxed Electron window. A listening port with
+the wrong service is reported as unavailable rather than ready.
+
+Local PDFs selected through the desktop control are copied to the preserved
+English user-data folder using a SHA-256 identifier. Only the loopback Reader
+can fetch that import; paths are never accepted from a URL and the endpoint is
+not available to same-Wi-Fi clients. Highlights, comments, and reading state
+remain in the Reader browser profile through update and repair. Keep the
+version-matched `.payload.zip` beside the setup executable.
+
 ## Store submission identities
 
 The generated packages use the stable ID

@@ -2,6 +2,7 @@ const fs = require("node:fs");
 const http = require("node:http");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
+const crypto = require("node:crypto");
 
 const {
   app,
@@ -17,9 +18,14 @@ const WEB_PORT = 3201;
 const API_PORT = 4201;
 const APP_URL = `http://127.0.0.1:${WEB_PORT}/`;
 const APP_ORIGIN = new URL(APP_URL).origin;
-const DESKTOP_USER_AGENT_TOKEN = "EnglishGrammarAutomaticityDesktop/27.0";
+const READER_PORT = 4332;
+const READER_URL = `http://127.0.0.1:${READER_PORT}/`;
+const READER_ORIGIN = new URL(READER_URL).origin;
+const DESKTOP_VERSION = "27.3.18";
+const DESKTOP_USER_AGENT_TOKEN = `EnglishGrammarAutomaticityDesktop/${DESKTOP_VERSION}`;
 const ALLOWED_PERMISSIONS = new Set(["media", "notifications"]);
 const USER_DATA_DIRECTORY = "English Grammar Automaticity";
+const configuredUserDataRoot = process.env.ENGLISH_GRAMMAR_USER_DATA_ROOT?.trim();
 const PDF_CHANNEL = "desktop:choose-pdf";
 const CALENDAR_RESOURCES_PATH =
   process.env.STUDY_CALENDAR_RESOURCE_ROOT || process.resourcesPath;
@@ -40,8 +46,14 @@ let disposeLearnerProfileBridge = null;
 let disposeAIProviderBridge = null;
 let webProcess = null;
 let apiProcess = null;
+let readerProcess = null;
+let readerManagedByDesktop = false;
+const readerWindows = new Set();
 
-app.setPath("userData", path.join(app.getPath("appData"), USER_DATA_DIRECTORY));
+app.setPath(
+  "userData",
+  configuredUserDataRoot || path.join(app.getPath("appData"), USER_DATA_DIRECTORY),
+);
 app.setAppUserModelId("app.englishgrammar.automaticity.desktop");
 
 function waitForEndpoint(url, attempts = 100) {
@@ -73,6 +85,52 @@ function waitForEndpoint(url, attempts = 100) {
     };
     probe();
   });
+}
+
+function readJsonEndpoint(url) {
+  return new Promise((resolve) => {
+    const request = http.get(url, { headers: { Accept: "application/json" } }, (response) => {
+      const chunks = [];
+      let size = 0;
+      response.on("data", (chunk) => {
+        size += chunk.length;
+        if (size <= 128 * 1024) chunks.push(chunk);
+      });
+      response.on("end", () => {
+        if (response.statusCode !== 200 || size > 128 * 1024) {
+          resolve(null);
+          return;
+        }
+        try {
+          resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
+        } catch {
+          resolve(null);
+        }
+      });
+    });
+    request.setTimeout(1_000, () => request.destroy());
+    request.on("error", () => resolve(null));
+  });
+}
+
+function matchesReaderHealth(payload) {
+  return (
+    payload?.service === "research-pdf-studio" &&
+    payload?.ready === true &&
+    payload?.contractVersion === 1 &&
+    payload?.storageBoundary === "browser-local" &&
+    payload?.localPdfImport === "loopback-only"
+  );
+}
+
+async function waitForReaderHealth(attempts = 100) {
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    if (matchesReaderHealth(await readJsonEndpoint(`${READER_URL}api/health`))) return;
+    await new Promise((resolve) => setTimeout(resolve, 150));
+  }
+  throw new Error(
+    `Research PDF Studio did not return its expected health contract on port ${READER_PORT}.`,
+  );
 }
 
 function spawnLocalService(entryPoint, workingDirectory, environment) {
@@ -202,10 +260,16 @@ async function startLocalApplication() {
   const webEntry = path.join(webRoot, "server.js");
   const apiRoot = path.join(localRoot, "api");
   const apiEntry = path.join(apiRoot, "main.js");
+  const readerRoot = path.join(localRoot, "reader");
+  const readerEntry = path.join(readerRoot, "scripts", "start-local.mjs");
+  const readerImportsRoot = path.join(app.getPath("userData"), "PDF Reader Imports");
   for (const requiredFile of [
     path.join(localRoot, "runtime", "bun.exe"),
     apiEntry,
     webEntry,
+    readerEntry,
+    path.join(readerRoot, "dist", "server", "index.js"),
+    path.join(readerRoot, "package.json"),
   ]) {
     if (!fs.existsSync(requiredFile)) {
       throw new Error(`The offline installation is incomplete: ${requiredFile}`);
@@ -222,15 +286,34 @@ async function startLocalApplication() {
     NEXT_TELEMETRY_DISABLED: "1",
     PORT: String(WEB_PORT),
   });
+  fs.mkdirSync(readerImportsRoot, { recursive: true });
+  if (!matchesReaderHealth(await readJsonEndpoint(`${READER_URL}api/health`))) {
+    readerProcess = spawnLocalService(readerEntry, readerRoot, {
+      HOSTNAME: "127.0.0.1",
+      PDF_READER_IMPORT_ROOT: readerImportsRoot,
+      PDF_READER_RELEASE_VERSION: DESKTOP_VERSION,
+      PORT: String(READER_PORT),
+    });
+    readerManagedByDesktop = true;
+  }
   await Promise.all([
     waitForEndpoint(`${APP_URL}`),
     waitForEndpoint(`http://127.0.0.1:${API_PORT}/api/health`),
+    waitForReaderHealth(),
   ]);
 }
 
 function isAppUrl(value) {
   try {
     return new URL(value).origin === APP_ORIGIN;
+  } catch {
+    return false;
+  }
+}
+
+function isReaderUrl(value) {
+  try {
+    return new URL(value).origin === READER_ORIGIN;
   } catch {
     return false;
   }
@@ -245,53 +328,51 @@ function isSafeExternalUrl(value) {
   }
 }
 
-function findMicrosoftEdge() {
-  const candidates = [
-    path.join(
-      process.env["PROGRAMFILES(X86)"] || "",
-      "Microsoft",
-      "Edge",
-      "Application",
-      "msedge.exe",
-    ),
-    path.join(
-      process.env.PROGRAMFILES || "",
-      "Microsoft",
-      "Edge",
-      "Application",
-      "msedge.exe",
-    ),
-    path.join(
-      process.env.LOCALAPPDATA || "",
-      "Microsoft",
-      "Edge",
-      "Application",
-      "msedge.exe",
-    ),
-  ];
-  return candidates.find((candidate) => fs.existsSync(candidate));
+function fileSha256(pdfPath) {
+  return new Promise((resolve, reject) => {
+    const hasher = crypto.createHash("sha256");
+    const stream = fs.createReadStream(pdfPath);
+    stream.on("data", (chunk) => hasher.update(chunk));
+    stream.once("error", reject);
+    stream.once("end", () => resolve(hasher.digest("hex")));
+  });
 }
 
-async function openPdf(pdfPath) {
-  const edgePath = findMicrosoftEdge();
-  if (edgePath) {
-    const edge = spawn(edgePath, ["--new-window", pdfPath], {
-      detached: true,
-      stdio: "ignore",
-      windowsHide: false,
-    });
-    edge.once("error", () => {
-      void shell.openPath(pdfPath);
-    });
-    edge.unref();
-    return "Microsoft Edge";
-  }
-
-  const error = await shell.openPath(pdfPath);
-  if (error) {
-    throw new Error(error);
-  }
-  return "Windows PDF Viewer";
+function createReaderWindow(url = READER_URL) {
+  const readerWindow = new BrowserWindow({
+    width: 1380,
+    height: 900,
+    minWidth: 760,
+    minHeight: 620,
+    show: false,
+    title: "Research PDF Studio",
+    backgroundColor: "#F7F5FC",
+    autoHideMenuBar: true,
+    webPreferences: {
+      contextIsolation: true,
+      devTools: false,
+      nodeIntegration: false,
+      sandbox: true,
+      webSecurity: true,
+      webviewTag: false,
+    },
+  });
+  readerWindows.add(readerWindow);
+  readerWindow.once("ready-to-show", () => readerWindow.show());
+  readerWindow.once("closed", () => readerWindows.delete(readerWindow));
+  readerWindow.webContents.setWindowOpenHandler(({ url: target }) => {
+    if (isReaderUrl(target)) void readerWindow.loadURL(target);
+    else if (isSafeExternalUrl(target)) void shell.openExternal(target);
+    return { action: "deny" };
+  });
+  readerWindow.webContents.on("will-navigate", (event, target) => {
+    if (isReaderUrl(target)) return;
+    event.preventDefault();
+    if (isSafeExternalUrl(target)) void shell.openExternal(target);
+  });
+  readerWindow.webContents.on("will-attach-webview", (event) => event.preventDefault());
+  void readerWindow.loadURL(url);
+  return readerWindow;
 }
 
 async function chooseAndOpenPdf(ownerWindow) {
@@ -299,7 +380,7 @@ async function chooseAndOpenPdf(ownerWindow) {
   if (!pdfPath) {
     const result = await dialog.showOpenDialog(ownerWindow, {
       title: "Open a PDF file",
-      buttonLabel: "Open in Microsoft Edge",
+      buttonLabel: "Open in Research PDF Studio",
       defaultPath: app.getPath("documents"),
       properties: ["openFile"],
       filters: [
@@ -327,11 +408,19 @@ async function chooseAndOpenPdf(ownerWindow) {
   }
 
   try {
-    const viewer = await openPdf(pdfPath);
+    const readerImportsRoot = path.join(app.getPath("userData"), "PDF Reader Imports");
+    fs.mkdirSync(readerImportsRoot, { recursive: true });
+    const id = await fileSha256(pdfPath);
+    const importedPath = path.join(readerImportsRoot, `${id}.pdf`);
+    if (!fs.existsSync(importedPath)) fs.copyFileSync(pdfPath, importedPath);
+    const target = new URL(READER_URL);
+    target.searchParams.set("localPdf", id);
+    target.searchParams.set("name", path.basename(pdfPath));
+    createReaderWindow(target.toString());
     return {
       status: "opened",
       fileName: path.basename(pdfPath),
-      viewer,
+      viewer: "Research PDF Studio",
     };
   } catch {
     return {
@@ -387,6 +476,8 @@ function createMainWindow() {
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     if (isAppUrl(url)) {
       void mainWindow.loadURL(url, { userAgent: desktopUserAgent });
+    } else if (isReaderUrl(url)) {
+      createReaderWindow(url);
     } else if (isSafeExternalUrl(url)) {
       void shell.openExternal(url);
     }
@@ -398,7 +489,9 @@ function createMainWindow() {
       return;
     }
     event.preventDefault();
-    if (isSafeExternalUrl(url)) {
+    if (isReaderUrl(url)) {
+      createReaderWindow(url);
+    } else if (isSafeExternalUrl(url)) {
       void shell.openExternal(url);
     }
   });
@@ -525,6 +618,9 @@ app.on("before-quit", () => {
   webProcess = null;
   apiProcess?.kill();
   apiProcess = null;
+  if (readerManagedByDesktop) readerProcess?.kill();
+  readerProcess = null;
+  readerManagedByDesktop = false;
   ipcMain.removeHandler(PDF_CHANNEL);
   disposeGoogleCalendarBridge?.();
   disposeGoogleCalendarBridge = null;

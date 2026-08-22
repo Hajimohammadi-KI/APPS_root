@@ -12,7 +12,7 @@ if not exist "%PDF%\dist\server\index.js" goto missing_build
 if not exist "%SETTINGS%\dist\server\index.js" goto missing_build
 
 call :start_if_closed 3202 english
-call :start_if_closed 4322 pdf
+call :start_if_closed 4332 pdf
 call :start_if_closed 4323 settings
 
 powershell.exe -NoProfile -Command "Start-Sleep -Seconds 3"
@@ -24,7 +24,7 @@ netstat -ano | findstr /r /c:":%~1 .*LISTENING" >nul
 if not errorlevel 1 exit /b 0
 
 if /i "%~2"=="english" powershell.exe -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath 'node.exe' -ArgumentList @('scripts/start-standalone.mjs','--port','3202','--hostname','127.0.0.1') -WorkingDirectory '%ENGLISH%' -WindowStyle Hidden"
-if /i "%~2"=="pdf" powershell.exe -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath 'bun.exe' -ArgumentList @('run','start','--port','4322') -WorkingDirectory '%PDF%' -WindowStyle Hidden"
+if /i "%~2"=="pdf" powershell.exe -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath 'bun.exe' -ArgumentList @('run','start','--port','4332') -WorkingDirectory '%PDF%' -WindowStyle Hidden"
 if /i "%~2"=="settings" powershell.exe -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath 'bun.exe' -ArgumentList @('run','start','--port','4323') -WorkingDirectory '%SETTINGS%' -WindowStyle Hidden"
 exit /b 0
 

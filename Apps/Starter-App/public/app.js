@@ -13,16 +13,16 @@ function render(apps) {
     <article class="app-card ${index === 0 ? "wide" : ""}" id="${id}">
       <div class="app-top">
         <div class="app-title"><span class="app-icon">${icons[id]}</span><div><h2>${app.name}</h2><p>${app.description}</p></div></div>
-        <span class="status ${app.running ? "online" : ""}">${app.running ? (app.ready ? "Ready" : "Partly running") : "Stopped"}</span>
+        <span class="status ${app.ready ? "online" : ""}">${app.ready ? "Ready" : (app.running ? "Unavailable" : "Stopped")}</span>
       </div>
       <div class="services">${app.services.map(service => `<span class="service ${service.running ? "online" : ""}">Port ${service.port} · ${service.running ? "online" : "offline"}</span>`).join("")}</div>
       <div class="actions">
-        <button class="action" data-start="${id}">${app.running ? "Check and open" : "Start app"}</button>
-        <button class="action open" data-open="${app.url}" ${app.running ? "" : "disabled"}>Open</button>
+        <button class="action" data-start="${id}">${app.ready ? "Check and open" : "Start app"}</button>
+        <button class="action open" data-open="${app.url}" ${app.ready ? "" : "disabled"}>Open</button>
       </div>
     </article>`).join("");
   const values = Object.values(apps);
-  document.querySelector("#online-count").textContent = values.filter(app => app.running).length;
+  document.querySelector("#online-count").textContent = values.filter(app => app.ready).length;
   document.querySelector("#service-count").textContent = values.flatMap(app => app.services).filter(service => service.running).length;
 }
 
@@ -40,8 +40,8 @@ grid.addEventListener("click", async event => {
   const response = await fetch(`/api/start/${start.dataset.start}`, { method: "POST" });
   const result = await response.json();
   await refresh();
-  if (result.url && result.running) window.open(result.url, "_blank", "noopener");
-  else alert(result.error || "The app did not become ready. Check the Starter logs.");
+  if (result.url && result.ready) window.open(result.url, "_blank", "noopener");
+  else alert(result.health?.error || result.error || "The app did not become ready. Check the Starter logs.");
 });
 
 startAllButton.addEventListener("click", async () => {

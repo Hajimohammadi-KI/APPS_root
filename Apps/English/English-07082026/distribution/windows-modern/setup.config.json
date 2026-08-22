@@ -1,6 +1,6 @@
 {
   "productName": "English Grammar Automaticity",
-  "version": "27.3.17",
+  "version": "27.3.18",
   "publisher": "English Grammar Automaticity",
   "productId": "EnglishGrammarAutomaticityDesktop",
   "installFolder": "English Grammar Automaticity Desktop",
@@ -28,6 +28,7 @@
   "highlightSoftColor": "#EEE5F7",
   "projectRoot": "../..",
   "desktopProject": "../windows-desktop",
+  "readerProject": "../../../../Apps-For-Integeration/Reader-PDF-App",
   "iconSource": "../../apps/web/public/icons/icon-512.png",
   "outputFile": "EnglishGrammar-Setup.exe"
 }

@@ -6,10 +6,14 @@ on:
       - main
     paths:
       - "Apps/English/English-07082026/**"
+      - "Apps/Apps-For-Integeration/Reader-PDF-App/**"
+      - "Apps/Starter-App/**"
       - ".github/workflows/english-automaticity-ci.yml"
   pull_request:
     paths:
       - "Apps/English/English-07082026/**"
+      - "Apps/Apps-For-Integeration/Reader-PDF-App/**"
+      - "Apps/Starter-App/**"
       - ".github/workflows/english-automaticity-ci.yml"
 
 permissions:

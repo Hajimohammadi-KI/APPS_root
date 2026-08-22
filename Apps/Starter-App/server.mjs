@@ -3,9 +3,17 @@ import { createReadStream, existsSync, mkdirSync, openSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import net from "node:net";
+import { probeHttpHealth } from "./health.mjs";
 
 const host = "127.0.0.1";
-const port = 4300;
+
+function readPort(name, fallback) {
+  const value = Number.parseInt(process.env[name] ?? "", 10);
+  return Number.isInteger(value) && value >= 1024 && value <= 65_535 ? value : fallback;
+}
+
+const port = readPort("STARTER_PORT", 4300);
+const pdfReaderPort = readPort("PDF_READER_PORT", 4332);
 const root = resolve(import.meta.dirname);
 const publicRoot = join(root, "public");
 const logRoot = join(root, "logs");
@@ -13,6 +21,7 @@ const logRoot = join(root, "logs");
 // pinned to one absolute drive letter.
 const appsRoot = resolve(root, "..");
 const integration = join(appsRoot, "Apps-For-Integeration");
+const pdfReaderHost = process.env.PDF_READER_ALLOW_LAN === "1" ? "0.0.0.0" : "127.0.0.1";
 mkdirSync(logRoot, { recursive: true });
 
 const apps = {
@@ -58,10 +67,18 @@ const apps = {
   pdf: {
     name: "PDF Reader",
     description: "Read, select, highlight, annotate and save PDFs",
-    url: "http://127.0.0.1:4322",
-    ports: [4322],
+    url: `http://127.0.0.1:${pdfReaderPort}`,
+    ports: [pdfReaderPort],
+    health: {
+      url: `http://127.0.0.1:${pdfReaderPort}/api/health`,
+      expected: { service: "research-pdf-studio", ready: true, contractVersion: 1 },
+    },
     commands: [
-      { cwd: join(integration, "Reader-PDF-App"), command: "bun run start --port 4322", log: "pdf-reader" },
+      {
+        cwd: join(integration, "Reader-PDF-App"),
+        command: `node scripts/start-local.mjs --hostname ${pdfReaderHost} --port ${pdfReaderPort}`,
+        log: "pdf-reader",
+      },
     ],
   },
 };
@@ -79,9 +96,11 @@ function isPortOpen(checkPort) {
 
 async function appStatus(app) {
   const states = await Promise.all(app.ports.map(isPortOpen));
+  const health = await probeHttpHealth(app.health);
   return {
     running: states[0] === true,
-    ready: states.every(Boolean),
+    ready: states.every(Boolean) && health.ready,
+    health: app.health ? health : undefined,
     services: app.ports.map((servicePort, index) => ({ port: servicePort, running: states[index] })),
   };
 }
@@ -109,7 +128,7 @@ async function startApp(id) {
   for (let attempt = 0; attempt < 80; attempt++) {
     await new Promise((resolveWait) => setTimeout(resolveWait, 250));
     const status = await appStatus(app);
-    if (status.ready || (app.ports.length === 1 && status.running)) return status;
+    if (status.ready) return status;
   }
   return appStatus(app);
 }
@@ -132,12 +151,12 @@ createServer(async (request, response) => {
     if (request.method === "POST" && requestUrl.pathname.startsWith("/api/start/")) {
       const id = requestUrl.pathname.split("/").pop();
       const status = await startApp(id);
-      return sendJson(response, status.running ? 200 : 503, { ...status, url: apps[id]?.url });
+      return sendJson(response, status.ready ? 200 : 503, { ...status, url: apps[id]?.url });
     }
     if (request.method === "POST" && requestUrl.pathname === "/api/start-all") {
       const result = {};
       for (const id of Object.keys(apps)) result[id] = await startApp(id);
-      return sendJson(response, 200, result);
+      return sendJson(response, Object.values(result).every((status) => status.ready) ? 200 : 503, result);
     }
 
     const relative = requestUrl.pathname === "/" ? "index.html" : requestUrl.pathname.slice(1);

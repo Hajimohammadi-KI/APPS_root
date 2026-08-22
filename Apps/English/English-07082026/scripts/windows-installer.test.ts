@@ -13,6 +13,14 @@ const setupConfig = JSON.parse(
     "utf8",
   ),
 ) as Record<string, string>;
+const buildScript = readFileSync(
+  resolve(projectRoot, "distribution/windows-modern/build-modern-installer.ps1"),
+  "utf8",
+);
+const desktopMain = readFileSync(
+  resolve(projectRoot, "distribution/windows-desktop/main.cjs"),
+  "utf8",
+);
 
 describe("Windows installation roadmap", () => {
   test("offers the same four lifecycle actions as the tracker", () => {
@@ -63,5 +71,19 @@ describe("Windows installation roadmap", () => {
     expect(setupSource).toContain(
       "selectedOperation == SetupOperation.Install && openDeepLCheckBox.IsChecked == true",
     );
+  });
+
+  test("packages and health-gates Research PDF Studio", () => {
+    expect(setupConfig.version).toBe("27.3.18");
+    expect(setupConfig.readerProject).toContain("Reader-PDF-App");
+    expect(buildScript).toContain("Building the deterministic local PDF Reader");
+    expect(buildScript).toContain("scripts\\start-local.mjs");
+    expect(buildScript).toContain("readerPayloadRoot");
+    expect(desktopMain).toContain("research-pdf-studio");
+    expect(desktopMain).toContain("contractVersion === 1");
+    expect(desktopMain).toContain("localPdfImport === \"loopback-only\"");
+    expect(desktopMain).toContain("ENGLISH_GRAMMAR_USER_DATA_ROOT");
+    expect(desktopMain).toContain("PDF Reader Imports");
+    expect(desktopMain).toContain("createReaderWindow(target.toString())");
   });
 });

@@ -39,10 +39,12 @@ test("Automatik-Mission speichert den Schreibnachweis dauerhaft", async ({
   await expect(page.getByText("100%", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/Tagebuch gespeichert/)).toBeVisible();
 
-  await page.reload();
-  await page
-    .getByRole("button", { name: /2\. Automatisieren & schreiben/ })
-    .click();
+  await page.reload({ waitUntil: "networkidle" });
+  const writingStep = page.getByRole("button", {
+    name: /2\. Automatisieren & schreiben/,
+  });
+  await writingStep.click();
+  await expect(writingStep).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByLabel("Nebensatz mit weil-Tagebuch")).toHaveValue(
     JOURNAL,
   );

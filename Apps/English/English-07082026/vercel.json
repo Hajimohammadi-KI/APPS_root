@@ -2,6 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "bunVersion": "1.x",
   "env": {
-    "VERCEL_PREVIEW_FEEDBACK_ENABLED": "0"
+    "VERCEL_PREVIEW_FEEDBACK_ENABLED": "0",
+    "NEXT_PUBLIC_PDF_READER_URL": "https://research-pdf-studio.vercel.app/"
   }
 }

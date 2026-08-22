@@ -11,5 +11,8 @@ EnglishGrammar-Setup.exe
 EnglishGrammar-Setup.exe.sha256
 apps/web/public/downloads/EnglishGrammar-Setup.exe
 apps/web/public/downloads/EnglishGrammar-Setup.exe.sha256
+apps/web/public/downloads/*.exe
+apps/web/public/downloads/*.payload.zip
+*.payload.zip
 .tmp/
 *.log

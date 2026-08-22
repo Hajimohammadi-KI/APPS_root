@@ -1,6 +1,18 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, describe, expect, test } from "bun:test";
 
+import { GET as openNotebook } from "../app/notizbuch/route";
+import { GET as openPdfReader } from "../app/pdf-reader/route";
 import { pdfReaderHrefForMaterial } from "./pdf-reader-link";
+
+const originalReaderUrl = process.env.NEXT_PUBLIC_PDF_READER_URL;
+
+afterEach(() => {
+  if (originalReaderUrl === undefined) {
+    delete process.env.NEXT_PUBLIC_PDF_READER_URL;
+  } else {
+    process.env.NEXT_PUBLIC_PDF_READER_URL = originalReaderUrl;
+  }
+});
 
 describe("gemeinsame PDF-Reader-Links", () => {
   test("öffnet genau die ausgewählte Drive-Datei mit Lesefokus", () => {
@@ -54,5 +66,29 @@ describe("gemeinsame PDF-Reader-Links", () => {
         context: "Deutsch B2",
       }),
     ).toBeNull();
+  });
+
+  test("öffnet PDF und Notizbuch im gehosteten Reader", () => {
+    process.env.NEXT_PUBLIC_PDF_READER_URL =
+      "https://research-pdf-studio.vercel.app/";
+
+    const pdfResponse = openPdfReader(
+      new Request("https://deutsch.example/pdf-reader?topic=nebensatz"),
+    );
+    const notebookResponse = openNotebook(
+      new Request("https://deutsch.example/notizbuch?activity=7"),
+    );
+    const pdfLocation = new URL(pdfResponse.headers.get("location") ?? "");
+    const notebookLocation = new URL(
+      notebookResponse.headers.get("location") ?? "",
+    );
+
+    expect(pdfResponse.status).toBe(307);
+    expect(pdfLocation.origin).toBe("https://research-pdf-studio.vercel.app");
+    expect(pdfLocation.searchParams.get("lang")).toBe("de");
+    expect(pdfLocation.searchParams.get("topic")).toBe("nebensatz");
+    expect(notebookResponse.status).toBe(307);
+    expect(notebookLocation.searchParams.get("source")).toBe("german-notebook");
+    expect(notebookLocation.searchParams.get("activity")).toBe("7");
   });
 });

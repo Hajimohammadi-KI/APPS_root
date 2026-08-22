@@ -9,10 +9,9 @@
 به‌عنوان Artifact، همان لینک با هر آپدیت دوباره deploy می‌شود).
 
 **نسخهٔ وب فعال و قابل بازشدن روی تبلت:**
-https://automaticity-ux-roadmap-elahe.vercel.app
-Alias قدیمی `automaticity-ux-roadmap.vercel.app` در یک Scope دیگر Vercel است و
-حساب فعلی اجازهٔ به‌روزرسانی یا انتقال آن را ندارد؛ بنابراین منبع معتبرِ نسخهٔ
-۲۰۲۶-۰۸-۲۲ آدرس بالا است.
+https://automaticity-ux-roadmap.vercel.app
+دامنهٔ دقیق در انتشار v1.20 به artifact جاری منتقل شد و پاسخ HTTP 200 و برابری
+byte-for-byte و SHA-256 با خروجی canonical مخزن تأیید شد.
 
 **نسخه‌های عمومی محصول:**
 
@@ -354,3 +353,4 @@ viewport و تست دستی Screen Reader/میکروفون روی سخت‌اف�
 - **۲۰۲۶-۰۸-۲۲ ۱۵:۰۰ CEST**: در PR #50 (`02e8781`) Research PDF Studio به Vercel متصل و PDF/Notebook هر دو اپ وب به آن وصل شد. English CI 32574226422، German CI 32574226421 و Reader CI 32574226430 سبز شدند؛ QA تبلت 800×1280 بدون overflow یا console error پاس شد.
 - **۲۰۲۶-۰۸-۲۲ ۱۵:۰۵ CEST**: نسخهٔ v1.18 روی `automaticity-ux-roadmap-elahe.vercel.app` با وضعیت Vercel Ready و محتوای hash-identical منتشر شد. تلاش مستقیم برای Alias دقیق `automaticity-ux-roadmap.vercel.app` با خطای `already in use` رد شد؛ دامنهٔ قدیمی در Scope دیگری است و محتوای آن نسخهٔ جاری نیست.
 - **۲۰۲۶-۰۸-۲۲ ۱۵:۲۰ CEST**: نگاشت GitHub Pages در PR #52 (`abd77e4`) اصلاح شد؛ مسیر UX فایل واقعی UX را منتشر می‌کند و workflow برابری root/Evidence و تفاوت Evidence/UX را assert می‌کند. Pages run 32575429454 سبز، هر سه URL برابر HTTP 200 و QA تبلت UX بدون overflow یا log هشدار/خطا بود.
+- **۲۰۲۶-۰۸-۲۲**: نسخهٔ v1.20 روی دامنهٔ دقیق `automaticity-ux-roadmap.vercel.app` منتشر شد. دامنه از پروژهٔ legacy همان حساب به انتشار جاری منتقل شد؛ پاسخ عمومی HTTP 200 و محتوای دریافت‌شده byte-for-byte و SHA-256 برابر artifact محلی بود. بسته‌های مستقل Vercel در PR #54 (`40454da`) و اصلاح trace آلمانی در PR #55 (`f72210a`) با CI 32577961398 ادغام شدند.

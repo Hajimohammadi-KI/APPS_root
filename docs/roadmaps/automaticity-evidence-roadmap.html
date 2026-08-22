@@ -440,7 +440,7 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.7 · 2026-08-22</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.8 · 2026-08-22</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
       <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
@@ -468,7 +468,7 @@
         <tr><td>هستهٔ مشترک learning-core</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز merge شد</td><td>merge <code>ed7e73f</code> و <code>shared/learning-core</code></td></tr>
         <tr><td>SKILL-001 Adherence Core</td><td>روی <code>main</code> ادغام و فقط به‌صورت shadow به برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز اعمال/ذخیره نمی‌شود</td><td><code>shared/learning-core/src/adherence/shadow-runner.ts</code></td></tr>
         <tr><td>تست اختصاصی adherence</td><td>۲۵ تست، ۶۹٬۱۹۹ assertion پس از G3</td><td><code>bun run test:adherence-core</code></td></tr>
-        <tr><td>کل تست learning-core</td><td>۴۷ تست، ۶۹٬۲۷۷ assertion پس از G3</td><td><code>bun run test</code></td></tr>
+        <tr><td>کل تست learning-core</td><td>۵۴ تست، ۶۹٬۲۹۳ assertion پس از زیرساخت G4</td><td><code>bun run test</code></td></tr>
         <tr><td>TypeScript و mirror parity</td><td>تأییدشده</td><td><code>bun run typecheck</code></td></tr>
         <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
         <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از تست کامل محلی و CI لینوکس merge شد</td><td>merge <code>b3fbc07</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
@@ -479,7 +479,9 @@
         <tr><td>CI مربوط به G2</td><td>Learning Core و German Automaticity هر دو سبز؛ Settings E2E در انگلیسی و آلمانی پاس شد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32535274524" class="mono">Core 32535274524</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32535274583" class="mono">German 32535274583</a></td></tr>
         <tr><td>Shadow Safety در هر دو اپ</td><td>adapter خالص و default-off، مقایسهٔ ۱۵/۳۰/۴۵ دقیقه، fail-closed، عدم persistence و E2E حفظ داده در انگلیسی و آلمانی ادغام شد</td><td><strong style="color:var(--pass)">G3 عبور کرد: <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24" class="mono">PR #24</a> · merge <code>ea3d25c</code></strong></td></tr>
         <tr><td>CI مربوط به G3</td><td>Learning Core و German Automaticity هر دو سبز؛ browser adapter در هر سه کپی hash-identical و زیر بودجهٔ ۵ KiB gzip است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261291" class="mono">Core 32537261291</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261468" class="mono">German 32537261468</a></td></tr>
-        <tr><td>AI و دیتاست runtime</td><td>هنوز نباید وارد runtime یا تصمیم mastery شود</td><td>G1 و G2 عبور کرده‌اند؛ ingestion محتوای پایلوت وابسته به G4 است</td></tr>
+        <tr><td>زیرساخت Content Quality</td><td>schema نسخه‌دار mediation، rubric ثابت، دو بازبین مستقل، weighted kappa، adjudication و quarantine در هر دو زبان ادغام شد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/26" class="mono">PR #26</a> · merge <code>8edaba2</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983463" class="mono">Core/Content CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983363" class="mono">German CI</a></td></tr>
+        <tr><td>بازبینی انسانی پایلوت G4</td><td>هنوز انجام نشده؛ هر دو draft با <code>humanReviewed=false</code> و <code>awaiting-human-review</code> از daily plan حذف می‌شوند</td><td><strong>N/A — Gate G4 هنوز عبور نکرده است</strong></td></tr>
+        <tr><td>AI و دیتاست runtime</td><td>هنوز نباید وارد runtime یا تصمیم mastery شود</td><td>ingestion محتوای پایلوت وابسته به تکمیل بازبینی انسانی G4 است</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
       </tbody>
     </table>
@@ -528,7 +530,7 @@ flowchart LR
     <div class="gate-card"><span class="gid">G1</span><span class="gname">Runtime Evidence Slice</span><span class="chip pass"><span class="dot"></span>عبور کرد · PR #17</span></div>
     <div class="gate-card"><span class="gid">G2</span><span class="gname">Measurement Contract</span><span class="chip pass"><span class="dot"></span>عبور کرد · PR #21</span></div>
     <div class="gate-card"><span class="gid">G3</span><span class="gname">Shadow Safety</span><span class="chip pass"><span class="dot"></span>عبور کرد · PR #24</span></div>
-    <div class="gate-card"><span class="gid">G4</span><span class="gname">Content Quality</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
+    <div class="gate-card"><span class="gid">G4</span><span class="gname">Content Quality</span><span class="chip active"><span class="dot"></span>زیرساخت آماده · human review باقی</span></div>
     <div class="gate-card"><span class="gid">G5</span><span class="gname">Learning Evidence</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
     <div class="gate-card"><span class="gid">G6</span><span class="gname">Release Lifecycle</span><span class="chip pending"><span class="dot"></span>در انتظار</span></div>
   </div>
@@ -540,7 +542,7 @@ flowchart LR
         <tr><td class="mono">G1</td><td>✅ در PR #17 عبور کرد: یک واحد B1 انگلیسی و آلمانی از content تا evidence و export عبور می‌کند</td><td>microphone سخت‌افزاری و provider زنده N/A است و در G6/پایلوت بررسی می‌شود</td></tr>
         <tr><td class="mono">G2</td><td>✅ در PR #21 عبور کرد: event schema، consent، privacy، baseline، retention و data-quality checks در هسته و هر دو اپ ادغام شدند</td><td>اثرگذاری روی زبان‌آموز واقعی همچنان N/A تا پایلوت است</td></tr>
         <tr><td class="mono">G3</td><td>✅ در PR #24 عبور کرد: خروجی جدید کنار برنامهٔ فعلی محاسبه می‌شود؛ E2E هر دو زبان ثابت می‌کند UI و دادهٔ learner/evidence تغییر نمی‌کنند</td><td>flag پیش‌فرض خاموش می‌ماند؛ اثر یادگیری همچنان N/A است</td></tr>
-        <tr><td class="mono">G4</td><td>provenance، مجوز، بازبینی انسانی و rubric برای همهٔ آیتم‌های پایلوت</td><td>آیتم وارد برنامهٔ روزانه نشود</td></tr>
+        <tr><td class="mono">G4</td><td>🟡 زیرساخت در PR #26 ادغام شد؛ provenance، مجوز، rubric، quarantine و CI موجود است، اما دو بازبین انسانی واقعی و agreement هنوز N/A هستند</td><td>draftها وارد برنامهٔ روزانه نمی‌شوند و Issue #8 باز می‌ماند</td></tr>
         <tr><td class="mono">G5</td><td>pre/post مستقل، delayed recall و novel transfer با دادهٔ واقعی</td><td>واژهٔ «automatic» فقط هدف محصول باشد، نه نتیجهٔ اثبات‌شده</td></tr>
         <tr><td class="mono">G6</td><td>build، E2E، responsive، Install/Update/Repair و حفظ داده پاس شوند</td><td>installer یا نسخهٔ وب منتشر نشود</td></tr>
       </tbody>
@@ -718,10 +720,11 @@ flowchart LR
   <section class="phase" id="p6">
     <div class="phase-head">
       <div class="phase-title-row"><span class="phase-num">۶</span><h3>Content QA، Mediation و پایلوت دیتاست</h3></div>
-      <span class="chip pending"><span class="dot"></span>در انتظار G4</span>
+      <span class="chip active"><span class="dot"></span>در حال انجام · human review باقی</span>
     </div>
     <div class="phase-tags">برآورد: ۲ تا ۳ sprint · وابستگی: <code>G1</code>؛ G2 عبور کرده و ingestion runtime اکنون وابسته به <code>G4</code> است · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a></div>
-    <p>هر <code>ContentUnit</code> باید language، CEFR، version، source/license، reviewer status و حداقل یکی از modeهای recognition، writing، speaking، repair، transfer یا mediation را داشته باشد.</p>
+    <p><strong>وضعیت:</strong> schema، release gate و یک draft authored B1 برای هر زبان در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/26" class="mono">PR #26</a> با merge <code>8edaba2</code> و دو CI سبز ادغام شد. هر دو draft هنوز <code>awaiting-human-review</code> هستند، release array خالی است و agreement/learning outcome برابر N/A است.</p>
+    <p>هر <code>ContentUnit</code> باید language، CEFR، version، source/license، reviewer status و حداقل یکی از modeهای recognition، recall، writing، speaking، repair، transfer یا mediation را داشته باشد.</p>
     <p><strong>پایلوت Mediation:</strong> ابتدا B1، خلاصه‌کردن، بازگویی، توضیح برای مخاطب دیگر و انتقال اطلاعات؛ Reception، Production، Interaction و Mediation جدا گزارش شوند.</p>
     <div class="table-scroll">
       <table>
@@ -813,7 +816,7 @@ flowchart LR
         <tr><td class="mono" style="text-align:center">3</td><td>Runtime evidence slice EN/DE</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/14" class="mono">#14</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/17" class="mono">PR #17</a></td><td>✅ merge <code>b452e3e</code>؛ G1 عبور کرد</td></tr>
         <tr><td class="mono" style="text-align:center">4</td><td>Measurement contract، consent، baseline و data quality</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/18" class="mono">#18</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/21" class="mono">PR #21</a></td><td>✅ merge <code>032ad14</code>؛ G2 عبور کرد</td></tr>
         <tr><td class="mono" style="text-align:center">5</td><td>Shadow Safety در برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/23" class="mono">#23</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24" class="mono">PR #24</a></td><td>✅ merge <code>ea3d25c</code>؛ G3 عبور کرد</td></tr>
-        <tr><td class="mono" style="text-align:center">6</td><td>Content QA و Mediation pilot</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a></td><td>🟡 اقدام بعدی؛ G4</td></tr>
+        <tr><td class="mono" style="text-align:center">6</td><td>Content QA و Mediation pilot</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/26" class="mono">PR #26</a></td><td>🟡 زیرساخت merge <code>8edaba2</code>؛ human review و agreement هنوز N/A</td></tr>
         <tr><td class="mono" style="text-align:center">7</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a></td><td>G3 و consent</td></tr>
         <tr><td class="mono" style="text-align:center">8</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>#6 و consent</td></tr>
         <tr><td class="mono" style="text-align:center">9</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></td><td>G2 و authored content</td></tr>
@@ -854,7 +857,7 @@ flowchart LR
 
   <div class="callout final">
     <span class="label">اقدام بعدی واحد</span>
-    <p style="margin:0;">Gate G4 را با یک پایلوت کوچک و human-reviewed شروع کنید: schema و provenance فعلی را برای مجموعه‌ای محدود از آیتم‌های انگلیسی و آلمانی به‌کار ببرید، rubric و بازبینی انسانی را ثبت کنید و mediation را وارد محتوای authored کنید. دادهٔ خام وارد برنامهٔ روزانه یا Installer نشود؛ AI، ingestion حجیم و هر ادعای اثرگذاری تا Gateهای مربوطه متوقف می‌مانند.</p>
+    <p style="margin:0;">Gate G4 را با بازبینی انسانی واقعی کامل کنید: دو draft انگلیسی و آلمانی، schema، rubric و quarantine روی <code>main</code> هستند. برای هر آیتم دقیقاً دو بازبین مستقل (native-speaker و language-pedagogy) با شناسهٔ مستعار ثبت شوند؛ weighted kappa باید حداقل ۰٫۶۰ باشد و اختلاف معنادار adjudication داشته باشد. تا آن زمان release array خالی، دادهٔ خام خارج از برنامهٔ روزانه و Installer، و learning outcome برابر N/A باقی می‌ماند.</p>
   </div>
 
   <footer class="note">

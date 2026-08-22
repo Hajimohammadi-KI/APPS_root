@@ -185,7 +185,15 @@ mastery مبتنی بر AI تا عبور vertical slice ممنوع است.
 mutation در G3 تأیید شدند. فقط
 Accessibility baseline قابل تکرار برای بستن فاز باقی مانده است.
 
-## فاز ۵ — کیفیت محتوا و پایلوت گزینش‌شدهٔ دیتاست ⬜
+## فاز ۵ — کیفیت محتوا و پایلوت گزینش‌شدهٔ دیتاست 🟡
+
+**وضعیت ۲۰۲۶-۰۸-۲۲:** زیرساخت Content Quality، schema نسخه‌دار mediation،
+release gate و یک draft authored B1 برای هر زبان در
+[PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26) با merge
+`8edaba2` و دو CI سبز ادغام شد. هر دو draft با `humanReviewed=false` و
+`awaiting-human-review` قرنطینه‌اند و release array خالی است. بازبینی انسانی و
+agreement واقعی هنوز `N/A — not sufficiently verified` است؛ بنابراین فاز کامل
+نشده و Issue #8 باز می‌ماند.
 
 **اثر برای زبان‌آموز:** جمله‌ها طبیعی، سطح‌بندی‌شده و قابل اعتمادند؛ دادهٔ
 خام یا نمونهٔ نامناسب مستقیماً وارد درس نمی‌شود.
@@ -206,10 +214,13 @@ Accessibility baseline قابل تکرار برای بستن فاز باقی م�
 | W&I + LOCNESS | پژوهش/پیش‌آموزش GEC | مجوز و استفادهٔ تجاری جداگانه بررسی شود |
 | C4 200M GEC | آزمایش پژوهشی GEC | با W&I/LOCNESS یک «دیتاست واحد» محسوب نشود |
 
-**Quality Gate:** حداقل ۱۰٪ نمونه‌گیری طبقه‌بندی‌شده بر اساس زبان، سطح و
-نوع تمرین؛ دو ارزیاب مستقل برای naturalness، CEFR alignment، cognitive
-load، authenticity و bias. عدد ICC≥0.75 فقط وقتی گزارش شود که واقعاً دو
-داور و دادهٔ کافی وجود داشته باشد.
+**Quality Gate پایلوت کوچک:** همهٔ آیتم‌های فعلی (یک English B1 و یک Deutsch
+B1) باید دقیقاً دو ارزیاب مستقل داشته باشند: پوشش native-speaker و
+language-pedagogy، امتیاز ۱ تا ۴ برای naturalness، CEFR fit، task validity و
+cultural safety، و adjudication برای اختلاف معنادار. روش از پیش تعیین‌شده
+quadratic weighted Cohen's kappa با آستانهٔ `0.60` است؛ تا ثبت rating واقعی،
+agreement برابر N/A است. در پایلوت بزرگ‌تر، طرح نمونه‌گیری باید پیش از ingestion
+نسخه‌گذاری شود.
 
 **معیار پذیرش:** ۱۰۰٪ آیتم‌های پایلوت schema/provenance معتبر داشته باشند؛
 هیچ آیتم QA-failed در برنامهٔ روزانه زمان‌بندی نشود؛ گزارش بازبینی قابل
@@ -305,4 +316,5 @@ viewport و تست دستی Screen Reader/میکروفون روی سخت‌اف�
 - **۲۰۲۶-۰۸-۲۲**: G1 در PR #17 (`b452e3e`) با CI سبز عبور کرد؛ مسیر B1 نوشتن/گفتار، audio gate، re-record invalidation، provider-unavailable و delayed/novel events برای هر دو زبان ادغام شد. فاز ۴ به 🟡 تغییر کرد و ادامهٔ Foundation Gate به Issue #18 (consent، baseline، data quality) منتقل شد. میکروفون سخت‌افزاری واقعی و provider زنده همچنان N/A هستند.
 - **۲۰۲۶-۰۸-۲۲**: G2 در PR #21 (`032ad14`) با CI سبز عبور کرد؛ consent نسخه‌دار، baseline پیش از intervention، export پژوهشی امن، revoke/delete، retention و data-quality در هر دو زبان ادغام و با Settings E2E تأیید شد. فاز ۴ فقط برای Accessibility baseline قابل تکرار باز است؛ cohort واقعی و اثر یادگیری همچنان N/A است.
 - **۲۰۲۶-۰۸-۲۲**: G3 در PR #24 (`ea3d25c`) با دو CI سبز عبور کرد؛ Shadow Safety به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شد، اما default-off، نامرئی و بدون تغییر یا persistence دادهٔ زبان‌آموز باقی ماند. E2E انگلیسی و آلمانی حفظ learner/evidence را تأیید کرد؛ cohort واقعی و اثر یادگیری همچنان N/A است.
+- **۲۰۲۶-۰۸-۲۲**: زیرساخت G4 در PR #26 (`8edaba2`) با Core/Content CI و German CI سبز ادغام شد: schema mediation، rubric، weighted kappa، adjudication، جلوگیری از solution leakage و quarantine برای draftهای B1 هر دو زبان. بازبینی انسانی، agreement و اثر یادگیری هنوز N/A است؛ G4 عبور نکرده است.
 - **۲۰۲۶-۰۸-۲۲ ۰۰:۳۲ CEST**: نسخهٔ جدید روی `automaticity-ux-roadmap-elahe.vercel.app` با وضعیت Vercel Ready منتشر شد. Alias قدیمی به‌دلیل مالکیت Scope دیگر قابل انتقال نبود و محتوای قدیمی آن به‌عنوان نسخهٔ جاری معرفی نمی‌شود.

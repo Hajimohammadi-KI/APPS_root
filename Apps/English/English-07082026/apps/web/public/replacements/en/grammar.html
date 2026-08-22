@@ -150,6 +150,7 @@
       border-radius: 8px; color: var(--ink); background: transparent; text-align: left; cursor: pointer;
     }
     .topic:hover { background: #f7f4fe; }
+    .topic[hidden], .level[hidden] { display: none !important; }
     .topic.active { color: #4a25a8; border-color: #cfc1ef; background: #f6f2ff; font-weight: 800; }
     .topic-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--purple); opacity: 0; }
     .topic.active .topic-dot { opacity: 1; }
@@ -415,7 +416,7 @@
           <div class="level-list" id="levelList"></div>
         </aside>
 
-        <section class="content" aria-labelledby="lessonTitle">
+        <section class="content" id="grammar-topic" aria-labelledby="lessonTitle">
           <div class="lesson-head">
             <div class="crumbs"><span class="badge">A1</span><span class="foundations">Foundations &amp; other</span><span>•</span><strong id="lessonTitle">Verb be: am/is/are</strong></div>
             <button class="use-btn" data-action="use-today"><svg class="icon" style="vertical-align:middle;margin-right:6px"><use href="#i-calendar"/></svg>Use today</button>
@@ -605,9 +606,14 @@
         progress.taskIndex = 0;
         taskIndex = 0;
         saveProgress();
+        const topicUrl = new URL(location.href);
+        topicUrl.searchParams.set('topic', progress.activeTopic);
+        topicUrl.hash = 'grammar-topic';
+        history.pushState({ topic: progress.activeTopic }, '', topicUrl);
         renderCurriculum();
         renderLesson();
         resetTask();
+        $('#grammar-topic').scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
         notify(`${progress.activeTopic} selected. Continue through its three exercises.`);
       }));
 

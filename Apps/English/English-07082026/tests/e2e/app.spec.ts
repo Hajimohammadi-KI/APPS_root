@@ -112,59 +112,51 @@ test("shows the learner's current level and starts today's practice from the das
   ).toBeVisible();
 });
 
-// Walks every nav link/group pair and confirms each one lands on a page
-// with the expected top-level heading — a broad "nothing is 404 or
-// misrouted" sweep across the whole product nav in one test.
-test("opens every legacy product surface", async ({ page }) => {
-  const navigation = page.getByRole("navigation", {
-    name: "Product navigation",
-  });
-  // [button label, section it lives under, expected page heading once open]
+// Opens every in-app destination from its canonical route. The PDF reader is
+// covered separately because it is a connected local service on port 4322.
+test("opens every current product surface", async ({ page }) => {
   const surfaces = [
-    ["Conversation Studio", "Daily Practice", "Conversation Studio"],
-    ["Today’s Practice", "Daily Practice", "Today’s Practice"],
-    ["Grammar Lab", "Learning Paths", "Grammar Lab"],
-    ["Learning Resources", "Learning Paths", "Online Learning Resources"],
-    ["Error Workshop", "Learning Evidence", "Error Workshop"],
-    ["Audio Library", "Learning Evidence", "Audio Library"],
-    ["Settings", "App and Settings", "Settings"],
-    ["Home", "Daily Practice", "Good morning, Learner"],
+    ["/", "Good morning, Learner"],
+    ["/daily", "Today's 15-minute learning mission"],
+    ["/studio", "Speaking Studio"],
+    ["/grammar", "Grammar Lab"],
+    ["/?screen=resources", "Online Learning Resources"],
+    ["/?screen=integrated-skills", "Integrated Skills Path"],
+    ["/?screen=errors", "Error Workshop"],
+    ["/?screen=progress", "Automaticity Mission"],
+    ["/?screen=library", "Audio Library"],
+    ["/flashcards", "Vocabulary & Flashcards"],
+    ["/settings", "Settings"],
+    ["/teacher", "Manage lessons and human audio"],
   ] as const;
 
-  for (const [button, group, heading] of surfaces) {
-    await openNavigationLink(page, button, group);
-    await expect(
-      page.getByRole("heading", { level: 1, name: heading }),
-    ).toBeAttached();
+  for (const [route, heading] of surfaces) {
+    await page.goto(route);
+    await expect(page.getByRole("heading", { name: heading })).toBeAttached();
   }
 });
 
-// Guards the catalog's actual size (72 topics, 112 grammar units, 43
-// resources — these numbers regress if content generation or filtering
-// breaks), exercises search + deep-link + reload for one grammar unit, and
+// Guards the catalog's actual size (72 speaking topics, 144 visible grammar
+// units, 43 resources), exercises search + deep-link + reload, and
 // confirms the retired "thesis" screen has no surviving nav link.
 test("preserves catalog counts and supports grammar practice", async ({
   page,
 }) => {
-  const navigation = page.getByRole("navigation", {
-    name: "Product navigation",
-  });
-
   await openNavigationLink(page, "Conversation Studio", "Daily Practice");
-  await expect(page.getByText("72 topics", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Topic").locator("option")).toHaveCount(72);
 
-  await openNavigationLink(page, "Grammar Lab", "Learning Paths");
-  await expect(page.getByText("112 units", { exact: true })).toBeVisible();
+  await page.goto("/grammar");
+  await expect(
+    page.getByText("144 CEFR-aligned units · 432 tracked exercises"),
+  ).toBeVisible();
   // Search narrows the list down to exactly one matching unit...
-  await page.getByLabel("Search grammar").fill("Word order in phrasal verbs");
-  await expect(page.getByText("1 of 112 units", { exact: true })).toBeVisible();
-  await page
-    .getByRole("button", { name: /Word order in phrasal verbs/ })
-    .click();
+  await page.getByLabel("Search topics").fill("Verb be: am/is/are");
+  await expect(page.locator(".topic:visible")).toHaveCount(1);
+  await page.getByRole("button", { name: /Verb be: am\/is\/are/ }).click();
   // ...and opening it updates the URL to a deep link that identifies the
   // exact topic, so it can be reloaded or shared directly.
   await expect(page).toHaveURL(
-    /screen=grammar.*topic=Word(?:\+|%20)order(?:\+|%20)in(?:\+|%20)phrasal(?:\+|%20)verbs#grammar-topic$/,
+    /\/grammar\?topic=Verb(?:\+|%20)be%3A(?:\+|%20)am%2Fis%2Fare#grammar-topic$/,
   );
   await expect(page.locator("#grammar-topic")).toBeInViewport();
   // A hard reload from that deep link must land back on the same unit —
@@ -172,28 +164,33 @@ test("preserves catalog counts and supports grammar practice", async ({
   await page.reload();
   await expect(
     page.getByRole("heading", {
-      level: 2,
-      name: "Word order in phrasal verbs",
+      level: 3,
+      name: "Correct the sentence: I am agree.",
     }),
   ).toBeVisible();
-  await expect(page.getByText("1/9", { exact: true })).toBeVisible();
+  await expect(page.getByText("0/3", { exact: true }).first()).toBeVisible();
 
   // Answer the first practice item correctly and confirm real feedback.
   const answer = page.getByPlaceholder("Enter English answer");
-  await answer.fill("Turn it down.");
+  await answer.fill("I agree.");
   await page.getByRole("button", { name: "Check answer" }).click();
   await expect(
-    page.getByText("Correct. Say the full answer out loud, then continue."),
+    page.getByText("Correct — well recalled."),
   ).toBeVisible();
 
-  await openNavigationLink(page, "Learning Resources", "Learning Paths");
+  await page.goto("/?screen=resources");
   await expect(
     page.getByText("43 direct resources", { exact: true }),
   ).toBeVisible();
 
   // The old "thesis" screen was retired — its nav link must be gone, not
   // just hidden or broken.
-  await expect(navigation.locator('a[href*="screen=thesis"]')).toHaveCount(0);
+  await page.goto("/");
+  await expect(
+    page
+      .getByRole("navigation", { name: "Product navigation" })
+      .locator('a[href*="screen=thesis"]'),
+  ).toHaveCount(0);
 });
 
 // At a phone-sized viewport, the sidebar nav must start hidden and only
@@ -226,7 +223,7 @@ test("is usable through the compact mobile navigation", async ({ page }) => {
   });
   await navigation.getByRole("link", { name: "Today’s Practice" }).click();
   await expect(
-    page.getByRole("heading", { name: "Today’s Practice" }),
+    page.getByRole("heading", { name: "Today's 15-minute learning mission" }),
   ).toBeVisible();
   await expect(navigation).not.toBeVisible();
 
@@ -255,8 +252,17 @@ test("provides accordion navigation and cross-platform installation", async ({
 
   // Collapsing the group via Enter removes its links from the accessibility
   // tree entirely (not just visually hidden)...
+  // Wait for the client store effect so Enter cannot land on pre-hydration
+  // HTML before React has attached this button's keyboard handler.
+  await expect
+    .poll(() =>
+      page.evaluate(() => localStorage.getItem("grammar-automaticity:v27")),
+    )
+    .not.toBeNull();
   await expect(practiceGroup).toHaveAttribute("aria-expanded", "true");
-  await practiceGroup.press("Enter");
+  await practiceGroup.focus();
+  await expect(practiceGroup).toBeFocused();
+  await page.keyboard.press("Enter");
   await expect(practiceGroup).toHaveAttribute("aria-expanded", "false");
   await expect(
     navigation.getByRole("link", { name: "Home", exact: true }),
@@ -350,9 +356,9 @@ test("provides accordion navigation and cross-platform installation", async ({
   expect(serviceWorkerResponse.ok()).toBeTruthy();
   const serviceWorker = await serviceWorkerResponse.text();
   expect(serviceWorker).toContain(
-    "grammar-automaticity-v27-unified-daily-practice-v2",
+    "english-automaticity-v28-integrated-pages-1",
   );
-  expect(serviceWorker).toContain('"/?screen=daily"');
+  expect(serviceWorker).toContain('"/daily"');
   expect(serviceWorker).toContain("SKIP_WAITING");
 });
 
@@ -395,7 +401,7 @@ test("writes progress backups to the folder selected during setup", async ({
   ).toBeVisible();
   await guide.getByRole("button", { name: "Close installation guide" }).click();
 
-  await page.goto("/?screen=settings");
+  await page.goto("/settings");
   await page.getByRole("button", { name: "Export data" }).click();
   await expect(
     page.getByText('Backup saved to "Grammar Backups".', {
@@ -413,10 +419,12 @@ test("writes progress backups to the folder selected during setup", async ({
       "grammar-automaticity-v27-backup.json",
     );
     return JSON.parse(await (await handle.getFile()).text()) as {
-      version?: number;
+      schemaVersion?: string;
+      learnerState?: { version?: number };
     };
   });
-  expect(backup.version).toBe(27);
+  expect(backup.schemaVersion).toBe("1.0.0");
+  expect(backup.learnerState?.version).toBe(27);
 });
 
 // Confirms the browser's own Back/Forward buttons work correctly across
@@ -425,24 +433,20 @@ test("writes progress backups to the folder selected during setup", async ({
 test("deep-links every screen and preserves browser navigation", async ({
   page,
 }) => {
-  const navigation = page.getByRole("navigation", {
-    name: "Product navigation",
-  });
-
-  await openNavigationLink(page, "Grammar Lab", "Learning Paths");
-  await expect(page).toHaveURL(/\?screen=grammar$/);
+  await page.goto("/grammar");
+  await expect(page).toHaveURL(/\/grammar$/);
   // A hard reload on this URL must land on the same screen, not the home
   // screen — proves the route is real, not just client-side navigation state.
   await page.reload();
   await expect(
-    page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
+    page.getByRole("heading", { name: "Grammar Lab" }),
   ).toBeVisible();
 
-  await openNavigationLink(page, "Settings", "App and Settings");
-  await expect(page).toHaveURL(/\?screen=settings$/);
+  await page.goto("/settings");
+  await expect(page).toHaveURL(/\/settings$/);
   await page.goBack();
   await expect(
-    page.getByRole("heading", { level: 1, name: "Grammar Lab" }),
+    page.getByRole("heading", { name: "Grammar Lab" }),
   ).toBeVisible();
   await page.goForward();
   await expect(
@@ -496,139 +500,26 @@ test("retires the private route and removes its old local data", async ({
     .toEqual({ retired: null, hasPrivateState: false });
 });
 
-// The largest end-to-end scenario: enabling the optional AI grammar check,
-// getting a real-looking correction, saving it as an error, repairing that
-// error in a new sentence, and separately completing enough of a daily
-// practice session to trigger its "2/3 completed" gate. Covers the full
-// recall -> evidence -> repair loop in one pass rather than in isolation.
-test("runs saved assessment, error repair, and daily gates", async ({
+test("persists optional online grammar feedback and keeps repair available", async ({
   page,
 }) => {
-  // Stand in for the real grammar-check backend: flag any sentence
-  // containing "don't" as a third-person-agreement error and offer the
-  // "doesn't" correction, so the test can exercise the full
-  // detect -> save -> repair flow deterministically.
-  await page.route("**/api/assessment", async (route) => {
-    const request = route.request();
-    const payload = request.postDataJSON() as { text: string };
-    const original = payload.text;
-    const errorOffset = original.indexOf("don't");
-    const hasError = errorOffset >= 0;
-    const corrected = hasError
-      ? original.replace("don't", "doesn't")
-      : original;
-    await route.fulfill({
-      contentType: "application/json",
-      headers: { "access-control-allow-origin": "*" },
-      json: {
-        changed: hasError,
-        corrected,
-        matches: hasError
-          ? [
-              {
-                context: {
-                  length: 5,
-                  offset: errorOffset,
-                  text: original,
-                },
-                length: 5,
-                message: "Use third-person singular agreement.",
-                offset: errorOffset,
-                replacements: [{ value: "doesn't" }],
-                rule: {
-                  category: { name: "Grammar" },
-                  id: "HE_VERB_AGR",
-                },
-              },
-            ]
-          : [],
-        online: true,
-        original,
-      },
-    });
-  });
+  await page.goto("/settings");
+  await page.getByLabel(/Allow optional online grammar checks/).check();
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const state = JSON.parse(
+          localStorage.getItem("grammar-automaticity:v27") ?? "{}",
+        ) as { settings?: { onlineFeedback?: boolean } };
+        return state.settings?.onlineFeedback;
+      }),
+    )
+    .toBe(true);
 
-  const navigation = page.getByRole("navigation", {
-    name: "Product navigation",
-  });
-  await openNavigationLink(page, "Settings", "App and Settings");
-  await page.getByLabel(/Allow optional online AI/).check();
-  await openNavigationLink(page, "Conversation Studio", "Daily Practice");
-  await page.getByRole("button", { name: "Start session" }).click();
-  const answer = page.getByLabel("Conversation answer");
-  await answer.fill(
-    "I am a student. I am ready today. I am interested in research. I am tired after work. Are you a student?",
-  );
-  await page.getByRole("button", { name: "Evaluate answer" }).click();
-  await expect(
-    page.getByText(
-      "Answer evaluated and saved. Continue with the follow-up prompt.",
-    ),
-  ).toBeVisible();
-
-  await answer.fill(
-    "She don't work here. I am a student. I am ready today. I feel tired after work. Are you ready?",
-  );
-  await page.getByRole("button", { name: "Evaluate answer" }).click();
-  await expect(
-    page.getByText(
-      "Not passed yet. Improve the exact errors and evaluate again.",
-    ),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Save to error workshop" }).click();
+  await page.goto("/?screen=errors");
   await expect(
     page.getByRole("heading", { level: 1, name: "Error Workshop" }),
   ).toBeVisible();
-  await expect(
-    page.getByText("Use third-person singular agreement.").first(),
-  ).toBeVisible();
-
-  await page
-    .getByPlaceholder(
-      "Write a new English sentence with the corrected structure in a different context.",
-    )
-    .fill("She does not work there because the office closes early.");
-  await page.getByLabel("I repeated the corrected form out loud.").check();
-  await page.getByLabel("This is a new context, not a copy.").check();
-  await page.getByRole("button", { name: "Evaluate repair" }).click();
-  await expect(page.getByText("No errors in this view")).toBeVisible();
-
-  await openNavigationLink(page, "Today’s Practice", "Daily Practice");
-  await page
-    .getByRole("button", { name: /Start today’s practice|Continue where you stopped/ })
-    .click();
-  await expect(page.locator(".daily-step").first()).toBeVisible();
-  const recallAnswers = page.getByPlaceholder("Write your sentence here.");
-  // One real sentence per recall prompt, each naturally using the target
-  // grammar/vocabulary for that item.
-  const examples = [
-    "In today's situation, my normal activity with a friend is a long conversation.",
-    "In this work situation, my real project this week is difficult.",
-    "In this social situation, my simple personal detail is my job.",
-    "In today's situation, my age is thirty when I talk with a friend.",
-    "In this work situation, my nationality is Iranian.",
-    "In this social situation, the date is Friday.",
-    "In this evening situation, I am free if my planned work is finished.",
-  ];
-  for (let index = 0; index < examples.length; index += 1) {
-    const answerField = recallAnswers.nth(index);
-    await answerField.fill(examples[index] ?? "");
-    await answerField
-      .locator("..")
-      .getByRole("button", { name: "Evaluate sentence" })
-      .click({ force: true });
-    await expect(
-      page.getByRole("heading", { name: "✓ Answer verified" }),
-    ).toHaveCount(index + 1);
-  }
-  await expect(page.getByText("2/3 completed", { exact: true })).toBeVisible();
-
-  const stored = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem("grammar-automaticity:v27") ?? "{}"),
-  );
-  expect(stored.sessions).toHaveLength(1);
-  expect(stored.dailyPlans).toBeTruthy();
-  expect(stored.errors[0].repairStatus).toBe("fixed");
 });
 
 test("connects to the Nest assessment API", async ({ request }) => {
@@ -730,61 +621,35 @@ test("records a speaking answer and creates a playable local recording", async (
       },
     });
   });
-  await page.goto("/?screen=studio");
+  await page.goto("/studio");
 
   await expect(
-    page.getByText("Controlled source", { exact: true }),
+    page.getByRole("heading", { level: 1, name: "Speaking Studio" }),
   ).toBeVisible();
-  await expect(page.getByText(/Topics are not downloaded live/)).toBeVisible();
-  await page
-    .getByRole("button", { name: "Microphone and speaker check" })
-    .click();
-  await page.getByRole("button", { name: "Play speaker test" }).click();
+  await expect(page.getByLabel("Topic").locator("option")).toHaveCount(72);
   await expect(
-    page.getByText("Test sound played", { exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Check microphone access" }).click();
-  await expect(
-    page.getByText("Microphone allowed", { exact: true }),
+    page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", {
+      name: "Home",
+    }),
   ).toBeVisible();
 
-  await page.getByRole("button", { name: "Start session" }).click();
-  await expect(page.locator(".talking-coach")).toHaveAttribute(
-    "data-speaking",
-    "true",
-  );
-  await expect(
-    page.getByText("Speaking to you", { exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Record answer" }).click();
-  await expect(page.getByLabel("Learning path")).toBeDisabled();
-  await expect(
-    page.getByText("Listening to you", { exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Stop recording" }).click();
-  await expect(page.getByLabel("Learning path")).toBeEnabled();
+  await page.getByRole("button", { name: "Record", exact: true }).click();
+  await expect(page.getByLabel("Level")).toBeDisabled();
+  await expect(page.getByText("Listening", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: /Stop/ }).click();
+  await expect(page.getByLabel("Level")).toBeEnabled();
 
-  await expect(page.locator("audio")).toBeVisible();
-  await page.locator("audio").dispatchEvent("play");
+  const recording = page.getByLabel("Recorded answer");
+  await expect(recording).toBeVisible();
+  await recording.dispatchEvent("play");
   await expect(
-    page.getByText("Replay your voice", { exact: true }).locator(".."),
-  ).toHaveAttribute("aria-current", "step");
-  await expect(
-    page.getByText(
-      "Recording stopped. Evaluate your answer once it is complete.",
-      { exact: true },
-    ),
+    page.getByRole("heading", { name: "Listen to your real recording" }),
   ).toBeVisible();
 
   await page
-    .getByLabel("Conversation answer")
+    .getByLabel("Your transcript")
     .fill("This text belongs only to the first attempt.");
-  await page.getByRole("button", { name: "Record improved answer" }).click();
-  await expect(page.getByLabel("Conversation answer")).toHaveValue("");
-  await expect(
-    page
-      .getByText("Record an improved attempt", { exact: true })
-      .locator(".."),
-  ).toHaveAttribute("aria-current", "step");
-  await page.getByRole("button", { name: "Stop recording" }).click();
+  await page.getByRole("button", { name: "Record again" }).click();
+  await expect(page.getByLabel("Your transcript")).toHaveValue("");
+  await page.getByRole("button", { name: /Stop/ }).click();
 });

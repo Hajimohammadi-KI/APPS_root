@@ -1,7 +1,7 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.8
+**نسخه:** 1.10
 
 **آخرین به‌روزرسانی:** 2026-08-22
 **دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)
@@ -30,8 +30,8 @@
 |---|---|---|
 | هستهٔ مشترک learning-core | PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) پس از بازبینی مستقل و CI سبز merge شد | merge `ed7e73f` و `shared/learning-core` |
 | SKILL-001 Adherence Core | روی `main` ادغام و فقط به‌صورت shadow به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز روی برنامه یا دادهٔ زبان‌آموز اعمال/ذخیره نمی‌شود | `shared/learning-core/src/adherence/shadow-runner.ts` |
-| تست اختصاصی adherence | تأییدشده پس از Implementation Intentions: 30 تست، 69,225 assertion | `bun run test:adherence-core` |
-| کل تست learning-core | تأییدشده پس از PR #28: 59 تست و 69,319 assertion | `bun run test` |
+| تست اختصاصی adherence | تأییدشده پس از Guarded Nudges: 36 تست، 69,262 assertion | `bun run test:adherence-core` |
+| کل تست learning-core | تأییدشده پس از PR #30: 65 تست و 69,356 assertion | `bun run test` |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
@@ -45,6 +45,7 @@
 | زیرساخت Content Quality | schema نسخه‌دار mediation، rubric ثابت، دو بازبین مستقل، weighted kappa، adjudication و quarantine محتوای تأییدنشده در هر دو زبان ادغام شد | [PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26)، merge `8edaba2`؛ [Core/Content run 32538983463](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983463) و [German run 32538983363](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983363) سبز |
 | بازبینی انسانی پایلوت G4 | هنوز انجام نشده؛ هر دو draft با `humanReviewed=false` و `awaiting-human-review` از daily plan حذف می‌شوند | **N/A — Gate G4 هنوز عبور نکرده است** |
 | Implementation Intentions | انتخاب اختیاری 0 یا 2 تا 5 برنامهٔ زمان/مکان در Settings هر دو زبان، ذخیرهٔ local-only، متن EN/DE/FA و حذف/بازیابی پس از reload ادغام شد؛ هیچ nudge یا event ساخته نمی‌شود | [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28)، merge `32e8a8c`؛ [Core run 32541173665](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173665) و [German run 32541173644](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173644) سبز؛ [Issue #6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) بسته |
+| Guarded in-app nudges | در هر دو اپ با opt-in صریح و پیش‌فرض خاموش، ترتیب guard قطعی، quiet hours، cooldown، سقف روزانه/هفتگی، رویداد محلی کمینه و متن EN/DE/FA ادغام شد؛ push/email و ادعای outcome وجود ندارد | [PR #30](https://github.com/Hajimohammadi-KI/APPS_root/pull/30)، merge `4e08775`؛ [Core/Content run 32542941048](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941048) و [Browser run 32542941037](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941037) سبز؛ [Issue #7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) بسته |
 | AI و دیتاست runtime | هنوز نباید وارد runtime یا تصمیم mastery شود | ingestion محتوای پایلوت وابسته به تکمیل بازبینی انسانی G4 است |
 | اثرگذاری روی زبان‌آموز واقعی | دادهٔ کافی وجود ندارد | **N/A تا اجرای پایلوت** |
 
@@ -236,7 +237,7 @@ flowchart LR
 **وابستگی:** G2
 **Issues:** [#6 — Implementation intentions](https://github.com/Hajimohammadi-KI/APPS_root/issues/6)، [#7 — Guarded nudges](https://github.com/Hajimohammadi-KI/APPS_root/issues/7)
 
-**وضعیت 2026-08-22:** بخش Shadow Safety در [PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24) با merge `ea3d25c` کامل شد. Implementation Intentions نیز در [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28) با merge `32e8a8c`، دو CI سبز و E2E Settings هر دو زبان ادغام شد: شروع خالی و اختیاری، 0 یا 2 تا 5 قصد فعال، ذخیرهٔ local-only و بدون ساخت nudge، event یا ادعای mastery. [Issue #6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) بسته و [Issue #7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) برای nudge رضایت‌محور آمادهٔ اجرا است.
+**وضعیت 2026-08-22:** Shadow Safety در [PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24)، Implementation Intentions در [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28) و Guarded Nudges در [PR #30](https://github.com/Hajimohammadi-KI/APPS_root/pull/30) با merge `4e08775` و چهار check سبز ادغام شدند. اعلان فقط پس از opt-in صریح و عبور guardهای قطعی داخل اپ ظاهر می‌شود؛ push/email ندارد، focus را جابه‌جا نمی‌کند و رویدادهایش learning outcome نیستند. Issues [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) و [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) بسته‌اند؛ micro-goal و comeback flow محصولی هنوز باقی است.
 
 ### ترتیب اجرا
 
@@ -244,7 +245,7 @@ flowchart LR
 2. ✅ ذخیرهٔ اختیاری implementation intention در Settings هر دو اپ؛
 3. micro-goal پنج‌دقیقه‌ای برای روزهای کم‌انرژی، بدون حذف کامل productive output؛
 4. comeback flow بدون شرم‌دادن یا صفرکردن دستاورد واقعی؛
-5. فقط in-app prompt با consent و cooldown؛ push/email در این فاز ممنوع؛
+5. ✅ فقط in-app prompt با consent و cooldown؛ push/email در این فاز ممنوع؛
 6. مقایسهٔ پیشنهاد shadow با برنامهٔ واقعی، بدون تغییر تجربهٔ کاربر.
 
 ### معیار خروج
@@ -425,7 +426,7 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | 5 | Shadow Safety در برنامهٔ 15/30/45 دقیقهٔ هر دو اپ | [#23](https://github.com/Hajimohammadi-KI/APPS_root/issues/23) و [PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24) | ✅ merge `ea3d25c`؛ G3 عبور کرد |
 | 6 | Content QA و Mediation pilot | [#8](https://github.com/Hajimohammadi-KI/APPS_root/issues/8) و [PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26) | 🟡 زیرساخت merge `8edaba2`؛ human review و agreement هنوز N/A |
 | 7 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) و [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28) | ✅ merge `32e8a8c`؛ Issue #6 بسته |
-| 8 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) | آمادهٔ اجرا؛ #6 عبور کرد، consent/cooldown اجباری است |
+| 8 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) و [PR #30](https://github.com/Hajimohammadi-KI/APPS_root/pull/30) | ✅ merge `4e08775`؛ Issue #7 بسته، consent/cooldown و hard caps در CI تأیید شد |
 | 9 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) | G2 و authored content |
 | 10 | FSRS shadow migration | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) | G2 |
 | 11 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
@@ -459,9 +460,7 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## اقدام بعدی واحد
 
-**Gate G4 را با بازبینی انسانی واقعی کامل کنید:** دو draft انگلیسی و آلمانی، schema،
-rubric و quarantine اکنون روی `main` هستند. برای هر آیتم دقیقاً دو بازبین مستقل
-(native-speaker و language-pedagogy) با شناسهٔ مستعار ثبت شوند؛ weighted kappa باید
-حداقل 0.60 باشد و اختلاف معنادار adjudication داشته باشد. تا آن زمان release array
-خالی، دادهٔ خام خارج از برنامهٔ روزانه و Installer، و learning outcome برابر N/A
-باقی می‌ماند.
+**کار اجرایی بعدی Issue #4 است:** Forced Output Booster در شاخهٔ مستقل، فقط پشت
+feature flag و با authored content معتبر. هم‌زمان G4 بدون دو بازبین انسانی مستقل
+قابل عبور نیست؛ تا دریافت آن reviewها، release array خالی، دادهٔ خام خارج از
+برنامهٔ روزانه و Installer، و learning outcome برابر N/A باقی می‌ماند.

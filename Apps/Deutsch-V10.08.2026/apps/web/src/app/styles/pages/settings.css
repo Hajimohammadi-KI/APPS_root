@@ -107,6 +107,104 @@
   gap: 1rem;
 }
 
+.settings-intentions {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.settings-intention-eyebrow {
+  color: #6d28d9;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.settings-intentions-empty,
+.settings-intention-privacy,
+.settings-intention-error {
+  border-radius: 0.9rem;
+  padding: 0.8rem;
+}
+
+.settings-intentions-empty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 1px dashed var(--border);
+}
+
+.settings-intention {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 0.9rem;
+}
+
+.settings-intention legend {
+  padding-inline: 0.4rem;
+  font-weight: 800;
+}
+
+.settings-intention-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.settings-intention-fields label {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.settings-intention-fields input,
+.settings-intention-fields select {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--background);
+  padding: 0.5rem 0.65rem;
+  color: var(--foreground);
+}
+
+.settings-intention-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.settings-intention-active {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  font-weight: 700;
+}
+
+.settings-intention-active input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #7c3aed;
+}
+
+.settings-intention-privacy {
+  background: color-mix(in srgb, #059669 8%, var(--background));
+  color: #047857;
+  line-height: 1.5;
+}
+
+.settings-intention-error {
+  background: color-mix(in srgb, #dc2626 8%, var(--background));
+  color: #b91c1c;
+  font-weight: 700;
+}
+
 .settings-device-grid article {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -123,5 +221,15 @@
   .settings-options-three,
   .settings-device-grid {
     grid-template-columns: 1fr;
+  }
+
+  .settings-intentions-empty,
+  .settings-intention-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .settings-intention-fields {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

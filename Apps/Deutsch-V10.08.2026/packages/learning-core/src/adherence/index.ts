@@ -1,4 +1,6 @@
 export * from "./feature-flags";
+export * from "./intention-copy";
+export * from "./intentions";
 export * from "./plan-adjustment";
 export * from "./readiness";
 export * from "./shadow-runner";

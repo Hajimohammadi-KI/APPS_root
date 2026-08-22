@@ -116,3 +116,95 @@ test("optionale Messung ist eingewilligt, datensparsam, widerrufbar und löschba
     progress: "keep-me",
   });
 });
+
+test("optionale Wenn-dann-Pläne sind tastaturbedienbar, lokal und senden keinen Nudge", async ({
+  page,
+}) => {
+  await page.goto("/einstellungen");
+  const onboarding = page.getByTestId("implementation-intentions-onboarding");
+  await expect(onboarding).toHaveAttribute("dir", "ltr");
+  await expect(
+    onboarding.getByRole("heading", { name: "Meine Wenn-dann-Lernpläne" }),
+  ).toBeVisible();
+  await expect(
+    onboarding.getByRole("button", { name: "Jetzt überspringen" }),
+  ).toBeVisible();
+
+  const add = onboarding.getByRole("button", { name: "Plan hinzufügen" });
+  await add.focus();
+  await page.keyboard.press("Enter");
+  await expect(onboarding.getByRole("group", { name: "Plan 1" })).toBeVisible();
+  await add.focus();
+  await page.keyboard.press("Enter");
+  await expect(onboarding.getByRole("group", { name: "Plan 2" })).toBeVisible();
+
+  await onboarding
+    .getByLabel("Wenn das passiert 1")
+    .selectOption("after_event");
+  await onboarding
+    .getByLabel("Uhrzeit oder kurze Situation 1")
+    .fill("Nach dem Frühstück");
+  const save = onboarding.getByRole("button", {
+    name: "Pläne auf diesem Gerät speichern",
+  });
+  await expect(save).toBeEnabled();
+  await save.focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    onboarding
+      .getByRole("status")
+      .getByText(
+        "Pläne lokal gespeichert. Es wurde keine Erinnerung gesendet.",
+      ),
+  ).toBeVisible();
+
+  const local = await page.evaluate(() => {
+    const profile = JSON.parse(
+      window.localStorage.getItem("adherence-core-v1") ?? "{}",
+    ) as {
+      intentions?: Array<{ triggerLabel?: string }>;
+      nudgeOptIn?: boolean;
+      streak?: unknown;
+    };
+    return {
+      intentions: profile.intentions,
+      nudgeOptIn: profile.nudgeOptIn,
+      hasStreak: Boolean(profile.streak),
+      nudgeEventKeys: Object.keys(window.localStorage).filter((key) =>
+        /nudge.*(?:event|shown|action)/i.test(key),
+      ),
+    };
+  });
+  expect(local.intentions).toHaveLength(2);
+  expect(local.intentions?.[0]?.triggerLabel).toBe("Nach dem Frühstück");
+  expect(local.nudgeOptIn).toBe(false);
+  expect(local.hasStreak).toBe(true);
+  expect(local.nudgeEventKeys).toEqual([]);
+
+  await page.reload();
+  await expect(onboarding.getByRole("group", { name: "Plan 2" })).toBeVisible();
+  await onboarding
+    .getByRole("button", { name: "Plan löschen" })
+    .first()
+    .click();
+  await expect(save).toBeDisabled();
+  await expect(
+    onboarding.getByText("Speichere entweder keinen oder 2–5 aktive Pläne."),
+  ).toBeVisible();
+
+  for (const viewport of [
+    { width: 800, height: 1280 },
+    { width: 412, height: 915 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.reload();
+    await expect(onboarding).toBeVisible();
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+  }
+});

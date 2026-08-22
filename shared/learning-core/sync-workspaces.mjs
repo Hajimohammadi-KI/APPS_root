@@ -25,6 +25,8 @@ const files = [
   "src/adherence/feature-flags.ts",
   "src/adherence/adherence.test.ts",
   "src/adherence/index.ts",
+  "src/adherence/intention-copy.ts",
+  "src/adherence/intentions.ts",
   "src/adherence/plan-adjustment.ts",
   "src/adherence/readiness.ts",
   "src/adherence/shadow-runner.ts",

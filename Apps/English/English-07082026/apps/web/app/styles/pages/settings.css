@@ -121,6 +121,104 @@ fieldset.settings-row {
   line-height: 1.5;
 }
 
+.settings-intentions {
+  display: grid;
+  gap: 14px;
+}
+
+.settings-intention-eyebrow {
+  color: #6d28d9;
+  font-weight: 800;
+  font-size: 0.78rem;
+}
+
+.settings-intentions-empty,
+.settings-intention-privacy,
+.settings-intention-error {
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.settings-intentions-empty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px dashed var(--border);
+}
+
+.settings-intention {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.settings-intention legend {
+  padding-inline: 6px;
+  font-weight: 800;
+}
+
+.settings-intention-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.settings-intention-fields label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.settings-intention-fields input,
+.settings-intention-fields select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--background);
+  padding: 8px 10px;
+  color: var(--foreground);
+}
+
+.settings-intention-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.settings-intention-active {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.settings-intention-active input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #6d28d9;
+}
+
+.settings-intention-privacy {
+  background: color-mix(in srgb, #059669 8%, var(--background));
+  color: #047857;
+  line-height: 1.5;
+}
+
+.settings-intention-error {
+  background: color-mix(in srgb, #dc2626 8%, var(--background));
+  color: #b91c1c;
+  font-weight: 700;
+}
+
 @media (max-width: 560px) {
   .settings-heading {
     align-items: stretch;
@@ -133,6 +231,16 @@ fieldset.settings-row {
 
   .settings-choice {
     flex-basis: 100%;
+  }
+
+  .settings-intentions-empty,
+  .settings-intention-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .settings-intention-fields {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

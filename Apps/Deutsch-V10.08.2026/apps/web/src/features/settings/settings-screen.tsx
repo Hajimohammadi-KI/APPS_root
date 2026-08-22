@@ -38,6 +38,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { InstallAppButton } from "@/features/pwa/install-app-button";
+import { ImplementationIntentionsCard } from "@/features/settings/implementation-intentions-card";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
 const TEXT_SIZES: readonly {
@@ -345,6 +346,8 @@ export function SettingsScreen() {
           </CardContent>
         </Card>
       </div>
+
+      <ImplementationIntentionsCard />
 
       <Card>
         <CardHeader>

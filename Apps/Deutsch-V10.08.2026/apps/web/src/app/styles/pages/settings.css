@@ -205,6 +205,20 @@
   font-weight: 700;
 }
 
+.settings-nudge-consent {
+  display: grid;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, #7c3aed 28%, var(--border));
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, #7c3aed 5%, var(--background));
+  padding: 0.8rem;
+}
+
+.settings-nudge-consent h3 {
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
 .settings-device-grid article {
   display: grid;
   grid-template-columns: auto 1fr;

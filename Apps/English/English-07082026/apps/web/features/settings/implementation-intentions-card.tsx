@@ -5,7 +5,9 @@ import { CalendarClock, Plus, Trash2 } from "lucide-react";
 import {
 	IMPLEMENTATION_INTENTION_COPY,
 	loadProfile,
+	NUDGE_COPY,
 	replaceImplementationIntentions,
+	replaceNudgeOptIn,
 	saveProfile,
 	validateImplementationIntentions,
 	type ImplementationIntention,
@@ -22,8 +24,13 @@ import {
 } from "@/components/ui/card";
 
 const copy = IMPLEMENTATION_INTENTION_COPY.en;
-const triggerOptions = Object.keys(copy.triggers) as ImplementationIntentionTrigger[];
-const actionOptions = Object.keys(copy.actions) as ImplementationIntentionAction[];
+const nudgeCopy = NUDGE_COPY.en;
+const triggerOptions = Object.keys(
+	copy.triggers,
+) as ImplementationIntentionTrigger[];
+const actionOptions = Object.keys(
+	copy.actions,
+) as ImplementationIntentionAction[];
 
 function makeDraft(index: number): ImplementationIntention {
 	return {
@@ -36,8 +43,11 @@ function makeDraft(index: number): ImplementationIntention {
 }
 
 export function ImplementationIntentionsCard() {
-	const [intentions, setIntentions] = React.useState<ImplementationIntention[]>([]);
+	const [intentions, setIntentions] = React.useState<ImplementationIntention[]>(
+		[],
+	);
 	const [ready, setReady] = React.useState(false);
+	const [nudgeOptIn, setNudgeOptIn] = React.useState(false);
 	const [status, setStatus] = React.useState("");
 
 	React.useEffect(() => {
@@ -46,6 +56,7 @@ export function ImplementationIntentionsCard() {
 			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
 		});
 		setIntentions(profile.intentions.map((intention) => ({ ...intention })));
+		setNudgeOptIn(profile.nudgeOptIn);
 		setReady(true);
 	}, []);
 
@@ -82,14 +93,29 @@ export function ImplementationIntentionsCard() {
 			now,
 			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
 		});
-		const next = replaceImplementationIntentions(profile, intentions, now);
-		saveProfile(window.localStorage, next);
+		const intentionsNext = replaceImplementationIntentions(
+			profile,
+			intentions,
+			now,
+		);
+		const next = replaceNudgeOptIn(intentionsNext, nudgeOptIn, now);
+		try {
+			saveProfile(window.localStorage, next);
+		} catch {
+			setStatus("This browser blocked local storage. Nothing was changed.");
+			return;
+		}
 		setIntentions(next.intentions.map((intention) => ({ ...intention })));
-		setStatus(copy.saved);
+		setStatus(
+			`${copy.saved} ${nudgeOptIn ? nudgeCopy.savedOn : nudgeCopy.savedOff}`,
+		);
 	}
 
 	return (
-		<Card data-testid="implementation-intentions-onboarding" dir={copy.direction}>
+		<Card
+			data-testid="implementation-intentions-onboarding"
+			dir={copy.direction}
+		>
 			<CardHeader>
 				<p className="settings-intention-eyebrow">{copy.eyebrow}</p>
 				<CardTitle>
@@ -117,7 +143,8 @@ export function ImplementationIntentionsCard() {
 								<select
 									aria-label={`${copy.trigger} ${index + 1}`}
 									onChange={(event) => {
-										const trigger = event.target.value as ImplementationIntentionTrigger;
+										const trigger = event.target
+											.value as ImplementationIntentionTrigger;
 										updateIntention(intention.id, {
 											trigger,
 											triggerLabel: trigger === "time" ? "18:00" : "",
@@ -153,7 +180,8 @@ export function ImplementationIntentionsCard() {
 									aria-label={`${copy.action} ${index + 1}`}
 									onChange={(event) =>
 										updateIntention(intention.id, {
-											action: event.target.value as ImplementationIntentionAction,
+											action: event.target
+												.value as ImplementationIntentionAction,
 										})
 									}
 									value={intention.action}
@@ -171,7 +199,9 @@ export function ImplementationIntentionsCard() {
 								<input
 									checked={intention.active}
 									onChange={(event) =>
-										updateIntention(intention.id, { active: event.target.checked })
+										updateIntention(intention.id, {
+											active: event.target.checked,
+										})
 									}
 									type="checkbox"
 								/>
@@ -180,7 +210,9 @@ export function ImplementationIntentionsCard() {
 							<Button
 								onClick={() => {
 									setIntentions((current) =>
-										current.filter((candidate) => candidate.id !== intention.id),
+										current.filter(
+											(candidate) => candidate.id !== intention.id,
+										),
 									);
 									setStatus("");
 								}}
@@ -195,22 +227,55 @@ export function ImplementationIntentionsCard() {
 				))}
 
 				<p className="settings-intention-privacy">{copy.privacy}</p>
+				<section
+					className="settings-nudge-consent"
+					aria-labelledby="nudge-settings-title-en"
+				>
+					<h3 id="nudge-settings-title-en">{nudgeCopy.settingsTitle}</h3>
+					<label className="settings-toggle">
+						<input
+							checked={nudgeOptIn}
+							onChange={(event) => {
+								setNudgeOptIn(event.target.checked);
+								setStatus("");
+							}}
+							type="checkbox"
+						/>
+						<span>
+							<strong>{nudgeCopy.optInLabel}</strong>
+							<small>{nudgeCopy.policy}</small>
+						</span>
+					</label>
+				</section>
 				{!validation.valid ? (
 					<p className="settings-intention-error">
-						{validation.code === "active-count" ? copy.countError : copy.labelError}
+						{validation.code === "active-count"
+							? copy.countError
+							: copy.labelError}
 					</p>
 				) : null}
 				<div className="settings-export-actions">
-					<Button disabled={!ready || intentions.length >= 5} onClick={addIntention} variant="outline">
+					<Button
+						disabled={!ready || intentions.length >= 5}
+						onClick={addIntention}
+						variant="outline"
+					>
 						<Plus aria-hidden className="size-4" />
 						{copy.add}
 					</Button>
-					<Button disabled={!ready || !validation.valid} onClick={saveIntentions}>
+					<Button
+						disabled={!ready || !validation.valid}
+						onClick={saveIntentions}
+					>
 						{copy.save}
 					</Button>
 				</div>
 				{status ? (
-					<p aria-live="polite" className="settings-export-status" role="status">
+					<p
+						aria-live="polite"
+						className="settings-export-status"
+						role="status"
+					>
 						{status}
 					</p>
 				) : null}

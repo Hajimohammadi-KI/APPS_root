@@ -117,7 +117,7 @@ test("optionale Messung ist eingewilligt, datensparsam, widerrufbar und löschba
   });
 });
 
-test("optionale Wenn-dann-Pläne sind tastaturbedienbar, lokal und senden keinen Nudge", async ({
+test("optionale Wenn-dann-Pläne sind tastaturbedienbar, lokal und zeigen standardmäßig keinen Hinweis", async ({
   page,
 }) => {
   await page.goto("/einstellungen");
@@ -170,16 +170,18 @@ test("optionale Wenn-dann-Pläne sind tastaturbedienbar, lokal und senden keinen
       intentions: profile.intentions,
       nudgeOptIn: profile.nudgeOptIn,
       hasStreak: Boolean(profile.streak),
-      nudgeEventKeys: Object.keys(window.localStorage).filter((key) =>
-        /nudge.*(?:event|shown|action)/i.test(key),
-      ),
+      nudgeEvents: JSON.parse(
+        window.localStorage.getItem("adherence-nudge-events-v1") ?? "[]",
+      ) as Array<{ type?: string }>,
     };
   });
   expect(local.intentions).toHaveLength(2);
   expect(local.intentions?.[0]?.triggerLabel).toBe("Nach dem Frühstück");
   expect(local.nudgeOptIn).toBe(false);
   expect(local.hasStreak).toBe(true);
-  expect(local.nudgeEventKeys).toEqual([]);
+  expect(local.nudgeEvents.every((event) => event.type === "evaluated")).toBe(
+    true,
+  );
 
   await page.reload();
   await expect(onboarding.getByRole("group", { name: "Plan 2" })).toBeVisible();
@@ -207,4 +209,126 @@ test("optionale Wenn-dann-Pläne sind tastaturbedienbar, lokal und senden keinen
       ),
     ).toBe(true);
   }
+});
+
+test("geschützter Hinweis braucht lokales Opt-in und stiehlt keinen Fokus", async ({
+  page,
+}) => {
+  await page.clock.setFixedTime(new Date("2026-08-22T10:00:00.000Z"));
+  await page.goto("/einstellungen");
+  const onboarding = page.getByTestId("implementation-intentions-onboarding");
+  const add = onboarding.getByRole("button", { name: "Plan hinzufügen" });
+  const optIn = onboarding.getByRole("checkbox", {
+    name: "Gelegentlich einen Hinweis in dieser App zeigen, wenn einer meiner Zeitpläne passt.",
+  });
+  await expect(optIn).not.toBeChecked();
+  await optIn.check();
+  await onboarding
+    .getByRole("button", { name: "Pläne auf diesem Gerät speichern" })
+    .click();
+  expect(
+    await page.evaluate(
+      () =>
+        (
+          JSON.parse(
+            window.localStorage.getItem("adherence-core-v1") ?? "{}",
+          ) as { nudgeOptIn?: boolean }
+        ).nudgeOptIn,
+    ),
+  ).toBe(true);
+  const localTime = await page.evaluate(() => {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).formatToParts(new Date());
+    const value = (type: "hour" | "minute") =>
+      parts.find((part) => part.type === type)?.value ?? "00";
+    return `${value("hour")}:${value("minute")}`;
+  });
+  await page.evaluate((triggerLabel) => {
+    const profile = JSON.parse(
+      window.localStorage.getItem("adherence-core-v1") ?? "{}",
+    ) as Record<string, unknown>;
+    profile.intentions = [
+      {
+        id: "e2e-time-plan",
+        trigger: "time",
+        triggerLabel,
+        action: "full_session",
+        active: true,
+      },
+      {
+        id: "e2e-review-plan",
+        trigger: "time",
+        triggerLabel,
+        action: "review_only",
+        active: true,
+      },
+    ];
+    profile.nudgeOptIn = false;
+    window.localStorage.setItem("adherence-core-v1", JSON.stringify(profile));
+    window.localStorage.removeItem("adherence-nudge-events-v1");
+  }, localTime);
+
+  await add.focus();
+  await page.evaluate(() => window.dispatchEvent(new Event("pageshow")));
+  await expect(page.getByTestId("guarded-in-app-nudge")).toHaveCount(0);
+
+  await page.evaluate(() => {
+    const profile = JSON.parse(
+      window.localStorage.getItem("adherence-core-v1") ?? "{}",
+    ) as Record<string, unknown>;
+    profile.nudgeOptIn = true;
+    window.localStorage.setItem("adherence-core-v1", JSON.stringify(profile));
+    window.dispatchEvent(new Event("pageshow"));
+  });
+  const nudge = page.getByTestId("guarded-in-app-nudge");
+  await expect(nudge).toBeVisible();
+  await expect(
+    nudge.getByRole("heading", {
+      name: "Dein geplantes Lernfenster ist geöffnet",
+    }),
+  ).toBeVisible();
+  await expect(nudge.getByRole("status")).toContainText(
+    "Wäre ein kleiner Anfang hilfreich?",
+  );
+  expect(
+    await page.evaluate(() => document.activeElement?.textContent),
+  ).toContain("Plan hinzufügen");
+
+  for (const viewport of [
+    { width: 800, height: 1280 },
+    { width: 412, height: 915 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await expect(nudge).toBeVisible();
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth <=
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+  }
+
+  await nudge
+    .getByRole("button", { name: "Jetzt nicht — ohne Nachteil" })
+    .click();
+  await expect(nudge).toHaveCount(0);
+  const events = await page.evaluate(
+    () =>
+      JSON.parse(
+        window.localStorage.getItem("adherence-nudge-events-v1") ?? "[]",
+      ) as Array<{ type?: string; learningOutcome?: string }>,
+  );
+  expect(events.map((event) => event.type)).toEqual(
+    expect.arrayContaining(["evaluated", "shown", "dismissed"]),
+  );
+  expect(
+    events.every((event) => event.learningOutcome === "not-evaluated"),
+  ).toBe(true);
+  expect(JSON.stringify(events)).not.toMatch(
+    /triggerLabel|transcript|email|audio/i,
+  );
 });

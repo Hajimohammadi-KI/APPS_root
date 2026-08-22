@@ -3,6 +3,7 @@ import { AppStoreProvider } from "@/features/store/app-store";
 import { ContextualHoverHelp } from "@/features/components/contextual-hover-help";
 import { GlobalReadingRuler } from "@/features/components/global-reading-ruler";
 import { DeepLSelectionTranslator } from "@/features/components/deepl-selection-translator";
+import { GuardedNudge } from "@/features/adherence/guarded-nudge";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -57,6 +58,7 @@ export default function RootLayout({
           <GlobalReadingRuler />
           <ContextualHoverHelp />
           <DeepLSelectionTranslator />
+          <GuardedNudge />
         </AppStoreProvider>
       </body>
     </html>

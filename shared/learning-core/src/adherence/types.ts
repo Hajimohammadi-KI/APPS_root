@@ -75,6 +75,62 @@ export interface AdherenceProfileV1 {
   readonly nudgeOptIn: boolean;
 }
 
+export type NudgeGuardCode =
+  | "eligible"
+  | "ineligible-trigger"
+  | "trigger-cooldown"
+  | "quiet-hours"
+  | "low-readiness"
+  | "review-backlog-cap"
+  | "opted-out"
+  | "daily-cap"
+  | "weekly-cap";
+
+export type NudgeEventType = "evaluated" | "shown" | "accepted" | "dismissed";
+
+export interface NudgeEventV1 {
+  readonly version: 1;
+  readonly id: string;
+  readonly type: NudgeEventType;
+  readonly triggerId: string;
+  readonly occurredAt: string;
+  readonly localDate: string;
+  readonly localWeek: string;
+  readonly decision: NudgeGuardCode;
+  readonly engagementOnly: true;
+  readonly learningOutcome: "not-evaluated";
+}
+
+export interface NudgePolicy {
+  readonly eligibleWindowMinutes: number;
+  readonly perTriggerCooldownHours: number;
+  readonly quietHoursStartMinute: number;
+  readonly quietHoursEndMinute: number;
+  readonly minimumReadiness: number;
+  readonly reviewBacklogCap: number;
+  readonly dailyCap: number;
+  readonly weeklyCap: number;
+}
+
+export interface NudgeEvaluationInput {
+  readonly trigger: ImplementationIntention | null;
+  readonly now: Date | string;
+  readonly timeZone: string;
+  readonly readiness: number;
+  readonly reviewBacklog: number;
+  readonly optedIn: boolean;
+  readonly history: readonly NudgeEventV1[];
+  readonly policy?: NudgePolicy;
+}
+
+export interface NudgeEvaluation {
+  readonly eligible: boolean;
+  readonly code: NudgeGuardCode;
+  readonly triggerId: string | null;
+  readonly evaluatedAt: string;
+  readonly learningOutcome: "not-evaluated";
+}
+
 export interface ShadowEntry {
   readonly date: string;
   readonly planDuration: PlanDuration;

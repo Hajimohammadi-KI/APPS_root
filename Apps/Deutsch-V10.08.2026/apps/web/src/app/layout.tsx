@@ -5,6 +5,7 @@ import "./globals.css";
 import { AppShell } from "@/components/app-shell";
 import { Providers } from "@/components/providers";
 import { DeepLSelectionTranslator } from "@/components/deepl-selection-translator";
+import { GuardedNudge } from "@/features/adherence/guarded-nudge";
 
 export const metadata: Metadata = {
   title: {
@@ -61,6 +62,7 @@ export default function RootLayout({
         <Providers>
           <AppShell>{children}</AppShell>
           <DeepLSelectionTranslator />
+          <GuardedNudge />
         </Providers>
       </body>
     </html>

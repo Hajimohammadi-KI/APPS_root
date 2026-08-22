@@ -219,6 +219,20 @@ fieldset.settings-row {
   font-weight: 700;
 }
 
+.settings-nudge-consent {
+  display: grid;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, #6d28d9 28%, var(--border));
+  border-radius: 14px;
+  background: color-mix(in srgb, #6d28d9 5%, var(--background));
+  padding: 12px 14px;
+}
+
+.settings-nudge-consent h3 {
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
 @media (max-width: 560px) {
   .settings-heading {
     align-items: stretch;
@@ -243,4 +257,3 @@ fieldset.settings-row {
     grid-template-columns: minmax(0, 1fr);
   }
 }
-

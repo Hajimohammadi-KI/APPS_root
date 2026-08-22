@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>رودمپ ساده‌سازی UX</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
@@ -652,10 +657,12 @@
     }
   }
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow">UX SIMPLIFICATION ROADMAP · UPDATED 2026-08-22</div>
+    <div class="eyebrow">UX SIMPLIFICATION ROADMAP · v1.18 · UPDATED 2026-08-22</div>
     <h1>رودمپ ساده‌سازی تجربهٔ کاربری</h1>
     <p class="lede">
       برای اپ‌های آموزش انگلیسی و آلمانی. این نسخه علاوه بر سادگی رابط،
@@ -668,7 +675,10 @@
       <span class="app-tag de"><span class="dot"></span>Deutsch-V10.08.2026</span>
     </div>
     <p style="margin:12px 0 0; color:var(--ink-dim); font-size:13px;">
-      نسخهٔ وب فعال: <a href="https://automaticity-ux-roadmap-elahe.vercel.app">automaticity-ux-roadmap-elahe.vercel.app</a>
+      نسخهٔ وب فعال: <a href="https://automaticity-ux-roadmap-elahe.vercel.app">automaticity-ux-roadmap-elahe.vercel.app</a> ·
+      اپ‌ها: <a href="https://english-grammar-automaticity-pwa.vercel.app/">English</a> ·
+      <a href="https://deutschflow-grammar.vercel.app/">Deutsch</a> ·
+      <a href="https://research-pdf-studio.vercel.app/">PDF Reader</a>
     </p>
     <div class="progress-row">
       <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
@@ -730,8 +740,24 @@
       <span>Implementation Intentions در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/28">PR #28</a> با merge <code class="path">32e8a8c</code>، دو CI سبز و Settings E2E هر دو زبان ادغام شد. Issue #6 بسته و Issue #7 برای nudge رضایت‌محور باز است؛ داده local-only است و هیچ nudge، telemetry یا ادعای mastery تولید نمی‌شود.</span>
     </div>
     <div class="hist-entry">
-      <span class="hist-date">2026-08-22 00:32 CEST</span>
-      <span>این نسخه با وضعیت Vercel Ready روی <a href="https://automaticity-ux-roadmap-elahe.vercel.app">automaticity-ux-roadmap-elahe.vercel.app</a> منتشر شد. Alias قدیمی در Scope دیگری است و حساب فعلی امکان انتقال آن را ندارد.</span>
+      <span class="hist-date">2026-08-22</span>
+      <span>Guarded Nudges در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/30">PR #30</a> با opt-in صریح، quiet hours، cooldown، سقف قطعی و event محلی ادغام و Issue #7 بسته شد. Forced Output Booster نیز در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/32">PR #32</a> به برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو زبان متصل شد؛ پیش‌فرض خاموش است و هیچ completion را mastery نمی‌نامد.</span>
+    </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-22</span>
+      <span>FSRS-6 shadow در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/34">PR #34</a> با بردار رسمی، ۱٬۰۰۰ replay و rollback ادغام شد؛ scheduler فعلی source of truth ماند. مسیرهای canonical و E2E آلمانی در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/36">PR #36</a> تثبیت شدند.</span>
+    </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-22</span>
+      <span>DeutschFlow 20.8.25 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/38">PR #38</a> و English 27.3.18 با Grammar canonical و PDF Reader یکپارچه در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/47">PR #47</a> چرخهٔ fresh/update/repair و حفظ داده را گذراندند. این نتیجه شواهد release است، نه outcome یادگیری.</span>
+    </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-22 15:00 CEST</span>
+      <span>در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/50">PR #50</a> با merge <code class="path">02e8781</code>، Research PDF Studio به Vercel متصل شد و هر دو اپ وب مسیر Reader واقعی گرفتند. English، German و Reader CI سبز شدند؛ ریشه و مسیرهای کلیدی HTTP 200، Reader redirect برابر 307، و browser QA در 800×1280 بدون overflow یا console error بود.</span>
+    </div>
+    <div class="hist-entry">
+      <span class="hist-date">2026-08-22 15:05 CEST</span>
+      <span>نسخهٔ v1.18 با وضعیت Vercel Ready و محتوای hash-identical روی <a href="https://automaticity-ux-roadmap-elahe.vercel.app">automaticity-ux-roadmap-elahe.vercel.app</a> منتشر شد. تلاش مستقیم برای Alias دقیق <code class="path">automaticity-ux-roadmap.vercel.app</code> با خطای «already in use» رد شد؛ آن دامنه در Scope دیگری است و محتوای legacy آن نسخهٔ جاری نیست.</span>
     </div>
     <div class="src-note">
       منبع متنی همراه: <code class="path">docs/roadmaps/UX-SIMPLIFICATION-ROADMAP-2026-08-20.md</code><br>
@@ -865,12 +891,12 @@
       }),
     },
     {
-      id: "p6", phase: "فاز ۶", title: "Mediation و Forced Output", status: "pending", when: "۳ تا ۸ هفته",
+      id: "p6", phase: "فاز ۶", title: "Mediation و Forced Output", status: "active", when: "Booster کامل · human reviewِ Mediation باقی است",
       summary: "پوشش CEFR کامل‌تر و دوز تولید واقعی زیر فشار زمان",
       body: structuredPhase({
-        effect: `<p>زبان‌آموز علاوه بر گرامر، اطلاعات را خلاصه، بازگو یا توضیح می‌دهد و ساختار هدف را زیر فشار زمانی تولید می‌کند.</p>`,
+        effect: `<p>زبان‌آموز علاوه بر گرامر، اطلاعات را خلاصه، بازگو یا توضیح می‌دهد و ساختار هدف را زیر فشار زمانی تولید می‌کند.</p><p><strong>وضعیت:</strong> Forced Output Booster در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/32">PR #32</a> برای هر دو زبان ادغام شده، opt-in و پیش‌فرض خاموش است و ۳ تا ۵ دور ۳۰ تا ۹۰ ثانیه‌ای فقط از سهم automatization استفاده می‌کند. draftهای Mediation هنوز در quarantine منتظر دو بازبین انسانی‌اند.</p>`,
         dependency: `<p>محتوای QA-passed فاز ۵ و قرارداد evidence فاز ۴.</p>`,
-        technical: `<ul><li>چهار بُعد CEFR-CV: Reception، Production، Interaction، Mediation</li><li>vertical slice: چهار descriptor در B1، هرکدام guided و independent، برای هر زبان</li><li>Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای در برنامه‌های ۱۵/۳۰/۴۵ دقیقه</li><li>fallback تایپ همیشه موجود؛ ASR فقط transcript و سیگنال قابل اندازه‌گیری</li></ul>`,
+        technical: `<ul><li>چهار بُعد CEFR-CV: Reception، Production، Interaction، Mediation</li><li>vertical slice: چهار descriptor در B1، هرکدام guided و independent، برای هر زبان</li><li>✅ Booster محدود با ۳ تا ۵ دور ۳۰ تا ۹۰ ثانیه‌ای در برنامه‌های ۱۵/۳۰/۴۵ دقیقه</li><li>✅ fallback تایپ، سقف ذخیره‌سازی و منع mastery؛ ASR فقط transcript و سیگنال قابل اندازه‌گیری</li></ul>`,
         acceptance: `<p>پاسخ واقعی ذخیره شود و latency نخستین کلمه، استفادهٔ درست از ساختار، self-repair و novel transfer سنجیده شود. اثر Booster تا مطالعهٔ مقایسه‌ای، ادعای اثبات‌شده نیست.</p>`
       }),
     },
@@ -880,17 +906,17 @@
       body: structuredPhase({
         effect: `<p>بازخورد روشن می‌گیرد و در روز کم‌انرژی به‌جای ترک کامل، جلسه‌ای کوچک و معنی‌دار دارد.</p>`,
         dependency: `<p>event contract فاز ۴ و سیگنال‌های گفتار/محتوای معتبر فازهای ۵ و ۶.</p>`,
-        technical: `<ol><li>Rule Engine + FSRS برای زمان‌بندی و تصمیم شواهد</li><li>LanguageTool + قواعد اختصاصی + UD برای پیشنهاد</li><li>ASR فقط transcript</li><li>LLM فقط generation/explanation با خروجی JSON؛ نه mastery</li><li>✅ Implementation Intentions در PR #28؛ local-only و بدون nudge/event</li><li>بعدی: micro-goal، comeback و nudge روز ۳/۷/۱۴ فقط با opt-in و cooldown در Issue #7</li><li>IndexedDB و صف همگام‌سازی برای PWA آفلاین‌محور</li></ol>`,
+        technical: `<ol><li>Rule Engine برای تصمیم شواهد؛ LLM/ASR هرگز mastery را تعیین نمی‌کنند</li><li>LanguageTool + قواعد اختصاصی + UD برای پیشنهاد</li><li>✅ Implementation Intentions در PR #28؛ local-only</li><li>✅ Guarded Nudges در PR #30؛ opt-in، quiet hours، cooldown، hard caps و بدون push/email</li><li>✅ FSRS-6 shadow در PR #34؛ default-off، rollback و scheduler فعلی به‌عنوان source of truth</li><li>بعدی: prospective rollout رضایت‌محور و مقایسهٔ retention/workload؛ تا آن زمان outcome برابر N/A</li><li>IndexedDB و صف همگام‌سازی برای PWA آفلاین‌محور</li></ol>`,
         acceptance: `<p>تصمیم ارتقای سطح deterministic و audit-able باشد؛ خروجی LLM قابل ردکردن و schema-valid باشد؛ نوتیفیکیشن بدون رضایت ارسال نشود؛ conversion نوتیفیکیشن جدا از outcome یادگیری گزارش شود.</p>`
       }),
     },
     {
-      id: "p8", phase: "فاز ۸", title: "Shared & Accessible Scale", status: "pending", when: "مستمر پس از vertical slice",
+      id: "p8", phase: "فاز ۸", title: "Shared & Accessible Scale", status: "active", when: "وب responsive منتشر شد · QA سخت‌افزار واقعی باقی است",
       summary: "گسترش تدریجی هستهٔ مشترک، نه big-bang rewrite",
       body: structuredPhase({
-        effect: `<p>English و Deutsch تجربهٔ سازگار دارند و وب در ویندوز، تبلت و اندروید قابل استفاده می‌ماند.</p>`,
+        effect: `<p>English و Deutsch تجربهٔ سازگار دارند و وب در ویندوز، تبلت و اندروید قابل استفاده می‌ماند.</p><p><strong>وضعیت:</strong> هر دو اپ و Research PDF Studio در PR #50 و Vercel عمومی شدند. QA مرورگر در 800×1280 بدون overflow یا console error پاس شد؛ Start/Home در Shellها باقی است و صفحات PDF/Notebook به Reader واقعی می‌رسند. Screen Reader و میکروفون سخت‌افزاری واقعی همچنان N/A هستند.</p>`,
         dependency: `<p>فقط قابلیت‌هایی که در هر دو زبان با vertical slice ثابت شده‌اند مشترک می‌شوند.</p>`,
-        technical: `<ul><li>انتقال تدریجی domain logic و UI primitives به learning-core</li><li>design tokens به‌صورت import، نه دو کپی CSS</li><li>reflow در ۳۲۰px، focus visible، ترتیب کیبورد و touch target حداقل ۴۴×۴۴</li><li>label میکروفون، recovery خطا و Screen Reader</li><li>LTR برای English/Deutsch و RTL برای فارسی</li></ul>`,
+        technical: `<ul><li>انتقال تدریجی domain logic و UI primitives به learning-core</li><li>design tokens به‌صورت import، نه دو کپی CSS</li><li>✅ وب عمومی English/Deutsch و Reader با اتصال نسخه‌دار</li><li>✅ جلوگیری از probe لوکال در وب عمومی و full navigation برای صفحات compatibility آلمانی</li><li>reflow در ۳۲۰px، focus visible، ترتیب کیبورد و touch target حداقل ۴۴×۴۴</li><li>label میکروفون، recovery خطا و Screen Reader</li><li>LTR برای English/Deutsch و RTL برای فارسی</li></ul>`,
         acceptance: `<p>parity contract هر دو اپ، E2E در سه viewport و آزمون دستی Screen Reader/میکروفون روی سخت‌افزار واقعی. مورد آزمون‌نشده N/A گزارش می‌شود.</p>`
       }),
     },
@@ -966,3 +992,5 @@
   document.getElementById("progress-fill").style.width = (done / phases.length) * 100 + "%";
   document.getElementById("progress-label").textContent = `${done} / ${phases.length} فاز انجام‌شده`;
 </script>
+</body>
+</html>

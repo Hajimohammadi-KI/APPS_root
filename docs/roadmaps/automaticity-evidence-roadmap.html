@@ -443,13 +443,11 @@
     </nav>
   </div>
 </div>
-</body>
-</html>
 
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.10 · 2026-08-22</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.11 · 2026-08-22</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
       <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
@@ -477,7 +475,8 @@
         <tr><td>هستهٔ مشترک learning-core</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز merge شد</td><td>merge <code>ed7e73f</code> و <code>shared/learning-core</code></td></tr>
         <tr><td>SKILL-001 Adherence Core</td><td>روی <code>main</code> ادغام و فقط به‌صورت shadow به برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز اعمال/ذخیره نمی‌شود</td><td><code>shared/learning-core/src/adherence/shadow-runner.ts</code></td></tr>
         <tr><td>تست اختصاصی adherence</td><td>۳۶ تست، ۶۹٬۲۶۲ assertion پس از Guarded Nudges</td><td><code>bun run test:adherence-core</code></td></tr>
-        <tr><td>کل تست learning-core</td><td>۶۵ تست، ۶۹٬۳۵۶ assertion پس از PR #30</td><td><code>bun run test</code></td></tr>
+        <tr><td>کل تست learning-core</td><td>۷۵ تست، ۷۱٬۶۲۵ assertion پس از PR #32</td><td><code>bun run test</code></td></tr>
+        <tr><td>تست اختصاصی Forced Output Booster</td><td>۱۰ تست و ۲٬۲۶۹ assertion؛ E2E انگلیسی ۲/۲ و آلمانی ۲/۲</td><td><code>bun run test:booster</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126" class="mono">run 32544972126</a></td></tr>
         <tr><td>TypeScript و mirror parity</td><td>تأییدشده</td><td><code>bun run typecheck</code></td></tr>
         <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
         <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از تست کامل محلی و CI لینوکس merge شد</td><td>merge <code>b3fbc07</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
@@ -492,6 +491,7 @@
         <tr><td>بازبینی انسانی پایلوت G4</td><td>هنوز انجام نشده؛ هر دو draft با <code>humanReviewed=false</code> و <code>awaiting-human-review</code> از daily plan حذف می‌شوند</td><td><strong>N/A — Gate G4 هنوز عبور نکرده است</strong></td></tr>
         <tr><td>Implementation Intentions</td><td>انتخاب اختیاری ۰ یا ۲ تا ۵ برنامهٔ زمان/مکان در Settings هر دو زبان، ذخیرهٔ local-only، متن EN/DE/FA و حذف/بازیابی پس از reload ادغام شد؛ هیچ nudge یا event ساخته نمی‌شود</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/28" class="mono">PR #28</a> · merge <code>32e8a8c</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173665" class="mono">Core CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173644" class="mono">German CI</a></td></tr>
         <tr><td>Guarded in-app nudges</td><td>در هر دو اپ با opt-in صریح و پیش‌فرض خاموش، ترتیب guard قطعی، quiet hours، cooldown، سقف روزانه/هفتگی، رویداد محلی کمینه و متن EN/DE/FA ادغام شد؛ push/email و ادعای outcome وجود ندارد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/30" class="mono">PR #30</a> · merge <code>4e08775</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941048" class="mono">Core/Content CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941037" class="mono">Browser CI</a> · Issue #7 بسته</td></tr>
+        <tr><td>Forced Output Booster</td><td>در هر دو اپ با <code>booster_mode</code> پیش‌فرض خاموش، ۳ تا ۵ دور ۳۰ تا ۹۰ ثانیه‌ای فقط از سهم <code>automatization</code>، ضبط واقعی یا fallback تایپ، metadata کمینه و منع قطعی mastery/automaticity ادغام شد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/32" class="mono">PR #32</a> · merge <code>1c6fb95</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126" class="mono">Core/Browser CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972169" class="mono">German CI</a> · Issue #4 بسته</td></tr>
         <tr><td>AI و دیتاست runtime</td><td>هنوز نباید وارد runtime یا تصمیم mastery شود</td><td>ingestion محتوای پایلوت وابسته به تکمیل بازبینی انسانی G4 است</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
       </tbody>
@@ -688,21 +688,25 @@ flowchart LR
   <section class="phase" id="p4">
     <div class="phase-head">
       <div class="phase-title-row"><span class="phase-num">۴</span><h3>Forced Output Booster</h3></div>
-      <span class="chip pending"><span class="dot"></span>آماده برای شاخهٔ مستقل</span>
+      <span class="chip pass"><span class="dot"></span>کامل · PR #32</span>
     </div>
-    <div class="phase-tags">برآورد: ۱ تا ۲ sprint · وابستگی: <code>G2</code> + محتوای authored معتبر · Issue: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></div>
+    <div class="phase-tags">merge <code>1c6fb95</code> · شش check سبز · وابستگی: <code>G2</code> + محتوای authored معتبر · <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">Issue #4</a> بسته · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/32" class="mono">PR #32</a></div>
+    <div class="callout final"><span class="label">خروجی تأییدشدهٔ فاز ۴</span><p>feature flag فقط با <code>booster_mode=true</code> و <code>?mode=booster</code> فعال می‌شود و پیش‌فرض خاموش است. ۱۰ تست قرارداد، ۲ E2E انگلیسی، ۲ E2E آلمانی و build هر دو اپ پاس شدند. کیفیت میکروفون واقعی، latency سخت‌افزاری، ASR و اثر یادگیری همچنان <strong>N/A — هنوز به‌اندازهٔ کافی تأیید نشده</strong> هستند.</p></div>
     <ul>
-      <li>۳ تا ۶ دور کوتاه ۳۰ تا ۶۰ ثانیه‌ای، پشت feature flag — دورهای Recall، Automate Aloud و Transfer</li>
+      <li>۳ تا ۵ دور کوتاه ۳۰ تا ۹۰ ثانیه‌ای: picture description، situation reaction، continuation، transformation و mini-argument</li>
       <li>fallback تایپ برای نبود میکروفون یا نیاز دسترس‌پذیری</li>
+      <li>ضبط با <code>MediaRecorder</code> و Blob محلی در IndexedDB؛ متن خام و صوت وارد <code>localStorage</code> نمی‌شوند</li>
+      <li>زمان فقط از بلوک موجود <code>automatization</code> گرفته می‌شود و بلوک ششم ساخته نمی‌شود</li>
       <li>برنامهٔ ۴۵ دقیقه‌ای فقط نسخهٔ کشیدهٔ ۱۵ دقیقه‌ای نباشد: گفتار طولانی‌تر، نوشتن مستقل و بیش از یک زمینهٔ انتقال</li>
       <li>سختی و حجم بر اساس مدت انتخابی تغییر کند، اما سطح فقط با کیفیت شواهد ارتقا یابد</li>
     </ul>
     <div class="exit-box">
       <span class="label">معیار خروج</span>
       <ul>
-        <li>تلاش واقعی ذخیره شود؛ latency اولین کلمه و self-repair قابل ثبت باشد</li>
-        <li>واژهٔ کلیدی به‌تنهایی جواب غلط را قبول نکند</li>
-        <li>هیچ ادعای «صدها تکرار لازم است» به‌عنوان آستانهٔ جهانی در کد hard-code نشود</li>
+        <li>✅ تلاش واقعی با attempt/round/plan/target ID مرتبط ذخیره می‌شود؛ latency اولین تولید و self-repair در قرارداد قابل ثبت است</li>
+        <li>✅ واژهٔ کلیدی یا fragment ناقص به‌تنهایی structure use محسوب نمی‌شود</li>
+        <li>✅ composite در <code>0..1</code> می‌ماند و یک Booster هرگز mastery، ارتقای سطح یا اثبات automaticity نمی‌سازد</li>
+        <li>✅ هیچ آستانهٔ جهانی «صدها تکرار» در کد hard-code نشده است</li>
       </ul>
     </div>
   </section>
@@ -830,7 +834,7 @@ flowchart LR
         <tr><td class="mono" style="text-align:center">6</td><td>Content QA و Mediation pilot</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/26" class="mono">PR #26</a></td><td>🟡 زیرساخت merge <code>8edaba2</code>؛ human review و agreement هنوز N/A</td></tr>
         <tr><td class="mono" style="text-align:center">7</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/28" class="mono">PR #28</a></td><td>✅ merge <code>32e8a8c</code>؛ Issue #6 بسته</td></tr>
         <tr><td class="mono" style="text-align:center">8</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/30" class="mono">PR #30</a></td><td>✅ merge <code>4e08775</code>؛ Issue #7 بسته، consent/cooldown و hard caps در CI تأیید شد</td></tr>
-        <tr><td class="mono" style="text-align:center">9</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></td><td>G2 و authored content</td></tr>
+        <tr><td class="mono" style="text-align:center">9</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/32" class="mono">PR #32</a></td><td>✅ merge <code>1c6fb95</code>؛ Issue #4 بسته و شش check سبز</td></tr>
         <tr><td class="mono" style="text-align:center">10</td><td>FSRS shadow migration</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></td><td>G2</td></tr>
         <tr><td class="mono" style="text-align:center">11</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>
         <tr><td class="mono" style="text-align:center">12</td><td>Consented pilot analytics</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/10" class="mono">#10</a></td><td>G5 و دادهٔ چندکاربره</td></tr>
@@ -868,7 +872,7 @@ flowchart LR
 
   <div class="callout final">
     <span class="label">اقدام بعدی واحد</span>
-    <p style="margin:0;">کار اجرایی بعدی <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">Issue #4</a> در شاخهٔ مستقل است: Forced Output Booster فقط پشت feature flag و با authored content معتبر. هم‌زمان G4 بدون دو بازبین انسانی مستقل قابل عبور نیست؛ تا دریافت آن reviewها، release array خالی و learning outcome برابر N/A باقی می‌ماند.</p>
+    <p style="margin:0;">کار اجرایی بعدی <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">Issue #5</a> است: مهاجرت FSRS فقط در Shadow، با محاسبهٔ scheduler فعلی و FSRS در کنار هم، rollback metadata و بدون تغییر برنامهٔ واقعی کاربر. هم‌زمان G4 بدون دو بازبین انسانی مستقل قابل عبور نیست؛ تا دریافت آن reviewها، release array خالی و learning outcome برابر N/A باقی می‌ماند.</p>
   </div>
 
   <footer class="note">
@@ -876,3 +880,5 @@ flowchart LR
   </footer>
 
 </div>
+</body>
+</html>

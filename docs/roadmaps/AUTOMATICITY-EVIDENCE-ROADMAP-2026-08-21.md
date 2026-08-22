@@ -1,7 +1,7 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.10
+**نسخه:** 1.11
 
 **آخرین به‌روزرسانی:** 2026-08-22
 **دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)
@@ -31,7 +31,8 @@
 | هستهٔ مشترک learning-core | PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) پس از بازبینی مستقل و CI سبز merge شد | merge `ed7e73f` و `shared/learning-core` |
 | SKILL-001 Adherence Core | روی `main` ادغام و فقط به‌صورت shadow به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز روی برنامه یا دادهٔ زبان‌آموز اعمال/ذخیره نمی‌شود | `shared/learning-core/src/adherence/shadow-runner.ts` |
 | تست اختصاصی adherence | تأییدشده پس از Guarded Nudges: 36 تست، 69,262 assertion | `bun run test:adherence-core` |
-| کل تست learning-core | تأییدشده پس از PR #30: 65 تست و 69,356 assertion | `bun run test` |
+| کل تست learning-core | تأییدشده پس از PR #32: 75 تست و 71,625 assertion | `bun run test` |
+| تست اختصاصی Forced Output Booster | 10 تست و 2,269 assertion؛ E2E انگلیسی 2/2 و آلمانی 2/2 | `bun run test:booster` و [run 32544972126](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126) |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
@@ -46,6 +47,7 @@
 | بازبینی انسانی پایلوت G4 | هنوز انجام نشده؛ هر دو draft با `humanReviewed=false` و `awaiting-human-review` از daily plan حذف می‌شوند | **N/A — Gate G4 هنوز عبور نکرده است** |
 | Implementation Intentions | انتخاب اختیاری 0 یا 2 تا 5 برنامهٔ زمان/مکان در Settings هر دو زبان، ذخیرهٔ local-only، متن EN/DE/FA و حذف/بازیابی پس از reload ادغام شد؛ هیچ nudge یا event ساخته نمی‌شود | [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28)، merge `32e8a8c`؛ [Core run 32541173665](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173665) و [German run 32541173644](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173644) سبز؛ [Issue #6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) بسته |
 | Guarded in-app nudges | در هر دو اپ با opt-in صریح و پیش‌فرض خاموش، ترتیب guard قطعی، quiet hours، cooldown، سقف روزانه/هفتگی، رویداد محلی کمینه و متن EN/DE/FA ادغام شد؛ push/email و ادعای outcome وجود ندارد | [PR #30](https://github.com/Hajimohammadi-KI/APPS_root/pull/30)، merge `4e08775`؛ [Core/Content run 32542941048](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941048) و [Browser run 32542941037](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32542941037) سبز؛ [Issue #7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) بسته |
+| Forced Output Booster | در هر دو اپ با `booster_mode` پیش‌فرض خاموش، 3 تا 5 دور 30 تا 90 ثانیه‌ای فقط از سهم `automatization`، ضبط واقعی یا fallback تایپ، metadata کمینه و منع قطعی mastery/automaticity ادغام شد | [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32)، merge `1c6fb95`؛ [Core/Browser run 32544972126](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972126) و [German run 32544972169](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32544972169) سبز؛ [Issue #4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) بسته |
 | AI و دیتاست runtime | هنوز نباید وارد runtime یا تصمیم mastery شود | ingestion محتوای پایلوت وابسته به تکمیل بازبینی انسانی G4 است |
 | اثرگذاری روی زبان‌آموز واقعی | دادهٔ کافی وجود ندارد | **N/A تا اجرای پایلوت** |
 
@@ -258,25 +260,34 @@ flowchart LR
 
 ## فاز 4 — Forced Output Booster
 
-**برآورد:** 1 تا 2 sprint
+**وضعیت 2026-08-22:** در [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32) با merge `1c6fb95` و شش check سبز ادغام شد؛ Issue #4 بسته است. feature flag پیش‌فرض خاموش است و فعال‌شدن به `booster_mode=true` همراه `?mode=booster` نیاز دارد. کیفیت میکروفون واقعی، latency سخت‌افزاری، ASR و اثر یادگیری همچنان **N/A — هنوز به‌اندازهٔ کافی تأیید نشده** هستند.
+
+**برآورد اولیه:** 1 تا 2 sprint
 **وابستگی:** G2 و محتوای authored معتبر
-**Issue:** [#4 — Forced-output booster](https://github.com/Hajimohammadi-KI/APPS_root/issues/4)
+**Issue/PR:** [#4 — Forced-output booster](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) و [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32)
 
 ### طراحی محصول
 
-- 3 تا 6 دور کوتاه 30 تا 60 ثانیه‌ای، پشت feature flag؛
-- دورهای Recall، Automate Aloud و Transfer؛
+- 3 تا 5 دور کوتاه 30 تا 90 ثانیه‌ای، پشت feature flag؛
+- picture description، situation reaction، continuation، transformation و mini-argument؛
 - fallback تایپ برای نبود میکروفون یا نیاز دسترس‌پذیری؛
+- ضبط با `MediaRecorder` و ذخیرهٔ Blob در IndexedDB؛ متن خام و صوت وارد
+  `localStorage` نمی‌شوند؛
+- زمان فقط از بلوک موجود `automatization` گرفته می‌شود و بلوک ششمی به برنامه
+  اضافه نمی‌شود؛
 - برنامهٔ 45 دقیقه‌ای فقط نسخهٔ کشیدهٔ 15 دقیقه‌ای نباشد: گفتار طولانی‌تر،
   نوشتن مستقل و بیش از یک زمینهٔ انتقال داشته باشد؛
 - سختی و حجم بر اساس مدت انتخابی تغییر کند، اما سطح فقط با کیفیت شواهد ارتقا یابد.
 
 ### معیار خروج
 
-- تلاش واقعی ذخیره شود؛ latency اولین کلمه و self-repair قابل ثبت باشد؛
-- واژهٔ کلیدی به‌تنهایی جواب غلط را قبول نکند؛
-- Booster قابل ردکردن و flag خاموش باشد؛
-- هیچ ادعای «صدها تکرار لازم است» به‌عنوان آستانهٔ جهانی در کد hard-code نشود.
+- ✅ تلاش واقعی با attempt/round/plan/target ID مرتبط ذخیره می‌شود؛ latency اولین
+  تولید و self-repair در قرارداد قابل ثبت است؛
+- ✅ واژهٔ کلیدی یا fragment ناقص به‌تنهایی structure use محسوب نمی‌شود؛
+- ✅ Booster قابل ردکردن و flag پیش‌فرض خاموش است؛
+- ✅ composite و اجزای آن در بازهٔ `0..1` می‌مانند و هیچ mastery یا ارتقای سطحی
+  از یک Booster ساخته نمی‌شود؛
+- ✅ هیچ آستانهٔ جهانی «صدها تکرار» در کد hard-code نشده است.
 
 ## فاز 5 — مهاجرت FSRS در Shadow
 
@@ -427,7 +438,7 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | 6 | Content QA و Mediation pilot | [#8](https://github.com/Hajimohammadi-KI/APPS_root/issues/8) و [PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26) | 🟡 زیرساخت merge `8edaba2`؛ human review و agreement هنوز N/A |
 | 7 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) و [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28) | ✅ merge `32e8a8c`؛ Issue #6 بسته |
 | 8 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) و [PR #30](https://github.com/Hajimohammadi-KI/APPS_root/pull/30) | ✅ merge `4e08775`؛ Issue #7 بسته، consent/cooldown و hard caps در CI تأیید شد |
-| 9 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) | G2 و authored content |
+| 9 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) و [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32) | ✅ merge `1c6fb95`؛ Issue #4 بسته و شش check سبز |
 | 10 | FSRS shadow migration | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) | G2 |
 | 11 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
 | 12 | Consented pilot analytics | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G5 و دادهٔ چندکاربره |
@@ -460,7 +471,8 @@ Intervention فقط وقتی گسترش می‌یابد که:
 
 ## اقدام بعدی واحد
 
-**کار اجرایی بعدی Issue #4 است:** Forced Output Booster در شاخهٔ مستقل، فقط پشت
-feature flag و با authored content معتبر. هم‌زمان G4 بدون دو بازبین انسانی مستقل
-قابل عبور نیست؛ تا دریافت آن reviewها، release array خالی، دادهٔ خام خارج از
-برنامهٔ روزانه و Installer، و learning outcome برابر N/A باقی می‌ماند.
+**کار اجرایی بعدی Issue #5 است:** مهاجرت FSRS فقط در Shadow، با محاسبهٔ scheduler
+فعلی و FSRS در کنار هم، rollback metadata و بدون تغییر برنامهٔ واقعی کاربر.
+هم‌زمان G4 بدون دو بازبین انسانی مستقل قابل عبور نیست؛ تا دریافت آن reviewها،
+release array خالی، دادهٔ خام خارج از برنامهٔ روزانه و Installer، و learning
+outcome برابر N/A باقی می‌ماند.

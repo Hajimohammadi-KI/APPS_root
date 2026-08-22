@@ -93,6 +93,27 @@ describe("legacy content parity", () => {
     }
   });
 
+  test("ships the exact authored grammar catalog to the visual Grammar Lab", async () => {
+    const root = resolve(import.meta.dir, "../../..");
+    const browserSource = await Bun.file(
+      resolve(
+        root,
+        "apps/web/public/replacements/en/grammar-curriculum.js",
+      ),
+    ).text();
+    const browserCatalog = JSON.parse(
+      sliceBetween(
+        browserSource,
+        "window.__ENGLISH_GRAMMAR_UNITS__ = ",
+        ";\n",
+      ),
+    );
+
+    expect(grammarUnits).toHaveLength(112);
+    expect(grammarUnits.every((unit) => unit.exercises.length === 6)).toBe(true);
+    expect(browserCatalog).toEqual(grammarUnits);
+  });
+
   test("keeps every legacy catalog identity while allowing teaching-copy repairs", async () => {
     const root = resolve(import.meta.dir, "../../..");
     const [indexHtml, resourcesSource] = await Promise.all([

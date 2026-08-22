@@ -27,6 +27,16 @@ for (const [name, url] of installedApps) {
   }) => {
     await page.goto(url, { waitUntil: "domcontentloaded" });
     await expect(page.locator("h1").first()).toBeVisible();
+    // The help targets are server-rendered, while their pointer listener is
+    // attached after the client store hydrates. Wait for that stable signal
+    // before hovering so the test cannot dispatch its only pointer event early.
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          localStorage.getItem("grammar-automaticity:v27"),
+        ),
+      )
+      .not.toBeNull();
 
     const tooltipTargets = page.locator(
       "[data-context-help], [data-persian-tooltip]",

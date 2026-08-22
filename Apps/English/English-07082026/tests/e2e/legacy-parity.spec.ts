@@ -140,7 +140,7 @@ test("keeps every legacy surface, catalog, and primary control available", async
 
   await page.goto(`${migratedUrl}/grammar`);
   await expect(
-    page.getByText("144 CEFR-aligned units · 432 tracked exercises"),
+    page.getByText("112 CEFR-aligned units · 672 tracked exercises"),
   ).toBeVisible();
   for (const label of [
     "Search topics",

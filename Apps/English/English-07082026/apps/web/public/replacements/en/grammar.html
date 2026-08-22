@@ -484,6 +484,7 @@
     <div style="padding:28px"><p class="eyebrow">TODAY'S PRACTICE</p><h2 id="dailyCompleteTitle" style="margin:6px 0 10px">Today's grammar practice is complete</h2><p id="dailyCompleteCopy" style="color:#625a70;line-height:1.55">Your result has been saved in today's route.</p><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:22px"><button class="primary-btn" id="dailyReturnBtn">OK · Return to Today's Practice</button><button class="ghost-btn" id="dailyRepeatBtn">Repeat this exercise</button><button class="ghost-btn" id="dailyMistakesBtn">Review my mistakes</button></div></div>
   </dialog>
 
+  <script src="/replacements/en/grammar-curriculum.js"></script>
   <script>
     (() => {
       const $ = (selector, root = document) => root.querySelector(selector);
@@ -511,17 +512,25 @@
       scrim.addEventListener('click', () => setDrawer(false));
       document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setDrawer(false); });
 
-      // Full internal syllabus mapped to CEFR can-do progression. CEFR supplies
-      // proficiency descriptors rather than one mandatory grammar-title list.
-      const curriculum = {
-        A1: ['Verb be: am/is/are','Subject pronouns','Object pronouns','Articles a/an/the','Singular and plural nouns','Possessive adjectives','Possessive ’s','Have/has got','Present simple affirmative','Present simple negatives','Present simple questions','Adverbs of frequency','There is/There are','Can/can’t for ability and permission','Imperatives','Prepositions of place','Prepositions of time','Countable and uncountable nouns','Some and any','Demonstratives this/that/these/those','Question words','Basic adjective order','Basic sentence word order','And, but and because'],
-        A2: ['Present continuous','Present simple vs continuous','Past be: was/were','Past simple regular','Past simple irregular','Past simple questions and negatives','Past continuous introduction','Future with will','Be going to','Present continuous for arrangements','Comparatives','Superlatives','As…as comparisons','Quantifiers: much, many, few and little','Object and possessive pronouns','Must and have to','Should and shouldn’t','Used to','Present perfect for experience','Present perfect with just, already and yet','Zero conditional','First conditional introduction','Infinitive of purpose','Gerunds after like, love and hate'],
-        B1: ['Present perfect','Present perfect vs past simple','For and since','Present perfect continuous introduction','Past continuous vs past simple','Past perfect introduction','Future forms and predictions','First conditional','Second conditional','Zero vs first conditional','Defining relative clauses','Non-defining relative clauses introduction','Gerunds and infinitives','Modal advice, obligation and possibility','Passive present and past','Reported statements','Reported questions and commands','Question tags','Too, enough, so and such','Used to and would for past habits','Indirect questions','Verb-preposition patterns','Phrasal-verb grammar','Linking clauses and contrast'],
-        B2: ['Present perfect continuous','Past perfect','Past perfect continuous','Future continuous','Future perfect','Future perfect continuous introduction','Third conditional','Mixed conditionals','Modal deduction in the present','Modal deduction in the past','Past modals for regret and criticism','Causative have/get','Advanced passive','Passive reporting structures','Participle clauses','Wish and if only','Inversion after negative adverbials','Advanced reported speech','Reduced relative clauses','Complex gerund and infinitive patterns','Concession and contrast clauses','Noun clauses','Advanced determiners and articles','Emphasis and cleft sentences introduction'],
-        C1: ['Cleft sentences','Inversion in conditionals','Nominalisation','Hedging and stance','Advanced discourse markers','Substitution and ellipsis','Complex relative clauses','Advanced reporting verbs','Emphasis with auxiliaries','Fronting','Complex noun phrases','Register control','Advanced tense-aspect choices','Parallelism','Advanced conditional meanings','Modal perfect nuance','Concessive inversion','Information structure and focus','Advanced participle clauses','Advanced passive reporting','Formal subjunctive and mandative forms','Advanced article choice','Cohesion and reference chains','Punctuation in complex sentences'],
-        C2: ['Marked word order','Layered subordination','Nuanced modality','Counterfactual distance','Advanced cohesion','Rhetorical grammar','Compressed academic structures','Idiomatic clause patterns','Ambiguity control','Style shifting','Advanced punctuation and grammar','Editing for naturalness','Genre-specific grammar','Integrated automatic production','Pragmatic softening','Syntactic ambiguity repair','Spoken ellipsis','Cross-register reformulation','Theme-rheme management','Grammatical metaphor','Dense noun-phrase unpacking','Rhetorical balance and parallelism','Corpus-sensitive variation','Precision editing and exception handling']
+      // The visual page consumes the same authored catalog as @grammar/content.
+      // `content:check` fails the build if this generated browser payload drifts.
+      const grammarUnits = window.__ENGLISH_GRAMMAR_UNITS__;
+      if (!Array.isArray(grammarUnits) || !grammarUnits.length) {
+        throw new Error('The canonical English grammar catalog did not load.');
+      }
+      const cefrLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+      const curriculum = Object.fromEntries(cefrLevels.map(level => [
+        level,
+        grammarUnits.filter(unit => unit.level === level).map(unit => unit.title)
+      ]));
+      const unitKey = (level, topic) => `${level}::${topic}`;
+      const unitsByKey = new Map(grammarUnits.map(unit => [unitKey(unit.level, unit.title), unit]));
+      const grammarUnit = (level = progress?.activeLevel, topic = progress?.activeTopic) => {
+        const unit = unitsByKey.get(unitKey(level, topic));
+        if (!unit) throw new Error(`Missing canonical grammar unit: ${level} / ${topic}`);
+        return unit;
       };
-      const exercisesPerTopic = 3;
+      const exerciseCount = (level, topic) => grammarUnit(level, topic).exercises.length;
       const progressKey = 'english-automaticity:grammar-progress:v2';
       const saved = (() => { try { return JSON.parse(localStorage.getItem(progressKey) || '{}'); } catch { return {}; } })();
       const params = new URLSearchParams(location.search);
@@ -535,7 +544,7 @@
       const completedSet = new Set(progress.completed);
       const saveProgress = () => localStorage.setItem(progressKey, JSON.stringify({ ...progress, completed: [...completedSet] }));
       const topicKey = (level, topic, index) => `${level}::${topic}::${index}`;
-      const topicCompleted = (level, topic) => Array.from({ length: exercisesPerTopic }, (_, index) => completedSet.has(topicKey(level, topic, index))).filter(Boolean).length;
+      const topicCompleted = (level, topic) => Array.from({ length: exerciseCount(level, topic) }, (_, index) => completedSet.has(topicKey(level, topic, index))).filter(Boolean).length;
       const levelCompleted = level => curriculum[level].reduce((sum, topic) => sum + topicCompleted(level, topic), 0);
 
       const lessonProfile = topic => {
@@ -563,21 +572,21 @@
 
       const renderLesson = () => {
         const current = lessonProfile(progress.activeTopic);
+        const unit = grammarUnit();
         $('#lessonTitle').textContent = progress.activeTopic;
         $('.badge').textContent = progress.activeLevel;
         $('.foundations').textContent = current.family;
-        $('#canDoGoal').textContent = current.goal;
-        $('#ruleIntro').textContent = current.rule;
-        $('#examplesContent').textContent = current.contrast;
-        $('#pathContent').textContent = 'Recall the meaning, choose the form, correct one example, say it aloud, and then use it independently in your own situation.';
-        $('#mistakeContent').textContent = current.mistake;
-        $('#practiceContent').textContent = `Create three accurate examples of ${progress.activeTopic}: one controlled, one contrasting, and one personal. Then say the personal example aloud.`;
+        $('#canDoGoal').textContent = unit.transferTest;
+        $('#ruleIntro').textContent = unit.rule;
+        $('#examplesContent').textContent = unit.examples.join(' · ');
+        $('#pathContent').textContent = `${unit.recallTest} Then repair the common error and use the form in a new situation.`;
+        $('#mistakeContent').textContent = unit.commonError;
+        $('#practiceContent').textContent = `${unit.exercises.length} controlled exercises · ${unit.links.length} reviewed learning links. Complete recall, repair and transfer without copying the model.`;
         $('#patternGrid').innerHTML = [
-          ['Meaning', 'What do I want to communicate?', 'Choose the intended meaning before the form.'],
-          ['Core pattern', current.formula, current.rule],
-          ['Contrast', 'Compare two related contexts', current.contrast],
-          ['Personal use', 'Create a true example from your life', `Use ${progress.activeTopic} without copying a model.`],
-          ['Transfer', 'Say or write it in a new situation', 'Check meaning, accuracy and natural word order.']
+          ['Rule', current.formula, unit.rule],
+          ...unit.examples.slice(0, 2).map((example, index) => [`Example ${index + 1}`, example, 'Recall and say the complete example accurately.']),
+          ['Repair', unit.repairTest, unit.commonError],
+          ['Transfer', unit.transferTest, 'Say or write the structure independently in a new context.']
         ].map(([title, formula, description], index) => `<article class="pattern-card"><div class="pattern-title"><span class="mini-icon">${index + 1}</span>${title}</div><div class="formula">${formula}</div><p>${description}</p></article>`).join('');
       };
 
@@ -585,18 +594,19 @@
         const levelList = $('#levelList');
         levelList.innerHTML = Object.entries(curriculum).map(([level, topics]) => {
           const done = levelCompleted(level);
-          const total = topics.length * exercisesPerTopic;
+          const total = topics.reduce((sum, topic) => sum + exerciseCount(level, topic), 0);
           const className = level.toLowerCase();
           return `<details class="level" data-level="${level}" ${level === progress.activeLevel ? 'open' : ''}>
             <summary><span class="level-tag ${className}">${level}</span><span>•</span><span class="level-summary-copy"><span>CEFR grammar path</span><span class="level-progress">${done} of ${total} exercises completed</span></span></summary>
             <div class="level-progress-bar" aria-hidden="true"><span style="width:${total ? done / total * 100 : 0}%"></span></div>
             <div class="topic-list">${topics.map(topic => {
               const count = topicCompleted(level, topic);
-              return `<button class="topic ${level === progress.activeLevel && topic === progress.activeTopic ? 'active' : ''}" data-level="${level}" data-topic="${topic}"><span class="topic-dot"></span><span class="topic-label">${topic}</span><span class="topic-count">${count}/${exercisesPerTopic}</span></button>`;
+              return `<button class="topic ${level === progress.activeLevel && topic === progress.activeTopic ? 'active' : ''}" data-level="${level}" data-topic="${topic}"><span class="topic-dot"></span><span class="topic-label">${topic}</span><span class="topic-count">${count}/${exerciseCount(level, topic)}</span></button>`;
             }).join('')}</div></details>`;
         }).join('');
         const topicTotal = Object.values(curriculum).reduce((sum, topics) => sum + topics.length, 0);
-        $('#curriculumCount').textContent = `${topicTotal} CEFR-aligned units · ${topicTotal * exercisesPerTopic} tracked exercises`;
+        const exerciseTotal = grammarUnits.reduce((sum, unit) => sum + unit.exercises.length, 0);
+        $('#curriculumCount').textContent = `${topicTotal} CEFR-aligned units · ${exerciseTotal} tracked exercises`;
         bindTopics();
       };
 
@@ -648,17 +658,15 @@
       }));
 
       // Recall task behavior.
-      const baseTasks = [
-        { prompt: 'Correct the sentence: I am agree.', answer: 'i agree', hint: 'Agree is already a verb. Do not use am before it.' },
-        { prompt: 'Complete: My notes ___ on the desk.', answer: 'are', hint: 'Notes is plural.' },
-        { prompt: 'Make it negative: She is tired.', answer: 'she is not tired', hint: 'Put not after is.' }
-      ];
-      const tasksForTopic = () => progress.activeTopic === 'Verb be: am/is/are' ? baseTasks : [
-        { prompt: `Write one accurate sentence using ${progress.activeTopic}.`, answer: '', hint: `Use the ${progress.activeTopic} pattern in a complete sentence.` },
-        { prompt: `Write a negative or contrasting example with ${progress.activeTopic}.`, answer: '', hint: 'Keep the meaning clear and check the verb form.' },
-        { prompt: `Write a personal example that shows you can use ${progress.activeTopic}.`, answer: '', hint: 'Use your own life, work, study, or plans.' }
-      ];
-      let taskIndex = Math.max(0, Math.min(exercisesPerTopic - 1, progress.taskIndex));
+      const tasksForTopic = () => {
+        const unit = grammarUnit();
+        return unit.exercises.map(([prompt, expected], index) => ({
+          prompt,
+          answer: expected,
+          hint: index === 0 ? unit.commonError : unit.rule
+        }));
+      };
+      let taskIndex = Math.max(0, Math.min(tasksForTopic().length - 1, progress.taskIndex));
       const answer = $('#answerInput');
       const feedback = $('#feedback');
       const repairBox = $('#repairBox');
@@ -682,8 +690,9 @@
       const updatePathStatus = () => {
         const topicDone = topicCompleted(progress.activeLevel, progress.activeTopic);
         const levelDone = levelCompleted(progress.activeLevel);
-        const levelTotal = curriculum[progress.activeLevel].length * exercisesPerTopic;
-        $('#pathStatus').innerHTML = `<strong>${topicDone}/${exercisesPerTopic}</strong> in this topic <span>·</span> <strong>${levelDone}/${levelTotal}</strong> in ${progress.activeLevel}`;
+        const topicTotal = exerciseCount(progress.activeLevel, progress.activeTopic);
+        const levelTotal = curriculum[progress.activeLevel].reduce((sum, topic) => sum + exerciseCount(progress.activeLevel, topic), 0);
+        $('#pathStatus').innerHTML = `<strong>${topicDone}/${topicTotal}</strong> in this topic <span>·</span> <strong>${levelDone}/${levelTotal}</strong> in ${progress.activeLevel}`;
         nextBtn.disabled = !completedSet.has(currentExerciseKey());
         nextBtn.setAttribute('aria-disabled', String(nextBtn.disabled));
       };
@@ -707,16 +716,15 @@
       $('#checkBtn').addEventListener('click', () => {
         const value = normalize(answer.value);
         const task = currentTask();
-        const isOpenProduction = !task.answer;
-        const isCorrect = isOpenProduction ? value.split(/\s+/).filter(Boolean).length >= 4 : value === task.answer;
-        feedback.className = 'feedback show ' + (isCorrect ? 'good' : 'bad');
+        const isCorrect = value === normalize(task.answer);
+        feedback.className = `feedback show ${isCorrect ? 'good' : 'bad'}`;
         if (isCorrect) {
-          feedback.textContent = isOpenProduction ? 'Saved as completed practice. Review the sentence once before continuing.' : 'Correct — well recalled.';
+          feedback.textContent = 'Correct — well recalled.';
           repairBox.classList.remove('show');
           completeCurrent();
           finishDailyActivity();
         } else {
-          const correct = task.answer.replace(/^./, c => c.toUpperCase()) + '.';
+          const correct = task.answer;
           feedback.textContent = `Not yet. The correct answer is: ${correct} Read it, then type it yourself below.`;
           repairBox.classList.add('show');
           repairInput.focus();
@@ -730,7 +738,7 @@
         feedback.textContent = `Hint: ${currentTask().hint}`;
       });
       $('#repairBtn').addEventListener('click', () => {
-        if (normalize(repairInput.value) === currentTask().answer) {
+        if (normalize(repairInput.value) === normalize(currentTask().answer)) {
           feedback.className = 'feedback show good';
           feedback.textContent = 'Correction completed — you produced the correct form yourself.';
           repairBox.classList.remove('show');
@@ -744,7 +752,7 @@
       });
       nextBtn.addEventListener('click', () => {
         if (!completedSet.has(currentExerciseKey())) return;
-        if (taskIndex < exercisesPerTopic - 1) {
+        if (taskIndex < tasksForTopic().length - 1) {
           taskIndex += 1;
         } else {
           const topics = curriculum[progress.activeLevel];

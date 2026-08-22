@@ -1,0 +1,8 @@
+{
+  "name": "automaticity-ux-roadmap-site",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node ../build-roadmap-site.mjs ../../docs/reports/ux-simplification-roadmap-visual.html \"UX SIMPLIFICATION ROADMAP\""
+  }
+}

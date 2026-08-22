@@ -1,0 +1,48 @@
+name: Roadmap Vercel sites CI
+
+on:
+  pull_request:
+    paths:
+      - docs/roadmaps/automaticity-evidence-roadmap.html
+      - docs/reports/ux-simplification-roadmap-visual.html
+      - sites/build-roadmap-site.mjs
+      - sites/automaticity-evidence-roadmap/**
+      - sites/automaticity-ux-roadmap/**
+      - .github/workflows/roadmap-vercel-sites-ci.yml
+  push:
+    branches: [main]
+    paths:
+      - docs/roadmaps/automaticity-evidence-roadmap.html
+      - docs/reports/ux-simplification-roadmap-visual.html
+      - sites/build-roadmap-site.mjs
+      - sites/automaticity-evidence-roadmap/**
+      - sites/automaticity-ux-roadmap/**
+      - .github/workflows/roadmap-vercel-sites-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build Evidence roadmap artifact
+        run: npm run build --prefix sites/automaticity-evidence-roadmap
+
+      - name: Build UX roadmap artifact
+        run: npm run build --prefix sites/automaticity-ux-roadmap
+
+      - name: Verify byte-identical artifacts
+        run: |
+          cmp -s docs/roadmaps/automaticity-evidence-roadmap.html sites/automaticity-evidence-roadmap/dist/index.html
+          cmp -s docs/reports/ux-simplification-roadmap-visual.html sites/automaticity-ux-roadmap/dist/index.html
+          ! cmp -s sites/automaticity-evidence-roadmap/dist/index.html sites/automaticity-ux-roadmap/dist/index.html

@@ -440,7 +440,7 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="eyebrow">EXECUTABLE ROADMAP · v1.8 · 2026-08-22</div>
+    <div class="eyebrow">EXECUTABLE ROADMAP · v1.9 · 2026-08-22</div>
     <h1>رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی</h1>
     <div class="meta-row">
       <span><b>دامنه:</b> English Automaticity و DeutschFlow</span>
@@ -467,8 +467,8 @@
       <tbody>
         <tr><td>هستهٔ مشترک learning-core</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/11" class="mono">#11</a> پس از بازبینی مستقل و CI سبز merge شد</td><td>merge <code>ed7e73f</code> و <code>shared/learning-core</code></td></tr>
         <tr><td>SKILL-001 Adherence Core</td><td>روی <code>main</code> ادغام و فقط به‌صورت shadow به برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز اعمال/ذخیره نمی‌شود</td><td><code>shared/learning-core/src/adherence/shadow-runner.ts</code></td></tr>
-        <tr><td>تست اختصاصی adherence</td><td>۲۵ تست، ۶۹٬۱۹۹ assertion پس از G3</td><td><code>bun run test:adherence-core</code></td></tr>
-        <tr><td>کل تست learning-core</td><td>۵۴ تست، ۶۹٬۲۹۳ assertion پس از زیرساخت G4</td><td><code>bun run test</code></td></tr>
+        <tr><td>تست اختصاصی adherence</td><td>۳۰ تست، ۶۹٬۲۲۵ assertion پس از Implementation Intentions</td><td><code>bun run test:adherence-core</code></td></tr>
+        <tr><td>کل تست learning-core</td><td>۵۹ تست، ۶۹٬۳۱۹ assertion پس از PR #28</td><td><code>bun run test</code></td></tr>
         <tr><td>TypeScript و mirror parity</td><td>تأییدشده</td><td><code>bun run typecheck</code></td></tr>
         <tr><td>CI اختصاصی</td><td>هر دو workflow PR #11 سبز و PR merge شده است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386" class="mono">Core run</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423" class="mono">German run</a></td></tr>
         <tr><td>اصلاح runtime و مسیرهای آلمانی</td><td>PR <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/13" class="mono">#13</a> پس از تست کامل محلی و CI لینوکس merge شد</td><td>merge <code>b3fbc07</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622" class="mono">run 32510365622</a></td></tr>
@@ -481,6 +481,7 @@
         <tr><td>CI مربوط به G3</td><td>Learning Core و German Automaticity هر دو سبز؛ browser adapter در هر سه کپی hash-identical و زیر بودجهٔ ۵ KiB gzip است</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261291" class="mono">Core 32537261291</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261468" class="mono">German 32537261468</a></td></tr>
         <tr><td>زیرساخت Content Quality</td><td>schema نسخه‌دار mediation، rubric ثابت، دو بازبین مستقل، weighted kappa، adjudication و quarantine در هر دو زبان ادغام شد</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/26" class="mono">PR #26</a> · merge <code>8edaba2</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983463" class="mono">Core/Content CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983363" class="mono">German CI</a></td></tr>
         <tr><td>بازبینی انسانی پایلوت G4</td><td>هنوز انجام نشده؛ هر دو draft با <code>humanReviewed=false</code> و <code>awaiting-human-review</code> از daily plan حذف می‌شوند</td><td><strong>N/A — Gate G4 هنوز عبور نکرده است</strong></td></tr>
+        <tr><td>Implementation Intentions</td><td>انتخاب اختیاری ۰ یا ۲ تا ۵ برنامهٔ زمان/مکان در Settings هر دو زبان، ذخیرهٔ local-only، متن EN/DE/FA و حذف/بازیابی پس از reload ادغام شد؛ هیچ nudge یا event ساخته نمی‌شود</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/28" class="mono">PR #28</a> · merge <code>32e8a8c</code> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173665" class="mono">Core CI</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173644" class="mono">German CI</a></td></tr>
         <tr><td>AI و دیتاست runtime</td><td>هنوز نباید وارد runtime یا تصمیم mastery شود</td><td>ingestion محتوای پایلوت وابسته به تکمیل بازبینی انسانی G4 است</td></tr>
         <tr><td>اثرگذاری روی زبان‌آموز واقعی</td><td>دادهٔ کافی وجود ندارد</td><td><strong>N/A تا اجرای پایلوت</strong></td></tr>
       </tbody>
@@ -652,13 +653,13 @@ flowchart LR
   <section class="phase" id="p3">
     <div class="phase-head">
       <div class="phase-title-row"><span class="phase-num">۳</span><h3>Adherence Engineering در Shadow</h3></div>
-      <span class="chip active"><span class="dot"></span>در حال انجام · G3 safety عبور کرد</span>
+      <span class="chip active"><span class="dot"></span>در حال انجام · #6 عبور کرد · #7 بعدی</span>
     </div>
     <div class="phase-tags">برآورد: ۱ تا ۲ sprint · وابستگی: <code>G2</code> · Issues: <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a>، <a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></div>
-    <div class="callout final"><span class="label">خروجی تأییدشدهٔ G3</span><p>Shadow Safety در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24" class="mono">PR #24</a> با merge <code>ea3d25c</code> و دو CI سبز کامل شد: اتصال default-off به برنامهٔ روزانهٔ هر دو زبان، مقایسهٔ deterministic برای ۱۵/۳۰/۴۵ دقیقه، fail-closed، عدم تغییر UI و حفظ دادهٔ learner/evidence با E2E. implementation intention و nudge هنوز قابلیت پیاده‌شده نیستند.</p></div>
+    <div class="callout final"><span class="label">خروجی تأییدشدهٔ G3 + Issue #6</span><p>Shadow Safety در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24" class="mono">PR #24</a> با merge <code>ea3d25c</code> کامل شد. Implementation Intentions نیز در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/28" class="mono">PR #28</a> با merge <code>32e8a8c</code>، دو CI سبز و E2E Settings هر دو زبان ادغام شد: شروع خالی و اختیاری، ۰ یا ۲ تا ۵ قصد فعال، ذخیرهٔ local-only و بدون ساخت nudge، event یا ادعای mastery. Issue #6 بسته و Issue #7 برای nudge رضایت‌محور آمادهٔ اجرا است.</p></div>
     <ul>
       <li>اتصال SKILL-001 به برنامهٔ ۱۵/۳۰/۴۵ دقیقه فقط در shadow</li>
-      <li>ذخیرهٔ اختیاری implementation intention در onboarding</li>
+      <li>✅ ذخیرهٔ اختیاری implementation intention در Settings هر دو اپ</li>
       <li>micro-goal پنج‌دقیقه‌ای برای روزهای کم‌انرژی، بدون حذف کامل productive output</li>
       <li>comeback flow بدون شرم‌دادن یا صفرکردن دستاورد واقعی</li>
       <li>فقط in-app prompt با consent و cooldown؛ push/email در این فاز ممنوع</li>
@@ -817,8 +818,8 @@ flowchart LR
         <tr><td class="mono" style="text-align:center">4</td><td>Measurement contract، consent، baseline و data quality</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/18" class="mono">#18</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/21" class="mono">PR #21</a></td><td>✅ merge <code>032ad14</code>؛ G2 عبور کرد</td></tr>
         <tr><td class="mono" style="text-align:center">5</td><td>Shadow Safety در برنامهٔ ۱۵/۳۰/۴۵ دقیقهٔ هر دو اپ</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/23" class="mono">#23</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/24" class="mono">PR #24</a></td><td>✅ merge <code>ea3d25c</code>؛ G3 عبور کرد</td></tr>
         <tr><td class="mono" style="text-align:center">6</td><td>Content QA و Mediation pilot</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/8" class="mono">#8</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/26" class="mono">PR #26</a></td><td>🟡 زیرساخت merge <code>8edaba2</code>؛ human review و agreement هنوز N/A</td></tr>
-        <tr><td class="mono" style="text-align:center">7</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a></td><td>G3 و consent</td></tr>
-        <tr><td class="mono" style="text-align:center">8</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>#6 و consent</td></tr>
+        <tr><td class="mono" style="text-align:center">7</td><td>Implementation intentions</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/6" class="mono">#6</a> · <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/28" class="mono">PR #28</a></td><td>✅ merge <code>32e8a8c</code>؛ Issue #6 بسته</td></tr>
+        <tr><td class="mono" style="text-align:center">8</td><td>Guarded in-app nudges</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/7" class="mono">#7</a></td><td>آمادهٔ اجرا؛ #6 عبور کرد، consent/cooldown اجباری است</td></tr>
         <tr><td class="mono" style="text-align:center">9</td><td>Forced-output booster</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/4" class="mono">#4</a></td><td>G2 و authored content</td></tr>
         <tr><td class="mono" style="text-align:center">10</td><td>FSRS shadow migration</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/5" class="mono">#5</a></td><td>G2</td></tr>
         <tr><td class="mono" style="text-align:center">11</td><td>Independent assessment</td><td><a href="https://github.com/Hajimohammadi-KI/APPS_root/issues/9" class="mono">#9</a></td><td>G3 و G4</td></tr>

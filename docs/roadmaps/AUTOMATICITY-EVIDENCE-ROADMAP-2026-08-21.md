@@ -30,8 +30,8 @@
 |---|---|---|
 | هستهٔ مشترک learning-core | PR [#11](https://github.com/Hajimohammadi-KI/APPS_root/pull/11) پس از بازبینی مستقل و CI سبز merge شد | merge `ed7e73f` و `shared/learning-core` |
 | SKILL-001 Adherence Core | روی `main` ادغام و فقط به‌صورت shadow به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شده؛ flag پیش‌فرض خاموش و proposal هرگز روی برنامه یا دادهٔ زبان‌آموز اعمال/ذخیره نمی‌شود | `shared/learning-core/src/adherence/shadow-runner.ts` |
-| تست اختصاصی adherence | تأییدشده پس از G3: 25 تست، 69,199 assertion | `bun run test:adherence-core` |
-| کل تست learning-core | تأییدشده پس از زیرساخت G4: 54 تست و 69,293 assertion | `bun run test` |
+| تست اختصاصی adherence | تأییدشده پس از Implementation Intentions: 30 تست، 69,225 assertion | `bun run test:adherence-core` |
+| کل تست learning-core | تأییدشده پس از PR #28: 59 تست و 69,319 assertion | `bun run test` |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
@@ -44,6 +44,7 @@
 | CI مربوط به G3 | Learning Core و German Automaticity هر دو سبز؛ browser adapter در هر سه کپی hash-identical و زیر بودجهٔ 5 KiB gzip است | [Core run 32537261291](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261291) و [German run 32537261468](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32537261468) |
 | زیرساخت Content Quality | schema نسخه‌دار mediation، rubric ثابت، دو بازبین مستقل، weighted kappa، adjudication و quarantine محتوای تأییدنشده در هر دو زبان ادغام شد | [PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26)، merge `8edaba2`؛ [Core/Content run 32538983463](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983463) و [German run 32538983363](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32538983363) سبز |
 | بازبینی انسانی پایلوت G4 | هنوز انجام نشده؛ هر دو draft با `humanReviewed=false` و `awaiting-human-review` از daily plan حذف می‌شوند | **N/A — Gate G4 هنوز عبور نکرده است** |
+| Implementation Intentions | انتخاب اختیاری 0 یا 2 تا 5 برنامهٔ زمان/مکان در Settings هر دو زبان، ذخیرهٔ local-only، متن EN/DE/FA و حذف/بازیابی پس از reload ادغام شد؛ هیچ nudge یا event ساخته نمی‌شود | [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28)، merge `32e8a8c`؛ [Core run 32541173665](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173665) و [German run 32541173644](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32541173644) سبز؛ [Issue #6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) بسته |
 | AI و دیتاست runtime | هنوز نباید وارد runtime یا تصمیم mastery شود | ingestion محتوای پایلوت وابسته به تکمیل بازبینی انسانی G4 است |
 | اثرگذاری روی زبان‌آموز واقعی | دادهٔ کافی وجود ندارد | **N/A تا اجرای پایلوت** |
 
@@ -235,12 +236,12 @@ flowchart LR
 **وابستگی:** G2
 **Issues:** [#6 — Implementation intentions](https://github.com/Hajimohammadi-KI/APPS_root/issues/6)، [#7 — Guarded nudges](https://github.com/Hajimohammadi-KI/APPS_root/issues/7)
 
-**وضعیت 2026-08-22:** بخش Shadow Safety در [PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24) با merge `ea3d25c` و CI سبز کامل شد. اتصال default-off به برنامهٔ روزانهٔ هر دو زبان، مقایسهٔ deterministic برای 15/30/45 دقیقه، fail-closed، عدم تغییر UI و حفظ دادهٔ learner/evidence با E2E تأیید شد. implementation intention و nudge هنوز قابلیت پیاده‌شده نیستند.
+**وضعیت 2026-08-22:** بخش Shadow Safety در [PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24) با merge `ea3d25c` کامل شد. Implementation Intentions نیز در [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28) با merge `32e8a8c`، دو CI سبز و E2E Settings هر دو زبان ادغام شد: شروع خالی و اختیاری، 0 یا 2 تا 5 قصد فعال، ذخیرهٔ local-only و بدون ساخت nudge، event یا ادعای mastery. [Issue #6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) بسته و [Issue #7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) برای nudge رضایت‌محور آمادهٔ اجرا است.
 
 ### ترتیب اجرا
 
 1. اتصال SKILL-001 به برنامهٔ 15/30/45 دقیقه فقط در shadow؛
-2. ذخیرهٔ اختیاری implementation intention در onboarding؛
+2. ✅ ذخیرهٔ اختیاری implementation intention در Settings هر دو اپ؛
 3. micro-goal پنج‌دقیقه‌ای برای روزهای کم‌انرژی، بدون حذف کامل productive output؛
 4. comeback flow بدون شرم‌دادن یا صفرکردن دستاورد واقعی؛
 5. فقط in-app prompt با consent و cooldown؛ push/email در این فاز ممنوع؛
@@ -423,8 +424,8 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | 4 | Measurement contract، consent، baseline و data quality | [#18](https://github.com/Hajimohammadi-KI/APPS_root/issues/18) و [PR #21](https://github.com/Hajimohammadi-KI/APPS_root/pull/21) | ✅ merge `032ad14`؛ G2 عبور کرد |
 | 5 | Shadow Safety در برنامهٔ 15/30/45 دقیقهٔ هر دو اپ | [#23](https://github.com/Hajimohammadi-KI/APPS_root/issues/23) و [PR #24](https://github.com/Hajimohammadi-KI/APPS_root/pull/24) | ✅ merge `ea3d25c`؛ G3 عبور کرد |
 | 6 | Content QA و Mediation pilot | [#8](https://github.com/Hajimohammadi-KI/APPS_root/issues/8) و [PR #26](https://github.com/Hajimohammadi-KI/APPS_root/pull/26) | 🟡 زیرساخت merge `8edaba2`؛ human review و agreement هنوز N/A |
-| 7 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) | G3 و consent |
-| 8 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) | #6 و consent |
+| 7 | Implementation intentions | [#6](https://github.com/Hajimohammadi-KI/APPS_root/issues/6) و [PR #28](https://github.com/Hajimohammadi-KI/APPS_root/pull/28) | ✅ merge `32e8a8c`؛ Issue #6 بسته |
+| 8 | Guarded in-app nudges | [#7](https://github.com/Hajimohammadi-KI/APPS_root/issues/7) | آمادهٔ اجرا؛ #6 عبور کرد، consent/cooldown اجباری است |
 | 9 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) | G2 و authored content |
 | 10 | FSRS shadow migration | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) | G2 |
 | 11 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |

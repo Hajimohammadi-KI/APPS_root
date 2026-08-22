@@ -18,15 +18,20 @@ Standalone PDF reader for research and learning workflows.
 
 ```powershell
 bun install
-bun run dev -- --host 127.0.0.1 --port 4322
+bun run dev -- --host 127.0.0.1 --port 4332
 ```
 
 Production:
 
 ```powershell
 bun run build
-bun run start -- --port 4324
+bun run start:local -- --hostname 127.0.0.1 --port 4332
 ```
+
+Readiness is not inferred from the listening port. The local runtime exposes an
+exact contract at `http://127.0.0.1:4332/api/health`; App Starter and the
+English Windows launcher require `service=research-pdf-studio`, `ready=true`,
+and `contractVersion=1` before enabling the Reader.
 
 ## Verify
 
@@ -39,7 +44,7 @@ bun run test
 ## Deep link
 
 ```text
-http://127.0.0.1:4324/?sourceUrl=https%3A%2F%2Fexample.org%2Fpaper.pdf&name=Paper&page=3
+http://127.0.0.1:4332/?sourceUrl=https%3A%2F%2Fexample.org%2Fpaper.pdf&name=Paper&page=3
 ```
 
 Only HTTPS external files are accepted. Local/private network targets are blocked by the public PDF proxy.
@@ -47,6 +52,18 @@ Only HTTPS external files are accepted. Local/private network targets are blocke
 ## Storage and privacy
 
 Reading state and annotations are stored in the browser on the current device. API keys entered in the reader stay only for the active browser tab unless server-side environment variables are configured. Export annotation JSON and the annotated PDF for a portable backup.
+
+The English desktop handoff copies a selected PDF into its preserved user-data
+folder under a SHA-256 name and opens `?localPdf=<sha256>`. The runtime accepts
+only a 64-character hexadecimal identifier and serves that file only to a
+loopback client; it never accepts a filesystem path from a URL. This allows the
+same document, highlights, comments, and reading position to reopen after a
+desktop restart without exposing the local PDF to the private network.
+
+To authorize the interface on a same-Wi-Fi tablet, bind the runtime to
+`0.0.0.0` and open `http://<PC-private-IP>:4332` on the tablet. The tablet can
+select its own local PDF in the browser. Desktop-imported PDFs remain
+loopback-only.
 
 ## Offline limitation
 

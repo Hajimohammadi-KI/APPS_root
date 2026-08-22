@@ -101,9 +101,10 @@ describe("legacy content parity", () => {
         "apps/web/public/replacements/en/grammar-curriculum.js",
       ),
     ).text();
+    const normalizedBrowserSource = browserSource.replaceAll("\r\n", "\n");
     const browserCatalog = JSON.parse(
       sliceBetween(
-        browserSource,
+        normalizedBrowserSource,
         "window.__ENGLISH_GRAMMAR_UNITS__ = ",
         ";\n",
       ),

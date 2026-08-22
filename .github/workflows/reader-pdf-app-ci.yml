@@ -6,10 +6,12 @@ on:
       - main
     paths:
       - "Apps/Apps-For-Integeration/Reader-PDF-App/**"
+      - "Apps/Starter-App/**"
       - "shared/check-duplicated-files.mjs"
   pull_request:
     paths:
       - "Apps/Apps-For-Integeration/Reader-PDF-App/**"
+      - "Apps/Starter-App/**"
       - "shared/check-duplicated-files.mjs"
 
 permissions:
@@ -44,3 +46,12 @@ jobs:
 
       - name: Test
         run: bun run test
+
+      - name: Test local runtime and Starter health contract
+        run: bun run test:runtime && node --test ../../Starter-App/health.test.mjs
+
+      - name: Install Playwright Chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: Verify real PDF browser lifecycle
+        run: bun run test:e2e

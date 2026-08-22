@@ -6,10 +6,14 @@ on:
       - main
     paths:
       - "Apps/English/English-07082026/**"
+      - "Apps/Apps-For-Integeration/Reader-PDF-App/**"
+      - "Apps/Starter-App/**"
       - ".github/workflows/english-automaticity-ci.yml"
   pull_request:
     paths:
       - "Apps/English/English-07082026/**"
+      - "Apps/Apps-For-Integeration/Reader-PDF-App/**"
+      - "Apps/Starter-App/**"
       - ".github/workflows/english-automaticity-ci.yml"
 
 permissions:
@@ -34,6 +38,10 @@ jobs:
           bun-version: 1.3.14
 
       - name: Install exact dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install exact PDF Reader dependencies
+        working-directory: Apps/Apps-For-Integeration/Reader-PDF-App
         run: bun install --frozen-lockfile
 
       - name: Verify types, tests, installer schema, and lint

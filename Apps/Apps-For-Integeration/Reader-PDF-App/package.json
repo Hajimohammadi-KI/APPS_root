@@ -11,8 +11,11 @@
     "prepare:pdf-worker": "node scripts/prepare-pdf-worker.mjs",
     "dev": "bun run prepare:pdf-worker && vite",
     "build": "bun run prepare:pdf-worker && vinext build",
-    "start": "wrangler dev dist/server/index.js --config dist/server/wrangler.json --persist-to .wrangler/state --ip 127.0.0.1 --port 4322",
+    "start": "wrangler dev dist/server/index.js --config dist/server/wrangler.json --persist-to .wrangler/state --ip 127.0.0.1 --port 4332",
+    "start:local": "node scripts/start-local.mjs",
     "test": "bun run build && bun test tests/pdf-marks.test.ts tests/pdf-reader-state.test.ts tests/provider-integration.test.ts tests/document-converters.test.ts && node --test tests/rendered-html.test.mjs",
+    "test:runtime": "node --test tests/local-runtime.test.mjs",
+    "test:e2e": "playwright test",
     "validate:artifact": "bash scripts/validate-artifact.sh",
     "typecheck": "node node_modules/typescript7/lib/tsc.js --noEmit --incremental false",
     "check:duplicates": "node ../../../shared/check-duplicated-files.mjs",
@@ -31,6 +34,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@playwright/test": "1.62.0",
     "@cloudflare/vite-plugin": "1.37.1",
     "@cloudflare/workers-types": "^4.20260702.1",
     "@tailwindcss/postcss": "4.2.1",

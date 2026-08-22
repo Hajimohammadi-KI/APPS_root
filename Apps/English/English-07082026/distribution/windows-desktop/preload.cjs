@@ -73,14 +73,14 @@ const copy =
         choosing: "PDF wählen …",
         opened: "Geöffnet",
         failed: "PDF konnte nicht geöffnet werden.",
-        title: "Lokale PDF-Datei auswählen und in Microsoft Edge öffnen",
+        title: "Lokale PDF-Datei auswählen und in Research PDF Studio öffnen",
       }
     : {
         action: "Open PDF",
         choosing: "Choose PDF …",
         opened: "Opened",
         failed: "The PDF could not be opened.",
-        title: "Choose a local PDF file and open it in Microsoft Edge",
+        title: "Choose a local PDF file and open it in Research PDF Studio",
       };
 
 function mountPdfLauncher() {

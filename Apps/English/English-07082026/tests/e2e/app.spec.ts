@@ -113,7 +113,7 @@ test("shows the learner's current level and starts today's practice from the das
 });
 
 // Opens every in-app destination from its canonical route. The PDF reader is
-// covered separately because it is a connected local service on port 4322.
+// covered separately because it is a connected local service on port 4332.
 test("opens every current product surface", async ({ page }) => {
   const surfaces = [
     ["/", "Good morning, Learner"],

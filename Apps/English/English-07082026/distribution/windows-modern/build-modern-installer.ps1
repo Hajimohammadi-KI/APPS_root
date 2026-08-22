@@ -196,6 +196,7 @@ $config = Get-Content -Raw -Encoding UTF8 -LiteralPath $configurationPath | Conv
 $configDirectory = Split-Path -Parent $configurationPath
 $projectRoot = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.projectRoot)
 $desktopProject = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.desktopProject)
+$readerProject = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.readerProject)
 $iconSource = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.iconSource)
 $outputFile = Resolve-ConfiguredPath -Base $projectRoot -Value ([string]$config.outputFile)
 
@@ -219,6 +220,7 @@ $requiredValues = @(
   'motifOne',
   'motifTwo',
   'motifThree'
+  'readerProject'
 )
 foreach ($name in $requiredValues) {
   $value = [string]$config.$name
@@ -238,6 +240,9 @@ Assert-HexColor -Name 'highlightSoftColor' -Value ([string]$config.highlightSoft
 
 if (-not (Test-Path -LiteralPath $desktopProject -PathType Container)) {
   throw "Electron desktop project does not exist: $desktopProject"
+}
+if (-not (Test-Path -LiteralPath $readerProject -PathType Container)) {
+  throw "PDF Reader project does not exist: $readerProject"
 }
 if (-not (Test-Path -LiteralPath $iconSource -PathType Leaf)) {
   throw "Setup icon does not exist: $iconSource"
@@ -265,7 +270,7 @@ if (-not $resolvedWorkRoot.StartsWith($tempRoot, [System.StringComparison]::Ordi
 }
 
 if (-not $SkipElectronBuild) {
-  Write-Host "[1/7] Building the standalone Next.js web application..."
+  Write-Host "[1/8] Building the standalone Next.js web application..."
   if (Test-Path -LiteralPath $workRoot) {
     Remove-Item -LiteralPath $workRoot -Recurse -Force
   }
@@ -345,13 +350,37 @@ if (-not $SkipElectronBuild) {
     (Join-Path $localAppRoot 'web.sha256'),
     (Get-Sha256Hex -LiteralPath $webArchive),
     (New-Object System.Text.UTF8Encoding($false)))
+
+  Write-Host "[2/8] Building the deterministic local PDF Reader..."
+  Push-Location $readerProject
+  try {
+    & bun run build
+    if ($LASTEXITCODE -ne 0) {
+      throw "PDF Reader production build failed with exit code $LASTEXITCODE."
+    }
+  } finally {
+    Pop-Location
+  }
+  $readerPayloadRoot = Join-Path $localAppRoot 'reader'
+  Copy-DirectoryDereferenced `
+    -Source (Join-Path $readerProject 'dist') `
+    -Destination (Join-Path $readerPayloadRoot 'dist')
+  New-Item -ItemType Directory -Force -Path (Join-Path $readerPayloadRoot 'scripts') | Out-Null
+  Copy-Item `
+    -LiteralPath (Join-Path $readerProject 'scripts\start-local.mjs') `
+    -Destination (Join-Path $readerPayloadRoot 'scripts\start-local.mjs') `
+    -Force
+  Copy-Item `
+    -LiteralPath (Join-Path $readerProject 'package.json') `
+    -Destination (Join-Path $readerPayloadRoot 'package.json') `
+    -Force
   New-Item -ItemType Directory -Force -Path (Join-Path $localAppRoot 'runtime') | Out-Null
   Copy-Item `
     -LiteralPath (Get-Command bun).Source `
     -Destination (Join-Path $localAppRoot 'runtime\bun.exe') `
     -Force
 
-  Write-Host "[2/7] Building the portable Electron application..."
+  Write-Host "[3/8] Building the portable Electron application..."
   $preloadBundle = Join-Path $desktopProject 'preload.bundle.cjs'
   & bun build `
     (Join-Path $desktopProject 'preload.cjs') `
@@ -380,7 +409,7 @@ if (-not $SkipElectronBuild) {
     }
   }
 } else {
-  Write-Host "[1-2/7] Reusing the existing standalone and Electron application..."
+  Write-Host "[1-3/8] Reusing the existing standalone, PDF Reader, and Electron application..."
 }
 
 $portableApp = Join-Path $portableOutput 'win-unpacked'
@@ -483,7 +512,7 @@ if (Test-Path -LiteralPath $embeddedLocalApp) {
 }
 Copy-Item -LiteralPath $localAppRoot -Destination $embeddedLocalApp -Recurse -Force
 
-Write-Host "[3/7] Preparing the embedded application payload..."
+Write-Host "[4/8] Preparing the embedded application payload..."
 if (Test-Path -LiteralPath $payloadRoot) {
   Remove-Item -LiteralPath $payloadRoot -Recurse -Force
 }
@@ -503,7 +532,7 @@ if (-not (Test-Path -LiteralPath $mainExecutable -PathType Leaf)) {
   (New-Object System.Text.UTF8Encoding($false)))
 New-IcoFromPng -Source $iconSource -Destination (Join-Path $payloadRoot 'app.ico')
 
-Write-Host "[4/7] Compressing the offline payload..."
+Write-Host "[5/8] Compressing the offline payload..."
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 if (Test-Path -LiteralPath $payloadZip) {
   Remove-Item -LiteralPath $payloadZip -Force
@@ -514,7 +543,7 @@ if (Test-Path -LiteralPath $payloadZip) {
   [System.IO.Compression.CompressionLevel]::Optimal,
   $false)
 
-Write-Host "[5/7] Applying the product identity and modern visual theme..."
+Write-Host "[6/8] Applying the product identity and modern visual theme..."
 # SetupApp.cs is also BOM-less UTF-8; force the correct decoder before source
 # generation and compilation.
 $source = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $scriptRoot 'SetupApp.cs')
@@ -557,7 +586,7 @@ if ($source -match '__[A-Z0-9_]+__') {
   $source,
   (New-Object System.Text.UTF8Encoding($true)))
 
-Write-Host "[6/7] Compiling the setup manager..."
+Write-Host "[7/8] Compiling the setup manager..."
 $frameworkRoot = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319'
 $compiler = Join-Path $frameworkRoot 'csc.exe'
 if (-not (Test-Path -LiteralPath $compiler -PathType Leaf)) {
@@ -591,7 +620,7 @@ if ($LASTEXITCODE -ne 0) {
   throw "Setup compilation failed with exit code $LASTEXITCODE."
 }
 
-Write-Host "[7/7] Publishing the setup file and checksum..."
+Write-Host "[8/8] Publishing the setup file and checksum..."
 $outputDirectory = Split-Path -Parent $outputFile
 New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
 Copy-Item -LiteralPath $compiledSetup -Destination $outputFile -Force

@@ -21,7 +21,10 @@ if (new Set(identities).size !== identities.length) {
 }
 
 if (checkOnly) {
-  const current = await Bun.file(outputPath).text();
+  // Git may check the generated browser artifact out as CRLF on Windows while
+  // CI uses LF. Compare normalized text so the gate detects content drift, not
+  // an operating-system line-ending conversion.
+  const current = (await Bun.file(outputPath).text()).replaceAll("\r\n", "\n");
   if (current !== serialized) {
     throw new Error(
       "Grammar replacement catalog is stale. Run `bun run content:sync` and commit the result.",

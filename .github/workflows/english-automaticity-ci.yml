@@ -40,10 +40,6 @@ jobs:
       - name: Install exact dependencies
         run: bun install --frozen-lockfile
 
-      - name: Install exact PDF Reader dependencies
-        working-directory: Apps/Apps-For-Integeration/Reader-PDF-App
-        run: bun install --frozen-lockfile
-
       - name: Verify types, tests, installer schema, and lint
         run: bun run check
 

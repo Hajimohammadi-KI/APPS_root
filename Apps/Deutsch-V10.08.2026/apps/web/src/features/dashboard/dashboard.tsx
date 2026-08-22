@@ -248,9 +248,9 @@ export function Dashboard() {
               />
               <ProgressRow label="Heutige Übung" value={todayProgress} />
               <ProgressRow label="Sprechgenauigkeit" value={speakingAccuracy} />
-              <Link className="home-v2-primary" href="/heute">
+              <a className="home-v2-primary" href="/heute">
                 Heutiges Training fortsetzen <ChevronRight />
-              </Link>
+              </a>
             </article>
 
             <article className="home-v2-focus-card">
@@ -304,7 +304,7 @@ export function Dashboard() {
             </div>
             <div className="home-v2-course-list">
               {courses.map(({ title, detail, tone, href, icon: Icon }) => (
-                <Link
+                <a
                   className={`home-v2-course home-v2-course-${tone}`}
                   key={title}
                   href={href}
@@ -317,7 +317,7 @@ export function Dashboard() {
                     <small>{detail}</small>
                   </span>
                   <ChevronRight />
-                </Link>
+                </a>
               ))}
             </div>
           </section>

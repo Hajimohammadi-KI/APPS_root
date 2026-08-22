@@ -12,12 +12,25 @@ const statusCopy: Record<ConnectionState, string> = {
   offline: "Lokaler App-Dienst nicht erreichbar",
 };
 
+function isLoopbackHost(hostname: string) {
+  return (
+    hostname === "127.0.0.1" || hostname === "localhost" || hostname === "::1"
+  );
+}
+
 export function ApiConnectionStatus() {
   const [status, setStatus] = useState<ConnectionState>("checking");
 
   useEffect(() => {
     let active = true;
     let timer: ReturnType<typeof setTimeout> | undefined;
+
+    if (!isLoopbackHost(window.location.hostname)) {
+      setStatus("offline");
+      return () => {
+        active = false;
+      };
+    }
 
     async function checkConnection() {
       const controller = new AbortController();

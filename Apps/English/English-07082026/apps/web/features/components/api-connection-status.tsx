@@ -10,12 +10,26 @@ const statusCopy: Record<ConnectionState, string> = {
 	offline: "Local app service unavailable",
 };
 
+function isLoopbackHost(hostname: string) {
+	return hostname === "127.0.0.1" || hostname === "localhost" || hostname === "::1";
+}
+
 export function ApiConnectionStatus({ baseUrl }: { baseUrl: string }) {
 	const [status, setStatus] = React.useState<ConnectionState>("checking");
 
 	React.useEffect(() => {
 		let active = true;
 		let timer: ReturnType<typeof setTimeout> | undefined;
+		const target = new URL(baseUrl, window.location.origin);
+		const isPublicWebUsingLocalService =
+			!isLoopbackHost(window.location.hostname) && isLoopbackHost(target.hostname);
+
+		if (isPublicWebUsingLocalService) {
+			setStatus("offline");
+			return () => {
+				active = false;
+			};
+		}
 
 		async function checkConnection() {
 			const controller = new AbortController();

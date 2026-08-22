@@ -10,10 +10,11 @@
   --blue: #eaf2ff;
   --coral: #fff0ef;
 }
-* {
+.app-shell,
+.app-shell * {
   box-sizing: border-box;
 }
-body {
+.app-shell {
   margin: 0;
   background: #fbfaf8;
   color: var(--ink);
@@ -66,7 +67,7 @@ body {
   font-weight: 800;
   margin: 0 8px 8px;
 }
-button {
+.app-shell button {
   font: inherit;
   color: inherit;
   background: white;
@@ -76,23 +77,23 @@ button {
   cursor: pointer;
   transition: 0.18s;
 }
-button:hover {
+.app-shell button:hover {
   border-color: #a48be0;
   transform: translateY(-1px);
 }
-button:focus-visible {
+.app-shell button:focus-visible {
   outline: 3px solid #b9a5ed;
   outline-offset: 2px;
 }
-button:disabled {
+.app-shell button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-nav {
+.app-shell nav {
   display: grid;
   gap: 3px;
 }
-nav button {
+.app-shell nav button {
   border: 0;
   text-align: left;
   background: transparent;
@@ -132,10 +133,10 @@ nav button {
 .growth span {
   line-height: 1.5;
 }
-main {
+.app-shell > main {
   min-width: 0;
 }
-header {
+.app-shell > main > header {
   height: 88px;
   border-bottom: 1px solid var(--line);
   display: flex;
@@ -143,11 +144,11 @@ header {
   align-items: center;
   padding: 0 24px;
 }
-h1 {
+.app-shell > main > header h1 {
   font-size: 18px;
   margin: 0;
 }
-header p,
+.app-shell > main > header p,
 .topic-bar p {
   margin: 5px 0 0;
   color: var(--muted);
@@ -498,7 +499,7 @@ header p,
   color: var(--muted);
   line-height: 1.45;
 }
-footer {
+.app-shell > main > footer {
   border-top: 1px solid var(--line);
   padding: 16px 22px;
   display: grid;
@@ -511,7 +512,7 @@ footer {
 .continue {
   font-weight: 700;
 }
-input {
+.app-shell input {
   accent-color: var(--violet);
 }
 @media (max-width: 1100px) {
@@ -543,7 +544,7 @@ input {
   .sidebar {
     display: none;
   }
-  header {
+  .app-shell > main > header {
     height: auto;
     padding: 16px;
     align-items: flex-start;
@@ -597,7 +598,7 @@ input {
   .evidence {
     grid-template-columns: 1fr;
   }
-  footer {
+  .app-shell > main > footer {
     padding: 12px;
   }
   .brand {

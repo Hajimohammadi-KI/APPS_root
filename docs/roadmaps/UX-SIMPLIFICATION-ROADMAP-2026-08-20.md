@@ -245,7 +245,7 @@ Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای اضاف
 ساختار، self-repair و انتقال به زمینهٔ جدید اندازه‌گیری شود. «ASR سریع» یا
 «اثر Booster» تا آزمون روی دستگاه و مطالعهٔ مقایسه‌ای، ادعای تأییدشده نیست.
 
-## فاز ۷ — Hybrid Coach و Adherence Engineering ⬜
+## فاز ۷ — Hybrid Coach و Adherence Engineering 🟡
 
 **اثر برای زبان‌آموز:** بازخورد قابل توضیح می‌گیرد و در روزهای کم‌انرژی به
 جای ترک کامل، یک جلسهٔ کوچک و معنی‌دار دارد.
@@ -259,6 +259,13 @@ Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای اضاف
 5. Implementation Intentions، micro-goal پنج‌دقیقه‌ای، comeback flow و
    nudge روزهای ۳/۷/۱۴ با opt-in و cooldown؛
 6. IndexedDB محلی و صف همگام‌سازی برای وب آفلاین‌محور.
+
+**وضعیت 2026-08-22:** بخش Implementation Intentions در PR #28
+(`32e8a8c`) برای هر دو اپ ادغام و Issue #6 بسته شد. داده فقط محلی است، شروع
+خالی و اختیاری است، 0 یا 2 تا 5 قصد فعال پذیرفته می‌شود و این بخش هیچ nudge،
+event یا تصمیم mastery تولید نمی‌کند. Guarded in-app nudges در Issue #7 باز
+است و فقط با opt-in، cooldown و جداسازی engagement از learning outcome اجرا
+خواهد شد.
 
 **معیار پذیرش:** همهٔ تصمیم‌های ارتقای سطح deterministic و قابل audit
 باشند؛ خروجی LLM schema-valid و قابل ردکردن باشد؛ نوتیفیکیشن بدون رضایت
@@ -317,4 +324,5 @@ viewport و تست دستی Screen Reader/میکروفون روی سخت‌اف�
 - **۲۰۲۶-۰۸-۲۲**: G2 در PR #21 (`032ad14`) با CI سبز عبور کرد؛ consent نسخه‌دار، baseline پیش از intervention، export پژوهشی امن، revoke/delete، retention و data-quality در هر دو زبان ادغام و با Settings E2E تأیید شد. فاز ۴ فقط برای Accessibility baseline قابل تکرار باز است؛ cohort واقعی و اثر یادگیری همچنان N/A است.
 - **۲۰۲۶-۰۸-۲۲**: G3 در PR #24 (`ea3d25c`) با دو CI سبز عبور کرد؛ Shadow Safety به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شد، اما default-off، نامرئی و بدون تغییر یا persistence دادهٔ زبان‌آموز باقی ماند. E2E انگلیسی و آلمانی حفظ learner/evidence را تأیید کرد؛ cohort واقعی و اثر یادگیری همچنان N/A است.
 - **۲۰۲۶-۰۸-۲۲**: زیرساخت G4 در PR #26 (`8edaba2`) با Core/Content CI و German CI سبز ادغام شد: schema mediation، rubric، weighted kappa، adjudication، جلوگیری از solution leakage و quarantine برای draftهای B1 هر دو زبان. بازبینی انسانی، agreement و اثر یادگیری هنوز N/A است؛ G4 عبور نکرده است.
+- **۲۰۲۶-۰۸-۲۲**: Implementation Intentions در PR #28 (`32e8a8c`) با دو CI سبز و Settings E2E هر دو زبان ادغام شد؛ Issue #6 بسته و Issue #7 برای nudge رضایت‌محور باز است. این قابلیت local-only است و هیچ nudge، telemetry یا ادعای mastery تولید نمی‌کند.
 - **۲۰۲۶-۰۸-۲۲ ۰۰:۳۲ CEST**: نسخهٔ جدید روی `automaticity-ux-roadmap-elahe.vercel.app` با وضعیت Vercel Ready منتشر شد. Alias قدیمی به‌دلیل مالکیت Scope دیگر قابل انتقال نبود و محتوای قدیمی آن به‌عنوان نسخهٔ جاری معرفی نمی‌شود.

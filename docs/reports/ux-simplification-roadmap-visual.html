@@ -726,6 +726,10 @@
       <span>زیرساخت G4 در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/26">PR #26</a> با merge <code class="path">8edaba2</code> و دو CI سبز ادغام شد: schema mediation، rubric ثابت، weighted kappa، adjudication و quarantine برای draftهای B1 هر دو زبان. بازبینی انسانی و agreement هنوز N/A است؛ G4 عبور نکرده است.</span>
     </div>
     <div class="hist-entry">
+      <span class="hist-date">2026-08-22</span>
+      <span>Implementation Intentions در <a href="https://github.com/Hajimohammadi-KI/APPS_root/pull/28">PR #28</a> با merge <code class="path">32e8a8c</code>، دو CI سبز و Settings E2E هر دو زبان ادغام شد. Issue #6 بسته و Issue #7 برای nudge رضایت‌محور باز است؛ داده local-only است و هیچ nudge، telemetry یا ادعای mastery تولید نمی‌شود.</span>
+    </div>
+    <div class="hist-entry">
       <span class="hist-date">2026-08-22 00:32 CEST</span>
       <span>این نسخه با وضعیت Vercel Ready روی <a href="https://automaticity-ux-roadmap-elahe.vercel.app">automaticity-ux-roadmap-elahe.vercel.app</a> منتشر شد. Alias قدیمی در Scope دیگری است و حساب فعلی امکان انتقال آن را ندارد.</span>
     </div>
@@ -871,12 +875,12 @@
       }),
     },
     {
-      id: "p7", phase: "فاز ۷", title: "Hybrid Coach و Adherence", status: "pending", when: "۴ تا ۹ هفته",
+      id: "p7", phase: "فاز ۷", title: "Hybrid Coach و Adherence", status: "active", when: "۴ تا ۹ هفته",
       summary: "بازخورد قابل توضیح + مسیر بازگشت پس از افت",
       body: structuredPhase({
         effect: `<p>بازخورد روشن می‌گیرد و در روز کم‌انرژی به‌جای ترک کامل، جلسه‌ای کوچک و معنی‌دار دارد.</p>`,
         dependency: `<p>event contract فاز ۴ و سیگنال‌های گفتار/محتوای معتبر فازهای ۵ و ۶.</p>`,
-        technical: `<ol><li>Rule Engine + FSRS برای زمان‌بندی و تصمیم شواهد</li><li>LanguageTool + قواعد اختصاصی + UD برای پیشنهاد</li><li>ASR فقط transcript</li><li>LLM فقط generation/explanation با خروجی JSON؛ نه mastery</li><li>Implementation Intentions، micro-goal پنج‌دقیقه‌ای، comeback و nudge روز ۳/۷/۱۴ با opt-in</li><li>IndexedDB و صف همگام‌سازی برای PWA آفلاین‌محور</li></ol>`,
+        technical: `<ol><li>Rule Engine + FSRS برای زمان‌بندی و تصمیم شواهد</li><li>LanguageTool + قواعد اختصاصی + UD برای پیشنهاد</li><li>ASR فقط transcript</li><li>LLM فقط generation/explanation با خروجی JSON؛ نه mastery</li><li>✅ Implementation Intentions در PR #28؛ local-only و بدون nudge/event</li><li>بعدی: micro-goal، comeback و nudge روز ۳/۷/۱۴ فقط با opt-in و cooldown در Issue #7</li><li>IndexedDB و صف همگام‌سازی برای PWA آفلاین‌محور</li></ol>`,
         acceptance: `<p>تصمیم ارتقای سطح deterministic و audit-able باشد؛ خروجی LLM قابل ردکردن و schema-valid باشد؛ نوتیفیکیشن بدون رضایت ارسال نشود؛ conversion نوتیفیکیشن جدا از outcome یادگیری گزارش شود.</p>`
       }),
     },

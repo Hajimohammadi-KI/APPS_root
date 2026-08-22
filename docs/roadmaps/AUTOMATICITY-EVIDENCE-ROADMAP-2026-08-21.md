@@ -1,7 +1,7 @@
 
 # رودمپ اجرایی اتوماتیک‌شدن زبان و شواهد پژوهشی
 
-**نسخه:** 1.16
+**نسخه:** 1.17
 
 **آخرین به‌روزرسانی:** 2026-08-22
 **دامنه:** English Automaticity و DeutschFlow (فقط این دو اپ — بدون پروژهٔ لیسانس)
@@ -39,9 +39,9 @@
 | FSRS-6 Shadow | `ts-fsrs@5.4.1` و FSRS-6.0 ثابت؛ 12 تست و 35 assertion، بردار رسمی، بازپخش 1,000 تاریخچه، مقایسهٔ due-count، rollback و migration-loss | [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34)، merge `00998b9`؛ [Core/App CI 32546150383](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150383) و [German verify 32546150384](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32546150384) سبز؛ Issue #5 بسته |
 | مسیرهای canonical و E2E آلمانی | مالکیت `/heute`، `/grammatik`، `/studio`، `/einstellungen` و `/klassik` مستند شد؛ Shell تکراری Studio حذف بصری، CSS محدود به Studio، چیدمان container-responsive و انتظار PWA آفلاین به UI فعلی اصلاح شد | [PR #36](https://github.com/Hajimohammadi-KI/APPS_root/pull/36)، merge `463a82d`؛ 25 تست non-opt-in پاس و 2 تست opt-in جدا؛ PWA production/offline نیز پاس؛ [German CI 32547665744](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32547665744) |
 | انتشار DeutschFlow 20.8.25 | از `main` فعلی ساخته شد؛ نصب تازه، اجرای مستقیم دسکتاپ، وب/API واقعی، ارتقا از 20.8.24، repair پس از خرابی عمدی version marker، uninstall و حفظ دقیق دادهٔ ساختگی پاس شد | [PR #38](https://github.com/Hajimohammadi-KI/APPS_root/pull/38)، merge `6239e3c`؛ [CI 32548697753](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32548697753)؛ Setup SHA-256 `B95AA51EE28E91B3A8493A239C57E8BB08CBC8F422741112EBEAAA98FD313724`؛ payload SHA-256 `52A99AC6E0A99001A9891E113F00DE7F77E5273B198199B9C79092F8720321CA` |
-| انتشار English Automaticity 27.3.17 | Grammar Lab اکنون مستقیماً از منبع canonical مؤلف‌شده تولید می‌شود: 112 واحد و دقیقاً 6 تمرین برای هر واحد، در مجموع 672 تمرین. `content:check` هر drift بعدی را در build/CI متوقف می‌کند. 31/31 تست E2E محلی و CI مرورگر پاس شد؛ نصب تازه، startup، ارتقا از 27.3.16، repair پس از خرابی عمدی و حفظ داده پس از uninstall نیز تأیید شد | [PR #45](https://github.com/Hajimohammadi-KI/APPS_root/pull/45)، merge `02f6b518`؛ [CI 32567360766](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32567360766)؛ [Issue #42 بسته](https://github.com/Hajimohammadi-KI/APPS_root/issues/42)؛ Setup SHA-256 `6208595B5778783BC4A175E9A76E30EE912F02C8EB4DFE56C60A38C5567D1CA6`؛ payload SHA-256 `F030530E96931650152D549065DF91EC412D13E3650E4DAFE5ADCDFDD921E058` |
-| مرز باقی‌ماندهٔ انتشار انگلیسی | اختلاف منبع Grammar رفع شده است؛ اما PDF Reader روی پورت 4322 هنوز وارد lifecycle نصب انگلیسی نشده و مسیر render/select/highlight/annotate/save/reopen همراه با حفظ داده پس از update/repair آزمون نشده است | [Issue #43](https://github.com/Hajimohammadi-KI/APPS_root/issues/43)؛ **N/A — lifecycle یکپارچهٔ PDF هنوز تأیید نشده است** |
-| انتشار عمومی رودمپ | همین HTML به‌صورت artifact محدود و عمومی در GitHub Pages منتشر شد؛ root و دو alias محتوای hash-identical می‌دهند و در viewport تبلت 800×1280 سرریز افقی یا خطای console ندارند | [PR #39](https://github.com/Hajimohammadi-KI/APPS_root/pull/39)، merge `be6bde6`؛ [Pages deploy 32548857892](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32548857892) |
+| انتشار English Automaticity 27.3.18 | Grammar Lab همچنان از منبع canonical مؤلف‌شده تولید می‌شود: 112 واحد و دقیقاً 6 تمرین برای هر واحد، در مجموع 672 تمرین. Research PDF Studio اکنون همراه Installer روی پورت loopback اختصاصی 4332 نصب و از Notebook/PDF باز می‌شود. 31/31 تست E2E اپ، 7 تست Reader و 2/2 تست مرورگر Reader پاس شد؛ نصب تازه، startup، ارتقا از 27.3.17، repair پس از خرابی عمدی، uninstall و حفظ داده نیز تأیید شد | [PR #47](https://github.com/Hajimohammadi-KI/APPS_root/pull/47)، merge `0e91c8f`؛ [English CI](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32570722314)، [Reader CI](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32570722315) و [Core CI](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32570722323)؛ [Issue #43 بسته](https://github.com/Hajimohammadi-KI/APPS_root/issues/43)؛ Setup SHA-256 `CE6B6C998E713E1BA19380EBBD84FCC0AF97B503F94A5160D7D7BD744E9183FA`؛ payload SHA-256 `B7C92131DC9BEDD6122B85CC197B2DF2936F0BCC06B5C9E4618A392E95AC92C0` |
+| چرخهٔ یکپارچهٔ PDF Reader | health دقیق، بازکردن PDF واقعی با شناسهٔ SHA-256 بدون افشای مسیر فایل، render و انتخاب متن، highlight، comment، export و reload در نصب تازه و پس از repair آزمون شد. viewport تبلت 800×1280 و حفظ داده پس از update/repair/uninstall نیز پاس شد | **تأیید release lifecycle**؛ این مدرک فنی جای G4/G5 یا سنجش outcome زبان‌آموز را نمی‌گیرد |
+| انتشار عمومی رودمپ | همین HTML به‌صورت artifact محدود و عمومی در GitHub Pages منتشر می‌شود؛ root و دو alias باید محتوای hash-identical بدهند و در viewport تبلت 800×1280 بدون سرریز افقی یا خطای console باشند | [v1.17 PR #48](https://github.com/Hajimohammadi-KI/APPS_root/pull/48)، [Pages setup PR #39](https://github.com/Hajimohammadi-KI/APPS_root/pull/39) و [نخستین deploy](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32548857892) |
 | TypeScript و mirror parity | تأییدشده در این بررسی | `bun run typecheck` و `node sync-workspaces.mjs --check` |
 | CI اختصاصی | هر دو workflow PR #11 سبز و PR merge شده است | [Learning Core run 32505151386](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151386) و [German run 32505151423](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32505151423) |
 | اصلاح runtime و مسیرهای آلمانی | PR [#13](https://github.com/Hajimohammadi-KI/APPS_root/pull/13) پس از تست کامل محلی و CI لینوکس merge شد | merge `b3fbc07` و [run 32510365622](https://github.com/Hajimohammadi-KI/APPS_root/actions/runs/32510365622) |
@@ -109,7 +109,7 @@ flowchart LR
 | **G3 — Shadow Safety** | ✅ در PR #24 عبور کرد: خروجی جدید کنار برنامهٔ فعلی محاسبه می‌شود؛ E2E هر دو زبان ثابت می‌کند UI و دادهٔ learner/evidence تغییر نمی‌کنند | flag پیش‌فرض خاموش می‌ماند؛ اثر یادگیری همچنان N/A است |
 | **G4 — Content Quality** | 🟡 زیرساخت در PR #26 ادغام شد؛ provenance، مجوز، rubric، quarantine و CI موجود است، اما دو بازبین انسانی واقعی و agreement هنوز N/A هستند | draftها وارد برنامهٔ روزانه نمی‌شوند و Issue #8 باز می‌ماند |
 | **G5 — Learning Evidence** | pre/post مستقل، delayed recall و novel transfer با دادهٔ واقعی | واژهٔ «automatic» فقط هدف محصول باشد، نه نتیجهٔ اثبات‌شده |
-| **G6 — Release Lifecycle** | build، E2E، responsive، Install/Update/Repair و حفظ داده پاس شوند؛ DeutschFlow 20.8.25 و English 27.3.17 چرخهٔ اصلی خود را گذرانده‌اند، اما PDF Reader متصل هنوز وارد lifecycle انگلیسی نشده و Gate سراسری تا G4/G5 باز است | هیچ انتشار جدیدی بدون تکرار چرخه انجام نشود؛ Issue #43 تا آزمون render/save/reopen و حفظ داده باز بماند |
+| **G6 — Release Lifecycle** | build، E2E، responsive، Install/Update/Repair و حفظ داده پاس شوند؛ DeutschFlow 20.8.25 و English 27.3.18، شامل PDF Reader متصل، چرخهٔ انتشار خود را گذرانده‌اند. Gate سراسری همچنان تا G4/G5 باز است | هیچ انتشار جدیدی بدون تکرار چرخه انجام نشود؛ شواهد release به‌جای human review یا outcome واقعی استفاده نشوند |
 
 > **چرا G1 فقط روی یک سطح (B1) تعریف شده، نه همهٔ سطوح؟** هدف G1 اثبات
 > درستی مسیر فنی (pipeline) است، نه پوشش محتوا — سطح فقط metadata روی
@@ -456,7 +456,7 @@ Intervention فقط وقتی گسترش می‌یابد که:
 | 9 | Forced-output booster | [#4](https://github.com/Hajimohammadi-KI/APPS_root/issues/4) و [PR #32](https://github.com/Hajimohammadi-KI/APPS_root/pull/32) | ✅ merge `1c6fb95`؛ Issue #4 بسته و شش check سبز |
 | 10 | FSRS shadow evaluation | [#5](https://github.com/Hajimohammadi-KI/APPS_root/issues/5) و [PR #34](https://github.com/Hajimohammadi-KI/APPS_root/pull/34) | ✅ merge `00998b9`؛ زیرساخت shadow کامل و Issue #5 بسته؛ rollout واقعی هنوز N/A |
 | 11 | Canonical German routes و Chromium E2E | [#12](https://github.com/Hajimohammadi-KI/APPS_root/issues/12) و [PR #36](https://github.com/Hajimohammadi-KI/APPS_root/pull/36) | ✅ merge `463a82d`؛ Issue #12 بسته، E2E و PWA آفلاین پاس |
-| 12 | DeutschFlow 20.8.25، English 27.3.17 و public roadmap mirror | [PR #38](https://github.com/Hajimohammadi-KI/APPS_root/pull/38)، [PR #45](https://github.com/Hajimohammadi-KI/APPS_root/pull/45) و [PR #39](https://github.com/Hajimohammadi-KI/APPS_root/pull/39) | ✅ چرخهٔ اصلی هر دو installer و Pages deploy پاس؛ اختلاف منبع Grammar در #42 رفع شد، lifecycle PDF در #43 باقی است و این شواهد عبور G4/G5 نیست |
+| 12 | DeutschFlow 20.8.25، English 27.3.18 با PDF Reader و public roadmap mirror | [PR #38](https://github.com/Hajimohammadi-KI/APPS_root/pull/38)، [PR #47](https://github.com/Hajimohammadi-KI/APPS_root/pull/47) و [PR #39](https://github.com/Hajimohammadi-KI/APPS_root/pull/39) | ✅ چرخهٔ هر دو installer و Pages deploy پاس؛ اختلاف Grammar در #42 و lifecycle یکپارچهٔ PDF در #43 رفع و بسته شد. این‌ها شواهد release هستند، نه عبور G4/G5 |
 | 13 | Independent assessment | [#9](https://github.com/Hajimohammadi-KI/APPS_root/issues/9) | G3 و G4 |
 | 14 | Consented pilot analytics | [#10](https://github.com/Hajimohammadi-KI/APPS_root/issues/10) | G5 و دادهٔ چندکاربره |
 
@@ -491,10 +491,10 @@ Intervention فقط وقتی گسترش می‌یابد که:
 **اقدام بعدی واقعی عبور G4 در Issue #8 است:** دو بازبین انسانی مستقل باید هر دو
 واحد mediation پایلوت را با rubric نسخه‌دار بررسی کنند و agreement/adjudication
 واقعی ثبت شود. اختلاف منبع Grammar در
-[#42](https://github.com/Hajimohammadi-KI/APPS_root/issues/42) رفع و بسته شد؛ کار
-فنی بعدی [#43](https://github.com/Hajimohammadi-KI/APPS_root/issues/43) است تا
-PDF Reader وارد lifecycle واقعی Starter/Installer شود. انتشارهای تأییدشدهٔ DeutschFlow
-20.8.25 و English 27.3.17 و mirror عمومی رودمپ، شواهد release هستند و جای human
+[#42](https://github.com/Hajimohammadi-KI/APPS_root/issues/42) و lifecycle یکپارچهٔ
+PDF Reader در [#43](https://github.com/Hajimohammadi-KI/APPS_root/issues/43) رفع و
+بسته شده‌اند. انتشارهای تأییدشدهٔ DeutschFlow 20.8.25 و English 27.3.18 و mirror
+عمومی رودمپ، شواهد release هستند و جای human
 review یا outcome واقعی را نمی‌گیرند. Issues #9 و #10 تا دریافت review، پایلوت و
 دادهٔ واقعی نباید موفق گزارش شوند. release array خالی، دادهٔ خام خارج از برنامهٔ
 روزانه و Installer، و learning outcome برابر N/A باقی می‌ماند.

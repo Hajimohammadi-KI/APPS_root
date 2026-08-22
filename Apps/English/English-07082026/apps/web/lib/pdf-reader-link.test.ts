@@ -1,6 +1,17 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, describe, expect, test } from "bun:test";
 
+import { GET as openPdfReader } from "../app/pdf-reader/route";
 import { pdfReaderHrefForResource } from "./pdf-reader-link";
+
+const originalReaderUrl = process.env.NEXT_PUBLIC_PDF_READER_URL;
+
+afterEach(() => {
+  if (originalReaderUrl === undefined) {
+    delete process.env.NEXT_PUBLIC_PDF_READER_URL;
+  } else {
+    process.env.NEXT_PUBLIC_PDF_READER_URL = originalReaderUrl;
+  }
+});
 
 describe("shared PDF reader links", () => {
   test("sends an exact Drive PDF to the shared reader", () => {
@@ -24,5 +35,20 @@ describe("shared PDF reader links", () => {
       focus: "Reading",
       context: "English A1",
     })).toBeNull();
+  });
+
+  test("uses the hosted reader on the web and preserves incoming context", () => {
+    process.env.NEXT_PUBLIC_PDF_READER_URL =
+      "https://research-pdf-studio.vercel.app/";
+
+    const response = openPdfReader(
+      new Request("https://english.example/pdf-reader?topic=present-perfect"),
+    );
+    const location = new URL(response.headers.get("location") ?? "");
+
+    expect(response.status).toBe(307);
+    expect(location.origin).toBe("https://research-pdf-studio.vercel.app");
+    expect(location.searchParams.get("lang")).toBe("en");
+    expect(location.searchParams.get("topic")).toBe("present-perfect");
   });
 });

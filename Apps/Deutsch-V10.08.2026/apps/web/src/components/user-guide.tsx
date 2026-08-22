@@ -110,7 +110,7 @@ export function UserGuideButton() {
           <Button
             nativeButton={false}
             size="lg"
-            render={<Link href="/heute" onClick={() => setOpen(false)} />}
+            render={<a href="/heute" onClick={() => setOpen(false)} />}
           >
             Jetzt mit Schritt 1 beginnen
             <ArrowRight data-icon="inline-end" aria-hidden="true" />
@@ -149,7 +149,7 @@ export function QuickStartGuide() {
       <Button
         nativeButton={false}
         className="quick-start-action"
-        render={<Link href="/heute" />}
+        render={<a href="/heute" />}
       >
         Schritt 1 starten
         <ArrowRight data-icon="inline-end" aria-hidden="true" />

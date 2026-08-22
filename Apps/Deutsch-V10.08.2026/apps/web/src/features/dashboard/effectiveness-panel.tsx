@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   Activity,
   ArrowRight,
@@ -151,7 +150,7 @@ export function EffectivenessPanel() {
             className="mt-4 w-full"
             nativeButton={false}
             render={
-              <Link
+              <a
                 href={
                   state.learner.selfDeclaredLevel ? "/heute" : "/einstellungen"
                 }

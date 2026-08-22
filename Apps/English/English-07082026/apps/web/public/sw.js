@@ -1,9 +1,10 @@
-const CACHE = "english-automaticity-v28-integrated-pages-1";
+const CACHE = "english-automaticity-v28-canonical-grammar-1";
 const PRECACHE = [
   "/",
   "/daily",
   "/studio",
   "/grammar",
+  "/replacements/en/grammar-curriculum.js",
   "/offline",
   "/manifest.webmanifest",
   "/icons/icon-192.png",

@@ -136,8 +136,9 @@ test("opens every current product surface", async ({ page }) => {
   }
 });
 
-// Guards the catalog's actual size (72 speaking topics, 144 visible grammar
-// units, 43 resources), exercises search + deep-link + reload, and
+// Guards the catalog's actual size (72 speaking topics, 112 authored grammar
+// units with 672 controlled exercises, 43 resources), exercises search +
+// deep-link + reload, and
 // confirms the retired "thesis" screen has no surviving nav link.
 test("preserves catalog counts and supports grammar practice", async ({
   page,
@@ -147,7 +148,7 @@ test("preserves catalog counts and supports grammar practice", async ({
 
   await page.goto("/grammar");
   await expect(
-    page.getByText("144 CEFR-aligned units · 432 tracked exercises"),
+    page.getByText("112 CEFR-aligned units · 672 tracked exercises"),
   ).toBeVisible();
   // Search narrows the list down to exactly one matching unit...
   await page.getByLabel("Search topics").fill("Verb be: am/is/are");
@@ -168,7 +169,7 @@ test("preserves catalog counts and supports grammar practice", async ({
       name: "Correct the sentence: I am agree.",
     }),
   ).toBeVisible();
-  await expect(page.getByText("0/3", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("0/6", { exact: true }).first()).toBeVisible();
 
   // Answer the first practice item correctly and confirm real feedback.
   const answer = page.getByPlaceholder("Enter English answer");
@@ -356,7 +357,7 @@ test("provides accordion navigation and cross-platform installation", async ({
   expect(serviceWorkerResponse.ok()).toBeTruthy();
   const serviceWorker = await serviceWorkerResponse.text();
   expect(serviceWorker).toContain(
-    "english-automaticity-v28-integrated-pages-1",
+    "english-automaticity-v28-canonical-grammar-1",
   );
   expect(serviceWorker).toContain('"/daily"');
   expect(serviceWorker).toContain("SKIP_WAITING");

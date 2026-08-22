@@ -146,6 +146,11 @@ jobs:
         working-directory: ${{ matrix.app_root }}
         run: bunx playwright install --with-deps chromium
 
+      - name: Build the English API used by its Playwright web server
+        if: matrix.app_root == 'Apps/English/English-07082026'
+        working-directory: ${{ matrix.app_root }}
+        run: bun run --cwd apps/api build
+
       - name: Verify forced-output booster in the browser
         working-directory: ${{ matrix.test_root }}
         run: bunx playwright test ${{ matrix.spec }}

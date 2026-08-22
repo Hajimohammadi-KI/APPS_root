@@ -11,12 +11,15 @@ on:
       - "Apps/English/English-07082026/packages/content/**"
       - "Apps/Deutsch-V10.08.2026/packages/content/**"
       - "Apps/English/English-07082026/apps/web/public/replacements/en/daily.html"
+      - "Apps/English/English-07082026/apps/web/features/screens/automaticity-screen.tsx"
       - "Apps/English/English-07082026/apps/web/public/learning-core/forced-output-booster.js"
       - "Apps/English/English-07082026/tests/e2e/forced-output-booster.spec.ts"
       - "Apps/Deutsch-V10.08.2026/apps/web/public/replacements/de/heute.html"
+      - "Apps/Deutsch-V10.08.2026/apps/web/src/features/learner-state/learner-state-provider.tsx"
       - "Apps/Deutsch-V10.08.2026/apps/web/public/learning-core/forced-output-booster.js"
       - "Apps/Deutsch-V10.08.2026/apps/web/e2e/forced-output-booster.spec.ts"
       - "docs/automaticity/FORCED-OUTPUT-BOOSTER.md"
+      - "docs/automaticity/FSRS-SHADOW-EVALUATION.md"
       - "Apps/English/English-07082026/bun.lock"
       - "Apps/Deutsch-V10.08.2026/bun.lock"
       - ".github/workflows/learning-core-adherence-ci.yml"
@@ -28,12 +31,15 @@ on:
       - "Apps/English/English-07082026/packages/content/**"
       - "Apps/Deutsch-V10.08.2026/packages/content/**"
       - "Apps/English/English-07082026/apps/web/public/replacements/en/daily.html"
+      - "Apps/English/English-07082026/apps/web/features/screens/automaticity-screen.tsx"
       - "Apps/English/English-07082026/apps/web/public/learning-core/forced-output-booster.js"
       - "Apps/English/English-07082026/tests/e2e/forced-output-booster.spec.ts"
       - "Apps/Deutsch-V10.08.2026/apps/web/public/replacements/de/heute.html"
+      - "Apps/Deutsch-V10.08.2026/apps/web/src/features/learner-state/learner-state-provider.tsx"
       - "Apps/Deutsch-V10.08.2026/apps/web/public/learning-core/forced-output-booster.js"
       - "Apps/Deutsch-V10.08.2026/apps/web/e2e/forced-output-booster.spec.ts"
       - "docs/automaticity/FORCED-OUTPUT-BOOSTER.md"
+      - "docs/automaticity/FSRS-SHADOW-EVALUATION.md"
       - "Apps/English/English-07082026/bun.lock"
       - "Apps/Deutsch-V10.08.2026/bun.lock"
       - ".github/workflows/learning-core-adherence-ci.yml"
@@ -59,6 +65,9 @@ jobs:
         with:
           bun-version: 1.3.14
 
+      - name: Install exact learning-core dependencies
+        run: bun install --frozen-lockfile
+
       - name: Type-check pure TypeScript core
         run: bun run typecheck
 
@@ -67,6 +76,9 @@ jobs:
 
       - name: Run forced-output booster contract tests
         run: bun run test:booster
+
+      - name: Run FSRS-6 shadow replay and migration tests
+        run: bun run test:fsrs-shadow
 
       - name: Run complete learning-core tests
         run: bun run test
@@ -114,6 +126,37 @@ jobs:
       - name: Verify authored content and release quarantine
         working-directory: ${{ matrix.app }}
         run: bun test packages/content/src/content.test.ts
+
+  fsrs-app-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - Apps/English/English-07082026
+          - Apps/Deutsch-V10.08.2026
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Install exact dependencies
+        working-directory: ${{ matrix.app }}
+        run: bun install --frozen-lockfile
+
+      - name: Type-check FSRS shadow integration
+        working-directory: ${{ matrix.app }}
+        run: bun run --cwd apps/web typecheck
+
+      - name: Build FSRS shadow integration
+        working-directory: ${{ matrix.app }}
+        run: bun run --cwd apps/web build
 
   booster-browser:
     runs-on: ubuntu-latest

@@ -5,6 +5,7 @@ export const LEARNING_DATA_EXPORT_KIND =
 export * from "./adherence";
 export * from "./booster";
 export * from "./content-quality";
+export * from "./fsrs-shadow";
 export * from "./measurement";
 
 export type LearningLanguage = "en" | "de";

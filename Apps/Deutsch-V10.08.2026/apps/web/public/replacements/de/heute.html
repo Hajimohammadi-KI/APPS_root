@@ -30,6 +30,7 @@
   <nav class="side" id="side" aria-label="Hauptnavigation"><div class="brand"><span class="logo">♧</span><span class="brand-copy"><strong>Deutsch<br>Automaticity</strong><small>Messbare tägliche Sprachpraxis</small></span></div><div class="side-body"><section class="nav-section"><div class="nav-heading">Tägliche Praxis</div><button class="nav-parent"><span class="nav-glyph">⌂</span><span>Heute üben und<br>sprechen</span></button><button class="nav-item" data-route="/"><span class="nav-glyph">⌂</span><span>Startseite</span></button><button class="nav-item active" data-route="/heute"><span class="nav-glyph">◷</span><span>Heutiges Training</span></button><button class="nav-item" data-route="/studio"><span class="nav-glyph">▢</span><span>Konversationsstudio</span></button></section><section class="nav-section"><div class="nav-heading">Lernpfade</div><button class="nav-parent"><span class="nav-glyph">⚙</span><span>Grammatik und<br>Deutsch lernen</span><span class="chev">⌃</span></button><button class="nav-item" data-route="/grammatik"><span class="nav-glyph">▣</span><span>Grammatik-Labor</span></button><button class="nav-item" data-route="/ressourcen"><span class="nav-glyph">□</span><span>Lernressourcen</span></button><button class="nav-item" data-route="/integrierte-fertigkeiten"><span class="nav-glyph">▥</span><span>Integrierte Fertigkeiten</span></button></section><section class="nav-section"><div class="nav-heading">Lernnachweise</div><button class="nav-parent"><span class="nav-glyph">◷</span><span>Fehler und Aufnahmen</span><span class="chev">⌄</span></button><button class="nav-item" data-route="/notizbuch"><span class="nav-glyph">▣</span><span>Notizbuch &amp; PDF-Reader</span></button><button class="nav-item" data-route="/karteikarten"><span class="nav-glyph">□</span><span>Wortschatz &amp; Karteikarten</span></button></section><section class="nav-section"><div class="nav-heading">App und Einstellungen</div><button class="nav-parent" data-route="/einstellungen"><span class="nav-glyph">⚙</span><span>Speicher und<br>persönliche Optionen</span><span class="chev">⌄</span></button></section></div></nav>
   <div class="content"><div class="shell"><main class="main"><h2 class="greeting">Guten Morgen, Elahe 👋</h2>
     <section class="hero"><div class="owl" role="img" aria-label="Violettes Eulenmaskottchen"><span class="spark s1">✦</span><span class="spark s2">✦</span><span class="spark s3">✦</span><i class="ear l"></i><i class="ear r"></i><i class="wing l"></i><i class="wing r"></i><i class="body"></i><i class="face l"></i><i class="face r"></i><i class="eye l"></i><i class="eye r"></i><i class="beak"></i><i class="foot l"></i><i class="foot r"></i></div><div class="hero-copy"><h1>Deine heutige 15-Minuten-Lernmission</h1><h2 id="mission-focus">sein: bin/ist/sind · A1</h2><button class="primary action" data-action="Heutiges Training wird gestartet"><span class="play">▶</span>Heutiges Training starten</button><div class="meta"><strong>0 von 7 Aktivitäten erledigt</strong><span class="divider"></span><span>Etwa 15 Minuten</span></div></div><div class="progress-ring" style="background:#eee9f3"><div class="ring-text"><b>0<span>%</span></b><small>Dein Fortschritt</small></div></div></section>
+    <div id="forced-output-booster" hidden></div>
     <section class="phase"><h3 class="phase-title">Phase 1 · Muster aufbauen</h3><div class="cards two">
       <article class="activity active"><span class="number">1</span><div class="act-icon">◎</div><div class="act-body"><div class="act-head"><b>Aktivieren und korrekt anwenden</b><span class="tag purple">Bereit</span></div><p class="desc">Rufe die Zielform ab und verwende sie in echten Situationen.</p><div class="act-foot"><div class="bar"><span></span></div><span class="Minuten">4 min</span><button class="open primary-mini action" data-action="Aktivierung wird geöffnet">Übung öffnen　›</button></div></div></article>
       <article class="activity"><span class="number">2</span><div class="act-icon">♧</div><div class="act-body"><div class="act-head"><b>Laut automatisieren</b><span class="tag">Danach</span></div><p class="desc">Lies, höre und nimm den korrigierten Satz auf.</p><div class="act-foot"><div class="bar"><span></span></div><span class="Minuten">3 min</span><button class="open action" data-action="Lautes Üben wird geöffnet">Übung öffnen　›</button></div></div></article>
@@ -48,6 +49,7 @@
   </div></div><div class="toast" id="toast" role="status"></div>
 </div>
 <script src="/learning-core/adherence-shadow.js"></script>
+<script src="/learning-core/forced-output-booster.js"></script>
 <script>
   try {
     const state=JSON.parse(localStorage.getItem('german-automaticity:v20')||localStorage.getItem('grammar-automaticity:de')||'{}');
@@ -88,6 +90,7 @@ function refreshAdherenceShadow(minutes){
 const focusByLevel={A1:'sein: bin/ist/sind',A2:'Perfekt im Alltag',B1:'Nebensätze und sichere Wortstellung',B2:'Konjunktiv II und präzise Erklärungen',C1:'Komplexer Satzbau und Register',C2:'Nuancierte Stil- und Registerwahl'};
 const currentLevel=()=>{const state=readLearnerState();return state?.learningLevel||state?.learner?.selfDeclaredLevel||localStorage.getItem('german-cefr-level')||'A1'};
 let selectedDuration=15;
+let boosterController=null;
 const applyDailyDuration=(minutes,persist=false)=>{
   selectedDuration=durationPlans[minutes]?minutes:15;
   const plan=durationPlans[selectedDuration];
@@ -112,6 +115,7 @@ const applyDailyDuration=(minutes,persist=false)=>{
     localStorage.setItem(learnerStateKey,JSON.stringify({...state,settings:{...(state.settings||{}),dailyStudyMinutes:selectedDuration}}));
     notify(`${selectedDuration}-Minuten-Plan gespeichert`);
   }
+  boosterController?.refresh(boosterContext(selectedDuration));
 };
 const storedDuration=Number(localStorage.getItem(dailyDurationKey)||readLearnerState()?.settings?.dailyStudyMinutes||15);
 applyDailyDuration(storedDuration);
@@ -133,6 +137,20 @@ document.querySelectorAll('.activity .open').forEach((button,index)=>button.addE
   location.href=`${routes[index]||'/heute'}?${query}`;
 }));
 document.querySelector('.hero-copy .primary').addEventListener('click',()=>document.querySelector('.activity .open').click());
+const boosterPatterns={
+  A1:[String.raw`\b(?:ich\s+bin|du\s+bist|(?:er|sie|es)\s+ist|wir\s+sind|ihr\s+seid|sie\s+sind)\b`],
+  A2:[String.raw`\b(?:ich|du|er|sie|es|wir|ihr)\s+(?:habe|hast|hat|haben|bin|bist|ist|sind|seid)\b.+\b(?:ge\p{L}+(?:t|en)|gewesen|gemacht|gesehen|gegangen)\b`],
+  B1:[String.raw`\b(?:weil|obwohl|dass|wenn)\b.+\b\p{L}+(?:t|en|st)\s*$`],
+  B2:[String.raw`\b(?:würde|wäre|hätte|könnte|müsste|sollte)\b`],
+  C1:[String.raw`\b(?:während|sofern|wenngleich|indem|sodass)\b`],
+  C2:[String.raw`\b(?:nichtsdestotrotz|insofern|demgegenüber|unter der Voraussetzung)\b`]
+};
+function boosterContext(value){const selected=durationPlans[value]?Number(value):15,level=currentLevel(),target=focusByLevel[level]||focusByLevel.A1;return{targetStructureId:`de:${level.toLowerCase()}:${target.toLowerCase().replace(/[^a-z0-9äöüß]+/g,'-')}`,targetStructureLabel:target,sessionMinutes:selected,automatizationMinutes:durationPlans[selected].minutes[1]+durationPlans[selected].minutes[5],targetPatterns:boosterPatterns[level]||[]}}
+const boosterRuntime=window.AutomaticityForcedOutputBooster;
+if(boosterRuntime){
+  boosterController=boosterRuntime.mountForcedOutputBooster({root:document.getElementById('forced-output-booster'),language:'de',...boosterContext(selectedDuration),onActiveChange(active){document.querySelectorAll('.phase,.tip').forEach(element=>{element.hidden=active})},onFinish(){location.href='/heute'}});
+  Object.defineProperty(window,'__automaticityBooster',{configurable:true,writable:true,value:boosterController});
+}
 </script></body>
 </html>
 

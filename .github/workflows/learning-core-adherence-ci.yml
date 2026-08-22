@@ -10,6 +10,13 @@ on:
       - "Apps/Deutsch-V10.08.2026/packages/learning-core/**"
       - "Apps/English/English-07082026/packages/content/**"
       - "Apps/Deutsch-V10.08.2026/packages/content/**"
+      - "Apps/English/English-07082026/apps/web/public/replacements/en/daily.html"
+      - "Apps/English/English-07082026/apps/web/public/learning-core/forced-output-booster.js"
+      - "Apps/English/English-07082026/tests/e2e/forced-output-booster.spec.ts"
+      - "Apps/Deutsch-V10.08.2026/apps/web/public/replacements/de/heute.html"
+      - "Apps/Deutsch-V10.08.2026/apps/web/public/learning-core/forced-output-booster.js"
+      - "Apps/Deutsch-V10.08.2026/apps/web/e2e/forced-output-booster.spec.ts"
+      - "docs/automaticity/FORCED-OUTPUT-BOOSTER.md"
       - "Apps/English/English-07082026/bun.lock"
       - "Apps/Deutsch-V10.08.2026/bun.lock"
       - ".github/workflows/learning-core-adherence-ci.yml"
@@ -20,6 +27,13 @@ on:
       - "Apps/Deutsch-V10.08.2026/packages/learning-core/**"
       - "Apps/English/English-07082026/packages/content/**"
       - "Apps/Deutsch-V10.08.2026/packages/content/**"
+      - "Apps/English/English-07082026/apps/web/public/replacements/en/daily.html"
+      - "Apps/English/English-07082026/apps/web/public/learning-core/forced-output-booster.js"
+      - "Apps/English/English-07082026/tests/e2e/forced-output-booster.spec.ts"
+      - "Apps/Deutsch-V10.08.2026/apps/web/public/replacements/de/heute.html"
+      - "Apps/Deutsch-V10.08.2026/apps/web/public/learning-core/forced-output-booster.js"
+      - "Apps/Deutsch-V10.08.2026/apps/web/e2e/forced-output-booster.spec.ts"
+      - "docs/automaticity/FORCED-OUTPUT-BOOSTER.md"
       - "Apps/English/English-07082026/bun.lock"
       - "Apps/Deutsch-V10.08.2026/bun.lock"
       - ".github/workflows/learning-core-adherence-ci.yml"
@@ -51,6 +65,9 @@ jobs:
       - name: Run adherence property and scenario tests
         run: bun run test:adherence-core
 
+      - name: Run forced-output booster contract tests
+        run: bun run test:booster
+
       - name: Run complete learning-core tests
         run: bun run test
 
@@ -60,9 +77,9 @@ jobs:
       - name: Rebuild browser shadow adapter
         run: bun run build:browser
 
-      - name: Reject stale generated browser adapter
+      - name: Reject stale generated browser adapters
         working-directory: .
-        run: git diff --exit-code -- shared/learning-core/browser/adherence-shadow.js
+        run: git diff --exit-code -- shared/learning-core/browser/adherence-shadow.js shared/learning-core/browser/forced-output-booster.js
 
       - name: Reject stale app mirrors
         run: node sync-workspaces.mjs --check
@@ -97,3 +114,38 @@ jobs:
       - name: Verify authored content and release quarantine
         working-directory: ${{ matrix.app }}
         run: bun test packages/content/src/content.test.ts
+
+  booster-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app_root: Apps/English/English-07082026
+            test_root: Apps/English/English-07082026
+            spec: tests/e2e/forced-output-booster.spec.ts
+          - app_root: Apps/Deutsch-V10.08.2026
+            test_root: Apps/Deutsch-V10.08.2026/apps/web
+            spec: e2e/forced-output-booster.spec.ts
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Install exact dependencies
+        working-directory: ${{ matrix.app_root }}
+        run: bun install --frozen-lockfile
+
+      - name: Install Chromium
+        working-directory: ${{ matrix.app_root }}
+        run: bunx playwright install --with-deps chromium
+
+      - name: Verify forced-output booster in the browser
+        working-directory: ${{ matrix.test_root }}
+        run: bunx playwright test ${{ matrix.spec }}

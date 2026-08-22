@@ -36,45 +36,55 @@ const files = [
   "src/adherence/storage.ts",
   "src/adherence/streak.ts",
   "src/adherence/types.ts",
+  "src/booster/booster.ts",
+  "src/booster/booster.test.ts",
+  "src/booster/browser-entry.ts",
+  "src/booster/copy.ts",
+  "src/booster/index.ts",
+  "src/booster/types.ts",
   "schemas/learning-vertical-slice.schema.json",
   "schemas/measurement-contract.schema.json",
   "schemas/mediation-content-pilot.schema.json",
   "browser/adherence-shadow.js",
+  "browser/forced-output-booster.js",
 ];
-const browserTargets = [
-  resolve(
-    repositoryRoot,
-    "Apps/English/English-07082026/apps/web/public/learning-core/adherence-shadow.js",
-  ),
-  resolve(
-    repositoryRoot,
-    "Apps/Deutsch-V10.08.2026/apps/web/public/learning-core/adherence-shadow.js",
-  ),
-];
+const browserBundles = ["adherence-shadow.js", "forced-output-booster.js"];
 const checkOnly = process.argv.includes("--check");
 
 function digest(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
-const browserSource = join(sourceRoot, "browser/adherence-shadow.js");
-for (const target of browserTargets) {
-  const relativeTarget = relative(appsRoot, target);
-  if (
-    relativeTarget === "" ||
-    relativeTarget.startsWith("..") ||
-    isAbsolute(relativeTarget)
-  ) {
-    throw new Error(`Refusing to sync outside app workspaces: ${target}`);
-  }
-  if (checkOnly) {
-    if (!existsSync(target) || digest(browserSource) !== digest(target)) {
-      throw new Error(`Browser adherence bundle is stale: ${target}`);
+for (const bundle of browserBundles) {
+  const browserSource = join(sourceRoot, "browser", bundle);
+  const browserTargets = [
+    resolve(
+      repositoryRoot,
+      `Apps/English/English-07082026/apps/web/public/learning-core/${bundle}`,
+    ),
+    resolve(
+      repositoryRoot,
+      `Apps/Deutsch-V10.08.2026/apps/web/public/learning-core/${bundle}`,
+    ),
+  ];
+  for (const target of browserTargets) {
+    const relativeTarget = relative(appsRoot, target);
+    if (
+      relativeTarget === "" ||
+      relativeTarget.startsWith("..") ||
+      isAbsolute(relativeTarget)
+    ) {
+      throw new Error(`Refusing to sync outside app workspaces: ${target}`);
     }
-    continue;
+    if (checkOnly) {
+      if (!existsSync(target) || digest(browserSource) !== digest(target)) {
+        throw new Error(`Browser learning-core bundle is stale: ${target}`);
+      }
+      continue;
+    }
+    mkdirSync(dirname(target), { recursive: true });
+    copyFileSync(browserSource, target);
   }
-  mkdirSync(dirname(target), { recursive: true });
-  copyFileSync(browserSource, target);
 }
 
 for (const targetRoot of targets) {

@@ -10,7 +10,11 @@ export const MIN_ACTIVE_IMPLEMENTATION_INTENTIONS = 2 as const;
 export const MAX_IMPLEMENTATION_INTENTION_LABEL_LENGTH = 120 as const;
 
 function normalizeLabel(value: string): string {
-  return value.normalize("NFKC").trim().replace(/\s+/g, " ").toLocaleLowerCase();
+  return value
+    .normalize("NFKC")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase();
 }
 
 function isTimeLabel(value: string): boolean {
@@ -85,13 +89,18 @@ export function replaceImplementationIntentions(
   updatedAt: string,
 ): AdherenceProfileV1 {
   const now = new Date(updatedAt);
-  if (Number.isNaN(now.getTime())) throw new RangeError("updatedAt must be valid");
+  if (Number.isNaN(now.getTime()))
+    throw new RangeError("updatedAt must be valid");
   if (intentions.length > MAX_ACTIVE_IMPLEMENTATION_INTENTIONS) {
-    throw new RangeError("At most five implementation intentions can be stored");
+    throw new RangeError(
+      "At most five implementation intentions can be stored",
+    );
   }
   const validation = validateImplementationIntentions(intentions);
   if (!validation.valid) {
-    throw new RangeError(`Invalid implementation intentions: ${validation.code}`);
+    throw new RangeError(
+      `Invalid implementation intentions: ${validation.code}`,
+    );
   }
   return {
     ...profile,
@@ -100,7 +109,10 @@ export function replaceImplementationIntentions(
     intentions: intentions.map((intention) => ({
       ...intention,
       id: intention.id.trim(),
-      triggerLabel: intention.triggerLabel.normalize("NFKC").trim().replace(/\s+/g, " "),
+      triggerLabel: intention.triggerLabel
+        .normalize("NFKC")
+        .trim()
+        .replace(/\s+/g, " "),
     })),
   };
 }

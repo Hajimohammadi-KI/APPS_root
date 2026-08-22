@@ -59,11 +59,7 @@ export interface ImplementationIntentionSignal {
 }
 
 export type ImplementationIntentionValidationCode =
-  | "valid"
-  | "active-count"
-  | "duplicate-id"
-  | "invalid-id"
-  | "invalid-label";
+  "valid" | "active-count" | "duplicate-id" | "invalid-id" | "invalid-label";
 
 export interface ImplementationIntentionValidation {
   readonly valid: boolean;

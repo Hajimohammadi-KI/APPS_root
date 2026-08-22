@@ -302,7 +302,9 @@ describe("optional implementation intentions", () => {
       valid: true,
       activeCount: 2,
     });
-    expect(validateImplementationIntentions(intentions.slice(0, 1))).toMatchObject({
+    expect(
+      validateImplementationIntentions(intentions.slice(0, 1)),
+    ).toMatchObject({
       valid: false,
       code: "active-count",
     });

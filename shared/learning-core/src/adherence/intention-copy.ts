@@ -82,7 +82,8 @@ export const IMPLEMENTATION_INTENTION_COPY: Readonly<
     countError: "Speichere entweder keinen oder 2–5 aktive Pläne.",
     labelError: "Jeder Plan braucht eine gültige Uhrzeit oder kurze Situation.",
     saved: "Pläne lokal gespeichert. Es wurde keine Erinnerung gesendet.",
-    skipped: "Übersprungen. Nichts wurde gespeichert und es gibt keinen Nachteil.",
+    skipped:
+      "Übersprungen. Nichts wurde gespeichert und es gibt keinen Nachteil.",
     triggers: {
       time: "Zu einer Uhrzeit",
       after_event: "Nach einem Ereignis",

@@ -190,7 +190,9 @@ if (-not (Test-Path -LiteralPath $configurationPath -PathType Leaf)) {
   throw "Setup configuration does not exist: $configurationPath"
 }
 
-$config = Get-Content -Raw -LiteralPath $configurationPath | ConvertFrom-Json
+# setup.config.json is BOM-less UTF-8. Force the decoder so Windows PowerShell
+# cannot silently corrupt non-ASCII product copy through the system code page.
+$config = Get-Content -Raw -Encoding UTF8 -LiteralPath $configurationPath | ConvertFrom-Json
 $configDirectory = Split-Path -Parent $configurationPath
 $projectRoot = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.projectRoot)
 $desktopProject = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.desktopProject)
@@ -205,6 +207,8 @@ $requiredValues = @(
   'installFolder',
   'dataFolder',
   'mainExecutable',
+  'compatibilityLauncherArchive',
+  'compatibilityLauncherSha256',
   'setupFile',
   'shortcutName',
   'environmentPrefix',
@@ -384,6 +388,76 @@ if (-not (Test-Path -LiteralPath $portableApp -PathType Container)) {
   throw "Portable Electron output is missing: $portableApp"
 }
 
+$configuredMainExecutable = [string]$config.mainExecutable
+if ([IO.Path]::GetFileName($configuredMainExecutable) -ne $configuredMainExecutable) {
+  throw 'The configured main executable must be a root-level file name.'
+}
+$portableLauncher = Join-Path $portableApp $configuredMainExecutable
+if (-not (Test-Path -LiteralPath $portableLauncher -PathType Leaf)) {
+  throw "Portable application executable is missing: $portableLauncher"
+}
+
+$compatibilityLauncherArchive = Resolve-ConfiguredPath `
+  -Base $configDirectory `
+  -Value ([string]$config.compatibilityLauncherArchive)
+if (-not (Test-Path -LiteralPath $compatibilityLauncherArchive -PathType Leaf)) {
+  throw "Compatibility launcher archive is missing: $compatibilityLauncherArchive"
+}
+$expectedCompatibilityLauncherSha256 =
+  ([string]$config.compatibilityLauncherSha256).Trim()
+if ($expectedCompatibilityLauncherSha256 -notmatch '^[0-9A-Fa-f]{64}$') {
+  throw 'The compatibility launcher SHA-256 must contain exactly 64 hexadecimal characters.'
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$compatibilityLauncherTemp = Join-Path $workRoot 'compatibility-launcher.exe'
+$compatibilityArchive = [System.IO.Compression.ZipFile]::OpenRead(
+  $compatibilityLauncherArchive)
+try {
+  $compatibilityEntries = @(
+    $compatibilityArchive.Entries | Where-Object {
+      $_.FullName -ceq $configuredMainExecutable -and
+      -not [string]::IsNullOrEmpty($_.Name)
+    }
+  )
+  if ($compatibilityEntries.Count -ne 1) {
+    throw (
+      "Compatibility launcher archive must contain exactly one root entry " +
+      "named '$configuredMainExecutable'; found $($compatibilityEntries.Count).")
+  }
+  [System.IO.Compression.ZipFileExtensions]::ExtractToFile(
+    $compatibilityEntries[0],
+    $compatibilityLauncherTemp,
+    $true)
+} finally {
+  $compatibilityArchive.Dispose()
+}
+
+try {
+  $actualCompatibilityLauncherSha256 =
+    Get-Sha256Hex -LiteralPath $compatibilityLauncherTemp
+  if (-not [string]::Equals(
+    $actualCompatibilityLauncherSha256,
+    $expectedCompatibilityLauncherSha256,
+    [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw (
+      'Compatibility launcher SHA-256 mismatch. ' +
+      "Expected $expectedCompatibilityLauncherSha256; " +
+      "found $actualCompatibilityLauncherSha256.")
+  }
+
+  # Preserve the launcher that already passes this Windows machine's App
+  # Control policy while retaining the current app.asar and resources.
+  Copy-Item `
+    -LiteralPath $compatibilityLauncherTemp `
+    -Destination $portableLauncher `
+    -Force
+} finally {
+  if (Test-Path -LiteralPath $compatibilityLauncherTemp -PathType Leaf) {
+    Remove-Item -LiteralPath $compatibilityLauncherTemp -Force
+  }
+}
+
 $workspaceRoot = $null
 $workspaceCandidate = [System.IO.DirectoryInfo]$projectRoot
 while ($null -ne $workspaceCandidate) {
@@ -441,7 +515,9 @@ if (Test-Path -LiteralPath $payloadZip) {
   $false)
 
 Write-Host "[5/7] Applying the product identity and modern visual theme..."
-$source = Get-Content -Raw -LiteralPath (Join-Path $scriptRoot 'SetupApp.cs')
+# SetupApp.cs is also BOM-less UTF-8; force the correct decoder before source
+# generation and compilation.
+$source = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $scriptRoot 'SetupApp.cs')
 $replacements = [ordered]@{
   '__PRODUCT_NAME__' = ConvertTo-CSharpLiteralContent ([string]$config.productName)
   '__VERSION__' = ConvertTo-CSharpLiteralContent ([string]$config.version)

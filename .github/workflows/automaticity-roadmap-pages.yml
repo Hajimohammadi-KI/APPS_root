@@ -1,0 +1,49 @@
+name: Automaticity roadmap Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - docs/roadmaps/automaticity-evidence-roadmap.html
+      - .github/workflows/automaticity-roadmap-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: automaticity-roadmap-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Prepare the public roadmap artifact
+        run: |
+          mkdir -p _site/automaticity-evidence-roadmap
+          mkdir -p _site/automaticity-ux-roadmap
+          cp docs/roadmaps/automaticity-evidence-roadmap.html _site/index.html
+          cp docs/roadmaps/automaticity-evidence-roadmap.html _site/automaticity-evidence-roadmap/index.html
+          cp docs/roadmaps/automaticity-evidence-roadmap.html _site/automaticity-ux-roadmap/index.html
+          touch _site/.nojekyll
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

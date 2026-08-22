@@ -14,6 +14,12 @@ Alias قدیمی `automaticity-ux-roadmap.vercel.app` در یک Scope دیگر V
 حساب فعلی اجازهٔ به‌روزرسانی یا انتقال آن را ندارد؛ بنابراین منبع معتبرِ نسخهٔ
 ۲۰۲۶-۰۸-۲۲ آدرس بالا است.
 
+**نسخه‌های عمومی محصول:**
+
+- English: https://english-grammar-automaticity-pwa.vercel.app/
+- Deutsch: https://deutschflow-grammar.vercel.app/
+- PDF Reader مشترک: https://research-pdf-studio.vercel.app/
+
 نمادهای وضعیت: ⬜ شروع‌نشده · 🟡 در حال انجام · ✅ انجام‌شده · 🔴 مسدود
 
 ## منشأ
@@ -226,7 +232,7 @@ agreement برابر N/A است. در پایلوت بزرگ‌تر، طرح نم
 هیچ آیتم QA-failed در برنامهٔ روزانه زمان‌بندی نشود؛ گزارش بازبینی قابل
 ردگیری به نسخهٔ محتوا باشد.
 
-## فاز ۶ — Mediation و Forced Output Booster ⬜
+## فاز ۶ — Mediation و Forced Output Booster 🟡
 
 **اثر برای زبان‌آموز:** علاوه بر گرامر، بتواند اطلاعات را خلاصه، بازگو،
 توضیح یا بین دو نفر/دو زبان منتقل کند و ساختار هدف را زیر فشار زمانی واقعاً
@@ -238,6 +244,12 @@ Production، Interaction و Mediation. ابتدا یک vertical slice کوچک �
 تمرین independent. در برنامه‌های ۱۵/۳۰/۴۵ دقیقه‌ای یک Forced Output
 Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای اضافه شود؛ fallback تایپ همیشه
 موجود باشد.
+
+**وضعیت ۲۰۲۶-۰۸-۲۲:** Forced Output Booster در PR #32 (`1c6fb95`) برای
+هر دو زبان ادغام شد: پیش‌فرض خاموش، ۳ تا ۵ دور ۳۰ تا ۹۰ ثانیه‌ای فقط از
+سهم automatization، ضبط واقعی یا fallback تایپ، metadata کمینه و منع قطعی
+mastery/automaticity. بخش Mediation هنوز منتظر دو بازبین انسانی مستقل و
+agreement/adjudication است؛ بنابراین فاز کامل نشده و outcome برابر N/A است.
 
 **وابستگی:** schema و event/evidence فاز ۴، محتوای QA-passed فاز ۵.
 
@@ -257,21 +269,24 @@ Booster کوتاه با ۳–۶ دور ۳۰ تا ۶۰ ثانیه‌ای اضاف
 3. ASR فقط برای transcript و شاخص‌های گفتار قابل اندازه‌گیری؛
 4. LLM فقط برای تولید/توضیح/بازنویسی ساختاریافته، نه تصمیم تسلط؛
 5. Implementation Intentions، micro-goal پنج‌دقیقه‌ای، comeback flow و
-   nudge روزهای ۳/۷/۱۴ با opt-in و cooldown؛
-6. IndexedDB محلی و صف همگام‌سازی برای وب آفلاین‌محور.
+   nudge رضایت‌محور با quiet hours، cooldown و سقف قطعی؛
+6. FSRS-6 فقط در shadow، default-off و با rollback؛
+7. IndexedDB محلی و صف همگام‌سازی برای وب آفلاین‌محور.
 
 **وضعیت 2026-08-22:** بخش Implementation Intentions در PR #28
 (`32e8a8c`) برای هر دو اپ ادغام و Issue #6 بسته شد. داده فقط محلی است، شروع
-خالی و اختیاری است، 0 یا 2 تا 5 قصد فعال پذیرفته می‌شود و این بخش هیچ nudge،
-event یا تصمیم mastery تولید نمی‌کند. Guarded in-app nudges در Issue #7 باز
-است و فقط با opt-in، cooldown و جداسازی engagement از learning outcome اجرا
-خواهد شد.
+خالی و اختیاری است و 0 یا 2 تا 5 قصد فعال پذیرفته می‌شود. Guarded in-app
+nudges در PR #30 (`4e08775`) با opt-in صریح، quiet hours، cooldown، hard cap،
+رویداد local-only و بدون push/email ادغام شد و Issue #7 بسته شد. FSRS-6 shadow
+نیز در PR #34 (`00998b9`) با بردار رسمی، ۱٬۰۰۰ replay، rollback و حفظ
+scheduler فعلی به‌عنوان source of truth ادغام شد. retention/workload واقعی
+و learning outcome همچنان N/A هستند.
 
 **معیار پذیرش:** همهٔ تصمیم‌های ارتقای سطح deterministic و قابل audit
 باشند؛ خروجی LLM schema-valid و قابل ردکردن باشد؛ نوتیفیکیشن بدون رضایت
 کاربر ارسال نشود؛ نرخ `nudge → session` جدا از یادگیری گزارش شود.
 
-## فاز ۸ — گسترش تدریجی هستهٔ مشترک و Accessibility Gate ⬜
+## فاز ۸ — گسترش تدریجی هستهٔ مشترک و Accessibility Gate 🟡
 
 **اثر برای زبان‌آموز:** انگلیسی و آلمانی تجربهٔ سازگار دارند و صفحه‌ها با
 کیبورد، Screen Reader، ویندوز، تبلت و اندروید وب قابل استفاده‌اند.
@@ -281,6 +296,14 @@ event یا تصمیم mastery تولید نمی‌کند. Guarded in-app nudges 
 شوند، نه با کپی فایل. دسترس‌پذیری در هر PR سنجیده شود: reflow در ۳۲۰px،
 ترتیب فوکوس، focus visible، touch target حداقل ۴۴×۴۴، label میکروفون،
 recovery خطا، LTR برای انگلیسی/آلمانی و RTL برای فارسی.
+
+**وضعیت ۲۰۲۶-۰۸-۲۲:** مسیرهای canonical آلمانی در PR #36 تثبیت شدند.
+Research PDF Studio و اتصال PDF/Notebook هر دو اپ در PR #50 (`02e8781`) روی
+Vercel عمومی شدند. ریشه و مسیرهای اصلی HTTP 200، redirectهای Reader برابر
+307 و QA مرورگر در viewport تبلت 800×1280 بدون overflow یا console error
+بود. probeهای loopback در وب عمومی متوقف و صفحات compatibility آلمانی با
+full navigation باز می‌شوند. تست دستی Screen Reader و میکروفون سخت‌افزاری
+واقعی هنوز N/A است، پس فاز کامل نیست.
 
 **معیار پذیرش:** parity contract هر دو اپ، تست E2E صفحه‌های بحرانی در سه
 viewport و تست دستی Screen Reader/میکروفون روی سخت‌افزار واقعی. موارد سخت‌افزار
@@ -325,4 +348,8 @@ viewport و تست دستی Screen Reader/میکروفون روی سخت‌اف�
 - **۲۰۲۶-۰۸-۲۲**: G3 در PR #24 (`ea3d25c`) با دو CI سبز عبور کرد؛ Shadow Safety به برنامهٔ 15/30/45 دقیقهٔ هر دو اپ متصل شد، اما default-off، نامرئی و بدون تغییر یا persistence دادهٔ زبان‌آموز باقی ماند. E2E انگلیسی و آلمانی حفظ learner/evidence را تأیید کرد؛ cohort واقعی و اثر یادگیری همچنان N/A است.
 - **۲۰۲۶-۰۸-۲۲**: زیرساخت G4 در PR #26 (`8edaba2`) با Core/Content CI و German CI سبز ادغام شد: schema mediation، rubric، weighted kappa، adjudication، جلوگیری از solution leakage و quarantine برای draftهای B1 هر دو زبان. بازبینی انسانی، agreement و اثر یادگیری هنوز N/A است؛ G4 عبور نکرده است.
 - **۲۰۲۶-۰۸-۲۲**: Implementation Intentions در PR #28 (`32e8a8c`) با دو CI سبز و Settings E2E هر دو زبان ادغام شد؛ Issue #6 بسته و Issue #7 برای nudge رضایت‌محور باز است. این قابلیت local-only است و هیچ nudge، telemetry یا ادعای mastery تولید نمی‌کند.
-- **۲۰۲۶-۰۸-۲۲ ۰۰:۳۲ CEST**: نسخهٔ جدید روی `automaticity-ux-roadmap-elahe.vercel.app` با وضعیت Vercel Ready منتشر شد. Alias قدیمی به‌دلیل مالکیت Scope دیگر قابل انتقال نبود و محتوای قدیمی آن به‌عنوان نسخهٔ جاری معرفی نمی‌شود.
+- **۲۰۲۶-۰۸-۲۲**: Guarded Nudges در PR #30 (`4e08775`) با opt-in، quiet hours، cooldown و hard caps ادغام و Issue #7 بسته شد. Forced Output Booster در PR #32 (`1c6fb95`) برای هر دو زبان ادغام و Issue #4 بسته شد؛ completion همچنان mastery نیست.
+- **۲۰۲۶-۰۸-۲۲**: FSRS-6 shadow در PR #34 (`00998b9`) با replay و rollback ادغام شد و scheduler فعلی source of truth ماند. مسیرهای canonical و E2E آلمانی در PR #36 (`463a82d`) تثبیت شدند.
+- **۲۰۲۶-۰۸-۲۲**: DeutschFlow 20.8.25 در PR #38 و English 27.3.18 با Grammar canonical و PDF Reader یکپارچه در PR #47 چرخهٔ fresh/update/repair و حفظ داده را گذراندند؛ این شواهد release است، نه learning outcome.
+- **۲۰۲۶-۰۸-۲۲ ۱۵:۰۰ CEST**: در PR #50 (`02e8781`) Research PDF Studio به Vercel متصل و PDF/Notebook هر دو اپ وب به آن وصل شد. English CI 32574226422، German CI 32574226421 و Reader CI 32574226430 سبز شدند؛ QA تبلت 800×1280 بدون overflow یا console error پاس شد.
+- **۲۰۲۶-۰۸-۲۲ ۱۵:۰۵ CEST**: نسخهٔ v1.18 روی `automaticity-ux-roadmap-elahe.vercel.app` با وضعیت Vercel Ready و محتوای hash-identical منتشر شد. تلاش مستقیم برای Alias دقیق `automaticity-ux-roadmap.vercel.app` با خطای `already in use` رد شد؛ دامنهٔ قدیمی در Scope دیگری است و محتوای آن نسخهٔ جاری نیست.

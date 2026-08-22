@@ -14,9 +14,7 @@ async function findSourceRoot() {
 
   for (const candidate of candidates) {
     try {
-      if (
-        (await stat(/* turbopackIgnore: true */ candidate)).isDirectory()
-      ) {
+      if ((await stat(/* turbopackIgnore: true */ candidate)).isDirectory()) {
         return candidate;
       }
     } catch {

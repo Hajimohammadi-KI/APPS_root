@@ -1,6 +1,8 @@
 # Optional implementation intentions
 
-Status: implemented locally for English and German settings; no nudge delivery.
+Status: implemented locally for English and German settings. Optional guarded
+in-app delivery is documented separately in `GUARDED-IN-APP-NUDGES.md` and
+remains off by default.
 
 ## Learner contract
 
@@ -16,7 +18,8 @@ Status: implemented locally for English and German settings; no nudge delivery.
 ## Technical boundary
 
 `matchIntention` is a pure normalized exact matcher. It does not schedule,
-display, persist, or emit a nudge. `replaceImplementationIntentions` replaces
+display, persist, or emit a nudge. The separate guarded adapter uses only
+time-based intentions after explicit opt-in. `replaceImplementationIntentions` replaces
 only the intention list and timestamp; it preserves the existing streak and
 `nudgeOptIn` value. The existing measurement export rejects intention fields,
 so free text cannot enter the research export.

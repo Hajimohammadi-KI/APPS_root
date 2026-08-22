@@ -9,15 +9,23 @@ import {
   DEFAULT_ADHERENCE_FEATURE_FLAGS,
   computeBlockWeights,
   computeReadiness,
+  createNudgeEvent,
   createDefaultAdherenceProfile,
+  DEFAULT_NUDGE_POLICY,
   emptyStreakState,
+  evaluateNudge,
+  findEligibleTimeIntention,
   isAdherenceShadowEnabled,
   loadProfile,
+  logNudgeEvent,
   logShadowComparison,
   matchIntention,
   migrateAdherenceProfile,
+  NUDGE_COPY,
+  readNudgeEvents,
   readShadowComparisons,
   replaceImplementationIntentions,
+  replaceNudgeOptIn,
   requestContinuityFreeze,
   runAdherenceShadow,
   saveProfile,
@@ -27,6 +35,7 @@ import {
   type AdherenceKeyValueStorage,
   type AdherenceCurrentPlan,
   type ImplementationIntention,
+  type NudgeEventV1,
   type PlanDuration,
   type ReadinessSignals,
 } from "./index";
@@ -387,6 +396,200 @@ describe("optional implementation intentions", () => {
       expect(Object.keys(copy.triggers)).toHaveLength(4);
       expect(Object.keys(copy.actions)).toHaveLength(4);
       expect(copy.privacy.length).toBeGreaterThan(20);
+    }
+  });
+});
+
+describe("consent-first guarded in-app nudges", () => {
+  const zone = "Europe/Berlin";
+  const trigger: ImplementationIntention = {
+    id: "morning-plan",
+    trigger: "time",
+    triggerLabel: "08:30",
+    action: "full_session",
+    active: true,
+  };
+  const base = {
+    trigger,
+    now: "2026-08-20T06:40:00.000Z",
+    timeZone: zone,
+    readiness: 0.8,
+    reviewBacklog: 2,
+    optedIn: true,
+    history: [] as readonly NudgeEventV1[],
+  } as const;
+
+  function shown(triggerId: string, occurredAt: string): NudgeEventV1 {
+    return createNudgeEvent({
+      type: "shown",
+      triggerId,
+      occurredAt,
+      timeZone: zone,
+      decision: "eligible",
+    });
+  }
+
+  test("uses the required first-failure guard order", () => {
+    const cooldown = shown("morning-plan", "2026-08-20T06:00:00.000Z");
+    expect(
+      evaluateNudge({
+        ...base,
+        trigger: { ...trigger, active: false },
+        readiness: 0,
+        reviewBacklog: 999,
+        optedIn: false,
+        history: [cooldown],
+      }).code,
+    ).toBe("ineligible-trigger");
+    expect(evaluateNudge({ ...base, history: [cooldown] }).code).toBe(
+      "trigger-cooldown",
+    );
+
+    const evening = {
+      ...trigger,
+      id: "evening-plan",
+      triggerLabel: "21:00",
+    };
+    expect(
+      evaluateNudge({
+        ...base,
+        trigger: evening,
+        now: "2026-08-20T19:05:00.000Z",
+        readiness: 0,
+        reviewBacklog: 999,
+        optedIn: false,
+      }).code,
+    ).toBe("quiet-hours");
+    expect(evaluateNudge({ ...base, readiness: 0.34 }).code).toBe(
+      "low-readiness",
+    );
+    expect(evaluateNudge({ ...base, reviewBacklog: 41 }).code).toBe(
+      "review-backlog-cap",
+    );
+    expect(evaluateNudge({ ...base, optedIn: false }).code).toBe("opted-out");
+
+    const todayShown = shown("other-plan", "2026-08-20T05:00:00.000Z");
+    expect(evaluateNudge({ ...base, history: [todayShown] }).code).toBe(
+      "daily-cap",
+    );
+    const weekHistory = [
+      shown("other-1", "2026-08-17T10:00:00.000Z"),
+      shown("other-2", "2026-08-18T10:00:00.000Z"),
+      shown("other-3", "2026-08-19T10:00:00.000Z"),
+    ];
+    expect(evaluateNudge({ ...base, history: weekHistory }).code).toBe(
+      "weekly-cap",
+    );
+    expect(evaluateNudge(base)).toMatchObject({
+      eligible: true,
+      code: "eligible",
+      triggerId: "morning-plan",
+      learningOutcome: "not-evaluated",
+    });
+  });
+
+  test("matches only active time plans inside the local 30-minute window", () => {
+    expect(findEligibleTimeIntention([trigger], base.now, zone)?.id).toBe(
+      "morning-plan",
+    );
+    expect(
+      findEligibleTimeIntention(
+        [{ ...trigger, action: "skip_ok" }],
+        base.now,
+        zone,
+      ),
+    ).toBeNull();
+    expect(
+      findEligibleTimeIntention([trigger], "2026-08-20T07:01:00.000Z", zone),
+    ).toBeNull();
+  });
+
+  test("uses real timezone offsets through both Berlin DST transitions", () => {
+    const spring = findEligibleTimeIntention(
+      [trigger],
+      "2026-03-29T06:30:00.000Z",
+      zone,
+    );
+    const autumn = findEligibleTimeIntention(
+      [trigger],
+      "2026-10-25T07:30:00.000Z",
+      zone,
+    );
+    expect(spring?.id).toBe(trigger.id);
+    expect(autumn?.id).toBe(trigger.id);
+
+    const onlySeventyOneHoursAgo = shown(
+      trigger.id,
+      "2026-03-26T07:30:00.000Z",
+    );
+    expect(
+      evaluateNudge({
+        ...base,
+        now: "2026-03-29T06:30:00.000Z",
+        history: [onlySeventyOneHoursAgo],
+      }).code,
+    ).toBe("trigger-cooldown");
+  });
+
+  test("persists minimal stable engagement events and expires old rows", () => {
+    const storage = new MemoryStorage();
+    const event = createNudgeEvent({
+      type: "evaluated",
+      triggerId: trigger.id,
+      occurredAt: base.now,
+      timeZone: zone,
+      decision: "eligible",
+    });
+    const duplicate = createNudgeEvent({
+      type: "evaluated",
+      triggerId: trigger.id,
+      occurredAt: base.now,
+      timeZone: zone,
+      decision: "eligible",
+    });
+    expect(duplicate.id).toBe(event.id);
+    logNudgeEvent(storage, event);
+    logNudgeEvent(storage, duplicate);
+    expect(readNudgeEvents(storage, base.now)).toEqual([event]);
+    expect(JSON.stringify(event)).not.toMatch(
+      /triggerLabel|prompt|transcript|email|audio/i,
+    );
+    expect(readNudgeEvents(storage, "2026-12-01T08:00:00.000Z")).toEqual([]);
+  });
+
+  test("opt-in remains false by default and changing it preserves learner state", () => {
+    const profile = createDefaultAdherenceProfile({
+      now: base.now,
+      timeZone: zone,
+    });
+    expect(profile.nudgeOptIn).toBe(false);
+    const enabled = replaceNudgeOptIn(profile, true, base.now);
+    expect(enabled.nudgeOptIn).toBe(true);
+    expect(enabled.streak).toEqual(profile.streak);
+    expect(enabled.intentions).toEqual(profile.intentions);
+    expect(evaluateNudge({ ...base, optedIn: profile.nudgeOptIn }).code).toBe(
+      "opted-out",
+    );
+  });
+
+  test("policy and EN/DE/FA copy remain supportive and directionally correct", () => {
+    expect(DEFAULT_NUDGE_POLICY).toMatchObject({
+      eligibleWindowMinutes: 30,
+      perTriggerCooldownHours: 72,
+      minimumReadiness: 0.35,
+      reviewBacklogCap: 40,
+      dailyCap: 1,
+      weeklyCap: 3,
+    });
+    expect(NUDGE_COPY.en.direction).toBe("ltr");
+    expect(NUDGE_COPY.de.direction).toBe("ltr");
+    expect(NUDGE_COPY.fa.direction).toBe("rtl");
+    for (const copy of Object.values(NUDGE_COPY)) {
+      expect(copy.policy.length).toBeGreaterThan(40);
+      expect(copy.dismiss.length).toBeGreaterThan(5);
+      expect(`${copy.promptTitle} ${copy.promptBody}`).not.toMatch(
+        /failure|failed|lose|lost|schuld|versagt|تنبل|شکست/i,
+      );
     }
   });
 });

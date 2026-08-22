@@ -6,7 +6,9 @@ import { CalendarClock, Plus, Trash2 } from "lucide-react";
 import {
   IMPLEMENTATION_INTENTION_COPY,
   loadProfile,
+  NUDGE_COPY,
   replaceImplementationIntentions,
+  replaceNudgeOptIn,
   saveProfile,
   validateImplementationIntentions,
   type ImplementationIntention,
@@ -23,6 +25,7 @@ import {
 } from "@/components/ui/card";
 
 const copy = IMPLEMENTATION_INTENTION_COPY.de;
+const nudgeCopy = NUDGE_COPY.de;
 const triggerOptions = Object.keys(
   copy.triggers,
 ) as ImplementationIntentionTrigger[];
@@ -43,6 +46,7 @@ function makeDraft(index: number): ImplementationIntention {
 export function ImplementationIntentionsCard() {
   const [intentions, setIntentions] = useState<ImplementationIntention[]>([]);
   const [ready, setReady] = useState(false);
+  const [nudgeOptIn, setNudgeOptIn] = useState(false);
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -51,6 +55,7 @@ export function ImplementationIntentionsCard() {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
     });
     setIntentions(profile.intentions.map((intention) => ({ ...intention })));
+    setNudgeOptIn(profile.nudgeOptIn);
     setReady(true);
   }, []);
 
@@ -87,10 +92,22 @@ export function ImplementationIntentionsCard() {
       now,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
     });
-    const next = replaceImplementationIntentions(profile, intentions, now);
-    saveProfile(window.localStorage, next);
+    const intentionsNext = replaceImplementationIntentions(
+      profile,
+      intentions,
+      now,
+    );
+    const next = replaceNudgeOptIn(intentionsNext, nudgeOptIn, now);
+    try {
+      saveProfile(window.localStorage, next);
+    } catch {
+      setStatus("Der lokale Speicher ist blockiert. Es wurde nichts geändert.");
+      return;
+    }
     setIntentions(next.intentions.map((intention) => ({ ...intention })));
-    setStatus(copy.saved);
+    setStatus(
+      `${copy.saved} ${nudgeOptIn ? nudgeCopy.savedOn : nudgeCopy.savedOff}`,
+    );
   }
 
   return (
@@ -211,6 +228,26 @@ export function ImplementationIntentionsCard() {
         ))}
 
         <p className="settings-intention-privacy">{copy.privacy}</p>
+        <section
+          aria-labelledby="nudge-settings-title-de"
+          className="settings-nudge-consent"
+        >
+          <h3 id="nudge-settings-title-de">{nudgeCopy.settingsTitle}</h3>
+          <label className="settings-toggle">
+            <input
+              checked={nudgeOptIn}
+              onChange={(event) => {
+                setNudgeOptIn(event.target.checked);
+                setStatus("");
+              }}
+              type="checkbox"
+            />
+            <span>
+              <strong>{nudgeCopy.optInLabel}</strong>
+              <small>{nudgeCopy.policy}</small>
+            </span>
+          </label>
+        </section>
         {!validation.valid ? (
           <p className="settings-intention-error">
             {validation.code === "active-count"

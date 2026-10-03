@@ -14,9 +14,11 @@ import type {ContextCase} from "./prepare-context-writing";
 const MODELS={
  "14b":{name:"Qwen3-14B-Q5_K_M.gguf",sha256:"e7c9aba1129ca2936be9eca01419d9f86af40e08caa01230d5574b34d08e3e31",revision:"530227a7d994db8eca5ab5ced2fb692b614357fd",repository:"Qwen/Qwen3-14B-GGUF"},
  "27b":{name:"Qwen3.5-27B-Q4_K_M.gguf",sha256:"84b5f7f112156d63836a01a69dc3f11a6ba63b10a23b8ca7a7efaf52d5a2d806",revision:"3221f178a6b842d04f1fb42f1c413534adcc0a6a",repository:"unsloth/Qwen3.5-27B-GGUF"},
+ "gemma4-26b":{name:"gemma-4-26B-A4B-it-Q4_0.gguf",sha256:"d208665ab1cd3a69f7a9a4bc59430e8448c8093d9b06334f566ac59d6d504a03",revision:"bb4531cda34d1ea09d9814959ed4d5833cf2a4c8",repository:"ggml-org/gemma-4-26B-A4B-it-GGUF"},
 } as const;
 const [modelId,split,version,inputProfile="baseline",decodingName="greedy"]=Bun.argv.slice(2);
-if(!modelId || !(modelId in MODELS) || !["development","holdout"].includes(split??"") || !/^v\d+$/.test(version??"") || !["baseline","target-last"].includes(inputProfile)) throw Error("Usage: run-edit-writing.ts 14b|27b development|holdout vN [baseline|target-last] [greedy|reasoning]");
+if(!modelId || !(modelId in MODELS) || !["development","holdout"].includes(split??"") || !/^v\d+$/.test(version??"") || !["baseline","target-last"].includes(inputProfile)) throw Error("Usage: run-edit-writing.ts 14b|27b|gemma4-26b development|holdout vN [baseline|target-last] [greedy|reasoning]");
+if(modelId==="gemma4-26b" && (inputProfile!=="target-last" || decodingName!=="greedy"))throw Error("R64 registers only Gemma target-last greedy decoding");
 const decoding=editDecodingProfile(decodingName);
 const model={...MODELS[modelId as keyof typeof MODELS],runtime:"b11146-7fe450e19"};
 const modelPath=resolve(import.meta.dir,"data",model.name),dataDir=resolve(import.meta.dir,"runs/writing-context-data-v2");

@@ -4,6 +4,13 @@ import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 
 const candidates = {
+"gemma4-26b": {
+  id: "gemma4-26b-a4b-q4", name: "gemma-4-26B-A4B-it-Q4_0.gguf", license: "Apache-2.0",
+  repository: "ggml-org/gemma-4-26B-A4B-it-GGUF", baseModel: "google/gemma-4-26B-A4B-it",
+  revision: "bb4531cda34d1ea09d9814959ed4d5833cf2a4c8",
+  sha256: "d208665ab1cd3a69f7a9a4bc59430e8448c8093d9b06334f566ac59d6d504a03",
+  bytes: 14618145824,
+},
 "qwen35-27b": {
   id: "qwen35-27b-q4", name: "Qwen3.5-27B-Q4_K_M.gguf", license: "Apache-2.0",
   repository: "unsloth/Qwen3.5-27B-GGUF", baseModel: "Qwen/Qwen3.5-27B",

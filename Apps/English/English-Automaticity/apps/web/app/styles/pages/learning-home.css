@@ -612,3 +612,77 @@ html[data-low-stimulation="true"] .learning-home *::after {
 .learning-home .lh-local {
   color: #d8e2f3;
 }
+
+/* ── Visual polish (2026-10 refresh) ──────────────────────────────────────── */
+
+/* Metric cards: subtle lift on hover */
+.lh-metric {
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+.lh-metric:hover {
+  box-shadow: 0 8px 24px rgba(54, 79, 140, 0.1) !important;
+  transform: translateY(-2px);
+}
+
+/* Course cards: lift */
+.lh-course-list > a {
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+.lh-course-list > a:hover {
+  box-shadow: 0 6px 18px rgba(54, 79, 140, 0.09) !important;
+  transform: translateY(-1px);
+}
+
+/* Settings chip: shadow */
+.lh-settings {
+  box-shadow: 0 2px 6px rgba(40, 60, 100, 0.06);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.lh-settings:hover {
+  box-shadow: 0 4px 12px rgba(54, 79, 140, 0.12) !important;
+}
+
+/* Hero: richer dark background */
+.learning-home .lh-hero {
+  background: linear-gradient(145deg, #1a3060 0%, #0f1f40 100%) !important;
+  border-color: #162850 !important;
+  box-shadow: 0 20px 48px rgba(15, 31, 64, 0.22);
+}
+
+/* CTA button in dark hero */
+.learning-home .lh-primary {
+  font-weight: 700 !important;
+  transition: background-color 150ms ease, transform 120ms ease;
+}
+.learning-home .lh-primary:hover {
+  transform: translateY(-1px);
+}
+.learning-home .lh-primary:active {
+  transform: translateY(0);
+}
+
+/* Week bar: smoother */
+.lh-bar > span {
+  transition: height 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Empty state: centered + softer */
+.lh-empty {
+  align-items: center !important;
+  text-align: center;
+}
+
+/* Evidence section: more premium */
+.lh-evidence {
+  box-shadow: 0 2px 8px rgba(40, 60, 100, 0.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lh-metric,
+  .lh-course-list > a,
+  .lh-settings,
+  .learning-home .lh-primary {
+    transition: none !important;
+    transform: none !important;
+  }
+}

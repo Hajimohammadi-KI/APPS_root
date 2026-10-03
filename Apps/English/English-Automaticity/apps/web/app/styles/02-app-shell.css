@@ -488,3 +488,39 @@
     auto;
 }
 
+
+/* ── Topbar polish (2026-10 refresh) ────────────────────────────────────────── */
+
+/* Cleaner topbar background */
+.app-topbar {
+  box-shadow: 0 1px 0 rgba(210, 220, 240, 0.8) !important;
+}
+
+/* Brand icon: more refined */
+.brand-icon {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(21, 94, 239, 0.2) !important;
+}
+
+/* Topbar screen icon: softer */
+.topbar-screen-icon {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile menu button: cleaner */
+.mobile-menu {
+  border-radius: 10px !important;
+}
+
+/* Sidebar: no harsh border, softer shadow */
+.app-sidebar {
+  box-shadow: 1px 0 0 rgba(210, 220, 240, 0.6) !important;
+  border-right: none !important;
+}
+
+/* App main: cleaner gradient */
+.app-main {
+  background:
+    radial-gradient(circle at 90% 5%, var(--screen-glow), transparent 20rem),
+    var(--background) !important;
+}

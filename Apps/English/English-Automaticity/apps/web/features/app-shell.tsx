@@ -1,5 +1,5 @@
 "use client";
-import {AutomaticityEvidenceSummary} from "./components/automaticity-evidence-summary";
+import { AutomaticityEvidenceSummary } from "./components/automaticity-evidence-summary";
 
 import * as React from "react";
 import { LearningNavigation } from "@/components/learning-navigation";
@@ -89,7 +89,7 @@ const navigation: NavigationItem[] = [
 	homeNavigation,
 	{
 		id: "daily",
-		label: "Today’s Practice",
+		label: "Today's Practice",
 		subtitle: "Adaptive recall and automaticity",
 		icon: Flame,
 	},
@@ -188,6 +188,30 @@ function replacementUrl(
 	return `${url.pathname}${url.search}${url.hash}`;
 }
 
+// ── Progress screen ────────────────────────────────────────────────────────────
+function ProgressScreen() {
+	return (
+		<div className="learning-progress-page">
+			<header>
+				<p>YOUR LEARNING RECORD</p>
+				<h1>Progress you can see.</h1>
+				<p>
+					Review saved work, find what needs attention and check the evidence
+					behind each result.
+				</p>
+			</header>
+			<AutomaticityEvidenceSummary />
+			<details className="quiet-disclosure">
+				<summary>Additional practice &amp; earlier learning tools</summary>
+				<div>
+					<AutomaticityScreen />
+				</div>
+			</details>
+		</div>
+	);
+}
+
+// ── AppShell ───────────────────────────────────────────────────────────────────
 export function AppShell() {
 	const { state, mutate } = useAppStore();
 	const [screen, setScreen] = React.useState<ScreenId>("home");
@@ -229,7 +253,6 @@ export function AppShell() {
 			window.removeEventListener("popstate", restoreScreen);
 		};
 	}, []);
-
 
 	React.useEffect(() => {
 		if (!menuOpen) return;
@@ -311,11 +334,17 @@ export function AppShell() {
 		[],
 	);
 
+	const currentPath =
+		replacementRoutes[screen] ??
+		(screen === "home" ? "/" : `/?screen=${screen}`);
+
 	return (
 		<div className="app-shell" data-screen={screen}>
 			<a className="skip-link" href="#main-content">
 				Skip to main content
 			</a>
+
+			{/* ── Sidebar ─────────────────────────────────────────────────────── */}
 			<aside
 				aria-label={menuOpen ? "English learning navigation" : undefined}
 				aria-modal={menuOpen || undefined}
@@ -337,8 +366,13 @@ export function AppShell() {
 						<span>Measurable daily language practice</span>
 					</span>
 				</div>
-				<LearningNavigation language="en" current={replacementRoutes[screen] ?? (screen === "home" ? "/" : `/?screen=${screen}`)} onNavigate={() => setMenuOpen(false)} />
+				<LearningNavigation
+					language="en"
+					current={currentPath}
+					onNavigate={() => setMenuOpen(false)}
+				/>
 			</aside>
+
 			{menuOpen ? (
 				<button
 					aria-label="Close navigation"
@@ -347,8 +381,9 @@ export function AppShell() {
 					type="button"
 				/>
 			) : null}
+
+			{/* ── Main ────────────────────────────────────────────────────────── */}
 			<main className="app-main" id="main-content" tabIndex={-1}>
-        
 				<header className="app-topbar">
 					<div className="flex min-w-0 items-center gap-3">
 						<Button
@@ -372,33 +407,55 @@ export function AppShell() {
 							</p>
 						</div>
 					</div>
-					<details className="app-tools"><summary>Tools & help</summary><div className="app-tools-panel">
-						<a href="/roadmap.html" className="inline-flex min-h-11 shrink-0 items-center rounded-lg border px-3 text-sm font-semibold" lang="fa" dir="rtl">رودمپ</a>
-						<ApiConnectionStatus baseUrl={state.settings.apiBaseUrl} />
-						<NeuroReader
-							onOpenSettings={() => navigate("settings")}
-							onToggleReadingRuler={(enabled) =>
-								mutate((draft) => {
-									draft.settings.readingRuler = enabled;
-								})
-							}
-							settings={state.settings}
-						/>
-						<UserGuideButton navigate={navigate} />
-						<InstallAppControl />
-					</div></details>
+
+					<details className="app-tools">
+						<summary>Tools &amp; help</summary>
+						<div className="app-tools-panel">
+							<a
+								href="/roadmap.html"
+								className="inline-flex min-h-11 shrink-0 items-center rounded-lg border px-3 text-sm font-semibold"
+								lang="fa"
+								dir="rtl"
+							>
+								رودمپ
+							</a>
+							<ApiConnectionStatus baseUrl={state.settings.apiBaseUrl} />
+							<NeuroReader
+								onOpenSettings={() => navigate("settings")}
+								onToggleReadingRuler={(enabled) =>
+									mutate((draft) => {
+										draft.settings.readingRuler = enabled;
+									})
+								}
+								settings={state.settings}
+							/>
+							<UserGuideButton navigate={navigate} />
+							<InstallAppControl />
+						</div>
+					</details>
 				</header>
+
+				{/* ── Content ─────────────────────────────────────────────────── */}
 				<div className="app-content" data-screen={screen}>
-{screen === "errors" ? <details className="quiet-disclosure"><summary>Saved responses & learning evidence</summary><div><AutomaticityEvidenceSummary /></div></details> : null}
-					{screen === "home" ? <DashboardV2Screen /> : null}
-					{screen === "progress" ? <div className="learning-progress-page"><header><p>YOUR LEARNING RECORD</p><h1>Progress you can see.</h1><p>Review saved work, find what needs attention and check the evidence behind each result.</p></header><AutomaticityEvidenceSummary /><details className="quiet-disclosure"><summary>Additional practice & earlier learning tools</summary><div><AutomaticityScreen /></div></details></div> : null}
-					{screen === "integrated-skills" ? (
+					{screen === "errors" && (
+						<details className="quiet-disclosure">
+							<summary>Saved responses &amp; learning evidence</summary>
+							<div>
+								<AutomaticityEvidenceSummary />
+							</div>
+						</details>
+					)}
+
+					{screen === "home" && <DashboardV2Screen />}
+					{screen === "progress" && <ProgressScreen />}
+					{screen === "integrated-skills" && (
 						<IntegratedSkillsScreen navigate={navigate} />
-					) : null}
-					{screen === "resources" ? <ResourcesScreen /> : null}
-					{screen === "errors" ? <ErrorsScreen /> : null}
-					{screen === "library" ? <AudioScreen /> : null}
+					)}
+					{screen === "resources" && <ResourcesScreen />}
+					{screen === "errors" && <ErrorsScreen />}
+					{screen === "library" && <AudioScreen />}
 				</div>
+
 				<AppUpdateNotice />
 			</main>
 		</div>

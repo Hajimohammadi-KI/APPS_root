@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-03T04:31:28.448Z",
+  "seed": "r36-v1",
+  "selectionSha256": "8d53ba64e620f583d218a4ed224880ce3b3a5dadd423616a8b4a40f4191c3058",
+  "counts": {
+    "en": 4355,
+    "de": 2320
+  },
+  "excluded": {
+    "en:ambiguous annotation": 355,
+    "en:ambiguous or missing document alignment": 29,
+    "en:outside length bounds": 79,
+    "de:outside length bounds": 42,
+    "de:ambiguous or missing document alignment": 17
+  },
+  "selected": 512,
+  "labels": "Reference edited / reference no correction; includes grammar, spelling, punctuation and word choice. Not universal correctness or app task validity.",
+  "groupPolicy": "Official corpus split, exact text deduplication; document IDs retained. No training or tuning in this run. Sentence Wilson intervals are descriptive; within-document correlation may narrow them.",
+  "contamination": "Public data exposure during model pretraining unknown; diagnostic only.",
+  "screen": {
+    "minimumPerClass": 100,
+    "maxFalseAcceptWilsonUpper": 0.05,
+    "minCorrectAcceptWilsonLower": 0.9
+  }
+}

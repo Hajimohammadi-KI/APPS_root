@@ -1,0 +1,26 @@
+import {mkdir,readFile,writeFile} from "node:fs/promises";
+import {resolve} from "node:path";
+import {digest,parseManifest,policy,evidenceFile,validateRun,type PredictionRun} from "./lib/model-benchmark";
+import {loadRepresentativeRuntime,representativeCandidate} from "./lib/representative-model-candidate";
+const root=resolve(import.meta.dir,".."),folder=resolve(root,"docs/model-evaluation");
+const scope=JSON.parse(await readFile(resolve(root,"docs/grammar-scope/inventory.json"),"utf8")) as {inventory:{id:string;language:string;title:string;familyIds:string[]}[];cells:{id:string;constructionId:string;stage:string;modality:string;required:boolean;taskIds:string[]}[]};
+const draft=parseManifest(JSON.parse(await readFile(resolve(folder,"development.json"),"utf8")));
+const representativeDraft=parseManifest(JSON.parse(await readFile(resolve(folder,"representative-development.json"),"utf8")));
+const comparison=JSON.parse(await readFile(resolve(folder,"representative-comparison.json"),"utf8")) as {approved:boolean;manifestSha256:string;candidates:{candidate:{id:string;version:string};source:{folder:string;runSha256:string}}[]};
+if(comparison.approved!==false||comparison.manifestSha256!==digest(JSON.stringify(representativeDraft)))throw Error("Stale representative comparison");
+const representative=comparison.candidates.find(row=>row.candidate.id===representativeCandidate.id&&row.candidate.version===representativeCandidate.version);
+if(!representative)throw Error("Missing representative diagnostic run");
+const run=JSON.parse(await evidenceFile(root,{path:`${representative.source.folder}/run.json`,sha256:representative.source.runSha256})) as PredictionRun;
+validateRun(representativeDraft,run);const runtime=await loadRepresentativeRuntime(root);
+if(run.partition!=="development"||JSON.stringify(run.configuration?.sourceHashes)!==JSON.stringify(runtime.sourceHashes)||JSON.stringify(run.configuration?.packHashes)!==JSON.stringify(runtime.packHashes))throw Error("Representative diagnostics do not match the current source and curriculum");
+const matrix={schemaVersion:1,version:"2026-09-05.3",policy,scopeSha256:digest(JSON.stringify(scope)),benchmarkVersion:draft.version,benchmarkSha256:digest(JSON.stringify(draft)),
+ representativeBenchmark:{version:representativeDraft.version,manifestSha256:digest(JSON.stringify(representativeDraft)),reviewed:false,evidence:"docs/model-evaluation/representative-comparison.json"},
+ decision:"No automatic grammar evaluator is qualified. Closed-answer matching and 12 bounded construction checkers provide practice feedback; unsupported and free production need manual review.",
+ candidateAvailability:[{id:"controlled-answer",version:"1.0.0",status:"development_diagnostic_run",deployment:"controlled_practice_only"},
+ {...representativeCandidate,status:"development_diagnostic_run",deployment:"bounded_practice_only",evidence:"docs/model-evaluation/representative-comparison.json",reason:"74 implementation-authored writing regressions in 12 construction scopes. Exact production task and source hashes are checked. No independent labels or untouched calibration/final evidence; no mastery qualification."},
+ {id:"languagetool",version:"6.6",status:"local_development_diagnostic_run",deployment:"not_qualified",evidence:"docs/model-evaluation/development-comparison.json",reason:"Portable local server completed 20 unreviewed drafts. Suggestions cannot establish task target or meaning. Calibration and final human-reviewed runs remain unavailable."},
+ {id:"pretrained-local",version:"qwen3-8b-q4km-d98cdcbd03e1-p2-b10809",status:"local_development_diagnostic_run",deployment:"not_qualified",evidence:"docs/model-evaluation/development-comparison.json",reason:"Real Qwen3-8B Q4_K_M run: 3 pass proposals, 17 rejected responses on 20 unreviewed development drafts. Shared installed adapter and release compiler are implemented; no reviewed calibration/final qualification or release approval exists."}],
+ functions:[{id:"closed-answer-match",status:"practice_feedback_only"},{id:"bounded-construction-assessment",status:"practice_feedback_only"},{id:"orthography-suggestions",status:"practice_feedback_only"},{id:"open-grammar-assessment",status:"manual_review_required"},{id:"target-and-meaning-assessment",status:"manual_review_required"},{id:"minimal-correction",status:"manual_review_required"},{id:"style-rewrite",status:"no_mastery_credit"},{id:"asr",status:"not_qualified"},{id:"pronunciation-and-fluency",status:"not_qualified"}],
+ cells:scope.cells.filter(cell=>cell.required).map(cell=>({id:cell.id,constructionId:cell.constructionId,language:cell.constructionId.slice(0,2),stage:cell.stage,modality:cell.modality,taskIds:cell.taskIds,automaticScopeApproved:false,humanAssessmentPath:"/practice?review=1",humanAssessmentQualification:"Reviewer identity and content/evaluator approval must be independently recorded",fallback:"Save original response without an independent correctness score"}))};
+await mkdir(folder,{recursive:true});await writeFile(resolve(folder,"support-matrix.json"),JSON.stringify(matrix,null,2)+"\n");
+console.log(JSON.stringify({requiredCells:matrix.cells.length,approvedAutomaticScopes:0,reviewWorkflow:"available",qualifiedHumanScopes:0}));

@@ -1,0 +1,221 @@
+.daily-list,
+.resource-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.daily-step {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 8px 22px rgba(24, 43, 75, 0.05);
+}
+
+.daily-step[data-done="true"] {
+  border-color: #82c599;
+  background: linear-gradient(
+    180deg,
+    rgba(244, 252, 247, 0.98),
+    rgba(239, 250, 244, 0.98)
+  );
+}
+
+.daily-step-head {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 15px;
+}
+
+.step-number {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--primary), #1760df);
+  color: white;
+  font-weight: 900;
+  box-shadow: 0 10px 18px rgba(23, 96, 223, 0.16);
+}
+
+.daily-step-body {
+  border-top: 1px solid var(--border);
+  padding: 15px;
+}
+
+.daily-step-body > summary {
+  display: none;
+}
+
+.heatmap {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 5px;
+}
+
+.heat-cell {
+  aspect-ratio: 1;
+  border-radius: 5px;
+  background: #e5ebf3;
+}
+
+.heat-cell[data-level="1"] {
+  background: #b9dec4;
+}
+.heat-cell[data-level="2"] {
+  background: #74bd89;
+}
+.heat-cell[data-level="3"] {
+  background: #2f8e52;
+}
+
+.daily-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 16px;
+  color: #17142f;
+}
+
+.daily-overview-main,
+.daily-overview-aside > div {
+  border: 1px solid #e3dcf4;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 32px rgba(65, 43, 111, 0.07);
+}
+
+.daily-overview-main { padding: 18px; }
+.daily-greeting { margin: 0 0 12px; font-size: 1.05rem; font-weight: 900; }
+
+.daily-overview-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px 132px;
+  align-items: center;
+  min-height: 220px;
+  overflow: hidden;
+  padding: 24px;
+  border: 1px solid #ded3f6;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 72% 30%, rgba(190, 163, 255, 0.34), transparent 28%),
+    linear-gradient(125deg, #fbf9ff 0%, #f3edff 64%, #fff9ed 100%);
+}
+
+.daily-overview-copy { position: relative; z-index: 2; }
+.daily-overview-copy h2 { margin: 7px 0 2px; font-size: clamp(1.35rem, 2vw, 2rem); line-height: 1.13; }
+.daily-overview-copy > p:not(.daily-overview-topic) { max-width: 580px; margin: 8px 0 16px; color: #5f5874; line-height: 1.55; }
+.daily-overview-topic { margin: 0; color: #6234c7; font-weight: 900; }
+.daily-overview-kicker { display: inline-flex; align-items: center; gap: 6px; color: #6d3fd0; font-size: .73rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.daily-overview-kicker svg { width: 15px; }
+.daily-overview-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 11px; color: #625b74; font-size: .75rem; font-weight: 700; }
+
+.daily-coach-image { width: 145px; height: 145px; object-fit: contain; filter: drop-shadow(0 15px 22px rgba(77, 45, 139, .16)); }
+.daily-progress-ring {
+  display: grid;
+  width: 116px;
+  aspect-ratio: 1;
+  place-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side, #fff 77%, transparent 79%), conic-gradient(#6940cf var(--daily-progress), #e7dff6 0);
+  text-align: center;
+}
+.daily-progress-ring strong { font-size: 1.55rem; }
+.daily-progress-ring span { color: #696178; font-size: .66rem; }
+
+.daily-phases { display: grid; gap: 18px; margin-top: 18px; }
+.daily-phases h3 { margin: 0 0 8px; color: #6436bd; font-size: .76rem; font-weight: 900; }
+.daily-activity-grid { display: grid; gap: 10px; }
+.daily-activity-grid-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.daily-activity-grid-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.daily-activity-card {
+  display: grid;
+  grid-template-columns: 28px 42px minmax(0, 1fr);
+  gap: 9px;
+  min-height: 128px;
+  padding: 13px;
+  border: 1px solid #e1d9ef;
+  border-radius: 16px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.daily-activity-card:hover { border-color: #9c7ee1; box-shadow: 0 10px 24px rgba(83, 55, 145, .09); transform: translateY(-1px); }
+.daily-activity-card[data-completed="true"] { border-color: #9cdabb; background: #f5fcf8; }
+.daily-activity-number,
+.daily-activity-icon { display: grid; place-items: center; border-radius: 50%; font-weight: 900; }
+.daily-activity-number { width: 26px; height: 26px; background: #7042ce; color: #fff; font-size: .74rem; }
+.daily-activity-icon { width: 40px; height: 40px; background: #f0e9ff; color: #6a3bc8; }
+.daily-activity-icon svg { width: 19px; }
+.daily-activity-title-row { display: flex; align-items: start; justify-content: space-between; gap: 8px; }
+.daily-activity-title-row h4 { margin: 1px 0 0; font-size: .84rem; line-height: 1.25; }
+.daily-activity-title-row span { border-radius: 999px; background: #f2edf9; padding: 3px 7px; color: #70677f; font-size: .58rem; font-weight: 800; }
+.daily-activity-card p { margin: 5px 0 10px; color: #6d6579; font-size: .7rem; line-height: 1.4; }
+.daily-activity-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; color: #6c6479; font-size: .66rem; font-weight: 800; }
+.daily-activity-open { color: #5d2db8; }
+.daily-activity-card:hover .daily-activity-open { text-decoration: underline; }
+.daily-activity-card:active { transform: scale(.99); }
+.daily-activity-card:focus-visible { outline: 3px solid rgba(104, 64, 195, .3); outline-offset: 2px; }
+
+.daily-overview-aside { display: grid; align-content: start; gap: 14px; }
+.daily-overview-aside > div { padding: 16px; }
+.daily-overview-aside h3 { margin: 0 0 12px; font-size: .9rem; }
+.daily-glance-card p { display: grid; grid-template-columns: 34px 1fr; gap: 0 8px; margin: 0; padding: 10px 0; border-top: 1px solid #eee8f6; font-size: .72rem; }
+.daily-glance-card p:first-of-type { border-top: 0; }
+.daily-glance-card svg { grid-row: span 2; width: 32px; height: 32px; padding: 8px; border-radius: 10px; background: #f1ebff; color: #673bc5; }
+.daily-glance-card strong { line-height: 1.2; }
+.daily-glance-card span { color: #7c7389; font-size: .64rem; }
+.daily-plan-card > p { margin: -7px 0 12px; color: #756d82; font-size: .68rem; }
+.daily-plan-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; }
+.daily-plan-options button { display: grid; min-height: 54px; place-content: center; border: 1px solid #ddd4ed; border-radius: 12px; background: #fff; color: #362d48; cursor: pointer; }
+.daily-plan-options button[aria-pressed="true"] { border-color: #6840c3; background: #f1ebff; color: #5b2db8; box-shadow: 0 0 0 2px rgba(104, 64, 195, .12); }
+.daily-plan-options button:active { transform: scale(.97); }
+.daily-plan-options strong { font-size: .9rem; }
+.daily-plan-options span { font-size: .58rem; }
+.daily-overview-meta span + span { padding-left: 12px; border-left: 1px solid #d8cfea; }
+
+.daily-plan-details { overflow: hidden; border: 1px solid #e2daef; border-radius: 18px; background: #fff; }
+.daily-plan-details > summary { cursor: pointer; padding: 14px 17px; color: #58309f; font-size: .82rem; font-weight: 900; }
+.daily-plan-details > .daily-mission-hero { margin: 0 12px 12px; }
+
+[id^="daily-activity-"] { scroll-margin-top: 100px; }
+
+.daily-focused-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid #ded5ee;
+  border-radius: 18px;
+  background: linear-gradient(110deg, #fff, #f7f2ff);
+  box-shadow: 0 10px 28px rgba(69, 43, 121, .07);
+}
+.daily-focused-header p { margin: 0 0 2px; color: #725b93; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
+.daily-focused-header h2 { margin: 0; font-size: 1.05rem; }
+
+@media (max-width: 1100px) {
+  .daily-overview { grid-template-columns: 1fr; }
+  .daily-overview-aside { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .daily-overview-main { padding: 12px; }
+  .daily-overview-hero { grid-template-columns: 1fr 92px; padding: 18px; }
+  .daily-coach-image { width: 90px; height: 90px; }
+  .daily-progress-ring { grid-column: 1 / -1; width: 94px; margin: 10px auto 0; }
+  .daily-activity-grid-two,
+  .daily-activity-grid-three,
+  .daily-overview-aside { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daily-activity-card { transition: none; }
+  .daily-activity-card:hover { transform: none; }
+}
+

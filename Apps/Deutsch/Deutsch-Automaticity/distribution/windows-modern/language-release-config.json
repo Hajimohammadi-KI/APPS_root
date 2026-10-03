@@ -1,0 +1,12 @@
+{
+  "productName": "DeutschFlow",
+  "productId": "DeutschFlowDesktop",
+  "version": "20.8.45",
+  "installFolder": "DeutschFlow",
+  "dataFolder": "DeutschFlow",
+  "mainExecutable": "DeutschFlow.exe",
+  "payloadFile": "DeutschFlow-Setup.payload.zip",
+  "shortcutName": "DeutschFlow",
+  "environmentPrefix": "DEUTSCHFLOW",
+  "locale": "de"
+}

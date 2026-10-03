@@ -1,0 +1,148 @@
+{
+  "policy_kind": "max-probability confidence threshold",
+  "selection_rule": "loosest threshold with retained_accuracy >= 80% and coverage >= 30% on the held-out test set",
+  "runs": {
+    "english-feature-seed42": {
+      "status": "target_unreachable",
+      "reason": "No threshold in [0, 1] reaches 80% retained accuracy with at least 30% coverage on this data",
+      "always_answer_baseline": {
+        "confidence_threshold": 0.0,
+        "sample_count": 175,
+        "coverage": 1.0,
+        "retained_count": 175,
+        "retained_accuracy": 0.48,
+        "abstained_count": 0,
+        "abstained_rate": 0.0,
+        "abstained_accuracy_if_forced": null
+      },
+      "best_achievable_at_min_coverage": {
+        "confidence_threshold": 0.35,
+        "sample_count": 175,
+        "coverage": 0.3657142857142857,
+        "retained_count": 64,
+        "retained_accuracy": 0.609375,
+        "abstained_count": 111,
+        "abstained_rate": 0.6342857142857142,
+        "abstained_accuracy_if_forced": 0.40540540540540543
+      }
+    },
+    "english-modernbert-seed42": {
+      "status": "target_unreachable",
+      "reason": "No threshold in [0, 1] reaches 80% retained accuracy with at least 30% coverage on this data",
+      "always_answer_baseline": {
+        "confidence_threshold": 0.0,
+        "sample_count": 175,
+        "coverage": 1.0,
+        "retained_count": 175,
+        "retained_accuracy": 0.4857142857142857,
+        "abstained_count": 0,
+        "abstained_rate": 0.0,
+        "abstained_accuracy_if_forced": null
+      },
+      "best_achievable_at_min_coverage": {
+        "confidence_threshold": 0.77,
+        "sample_count": 175,
+        "coverage": 0.3028571428571429,
+        "retained_count": 53,
+        "retained_accuracy": 0.6415094339622641,
+        "abstained_count": 122,
+        "abstained_rate": 0.6971428571428572,
+        "abstained_accuracy_if_forced": 0.4180327868852459
+      }
+    },
+    "english-roberta-seed42": {
+      "status": "target_unreachable",
+      "reason": "No threshold in [0, 1] reaches 80% retained accuracy with at least 30% coverage on this data",
+      "always_answer_baseline": {
+        "confidence_threshold": 0.0,
+        "sample_count": 175,
+        "coverage": 1.0,
+        "retained_count": 175,
+        "retained_accuracy": 0.52,
+        "abstained_count": 0,
+        "abstained_rate": 0.0,
+        "abstained_accuracy_if_forced": null
+      },
+      "best_achievable_at_min_coverage": {
+        "confidence_threshold": 0.46,
+        "sample_count": 175,
+        "coverage": 0.3028571428571429,
+        "retained_count": 53,
+        "retained_accuracy": 0.6792452830188679,
+        "abstained_count": 122,
+        "abstained_rate": 0.6971428571428572,
+        "abstained_accuracy_if_forced": 0.45081967213114754
+      }
+    },
+    "german-feature-seed42": {
+      "status": "target_unreachable",
+      "reason": "No threshold in [0, 1] reaches 80% retained accuracy with at least 30% coverage on this data",
+      "always_answer_baseline": {
+        "confidence_threshold": 0.0,
+        "sample_count": 326,
+        "coverage": 1.0,
+        "retained_count": 326,
+        "retained_accuracy": 0.6625766871165644,
+        "abstained_count": 0,
+        "abstained_rate": 0.0,
+        "abstained_accuracy_if_forced": null
+      },
+      "best_achievable_at_min_coverage": {
+        "confidence_threshold": 0.48,
+        "sample_count": 326,
+        "coverage": 0.3343558282208589,
+        "retained_count": 109,
+        "retained_accuracy": 0.7247706422018348,
+        "abstained_count": 217,
+        "abstained_rate": 0.6656441717791411,
+        "abstained_accuracy_if_forced": 0.631336405529954
+      }
+    },
+    "german-gbert-seed42": {
+      "status": "target_unreachable",
+      "reason": "No threshold in [0, 1] reaches 80% retained accuracy with at least 30% coverage on this data",
+      "always_answer_baseline": {
+        "confidence_threshold": 0.0,
+        "sample_count": 326,
+        "coverage": 1.0,
+        "retained_count": 326,
+        "retained_accuracy": 0.6625766871165644,
+        "abstained_count": 0,
+        "abstained_rate": 0.0,
+        "abstained_accuracy_if_forced": null
+      },
+      "best_achievable_at_min_coverage": {
+        "confidence_threshold": 0.62,
+        "sample_count": 326,
+        "coverage": 0.4570552147239264,
+        "retained_count": 149,
+        "retained_accuracy": 0.7583892617449665,
+        "abstained_count": 177,
+        "abstained_rate": 0.5429447852760736,
+        "abstained_accuracy_if_forced": 0.5819209039548022
+      }
+    },
+    "multilingual-mdeberta-seed42": {
+      "status": "threshold_found",
+      "confidence_threshold": 0.56,
+      "sample_count": 357,
+      "coverage": 0.5686274509803921,
+      "retained_count": 203,
+      "retained_accuracy": 0.8078817733990148,
+      "abstained_count": 154,
+      "abstained_rate": 0.43137254901960786,
+      "abstained_accuracy_if_forced": 0.6623376623376623
+    },
+    "multilingual-xlm-roberta-seed42": {
+      "status": "threshold_found",
+      "confidence_threshold": 0.52,
+      "sample_count": 357,
+      "coverage": 0.7843137254901961,
+      "retained_count": 280,
+      "retained_accuracy": 0.8,
+      "abstained_count": 77,
+      "abstained_rate": 0.21568627450980393,
+      "abstained_accuracy_if_forced": 0.5324675324675324
+    }
+  }
+}

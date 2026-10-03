@@ -1,0 +1,75 @@
+node_modules/
+.bun-install-cache*/
+.build-caches/
+.git.backup-*/
+backups/
+/APPS_root/
+/Apps/Tracker/Tracker-chart-test-build-2026-09-06/
+/Apps/Tracker/Tracker-test-build-2026-09-06/
+.next/
+.vinext/
+.vercel/
+dist/
+build/
+out/
+coverage/
+.tmp/
+tmp/
+.run-logs/
+.history/
+.claude/
+.tmp.driveupload/
+
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+*.tsbuildinfo
+*.log
+*.log.err
+runtime-logs/
+
+# Local AI/editor working files
+.agents/
+.codex-tmp/
+.audit/
+
+# Recoverable files intentionally kept outside the active source tree
+deleted/
+DELETE/
+
+# Local educational source library (large and potentially licensed material)
+Sources/
+
+.env
+.env.*
+!.env.example
+client_secret*.json
+shared/private/
+API-CONNECTION-INFORMATION.txt
+
+*.exe
+*.msi
+*.dll
+*.zip
+!releases/CrossRepositoryCodeIntelligence-*-Version2-final.zip
+
+# Local-only update channels for the language apps and PDF Reader. Their large
+# packages are intentionally not published until external signing/hosting is ready.
+releases/english-grammar-update.json
+releases/deutschflow-update.json
+releases/research-pdf-studio-update.json
+
+artifacts/
+release/
+
+*.downloads
+*.exe
+*.msi
+.vercel
+.env*
+!.env.example
+
+# Interrupted atomic document writes are disposable local intermediates.
+*.html.*.tmp

@@ -1,0 +1,13 @@
+{
+  "productId": "EnglishGrammarAutomaticityDesktop",
+  "productName": "English Grammar Automaticity",
+  "versionFile": "version.txt",
+  "dataFolder": "English Grammar Automaticity",
+  "environmentPrefix": "ENGLISH_GRAMMAR",
+  "defaultManifestUrl": "https://raw.githubusercontent.com/Hajimohammadi-KI/APPS_root_new/main/releases/english-grammar-update.json",
+  "localManifestPath": "D:\\APPS_root_new\\releases\\english-grammar-update.json",
+  "setupFile": "SETUP-WINDOWS.bat",
+  "payloadFile": "EnglishGrammar-Setup.payload.zip",
+  "packageKind": "powershell-language",
+  "locale": "en"
+}

@@ -1,0 +1,58 @@
+/* Script-specific writing rules; keep learner text-size preferences intact. */
+.learning-path-link{display:block;width:fit-content;max-width:100%;margin-block:14px 4px;padding:12px 14px;border:1px solid #7955a3;border-radius:10px;background:#f2ecfa;color:#442466;font-size:1rem;font-weight:700;line-height:1.6;text-decoration:none;overflow-wrap:anywhere}
+.learning-path-link:focus-visible{outline:3px solid #7546b5;outline-offset:3px}
+:lang(fa){font-family:Tahoma,"Segoe UI",sans-serif;letter-spacing:normal;word-spacing:normal}
+.prompt-instruction,.prompt-example{unicode-bidi:isolate;line-height:1.8}
+.prompt-instruction[dir=rtl]{display:block;text-align:right}
+.prompt-example{display:block;text-align:left;margin-block:10px;padding:10px 12px;background:#f2eef9;border-radius:9px}
+#exercisePrompt{font-size:1.125rem;line-height:1.7;letter-spacing:normal;overflow-wrap:anywhere}
+.exercise-title>div,.answer-field,.content,.lesson-stack{min-width:0}
+.exercise-title>div{flex:1}
+.exercise-card :is(input,textarea),.catalog input{font-size:max(16px,1rem);line-height:1.65;min-height:48px}
+.exercise-card :is(label,button),.rule-body,.accordion-content,.honovr-guide{font-size:1rem;line-height:1.75}
+.exercise-card :is(button,input,textarea){border-radius:10px}
+.exercise-card :is(button,a){min-height:44px}
+.exercise-card :is(input,textarea)[lang=de],.exercise-card :is(input,textarea)[lang=en]{direction:ltr;text-align:left}
+.exercise-card [lang=fa]{line-height:1.9;letter-spacing:normal}
+.exercise-card .exercise-actions{display:flex;flex-wrap:wrap;gap:10px}
+.exercise-actions>*{flex:1 1 135px}
+.catalog-toggle,.support-disclosure>summary,.reference-disclosure>summary{cursor:pointer;min-height:44px;padding:12px 14px;font:600 1rem/1.6 system-ui}
+.catalog-toggle{display:none}
+.support-disclosure,.reference-disclosure{border:1px solid #ded6ea;border-radius:12px;background:#fff;grid-column:1/-1}
+.support-disclosure>div{padding:8px 14px 16px}
+.support-disclosure .automaticity-overview{margin:0!important;padding:8px!important}
+.reference-disclosure:not([open])>.rule-body{display:none}
+.reference-disclosure>summary{display:flex;align-items:center;gap:10px}
+.reference-disclosure>summary::after{content:"⌄";margin-inline-start:auto}
+.reference-disclosure>summary h3{margin:0;font-size:1rem}
+.writing-guide{margin-block:8px 12px}
+.writing-guide>summary{padding:10px 12px;cursor:pointer;font-weight:600}
+.writing-guide .honovr-guide{border:0;margin:0;padding:10px 14px}
+.supplementary-context{font-size:1rem;line-height:1.75;color:#585169}
+:is(.catalog-toggle,.support-disclosure>summary,.reference-disclosure>summary,.writing-guide>summary):focus-visible{outline:3px solid #7546b5;outline-offset:3px}
+@media(max-width:820px){
+  .workspace{display:flex!important;flex-direction:column;gap:14px!important}
+  .workspace>.catalog{width:100%;max-height:none;overflow:visible;position:static}
+  .catalog-toggle{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:#f1ecf8;color:#352254}
+  .catalog-tools{margin-top:10px}
+  .catalog .level-list{display:grid!important;max-height:300px;overflow:auto;overscroll-behavior:contain;margin-top:10px}
+  .catalog [hidden],.catalog[hidden]{display:none!important}
+  .catalog .topic-list{max-height:none}
+  .workspace>.content{width:100%;margin:0;padding:0}
+  .workspace .lesson-head{align-items:flex-start;gap:8px;flex-wrap:wrap;margin-inline:0;max-width:100%}
+  .workspace .lesson-stack{display:flex;flex-direction:column;gap:14px}
+  .workspace .goal-card{order:2}
+  .topbar{gap:8px!important;padding-inline:10px!important}
+  .topbar .page-id{min-width:0;gap:8px}
+  .topbar .page-id h2{font-size:clamp(15px,4vw,19px);white-space:normal}
+  .topbar .header-actions{gap:6px}
+  .topbar .roadmap-link{padding-inline:8px;font-size:13px}
+  .main>.hero{height:auto;display:block;text-align:start;padding:20px}
+  .hero>.owl{display:none}
+  .hero .hero-copy h1{line-height:1.4}
+  .hero>.progress-ring{width:94px;height:94px;margin:16px 0 0}
+  .hero .ring-text b{font-size:24px}
+  .hero .meta{justify-content:flex-start;font-size:15px}
+  .main>.support-disclosure{margin-top:20px}
+}
+@media(max-width:420px){.exercise-actions>*{flex-basis:120px}.exercise-actions>#checkBtn{flex-basis:100%}}

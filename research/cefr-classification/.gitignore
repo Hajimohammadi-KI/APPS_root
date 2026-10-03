@@ -1,0 +1,21 @@
+# Python and local environments are reproducible from pyproject.toml.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# Licensed/raw corpora, trained weights, and learner predictions stay local.
+data/raw/*
+data/processed/*
+runs/*
+
+# Keep the directory contracts visible without committing their private contents.
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!runs/.gitkeep
+
+# Portable-reader diagnostics are local verification evidence, not product artifacts.
+dashboard/.chrome-debug-profile/
+dashboard/dashboard-failure.png
+dashboard/debug-dashboard.html

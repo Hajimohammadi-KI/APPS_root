@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1785757664193,
+      "tag": "0000_clammy_lightspeed",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1785759787838,
+      "tag": "0001_whole_calypso",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1785764184894,
+      "tag": "0002_stale_hercules",
+      "breakpoints": true
+    }
+  ]
+}

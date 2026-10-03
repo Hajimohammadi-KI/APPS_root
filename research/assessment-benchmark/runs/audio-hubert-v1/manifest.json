@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-03T04:34:35.318Z",
+  "corpus": "SpeechOcean762 / OpenSLR 101 original release",
+  "source": "https://openslr.org/101/",
+  "license": "CC-BY-4.0",
+  "casesSha256": "f4de6d61a4937c0234436ef2226bfc8dd7119b6ad28b5e31ca27785d2b4b2dc8",
+  "recordings": 5000,
+  "train": 2500,
+  "test": 2500,
+  "trainSpeakers": 125,
+  "testSpeakers": 125,
+  "overlappingSpeakers": 0,
+  "duplicateAudio": 0,
+  "allWavDecodedHeaders": true,
+  "totalHours": 5.5674327777777775,
+  "durationSeconds": {
+    "min": 1.59,
+    "max": 20.408
+  },
+  "ratingsPerUtterance": 5,
+  "scales": {
+    "accuracy": "0–10",
+    "fluency": "0–10",
+    "prosodic": "0–10",
+    "total": "0–10",
+    "completeness": "aggregate 0–10; individual binary 0/1; not used by candidate"
+  },
+  "modelScope": "English read speech, native Mandarin learners, children and adults",
+  "qualifiesGerman": false,
+  "qualifiesSpontaneousSpeech": false,
+  "qualifiesGrammar": false
+}

@@ -1,0 +1,422 @@
+/* Shared English/German editorial palette. Keep status text and icons meaningful without green. */
+:root,
+html,
+html.dark {
+  --background: #faf8f4;
+  --foreground: #192a3c;
+  --card: #fff;
+  --card-foreground: #192a3c;
+  --popover: #fff;
+  --popover-foreground: #192a3c;
+  --primary: #3d5a9e;
+  --primary-foreground: #fff;
+  --secondary: #efe7da;
+  --secondary-foreground: #304b86;
+  --muted: #f3eee6;
+  --muted-foreground: #627085;
+  --accent: #efe7da;
+  --accent-foreground: #304b86;
+  --border: #ded8cd;
+  --input: #cfc7ba;
+  --ring: #3d5a9e;
+  --destructive: #b45040;
+  --sidebar-foreground: #192a3c;
+  --sidebar-primary: #3d5a9e;
+  --sidebar-primary-foreground: #fff;
+  --sidebar-accent: #efe7da;
+  --sidebar-accent-foreground: #304b86;
+  --sidebar-border: #ded8cd;
+  --sidebar-ring: #3d5a9e;
+  --chart-1: #3d5a9e;
+  --chart-2: #8a9cc4;
+  --chart-3: #c2a885;
+  --chart-4: #d96b5a;
+  --chart-5: #192a3c;
+  --screen-accent: #3d5a9e;
+  --screen-accent-strong: #304b86;
+  --screen-paper: #faf8f4;
+  --bg: #faf8f4;
+  --text: #192a3c;
+  --ink: #192a3c;
+  --blue: #3d5a9e;
+  --navy: #192a3c;
+  --panel: #fff;
+  --paper: #faf8f4;
+  --sand: #efe7da;
+  --line: #ded8cd;
+  --green: #3d5a9e;
+  --shadow-card: 0 3px 12px #192a3c0a;
+  color-scheme: light;
+}
+html body {
+  background: #faf8f4 !important;
+  color: #192a3c;
+}
+body
+  :is(
+    .app-sidebar,
+    .sidebar,
+    .german-app-sidebar,
+    .german-app-topbar,
+    .app-topbar,
+    .topbar
+  ) {
+  background: #faf8f4 !important;
+  border-color: #ded8cd !important;
+  box-shadow: none;
+}
+body
+  :is(
+    .screen-intro,
+    .page-intro,
+    .page-header,
+    .dashboard-hero,
+    .daily-mission-hero,
+    .welcome-card,
+    .hero-card,
+    .hero
+  ) {
+  background: #efe7da !important;
+  color: #192a3c !important;
+  border: 1px solid #ded8cd;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px #192a3c08;
+}
+body
+  :is(
+    .panel,
+    .lesson-card,
+    .audio-card,
+    .resource-card,
+    .stat-card,
+    .setting-card,
+    .card,
+    .section-card
+  ) {
+  background: #fff;
+  border-color: #ded8cd;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #192a3c08;
+}
+body
+  :is(
+    .nav-item.active,
+    .nav-link.active,
+    nav [aria-current="page"],
+    .german-sidebar-trigger,
+    .sidebar-link.active
+  ) {
+  background: #efe7da !important;
+  color: #3d5a9e !important;
+  border-color: #d1c5b1 !important;
+}
+body
+  :is(
+    .primary-button,
+    .btn-primary,
+    .primary,
+    .use-btn,
+    .teacher-primary-button,
+    button.bg-primary,
+    a.bg-primary
+  ) {
+  background: #3d5a9e !important;
+  color: white !important;
+  border-color: #3d5a9e !important;
+}
+body
+  :is(
+    [class*="bg-purple-"],
+    [class*="bg-violet-"],
+    [class*="bg-emerald-"],
+    [class*="bg-green-"],
+    [class*="bg-teal-"],
+    [class*="bg-cyan-"],
+    [class*="bg-sky-"]
+  ) {
+  background-color: #efe7da !important;
+  background-image: none !important;
+}
+body
+  :is(
+    [class*="text-purple-"],
+    [class*="text-violet-"],
+    [class*="text-emerald-"],
+    [class*="text-green-"],
+    [class*="text-teal-"],
+    [class*="text-cyan-"],
+    [class*="text-sky-"]
+  ) {
+  color: #3d5a9e !important;
+}
+body
+  :is(
+    [class*="border-purple-"],
+    [class*="border-violet-"],
+    [class*="border-emerald-"],
+    [class*="border-green-"],
+    [class*="border-teal-"]
+  ) {
+  border-color: #d1c5b1 !important;
+}
+body
+  :is(
+    .success,
+    .status-success,
+    .badge-success,
+    .online,
+    .status-dot,
+    .level-tag
+  ) {
+  color: #3d5a9e;
+  background-color: #efe7da;
+}
+body :is(button, select, input, textarea) {
+  accent-color: #3d5a9e;
+}
+body :is(button, a, select, textarea, input, summary):focus-visible {
+  outline-color: #3d5a9e !important;
+}
+.audio-playback-speed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #3d5a9e;
+  font-size: 14px;
+  margin: 8px 0;
+}
+.audio-playback-speed select {
+  padding: 7px 12px;
+  min-height: 44px;
+  border: 1px solid #cfc7ba;
+  border-radius: 8px;
+  background: #fff;
+  color: #192a3c;
+}
+.audio-playback audio {
+  width: 100%;
+}
+@media (max-width: 600px) {
+  body :is(.screen-intro, .page-intro, .page-header) {
+    padding: 20px;
+  }
+}
+
+.conversation-library {
+  display: grid;
+  gap: 16px;
+}
+.conversation-library h2 {
+  font-size: 22px;
+  font-weight: 700;
+}
+.conversation-library-card {
+  background: #fff;
+  border: 1px solid #ded8cd;
+  border-radius: 14px;
+  padding: 20px;
+}
+.conversation-library-card h3 {
+  font-weight: 650;
+}
+.conversation-library-card p {
+  margin: 12px 0;
+}
+.conversation-library-card a {
+  color: #3d5a9e;
+  text-decoration: underline;
+}
+
+/* Preserve white title contrast on formerly purple header bands. */
+body :is([class*="bg-violet-9"], [class*="bg-purple-9"]) {
+  background: #3d5a9e !important;
+  color: #fff !important;
+}
+body
+  :is([class*="bg-violet-9"], [class*="bg-purple-9"])
+  :is([class*="text-violet-"], [class*="text-purple-"]) {
+  color: #fff !important;
+}
+body :is([class*="bg-violet-9"], [class*="bg-purple-9"]) .bg-white {
+  color: #3d5a9e !important;
+}
+
+body
+  :is(
+    .settings-intention-privacy,
+    .teacher-assignment-heading > span,
+    .teacher-status-published
+  ) {
+  color: #3d5a9e !important;
+  background-color: #efe7da !important;
+}
+body .dot {
+  background: #3d5a9e !important;
+}
+
+/* Legacy pages use --sidebar for a width; keep that variable owned by their layout. */
+body :is(.side, .sidebar-section, .german-sidebar-group) {
+  background: #faf8f4 !important;
+}
+body :is(.logo, .brand-mark, .german-brand-mark, .nav-main, .install-button) {
+  background: #3d5a9e !important;
+  color: #fff !important;
+}
+body :is(.owl, .spark) {
+  display: none;
+}
+body .hero:has(.owl) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+@media (max-width: 650px) {
+  body .hero:has(.owl) {
+    display: block;
+  }
+}
+
+/* Saturated utility bands keep white labels readable after recoloring. */
+body
+  :is(
+    [class*="bg-purple-5"],
+    [class*="bg-purple-6"],
+    [class*="bg-purple-7"],
+    [class*="bg-purple-8"],
+    [class*="bg-purple-9"],
+    [class*="bg-violet-5"],
+    [class*="bg-violet-6"],
+    [class*="bg-violet-7"],
+    [class*="bg-violet-8"],
+    [class*="bg-violet-9"],
+    [class*="bg-emerald-5"],
+    [class*="bg-emerald-6"],
+    [class*="bg-emerald-7"],
+    [class*="bg-emerald-8"],
+    [class*="bg-emerald-9"],
+    [class*="bg-green-5"],
+    [class*="bg-green-6"],
+    [class*="bg-green-7"],
+    [class*="bg-green-8"],
+    [class*="bg-green-9"],
+    [class*="bg-teal-5"],
+    [class*="bg-teal-6"],
+    [class*="bg-teal-7"],
+    [class*="bg-teal-8"],
+    [class*="bg-teal-9"],
+    [class*="bg-cyan-5"],
+    [class*="bg-cyan-6"],
+    [class*="bg-cyan-7"],
+    [class*="bg-cyan-8"],
+    [class*="bg-cyan-9"],
+    [class*="bg-sky-5"],
+    [class*="bg-sky-6"],
+    [class*="bg-sky-7"],
+    [class*="bg-sky-8"],
+    [class*="bg-sky-9"]
+  ) {
+  background: #3d5a9e !important;
+  color: #fff !important;
+}
+
+/* Tailwind gradient stops use these tokens, including the brand and install controls. */
+:root,
+html.dark {
+  --color-violet-50: #faf8f4;
+  --color-violet-100: #efe7da;
+  --color-violet-200: #efe7da;
+  --color-violet-300: #ded8cd;
+  --color-violet-400: #879bc4;
+  --color-violet-500: #3d5a9e;
+  --color-violet-600: #3d5a9e;
+  --color-violet-700: #304b86;
+  --color-violet-800: #304b86;
+  --color-violet-900: #192a3c;
+  --color-violet-950: #192a3c;
+  --color-purple-50: #faf8f4;
+  --color-purple-100: #efe7da;
+  --color-purple-200: #efe7da;
+  --color-purple-300: #ded8cd;
+  --color-purple-400: #879bc4;
+  --color-purple-500: #3d5a9e;
+  --color-purple-600: #3d5a9e;
+  --color-purple-700: #304b86;
+  --color-purple-800: #304b86;
+  --color-purple-900: #192a3c;
+  --color-purple-950: #192a3c;
+  --color-pink-50: #faf8f4;
+  --color-pink-100: #efe7da;
+  --color-pink-200: #efe7da;
+  --color-pink-300: #ded8cd;
+  --color-pink-400: #879bc4;
+  --color-pink-500: #3d5a9e;
+  --color-pink-600: #3d5a9e;
+  --color-pink-700: #304b86;
+  --color-pink-800: #304b86;
+  --color-pink-900: #192a3c;
+  --color-pink-950: #192a3c;
+  --color-fuchsia-50: #faf8f4;
+  --color-fuchsia-100: #efe7da;
+  --color-fuchsia-200: #efe7da;
+  --color-fuchsia-300: #ded8cd;
+  --color-fuchsia-400: #879bc4;
+  --color-fuchsia-500: #3d5a9e;
+  --color-fuchsia-600: #3d5a9e;
+  --color-fuchsia-700: #304b86;
+  --color-fuchsia-800: #304b86;
+  --color-fuchsia-900: #192a3c;
+  --color-fuchsia-950: #192a3c;
+  --color-green-50: #faf8f4;
+  --color-green-100: #efe7da;
+  --color-green-200: #efe7da;
+  --color-green-300: #ded8cd;
+  --color-green-400: #879bc4;
+  --color-green-500: #3d5a9e;
+  --color-green-600: #3d5a9e;
+  --color-green-700: #304b86;
+  --color-green-800: #304b86;
+  --color-green-900: #192a3c;
+  --color-green-950: #192a3c;
+  --color-emerald-50: #faf8f4;
+  --color-emerald-100: #efe7da;
+  --color-emerald-200: #efe7da;
+  --color-emerald-300: #ded8cd;
+  --color-emerald-400: #879bc4;
+  --color-emerald-500: #3d5a9e;
+  --color-emerald-600: #3d5a9e;
+  --color-emerald-700: #304b86;
+  --color-emerald-800: #304b86;
+  --color-emerald-900: #192a3c;
+  --color-emerald-950: #192a3c;
+  --color-teal-50: #faf8f4;
+  --color-teal-100: #efe7da;
+  --color-teal-200: #efe7da;
+  --color-teal-300: #ded8cd;
+  --color-teal-400: #879bc4;
+  --color-teal-500: #3d5a9e;
+  --color-teal-600: #3d5a9e;
+  --color-teal-700: #304b86;
+  --color-teal-800: #304b86;
+  --color-teal-900: #192a3c;
+  --color-teal-950: #192a3c;
+  --color-cyan-50: #faf8f4;
+  --color-cyan-100: #efe7da;
+  --color-cyan-200: #efe7da;
+  --color-cyan-300: #ded8cd;
+  --color-cyan-400: #879bc4;
+  --color-cyan-500: #3d5a9e;
+  --color-cyan-600: #3d5a9e;
+  --color-cyan-700: #304b86;
+  --color-cyan-800: #304b86;
+  --color-cyan-900: #192a3c;
+  --color-cyan-950: #192a3c;
+  --color-sky-50: #faf8f4;
+  --color-sky-100: #efe7da;
+  --color-sky-200: #efe7da;
+  --color-sky-300: #ded8cd;
+  --color-sky-400: #879bc4;
+  --color-sky-500: #3d5a9e;
+  --color-sky-600: #3d5a9e;
+  --color-sky-700: #304b86;
+  --color-sky-800: #304b86;
+  --color-sky-900: #192a3c;
+  --color-sky-950: #192a3c;
+}

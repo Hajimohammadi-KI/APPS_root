@@ -1,0 +1,26 @@
+{
+  "name": "@automaticity/learning-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./adherence": "./src/adherence/index.ts",
+    "./fsrs-shadow": "./src/fsrs-shadow/index.ts",
+    "./schema": "./schemas/learning-vertical-slice.schema.json",
+    "./measurement-schema": "./schemas/measurement-contract.schema.json",
+    "./mediation-schema": "./schemas/mediation-content-pilot.schema.json"
+  },
+  "scripts": {
+    "build:browser": "bun build src/adherence/browser-entry.ts --target=browser --format=iife --global-name=AutomaticityAdherenceShadow --outfile=browser/adherence-shadow.js --minify && bun build src/booster/browser-entry.ts --target=browser --format=iife --global-name=AutomaticityForcedOutputBooster --outfile=browser/forced-output-booster.js --minify",
+    "test:booster": "bun test src/booster/booster.test.ts",
+    "test:fsrs-shadow": "bun test src/fsrs-shadow",
+    "test": "bun test",
+    "test:adherence-core": "bun test src/adherence/adherence.test.ts",
+    "test:content-quality": "bun test src/content-quality.test.ts",
+    "typecheck": "bunx -p typescript@5.9.2 tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "ts-fsrs": "5.4.1"
+  }
+}

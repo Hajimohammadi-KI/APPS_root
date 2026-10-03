@@ -1,0 +1,15 @@
+node_modules/
+.next/
+dist/
+coverage/
+test-results/
+playwright-report/
+.tmp/
+artifacts/
+distribution/windows-desktop/node_modules/
+distribution/windows-modern/.staging/
+DeutschFlow-Setup.exe
+DeutschFlow-Setup.exe.sha256
+apps/web/public/downloads/DeutschFlow-Setup.exe
+apps/web/public/downloads/DeutschFlow-Setup.exe.sha256
+*.log

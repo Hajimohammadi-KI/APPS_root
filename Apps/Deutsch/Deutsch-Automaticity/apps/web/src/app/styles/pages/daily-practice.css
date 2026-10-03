@@ -1,0 +1,315 @@
+.daily-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 16px;
+}
+.daily-overview-main,
+.daily-overview-aside > div {
+  border: 1px solid #ded5ee;
+  background: #fff;
+  box-shadow: 0 14px 36px rgb(69 43 121 / 7%);
+}
+.daily-overview-main {
+  overflow: hidden;
+  border-radius: 24px;
+  padding: 18px;
+}
+.daily-overview-hero {
+  display: grid;
+  grid-template-columns: 1fr 118px;
+  gap: 18px;
+  align-items: center;
+  border-radius: 20px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f7f1ff, #fff9ee);
+}
+.daily-overview-greeting {
+  color: #6941ad;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.daily-overview-hero h1 {
+  margin: 5px 0 3px;
+  color: #251738;
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  font-weight: 900;
+}
+.daily-overview-hero h2 {
+  margin: 0 0 8px;
+  color: #7040bd;
+  font-size: 1rem;
+}
+.daily-overview-hero p {
+  color: #665d73;
+  font-size: 0.84rem;
+}
+.daily-overview-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  color: #594d68;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+.daily-progress-ring {
+  --daily-progress: 0%;
+  display: grid;
+  width: 108px;
+  aspect-ratio: 1;
+  place-content: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fff 58%, transparent 60%),
+    conic-gradient(#7443c4 var(--daily-progress), #e6ddf2 0);
+  text-align: center;
+}
+.daily-progress-ring strong {
+  color: #321b52;
+  font-size: 1.45rem;
+}
+.daily-progress-ring span {
+  color: #7c6f8d;
+  font-size: 0.62rem;
+}
+.daily-activity-phase {
+  margin-top: 18px;
+}
+.daily-activity-phase h3 {
+  margin: 0 0 8px;
+  color: #6b5790;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.daily-activity-grid-two,
+.daily-activity-grid-three {
+  display: grid;
+  gap: 10px;
+}
+.daily-activity-grid-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.daily-activity-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.daily-activity-card {
+  display: grid;
+  grid-template-columns: 30px 42px 1fr;
+  gap: 10px;
+  align-items: start;
+  width: 100%;
+  min-height: 118px;
+  border: 1px solid #e0d7ed;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fff, #fbf8ff);
+  padding: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.daily-activity-card:hover {
+  border-color: #9b79ce;
+  box-shadow: 0 12px 24px rgb(78 45 125 / 10%);
+  transform: translateY(-1px);
+}
+.daily-activity-card:active {
+  transform: scale(0.97);
+}
+.daily-activity-card:focus-visible {
+  outline: 3px solid rgb(116 67 196 / 28%);
+  outline-offset: 2px;
+}
+.daily-activity-card[data-completed="true"] {
+  border-color: #8dcbb7;
+  background: #f4fcf8;
+}
+.daily-activity-number,
+.daily-activity-icon {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+.daily-activity-number {
+  width: 28px;
+  height: 28px;
+  background: #7141bd;
+  color: #fff;
+  font-weight: 900;
+}
+.daily-activity-icon {
+  width: 40px;
+  height: 40px;
+  background: #f0e8fb;
+  color: #6c39b6;
+}
+.daily-activity-icon svg {
+  width: 20px;
+}
+.daily-activity-copy {
+  min-width: 0;
+}
+.daily-activity-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #271936;
+}
+.daily-activity-title-row strong {
+  font-size: 0.82rem;
+}
+.daily-activity-title-row small {
+  border-radius: 999px;
+  background: #f1ebf9;
+  padding: 3px 7px;
+  color: #6f5e86;
+  font-size: 0.56rem;
+}
+.daily-activity-description {
+  display: block;
+  margin-top: 5px;
+  color: #756a83;
+  font-size: 0.67rem;
+  line-height: 1.45;
+}
+.daily-activity-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  color: #6f6280;
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+.daily-activity-open {
+  color: #6734b5;
+}
+.daily-overview-aside {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.daily-overview-aside > div {
+  border-radius: 18px;
+  padding: 14px;
+}
+.daily-glance-card {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 2px 10px;
+  align-items: center;
+}
+.daily-glance-card svg {
+  grid-row: span 2;
+  width: 38px;
+  height: 38px;
+  padding: 9px;
+  border-radius: 12px;
+  background: #f1eaff;
+  color: #7141bd;
+}
+.daily-glance-card span {
+  color: #776b84;
+  font-size: 0.65rem;
+}
+.daily-plan-card > p {
+  margin: 5px 0 12px;
+  color: #756b80;
+  font-size: 0.68rem;
+}
+.daily-plan-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+.daily-plan-options button {
+  display: grid;
+  min-height: 52px;
+  place-content: center;
+  border: 1px solid #ddd4e9;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+.daily-plan-options button[aria-pressed="true"] {
+  border-color: #7141bd;
+  background: #f0e8fb;
+  color: #5d2cac;
+  box-shadow: 0 0 0 2px rgb(113 65 189 / 12%);
+}
+.daily-plan-options button:active {
+  transform: scale(0.97);
+}
+.daily-plan-options span {
+  font-size: 0.58rem;
+}
+.daily-focused-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #ded5ee;
+  border-radius: 18px;
+  background: linear-gradient(110deg, #fff, #f7f2ff);
+  padding: 14px 16px;
+  box-shadow: 0 10px 28px rgb(69 43 121 / 7%);
+}
+.daily-focused-header p {
+  margin: 0;
+  color: #725b93;
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.daily-focused-header h2 {
+  margin: 2px 0 0;
+  font-size: 1.05rem;
+}
+.daily-step-body > summary {
+  display: none;
+}
+@media (max-width: 1100px) {
+  .daily-overview {
+    grid-template-columns: 1fr;
+  }
+  .daily-overview-aside {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .daily-overview-main {
+    padding: 12px;
+  }
+  .daily-overview-hero {
+    grid-template-columns: 1fr 92px;
+    padding: 18px;
+  }
+  .daily-progress-ring {
+    width: 90px;
+  }
+  .daily-activity-grid-two,
+  .daily-activity-grid-three,
+  .daily-overview-aside {
+    grid-template-columns: 1fr;
+  }
+  .daily-activity-card {
+    grid-template-columns: 28px 38px 1fr;
+  }
+  .daily-focused-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .daily-activity-card {
+    transition: none;
+  }
+  .daily-activity-card:hover {
+    transform: none;
+  }
+}

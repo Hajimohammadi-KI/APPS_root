@@ -1,0 +1,12 @@
+{
+  "productName": "English Grammar Automaticity",
+  "productId": "EnglishGrammarAutomaticityDesktop",
+  "version": "27.3.41",
+  "installFolder": "English Grammar Automaticity Desktop",
+  "dataFolder": "English Grammar Automaticity",
+  "mainExecutable": "English Grammar Automaticity.exe",
+  "payloadFile": "EnglishGrammar-Setup.payload.zip",
+  "shortcutName": "English Grammar Automaticity Desktop",
+  "environmentPrefix": "ENGLISH_GRAMMAR",
+  "locale": "en"
+}

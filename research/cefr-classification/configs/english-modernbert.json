@@ -1,0 +1,19 @@
+{
+  "catalog_id": "modernbert-base",
+  "model_id": "answerdotai/ModernBERT-base",
+  "language_scope": "English",
+  "revision": "main",
+  "max_length": 384,
+  "learning_rate": 0.00002,
+  "train_batch_size": 8,
+  "eval_batch_size": 16,
+  "gradient_accumulation_steps": 2,
+  "epochs": 4.0,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.1,
+  "early_stopping_patience": 2,
+  "random_seed": 42,
+  "use_class_weights": true,
+  "gradient_checkpointing": false
+}
+

@@ -1,0 +1,50 @@
+*.pdf filter=lfs diff=lfs merge=lfs -text
+Apps/Apps-For-Integeration/Reader-PDF-App/tests/fixtures/reader-smoke.pdf -filter -diff -merge -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.docx filter=lfs diff=lfs merge=lfs -text
+*.pptx filter=lfs diff=lfs merge=lfs -text
+*.rar filter=lfs diff=lfs merge=lfs -text
+*.msi filter=lfs diff=lfs merge=lfs -text
+*.dll filter=lfs diff=lfs merge=lfs -text
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.webp filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.7z filter=lfs diff=lfs merge=lfs -text
+*.xlsx filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.ico filter=lfs diff=lfs merge=lfs -text
+
+# These files are LFS pointers in the local working copy, but their original
+# media objects cannot be retrieved because the legacy repository is over its
+# LFS budget. Track explicit recovery notices (including the original pointers)
+# as ordinary Git blobs so the new repository preserves the complete current tree.
+Apps/**/english-automaticity-compact-dashboard.png -filter -diff -merge -text
+Apps/**/dashboard-v2-comparison.png -filter -diff -merge -text
+Apps/**/dashboard-v2-implementation.png -filter -diff -merge -text
+Apps/**/coach-ava.png -filter -diff -merge -text
+Apps/Study-Tracker/**/Cross_Repository_Code_Intelligence_Expose_DE_2026_v2_4.pdf -filter -diff -merge -text
+Apps/Study-Tracker/public/expose.pdf -filter -diff -merge -text
+Apps/**/apple-touch-icon.png -filter -diff -merge -text
+Apps/**/icon-192.png -filter -diff -merge -text
+Apps/**/icon-512.png -filter -diff -merge -text
+Apps/**/icon-512-generated.png -filter -diff -merge -text
+Apps/Study-Tracker/public/icon-maskable-512.png -filter -diff -merge -text
+Apps/**/automaticity-journey-hero.png -filter -diff -merge -text
+Apps/**/automaticity-progress-story.png -filter -diff -merge -text
+Apps/**/ava-language-coach.png -filter -diff -merge -text
+Apps/**/dashboard-wide.png -filter -diff -merge -text
+Apps/**/navigation-narrow.png -filter -diff -merge -text
+
+# WSL launch scripts are executed directly from the Windows-mounted release.
+# A CRLF checkout makes `set -o pipefail` fail before installation can start.
+Apps/Study-Tracker/**/*.sh text eol=lf
+
+# The small current Windows update archive is served directly from the public
+# repository. Keep it outside LFS so an exhausted LFS quota cannot break the
+# consent-based updater. The SHA-256 is published in the adjacent manifest.
+releases/CrossRepositoryCodeIntelligence-*-Version2-final.zip -filter -diff -merge -text

@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.englishgrammarautomaticity.app",
+      "sha256_cert_fingerprints": [
+        "0E:13:6E:61:F1:AB:79:E1:54:E4:B1:E8:35:AE:88:E4:F0:5F:3D:58:B8:1E:C5:DE:0D:5B:89:AB:2F:FD:21:7C"
+      ]
+    }
+  }
+]

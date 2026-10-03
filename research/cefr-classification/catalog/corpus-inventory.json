@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-09-01",
+  "policy": "Only approval_status=approved, licence_status=verified, and the exact requested use in allowed_uses may enter the pipeline.",
+  "corpora": [
+    {
+      "corpus_id": "universalcefr-index",
+      "name": "UniversalCEFR corpus index",
+      "languages": ["multiple"],
+      "approval_status": "review_required",
+      "licence_status": "mixed_by_subcorpus",
+      "allowed_uses": [],
+      "reason": "Useful discovery index, but every subcorpus has separate terms and must be approved independently.",
+      "source_url": "https://universalcefr.github.io/"
+    },
+    {
+      "corpus_id": "universalcefr-elg-en",
+      "name": "UniversalCEFR ELG English reference documents",
+      "languages": ["en"],
+      "approval_status": "approved",
+      "licence_status": "verified",
+      "allowed_uses": ["research", "evaluation"],
+      "licence_id": "CC-BY-NC-SA-4.0",
+      "reason": "Pinned evaluation-only copy of 712 manually labelled reference documents. It is independent of Ace-CEFR but changes both corpus and domain, so results measure cross-domain robustness and must not be represented as learner-proficiency validation. Non-commercial/share-alike terms prohibit product training and raw-data redistribution here.",
+      "source_url": "https://huggingface.co/datasets/UniversalCEFR/elg_cefr_en"
+    },
+    {
+      "corpus_id": "universalcefr-elg-de",
+      "name": "UniversalCEFR ELG German reference documents",
+      "languages": ["de"],
+      "approval_status": "approved",
+      "licence_status": "verified",
+      "allowed_uses": ["research", "evaluation"],
+      "licence_id": "CC-BY-NC-SA-4.0",
+      "reason": "Pinned evaluation-only copy of 509 manually labelled reference documents. It is independent of MERLIN and intentionally changes from learner paragraphs to reference documents, so results measure cross-domain robustness only. Non-commercial/share-alike terms prohibit product training and raw-data redistribution here.",
+      "source_url": "https://huggingface.co/datasets/UniversalCEFR/elg_cefr_de"
+    },
+    {
+      "corpus_id": "merlin-de",
+      "name": "MERLIN German learner corpus",
+      "languages": ["de"],
+      "approval_status": "approved",
+      "licence_status": "verified",
+      "allowed_uses": ["research", "training"],
+      "licence_id": "CC-BY-SA-4.0",
+      "reason": "Freely downloadable without registration from the CLARIN Eurac repository; licence verified as CC-BY-SA-4.0. Approved 2026-08-30 for the German transformer run. Attribution/share-alike obligation: any redistribution of derived text or model outputs trained on this corpus must credit the MERLIN project (https://www.merlin-platform.eu/) and remain under a compatible share-alike licence.",
+      "source_url": "https://www.merlin-platform.eu/"
+    },
+    {
+      "corpus_id": "kaggle-cefr-levelled-english-texts",
+      "name": "CEFR Levelled English Texts",
+      "languages": ["en"],
+      "approval_status": "blocked",
+      "licence_status": "provenance_unverified",
+      "allowed_uses": [],
+      "reason": "Confirmed 2026-08-30: the creator's own writeup states texts are pulled from The British Council, ESLFast, and the cnn-dailymail dataset. The Kaggle uploader does not hold rights to those underlying sources, so the dataset licence tag does not clear redistribution or training use. Remains blocked; use ace-cefr as the licensed substitute for English.",
+      "source_url": "https://www.kaggle.com/datasets/amontgomerie/cefr-levelled-english-texts"
+    },
+    {
+      "corpus_id": "ace-cefr",
+      "name": "Ace-CEFR conversational text difficulty dataset",
+      "languages": ["en"],
+      "approval_status": "approved",
+      "licence_status": "verified",
+      "allowed_uses": ["research", "training"],
+      "licence_id": "CC0-1.0",
+      "reason": "Purpose-built human-expert-labelled CEFR difficulty dataset (890 conversational passages, 445 train / 445 test) authored by Kogan, Schumacher, Nguyen, Suzuki, Smith, Bellows, and Bernstein at Google Research, released CC0-1.0 as an arXiv ancillary file (arXiv:2506.14046). Approved 2026-08-30 as the licensed substitute for the blocked Kaggle English corpus. Retrieved via the GliteTech/research-ace-cefr mirror, which packages the same CC0 file under its own Apache-2.0 code licence (data licence governs, not the wrapper repo's code licence).",
+      "source_url": "https://arxiv.org/abs/2506.14046"
+    },
+    {
+      "corpus_id": "kaggle-toefl-cefr-vocabulary",
+      "name": "TOEFL-CEFR vocabulary",
+      "languages": ["en"],
+      "approval_status": "blocked",
+      "licence_status": "unverified",
+      "allowed_uses": [],
+      "reason": "Vocabulary support data is not a learner-writing classification corpus; metadata and terms need verification.",
+      "source_url": "https://www.kaggle.com/datasets/panteamohamadkhani/toefl-cefr-vocabulary"
+    },
+    {
+      "corpus_id": "kaggle-celp",
+      "name": "Kaggle CELP competition reference",
+      "languages": ["unknown"],
+      "approval_status": "blocked",
+      "licence_status": "unverified",
+      "allowed_uses": [],
+      "reason": "The exact task, data files, labels, and licence have not been verified as a CEFR learner-text corpus.",
+      "source_url": "https://www.kaggle.com/c/celp"
+    },
+    {
+      "corpus_id": "cefr-j",
+      "name": "CEFR-J English Profile",
+      "languages": ["en"],
+      "approval_status": "review_required",
+      "licence_status": "mixed_component_terms",
+      "allowed_uses": [],
+      "reason": "Valuable controlled vocabulary/grammar reference for RAG and validation, not the primary learner-text classifier corpus.",
+      "source_url": "https://github.com/openlanguageprofiles/olp-en-cefrj"
+    },
+    {
+      "corpus_id": "daflex",
+      "name": "DAFlex German receptive lexicon",
+      "languages": ["de"],
+      "approval_status": "blocked",
+      "licence_status": "download_terms_unverified",
+      "allowed_uses": [],
+      "reason": "Useful German lexical feature source, but redistribution/download terms must be confirmed before ingestion.",
+      "source_url": "https://cental.uclouvain.be/cefrlex/daflex/"
+    },
+    {
+      "corpus_id": "synthetic-contract-fixture",
+      "name": "Repository-generated test fixture",
+      "languages": ["en", "de"],
+      "approval_status": "approved",
+      "licence_status": "verified",
+      "allowed_uses": ["testing", "training"],
+      "licence_id": "repository-generated",
+      "is_fixture": true,
+      "reason": "May test pipeline behavior only; its metrics are excluded from the research dashboard."
+    }
+  ]
+}

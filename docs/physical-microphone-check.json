@@ -1,0 +1,52 @@
+{
+  "testDate": "2026-10-03",
+  "agentHardwareTest": "Windows PCM capture and driver playback completed; browser app test pending",
+  "method": "WinMM, physical input devices, PCM mono 48 kHz 16-bit; no simulated microphone",
+  "audioUploaded": false,
+  "rawAudioSaved": false,
+  "browserAppTest": "not performed: no connected browser",
+  "phoneTabletTest": "not performed",
+  "speechClarityConfirmed": false,
+  "audiblePlaybackConfirmed": false,
+  "pronunciationOrFluencyEvaluated": false,
+  "defaultInput": {
+    "durationSeconds": 5,
+    "samples": 240000,
+    "rmsDbfs": -49.52118002493626,
+    "clippedSamples": 0
+  },
+  "driverPlayback": {
+    "bufferCompleted": true,
+    "durationSeconds": 5,
+    "sampleGain": 0.25,
+    "audibilityConfirmed": false
+  },
+  "reopenAfterReleasePassed": true,
+  "inputs": [
+    {
+      "name": "Microphone (UGREEN Camera Audio",
+      "durationSeconds": 3,
+      "samples": 144000,
+      "rmsDbfs": -51.53071672042274,
+      "clippedSamples": 0,
+      "captureCompleted": true,
+      "deviceClosed": true,
+      "interpretation": "low signal; clear speech not confirmed"
+    },
+    {
+      "name": "Microphone (2- EPOS PC 8 USB)",
+      "durationSeconds": 3,
+      "samples": 144000,
+      "rmsDbfs": -96.19326925138691,
+      "clippedSamples": 0,
+      "captureCompleted": true,
+      "deviceClosed": true,
+      "interpretation": "near-silence; clear speech not confirmed"
+    }
+  ],
+  "limitations": [
+    "OS capture does not validate browser getUserMedia or MediaRecorder.",
+    "No human speech reference or acoustic loopback was used.",
+    "Low signal does not identify a hardware fault or confirm the mute setting."
+  ]
+}

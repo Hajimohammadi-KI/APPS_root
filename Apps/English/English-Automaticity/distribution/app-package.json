@@ -1,0 +1,15 @@
+{
+  "name": "English Grammar Automaticity",
+  "shortName": "Grammar Automaticity",
+  "description": "Offline-first English grammar and speaking practice with correction, repair, transfer, and spaced review.",
+  "version": "27.1.0",
+  "versionCode": 270100,
+  "origin": "https://english-grammar-automaticity-pwa.vercel.app",
+  "packageId": "com.englishgrammarautomaticity.app",
+  "themeColor": "#155eef",
+  "backgroundColor": "#f3f6fb",
+  "publisher": {
+    "displayName": "English Grammar Automaticity",
+    "windowsCommonName": "CN=EnglishGrammarAutomaticity"
+  }
+}

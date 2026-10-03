@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://automaticity.local/schemas/mediation-content-pilot-1.0.0.json",
+  "title": "Automaticity B1 mediation content pilot item",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "language",
+    "cefrLevel",
+    "title",
+    "targetForm",
+    "prompt",
+    "modes",
+    "provenance",
+    "mediation",
+    "quality"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "id": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "language": { "enum": ["en", "de"] },
+    "cefrLevel": { "const": "B1" },
+    "title": { "type": "string", "minLength": 1 },
+    "targetForm": { "type": "string", "minLength": 1 },
+    "prompt": { "type": "string", "minLength": 1 },
+    "modes": {
+      "type": "array",
+      "minItems": 2,
+      "contains": { "const": "mediation" },
+      "allOf": [{ "contains": { "const": "transfer" } }],
+      "items": {
+        "enum": [
+          "recognition",
+          "recall",
+          "writing",
+          "speaking",
+          "repair",
+          "transfer",
+          "mediation"
+        ]
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["kind", "sourceId", "license", "humanReviewed"],
+      "properties": {
+        "kind": { "enum": ["authored", "open-dataset"] },
+        "sourceId": { "type": "string", "minLength": 1 },
+        "license": { "type": "string", "minLength": 1 },
+        "humanReviewed": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "mediation": {
+      "type": "object",
+      "required": [
+        "activity",
+        "sourceText",
+        "guidedPrompt",
+        "independentPrompt",
+        "novelTransferPrompt"
+      ],
+      "properties": {
+        "activity": {
+          "enum": [
+            "relaying-specific-information",
+            "explaining-data",
+            "processing-text",
+            "facilitating-collaboration"
+          ]
+        },
+        "sourceText": { "type": "string", "minLength": 1 },
+        "guidedPrompt": { "type": "string", "minLength": 1 },
+        "independentPrompt": { "type": "string", "minLength": 1 },
+        "novelTransferPrompt": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "quality": {
+      "type": "object",
+      "required": ["rubricVersion", "status", "reviews"],
+      "properties": {
+        "rubricVersion": { "const": "1.0.0" },
+        "status": {
+          "enum": ["awaiting-human-review", "in-review", "approved", "rejected"]
+        },
+        "reviews": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/humanReview" }
+        },
+        "adjudication": { "$ref": "#/$defs/adjudication" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "score": { "type": "integer", "minimum": 1, "maximum": 4 },
+    "humanReview": {
+      "type": "object",
+      "required": ["reviewerId", "roles", "reviewedAt", "decision", "scores"],
+      "properties": {
+        "reviewerId": { "type": "string", "minLength": 1 },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["native-speaker", "language-pedagogy"] },
+          "uniqueItems": true
+        },
+        "reviewedAt": { "type": "string", "format": "date-time" },
+        "decision": { "enum": ["approve", "revise", "reject"] },
+        "scores": {
+          "type": "object",
+          "required": [
+            "naturalness",
+            "cefrFit",
+            "taskValidity",
+            "culturalSafety"
+          ],
+          "properties": {
+            "naturalness": { "$ref": "#/$defs/score" },
+            "cefrFit": { "$ref": "#/$defs/score" },
+            "taskValidity": { "$ref": "#/$defs/score" },
+            "culturalSafety": { "$ref": "#/$defs/score" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "adjudication": {
+      "type": "object",
+      "required": ["adjudicatorId", "adjudicatedAt", "decision", "rationale"],
+      "properties": {
+        "adjudicatorId": { "type": "string", "minLength": 1 },
+        "adjudicatedAt": { "type": "string", "format": "date-time" },
+        "decision": { "enum": ["approve", "reject"] },
+        "rationale": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

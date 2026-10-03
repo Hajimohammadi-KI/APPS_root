@@ -1,0 +1,21 @@
+{
+  "python.testing.unittestArgs": [
+    "-v",
+    "-s",
+    "./research/cefr-classification/tests",
+    "-p",
+    "test_*.py"
+  ],
+  "search.exclude": {
+    "backups/**": true,
+    "DELETE/**": true,
+    ".codex-tmp/**": true,
+    "artifacts/**": true
+  },
+  "git.ignoredRepositories": [
+    "D:/APPS_root_new/APPS_root"
+  ],
+  "git.openRepositoryInParentFolders": "never",
+  "python.testing.pytestEnabled": false,
+  "python.testing.unittestEnabled": true
+}

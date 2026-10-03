@@ -1,0 +1,2970 @@
+{
+  "language": "de",
+  "contentVersion": "2026-10-02.1",
+  "units": [
+    {
+      "id": "de.c.001",
+      "title": "Personalpronomen und sein",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.002",
+      "title": "haben",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.003",
+      "title": "Präsens regelmäßiger Verben",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.004",
+      "title": "Präsens unregelmäßiger Verben",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.005",
+      "title": "W-Fragen",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.006",
+      "title": "Ja/Nein-Fragen",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.007",
+      "title": "bestimmter und unbestimmter Artikel",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.008",
+      "title": "Pluralformen",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.009",
+      "title": "Akkusativ",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.010",
+      "title": "Possessivartikel",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.011",
+      "title": "nicht und kein",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.012",
+      "title": "Modalverb können",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 10,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.013",
+      "title": "Trennbare Verben",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.014",
+      "title": "lokale Präpositionen",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.015",
+      "title": "Perfekt mit haben",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 18,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.016",
+      "title": "Perfekt mit sein",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.017",
+      "title": "Präteritum von sein/haben/Modalverben",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.018",
+      "title": "Dativ",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.019",
+      "title": "Wechselpräpositionen",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.020",
+      "title": "Modalverben müssen, dürfen, sollen, wollen",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.021",
+      "title": "Komparativ und Superlativ",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.022",
+      "title": "Nebensatz mit weil",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 18,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.023",
+      "title": "Nebensatz mit dass",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.024",
+      "title": "wenn und als",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.025",
+      "title": "Reflexive Verben",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.026",
+      "title": "Adjektiv nach sein",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.027",
+      "title": "Zeitangaben und Wortstellung",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.028",
+      "title": "Indefinitpronomen man/jemand/niemand",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.029",
+      "title": "Präteritum in Erzählungen",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.030",
+      "title": "Plusquamperfekt",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.031",
+      "title": "Relativsätze Nominativ/Akkusativ",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 10,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.032",
+      "title": "Relativsätze Dativ",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.033",
+      "title": "Konjunktiv II mit würde",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.034",
+      "title": "Konjunktiv II von sein/haben/Modalverben",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.035",
+      "title": "Passiv Präsens",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.036",
+      "title": "Passiv Präteritum und Perfekt",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.037",
+      "title": "Infinitiv mit zu",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.038",
+      "title": "um...zu / damit",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.039",
+      "title": "obwohl/trotzdem",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 18,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.040",
+      "title": "Genitivgrundlagen",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.041",
+      "title": "Adjektivdeklination Grundlagen",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 18,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.042",
+      "title": "indirekte Fragen",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.043",
+      "title": "Konjunktiv II Vergangenheit",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.044",
+      "title": "Passiv mit Modalverben",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 18,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.045",
+      "title": "Zustandspassiv",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.046",
+      "title": "Nominalisierung",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.047",
+      "title": "N-Deklination",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.048",
+      "title": "Partizipien als Adjektive",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.049",
+      "title": "je...desto/umso",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.050",
+      "title": "sowohl...als auch / weder...noch",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.051",
+      "title": "erweiterte Relativsätze",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.052",
+      "title": "Verben mit Präpositionen",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.053",
+      "title": "indirekte Rede Grundlagen",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.054",
+      "title": "Nomen-Verb-Verbindungen / Funktionsverbgefüge",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.055",
+      "title": "Wortstellung im Mittelfeld",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.056",
+      "title": "Konnektoren und Satzverknüpfung",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.057",
+      "title": "Konjunktiv I vollständig",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.058",
+      "title": "Subjektive Bedeutung der Modalverben",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.059",
+      "title": "Ersatzformen des Passivs",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.060",
+      "title": "Komplexe Nominalgruppen",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.061",
+      "title": "Partizipialkonstruktionen",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.062",
+      "title": "Appositionen",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.063",
+      "title": "Informationsstruktur und Vorfeld",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.064",
+      "title": "Ausklammerung und Nachfeld",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.065",
+      "title": "Konzessive und adversative Strukturen",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.066",
+      "title": "Wissenschaftliches Hedging",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.067",
+      "title": "Textkohäsion",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.068",
+      "title": "Register und Stil",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.069",
+      "title": "Verbalisierung und Nominalisierung abwägen",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.070",
+      "title": "Parallelismus",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.071",
+      "title": "Feine Bedeutungsunterschiede im Modus",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.072",
+      "title": "Markierte Wortstellung",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.073",
+      "title": "Komplexe Einbettung",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.074",
+      "title": "Ellipsen und Substitution",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.075",
+      "title": "Rhetorische Syntax",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.076",
+      "title": "Ambiguitätskontrolle",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.077",
+      "title": "Idiomatizität und Kollokation",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.078",
+      "title": "Textsortenspezifische Grammatik",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.079",
+      "title": "Stilistische Verdichtung",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.080",
+      "title": "Pragmatische Feinsteuerung",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.081",
+      "title": "Kohärenz langer Beiträge",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.082",
+      "title": "Selbstreparatur im Sprechen",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.083",
+      "title": "Mehrsprachige Interferenzkontrolle",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.084",
+      "title": "Integrierte automatische Produktion",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.085",
+      "title": "Imperativ mit du, ihr und Sie",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.086",
+      "title": "Satzklammer im einfachen Hauptsatz",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.087",
+      "title": "Uhrzeit, Datum und Reihenfolge",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.088",
+      "title": "Temporale Präpositionen am, um und im",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.089",
+      "title": "Häufigkeitsadverbien",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.090",
+      "title": "es gibt mit Akkusativ",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.091",
+      "title": "man für allgemeine Aussagen",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.092",
+      "title": "und, aber, denn und oder",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.093",
+      "title": "Mengenwörter viel, wenig und genug",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.094",
+      "title": "Akkusativpronomen",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.095",
+      "title": "Adjektivdeklination nach Artikeln",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.096",
+      "title": "Relativsätze mit der, die und das",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.097",
+      "title": "Nebensätze mit ob",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.098",
+      "title": "darum, deshalb und deswegen",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.099",
+      "title": "denn und sondern",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.100",
+      "title": "Verben mit Dativ und Akkusativ",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.101",
+      "title": "Verben mit Präpositionen Grundlagen",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.102",
+      "title": "Futur I mit werden",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.103",
+      "title": "da- und wo-Komposita Grundlagen",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.104",
+      "title": "Infinitiv mit zu Grundlagen",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.105",
+      "title": "Adjektivdeklination vollständig",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.106",
+      "title": "Pronominaladverbien",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.107",
+      "title": "Futur I für Prognosen und Vermutungen",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.108",
+      "title": "Vorgangspassiv und Zustandspassiv",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.109",
+      "title": "Temporalsätze mit bevor, nachdem und seitdem",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.110",
+      "title": "ohne zu und anstatt zu",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.111",
+      "title": "lassen als Vollverb und Hilfsverb",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.112",
+      "title": "brauchen nicht zu",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.113",
+      "title": "Zweiteilige Konnektoren",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.114",
+      "title": "Genitivpräpositionen",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.115",
+      "title": "Indirekte Rede mit Konjunktiv I",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.116",
+      "title": "Modalpartikeln im Gespräch",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.117",
+      "title": "Komplexe Temporalsätze",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.118",
+      "title": "Konzessive Verknüpfung mit dennoch und gleichwohl",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.119",
+      "title": "Kausale und konsekutive Verknüpfung",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.120",
+      "title": "Partizipialattribute erweitern",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.121",
+      "title": "Nominalisierte Adjektive",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.122",
+      "title": "Erweiterte Genitivpräpositionen",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.123",
+      "title": "Funktionsverbgefüge systematisch",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.124",
+      "title": "Informationsstruktur durch Vorfeldbesetzung",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.125",
+      "title": "Diskurspartikeln und Registersteuerung",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.126",
+      "title": "Tempusfolge in Berichten",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.127",
+      "title": "Komplexe Verbvalenz und Rektion",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 18,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.128",
+      "title": "Infinitiv- und Partizipialverdichtung",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.129",
+      "title": "Indirekte Rede mit Tempus und Modalität",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.130",
+      "title": "Komplexe Konditionalstrukturen",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.131",
+      "title": "Kausale Zuschreibung und wissenschaftliche Positionierung",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.132",
+      "title": "Thema-Rhema-Gliederung",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.133",
+      "title": "Interpunktion als Bedeutungssignal",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.134",
+      "title": "Syntax wissenschaftlicher Zitate",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.135",
+      "title": "Deixis und Perspektivsteuerung",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.136",
+      "title": "Anapher und Katapher",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.137",
+      "title": "Skopus und Negation",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.138",
+      "title": "Präsupposition und Implikatur",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.139",
+      "title": "Informationsdichte kontrollieren",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.140",
+      "title": "Regionale Variation und Standardregister",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.141",
+      "title": "Modalität und Evidentialität",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.142",
+      "title": "Textsortentransformation",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.143",
+      "title": "Syntaktischer Rhythmus",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.144",
+      "title": "Fehlerdiagnose und präzise Reformulierung",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 11,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.145",
+      "title": "Futur II und vergangenheitsbezogene Vermutung",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.146",
+      "title": "Ersatzinfinitiv und Oberfeld",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.147",
+      "title": "Adjektivvalenz und Rektion",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.148",
+      "title": "Demonstrative Determinierer und Pronomen",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.149",
+      "title": "Lexikalisches Genus und Kongruenz",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.150",
+      "title": "Genitivische Relativattribute",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.151",
+      "title": "Vergleich mit als und wie",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.152",
+      "title": "Korrelat-es und unpersönliche Muster",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.153",
+      "title": "Nominale Wortbildung und Komposita",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.154",
+      "title": "Reziproke Beziehungen",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.155",
+      "title": "Negative Indefinita und Kongruenz",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "de.c.156",
+      "title": "Getrennt- und Zusammenschreibung",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 0,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    }
+  ]
+}

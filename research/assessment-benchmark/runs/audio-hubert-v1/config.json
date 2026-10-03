@@ -1,0 +1,19 @@
+{
+  "model": "haeylee/ssl_ft_pron/hubert/general/07_hubert-base-ls960",
+  "device": "cuda",
+  "torch": "2.8.0+cu128",
+  "batchSize": 1,
+  "dtype": "float32",
+  "seed": 36,
+  "casesSha256": "f4de6d61a4937c0234436ef2226bfc8dd7119b6ad28b5e31ca27785d2b4b2dc8",
+  "codeSha256": "7810c7969bfebbb8f0b5ac437825b6ae9fca79150e713e4186bcc897c389d164",
+  "padding": "none, individual recording",
+  "referenceTextInput": false,
+  "scoreOrder": [
+    "accuracy",
+    "fluency",
+    "prosodic",
+    "total"
+  ],
+  "releaseEligible": false
+}

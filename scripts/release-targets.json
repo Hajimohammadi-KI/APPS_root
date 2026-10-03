@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "targets": [
+    {
+      "id": "english",
+      "name": "English Automaticity",
+      "projectDir": "Apps/English/English-Automaticity",
+      "owner": {
+        "name": "Elahe Hajimohammadi",
+        "github": "Hajimohammadi-KI",
+        "status": "assigned",
+        "assignedOn": "2026-09-01",
+        "reviewBy": "2026-12-01"
+      },
+      "deployment": {
+        "provider": "vercel",
+        "projectName": "english-grammar-automaticity-pwa",
+        "rootDirectory": "Apps/English/English-Automaticity/apps/web",
+        "configFile": "Apps/English/English-Automaticity/apps/web/vercel.json"
+      },
+      "build": {
+        "command": "bun",
+        "args": [
+          "run",
+          "build"
+        ]
+      },
+      "localChecks": [
+        {
+          "url": "http://127.0.0.1:3202/",
+          "kind": "html",
+          "includes": [
+            "dir=\"ltr\""
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:4201/api/health",
+          "kind": "json",
+          "expected": {
+            "service": "grammar-automaticity-api",
+            "status": "ok"
+          }
+        }
+      ],
+      "publicAccess": "public",
+      "publicChecks": [
+        {
+          "url": "https://english-grammar-automaticity-pwa.vercel.app/",
+          "kind": "html",
+          "includes": [
+            "English Automaticity"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "german",
+      "name": "Deutsch Automaticity",
+      "projectDir": "Apps/Deutsch/Deutsch-Automaticity",
+      "owner": {
+        "name": "Elahe Hajimohammadi",
+        "github": "Hajimohammadi-KI",
+        "status": "assigned",
+        "assignedOn": "2026-09-01",
+        "reviewBy": "2026-12-01"
+      },
+      "deployment": {
+        "provider": "vercel",
+        "projectName": "deutschflow-grammar",
+        "rootDirectory": "Apps/Deutsch/Deutsch-Automaticity/apps/web",
+        "configFile": "Apps/Deutsch/Deutsch-Automaticity/apps/web/vercel.json"
+      },
+      "build": {
+        "command": "bun",
+        "args": [
+          "run",
+          "build"
+        ]
+      },
+      "localChecks": [
+        {
+          "url": "http://127.0.0.1:3210/",
+          "kind": "html",
+          "includes": [
+            "dir=\"ltr\""
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:4210/api/v1/health",
+          "kind": "json",
+          "expected": {
+            "service": "grammar-api",
+            "status": "ok"
+          }
+        }
+      ],
+      "publicAccess": "public",
+      "publicChecks": [
+        {
+          "url": "https://deutschflow-grammar.vercel.app/",
+          "kind": "html",
+          "includes": [
+            "DeutschFlow"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tracker",
+      "name": "Cross Repository Tracker",
+      "projectDir": "Apps/Study-Tracker",
+      "owner": {
+        "name": "Elahe Hajimohammadi",
+        "github": "Hajimohammadi-KI",
+        "status": "assigned",
+        "assignedOn": "2026-09-01",
+        "reviewBy": "2026-12-01"
+      },
+      "deployment": {
+        "provider": "vercel",
+        "projectName": "study-tracker-plan-old",
+        "rootDirectory": "Apps/Study-Tracker",
+        "configFile": "Apps/Study-Tracker/vercel.json"
+      },
+      "build": {
+        "command": "bun",
+        "args": [
+          "run",
+          "build:all"
+        ]
+      },
+      "localChecks": [
+        {
+          "url": "http://127.0.0.1:4312/",
+          "kind": "html",
+          "includes": [
+            "dir=\"ltr\""
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:4313/v1/health",
+          "kind": "json",
+          "expected": {
+            "ok": true,
+            "service": "cross-repository-api"
+          }
+        }
+      ],
+      "publicAccess": "public",
+      "publicChecks": [
+        {
+          "url": "https://study-tracker-plan-five.vercel.app/",
+          "kind": "html",
+          "includes": [
+            "Cross-Repository"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "name": "Settings",
+      "projectDir": "Apps/Apps-For-Integeration/Einstellungen-APP",
+      "owner": {
+        "name": "Elahe Hajimohammadi",
+        "github": "Hajimohammadi-KI",
+        "status": "assigned",
+        "assignedOn": "2026-09-01",
+        "reviewBy": "2026-12-01"
+      },
+      "deployment": {
+        "provider": "local",
+        "reason": "Starter-managed local application"
+      },
+      "build": {
+        "command": "bun",
+        "args": [
+          "run",
+          "build"
+        ]
+      },
+      "localChecks": [
+        {
+          "url": "http://127.0.0.1:4323/settings",
+          "kind": "html",
+          "includes": [
+            "dir=\"ltr\""
+          ]
+        }
+      ],
+      "publicAccess": "local-only",
+      "publicChecks": []
+    },
+    {
+      "id": "pdf",
+      "name": "Research PDF Studio",
+      "projectDir": "Apps/Apps-For-Integeration/Reader-PDF-App",
+      "owner": {
+        "name": "Elahe Hajimohammadi",
+        "github": "Hajimohammadi-KI",
+        "status": "assigned",
+        "assignedOn": "2026-09-01",
+        "reviewBy": "2026-12-01"
+      },
+      "deployment": {
+        "provider": "vercel",
+        "projectName": "research-pdf-studio-old",
+        "rootDirectory": "Apps/Apps-For-Integeration/Reader-PDF-App",
+        "configFile": "Apps/Apps-For-Integeration/Reader-PDF-App/vercel.json"
+      },
+      "build": {
+        "command": "bun",
+        "args": [
+          "run",
+          "build"
+        ]
+      },
+      "localChecks": [
+        {
+          "url": "http://127.0.0.1:4332/",
+          "kind": "html",
+          "includes": [
+            "dir=\"ltr\""
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:4332/api/health",
+          "kind": "json",
+          "expected": {
+            "service": "research-pdf-studio",
+            "ready": true,
+            "contractVersion": 1
+          }
+        }
+      ],
+      "publicAccess": "public",
+      "publicChecks": [
+        {
+          "url": "https://research-pdf-studio.vercel.app/",
+          "kind": "html",
+          "includes": [
+            "Research PDF Studio"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+<!-- Free local vector icon: replaces unavailable Git LFS PNG media in web and installed-app metadata. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="English Automaticity">
+  <defs><linearGradient id="a" x1="64" x2="448" y1="48" y2="464" gradientUnits="userSpaceOnUse"><stop stop-color="#8c5cda"/><stop offset="1" stop-color="#4e269b"/></linearGradient></defs>
+  <rect width="512" height="512" rx="112" fill="url(#a)"/><circle cx="256" cy="256" r="150" fill="#fff" opacity=".13"/><path fill="#fff" d="M160 154h208v54H220v42h130v52H220v48h148v54H160z"/><path fill="#f7c849" d="M212 373h88l-44 55z"/>
+</svg>

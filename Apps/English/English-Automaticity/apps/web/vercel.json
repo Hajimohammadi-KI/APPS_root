@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && bun install --frozen-lockfile",
+  "buildCommand": "NODE_PATH=$PWD/node_modules bun run build",
+  "ignoreCommand": null,
+  "bunVersion": "1.x",
+  "env": {
+    "VERCEL_PREVIEW_FEEDBACK_ENABLED": "0",
+    "NEXT_PUBLIC_PDF_READER_URL": "https://research-pdf-studio.vercel.app/"
+  }
+}

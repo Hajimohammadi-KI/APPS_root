@@ -1,0 +1,13 @@
+{
+  "productId": "DeutschFlowDesktop",
+  "productName": "DeutschFlow",
+  "versionFile": "version.txt",
+  "dataFolder": "DeutschFlow",
+  "environmentPrefix": "DEUTSCHFLOW",
+  "defaultManifestUrl": "https://raw.githubusercontent.com/Hajimohammadi-KI/APPS_root_new/main/releases/deutschflow-update.json",
+  "localManifestPath": "D:\\APPS_root_new\\releases\\deutschflow-update.json",
+  "setupFile": "SETUP-WINDOWS.bat",
+  "payloadFile": "DeutschFlow-Setup.payload.zip",
+  "packageKind": "powershell-language",
+  "locale": "de"
+}

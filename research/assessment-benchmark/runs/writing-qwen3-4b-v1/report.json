@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T04:34:22.771Z",
+  "configSha256": "bcfea13fff8409378f7112e3545481b9d15ceb386cd36d56a18f0fb5f7dcb227",
+  "selectionSha256": "8d53ba64e620f583d218a4ed224880ce3b3a5dadd423616a8b4a40f4191c3058",
+  "counts": {
+    "requested": 512,
+    "completed": 512,
+    "failures": 0
+  },
+  "languages": {
+    "en": {
+      "candidate": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 22,
+        "trueAccept": 89,
+        "falseAcceptanceRate": 0.171875,
+        "correctAcceptanceRate": 0.6953125,
+        "abstentions": 25,
+        "coverage": 0.90234375,
+        "falseAcceptance95": {
+          "low": 0.11633115948147267,
+          "high": 0.24653996807301726
+        },
+        "correctAcceptance95": {
+          "low": 0.6108489916080531,
+          "high": 0.7683943848476078
+        },
+        "diagnosticScreenPassed": false
+      },
+      "acceptAllBaseline": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 128,
+        "trueAccept": 128,
+        "falseAcceptanceRate": 1,
+        "correctAcceptanceRate": 1,
+        "abstentions": 0,
+        "coverage": 1,
+        "falseAcceptance95": {
+          "low": 0.9708630437264916,
+          "high": 1
+        },
+        "correctAcceptance95": {
+          "low": 0.9708630437264916,
+          "high": 1
+        },
+        "diagnosticScreenPassed": false
+      },
+      "rejectAllBaseline": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 0,
+        "trueAccept": 0,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0,
+        "abstentions": 0,
+        "coverage": 1,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.029136956273508416
+        },
+        "correctAcceptance95": {
+          "low": 0,
+          "high": 0.029136956273508416
+        },
+        "diagnosticScreenPassed": false
+      },
+      "matrix": {
+        "error": {
+          "correct": 22,
+          "incorrect": 92,
+          "uncertain": 14
+        },
+        "clean": {
+          "correct": 89,
+          "incorrect": 28,
+          "uncertain": 11
+        }
+      }
+    },
+    "de": {
+      "candidate": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 19,
+        "trueAccept": 87,
+        "falseAcceptanceRate": 0.1484375,
+        "correctAcceptanceRate": 0.6796875,
+        "abstentions": 33,
+        "coverage": 0.87109375,
+        "falseAcceptance95": {
+          "low": 0.09713463115350009,
+          "high": 0.22022729122631057
+        },
+        "correctAcceptance95": {
+          "low": 0.5946341124452171,
+          "high": 0.7542697938939907
+        },
+        "diagnosticScreenPassed": false
+      },
+      "acceptAllBaseline": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 128,
+        "trueAccept": 128,
+        "falseAcceptanceRate": 1,
+        "correctAcceptanceRate": 1,
+        "abstentions": 0,
+        "coverage": 1,
+        "falseAcceptance95": {
+          "low": 0.9708630437264916,
+          "high": 1
+        },
+        "correctAcceptance95": {
+          "low": 0.9708630437264916,
+          "high": 1
+        },
+        "diagnosticScreenPassed": false
+      },
+      "rejectAllBaseline": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 0,
+        "trueAccept": 0,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0,
+        "abstentions": 0,
+        "coverage": 1,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.029136956273508416
+        },
+        "correctAcceptance95": {
+          "low": 0,
+          "high": 0.029136956273508416
+        },
+        "diagnosticScreenPassed": false
+      },
+      "matrix": {
+        "error": {
+          "correct": 19,
+          "incorrect": 91,
+          "uncertain": 18
+        },
+        "clean": {
+          "correct": 87,
+          "incorrect": 26,
+          "uncertain": 15
+        }
+      }
+    }
+  },
+  "releaseEligible": false,
+  "limitations": "Public data exposure during model pretraining unknown; diagnostic only. Official corpus split, exact text deduplication; document IDs retained. No training or tuning in this run. Sentence Wilson intervals are descriptive; within-document correlation may narrow them."
+}

@@ -1,0 +1,72 @@
+{
+  "name": "english-grammar-automaticity-windows",
+  "version": "27.3.18",
+  "private": true,
+  "description": "English Grammar Automaticity as a one-click Windows desktop app",
+  "author": "English Grammar Automaticity",
+  "main": "main.cjs",
+  "packageManager": "bun@1.3.14",
+  "scripts": {
+    "dist": "bun build preload.cjs --target=node --format=cjs --external electron --outfile preload.bundle.cjs && electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "43.2.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "app.englishgrammar.automaticity.desktop",
+    "productName": "English Grammar Automaticity",
+    "asar": true,
+    "files": [
+      "main.cjs",
+      "preload.bundle.cjs",
+      "offline.html"
+    ],
+    "extraResources": [
+      {
+        "from": "../../../../../shared/google-calendar-bridge.cjs",
+        "to": "google-calendar-bridge.cjs"
+      },
+      {
+        "from": "../../../../../shared/learner-profile-bridge.cjs",
+        "to": "learner-profile-bridge.cjs"
+      },
+      {
+        "from": "../../../../../shared/ai-provider-bridge.cjs",
+        "to": "ai-provider-bridge.cjs"
+      }
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "../../artifacts/windows-installer"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "../../apps/web/public/icons/icon-512-generated.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "installerLanguages": [
+        "en_US"
+      ],
+      "language": "1033",
+      "menuCategory": "English Grammar Automaticity",
+      "runAfterFinish": true,
+      "shortcutName": "English Grammar Automaticity Desktop",
+      "artifactName": "English-Grammar-Automaticity-Setup-${version}.${ext}"
+    }
+  }
+}

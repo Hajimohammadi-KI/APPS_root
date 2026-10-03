@@ -1,0 +1,267 @@
+/* Final cross-page contract: keep both language apps visually coherent. */
+:root {
+  --background: #faf8f4 !important;
+  --foreground: #1f2937 !important;
+  --card: #ffffff !important;
+  --primary: #3d5a9e !important;
+  --primary-foreground: #ffffff !important;
+  --secondary: #efe7da !important;
+  --muted: #f1eee8 !important;
+  --muted-foreground: #52627a !important;
+  --border: #d8d3ca !important;
+  --input: #d8d3ca !important;
+  --ring: #3d5a9e !important;
+  --screen-accent: #3d5a9e !important;
+  --screen-accent-strong: #2f477e !important;
+}
+
+.app-shell,
+.app-shell[data-screen] {
+  --screen-accent: #3d5a9e !important;
+  --screen-accent-strong: #2f477e !important;
+  --screen-soft: #efe7da !important;
+  --screen-glow: rgb(61 90 158 / 12%) !important;
+  --primary: #3d5a9e !important;
+}
+
+body {
+  background: #faf8f4 !important;
+  color: #1f2937 !important;
+  font-family: "Segoe UI Variable", "Segoe UI", Inter, system-ui, sans-serif !important;
+}
+
+.app-main {
+  padding-top: 20px !important;
+}
+
+.app-main > a[href="/practice"] {
+  margin-top: 0 !important;
+  margin-bottom: 20px !important;
+}
+
+button,
+input,
+select,
+textarea,
+a,
+summary {
+  font-family: inherit;
+}
+
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+.automaticity-primary-action,
+.automaticity-secondary-action {
+  min-height: 40px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+button:not(:disabled):hover,
+[role="button"]:not([aria-disabled="true"]):hover,
+a.automaticity-primary-action:hover,
+a.automaticity-secondary-action:hover,
+summary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 18px rgb(31 41 55 / 10%);
+}
+
+button:active:not(:disabled),
+[role="button"]:active:not([aria-disabled="true"]),
+a.automaticity-primary-action:active,
+a.automaticity-secondary-action:active {
+  transform: translateY(0) scale(0.98);
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgb(61 90 158 / 38%) !important;
+  outline-offset: 2px;
+}
+
+.automaticity-overview {
+  border-color: #d8d3ca !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+.automaticity-primary-action,
+.dashboard-hero-actions > :first-child,
+[class~="bg-primary"],
+[class~="bg-blue-700"],
+[class~="bg-sky-700"],
+[class~="bg-violet-700"],
+[class~="bg-purple-700"],
+[class~="bg-purple-800"] {
+  background: #3d5a9e !important;
+  border-color: #3d5a9e !important;
+  color: #ffffff !important;
+}
+
+.automaticity-secondary-action {
+  border: 1px solid #c9c2b7 !important;
+  background: #efe7da !important;
+  color: #2f477e !important;
+}
+
+.automaticity-overview h2,
+.automaticity-overview h3,
+.automaticity-overview summary {
+  color: #1f2937 !important;
+}
+
+/* Replace legacy green, purple, violet, and blue utility accents with indigo/beige. */
+[class~="bg-emerald-50"],
+[class~="bg-emerald-100"],
+[class~="bg-green-50"],
+[class~="bg-green-100"],
+[class~="bg-sky-50"],
+[class~="bg-sky-100"],
+[class~="bg-blue-50"],
+[class~="bg-blue-100"],
+[class~="bg-violet-50"],
+[class~="bg-violet-100"],
+[class~="bg-purple-50"],
+[class~="bg-purple-100"] {
+  background-color: #efe7da !important;
+}
+
+[class~="bg-emerald-950"],
+[class~="bg-green-950"],
+[class~="bg-violet-950"],
+[class~="bg-purple-950"] {
+  background-color: #2f477e !important;
+  color: #ffffff !important;
+}
+
+[class~="text-emerald-700"],
+[class~="text-emerald-800"],
+[class~="text-emerald-900"],
+[class~="text-emerald-950"],
+[class~="text-green-700"],
+[class~="text-green-800"],
+[class~="text-green-900"],
+[class~="text-green-950"],
+[class~="text-sky-700"],
+[class~="text-sky-800"],
+[class~="text-sky-900"],
+[class~="text-sky-950"],
+[class~="text-blue-700"],
+[class~="text-blue-800"],
+[class~="text-blue-900"],
+[class~="text-blue-950"],
+[class~="text-violet-700"],
+[class~="text-violet-800"],
+[class~="text-violet-900"],
+[class~="text-violet-950"],
+[class~="text-purple-700"],
+[class~="text-purple-800"],
+[class~="text-purple-900"],
+[class~="text-purple-950"] {
+  color: #3d5a9e !important;
+}
+
+[class~="border-emerald-200"],
+[class~="border-emerald-300"],
+[class~="border-green-200"],
+[class~="border-green-300"],
+[class~="border-sky-200"],
+[class~="border-sky-300"],
+[class~="border-blue-200"],
+[class~="border-blue-300"],
+[class~="border-violet-200"],
+[class~="border-violet-300"],
+[class~="border-violet-400"],
+[class~="border-purple-200"],
+[class~="border-purple-300"] {
+  border-color: rgb(61 90 158 / 30%) !important;
+}
+
+.dashboard-hero-actions > :first-child,
+[class*="bg-violet-700"],
+[class*="bg-purple-800"],
+[class*="bg-blue-700"],
+[class*="bg-sky-700"] {
+  background-image: none !important;
+}
+
+.dashboard-hero-actions > :first-child {
+  background-color: #3d5a9e !important;
+}
+
+.brand-icon {
+  background: linear-gradient(145deg, #3d5a9e, #2f477e) !important;
+}
+
+[class*="bg-gradient"][class*="from-violet"],
+[class*="bg-gradient"][class*="from-purple"],
+[class*="bg-gradient"][class*="from-blue"] {
+  background-image: linear-gradient(145deg, #3d5a9e, #2f477e) !important;
+}
+
+/* The contextual explanation must remain complete and readable near edges. */
+.persian-word-help-card {
+  width: min(28rem, calc(100vw - 2rem)) !important;
+  max-height: min(40rem, calc(100vh - 2rem)) !important;
+  overflow: auto !important;
+  border: 2px solid #3d5a9e !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  box-shadow: 0 18px 50px rgb(31 41 55 / 20%), 0 0 0 3px rgb(61 90 158 / 10%) !important;
+  padding: 1rem !important;
+  font-family: "Segoe UI Variable", "Segoe UI", Tahoma, sans-serif !important;
+  line-height: 1.6 !important;
+  text-align: left !important;
+}
+
+.persian-word-help-term {
+  margin-bottom: 0.7rem !important;
+  background: #efe7da !important;
+  color: #2f477e !important;
+}
+
+.persian-word-help-section + .persian-word-help-section,
+.persian-word-help-example {
+  border-top-color: rgb(61 90 158 / 20%) !important;
+}
+
+.persian-word-help-section strong,
+.persian-word-help-example strong {
+  color: #3d5a9e !important;
+}
+
+.persian-word-help-card::after {
+  content: "Direction: LTOR / LTR for English and German · RTL for فارسی";
+  display: block;
+  margin-top: 0.65rem;
+  border-top: 1px solid rgb(61 90 158 / 20%);
+  padding: 0.65rem 0.55rem 0.1rem;
+  color: #52627a;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+[lang="fa"],
+[lang^="fa-"] {
+  direction: rtl !important;
+  text-align: start !important;
+  unicode-bidi: isolate;
+}
+
+[lang="fa"] .persian-word-help-card,
+[lang^="fa-"] .persian-word-help-card,
+.persian-word-help-card[lang="fa"],
+.persian-word-help-card[lang^="fa-"] {
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: Tahoma, "Segoe UI", sans-serif !important;
+}

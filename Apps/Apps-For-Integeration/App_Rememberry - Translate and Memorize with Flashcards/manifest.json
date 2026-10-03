@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "LingoBridge: Deutsch & فارسی Cards",
+  "version": "2.0.0",
+  "description": "Private German, Persian and English flashcards with local spaced review, listening, typing and learning-app integration.",
+  "permissions": ["activeTab", "contextMenus", "scripting", "sidePanel", "storage", "tabs"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "action": {
+    "default_title": "LingoBridge – Deutsch ↔ فارسی",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

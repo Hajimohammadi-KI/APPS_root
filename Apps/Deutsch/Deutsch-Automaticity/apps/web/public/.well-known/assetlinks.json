@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.deutschflow.grammar",
+      "sha256_cert_fingerprints": [
+        "79:F9:A8:E9:F8:CB:F8:29:09:D2:9F:CE:4C:C5:0E:5E:18:3E:B3:C2:CF:40:0B:44:4E:8F:35:FA:66:C1:D6:D3"
+      ]
+    }
+  }
+]

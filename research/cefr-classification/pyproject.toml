@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "automaticity-cefr-pipeline"
+version = "0.1.0"
+description = "Evidence-first English and German CEFR text-classification pipeline"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+# The baseline extra stays CPU-friendly and must be installed before the heavier Transformer extra.
+baseline = [
+  "joblib>=1.4,<2",
+  "numpy>=1.26,<3",
+  "scikit-learn>=1.5,<2",
+  "scipy>=1.13,<2",
+]
+# ModernBERT support starts in Transformers 4.48; PyTorch remains unpinned so the
+# operator can select the correct CPU/CUDA wheel from the official PyTorch index.
+# Capped below 5: Transformers 5.x renamed/removed TrainingArguments(warmup_ratio=...)
+# and changed the slow-to-fast tokenizer conversion path this pipeline relies on.
+transformer = [
+  "accelerate>=1.2,<2",
+  "datasets>=3.2,<5",
+  "numpy>=1.26,<3",
+  "protobuf>=4,<6",
+  "scikit-learn>=1.5,<2",
+  "sentencepiece>=0.2,<1",
+  "transformers>=4.48,<5",
+]
+dev = ["pytest>=8.3,<9"]
+
+[project.scripts]
+cefr-pipeline = "cefr_pipeline.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+

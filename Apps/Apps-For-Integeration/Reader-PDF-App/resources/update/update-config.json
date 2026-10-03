@@ -1,0 +1,13 @@
+{
+  "productId": "ResearchPDFStudio",
+  "productName": "Research PDF Studio",
+  "versionFile": "version.txt",
+  "dataFolder": "Research PDF Studio",
+  "environmentPrefix": "RESEARCH_PDF",
+  "defaultManifestUrl": "https://raw.githubusercontent.com/Hajimohammadi-KI/APPS_root_new/main/releases/research-pdf-studio-update.json",
+  "localManifestPath": "D:\\APPS_root_new\\releases\\research-pdf-studio-update.json",
+  "setupFile": "SETUP-WINDOWS.bat",
+  "payloadFile": "package.json",
+  "packageKind": "powershell",
+  "locale": "en"
+}

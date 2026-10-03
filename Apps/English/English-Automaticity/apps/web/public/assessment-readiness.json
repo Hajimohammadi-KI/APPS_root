@@ -1,0 +1,2362 @@
+{
+  "language": "en",
+  "contentVersion": "2026-10-02.1",
+  "units": [
+    {
+      "id": "en.c.001",
+      "title": "Verb be: am/is/are",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.002",
+      "title": "Subject pronouns",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.003",
+      "title": "Articles a/an/the",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.004",
+      "title": "Plural nouns",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.005",
+      "title": "Possessive adjectives",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.006",
+      "title": "Have/has got",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.007",
+      "title": "Present simple affirmative",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 15,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.008",
+      "title": "Present simple negatives",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.009",
+      "title": "Present simple questions",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.010",
+      "title": "There is/There are",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.011",
+      "title": "Can/can’t",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.012",
+      "title": "Imperatives",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.013",
+      "title": "Prepositions of place",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.014",
+      "title": "Countable and uncountable nouns",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.015",
+      "title": "Present continuous",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.016",
+      "title": "Present simple vs continuous",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.017",
+      "title": "Past simple regular",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.018",
+      "title": "Past simple irregular",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.019",
+      "title": "Past simple questions and negatives",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.020",
+      "title": "Future with will",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.021",
+      "title": "Be going to",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.022",
+      "title": "Comparatives",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.023",
+      "title": "Superlatives",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.024",
+      "title": "Some/any/no",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.025",
+      "title": "Much/many/a lot of",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.026",
+      "title": "Adverbs of frequency",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.027",
+      "title": "Object pronouns",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.028",
+      "title": "Must/have to",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.029",
+      "title": "Present perfect",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.030",
+      "title": "Present perfect vs past simple",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 15,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.031",
+      "title": "For and since",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.032",
+      "title": "Past continuous",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.033",
+      "title": "Past continuous vs past simple",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.034",
+      "title": "First conditional",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.035",
+      "title": "Second conditional",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.036",
+      "title": "Relative clauses",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.037",
+      "title": "Gerunds and infinitives",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.038",
+      "title": "Modal verbs of advice",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.039",
+      "title": "Passive present and past",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.040",
+      "title": "Reported statements",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 16,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.041",
+      "title": "Question tags",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.042",
+      "title": "Too/enough",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.043",
+      "title": "Present perfect continuous",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.044",
+      "title": "Past perfect",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.045",
+      "title": "Past perfect continuous",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.046",
+      "title": "Future continuous",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.047",
+      "title": "Future perfect",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.048",
+      "title": "Third conditional",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.049",
+      "title": "Mixed conditionals",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.050",
+      "title": "Modal deduction present",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.051",
+      "title": "Modal deduction past",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.052",
+      "title": "Causative have/get",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.053",
+      "title": "Advanced passive",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 15,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.054",
+      "title": "Participle clauses",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.055",
+      "title": "Wish and if only",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.056",
+      "title": "Inversion after negative adverbials",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.057",
+      "title": "Cleft sentences",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.058",
+      "title": "Inversion in conditionals",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.059",
+      "title": "Nominalisation",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.060",
+      "title": "Hedging and stance",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.061",
+      "title": "Advanced discourse markers",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.062",
+      "title": "Substitution and ellipsis",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.063",
+      "title": "Complex relative clauses",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.064",
+      "title": "Advanced reporting verbs",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.065",
+      "title": "Emphasis with auxiliaries",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.066",
+      "title": "Fronting",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.067",
+      "title": "Complex noun phrases",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.068",
+      "title": "Register control",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.069",
+      "title": "Advanced tense-aspect choices",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.070",
+      "title": "Parallelism",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.071",
+      "title": "Marked word order",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.072",
+      "title": "Layered subordination",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.073",
+      "title": "Nuanced modality",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.074",
+      "title": "Counterfactual distance",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.075",
+      "title": "Advanced cohesion",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.076",
+      "title": "Rhetorical grammar",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.077",
+      "title": "Compressed academic structures",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.078",
+      "title": "Idiomatic clause patterns",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.079",
+      "title": "Ambiguity control",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.080",
+      "title": "Style shifting",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 8,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.081",
+      "title": "Advanced punctuation and grammar",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.082",
+      "title": "Editing for naturalness",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.083",
+      "title": "Genre-specific grammar",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.084",
+      "title": "Integrated automatic production",
+      "level": "C2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 9,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.085",
+      "title": "Possessive ’s and whose",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.086",
+      "title": "Prepositions of time: at, in, on",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.087",
+      "title": "Adjectives and prepositions",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.088",
+      "title": "Adjectives ending in -ed and -ing",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.089",
+      "title": "Infinitive of purpose",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.090",
+      "title": "Quantifiers: few, a few, little, a little",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.091",
+      "title": "Capital letters and apostrophes",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.092",
+      "title": "Contrasting ideas: although, despite, however",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 19,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.093",
+      "title": "Used to, be used to, get used to",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.094",
+      "title": "Intensifiers: so and such",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.095",
+      "title": "Past ability: could, was able to, managed to",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.096",
+      "title": "Past habits: used to, would, past simple",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.097",
+      "title": "Phrasal verbs",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.098",
+      "title": "Present perfect: just, yet, still, already",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.099",
+      "title": "Reflexive pronouns",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.100",
+      "title": "Stative and dynamic verbs",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.101",
+      "title": "Using as and like",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.102",
+      "title": "Verbs and prepositions",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 19,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 14,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.103",
+      "title": "Gradable and non-gradable adjectives",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.104",
+      "title": "British and American grammar",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.105",
+      "title": "Modifying comparatives",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.106",
+      "title": "Reported speech: questions",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.107",
+      "title": "Future degrees of certainty",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.108",
+      "title": "Gerund or infinitive: change in meaning",
+      "level": "B2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.109",
+      "title": "Advanced passives review",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.110",
+      "title": "Modals and expressions of probability",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.111",
+      "title": "Unreal time",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.112",
+      "title": "Word order in phrasal verbs",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 12,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.113",
+      "title": "Generic and zero conditionals",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.114",
+      "title": "Demonstratives and reference distance",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.115",
+      "title": "Indefinite pronouns and reference",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.116",
+      "title": "Reciprocal pronouns",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.117",
+      "title": "Independent possessive pronouns",
+      "level": "A1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.118",
+      "title": "Agreement with complex subjects",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.119",
+      "title": "Subject and object questions",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.120",
+      "title": "Dummy it and extraposition",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.121",
+      "title": "Attributive adjective order",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.122",
+      "title": "Genitive and of-construction choices",
+      "level": "B1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.123",
+      "title": "Mandative complement clauses",
+      "level": "C1",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    },
+    {
+      "id": "en.c.124",
+      "title": "Inflectional spelling changes",
+      "level": "A2",
+      "modes": [
+        {
+          "modality": "writing",
+          "tasks": 7,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        },
+        {
+          "modality": "speaking",
+          "tasks": 0,
+          "contentReviewed": 0,
+          "evaluatorApproved": 0
+        }
+      ]
+    }
+  ]
+}

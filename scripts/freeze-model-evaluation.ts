@@ -1,0 +1,15 @@
+import {readFile,writeFile} from "node:fs/promises";
+import {resolve} from "node:path";
+import {digest,policy,parseManifest,reviewedManifest,validateRun,type PredictionRun,type FrozenEvaluation} from "./lib/model-benchmark";
+const root=resolve(import.meta.dir,".."),[manifestFile,calibrationFile,outputFile]=Bun.argv.slice(2);
+if(!manifestFile||!calibrationFile||!outputFile)throw Error("Usage: bun scripts/freeze-model-evaluation.ts manifest.json calibration-run.json new-freeze.json");
+const manifest=parseManifest(JSON.parse(await readFile(resolve(root,manifestFile),"utf8")));
+const reviewed=await reviewedManifest(root,manifest);
+if(JSON.stringify(reviewed)!==JSON.stringify(manifest))throw Error("Manifest must contain validated human labels before calibration");
+const bytes=await readFile(resolve(root,calibrationFile),"utf8"),run=JSON.parse(bytes) as PredictionRun;
+validateRun(manifest,run);if(run.partition!=="calibration")throw Error("Freeze requires a real calibration run");
+const finalCaseIds=manifest.cases.filter(row=>row.partition==="final").map(row=>row.id);
+if(!finalCaseIds.length)throw Error("No untouched final cases registered");
+const record:FrozenEvaluation={schemaVersion:1,benchmarkVersion:manifest.version,manifestSha256:digest(JSON.stringify(manifest)),policySha256:digest(JSON.stringify(policy)),frozenAt:new Date().toISOString(),candidate:run.candidate,configurationSha256:run.configurationSha256,calibration:{path:calibrationFile,sha256:digest(bytes)},finalCaseIds};
+await writeFile(resolve(root,outputFile),JSON.stringify(record,null,2),{flag:"wx"});
+console.log(`Configuration frozen at ${record.frozenAt}. Final evaluation and independent release review remain required.`);

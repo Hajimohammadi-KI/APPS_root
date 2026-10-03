@@ -1,0 +1,79 @@
+/* Keep language direction and interaction feedback consistent across app shells. */
+.skip-link {
+  position: fixed;
+  inset-block-start: 0.5rem;
+  inset-inline-start: 0.5rem;
+  z-index: 10000;
+  max-inline-size: calc(100vw - 1rem);
+  padding: 0.75rem 1rem;
+  border: 2px solid #6f42b5;
+  border-radius: 0.75rem;
+  background: #fff;
+  color: #24143d;
+  font-weight: 700;
+  transform: translateY(-160%);
+  transition: transform 120ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+html[lang="en"],
+html[lang^="en-"],
+html[lang="de"],
+html[lang^="de-"] {
+  direction: ltr;
+}
+html[lang="fa"],
+html[lang^="fa-"],
+html[lang="ar"],
+html[lang^="ar-"] {
+  direction: rtl;
+}
+
+:where([lang="en"]:not(html), [lang^="en-"]:not(html), [lang="de"]:not(html), [lang^="de-"]:not(html), [dir="ltr"]) {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+:where([lang="fa"]:not(html), [lang^="fa-"]:not(html), [lang="ar"]:not(html), [lang^="ar-"]:not(html), [dir="rtl"]) {
+  direction: rtl;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+
+:where(button:not(:disabled), summary, select:not(:disabled), [role="button"]:not([aria-disabled="true"]), nav a[href], a[class*="button"], a[class*="card"], a.action) {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+@media (hover: hover) {
+  :where(button:not(:disabled), summary, select:not(:disabled), [role="button"]:not([aria-disabled="true"]), nav a[href], a[class*="button"], a[class*="card"], a.action):hover {
+    border-color: #9f83c4;
+    box-shadow: 0 7px 18px rgba(73, 52, 101, 0.14);
+    transform: translateY(-1px);
+  }
+}
+
+:where(button, summary, select, [role="button"], nav a[href], a[class*="button"], a[class*="card"], a.action):focus-visible {
+  outline: 3px solid rgba(117, 70, 183, 0.42);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+
+  :where(button, summary, select, [role="button"], nav a[href], a[class*="button"], a[class*="card"], a.action) {
+    transition: none !important;
+  }
+
+  :where(button, summary, select, [role="button"], nav a[href], a[class*="button"], a[class*="card"], a.action):hover {
+    transform: none !important;
+  }
+}

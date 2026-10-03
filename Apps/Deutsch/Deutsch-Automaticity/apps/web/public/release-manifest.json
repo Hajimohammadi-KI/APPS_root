@@ -1,0 +1,10 @@
+{
+  "publishedAt": "2026-10-02",
+  "version": "20.9.0",
+  "webRelease": "2026.10.02.1",
+  "changes": [
+    "Visible improvement roadmap with stable application links",
+    "Accessible mobile navigation and accurate service status",
+    "Offline cache preservation and API cache exclusion"
+  ]
+}

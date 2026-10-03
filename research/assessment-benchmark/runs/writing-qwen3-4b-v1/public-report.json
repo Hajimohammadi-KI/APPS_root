@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T04:46:38.076Z",
+  "predictionsSha256": "18fd0d849a40bfa000db7549f67f5006b84e3665ab1b23a4fb7171bdc8523c74",
+  "publicSubset": "Write & Improve and Falko–MERLIN only. LOCNESS-derived results remain local because its publication terms request sending an offprint, which is not authorized. Subsetting is a licensing decision, not model selection.",
+  "counts": {
+    "completed": 453
+  },
+  "languages": {
+    "en": {
+      "candidate": {
+        "count": 197,
+        "errors": 101,
+        "clean": 96,
+        "falseAccept": 19,
+        "trueAccept": 67,
+        "falseAcceptanceRate": 0.18811881188118812,
+        "correctAcceptanceRate": 0.6979166666666666,
+        "abstentions": 15,
+        "coverage": 0.9238578680203046,
+        "falseAcceptance95": {
+          "low": 0.12387125256857148,
+          "high": 0.27522142785906156
+        },
+        "correctAcceptance95": {
+          "low": 0.5999149981303159,
+          "high": 0.7806884150093544
+        },
+        "detectedErrors": 74,
+        "errorDetection95": {
+          "low": 0.6390055396933065,
+          "high": 0.8092903971305228
+        },
+        "protocolVersion": 2,
+        "diagnosticScreenPassed": false
+      },
+      "contradictoryCorrect": 8,
+      "contradictoryIncorrect": 5,
+      "postHocConsistencySensitivity": {
+        "count": 197,
+        "errors": 101,
+        "clean": 96,
+        "falseAccept": 13,
+        "trueAccept": 65,
+        "falseAcceptanceRate": 0.12871287128712872,
+        "correctAcceptanceRate": 0.6770833333333334,
+        "abstentions": 28,
+        "coverage": 0.8578680203045685,
+        "falseAcceptance95": {
+          "low": 0.07678714443671886,
+          "high": 0.20784699892951097
+        },
+        "correctAcceptance95": {
+          "low": 0.5782983099894397,
+          "high": 0.7622415859776339
+        },
+        "detectedErrors": 72,
+        "errorDetection95": {
+          "low": 0.6181195096913985,
+          "high": 0.7920235814452965
+        },
+        "protocolVersion": 2,
+        "diagnosticScreenPassed": false
+      }
+    },
+    "de": {
+      "candidate": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 19,
+        "trueAccept": 87,
+        "falseAcceptanceRate": 0.1484375,
+        "correctAcceptanceRate": 0.6796875,
+        "abstentions": 33,
+        "coverage": 0.87109375,
+        "falseAcceptance95": {
+          "low": 0.09713463115350009,
+          "high": 0.22022729122631057
+        },
+        "correctAcceptance95": {
+          "low": 0.5946341124452171,
+          "high": 0.7542697938939907
+        },
+        "detectedErrors": 91,
+        "errorDetection95": {
+          "low": 0.6271668442501395,
+          "high": 0.7824160023219742
+        },
+        "protocolVersion": 2,
+        "diagnosticScreenPassed": false
+      },
+      "contradictoryCorrect": 14,
+      "contradictoryIncorrect": 7,
+      "postHocConsistencySensitivity": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 15,
+        "trueAccept": 77,
+        "falseAcceptanceRate": 0.1171875,
+        "correctAcceptanceRate": 0.6015625,
+        "abstentions": 54,
+        "coverage": 0.7890625,
+        "falseAcceptance95": {
+          "low": 0.07231682349355734,
+          "high": 0.18436615865334754
+        },
+        "correctAcceptance95": {
+          "low": 0.5149824068759288,
+          "high": 0.6822241488810148
+        },
+        "detectedErrors": 90,
+        "errorDetection95": {
+          "low": 0.6189947723495539,
+          "high": 0.7754183391643332
+        },
+        "protocolVersion": 2,
+        "diagnosticScreenPassed": false
+      }
+    }
+  },
+  "releaseEligible": false
+}

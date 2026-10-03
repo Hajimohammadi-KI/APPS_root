@@ -1,0 +1,968 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T04:46:38.487Z",
+  "kind": "individual-recording diagnostic of published checkpoint",
+  "source": "https://github.com/hy310/ssl_finetuning",
+  "casesSha256": "f4de6d61a4937c0234436ef2226bfc8dd7119b6ad28b5e31ca27785d2b4b2dc8",
+  "predictionsSha256": "1ce013e2269a1f51f69c852fa2bf8c6e065bac54dd09bcee5e5468b5394e3492",
+  "testRecordings": 2500,
+  "completed": 2500,
+  "valid": 2500,
+  "failures": 0,
+  "coverage": 1,
+  "speakers": 125,
+  "dimensions": {
+    "accuracy": {
+      "candidate": {
+        "count": 2500,
+        "mae": 0.8299922807693482,
+        "correlation": 0.6695480929212045,
+        "diagnosticScreenPassed": false
+      },
+      "trainingMeanBaseline": {
+        "count": 2500,
+        "mae": 1.1610713599999671,
+        "correlation": null,
+        "diagnosticScreenPassed": false
+      },
+      "trainingMean": 7.6184,
+      "outOfRange": 0
+    },
+    "fluency": {
+      "candidate": {
+        "count": 2500,
+        "mae": 0.6866428845405579,
+        "correlation": 0.7506402280450157,
+        "diagnosticScreenPassed": false
+      },
+      "trainingMeanBaseline": {
+        "count": 2500,
+        "mae": 1.0959932800000105,
+        "correlation": null,
+        "diagnosticScreenPassed": false
+      },
+      "trainingMean": 7.7284,
+      "outOfRange": 0
+    },
+    "prosodic": {
+      "candidate": {
+        "count": 2500,
+        "mae": 0.6827514310836792,
+        "correlation": 0.7489895562683023,
+        "diagnosticScreenPassed": false
+      },
+      "trainingMeanBaseline": {
+        "count": 2500,
+        "mae": 1.1375680000000121,
+        "correlation": null,
+        "diagnosticScreenPassed": false
+      },
+      "trainingMean": 7.4224,
+      "outOfRange": 0
+    },
+    "total": {
+      "candidate": {
+        "count": 2500,
+        "mae": 0.7979967837333679,
+        "correlation": 0.6971298591741185,
+        "diagnosticScreenPassed": false
+      },
+      "trainingMeanBaseline": {
+        "count": 2500,
+        "mae": 1.1901699200000007,
+        "correlation": null,
+        "diagnosticScreenPassed": false
+      },
+      "trainingMean": 7.1812,
+      "outOfRange": 0
+    }
+  },
+  "cohortsByOriginalSourceCodes": {
+    "age": {
+      "6": {
+        "count": 240,
+        "dimensions": {
+          "accuracy": {
+            "count": 240,
+            "mae": 0.8327831010023753,
+            "correlation": 0.17084123590401748,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 240,
+            "mae": 0.7250504930814107,
+            "correlation": 0.3374141272957708,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 240,
+            "mae": 0.7422588368256887,
+            "correlation": 0.2650934604070273,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 240,
+            "mae": 0.8468440035978954,
+            "correlation": 0.18558613548758818,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "7": {
+        "count": 240,
+        "dimensions": {
+          "accuracy": {
+            "count": 240,
+            "mae": 1.0714880923430126,
+            "correlation": 0.31744552974629475,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 240,
+            "mae": 0.9122749328613281,
+            "correlation": 0.4940717116987141,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 240,
+            "mae": 0.8660174389680226,
+            "correlation": 0.4999627743913917,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 240,
+            "mae": 1.0996223787466686,
+            "correlation": 0.3788180527131521,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "8": {
+        "count": 120,
+        "dimensions": {
+          "accuracy": {
+            "count": 120,
+            "mae": 0.6830393234888713,
+            "correlation": 0.3441774581284326,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 120,
+            "mae": 0.6344682097434997,
+            "correlation": 0.3892877277214595,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 120,
+            "mae": 0.5896875500679016,
+            "correlation": 0.4880277264147388,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 120,
+            "mae": 0.6073587735493978,
+            "correlation": 0.3470147167008245,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "9": {
+        "count": 160,
+        "dimensions": {
+          "accuracy": {
+            "count": 160,
+            "mae": 0.5510073572397232,
+            "correlation": 0.4927783358773123,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 160,
+            "mae": 0.5860157936811448,
+            "correlation": 0.4896055520804481,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 160,
+            "mae": 0.5397009998559952,
+            "correlation": 0.6043704100572447,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 160,
+            "mae": 0.5528018951416016,
+            "correlation": 0.48589516669217303,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "10": {
+        "count": 80,
+        "dimensions": {
+          "accuracy": {
+            "count": 80,
+            "mae": 0.563523405790329,
+            "correlation": 0.20941049455546448,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 80,
+            "mae": 0.5305164158344269,
+            "correlation": 0.6005003752718142,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 80,
+            "mae": 0.4526860177516937,
+            "correlation": 0.3688886805368141,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 80,
+            "mae": 0.573849219083786,
+            "correlation": 0.24851003228431479,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "11": {
+        "count": 120,
+        "dimensions": {
+          "accuracy": {
+            "count": 120,
+            "mae": 0.8767248253027599,
+            "correlation": 0.3010865161116633,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 120,
+            "mae": 0.563027822971344,
+            "correlation": 0.7816759739466438,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 120,
+            "mae": 0.6916274468104044,
+            "correlation": 0.7383093086808045,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 120,
+            "mae": 0.8944161335627238,
+            "correlation": 0.47259214071359046,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "12": {
+        "count": 80,
+        "dimensions": {
+          "accuracy": {
+            "count": 80,
+            "mae": 0.9456020474433899,
+            "correlation": 0.5035497129072422,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 80,
+            "mae": 0.9332738220691681,
+            "correlation": 0.4067071029024053,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 80,
+            "mae": 0.7684800267219544,
+            "correlation": 0.49223295022865754,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 80,
+            "mae": 0.9757656931877137,
+            "correlation": 0.4805246981914454,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "13": {
+        "count": 20,
+        "dimensions": {
+          "accuracy": {
+            "count": 20,
+            "mae": 0.40052571296691897,
+            "correlation": 0.3744528563784191,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 20,
+            "mae": 0.5066240310668946,
+            "correlation": 0.2838230719333831,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 20,
+            "mae": 0.5336960554122925,
+            "correlation": -0.07813214786815086,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 20,
+            "mae": 0.4306914806365967,
+            "correlation": -0.0410133771314168,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "14": {
+        "count": 40,
+        "dimensions": {
+          "accuracy": {
+            "count": 40,
+            "mae": 0.5870893716812133,
+            "correlation": -0.04242226480588266,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 40,
+            "mae": 0.4948691725730896,
+            "correlation": 0.21388039950264637,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 40,
+            "mae": 0.43774449825286865,
+            "correlation": 0.4059837311005966,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 40,
+            "mae": 0.4843118071556091,
+            "correlation": 0.18422597618797568,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "15": {
+        "count": 180,
+        "dimensions": {
+          "accuracy": {
+            "count": 180,
+            "mae": 0.5825641685061984,
+            "correlation": 0.18602959862912352,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 180,
+            "mae": 0.5340445703930325,
+            "correlation": 0.3574816797646372,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 180,
+            "mae": 0.5926151990890502,
+            "correlation": 0.4565050787306323,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 180,
+            "mae": 0.6509494384129842,
+            "correlation": 0.24726557777778937,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "19": {
+        "count": 120,
+        "dimensions": {
+          "accuracy": {
+            "count": 120,
+            "mae": 0.5728511095046998,
+            "correlation": 0.32838984387000547,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 120,
+            "mae": 0.5109906872113545,
+            "correlation": 0.3619568231805834,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 120,
+            "mae": 0.3784829338391622,
+            "correlation": 0.5623814520787751,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 120,
+            "mae": 0.4477825323740641,
+            "correlation": 0.38260237463600566,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "20": {
+        "count": 220,
+        "dimensions": {
+          "accuracy": {
+            "count": 220,
+            "mae": 0.8291197776794433,
+            "correlation": 0.8285808063610761,
+            "diagnosticScreenPassed": true
+          },
+          "fluency": {
+            "count": 220,
+            "mae": 0.708194223317233,
+            "correlation": 0.8865234230677531,
+            "diagnosticScreenPassed": true
+          },
+          "prosodic": {
+            "count": 220,
+            "mae": 0.6743269877000289,
+            "correlation": 0.890950691399673,
+            "diagnosticScreenPassed": true
+          },
+          "total": {
+            "count": 220,
+            "mae": 0.7228500106117942,
+            "correlation": 0.8667621708966488,
+            "diagnosticScreenPassed": true
+          }
+        }
+      },
+      "21": {
+        "count": 220,
+        "dimensions": {
+          "accuracy": {
+            "count": 220,
+            "mae": 1.0955335183577104,
+            "correlation": 0.7043209205529432,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 220,
+            "mae": 0.7348871144381437,
+            "correlation": 0.8441848719960011,
+            "diagnosticScreenPassed": true
+          },
+          "prosodic": {
+            "count": 220,
+            "mae": 0.8532850633968007,
+            "correlation": 0.8048456888368667,
+            "diagnosticScreenPassed": true
+          },
+          "total": {
+            "count": 220,
+            "mae": 0.9991810874505477,
+            "correlation": 0.7536814997455535,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "22": {
+        "count": 80,
+        "dimensions": {
+          "accuracy": {
+            "count": 80,
+            "mae": 0.6698550045490265,
+            "correlation": 0.7179074229680131,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 80,
+            "mae": 0.5562076985836029,
+            "correlation": 0.8715709924596936,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 80,
+            "mae": 0.6466734826564788,
+            "correlation": 0.8460405553041622,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 80,
+            "mae": 0.7004043102264405,
+            "correlation": 0.7794548509254378,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "23": {
+        "count": 80,
+        "dimensions": {
+          "accuracy": {
+            "count": 80,
+            "mae": 0.9521064937114716,
+            "correlation": 0.21029898393468657,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 80,
+            "mae": 0.7856927216053009,
+            "correlation": 0.251639714060234,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 80,
+            "mae": 0.865174674987793,
+            "correlation": 0.20056752526926738,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 80,
+            "mae": 0.9654410004615783,
+            "correlation": 0.29136426234413976,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "24": {
+        "count": 60,
+        "dimensions": {
+          "accuracy": {
+            "count": 60,
+            "mae": 1.063901416460673,
+            "correlation": 0.7578503549151314,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 60,
+            "mae": 0.6260724147160848,
+            "correlation": 0.9014016374022757,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 60,
+            "mae": 0.5649642705917358,
+            "correlation": 0.9221296822327014,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 60,
+            "mae": 0.8530413985252381,
+            "correlation": 0.8516347349372297,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "25": {
+        "count": 120,
+        "dimensions": {
+          "accuracy": {
+            "count": 120,
+            "mae": 0.987493751446406,
+            "correlation": 0.7193266889275894,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 120,
+            "mae": 0.7161184151967367,
+            "correlation": 0.8480988861853331,
+            "diagnosticScreenPassed": true
+          },
+          "prosodic": {
+            "count": 120,
+            "mae": 0.7136323849360148,
+            "correlation": 0.8446662460702515,
+            "diagnosticScreenPassed": true
+          },
+          "total": {
+            "count": 120,
+            "mae": 0.9466354012489319,
+            "correlation": 0.7752446178151225,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "26": {
+        "count": 40,
+        "dimensions": {
+          "accuracy": {
+            "count": 40,
+            "mae": 1.3482728362083436,
+            "correlation": 0.5435810071988697,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 40,
+            "mae": 0.6924412250518799,
+            "correlation": 0.6902454602190004,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 40,
+            "mae": 0.6328551054000855,
+            "correlation": 0.5204717674774746,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 40,
+            "mae": 1.2118778824806213,
+            "correlation": 0.5227391616400234,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "27": {
+        "count": 20,
+        "dimensions": {
+          "accuracy": {
+            "count": 20,
+            "mae": 0.31943817138671876,
+            "correlation": -0.5704671541508489,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 20,
+            "mae": 0.46323723793029786,
+            "correlation": 0.2534442311416878,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 20,
+            "mae": 0.3156313419342041,
+            "correlation": -0.28256521590748,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 20,
+            "mae": 0.3997026920318604,
+            "correlation": -0.22117423736057787,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "28": {
+        "count": 20,
+        "dimensions": {
+          "accuracy": {
+            "count": 20,
+            "mae": 0.8634716987609863,
+            "correlation": -0.2824431308111065,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 20,
+            "mae": 0.9961276531219483,
+            "correlation": 0.2652878213550404,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 20,
+            "mae": 0.6891367912292481,
+            "correlation": 0.25966842598224804,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 20,
+            "mae": 0.5374985218048096,
+            "correlation": -0.08175697018969588,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "29": {
+        "count": 40,
+        "dimensions": {
+          "accuracy": {
+            "count": 40,
+            "mae": 1.0111820697784424,
+            "correlation": 0.8441230412821944,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 40,
+            "mae": 0.4855040192604065,
+            "correlation": 0.8496359578262265,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 40,
+            "mae": 0.6890709519386291,
+            "correlation": 0.762301720572005,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 40,
+            "mae": 1.0105461478233337,
+            "correlation": 0.8430720073468563,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "30": {
+        "count": 40,
+        "dimensions": {
+          "accuracy": {
+            "count": 40,
+            "mae": 1.0618420541286469,
+            "correlation": 0.8158818792688185,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 40,
+            "mae": 0.9038217663764954,
+            "correlation": 0.7305069963041715,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 40,
+            "mae": 0.8475470662117004,
+            "correlation": 0.7682609590648884,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 40,
+            "mae": 0.9689586400985718,
+            "correlation": 0.8058389686817978,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "32": {
+        "count": 20,
+        "dimensions": {
+          "accuracy": {
+            "count": 20,
+            "mae": 0.8811585903167725,
+            "correlation": 0.0035011977862618696,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 20,
+            "mae": 1.6063606977462768,
+            "correlation": 0.5017884552911014,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 20,
+            "mae": 1.2053468227386475,
+            "correlation": 0.3736504491241944,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 20,
+            "mae": 0.9530930280685425,
+            "correlation": 0.09551155154168897,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "33": {
+        "count": 20,
+        "dimensions": {
+          "accuracy": {
+            "count": 20,
+            "mae": 0.49298901557922364,
+            "correlation": 0.4156901235970443,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 20,
+            "mae": 0.5035471677780151,
+            "correlation": 0.4795831618853889,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 20,
+            "mae": 0.688748049736023,
+            "correlation": 0.6002448588473562,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 20,
+            "mae": 0.3721320152282715,
+            "correlation": 0.781517493900036,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "35": {
+        "count": 40,
+        "dimensions": {
+          "accuracy": {
+            "count": 40,
+            "mae": 1.1054400324821472,
+            "correlation": 0.751623615831002,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 40,
+            "mae": 0.600907301902771,
+            "correlation": 0.8765860578218849,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 40,
+            "mae": 0.6610081672668457,
+            "correlation": 0.8494385990678828,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 40,
+            "mae": 1.0374021410942078,
+            "correlation": 0.7768949163564618,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "37": {
+        "count": 40,
+        "dimensions": {
+          "accuracy": {
+            "count": 40,
+            "mae": 0.6723241865634918,
+            "correlation": 0.9246010493998443,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 40,
+            "mae": 0.8147761523723602,
+            "correlation": 0.9609750090879817,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 40,
+            "mae": 0.7423611044883728,
+            "correlation": 0.9263575403156739,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 40,
+            "mae": 0.571948128938675,
+            "correlation": 0.9448816518810673,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "38": {
+        "count": 20,
+        "dimensions": {
+          "accuracy": {
+            "count": 20,
+            "mae": 0.5248598575592041,
+            "correlation": 0.009723803421512293,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 20,
+            "mae": 0.34337410926818845,
+            "correlation": -0.04641382952890034,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 20,
+            "mae": 0.4233377933502197,
+            "correlation": -0.11315310207110163,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 20,
+            "mae": 0.46901164054870603,
+            "correlation": 0.13498866477638677,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "43": {
+        "count": 20,
+        "dimensions": {
+          "accuracy": {
+            "count": 20,
+            "mae": 0.5840078830718994,
+            "correlation": -0.26266442370066134,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 20,
+            "mae": 0.7615123987197876,
+            "correlation": -0.08095934129734243,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 20,
+            "mae": 0.8451340675354004,
+            "correlation": -0.14186761124815003,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 20,
+            "mae": 0.638358187675476,
+            "correlation": 0.029650085469321706,
+            "diagnosticScreenPassed": false
+          }
+        }
+      }
+    },
+    "gender": {
+      "f": {
+        "count": 1160,
+        "dimensions": {
+          "accuracy": {
+            "count": 1160,
+            "mae": 0.8466874772104723,
+            "correlation": 0.7137783593602296,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 1160,
+            "mae": 0.6631180335735453,
+            "correlation": 0.8042871184284784,
+            "diagnosticScreenPassed": true
+          },
+          "prosodic": {
+            "count": 1160,
+            "mae": 0.6854776037150416,
+            "correlation": 0.784618040488772,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 1160,
+            "mae": 0.7936401506950115,
+            "correlation": 0.752646847848947,
+            "diagnosticScreenPassed": false
+          }
+        }
+      },
+      "m": {
+        "count": 1340,
+        "dimensions": {
+          "accuracy": {
+            "count": 1340,
+            "mae": 0.8155397226561362,
+            "correlation": 0.6207005453797688,
+            "diagnosticScreenPassed": false
+          },
+          "fluency": {
+            "count": 1340,
+            "mae": 0.7070076809000613,
+            "correlation": 0.7025121618539713,
+            "diagnosticScreenPassed": false
+          },
+          "prosodic": {
+            "count": 1340,
+            "mae": 0.6803914607460819,
+            "correlation": 0.7169471563745802,
+            "diagnosticScreenPassed": false
+          },
+          "total": {
+            "count": 1340,
+            "mae": 0.801768197408363,
+            "correlation": 0.6400915822492387,
+            "diagnosticScreenPassed": false
+          }
+        }
+      }
+    }
+  },
+  "latencyMs": {
+    "median": 39,
+    "p95": 69
+  },
+  "diagnosticScreenPassed": false,
+  "releaseEligible": false,
+  "limitations": [
+    "The published development code evaluates the official test set each epoch; this is not an untouched qualification set.",
+    "Single-recording unpadded inference intentionally differs from the author's padded batch inference to avoid dependence on other recordings.",
+    "Only native-Mandarin English read speech; no evidence for German, Persian-L1 or spontaneous grammar.",
+    "Weight redistribution/deployment license not explicit in the model card; local research only."
+  ]
+}

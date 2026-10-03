@@ -1,0 +1,855 @@
+<!doctype html>
+<!-- The standalone English practice document must not inherit a browser RTL preference. -->
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>English Automaticity — Grammar Lab</title>
+  <style>
+    :root {
+      --ink: #101a47;
+      --ink-soft: #586080;
+      --purple: #6740c7;
+      --purple-2: #7d59dc;
+      --purple-soft: #eee8fb;
+      --purple-wash: #f8f5ff;
+      --canvas: #fbfaff;
+      --card: #ffffff;
+      --line: #ded9ee;
+      --line-strong: #cfc5ea;
+      --success: #13a53f;
+      --warning: #c18100;
+      --danger: #cb3150;
+      --radius-sm: 10px;
+      --radius: 14px;
+      --radius-lg: 20px;
+      --shadow: 0 10px 30px rgba(63, 40, 120, .07);
+      --focus: 0 0 0 3px rgba(103, 64, 199, .28);
+      --sidebar: 292px;
+      --catalog: 330px;
+      --header-h: 80px;
+    }
+
+    * { box-sizing: border-box; }
+    html { width: 100%; min-width: 320px; max-width: none; background: var(--canvas); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 90% 5%, rgba(122, 83, 210, .045), transparent 26%),
+        var(--canvas);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      width: 100%;
+      max-width: none;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+    .icon { width: 20px; height: 20px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    .app { display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); width: 100%; max-width: none; min-height: 100vh; }
+
+    /* Left navigation */
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--sidebar);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden auto;
+      border-right: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff 0%, #fcfaff 72%, #f4efff 100%);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 20px 18px 18px; }
+    .brand-mark {
+      display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px;
+      color: white; background: linear-gradient(145deg, #7959df, #5030ac); box-shadow: 0 8px 18px rgba(88, 49, 183, .25);
+    }
+    .brand-mark .icon { width: 31px; height: 31px; stroke-width: 1.6; }
+    .brand h1 { margin: 0; font-size: 16px; line-height: 1.15; letter-spacing: -.01em; }
+    .brand p { margin: 5px 0 0; color: var(--ink-soft); font-size: 11px; }
+    .sidebar-rule { height: 1px; margin: 0 18px 14px; background: var(--line); }
+    .nav-group { padding: 0 16px 13px; }
+    .nav-group + .nav-group { padding-top: 13px; border-top: 1px solid var(--line); }
+    .nav-title { margin: 0 8px 8px; color: #50419d; font-size: 11px; font-weight: 800; letter-spacing: .025em; text-transform: uppercase; }
+    .nav-link {
+      display: flex; align-items: center; gap: 12px; min-height: 42px; width: 100%; padding: 9px 10px;
+      border: 0; border-radius: 8px; color: var(--ink); background: transparent; text-decoration: none; text-align: left; cursor: pointer;
+      transition: background .16s ease, color .16s ease, transform .16s ease;
+    }
+    .nav-link:hover { color: var(--purple); background: #f7f4fe; }
+    .nav-link:active { transform: translateY(1px); }
+    .nav-link.active { color: #4f2db2; background: linear-gradient(90deg, #e4dcf8, #e9e1f8); font-weight: 750; }
+    .nav-link .chevron { margin-left: auto; width: 16px; height: 16px; }
+    .mascot-scene { margin-top: auto; min-height: 270px; padding: 18px 0 0; display: flex; align-items: end; justify-content: center; overflow: hidden; }
+    .mascot-scene svg { width: 292px; height: 255px; display: block; }
+
+    /* Main application shell */
+    .shell { grid-column: 2; width: 100%; max-width: 100%; min-width: 0; }
+    .topbar {
+      position: sticky; top: 0; z-index: 30; height: var(--header-h); display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 22px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.94); backdrop-filter: blur(14px);
+    }
+    .page-id { display: flex; align-items: center; gap: 13px; min-width: 0; }
+    .page-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; color: var(--purple); background: var(--purple-wash); }
+    .page-icon .icon { width: 26px; height: 26px; }
+    .page-id h2 { margin: 0; font-size: 20px; line-height: 1.1; letter-spacing: -.02em; }
+    .page-id p { margin: 4px 0 0; color: var(--ink-soft); font-size: 14px; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .pill, .primary-btn, .ghost-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 42px; padding: 0 15px;
+      border: 1px solid var(--line); border-radius: 11px; background: #fff; font-weight: 700; cursor: pointer; white-space: nowrap;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+    .pill:hover, .ghost-btn:hover { border-color: #bfb2e1; background: #faf8ff; }
+    .primary-btn { color: #fff; border-color: var(--purple); background: linear-gradient(135deg, var(--purple-2), #5832b7); box-shadow: 0 7px 16px rgba(90, 50, 184, .18); }
+    .primary-btn:hover { background: linear-gradient(135deg, #8765e3, #6038bf); transform: translateY(-1px); }
+    .primary-btn:active, .pill:active, .ghost-btn:active { transform: translateY(1px); }
+    .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); }
+    .mobile-menu { display: none; padding: 9px; }
+
+    .workspace { display: grid; grid-template-columns: var(--catalog) minmax(0, 1fr); width: 100%; max-width: none; min-height: calc(100vh - var(--header-h)); }
+
+    /* Topic catalog */
+    .catalog { border-right: 1px solid var(--line); padding: 24px 14px; background: rgba(255,255,255,.58); }
+    .catalog-tools { display: grid; grid-template-columns: 1fr 46px; gap: 12px; margin-bottom: 20px; }
+    .search-box { position: relative; }
+    .search-box input {
+      width: 100%; height: 44px; padding: 0 42px 0 15px; color: var(--ink); border: 1px solid var(--line); border-radius: 10px; background: #fff;
+    }
+    .search-box .icon { position: absolute; top: 12px; right: 13px; }
+    .filter-btn { display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; }
+    .level-list { display: grid; gap: 18px; }
+    .level { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: rgba(255,255,255,.75); }
+    .level summary {
+      list-style: none; display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 15px; color: var(--purple); font-weight: 800; cursor: pointer;
+    }
+    .level summary::-webkit-details-marker { display: none; }
+    .level summary::after { content: "⌄"; margin-left: auto; color: var(--ink-soft); font-size: 18px; transform-origin: center; }
+    .level-summary-copy { display: grid; gap: 2px; min-width: 0; }
+    .level-progress { color: var(--ink-soft); font-size: 11px; font-weight: 650; }
+    .level-progress-bar { height: 4px; margin: 0 12px 7px; overflow: hidden; border-radius: 99px; background: #ece8f2; }
+    .level-progress-bar > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #7352d2, #9b7dea); transition: width .2s ease; }
+    .level[open] summary { background: linear-gradient(90deg, #efeafd, #f7f4ff); }
+    .level[open] summary::after { transform: rotate(180deg); }
+    .level-tag.a2 { color: #ae2cc5; } .level-tag.b1 { color: #ad6500; } .level-tag.b2 { color: #4b29cf; }
+    .level-tag.c1 { color: #ee4f56; } .level-tag.c2 { color: #198dc9; }
+    .topic-list { padding: 8px 10px 12px; }
+    .topic {
+      display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 8px 13px; border: 1px solid transparent;
+      border-radius: 8px; color: var(--ink); background: transparent; text-align: left; cursor: pointer;
+    }
+    .topic:hover { background: #f7f4fe; }
+    .topic[hidden], .level[hidden] { display: none !important; }
+    .topic.active { color: #4a25a8; border-color: #cfc1ef; background: #f6f2ff; font-weight: 800; }
+    .topic-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--purple); opacity: 0; }
+    .topic.active .topic-dot { opacity: 1; }
+    .topic-label { min-width: 0; flex: 1; overflow-wrap: anywhere; }
+    .topic-count { flex: 0 0 auto; color: var(--ink-soft); font-size: 10px; font-weight: 750; }
+
+    /* Lesson content */
+    .content { width: 100%; max-width: none; min-width: 0; padding: 0 24px 24px; }
+    .lesson-head { display: flex; align-items: center; justify-content: space-between; min-height: 54px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 10px 10px; padding: 0 14px; background: #fff; }
+    .crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; color: var(--ink-soft); }
+    .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 28px; padding: 0 9px; border-radius: 999px; color: #4e2ab4; background: #eee8ff; font-weight: 800; }
+    .use-btn { min-height: 36px; padding: 0 13px; color: #5837bb; border: 1px solid #8f70db; border-radius: 9px; background: #fff; font-weight: 750; cursor: pointer; }
+    .lesson-stack { display: grid; gap: 12px; padding-top: 14px; }
+    .goal-card {
+      display: flex; align-items: center; gap: 14px; min-height: 66px; padding: 12px 16px; border: 1px solid #f0dfaa; border-radius: 11px;
+      background: linear-gradient(100deg, #fffaf0, #fffdf5); box-shadow: 0 5px 18px rgba(150, 108, 0, .035);
+    }
+    .goal-star { display: grid; place-items: center; width: 43px; height: 43px; border-radius: 50%; color: #bd7e00; background: #fff3c7; }
+    .eyebrow { margin: 0 0 2px; color: #4630a7; font-size: 12px; font-weight: 850; letter-spacing: .025em; text-transform: uppercase; }
+    .goal-card strong { display: block; font-size: 14px; }
+    .exercise-card { padding: 14px; border: 1px solid var(--line); border-radius: 11px; background: linear-gradient(110deg, #fbfaff, #fff); }
+    .exercise-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .exercise-title h3 { margin: 5px 0 10px; font-size: 21px; letter-spacing: -.01em; }
+    .audio-btn { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 9px; color: var(--ink-soft); background: transparent; cursor: pointer; }
+    .answer-row { display: flex; gap: 10px; }
+    .answer-row input { width: 100%; height: 43px; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: 9px; color: var(--ink); background: #fff; }
+    .exercise-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .exercise-actions .primary-btn, .exercise-actions .ghost-btn { min-height: 38px; }
+    .feedback { display: none; margin-top: 10px; padding: 10px 12px; border-radius: 8px; font-weight: 700; }
+    .feedback.show { display: block; }
+    .feedback.good { color: #08702d; background: #e8f8ed; }
+    .feedback.bad { color: #9e233b; background: #fff0f2; }
+    .repair-box { display: none; margin-top: 10px; padding: 12px; border: 1px solid #e7b8c0; border-radius: 9px; background: #fff8f9; }
+    .repair-box.show { display: grid; gap: 9px; }
+    .repair-box label { color: #7f2033; font-weight: 800; }
+    .repair-row { display: flex; gap: 9px; min-width: 0; }
+    .repair-row input { min-width: 0; flex: 1; height: 42px; padding: 0 12px; border: 1px solid #d9bfd0; border-radius: 9px; }
+    .path-status { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; color: var(--ink-soft); font-size: 12px; }
+    .path-status strong { color: var(--purple); }
+
+    .rule-panel { border: 1px solid var(--line-strong); border-radius: 11px; overflow: hidden; background: #fff; }
+    .rule-heading { display: flex; align-items: center; gap: 12px; min-height: 45px; padding: 0 14px; color: #4d2aac; background: linear-gradient(90deg, #faf8ff, #fff); }
+    .number { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: #5230b1; background: #e9e2ff; font-size: 14px; font-weight: 850; }
+    .rule-heading h3 { margin: 0; font-size: 18px; }
+    .rule-heading .chevron { margin-left: auto; }
+    .rule-body { padding: 13px 14px 14px; border-top: 1px solid var(--line-strong); }
+    .rule-intro { margin: 0 0 14px; color: #434d70; }
+    .pattern-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+    .pattern-card { min-width: 0; min-height: 197px; padding: 12px 9px; border: 1px solid var(--line); border-radius: 11px; background: linear-gradient(145deg, #fff, #fdfcff); }
+    .pattern-title { display: flex; align-items: center; gap: 7px; min-height: 26px; color: #5130b1; font-weight: 800; white-space: nowrap; }
+    .mini-icon { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; color: #7757d7; background: #eee9ff; font-size: 14px; }
+    .formula { min-height: 46px; margin: 8px 0 12px; padding: 8px; border: 1px solid #e1dbef; border-radius: 7px; color: #382182; background: #faf8ff; font-size: 11px; font-weight: 750; }
+    .pattern-card p { margin: 8px 0 0; font-size: 12px; }
+
+    .accordion-list { display: grid; gap: 7px; }
+    .accordion { border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: #fff; }
+    .accordion summary { list-style: none; display: flex; align-items: center; gap: 12px; min-height: 42px; padding: 0 14px; color: #5230ad; font-size: 15px; font-weight: 800; cursor: pointer; background: linear-gradient(90deg, #fbf9ff, #fff); }
+    .accordion summary::-webkit-details-marker { display: none; }
+    .accordion summary .chevron { margin-left: auto; transition: transform .15s ease; }
+    .accordion[open] summary .chevron { transform: rotate(180deg); }
+    .accordion-content { padding: 12px 52px; border-top: 1px solid var(--line); color: var(--ink-soft); }
+
+    /* Mobile overlays and small feedback */
+    .drawer-scrim { display: none; position: fixed; inset: 0; z-index: 35; border: 0; background: rgba(17, 16, 45, .45); }
+    .drawer-scrim.show { display: block; }
+    .toast {
+      position: fixed; left: 50%; bottom: 24px; z-index: 90; max-width: min(92vw, 560px); padding: 12px 18px; border-radius: 12px;
+      color: #fff; background: #21154c; box-shadow: 0 15px 40px rgba(23, 12, 57, .3); opacity: 0; transform: translate(-50%, 18px); pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .reading-ruler { position: fixed; z-index: 80; left: 0; right: 0; top: 45%; height: 52px; border-top: 2px solid rgba(92,55,187,.28); border-bottom: 2px solid rgba(92,55,187,.28); background: rgba(255,250,159,.18); pointer-events: none; display: none; }
+    .reading-ruler.show { display: block; }
+
+    @media (max-width: 1220px) {
+      :root { --sidebar: 250px; --catalog: 280px; }
+      .header-actions .online-label { display: none; }
+      .pattern-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .pattern-card { min-height: 178px; }
+      .mascot-scene svg { width: 250px; }
+    }
+
+    @media (max-width: 1024px) {
+      :root { --sidebar: 232px; --catalog: 260px; }
+      .topbar { padding-inline: 14px; }
+      .content { padding-right: 14px; padding-left: 14px; }
+      .header-actions { gap: 7px; }
+      .header-actions .hide-tablet { display: none; }
+      .pattern-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pattern-card:last-child { grid-column: span 2; min-height: 140px; }
+      .pill, .primary-btn, .ghost-btn { max-width: 100%; white-space: normal; line-height: 1.2; }
+    }
+
+    @media (max-width: 820px) {
+      :root { --header-h: 70px; }
+      .app { display: block; }
+      .shell { width: 100%; }
+      .sidebar { width: min(86vw, 310px); transform: translateX(-105%); box-shadow: 16px 0 50px rgba(23, 13, 54, .2); transition: transform .22s ease; }
+      .sidebar.open { transform: translateX(0); }
+      .mobile-menu { display: grid; place-items: center; }
+      .page-icon { display: none; }
+      .page-id h2 { font-size: 18px; }
+      .page-id p { font-size: 12px; }
+      .header-actions .hide-mobile { display: none; }
+      .workspace { grid-template-columns: minmax(210px, 36vw) minmax(0, 1fr); }
+      .catalog { padding: 16px 10px; }
+      .catalog-tools { grid-template-columns: 1fr; }
+      .filter-btn { display: none; }
+      .level-list { gap: 10px; }
+      .content { padding-left: 12px; padding-right: 12px; }
+      .lesson-head { min-height: 58px; }
+      .crumbs { gap: 7px; font-size: 12px; }
+      .pattern-grid { grid-template-columns: 1fr; }
+      .pattern-card, .pattern-card:last-child { grid-column: auto; min-height: 0; }
+    }
+
+    @media (max-width: 620px) {
+      body { font-size: 13px; }
+      .topbar { padding: 8px 10px; }
+      .page-id p { display: none; }
+      .header-actions .pill { padding-inline: 11px; }
+      .header-actions .primary-btn { min-width: 44px; padding: 0 10px; }
+      .header-actions .button-text { display: none; }
+      .workspace { display: block; }
+      .catalog { border-right: 0; border-bottom: 1px solid var(--line); padding: 10px; }
+      .catalog-tools { margin: 0; }
+      .level-list { display: none; }
+      .content { padding: 0 9px 16px; }
+      .lesson-head { margin-inline: -9px; padding-inline: 10px; border-left: 0; border-right: 0; border-radius: 0; }
+      .crumbs .foundations { display: none; }
+      .goal-card { align-items: flex-start; padding: 12px; }
+      .goal-card strong { font-size: 13px; }
+      .exercise-card { padding: 12px; }
+      .exercise-title h3 { font-size: 18px; }
+      .answer-row { display: block; }
+      .exercise-actions { display: grid; grid-template-columns: 1fr 1fr; }
+      .exercise-actions .primary-btn { grid-column: span 2; }
+      .exercise-actions > *, .repair-row > * { width: 100%; min-width: 0; }
+      .repair-row { display: grid; grid-template-columns: 1fr; }
+      .lesson-head { align-items: flex-start; gap: 8px; padding-block: 9px; }
+      .use-btn { flex: 0 0 auto; max-width: 42%; white-space: normal; }
+      .rule-body { padding: 12px; }
+      .rule-heading h3 { font-size: 16px; }
+      .accordion-content { padding: 12px 18px; }
+    }
+
+    @media (max-width: 430px) {
+      .topbar { min-width: 0; gap: 6px; }
+      .page-id { flex: 1; }
+      .page-id h2 { font-size: 16px; }
+      .header-actions { flex: 0 0 auto; gap: 4px; }
+      .header-actions .pill { min-width: 40px; padding: 0 8px; }
+      .exercise-actions { grid-template-columns: 1fr; }
+      .exercise-actions .primary-btn { grid-column: auto; }
+      .goal-card, .exercise-card, .rule-body { min-width: 0; }
+      .exercise-title { align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+    /* Menus and interactive boxes share hover/focus feedback; language blocks own direction. */
+    html[lang="en"],html[lang^="en-"],html[lang="de"],html[lang^="de-"]{direction:ltr}
+    html[lang="fa"],html[lang^="fa-"],html[lang="ar"],html[lang^="ar-"]{direction:rtl}
+    :where([lang="en"]:not(html),[lang^="en-"]:not(html),[lang="de"]:not(html),[lang^="de-"]:not(html),[dir="ltr"]){direction:ltr;unicode-bidi:isolate}
+    :where([lang="fa"]:not(html),[lang^="fa-"]:not(html),[lang="ar"]:not(html),[lang^="ar-"]:not(html),[dir="rtl"]){direction:rtl;unicode-bidi:isolate;text-align:start}
+    :where(button:not(:disabled),summary,select:not(:disabled),[role="button"]:not([aria-disabled="true"]),nav a[href],a[class*="button"],a[class*="card"],a.action){transition:border-color 160ms ease,background-color 160ms ease,box-shadow 160ms ease,color 160ms ease,transform 160ms ease}
+    @media(hover:hover){:where(button:not(:disabled),summary,select:not(:disabled),[role="button"]:not([aria-disabled="true"]),nav a[href],a[class*="button"],a[class*="card"],a.action):hover{border-color:#9f83c4;box-shadow:0 7px 18px #49346524;transform:translateY(-1px)}}
+    :where(button,summary,select,[role="button"],nav a[href],a[class*="button"],a[class*="card"],a.action):focus-visible{outline:3px solid #7546b76b;outline-offset:3px}
+  </style>
+</head>
+<body>
+  <!-- Inline SVG symbol library -->
+  <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22V5.5Z"/><path d="M21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h4.5A3.5 3.5 0 0 1 21 22V5.5Z"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3 1.4-4A7 7 0 0 1 3 12a7 7 0 0 1 7-7h5a6 6 0 0 1 6 6v4Z"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v10a2 2 0 0 1-2 2H3V6Z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 14a7 7 0 0 0 0-4l2-1-2-4-2 1a7 7 0 0 0-3-2V2h-4v2a7 7 0 0 0-3 2L5 5 3 9l2 1a7 7 0 0 0 0 4l-2 1 2 4 2-1a7 7 0 0 0 3 2v2h4v-2a7 7 0 0 0 3-2l2 1 2-4-2-1Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8L3 5Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M8 14a7 7 0 1 1 8 0c-1 .8-1 2-1 2H9s0-1.2-1-2Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9a4 4 0 0 1 0 6m2-9a8 8 0 0 1 0 12"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 1 1 3.8 2.1c-1 .6-1.5 1.1-1.5 2.4M12 17.5h.01"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 18v3h16v-3"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M4 5h16v16H4zM8 2v6m8-6v6M4 10h16"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.5 3 6 6.5 1-4.7 4.6 1.1 6.5L12 17.5l-5.9 3.1 1.1-6.5-4.7-4.6 6.5-1 3-6Z"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10m4 0h2M4 12h3m4 0h9M4 18h8m4 0h4"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></symbol>
+  </svg>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 36 36"><circle cx="18" cy="20" r="11"/><circle cx="14" cy="18" r="1.2"/><circle cx="22" cy="18" r="1.2"/><path d="M14 23c2.6 2 5.4 2 8 0M13 8l-2-5m12 5 2-5M10 13l-5-2m21 2 5-2"/><circle cx="11" cy="3" r="1.5"/><circle cx="25" cy="3" r="1.5"/></svg>
+        </div>
+        <div><h1>English Automaticity</h1><p>Measurable daily language practice</p></div>
+      </div>
+      <div class="sidebar-rule"></div>
+
+      <nav>
+        <section class="nav-group" aria-labelledby="daily-nav">
+          <h2 class="nav-title" id="daily-nav">Daily Practice</h2>
+          <button class="nav-link" data-nav="Practice and speak today"><svg class="icon"><use href="#i-home"/></svg>Practice and speak today</button>
+          <button class="nav-link" data-nav="Today's Practice"><svg class="icon"><use href="#i-clock"/></svg>Today's Practice</button>
+          <button class="nav-link" data-nav="Conversation Studio"><svg class="icon"><use href="#i-chat"/></svg>Conversation Studio</button>
+        </section>
+        <section class="nav-group" aria-labelledby="paths-nav">
+          <h2 class="nav-title" id="paths-nav">Learning Paths</h2>
+          <button class="nav-link" data-nav="Grammar and English study"><svg class="icon"><use href="#i-settings"/></svg>Grammar and English study <span class="chevron">⌃</span></button>
+          <button class="nav-link active" data-nav="Grammar Lab" aria-current="page"><svg class="icon"><use href="#i-book"/></svg>Grammar Lab</button>
+          <button class="nav-link" data-nav="Learning Resources"><svg class="icon"><use href="#i-folder"/></svg>Learning Resources</button>
+          <button class="nav-link" data-nav="Integrated Skills"><svg class="icon"><use href="#i-book"/></svg>Integrated Skills</button>
+        </section>
+        <section class="nav-group" aria-labelledby="evidence-nav">
+          <h2 class="nav-title" id="evidence-nav">Learning Evidence</h2>
+          <button class="nav-link" data-nav="Errors and recordings"><svg class="icon"><use href="#i-clock"/></svg>Errors and recordings <span class="chevron">⌄</span></button>
+          <button class="nav-link" data-nav="Notebook & PDF Reader"><svg class="icon"><use href="#i-book"/></svg>Notebook &amp; PDF Reader</button>
+          <button class="nav-link" data-nav="Vocabulary & Flashcards"><svg class="icon"><use href="#i-folder"/></svg>Vocabulary &amp; Flashcards</button>
+        </section>
+        <section class="nav-group" aria-labelledby="settings-nav">
+          <h2 class="nav-title" id="settings-nav">App and Settings</h2>
+          <button class="nav-link" data-nav="Storage and personal options"><svg class="icon"><use href="#i-settings"/></svg>Storage and personal options <span class="chevron">⌄</span></button>
+        </section>
+      </nav>
+
+      <div class="mascot-scene" role="img" aria-label="Friendly purple study mascot beside books and a plant">
+        <svg viewBox="0 0 292 255" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bodyG" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8268d8"/><stop offset="1" stop-color="#4d329c"/></linearGradient></defs>
+          <path d="M-10 150C22 118 48 127 68 147c-7-49 12-79 41-85 21-4 40 10 47 33 14-34 43-48 66-36 28 15 27 55 8 91 35-25 70-10 75 25v80H-10Z" fill="#eee9fb"/>
+          <path d="M0 218c25-25 37-48 38-71 18 21 24 46 19 75" fill="#9a82dc" opacity=".7"/>
+          <path d="M8 216c-1-24-7-37-18-52 20 5 30 20 30 49" fill="#6a50be"/>
+          <rect x="16" y="224" width="57" height="8" rx="2" fill="#ec7547"/><rect x="22" y="216" width="52" height="8" rx="2" fill="#f5bd46"/><rect x="29" y="208" width="43" height="8" rx="2" fill="#fff" stroke="#7959c5"/>
+          <ellipse cx="136" cy="204" rx="61" ry="19" fill="#cfc4ec"/>
+          <path d="M91 177c0-50 17-89 45-89s46 39 46 89c0 38-16 57-46 57s-45-19-45-57Z" fill="url(#bodyG)"/>
+          <path d="M110 110c7-17 45-22 55 3 9 24-4 53-29 53-28 0-36-32-26-56Z" fill="#a995e6"/>
+          <circle cx="124" cy="132" r="4" fill="#15183e"/><circle cx="151" cy="132" r="4" fill="#15183e"/><circle cx="123" cy="131" r="1" fill="#fff"/><circle cx="150" cy="131" r="1" fill="#fff"/><path d="M126 145c8 7 16 7 23 0" fill="none" stroke="#281d5e" stroke-width="2" stroke-linecap="round"/>
+          <path d="M121 92 117 75m34 17 4-18" stroke="#5b3dae" stroke-width="4" stroke-linecap="round"/><circle cx="116" cy="73" r="6" fill="#7659cc"/><circle cx="156" cy="72" r="6" fill="#7659cc"/>
+          <path d="M93 189c-21 4-26 17-23 29 13-6 24-7 36-4m75-25c21 4 27 15 25 26-12-4-23-4-36 0" fill="#664bb7"/>
+          <rect x="173" y="208" width="59" height="8" rx="2" fill="#26315f"/><path d="M180 204h46l-4-25h-38Z" fill="#fff" stroke="#7561b6"/><path d="M202 180v27" stroke="#d0c5ef"/><path d="m204 182 7-15 5 16" fill="#f08c38"/><rect x="208" y="166" width="5" height="20" rx="2" fill="#ed9e3d"/>
+        </svg>
+      </div>
+    </aside>
+    <button class="drawer-scrim" id="scrim" aria-label="Close navigation"></button>
+
+    <div class="shell">
+      <header class="topbar">
+        <div class="page-id">
+          <button class="ghost-btn mobile-menu" id="menuBtn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg class="icon"><use href="#i-menu"/></svg></button>
+          <div class="page-icon"><svg class="icon"><use href="#i-book"/></svg></div>
+          <div><h2>Grammar Lab</h2><p id="curriculumCount">Complete CEFR-aligned path from A1 to C2</p></div>
+        </div>
+        <div class="header-actions" aria-label="Application controls">
+          <div class="pill hide-mobile"><span class="status-dot"></span><span class="online-label">App service online</span></div>
+          <button class="pill hide-tablet" id="rulerBtn" aria-pressed="false"><svg class="icon"><use href="#i-sliders"/></svg>Reading ruler</button>
+          <button class="pill hide-mobile" data-action="help"><svg class="icon"><use href="#i-help"/></svg>Help</button>
+          <button class="primary-btn" data-action="install"><svg class="icon"><use href="#i-download"/></svg><span class="button-text">Install app</span></button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="catalog" aria-label="Grammar topic browser">
+          <div class="catalog-tools">
+            <label class="search-box"><span class="sr-only">Search topics</span><input id="topicSearch" type="search" placeholder="Search topics..." autocomplete="off"/><svg class="icon"><use href="#i-search"/></svg></label>
+            <button class="filter-btn" data-action="filter" aria-label="Filter grammar topics"><svg class="icon"><use href="#i-filter"/></svg></button>
+          </div>
+          <div class="level-list" id="levelList"></div>
+        </aside>
+
+        <section class="content" id="grammar-topic" aria-labelledby="lessonTitle">
+          <div class="lesson-head">
+            <div class="crumbs"><span class="badge">A1</span><span class="foundations">Foundations &amp; other</span><span>•</span><strong id="lessonTitle">Verb be: am/is/are</strong></div>
+            <button class="use-btn" data-action="use-today"><svg class="icon" style="vertical-align:middle;margin-right:6px"><use href="#i-calendar"/></svg>Use today</button>
+          </div>
+
+          <div class="lesson-stack">
+            <article class="goal-card">
+              <div class="goal-star"><svg class="icon"><use href="#i-star"/></svg></div>
+              <div><p class="eyebrow">Can-do goal</p><strong id="canDoGoal">I can identify and describe people, places, feelings and situations with be.</strong></div>
+            </article>
+
+            <section class="exercise-card" aria-labelledby="exercisePrompt">
+              <div class="exercise-title">
+                <div><p class="eyebrow">Controlled recall</p><h3 id="exercisePrompt">Correct the sentence: I am agree.</h3></div>
+                <button class="audio-btn" id="audioBtn" aria-label="Read prompt aloud"><svg class="icon"><use href="#i-volume"/></svg></button>
+              </div>
+              <div class="answer-row"><label class="sr-only" for="answerInput">Enter English answer</label><input id="answerInput" placeholder="Enter English answer" autocomplete="off"/></div>
+              <div class="exercise-actions">
+                <button class="ghost-btn" id="previousBtn" aria-label="Previous exercise">← Previous</button>
+                <button class="primary-btn" id="checkBtn"><svg class="icon"><use href="#i-check"/></svg>Check answer</button>
+                <button class="ghost-btn" id="hintBtn"><svg class="icon"><use href="#i-bulb"/></svg>Hint</button>
+                <button class="ghost-btn" id="nextBtn">Next task<svg class="icon"><use href="#i-arrow"/></svg></button>
+              </div>
+              <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+              <div class="repair-box" id="repairBox">
+                <label for="repairInput">Now type the correct answer yourself</label>
+                <div class="repair-row">
+                  <input id="repairInput" autocomplete="off" placeholder="Retype the complete correct answer"/>
+                  <button class="ghost-btn" id="repairBtn"><svg class="icon"><use href="#i-check"/></svg>Confirm correction</button>
+                </div>
+              </div>
+              <div class="path-status" id="pathStatus" aria-live="polite"></div>
+            </section>
+
+            <section class="rule-panel" aria-labelledby="ruleTitle">
+              <div class="rule-heading"><span class="number">1</span><h3 id="ruleTitle">Rule and pattern</h3><span class="chevron">⌄</span></div>
+              <div class="rule-body">
+                <p class="rule-intro" id="ruleIntro">Be links the subject to an identity, description, location, age or condition.</p>
+                <div class="pattern-grid" id="patternGrid">
+                  <article class="pattern-card"><div class="pattern-title"><span class="mini-icon">✓</span>Affirmative</div><div class="formula">I am / he, she, it is / you, we, they are</div><p><strong>Use:</strong> give an identity or description</p><p><strong>Example:</strong> My study room is quiet.</p></article>
+                  <article class="pattern-card"><div class="pattern-title"><span class="mini-icon">−</span>Negative</div><div class="formula">subject + am/is/are + not</div><p><strong>Use:</strong> say a description is not true</p><p><strong>Example:</strong> The exercises are not difficult today.</p></article>
+                  <article class="pattern-card"><div class="pattern-title"><span class="mini-icon">?</span>Yes/no question</div><div class="formula">Am/Is/Are + subject + complement?</div><p><strong>Use:</strong> check an identity, condition or place</p><p><strong>Example:</strong> Is the next lesson ready?</p></article>
+                  <article class="pattern-card"><div class="pattern-title"><span class="mini-icon">??</span>Wh-question</div><div class="formula">Wh-word + am/is/are + subject?</div><p><strong>Use:</strong> ask for specific information</p><p><strong>Example:</strong> Where are your notes?</p></article>
+                  <article class="pattern-card"><div class="pattern-title"><span class="mini-icon">◔</span>Short answer</div><div class="formula">Yes, subject + am/is/are. / No, subject + am/is/are not.</div><p><strong>Use:</strong> answer naturally and briefly</p><p><strong>Example:</strong> No, they are not.</p></article>
+                </div>
+              </div>
+            </section>
+
+            <div class="accordion-list">
+              <details class="accordion"><summary><span class="number">2</span><span>♧</span>Examples and contrast <span class="chevron">⌄</span></summary><div class="accordion-content" id="examplesContent">Compare: “I agree” describes an action or opinion. “I am happy” uses <em>be</em> to link the subject to a description.</div></details>
+              <details class="accordion"><summary><span class="number">3</span><span>⇄</span>Learning path <span class="chevron">⌄</span></summary><div class="accordion-content" id="pathContent">Recall the rule, correct an example, say it aloud, and then use it in a personal sentence.</div></details>
+              <details class="accordion"><summary><span class="number">4</span><span>△</span>Typical mistake <span class="chevron">⌄</span></summary><div class="accordion-content" id="mistakeContent">Do not add <strong>am/is/are</strong> before verbs such as <em>agree</em>: say “I agree,” not “I am agree.”</div></details>
+              <details class="accordion"><summary><span class="number">5</span><span>▤</span>Resources and extra practice <span class="chevron">⌄</span></summary><div class="accordion-content" id="practiceContent">Create five affirmative sentences and turn each one into a negative and a question.</div></details>
+              <details class="accordion"><summary><span class="number">6</span><span>✧</span>Optional AI explanation <span class="chevron">⌄</span></summary><div class="accordion-content">Ask for another explanation only after attempting the recall task yourself.</div></details>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="reading-ruler" id="readingRuler" aria-hidden="true"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="dailyCompleteDialog" style="max-width:560px;width:calc(100% - 32px);border:1px solid #d8c8eb;border-radius:20px;padding:0;box-shadow:0 24px 70px #28144755">
+    <div style="padding:28px"><p class="eyebrow">TODAY'S PRACTICE</p><h2 id="dailyCompleteTitle" style="margin:6px 0 10px">Today's grammar practice is complete</h2><p id="dailyCompleteCopy" style="color:#625a70;line-height:1.55">Your result has been saved in today's route.</p><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:22px"><button class="primary-btn" id="dailyReturnBtn">OK · Return to Today's Practice</button><button class="ghost-btn" id="dailyRepeatBtn">Repeat this exercise</button><button class="ghost-btn" id="dailyMistakesBtn">Review my mistakes</button></div></div>
+  </dialog>
+
+  <script src="/replacements/en/grammar-curriculum.js"></script>
+  <script>
+    (() => {
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+      const toast = $('#toast');
+      let toastTimer;
+      const notify = (message) => {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+      };
+
+      // Accessible mobile drawer.
+      const sidebar = $('#sidebar');
+      const menuBtn = $('#menuBtn');
+      const scrim = $('#scrim');
+      const setDrawer = (open) => {
+        sidebar.classList.toggle('open', open);
+        scrim.classList.toggle('show', open);
+        menuBtn.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      };
+      menuBtn.addEventListener('click', () => setDrawer(!sidebar.classList.contains('open')));
+      scrim.addEventListener('click', () => setDrawer(false));
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setDrawer(false); });
+
+      // The visual page consumes the same authored catalog as @grammar/content.
+      // `content:check` fails the build if this generated browser payload drifts.
+      const grammarUnits = window.__ENGLISH_GRAMMAR_UNITS__;
+      if (!Array.isArray(grammarUnits) || !grammarUnits.length) {
+        throw new Error('The canonical English grammar catalog did not load.');
+      }
+      const cefrLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+      const curriculum = Object.fromEntries(cefrLevels.map(level => [
+        level,
+        grammarUnits.filter(unit => unit.level === level).map(unit => unit.title)
+      ]));
+      const unitKey = (level, topic) => `${level}::${topic}`;
+      const unitsByKey = new Map(grammarUnits.map(unit => [unitKey(unit.level, unit.title), unit]));
+      const grammarUnit = (level = progress?.activeLevel, topic = progress?.activeTopic) => {
+        const unit = unitsByKey.get(unitKey(level, topic));
+        if (!unit) throw new Error(`Missing canonical grammar unit: ${level} / ${topic}`);
+        return unit;
+      };
+      const exerciseCount = (level, topic) => grammarUnit(level, topic).exercises.length;
+      const progressKey = 'english-automaticity:grammar-progress:v2';
+      const saved = (() => { try { return JSON.parse(localStorage.getItem(progressKey) || '{}'); } catch { return {}; } })();
+      const params = new URLSearchParams(location.search);
+      const dailyContext = params.get('from') === 'daily' ? { activity:Number(params.get('activity')||1), level:params.get('level')||'A1', topic:params.get('topic')||'', returnTo:params.get('return')||'/daily' } : null;
+      const findDailyTopic = (level, requested) => { const topics=curriculum[level]||curriculum.A1; const needle=(requested||'').toLowerCase(); return topics.find(topic=>needle.includes(topic.toLowerCase())||topic.toLowerCase().includes(needle.split(' for ')[0]))||topics[0]; };
+      const requestedTopic = params.get('topic');
+      const requestedLesson = requestedTopic
+        ? Object.entries(curriculum).flatMap(([level, topics]) => topics.map(topic => ({ level, topic }))).find(({ topic }) => topic.toLowerCase() === requestedTopic.toLowerCase())
+        : null;
+      const progress = { completed: Array.isArray(saved.completed) ? saved.completed : [], activeLevel: dailyContext?.level || requestedLesson?.level || saved.activeLevel || 'A1', activeTopic: dailyContext ? findDailyTopic(dailyContext.level,dailyContext.topic) : (requestedLesson?.topic || saved.activeTopic || 'Verb be: am/is/are'), taskIndex: dailyContext || requestedLesson ? 0 : (Number.isInteger(saved.taskIndex) ? saved.taskIndex : 0) };
+      const completedSet = new Set(progress.completed);
+      const saveProgress = () => localStorage.setItem(progressKey, JSON.stringify({ ...progress, completed: [...completedSet] }));
+      const topicKey = (level, topic, index) => `${level}::${topic}::${index}`;
+      const topicCompleted = (level, topic) => Array.from({ length: exerciseCount(level, topic) }, (_, index) => completedSet.has(topicKey(level, topic, index))).filter(Boolean).length;
+      const levelCompleted = level => curriculum[level].reduce((sum, topic) => sum + topicCompleted(level, topic), 0);
+
+      const lessonProfile = topic => {
+        const value = topic.toLowerCase();
+        const profile = (family, goal, rule, contrast, mistake, formula) => ({ family, goal, rule, contrast, mistake, formula });
+        if (value.includes('be: am/is/are')) return profile('Foundations and identity', 'I can identify, describe and locate people and things with be.', 'Choose am, is or are from the subject. Move be before the subject for a question and add not for a negative.', 'Compare “I agree” with “I am happy”: agree is a verb, while happy follows be.', 'Do not put be before an ordinary verb: say “I agree,” not “I am agree.”', 'subject + am/is/are + complement');
+        if (value.includes('pronoun') || value.includes('possessive')) return profile('Pronouns and possession', `I can use ${topic} to refer to people and ownership clearly.`, 'Choose the form from its job in the sentence: subject, object, possessive determiner or possessive pronoun.', 'Compare the noun before and after the form so the reference stays clear.', 'Do not mix subject, object and possessive forms.', 'reference + correct pronoun or possessive form');
+        if (/(article|determiner|countable|uncountable|quantifier|some|any|much|many|few|little|plural|singular)/.test(value)) return profile('Nouns, articles and quantity', `I can choose ${topic} accurately when naming and counting things.`, 'Check whether the noun is countable, singular or plural, and whether it is specific before choosing the form.', 'Contrast a general first mention with a specific or already known noun.', 'Do not choose an article or quantifier before checking the noun type.', 'determiner or quantity word + noun');
+        if (/(present|past|future|tense|aspect|perfect|continuous|used to|would for past)/.test(value)) return profile('Time and aspect', `I can use ${topic} to place an event accurately in time.`, 'Identify the time, whether the event is complete or continuing, and its connection to the present before choosing the verb form.', 'Compare two time contexts and explain why the chosen form changes.', 'Do not choose a tense from one time word alone; check the intended meaning.', 'subject + auxiliary + main verb form');
+        if (/(conditional|wish|counterfactual)/.test(value)) return profile('Conditions and imagined situations', `I can use ${topic} to express real, possible or unreal situations.`, 'Decide how real and how distant the situation is, then match the condition clause and result clause.', 'Contrast a real possibility with an imagined or past-unreal result.', 'Do not mix time reference and verb form without checking the intended reality.', 'if-clause + result clause');
+        if (/(modal|can|must|have to|should)/.test(value)) return profile('Modal meaning', `I can use ${topic} to express ability, obligation, advice or certainty precisely.`, 'Choose the modal from the intended strength and time reference; use the base verb after a modal.', 'Compare weak advice, strong obligation and logical deduction.', 'Do not add to or an inflected verb after a core modal.', 'subject + modal + base verb');
+        if (/(passive|causative)/.test(value)) return profile('Voice and focus', `I can use ${topic} to focus on the action, result or person affected.`, 'Choose active or passive focus, keep the tense in be, and use the past participle.', 'Compare who performs the action with what receives the action.', 'Do not lose the original tense when changing voice.', 'subject + be + past participle');
+        if (/(report|indirect question)/.test(value)) return profile('Reporting language', `I can use ${topic} to report ideas and questions accurately.`, 'Choose a reporting verb, adjust pronouns and time references, and use statement word order in indirect questions.', 'Contrast a direct quotation with a natural report.', 'Do not keep direct-question word order inside an indirect question.', 'reporting clause + reported content');
+        if (/(relative|clause|subordination|participle)/.test(value)) return profile('Clause building', `I can use ${topic} to connect information without losing clarity.`, 'Identify the main clause first, then attach only the information that depends on it.', 'Compare two short sentences with one well-controlled complex sentence.', 'Do not create a clause without a clear subject, reference or logical link.', 'main clause + linking form + dependent information');
+        if (/(comparison|comparative|superlative|as…as)/.test(value)) return profile('Comparison', `I can use ${topic} to compare people, things and changes precisely.`, 'Choose the comparative pattern from the number of things and the type of comparison.', 'Contrast equal comparison, difference and the highest degree.', 'Do not combine two comparative markers in the same form.', 'comparison marker + adjective/adverb + reference');
+        if (/(gerund|infinitive)/.test(value)) return profile('Verb complementation', `I can choose gerund and infinitive patterns after common verbs.`, 'Learn the pattern with the controlling verb and check whether changing the form changes the meaning.', 'Compare a verb followed by -ing with the same verb followed by to + infinitive.', 'Do not assume every verb accepts both patterns with the same meaning.', 'controlling verb + -ing / to-infinitive');
+        if (/(question|imperative)/.test(value)) return profile('Questions and interaction', `I can use ${topic} to ask, check or direct clearly.`, 'Choose the question word or instruction type, then apply the correct auxiliary and word order.', 'Contrast a yes/no question, an information question and a polite instruction.', 'Do not keep statement word order when an auxiliary must move.', 'question/instruction marker + controlled word order');
+        if (value.includes('preposition')) return profile('Preposition patterns', `I can choose ${topic} from meaning and the phrase it belongs to.`, 'Learn the preposition with its noun, adjective or verb phrase and test it in a complete context.', 'Compare location, direction and time relationships.', 'Do not translate a preposition word for word from another language.', 'head word + preposition + complement');
+        if (/(word order|inversion|fronting|cleft|focus|theme-rheme|ellipsis|substitution)/.test(value)) return profile('Information structure', `I can use ${topic} to guide attention and emphasis naturally.`, 'Start with the intended focus, then choose the structure that keeps grammatical links clear.', 'Compare neutral word order with a marked structure and explain the change in focus.', 'Do not use marked order unless it serves a clear discourse purpose.', 'given information → focus → new information');
+        if (/(cohesion|discourse|linking|concession|contrast|parallelism)/.test(value)) return profile('Cohesion and discourse', `I can use ${topic} to connect ideas clearly across sentences.`, 'Choose links from the logical relationship and maintain consistent reference and parallel form.', 'Contrast addition, cause, concession and result.', 'Do not use a connector whose logical meaning does not match the ideas.', 'idea + logical link + related idea');
+        if (/(register|style|genre|pragmatic|hedging|stance|rhetorical)/.test(value)) return profile('Register and pragmatic choice', `I can use ${topic} to match purpose, audience and degree of certainty.`, 'Identify audience, purpose and relationship before choosing formality, directness and stance.', 'Compare a direct informal form with a precise formal alternative.', 'Do not make every sentence equally formal, direct or certain.', 'purpose + audience → appropriate language choice');
+        if (/(nominal|noun phrase|compressed|grammatical metaphor)/.test(value)) return profile('Academic compression', `I can use ${topic} without making meaning unnecessarily dense.`, 'Build the underlying clause first, then compress only information that remains clear.', 'Compare a clear clause with a compressed academic noun phrase.', 'Do not stack modifiers when the relationship between ideas becomes ambiguous.', 'core meaning → controlled compression');
+        return profile('Precision and editing', `I can apply ${topic} accurately in a new spoken or written context.`, 'Identify meaning, form and context; produce one controlled example; then transfer it to your own message.', 'Compare a clear accurate version with one that is ambiguous or unnatural.', 'Do not mark a topic complete until you can use it without copying the model.', 'meaning + accurate form + independent use');
+      };
+
+      const renderLesson = () => {
+        const current = lessonProfile(progress.activeTopic);
+        const unit = grammarUnit();
+        $('#lessonTitle').textContent = progress.activeTopic;
+        $('.badge').textContent = progress.activeLevel;
+        $('.foundations').textContent = current.family;
+        $('#canDoGoal').textContent = unit.transferTest;
+        $('#ruleIntro').textContent = unit.rule;
+        $('#examplesContent').textContent = unit.examples.join(' · ');
+        $('#pathContent').textContent = `${unit.recallTest} Then repair the common error and use the form in a new situation.`;
+        $('#mistakeContent').textContent = unit.commonError;
+        $('#practiceContent').textContent = `${unit.exercises.length} controlled exercises · ${unit.links.length} reviewed learning links. Complete recall, repair and transfer without copying the model.`;
+        $('#patternGrid').innerHTML = [
+          ['Rule', current.formula, unit.rule],
+          ...unit.examples.slice(0, 2).map((example, index) => [`Example ${index + 1}`, example, 'Recall and say the complete example accurately.']),
+          ['Repair', unit.repairTest, unit.commonError],
+          ['Transfer', unit.transferTest, 'Say or write the structure independently in a new context.']
+        ].map(([title, formula, description], index) => `<article class="pattern-card"><div class="pattern-title"><span class="mini-icon">${index + 1}</span>${title}</div><div class="formula">${formula}</div><p>${description}</p></article>`).join('');
+      };
+
+      const renderCurriculum = () => {
+        const levelList = $('#levelList');
+        levelList.innerHTML = Object.entries(curriculum).map(([level, topics]) => {
+          const done = levelCompleted(level);
+          const total = topics.reduce((sum, topic) => sum + exerciseCount(level, topic), 0);
+          const className = level.toLowerCase();
+          return `<details class="level" data-level="${level}" ${level === progress.activeLevel ? 'open' : ''}>
+            <summary><span class="level-tag ${className}">${level}</span><span>•</span><span class="level-summary-copy"><span>CEFR grammar path</span><span class="level-progress">${done} of ${total} exercises completed</span></span></summary>
+            <div class="level-progress-bar" aria-hidden="true"><span style="width:${total ? done / total * 100 : 0}%"></span></div>
+            <div class="topic-list">${topics.map(topic => {
+              const count = topicCompleted(level, topic);
+              return `<button class="topic ${level === progress.activeLevel && topic === progress.activeTopic ? 'active' : ''}" data-level="${level}" data-topic="${topic}"><span class="topic-dot"></span><span class="topic-label">${topic}</span><span class="topic-count">${count}/${exerciseCount(level, topic)}</span></button>`;
+            }).join('')}</div></details>`;
+        }).join('');
+        const topicTotal = Object.values(curriculum).reduce((sum, topics) => sum + topics.length, 0);
+        const exerciseTotal = grammarUnits.reduce((sum, unit) => sum + unit.exercises.length, 0);
+        $('#curriculumCount').textContent = `${topicTotal} CEFR-aligned units · ${exerciseTotal} tracked exercises`;
+        bindTopics();
+      };
+
+      const bindTopics = () => $$('.topic').forEach(topic => topic.addEventListener('click', () => {
+        progress.activeLevel = topic.dataset.level;
+        progress.activeTopic = topic.dataset.topic;
+        progress.taskIndex = 0;
+        taskIndex = 0;
+        saveProgress();
+        const topicUrl = new URL(location.href);
+        topicUrl.searchParams.set('topic', progress.activeTopic);
+        topicUrl.hash = 'grammar-topic';
+        history.pushState({ topic: progress.activeTopic }, '', topicUrl);
+        renderCurriculum();
+        renderLesson();
+        resetTask();
+        $('#grammar-topic').scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        notify(`${progress.activeTopic} selected. Continue through its three exercises.`);
+      }));
+
+      const search = $('#topicSearch');
+      search.addEventListener('input', () => {
+        const value = search.value.trim().toLowerCase();
+        $$('.topic').forEach(topic => { topic.hidden = !topic.dataset.topic.toLowerCase().includes(value); });
+        $$('.level').forEach(level => {
+          const hasVisible = $$('.topic', level).some(topic => !topic.hidden);
+          level.hidden = Boolean(value) && !hasVisible;
+          if (value && hasVisible) level.open = true;
+        });
+      });
+
+      // Connect every sidebar item to the active English application route.
+      const navRoutes = {
+        'Practice and speak today': '/daily',
+        "Today's Practice": '/daily',
+        'Conversation Studio': '/studio',
+        'Grammar and English study': '/grammar',
+        'Learning Resources': '/resources',
+        'Integrated Skills': '/?screen=integrated-skills',
+        'Errors and recordings': '/?screen=errors',
+        'Notebook & PDF Reader': '/notebook',
+        'Vocabulary & Flashcards': '/flashcards',
+        'Storage and personal options': '/settings'
+      };
+      $$('.nav-link').forEach(link => link.addEventListener('click', () => {
+        if (link.dataset.nav === 'Grammar Lab') return;
+        const route = navRoutes[link.dataset.nav];
+        if (route) window.location.href = route;
+      }));
+
+      // Recall task behavior.
+      const tasksForTopic = () => {
+        const unit = grammarUnit();
+        return unit.exercises.map(([prompt, expected], index) => ({
+          prompt,
+          answer: expected,
+          hint: index === 0 ? unit.commonError : unit.rule
+        }));
+      };
+      let taskIndex = Math.max(0, Math.min(tasksForTopic().length - 1, progress.taskIndex));
+      const answer = $('#answerInput');
+      const feedback = $('#feedback');
+      const repairBox = $('#repairBox');
+      const repairInput = $('#repairInput');
+      const nextBtn = $('#nextBtn');
+      const previousBtn = $('#previousBtn');
+      const dailySessionKey='english-automaticity:daily-session:v1';
+      let lastMistake='';
+      const finishDailyActivity=()=>{
+        if(!dailyContext)return;
+        let session={};try{session=JSON.parse(localStorage.getItem(dailySessionKey)||'{}')}catch{}
+        const completed=new Set(session.completedActivities||[]);completed.add(dailyContext.activity);
+        const mistakes=[...(session.mistakes||[])];if(lastMistake)mistakes.push({activity:dailyContext.activity,topic:progress.activeTopic,text:lastMistake,reviewed:false,at:new Date().toISOString()});
+        localStorage.setItem(dailySessionKey,JSON.stringify({...session,currentActivity:dailyContext.activity,completedActivities:[...completed],mistakes,updatedAt:new Date().toISOString()}));
+        $('#dailyCompleteTitle').textContent=`Today's ${dailyContext.activity===5?'writing':'grammar'} practice is complete`;
+        $('#dailyCompleteDialog').showModal();
+      };
+      const normalize = text => text.toLowerCase().trim().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+      const currentTask = () => tasksForTopic()[taskIndex];
+      const currentExerciseKey = () => topicKey(progress.activeLevel, progress.activeTopic, taskIndex);
+      const updatePathStatus = () => {
+        const topicDone = topicCompleted(progress.activeLevel, progress.activeTopic);
+        const levelDone = levelCompleted(progress.activeLevel);
+        const topicTotal = exerciseCount(progress.activeLevel, progress.activeTopic);
+        const levelTotal = curriculum[progress.activeLevel].reduce((sum, topic) => sum + exerciseCount(progress.activeLevel, topic), 0);
+        $('#pathStatus').innerHTML = `<strong>${topicDone}/${topicTotal}</strong> in this topic <span>·</span> <strong>${levelDone}/${levelTotal}</strong> in ${progress.activeLevel}`;
+        nextBtn.disabled = !completedSet.has(currentExerciseKey());
+        nextBtn.setAttribute('aria-disabled', String(nextBtn.disabled));
+      };
+      const completeCurrent = () => {
+        completedSet.add(currentExerciseKey());
+        progress.taskIndex = taskIndex;
+        saveProgress();
+        renderCurriculum();
+        updatePathStatus();
+      };
+      const resetTask = () => {
+        const task = currentTask();
+        $('#exercisePrompt').textContent = task.prompt;
+        answer.value = '';
+        repairInput.value = '';
+        repairBox.classList.remove('show');
+        feedback.className = 'feedback';
+        feedback.removeAttribute('style');
+        updatePathStatus();
+      };
+      $('#checkBtn').addEventListener('click', () => {
+        const value = normalize(answer.value);
+        const task = currentTask();
+        const isCorrect = value === normalize(task.answer);
+        feedback.className = `feedback show ${isCorrect ? 'good' : 'bad'}`;
+        if (isCorrect) {
+          feedback.textContent = 'Correct — well recalled.';
+          repairBox.classList.remove('show');
+          completeCurrent();
+          finishDailyActivity();
+        } else {
+          const correct = task.answer;
+          feedback.textContent = `Not yet. The correct answer is: ${correct} Read it, then type it yourself below.`;
+          repairBox.classList.add('show');
+          repairInput.focus();
+          lastMistake=`${task.prompt} — ${answer.value || '(no answer)'}`;
+        }
+      });
+      $('#hintBtn').addEventListener('click', () => {
+        feedback.className = 'feedback show';
+        feedback.style.background = '#f4efff';
+        feedback.style.color = '#4e2aa9';
+        feedback.textContent = `Hint: ${currentTask().hint}`;
+      });
+      $('#repairBtn').addEventListener('click', () => {
+        if (normalize(repairInput.value) === normalize(currentTask().answer)) {
+          feedback.className = 'feedback show good';
+          feedback.textContent = 'Correction completed — you produced the correct form yourself.';
+          repairBox.classList.remove('show');
+          completeCurrent();
+          finishDailyActivity();
+        } else {
+          feedback.className = 'feedback show bad';
+          feedback.textContent = 'Copy the complete correct answer exactly once more.';
+          repairInput.focus();
+        }
+      });
+      nextBtn.addEventListener('click', () => {
+        if (!completedSet.has(currentExerciseKey())) return;
+        if (taskIndex < tasksForTopic().length - 1) {
+          taskIndex += 1;
+        } else {
+          const topics = curriculum[progress.activeLevel];
+          const currentTopicIndex = topics.indexOf(progress.activeTopic);
+          if (currentTopicIndex < topics.length - 1) {
+            progress.activeTopic = topics[currentTopicIndex + 1];
+            taskIndex = 0;
+            renderLesson();
+          } else {
+            notify(`${progress.activeLevel} path completed. Choose the next CEFR level when you are ready.`);
+            return;
+          }
+        }
+        progress.taskIndex = taskIndex;
+        saveProgress();
+        renderCurriculum();
+        resetTask();
+        answer.focus();
+      });
+      previousBtn.addEventListener('click',()=>{if(taskIndex>0){taskIndex-=1;progress.taskIndex=taskIndex;saveProgress();resetTask();answer.focus()}else if(dailyContext){location.href=dailyContext.returnTo}else{history.back()}});
+      $('#dailyReturnBtn').addEventListener('click',()=>{location.href=dailyContext?.returnTo||'/daily'});
+      $('#dailyRepeatBtn').addEventListener('click',()=>{$('#dailyCompleteDialog').close();lastMistake='';answer.value='';feedback.className='feedback';answer.focus()});
+      $('#dailyMistakesBtn').addEventListener('click',()=>{$('#dailyCompleteDialog').close();feedback.className=lastMistake?'feedback show bad':'feedback show good';feedback.textContent=lastMistake?`Review your last answer: ${lastMistake}`:'No mistake was recorded in this exercise.';feedback.scrollIntoView({behavior:'smooth',block:'center'})});
+      answer.addEventListener('keydown', event => { if (event.key === 'Enter') $('#checkBtn').click(); });
+      repairInput.addEventListener('keydown', event => { if (event.key === 'Enter') $('#repairBtn').click(); });
+
+      renderCurriculum();
+      renderLesson();
+      resetTask();
+
+      // Browser speech synthesis is optional and degrades gracefully.
+      $('#audioBtn').addEventListener('click', () => {
+        if ('speechSynthesis' in window) {
+          speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance($('#exercisePrompt').textContent);
+          utterance.lang = 'en-US';
+          speechSynthesis.speak(utterance);
+        } else notify('Text-to-speech is not available in this browser.');
+      });
+
+      // Reading ruler and meaningful button feedback.
+      const rulerBtn = $('#rulerBtn');
+      const ruler = $('#readingRuler');
+      rulerBtn.addEventListener('click', () => {
+        const active = !ruler.classList.contains('show');
+        ruler.classList.toggle('show', active);
+        rulerBtn.setAttribute('aria-pressed', String(active));
+        notify(active ? 'Reading ruler enabled.' : 'Reading ruler disabled.');
+      });
+      ruler.addEventListener('mousemove', event => { ruler.style.top = `${Math.max(0, event.clientY - 26)}px`; });
+      $('[data-action="use-today"]').addEventListener('click', event => {
+        const appStateKey = 'grammar-automaticity:v27';
+        let appState = {};
+        try { appState = JSON.parse(localStorage.getItem(appStateKey) || '{}'); } catch {}
+        const reviews = Array.isArray(appState.reviews) ? [...appState.reviews] : [];
+        if (!reviews.some(review => review.sourceType === 'grammar_topic' && review.sourceId === progress.activeTopic && review.status === 'pending')) {
+          const lesson = lessonProfile(progress.activeTopic);
+          reviews.push({
+            id: `review-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
+            sourceType: 'grammar_topic',
+            sourceId: progress.activeTopic,
+            topic: progress.activeTopic,
+            original: lesson.rule,
+            corrected: lesson.rule,
+            intervalDays: 1,
+            dueAt: Date.now() + 86400000,
+            successStreak: 0,
+            stabilityScore: 0,
+            mode: 'production',
+            status: 'pending'
+          });
+        }
+        localStorage.setItem(appStateKey, JSON.stringify({
+          ...appState,
+          reviews,
+          todayGrammar: {
+            title: progress.activeTopic,
+            level: progress.activeLevel,
+            date: new Date().toISOString().slice(0, 10)
+          }
+        }));
+        event.currentTarget.innerHTML = '<svg class="icon" style="vertical-align:middle;margin-right:6px"><use href="#i-check"/></svg>Added today';
+        notify('This grammar lesson was added to today’s practice plan.');
+      });
+      $('[data-action="install"]').addEventListener('click', () => notify('Install is available when this page is served as a configured web app.'));
+      $('[data-action="help"]').addEventListener('click', () => notify('Tip: select a topic, answer the recall task, then open the supporting sections.'));
+      $('[data-action="filter"]').addEventListener('click', () => notify('All CEFR levels are currently visible.'));
+    })();
+  </script>
+</body>
+</html>

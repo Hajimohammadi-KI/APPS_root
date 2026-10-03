@@ -1,0 +1,14 @@
+.error-card,
+.audio-card {
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: white;
+  padding: 14px;
+}
+
+.install-app-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+

@@ -1,0 +1,10 @@
+{
+  "phase": "post-run hash verification; original config preserved",
+  "checkedAt": "2026-10-03T04:39:41.648Z",
+  "files": {
+    "model.safetensors": "60fc821bad4f91028d66f71d1e7b7c45965f6c7770fdec90c013b70e50da077c",
+    "config.json": "56be398848bbd9cbc720172b0d45b2f01cac7652f2968f0f31f5faf9f2986acc",
+    "preprocessor_config.json": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86"
+  },
+  "dependenciesSha256": "28bf146411e391e03227d1ff5ed7224f9a73822bb7775f3e8ffbeb8d45d29ffa"
+}

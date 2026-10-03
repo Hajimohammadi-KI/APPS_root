@@ -1,0 +1,939 @@
+{
+  "surface": "dashboard",
+  "manifest": {
+    "version": 1,
+    "surface": "dashboard",
+    "title": "CEFR Model Lab",
+    "description": "Capabilities, resource planning, and measured learner-text classification results.",
+    "generatedAt": "2026-08-30T14:52:04+00:00",
+    "filters": [
+      {
+        "id": "model-family",
+        "label": "Model family",
+        "dataset": "model-comparison",
+        "field": "family",
+        "includeAll": true,
+        "targets": [
+          {
+            "dataset": "model-comparison",
+            "field": "family"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "model-catalog-source",
+        "label": "Governed CEFR model catalog",
+        "href": "https://github.com/Hajimohammadi-KI/APPS_root_new/blob/main/research/cefr-classification/catalog/model-catalog.json",
+        "query": {
+          "engine": "repository-json",
+          "language": "python",
+          "query": "json.load(open('research/cefr-classification/catalog/model-catalog.json', encoding='utf-8'))",
+          "sql": "SELECT * FROM model_catalog ORDER BY catalog_id;",
+          "description": "Read model capabilities, official-source links, and explicitly labelled hardware estimates.",
+          "executed_at": "2026-08-30T14:52:04+00:00",
+          "tables_used": [
+            "research/cefr-classification/catalog/model-catalog.json"
+          ],
+          "filters": [
+            "No model rows excluded"
+          ],
+          "metric_definitions": [
+            "Parameter count follows each row's parameter_count_kind; it is not a CEFR score."
+          ]
+        }
+      },
+      {
+        "id": "run-artifacts-source",
+        "label": "Traceable non-fixture experiment runs",
+        "href": "https://github.com/Hajimohammadi-KI/APPS_root_new/tree/main/research/cefr-classification/runs",
+        "query": {
+          "engine": "repository-json",
+          "language": "python",
+          "query": "glob('research/cefr-classification/runs/**/run.json'); keep status == 'measured'; latest created_at per model.catalog_id",
+          "sql": "SELECT * FROM measured_runs WHERE status = 'measured' QUALIFY ROW_NUMBER() OVER (PARTITION BY model_catalog_id ORDER BY created_at DESC) = 1;",
+          "description": "Load only measured run artifacts and exclude all synthetic fixture results.",
+          "executed_at": "2026-08-30T14:52:04+00:00",
+          "tables_used": [
+            "research/cefr-classification/runs/**/run.json"
+          ],
+          "filters": [
+            "status = measured",
+            "latest created_at per catalog_id",
+            "status = fixture excluded"
+          ],
+          "metric_definitions": [
+            "Accuracy = exact CEFR label matches / test examples.",
+            "Weighted F1 = per-level F1 weighted by test support.",
+            "Training minutes = training.elapsed_seconds / 60."
+          ]
+        }
+      },
+      {
+        "id": "corpus-inventory-source",
+        "label": "Corpus licence and approval inventory",
+        "href": "https://github.com/Hajimohammadi-KI/APPS_root_new/blob/main/research/cefr-classification/catalog/corpus-inventory.json",
+        "query": {
+          "engine": "repository-json",
+          "language": "python",
+          "query": "json.load(open('research/cefr-classification/catalog/corpus-inventory.json', encoding='utf-8'))",
+          "sql": "SELECT * FROM corpus_inventory ORDER BY corpus_id;",
+          "description": "Read corpus provenance, licence review, allowed uses, and project approval state.",
+          "executed_at": "2026-08-30T14:52:04+00:00",
+          "tables_used": [
+            "research/cefr-classification/catalog/corpus-inventory.json"
+          ],
+          "filters": [
+            "No corpus rows excluded"
+          ],
+          "metric_definitions": [
+            "Approved real corpus requires approval_status=approved and is_fixture=false."
+          ]
+        }
+      }
+    ],
+    "cards": [
+      {
+        "id": "planned-models",
+        "description": "Governed candidates in the common benchmark matrix.",
+        "dataset": "summary",
+        "sourceId": "model-catalog-source",
+        "metrics": [
+          {
+            "label": "Planned models",
+            "field": "planned_models",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "measured-models",
+        "description": "Models with a latest non-fixture test run.",
+        "dataset": "summary",
+        "sourceId": "run-artifacts-source",
+        "metrics": [
+          {
+            "label": "Measured models",
+            "field": "measured_models",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "approved-corpora",
+        "description": "Real corpora approved for training in this project.",
+        "dataset": "summary",
+        "sourceId": "corpus-inventory-source",
+        "metrics": [
+          {
+            "label": "Approved real corpora",
+            "field": "approved_real_corpora",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "unresolved-corpora",
+        "description": "Candidate corpora still blocked or awaiting review.",
+        "dataset": "summary",
+        "sourceId": "corpus-inventory-source",
+        "metrics": [
+          {
+            "label": "Corpus decisions open",
+            "field": "unresolved_corpora",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "parameter-comparison",
+        "title": "Model size comparison",
+        "subtitle": "Millions of parameters; catalog facts and architecture-derived approximations are identified in the table.",
+        "intent": "comparison",
+        "question": "Which encoder candidates have the largest parameter footprint?",
+        "rationale": "A horizontal bar makes model labels readable and exposes relative memory pressure before training.",
+        "comparisonContext": {
+          "grain": "one model",
+          "unit": "million parameters"
+        },
+        "type": "horizontalBar",
+        "dataset": "parameter-comparison",
+        "sourceId": "model-catalog-source",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "Model"
+          },
+          "y": {
+            "field": "parameters_millions",
+            "type": "quantitative",
+            "label": "Parameters",
+            "unit": "M"
+          },
+          "tooltip": [
+            {
+              "field": "family",
+              "type": "text",
+              "label": "Family"
+            },
+            {
+              "field": "language_scope",
+              "type": "text",
+              "label": "Language scope"
+            },
+            {
+              "field": "maximum_tokens",
+              "type": "quantitative",
+              "label": "Maximum tokens"
+            }
+          ]
+        },
+        "valueFormat": "number",
+        "unit": "M parameters",
+        "layout": "full",
+        "maxRows": 10,
+        "compatibleTypes": [
+          "bar",
+          "leaderboard"
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "id": "model-matrix",
+        "title": "Sortable CEFR benchmark matrix",
+        "subtitle": "Null metric cells are intentionally N/A; only non-fixture test runs can populate them.",
+        "dataset": "model-comparison",
+        "defaultSort": {
+          "field": "weighted_f1",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "sourceId": "run-artifacts-source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "model",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "field": "result_status",
+            "label": "Result status",
+            "type": "text"
+          },
+          {
+            "field": "accuracy",
+            "label": "Accuracy",
+            "format": "percent"
+          },
+          {
+            "field": "weighted_f1",
+            "label": "Weighted F1",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "run-evidence-matrix",
+        "title": "Training run evidence",
+        "subtitle": "Dataset, elapsed time, hardware, and immutable run identifier for audit.",
+        "dataset": "model-comparison",
+        "defaultSort": {
+          "field": "training_minutes",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "sourceId": "run-artifacts-source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "model",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "field": "dataset",
+            "label": "Dataset",
+            "type": "text"
+          },
+          {
+            "field": "training_minutes",
+            "label": "Training time (min)",
+            "format": "number"
+          },
+          {
+            "field": "measured_hardware",
+            "label": "Measured hardware",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "capability-matrix",
+        "title": "Model capability and resource planning",
+        "subtitle": "Hardware values are labelled planning estimates, not measured requirements.",
+        "dataset": "model-comparison",
+        "defaultSort": {
+          "field": "parameters",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "sourceId": "model-catalog-source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "model",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "field": "language_scope",
+            "label": "Language support",
+            "type": "text"
+          },
+          {
+            "field": "parameters",
+            "label": "Parameters",
+            "format": "compact"
+          },
+          {
+            "field": "maximum_tokens",
+            "label": "Max tokens",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "resource-matrix",
+        "title": "Licence and hardware planning",
+        "subtitle": "Parameter and hardware bases show where values are official, derived, or estimated.",
+        "dataset": "model-comparison",
+        "defaultSort": {
+          "field": "model",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "sourceId": "model-catalog-source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "model",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "field": "licence",
+            "label": "Licence",
+            "type": "text"
+          },
+          {
+            "field": "parameter_basis",
+            "label": "Parameter basis",
+            "type": "text"
+          },
+          {
+            "field": "hardware_estimate",
+            "label": "Planning hardware",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "per-level-basic-matrix",
+        "title": "Per-level F1 detail · A1-B1",
+        "subtitle": "Cells remain N/A until each class has traceable test evidence.",
+        "dataset": "model-comparison",
+        "defaultSort": {
+          "field": "f1_b1",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "sourceId": "run-artifacts-source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "model",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "field": "f1_a1",
+            "label": "F1 A1",
+            "format": "percent"
+          },
+          {
+            "field": "f1_a2",
+            "label": "F1 A2",
+            "format": "percent"
+          },
+          {
+            "field": "f1_b1",
+            "label": "F1 B1",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "per-level-advanced-matrix",
+        "title": "Per-level F1 detail · B2-C2",
+        "subtitle": "Cells remain N/A until each class has traceable test evidence.",
+        "dataset": "model-comparison",
+        "defaultSort": {
+          "field": "f1_b2",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "sourceId": "run-artifacts-source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "model",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "field": "f1_b2",
+            "label": "F1 B2",
+            "format": "percent"
+          },
+          {
+            "field": "f1_c1",
+            "label": "F1 C1",
+            "format": "percent"
+          },
+          {
+            "field": "f1_c2",
+            "label": "F1 C2",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "corpus-decisions",
+        "title": "Corpus approval and licence decisions",
+        "subtitle": "Only explicitly approved, verified training sources can enter prepare.",
+        "dataset": "corpus-inventory",
+        "defaultSort": {
+          "field": "approval_status",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "sourceId": "corpus-inventory-source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "name",
+            "label": "Corpus",
+            "type": "text"
+          },
+          {
+            "field": "approval_status",
+            "label": "Approval",
+            "type": "text"
+          },
+          {
+            "field": "licence_status",
+            "label": "Licence review",
+            "type": "text"
+          },
+          {
+            "field": "reason",
+            "label": "Decision rationale",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "id": "decision-note",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "run-artifacts-source",
+        "body": "## Open-source CEFR model evaluation\nNo architecture can be ranked for CEFR accuracy yet. Compare capability and cost now; approve corpora and run the identical benchmark before selecting a production classifier."
+      },
+      {
+        "id": "summary-strip",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": [
+          "planned-models",
+          "measured-models",
+          "approved-corpora",
+          "unresolved-corpora"
+        ]
+      },
+      {
+        "id": "parameter-chart-block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "parameter-comparison"
+      },
+      {
+        "id": "model-table-block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "model-matrix"
+      },
+      {
+        "id": "run-evidence-table-block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "run-evidence-matrix"
+      },
+      {
+        "id": "capability-table-block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "capability-matrix"
+      },
+      {
+        "id": "resource-table-block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "resource-matrix"
+      },
+      {
+        "id": "per-level-basic-table-block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "per-level-basic-matrix"
+      },
+      {
+        "id": "per-level-advanced-table-block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "per-level-advanced-matrix"
+      },
+      {
+        "id": "corpus-note",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "corpus-inventory-source",
+        "body": "## Dataset gate\nA model comparison is valid only when every candidate uses the same immutable, leakage-audited splits. Corpus licences and source provenance are release requirements, not optional documentation."
+      },
+      {
+        "id": "corpus-table-block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "corpus-decisions"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-30T14:52:04+00:00",
+    "status": "ready",
+    "accessIssues": [],
+    "datasets": {
+      "summary": [
+        {
+          "planned_models": 6,
+          "measured_models": 6,
+          "approved_real_corpora": 2,
+          "unresolved_corpora": 6
+        }
+      ],
+      "parameter-comparison": [
+        {
+          "model": "ModernBERT-base",
+          "parameters_millions": 149.0,
+          "family": "ModernBERT encoder",
+          "language_scope": "English and code; not the German default",
+          "maximum_tokens": 8192
+        },
+        {
+          "model": "RoBERTa-base",
+          "parameters_millions": 125.0,
+          "family": "RoBERTa encoder",
+          "language_scope": "English",
+          "maximum_tokens": 512
+        },
+        {
+          "model": "GBERT-base",
+          "parameters_millions": 110.0,
+          "family": "BERT encoder",
+          "language_scope": "German",
+          "maximum_tokens": 512
+        },
+        {
+          "model": "XLM-RoBERTa-base",
+          "parameters_millions": 278.0,
+          "family": "Multilingual RoBERTa encoder",
+          "language_scope": "94 languages on the model card, including English and German",
+          "maximum_tokens": 512
+        },
+        {
+          "model": "mDeBERTa-v3-base",
+          "parameters_millions": 276.0,
+          "family": "Multilingual DeBERTa-v3 encoder",
+          "language_scope": "16 listed languages including English and German",
+          "maximum_tokens": 512
+        }
+      ],
+      "model-comparison": [
+        {
+          "catalog_id": "feature-logreg",
+          "model": "TF-IDF + style Logistic Regression",
+          "family": "Feature-based",
+          "language_scope": "English, German, or pooled",
+          "parameters": null,
+          "parameter_basis": "depends on fitted vocabulary",
+          "maximum_tokens": null,
+          "licence": "Project code only; corpus terms still apply",
+          "hardware_estimate": "CPU; 8 GB system RAM for the initial 60k-feature recipe",
+          "role": "Required transparent baseline",
+          "result_status": "Measured",
+          "dataset": "merlin-de",
+          "accuracy": 0.6625766871165644,
+          "weighted_f1": 0.6318004438163027,
+          "macro_f1": 0.4099830633048925,
+          "qwk": 0.7948037110304773,
+          "adjacent_accuracy": 0.99079754601227,
+          "calibration_error": 0.198625131057115,
+          "f1_a1": 0.4210526315789474,
+          "f1_a2": 0.736842105263158,
+          "f1_b1": 0.546448087431694,
+          "f1_b2": 0.7555555555555556,
+          "f1_c1": 0.0,
+          "f1_c2": 0.0,
+          "training_minutes": 0.014769255949795479,
+          "measured_hardware": "NVIDIA GeForce RTX 5060 Ti",
+          "run_id": "german-feature-seed42"
+        },
+        {
+          "catalog_id": "modernbert-base",
+          "model": "ModernBERT-base",
+          "family": "ModernBERT encoder",
+          "language_scope": "English and code; not the German default",
+          "parameters": 149000000,
+          "parameter_basis": "official model card",
+          "maximum_tokens": 8192,
+          "licence": "Apache-2.0",
+          "hardware_estimate": "12-16 GB GPU for max_length 384, batch 8, mixed precision; reduce batch if needed",
+          "role": "Primary English candidate",
+          "result_status": "Measured",
+          "dataset": "ace-cefr",
+          "accuracy": 0.4857142857142857,
+          "weighted_f1": 0.4790575579645215,
+          "macro_f1": 0.48749181330311075,
+          "qwk": 0.855765785135813,
+          "adjacent_accuracy": 0.9371428571428572,
+          "calibration_error": 0.1757446746035004,
+          "f1_a1": 0.6037735849056604,
+          "f1_a2": 0.4931506849315069,
+          "f1_b1": 0.4242424242424243,
+          "f1_b2": 0.4210526315789474,
+          "f1_c1": 0.36734693877551017,
+          "f1_c2": 0.6153846153846153,
+          "training_minutes": 2.2801262402834253,
+          "measured_hardware": "NVIDIA GeForce RTX 5060 Ti",
+          "run_id": "english-modernbert-seed42"
+        },
+        {
+          "catalog_id": "roberta-base",
+          "model": "RoBERTa-base",
+          "family": "RoBERTa encoder",
+          "language_scope": "English",
+          "parameters": 125000000,
+          "parameter_basis": "architecture-derived approximation",
+          "maximum_tokens": 512,
+          "licence": "MIT",
+          "hardware_estimate": "8-12 GB GPU for max_length 384, batch 8, mixed precision",
+          "role": "Established English benchmark",
+          "result_status": "Measured",
+          "dataset": "ace-cefr",
+          "accuracy": 0.52,
+          "weighted_f1": 0.49488717933830717,
+          "macro_f1": 0.5035647061962851,
+          "qwk": 0.8423631471143419,
+          "adjacent_accuracy": 0.9428571428571428,
+          "calibration_error": 0.10800409624738412,
+          "f1_a1": 0.6666666666666666,
+          "f1_a2": 0.4857142857142857,
+          "f1_b1": 0.45454545454545453,
+          "f1_b2": 0.5666666666666667,
+          "f1_c1": 0.21621621621621623,
+          "f1_c2": 0.631578947368421,
+          "training_minutes": 1.8223106493666517,
+          "measured_hardware": "NVIDIA GeForce RTX 5060 Ti",
+          "run_id": "english-roberta-seed42"
+        },
+        {
+          "catalog_id": "gbert-base",
+          "model": "GBERT-base",
+          "family": "BERT encoder",
+          "language_scope": "German",
+          "parameters": 110000000,
+          "parameter_basis": "architecture-derived approximation",
+          "maximum_tokens": 512,
+          "licence": "MIT",
+          "hardware_estimate": "8-12 GB GPU for max_length 384, batch 8, mixed precision",
+          "role": "Primary German candidate",
+          "result_status": "Measured",
+          "dataset": "merlin-de",
+          "accuracy": 0.6625766871165644,
+          "weighted_f1": 0.6536869433491754,
+          "macro_f1": 0.4664666436756349,
+          "qwk": 0.8250069412309116,
+          "adjacent_accuracy": 0.9938650306748467,
+          "calibration_error": 0.07088872506523512,
+          "f1_a1": 0.6153846153846153,
+          "f1_a2": 0.794392523364486,
+          "f1_b1": 0.5680473372781065,
+          "f1_b2": 0.6919431279620853,
+          "f1_c1": 0.12903225806451615,
+          "f1_c2": 0.0,
+          "training_minutes": 1.6386683752498357,
+          "measured_hardware": "NVIDIA GeForce RTX 5060 Ti",
+          "run_id": "german-gbert-seed42"
+        },
+        {
+          "catalog_id": "xlm-roberta-base",
+          "model": "XLM-RoBERTa-base",
+          "family": "Multilingual RoBERTa encoder",
+          "language_scope": "94 languages on the model card, including English and German",
+          "parameters": 278000000,
+          "parameter_basis": "architecture-derived approximation",
+          "maximum_tokens": 512,
+          "licence": "MIT",
+          "hardware_estimate": "16-24 GB GPU for max_length 384, batch 8, mixed precision",
+          "role": "Broad multilingual baseline",
+          "result_status": "Measured",
+          "dataset": "ace-cefr, merlin-de",
+          "accuracy": 0.742296918767507,
+          "weighted_f1": 0.7347996989567048,
+          "macro_f1": 0.43953124436272367,
+          "qwk": 0.7945528617418307,
+          "adjacent_accuracy": 0.9915966386554622,
+          "calibration_error": 0.13862521800413588,
+          "f1_a1": 0.0,
+          "f1_a2": 0.7606837606837606,
+          "f1_b1": 0.7760252365930599,
+          "f1_b2": 0.7368421052631577,
+          "f1_c1": 0.3636363636363636,
+          "f1_c2": 0.0,
+          "training_minutes": 4.335690960066616,
+          "measured_hardware": "NVIDIA GeForce RTX 5060 Ti",
+          "run_id": "multilingual-xlm-roberta-seed42"
+        },
+        {
+          "catalog_id": "mdeberta-v3-base",
+          "model": "mDeBERTa-v3-base",
+          "family": "Multilingual DeBERTa-v3 encoder",
+          "language_scope": "16 listed languages including English and German",
+          "parameters": 276000000,
+          "parameter_basis": "86M backbone plus 190M embeddings from official model card",
+          "maximum_tokens": 512,
+          "licence": "MIT",
+          "hardware_estimate": "16-24 GB GPU for max_length 384, batch 8, mixed precision",
+          "role": "Focused multilingual comparator",
+          "result_status": "Measured",
+          "dataset": "ace-cefr, merlin-de",
+          "accuracy": 0.7450980392156863,
+          "weighted_f1": 0.7388813296296167,
+          "macro_f1": 0.4860696494467933,
+          "qwk": 0.7973834028635122,
+          "adjacent_accuracy": 0.9943977591036415,
+          "calibration_error": 0.1814978602812869,
+          "f1_a1": 0.3636363636363636,
+          "f1_a2": 0.7207207207207207,
+          "f1_b1": 0.7791411042944784,
+          "f1_b2": 0.8029197080291971,
+          "f1_c1": 0.25,
+          "f1_c2": 0.0,
+          "training_minutes": 4.847258460900048,
+          "measured_hardware": "NVIDIA GeForce RTX 5060 Ti",
+          "run_id": "multilingual-mdeberta-seed42"
+        }
+      ],
+      "corpus-inventory": [
+        {
+          "corpus_id": "universalcefr-index",
+          "name": "UniversalCEFR corpus index",
+          "languages_display": "multiple",
+          "approval_status": "review_required",
+          "licence_status": "mixed_by_subcorpus",
+          "licence_id": "N/A",
+          "allowed_uses_display": "none",
+          "reason": "Useful discovery index, but every subcorpus has separate terms and must be approved independently.",
+          "source_url": "https://universalcefr.github.io/",
+          "is_fixture": false
+        },
+        {
+          "corpus_id": "merlin-de",
+          "name": "MERLIN German learner corpus",
+          "languages_display": "de",
+          "approval_status": "approved",
+          "licence_status": "verified",
+          "licence_id": "CC-BY-SA-4.0",
+          "allowed_uses_display": "research, training",
+          "reason": "Freely downloadable without registration from the CLARIN Eurac repository; licence verified as CC-BY-SA-4.0. Approved 2026-08-30 for the German transformer run. Attribution/share-alike obligation: any redistribution of derived text or model outputs trained on this corpus must credit the MERLIN project (https://www.merlin-platform.eu/) and remain under a compatible share-alike licence.",
+          "source_url": "https://www.merlin-platform.eu/",
+          "is_fixture": false
+        },
+        {
+          "corpus_id": "kaggle-cefr-levelled-english-texts",
+          "name": "CEFR Levelled English Texts",
+          "languages_display": "en",
+          "approval_status": "blocked",
+          "licence_status": "provenance_unverified",
+          "licence_id": "N/A",
+          "allowed_uses_display": "none",
+          "reason": "Confirmed 2026-08-30: the creator's own writeup states texts are pulled from The British Council, ESLFast, and the cnn-dailymail dataset. The Kaggle uploader does not hold rights to those underlying sources, so the dataset licence tag does not clear redistribution or training use. Remains blocked; use ace-cefr as the licensed substitute for English.",
+          "source_url": "https://www.kaggle.com/datasets/amontgomerie/cefr-levelled-english-texts",
+          "is_fixture": false
+        },
+        {
+          "corpus_id": "ace-cefr",
+          "name": "Ace-CEFR conversational text difficulty dataset",
+          "languages_display": "en",
+          "approval_status": "approved",
+          "licence_status": "verified",
+          "licence_id": "CC0-1.0",
+          "allowed_uses_display": "research, training",
+          "reason": "Purpose-built human-expert-labelled CEFR difficulty dataset (890 conversational passages, 445 train / 445 test) authored by Kogan, Schumacher, Nguyen, Suzuki, Smith, Bellows, and Bernstein at Google Research, released CC0-1.0 as an arXiv ancillary file (arXiv:2506.14046). Approved 2026-08-30 as the licensed substitute for the blocked Kaggle English corpus. Retrieved via the GliteTech/research-ace-cefr mirror, which packages the same CC0 file under its own Apache-2.0 code licence (data licence governs, not the wrapper repo's code licence).",
+          "source_url": "https://arxiv.org/abs/2506.14046",
+          "is_fixture": false
+        },
+        {
+          "corpus_id": "kaggle-toefl-cefr-vocabulary",
+          "name": "TOEFL-CEFR vocabulary",
+          "languages_display": "en",
+          "approval_status": "blocked",
+          "licence_status": "unverified",
+          "licence_id": "N/A",
+          "allowed_uses_display": "none",
+          "reason": "Vocabulary support data is not a learner-writing classification corpus; metadata and terms need verification.",
+          "source_url": "https://www.kaggle.com/datasets/panteamohamadkhani/toefl-cefr-vocabulary",
+          "is_fixture": false
+        },
+        {
+          "corpus_id": "kaggle-celp",
+          "name": "Kaggle CELP competition reference",
+          "languages_display": "unknown",
+          "approval_status": "blocked",
+          "licence_status": "unverified",
+          "licence_id": "N/A",
+          "allowed_uses_display": "none",
+          "reason": "The exact task, data files, labels, and licence have not been verified as a CEFR learner-text corpus.",
+          "source_url": "https://www.kaggle.com/c/celp",
+          "is_fixture": false
+        },
+        {
+          "corpus_id": "cefr-j",
+          "name": "CEFR-J English Profile",
+          "languages_display": "en",
+          "approval_status": "review_required",
+          "licence_status": "mixed_component_terms",
+          "licence_id": "N/A",
+          "allowed_uses_display": "none",
+          "reason": "Valuable controlled vocabulary/grammar reference for RAG and validation, not the primary learner-text classifier corpus.",
+          "source_url": "https://github.com/openlanguageprofiles/olp-en-cefrj",
+          "is_fixture": false
+        },
+        {
+          "corpus_id": "daflex",
+          "name": "DAFlex German receptive lexicon",
+          "languages_display": "de",
+          "approval_status": "blocked",
+          "licence_status": "download_terms_unverified",
+          "licence_id": "N/A",
+          "allowed_uses_display": "none",
+          "reason": "Useful German lexical feature source, but redistribution/download terms must be confirmed before ingestion.",
+          "source_url": "https://cental.uclouvain.be/cefrlex/daflex/",
+          "is_fixture": false
+        },
+        {
+          "corpus_id": "synthetic-contract-fixture",
+          "name": "Repository-generated test fixture",
+          "languages_display": "en, de",
+          "approval_status": "approved",
+          "licence_status": "verified",
+          "licence_id": "repository-generated",
+          "allowed_uses_display": "testing, training",
+          "reason": "May test pipeline behavior only; its metrics are excluded from the research dashboard.",
+          "source_url": "N/A",
+          "is_fixture": true
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "model-catalog-source",
+      "label": "Governed CEFR model catalog",
+      "href": "https://github.com/Hajimohammadi-KI/APPS_root_new/blob/main/research/cefr-classification/catalog/model-catalog.json",
+      "query": {
+        "engine": "repository-json",
+        "language": "python",
+        "query": "json.load(open('research/cefr-classification/catalog/model-catalog.json', encoding='utf-8'))",
+        "sql": "SELECT * FROM model_catalog ORDER BY catalog_id;",
+        "description": "Read model capabilities, official-source links, and explicitly labelled hardware estimates.",
+        "executed_at": "2026-08-30T14:52:04+00:00",
+        "tables_used": [
+          "research/cefr-classification/catalog/model-catalog.json"
+        ],
+        "filters": [
+          "No model rows excluded"
+        ],
+        "metric_definitions": [
+          "Parameter count follows each row's parameter_count_kind; it is not a CEFR score."
+        ]
+      }
+    },
+    {
+      "id": "run-artifacts-source",
+      "label": "Traceable non-fixture experiment runs",
+      "href": "https://github.com/Hajimohammadi-KI/APPS_root_new/tree/main/research/cefr-classification/runs",
+      "query": {
+        "engine": "repository-json",
+        "language": "python",
+        "query": "glob('research/cefr-classification/runs/**/run.json'); keep status == 'measured'; latest created_at per model.catalog_id",
+        "sql": "SELECT * FROM measured_runs WHERE status = 'measured' QUALIFY ROW_NUMBER() OVER (PARTITION BY model_catalog_id ORDER BY created_at DESC) = 1;",
+        "description": "Load only measured run artifacts and exclude all synthetic fixture results.",
+        "executed_at": "2026-08-30T14:52:04+00:00",
+        "tables_used": [
+          "research/cefr-classification/runs/**/run.json"
+        ],
+        "filters": [
+          "status = measured",
+          "latest created_at per catalog_id",
+          "status = fixture excluded"
+        ],
+        "metric_definitions": [
+          "Accuracy = exact CEFR label matches / test examples.",
+          "Weighted F1 = per-level F1 weighted by test support.",
+          "Training minutes = training.elapsed_seconds / 60."
+        ]
+      }
+    },
+    {
+      "id": "corpus-inventory-source",
+      "label": "Corpus licence and approval inventory",
+      "href": "https://github.com/Hajimohammadi-KI/APPS_root_new/blob/main/research/cefr-classification/catalog/corpus-inventory.json",
+      "query": {
+        "engine": "repository-json",
+        "language": "python",
+        "query": "json.load(open('research/cefr-classification/catalog/corpus-inventory.json', encoding='utf-8'))",
+        "sql": "SELECT * FROM corpus_inventory ORDER BY corpus_id;",
+        "description": "Read corpus provenance, licence review, allowed uses, and project approval state.",
+        "executed_at": "2026-08-30T14:52:04+00:00",
+        "tables_used": [
+          "research/cefr-classification/catalog/corpus-inventory.json"
+        ],
+        "filters": [
+          "No corpus rows excluded"
+        ],
+        "metric_definitions": [
+          "Approved real corpus requires approval_status=approved and is_fixture=false."
+        ]
+      }
+    }
+  ]
+}

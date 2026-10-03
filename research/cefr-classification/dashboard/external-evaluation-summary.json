@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "created_on": "2026-09-01",
+  "status": "measured_external",
+  "decision": "do_not_integrate_into_product",
+  "decision_reason": "Every saved checkpoint lost substantial accuracy under the independent reference-document domain shift. No external result supports a learner-facing answer path; teacher validation therefore cannot responsibly begin.",
+  "scope": {
+    "claim": "cross-corpus and cross-domain robustness",
+    "not_a_claim": "learner proficiency validation",
+    "selection_rule": "fixed saved checkpoints; no external-set fitting or threshold tuning"
+  },
+  "abstention_gate": {
+    "required_retained_accuracy": 0.8,
+    "required_coverage": 0.3,
+    "status": "target_unreachable_for_all_9_evaluations",
+    "reproduce": "python scripts/evaluate_external_abstention.py"
+  },
+  "corpora": {
+    "universalcefr-elg-en": {
+      "language": "en",
+      "source_count": 712,
+      "evaluation_count": 598,
+      "excluded_noncanonical_plus_labels": 114,
+      "revision": "5bcca039738fa3e611847964741234b73405718d",
+      "sha256": "5F748AE566C6470389681DBB1F3959DCF990B08A718E7BC81A176ED95EEE2B98",
+      "licence": "CC-BY-NC-SA-4.0",
+      "use": "evaluation-only"
+    },
+    "universalcefr-elg-de": {
+      "language": "de",
+      "source_count": 509,
+      "evaluation_count": 509,
+      "excluded_noncanonical_plus_labels": 0,
+      "revision": "5f6d8ba9b068906a1df217c756ce2fb6a0b05f84",
+      "sha256": "3063DE6C199B593BA90E9C6C6F93ACB474F1E878302887914B8722586C14C9EF",
+      "licence": "CC-BY-NC-SA-4.0",
+      "use": "evaluation-only"
+    }
+  },
+  "results": [
+    {"run_id":"english-feature-seed42","corpus":"universalcefr-elg-en","n":598,"accuracy":0.130435,"weighted_f1":0.049220,"macro_f1":0.055101,"qwk":0.036019,"adjacent_accuracy":0.449833,"ece":0.203804},
+    {"run_id":"english-modernbert-seed42","corpus":"universalcefr-elg-en","n":598,"accuracy":0.148829,"weighted_f1":0.064673,"macro_f1":0.077553,"qwk":0.051588,"adjacent_accuracy":0.496656,"ece":0.545624},
+    {"run_id":"english-roberta-seed42","corpus":"universalcefr-elg-en","n":598,"accuracy":0.128763,"weighted_f1":0.050214,"macro_f1":0.063055,"qwk":0.128384,"adjacent_accuracy":0.342809,"ece":0.264887},
+    {"run_id":"german-feature-seed42","corpus":"universalcefr-elg-de","n":509,"accuracy":0.269155,"weighted_f1":0.147074,"macro_f1":0.119326,"qwk":0.282757,"adjacent_accuracy":0.662083,"ece":0.126499},
+    {"run_id":"german-gbert-seed42","corpus":"universalcefr-elg-de","n":509,"accuracy":0.265226,"weighted_f1":0.188683,"macro_f1":0.164289,"qwk":0.345852,"adjacent_accuracy":0.691552,"ece":0.163107},
+    {"run_id":"multilingual-mdeberta-seed42","corpus":"universalcefr-elg-en","n":598,"accuracy":0.117057,"weighted_f1":0.030370,"macro_f1":0.042935,"qwk":0.129827,"adjacent_accuracy":0.312709,"ece":0.280093},
+    {"run_id":"multilingual-mdeberta-seed42","corpus":"universalcefr-elg-de","n":509,"accuracy":0.216110,"weighted_f1":0.124683,"macro_f1":0.108551,"qwk":0.325963,"adjacent_accuracy":0.473477,"ece":0.182115},
+    {"run_id":"multilingual-xlm-roberta-seed42","corpus":"universalcefr-elg-en","n":598,"accuracy":0.160535,"weighted_f1":0.077954,"macro_f1":0.103261,"qwk":0.231467,"adjacent_accuracy":0.431438,"ece":0.380099},
+    {"run_id":"multilingual-xlm-roberta-seed42","corpus":"universalcefr-elg-de","n":509,"accuracy":0.257367,"weighted_f1":0.200756,"macro_f1":0.176420,"qwk":0.489950,"adjacent_accuracy":0.719057,"ece":0.244552}
+  ]
+}

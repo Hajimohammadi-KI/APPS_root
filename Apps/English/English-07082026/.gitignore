@@ -1,0 +1,14 @@
+node_modules/
+.next/
+dist/
+coverage/
+test-results/
+playwright-report/
+.env
+.env.local
+*.log
+distribution/build/
+
+# Vercel project links and recovery copies are machine-specific, never source files.
+.vercel*
+.env*

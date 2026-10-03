@@ -1,0 +1,23 @@
+import {resolve} from "node:path";
+import {hash,regressionMetrics} from "./core";
+const dir=resolve(import.meta.dir,"runs/audio-hubert-v1");
+type Case={id:string;split:string;speaker:string;age:string;gender:string;scores:Record<string,number>};
+type Prediction={id:string;speaker:string;scores?:Record<string,number>;failure?:string;elapsedMs:number};
+const casesBytes=await Bun.file(resolve(dir,"cases.jsonl")).text(),manifest=await Bun.file(resolve(dir,"manifest.json")).json();
+if(hash(casesBytes)!==manifest.casesSha256)throw Error("Cases changed");
+const cases=casesBytes.trim().split("\n").map(s=>JSON.parse(s) as Case),test=cases.filter(x=>x.split==="test"),train=cases.filter(x=>x.split==="train");
+const predictionsBytes=await Bun.file(resolve(dir,"predictions.jsonl")).text(),predictions=predictionsBytes.trim().split("\n").map(s=>JSON.parse(s) as Prediction);
+const byId=new Map(predictions.map(p=>[p.id,p]));
+if(byId.size!==predictions.length||byId.size!==test.length||test.some(x=>!byId.has(x.id)||byId.get(x.id)!.speaker!==x.speaker))throw Error("Missing, duplicate or mismatched predictions");
+const keys=["accuracy","fluency","prosodic","total"];
+const valid=test.filter(row=>{const p=byId.get(row.id)!;return !p.failure&&keys.every(key=>Number.isFinite(p.scores?.[key]));});
+const baseline=Object.fromEntries(keys.map(key=>[key,train.reduce((n,r)=>n+r.scores[key]!,0)/train.length]));
+const dimensions=Object.fromEntries(keys.map(key=>{
+  const expected=valid.map(r=>r.scores[key]!),actual=valid.map(r=>byId.get(r.id)!.scores![key]!);
+  const metrics=regressionMetrics(expected,actual);
+  return [key,{candidate:metrics,trainingMeanBaseline:regressionMetrics(expected,expected.map(()=>baseline[key]!)),trainingMean:baseline[key],outOfRange:actual.filter(x=>x<0||x>10).length}];
+}));
+const cohorts=Object.fromEntries(["age","gender"].map(field=>[field,Object.fromEntries([...new Set(valid.map(x=>x[field as "age"|"gender"]))].sort().map(value=>{const rows=valid.filter(x=>x[field as "age"|"gender"]===value);return [value,{count:rows.length,dimensions:Object.fromEntries(keys.map(key=>[key,regressionMetrics(rows.map(x=>x.scores[key]!),rows.map(x=>byId.get(x.id)!.scores![key]!))]))}];}))]));
+const latencies=predictions.map(p=>p.elapsedMs).sort((a,b)=>a-b);
+const report={schemaVersion:1,completedAt:new Date().toISOString(),kind:"individual-recording diagnostic of published checkpoint",source:"https://github.com/hy310/ssl_finetuning",casesSha256:manifest.casesSha256,predictionsSha256:hash(predictionsBytes),testRecordings:test.length,completed:predictions.length,valid:valid.length,failures:predictions.filter(x=>x.failure).length,coverage:valid.length/test.length,speakers:new Set(valid.map(x=>x.speaker)).size,dimensions,cohortsByOriginalSourceCodes:cohorts,latencyMs:{median:latencies[Math.floor(latencies.length/2)],p95:latencies[Math.floor(latencies.length*.95)]},diagnosticScreenPassed:valid.length===test.length&&test.length===2500&&new Set(valid.map(x=>x.speaker)).size===125&&keys.every(key=>dimensions[key]!.outOfRange===0)&&keys.slice(0,2).every(key=>dimensions[key]!.candidate.diagnosticScreenPassed),releaseEligible:false,limitations:["The published development code evaluates the official test set each epoch; this is not an untouched qualification set.","Single-recording unpadded inference intentionally differs from the author's padded batch inference to avoid dependence on other recordings.","Only native-Mandarin English read speech; no evidence for German, Persian-L1 or spontaneous grammar.","Weight redistribution/deployment license not explicit in the model card; local research only."]};
+await Bun.write(resolve(dir,"report.json"),JSON.stringify(report,null,2)+"\n");console.log(JSON.stringify({...report,cohortsByOriginalSourceCodes:undefined},null,2));

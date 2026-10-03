@@ -1,0 +1,3146 @@
+{
+  "version": "2026-09-05.1",
+  "scopeStatus": "proposed-construction-crosswalk-human-review-pending",
+  "mappings": [
+    {
+      "id": "en.c.001",
+      "language": "en",
+      "lessonAlias": "A1::Verb be: am/is/are",
+      "familyIds": [
+        "G01"
+      ],
+      "prerequisites": [],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.002",
+      "language": "en",
+      "lessonAlias": "A1::Subject pronouns",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.003",
+      "language": "en",
+      "lessonAlias": "A1::Articles a/an/the",
+      "familyIds": [
+        "G03"
+      ],
+      "prerequisites": [
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.004",
+      "language": "en",
+      "lessonAlias": "A1::Plural nouns",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.005",
+      "language": "en",
+      "lessonAlias": "A1::Possessive adjectives",
+      "familyIds": [
+        "G03"
+      ],
+      "prerequisites": [
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.006",
+      "language": "en",
+      "lessonAlias": "A1::Have/has got",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "en.c.001",
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.007",
+      "language": "en",
+      "lessonAlias": "A1::Present simple affirmative",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.008",
+      "language": "en",
+      "lessonAlias": "A1::Present simple negatives",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.009",
+      "language": "en",
+      "lessonAlias": "A1::Present simple questions",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.010",
+      "language": "en",
+      "lessonAlias": "A1::There is/There are",
+      "familyIds": [
+        "G01"
+      ],
+      "prerequisites": [],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.011",
+      "language": "en",
+      "lessonAlias": "A1::Can/can’t",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.012",
+      "language": "en",
+      "lessonAlias": "A1::Imperatives",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.013",
+      "language": "en",
+      "lessonAlias": "A1::Prepositions of place",
+      "familyIds": [
+        "G13"
+      ],
+      "prerequisites": [
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.014",
+      "language": "en",
+      "lessonAlias": "A1::Countable and uncountable nouns",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.015",
+      "language": "en",
+      "lessonAlias": "A2::Present continuous",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.016",
+      "language": "en",
+      "lessonAlias": "A2::Present simple vs continuous",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.017",
+      "language": "en",
+      "lessonAlias": "A2::Past simple regular",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.018",
+      "language": "en",
+      "lessonAlias": "A2::Past simple irregular",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.019",
+      "language": "en",
+      "lessonAlias": "A2::Past simple questions and negatives",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.020",
+      "language": "en",
+      "lessonAlias": "A2::Future with will",
+      "familyIds": [
+        "G07"
+      ],
+      "prerequisites": [
+        "en.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.021",
+      "language": "en",
+      "lessonAlias": "A2::Be going to",
+      "familyIds": [
+        "G07"
+      ],
+      "prerequisites": [
+        "en.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.022",
+      "language": "en",
+      "lessonAlias": "A2::Comparatives",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "en.c.004",
+        "en.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.023",
+      "language": "en",
+      "lessonAlias": "A2::Superlatives",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "en.c.004",
+        "en.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.024",
+      "language": "en",
+      "lessonAlias": "A2::Some/any/no",
+      "familyIds": [
+        "G03"
+      ],
+      "prerequisites": [
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.025",
+      "language": "en",
+      "lessonAlias": "A2::Much/many/a lot of",
+      "familyIds": [
+        "G03"
+      ],
+      "prerequisites": [
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.026",
+      "language": "en",
+      "lessonAlias": "A2::Adverbs of frequency",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "en.c.004",
+        "en.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.027",
+      "language": "en",
+      "lessonAlias": "A2::Object pronouns",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.028",
+      "language": "en",
+      "lessonAlias": "A2::Must/have to",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.029",
+      "language": "en",
+      "lessonAlias": "B1::Present perfect",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.030",
+      "language": "en",
+      "lessonAlias": "B1::Present perfect vs past simple",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.031",
+      "language": "en",
+      "lessonAlias": "B1::For and since",
+      "familyIds": [
+        "G13"
+      ],
+      "prerequisites": [
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.032",
+      "language": "en",
+      "lessonAlias": "B1::Past continuous",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.033",
+      "language": "en",
+      "lessonAlias": "B1::Past continuous vs past simple",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.034",
+      "language": "en",
+      "lessonAlias": "B1::First conditional",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.035",
+      "language": "en",
+      "lessonAlias": "B1::Second conditional",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.036",
+      "language": "en",
+      "lessonAlias": "B1::Relative clauses",
+      "familyIds": [
+        "G15"
+      ],
+      "prerequisites": [
+        "en.c.002",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.037",
+      "language": "en",
+      "lessonAlias": "B1::Gerunds and infinitives",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "en.c.006"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.038",
+      "language": "en",
+      "lessonAlias": "B1::Modal verbs of advice",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.039",
+      "language": "en",
+      "lessonAlias": "B1::Passive present and past",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "en.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.040",
+      "language": "en",
+      "lessonAlias": "B1::Reported statements",
+      "familyIds": [
+        "G17"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.041",
+      "language": "en",
+      "lessonAlias": "B1::Question tags",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.042",
+      "language": "en",
+      "lessonAlias": "B1::Too/enough",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "en.c.004",
+        "en.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.043",
+      "language": "en",
+      "lessonAlias": "B2::Present perfect continuous",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.044",
+      "language": "en",
+      "lessonAlias": "B2::Past perfect",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.045",
+      "language": "en",
+      "lessonAlias": "B2::Past perfect continuous",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.046",
+      "language": "en",
+      "lessonAlias": "B2::Future continuous",
+      "familyIds": [
+        "G07"
+      ],
+      "prerequisites": [
+        "en.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.047",
+      "language": "en",
+      "lessonAlias": "B2::Future perfect",
+      "familyIds": [
+        "G07"
+      ],
+      "prerequisites": [
+        "en.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.048",
+      "language": "en",
+      "lessonAlias": "B2::Third conditional",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.049",
+      "language": "en",
+      "lessonAlias": "B2::Mixed conditionals",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.050",
+      "language": "en",
+      "lessonAlias": "B2::Modal deduction present",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.051",
+      "language": "en",
+      "lessonAlias": "B2::Modal deduction past",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.052",
+      "language": "en",
+      "lessonAlias": "B2::Causative have/get",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "en.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.053",
+      "language": "en",
+      "lessonAlias": "B2::Advanced passive",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "en.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.054",
+      "language": "en",
+      "lessonAlias": "B2::Participle clauses",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "en.c.006"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.055",
+      "language": "en",
+      "lessonAlias": "B2::Wish and if only",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.056",
+      "language": "en",
+      "lessonAlias": "B2::Inversion after negative adverbials",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.057",
+      "language": "en",
+      "lessonAlias": "C1::Cleft sentences",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.058",
+      "language": "en",
+      "lessonAlias": "C1::Inversion in conditionals",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.059",
+      "language": "en",
+      "lessonAlias": "C1::Nominalisation",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.060",
+      "language": "en",
+      "lessonAlias": "C1::Hedging and stance",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.061",
+      "language": "en",
+      "lessonAlias": "C1::Advanced discourse markers",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.062",
+      "language": "en",
+      "lessonAlias": "C1::Substitution and ellipsis",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.063",
+      "language": "en",
+      "lessonAlias": "C1::Complex relative clauses",
+      "familyIds": [
+        "G15"
+      ],
+      "prerequisites": [
+        "en.c.002",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.064",
+      "language": "en",
+      "lessonAlias": "C1::Advanced reporting verbs",
+      "familyIds": [
+        "G17"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.065",
+      "language": "en",
+      "lessonAlias": "C1::Emphasis with auxiliaries",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.066",
+      "language": "en",
+      "lessonAlias": "C1::Fronting",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.067",
+      "language": "en",
+      "lessonAlias": "C1::Complex noun phrases",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.068",
+      "language": "en",
+      "lessonAlias": "C1::Register control",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.069",
+      "language": "en",
+      "lessonAlias": "C1::Advanced tense-aspect choices",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.070",
+      "language": "en",
+      "lessonAlias": "C1::Parallelism",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "en.c.072",
+        "en.c.060"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.071",
+      "language": "en",
+      "lessonAlias": "C2::Marked word order",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.072",
+      "language": "en",
+      "lessonAlias": "C2::Layered subordination",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.073",
+      "language": "en",
+      "lessonAlias": "C2::Nuanced modality",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.074",
+      "language": "en",
+      "lessonAlias": "C2::Counterfactual distance",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.075",
+      "language": "en",
+      "lessonAlias": "C2::Advanced cohesion",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.076",
+      "language": "en",
+      "lessonAlias": "C2::Rhetorical grammar",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "en.c.072",
+        "en.c.060"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.077",
+      "language": "en",
+      "lessonAlias": "C2::Compressed academic structures",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "en.c.072",
+        "en.c.060"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.078",
+      "language": "en",
+      "lessonAlias": "C2::Idiomatic clause patterns",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "en.c.001",
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.079",
+      "language": "en",
+      "lessonAlias": "C2::Ambiguity control",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "en.c.072",
+        "en.c.060"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.080",
+      "language": "en",
+      "lessonAlias": "C2::Style shifting",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.081",
+      "language": "en",
+      "lessonAlias": "C2::Advanced punctuation and grammar",
+      "familyIds": [
+        "G21"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.082",
+      "language": "en",
+      "lessonAlias": "C2::Editing for naturalness",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "en.c.072",
+        "en.c.060"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.083",
+      "language": "en",
+      "lessonAlias": "C2::Genre-specific grammar",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.084",
+      "language": "en",
+      "lessonAlias": "C2::Integrated automatic production",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "en.c.072",
+        "en.c.060"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.085",
+      "language": "en",
+      "lessonAlias": "A1::Possessive ’s and whose",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.086",
+      "language": "en",
+      "lessonAlias": "A1::Prepositions of time: at, in, on",
+      "familyIds": [
+        "G13"
+      ],
+      "prerequisites": [
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.087",
+      "language": "en",
+      "lessonAlias": "A2::Adjectives and prepositions",
+      "familyIds": [
+        "G13"
+      ],
+      "prerequisites": [
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.088",
+      "language": "en",
+      "lessonAlias": "A2::Adjectives ending in -ed and -ing",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "en.c.004",
+        "en.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.089",
+      "language": "en",
+      "lessonAlias": "A2::Infinitive of purpose",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "en.c.006"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.090",
+      "language": "en",
+      "lessonAlias": "A2::Quantifiers: few, a few, little, a little",
+      "familyIds": [
+        "G03"
+      ],
+      "prerequisites": [
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.091",
+      "language": "en",
+      "lessonAlias": "B1::Capital letters and apostrophes",
+      "familyIds": [
+        "G21"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.092",
+      "language": "en",
+      "lessonAlias": "B1::Contrasting ideas: although, despite, however",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.093",
+      "language": "en",
+      "lessonAlias": "B1::Used to, be used to, get used to",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "en.c.001",
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.094",
+      "language": "en",
+      "lessonAlias": "B1::Intensifiers: so and such",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "en.c.004",
+        "en.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.095",
+      "language": "en",
+      "lessonAlias": "B1::Past ability: could, was able to, managed to",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.096",
+      "language": "en",
+      "lessonAlias": "B1::Past habits: used to, would, past simple",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.097",
+      "language": "en",
+      "lessonAlias": "B1::Phrasal verbs",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "en.c.001",
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.098",
+      "language": "en",
+      "lessonAlias": "B1::Present perfect: just, yet, still, already",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.099",
+      "language": "en",
+      "lessonAlias": "B1::Reflexive pronouns",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.100",
+      "language": "en",
+      "lessonAlias": "B1::Stative and dynamic verbs",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "en.c.001",
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.101",
+      "language": "en",
+      "lessonAlias": "B1::Using as and like",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.102",
+      "language": "en",
+      "lessonAlias": "B1::Verbs and prepositions",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "en.c.001",
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.103",
+      "language": "en",
+      "lessonAlias": "B2::Gradable and non-gradable adjectives",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "en.c.004",
+        "en.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.104",
+      "language": "en",
+      "lessonAlias": "B2::British and American grammar",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.105",
+      "language": "en",
+      "lessonAlias": "B2::Modifying comparatives",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "en.c.004",
+        "en.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.106",
+      "language": "en",
+      "lessonAlias": "B2::Reported speech: questions",
+      "familyIds": [
+        "G17"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.107",
+      "language": "en",
+      "lessonAlias": "B2::Future degrees of certainty",
+      "familyIds": [
+        "G07"
+      ],
+      "prerequisites": [
+        "en.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.108",
+      "language": "en",
+      "lessonAlias": "B2::Gerund or infinitive: change in meaning",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "en.c.006"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.109",
+      "language": "en",
+      "lessonAlias": "C1::Advanced passives review",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "en.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.110",
+      "language": "en",
+      "lessonAlias": "C1::Modals and expressions of probability",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "en.c.001"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.111",
+      "language": "en",
+      "lessonAlias": "C1::Unreal time",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "en.c.007",
+        "en.c.072"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "en.c.112",
+      "language": "en",
+      "lessonAlias": "C1::Word order in phrasal verbs",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "en.c.001",
+        "en.c.004"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.001",
+      "language": "de",
+      "lessonAlias": "A1::Personalpronomen und sein",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.002",
+      "language": "de",
+      "lessonAlias": "A1::haben",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.003",
+      "language": "de",
+      "lessonAlias": "A1::Präsens regelmäßiger Verben",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.004",
+      "language": "de",
+      "lessonAlias": "A1::Präsens unregelmäßiger Verben",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.005",
+      "language": "de",
+      "lessonAlias": "A1::W-Fragen",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.006",
+      "language": "de",
+      "lessonAlias": "A1::Ja/Nein-Fragen",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.007",
+      "language": "de",
+      "lessonAlias": "A1::bestimmter und unbestimmter Artikel",
+      "familyIds": [
+        "G03"
+      ],
+      "prerequisites": [
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.008",
+      "language": "de",
+      "lessonAlias": "A1::Pluralformen",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.009",
+      "language": "de",
+      "lessonAlias": "A1::Akkusativ",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.010",
+      "language": "de",
+      "lessonAlias": "A1::Possessivartikel",
+      "familyIds": [
+        "G03"
+      ],
+      "prerequisites": [
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.011",
+      "language": "de",
+      "lessonAlias": "A1::nicht und kein",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.012",
+      "language": "de",
+      "lessonAlias": "A1::Modalverb können",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.013",
+      "language": "de",
+      "lessonAlias": "A1::Trennbare Verben",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.014",
+      "language": "de",
+      "lessonAlias": "A1::lokale Präpositionen",
+      "familyIds": [
+        "G13"
+      ],
+      "prerequisites": [
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.015",
+      "language": "de",
+      "lessonAlias": "A2::Perfekt mit haben",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.016",
+      "language": "de",
+      "lessonAlias": "A2::Perfekt mit sein",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.017",
+      "language": "de",
+      "lessonAlias": "A2::Präteritum von sein/haben/Modalverben",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.018",
+      "language": "de",
+      "lessonAlias": "A2::Dativ",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.019",
+      "language": "de",
+      "lessonAlias": "A2::Wechselpräpositionen",
+      "familyIds": [
+        "G13"
+      ],
+      "prerequisites": [
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.020",
+      "language": "de",
+      "lessonAlias": "A2::Modalverben müssen, dürfen, sollen, wollen",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.021",
+      "language": "de",
+      "lessonAlias": "A2::Komparativ und Superlativ",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "de.c.008",
+        "de.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.022",
+      "language": "de",
+      "lessonAlias": "A2::Nebensatz mit weil",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.023",
+      "language": "de",
+      "lessonAlias": "A2::Nebensatz mit dass",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.024",
+      "language": "de",
+      "lessonAlias": "A2::wenn und als",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.025",
+      "language": "de",
+      "lessonAlias": "A2::Reflexive Verben",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.026",
+      "language": "de",
+      "lessonAlias": "A2::Adjektiv nach sein",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "de.c.008",
+        "de.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.027",
+      "language": "de",
+      "lessonAlias": "A2::Zeitangaben und Wortstellung",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.028",
+      "language": "de",
+      "lessonAlias": "A2::Indefinitpronomen man/jemand/niemand",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.029",
+      "language": "de",
+      "lessonAlias": "B1::Präteritum in Erzählungen",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.030",
+      "language": "de",
+      "lessonAlias": "B1::Plusquamperfekt",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.031",
+      "language": "de",
+      "lessonAlias": "B1::Relativsätze Nominativ/Akkusativ",
+      "familyIds": [
+        "G15"
+      ],
+      "prerequisites": [
+        "de.c.001",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.032",
+      "language": "de",
+      "lessonAlias": "B1::Relativsätze Dativ",
+      "familyIds": [
+        "G15"
+      ],
+      "prerequisites": [
+        "de.c.001",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.033",
+      "language": "de",
+      "lessonAlias": "B1::Konjunktiv II mit würde",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "de.c.003",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.034",
+      "language": "de",
+      "lessonAlias": "B1::Konjunktiv II von sein/haben/Modalverben",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "de.c.003",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.035",
+      "language": "de",
+      "lessonAlias": "B1::Passiv Präsens",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "de.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.036",
+      "language": "de",
+      "lessonAlias": "B1::Passiv Präteritum und Perfekt",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "de.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.037",
+      "language": "de",
+      "lessonAlias": "B1::Infinitiv mit zu",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "de.c.002"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.038",
+      "language": "de",
+      "lessonAlias": "B1::um...zu / damit",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "de.c.002"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.039",
+      "language": "de",
+      "lessonAlias": "B1::obwohl/trotzdem",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.040",
+      "language": "de",
+      "lessonAlias": "B1::Genitivgrundlagen",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.041",
+      "language": "de",
+      "lessonAlias": "B1::Adjektivdeklination Grundlagen",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "de.c.008",
+        "de.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.042",
+      "language": "de",
+      "lessonAlias": "B1::indirekte Fragen",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.043",
+      "language": "de",
+      "lessonAlias": "B2::Konjunktiv II Vergangenheit",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "de.c.003",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.044",
+      "language": "de",
+      "lessonAlias": "B2::Passiv mit Modalverben",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "de.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.045",
+      "language": "de",
+      "lessonAlias": "B2::Zustandspassiv",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "de.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.046",
+      "language": "de",
+      "lessonAlias": "B2::Nominalisierung",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.047",
+      "language": "de",
+      "lessonAlias": "B2::N-Deklination",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.048",
+      "language": "de",
+      "lessonAlias": "B2::Partizipien als Adjektive",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "de.c.008",
+        "de.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.049",
+      "language": "de",
+      "lessonAlias": "B2::je...desto/umso",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.050",
+      "language": "de",
+      "lessonAlias": "B2::sowohl...als auch / weder...noch",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.051",
+      "language": "de",
+      "lessonAlias": "B2::erweiterte Relativsätze",
+      "familyIds": [
+        "G15"
+      ],
+      "prerequisites": [
+        "de.c.001",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.052",
+      "language": "de",
+      "lessonAlias": "B2::Verben mit Präpositionen",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.053",
+      "language": "de",
+      "lessonAlias": "B2::indirekte Rede Grundlagen",
+      "familyIds": [
+        "G17"
+      ],
+      "prerequisites": [
+        "de.c.003",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.054",
+      "language": "de",
+      "lessonAlias": "B2::Nomen-Verb-Verbindungen / Funktionsverbgefüge",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.055",
+      "language": "de",
+      "lessonAlias": "B2::Wortstellung im Mittelfeld",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.056",
+      "language": "de",
+      "lessonAlias": "B2::Konnektoren und Satzverknüpfung",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.057",
+      "language": "de",
+      "lessonAlias": "C1::Konjunktiv I vollständig",
+      "familyIds": [
+        "G17"
+      ],
+      "prerequisites": [
+        "de.c.003",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.058",
+      "language": "de",
+      "lessonAlias": "C1::Subjektive Bedeutung der Modalverben",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.059",
+      "language": "de",
+      "lessonAlias": "C1::Ersatzformen des Passivs",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "de.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.060",
+      "language": "de",
+      "lessonAlias": "C1::Komplexe Nominalgruppen",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.061",
+      "language": "de",
+      "lessonAlias": "C1::Partizipialkonstruktionen",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "de.c.002"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.062",
+      "language": "de",
+      "lessonAlias": "C1::Appositionen",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.063",
+      "language": "de",
+      "lessonAlias": "C1::Informationsstruktur und Vorfeld",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.064",
+      "language": "de",
+      "lessonAlias": "C1::Ausklammerung und Nachfeld",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.065",
+      "language": "de",
+      "lessonAlias": "C1::Konzessive und adversative Strukturen",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.066",
+      "language": "de",
+      "lessonAlias": "C1::Wissenschaftliches Hedging",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.067",
+      "language": "de",
+      "lessonAlias": "C1::Textkohäsion",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.068",
+      "language": "de",
+      "lessonAlias": "C1::Register und Stil",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.069",
+      "language": "de",
+      "lessonAlias": "C1::Verbalisierung und Nominalisierung abwägen",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.070",
+      "language": "de",
+      "lessonAlias": "C1::Parallelismus",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.071",
+      "language": "de",
+      "lessonAlias": "C2::Feine Bedeutungsunterschiede im Modus",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.072",
+      "language": "de",
+      "lessonAlias": "C2::Markierte Wortstellung",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.073",
+      "language": "de",
+      "lessonAlias": "C2::Komplexe Einbettung",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.074",
+      "language": "de",
+      "lessonAlias": "C2::Ellipsen und Substitution",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.075",
+      "language": "de",
+      "lessonAlias": "C2::Rhetorische Syntax",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.076",
+      "language": "de",
+      "lessonAlias": "C2::Ambiguitätskontrolle",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.077",
+      "language": "de",
+      "lessonAlias": "C2::Idiomatizität und Kollokation",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.078",
+      "language": "de",
+      "lessonAlias": "C2::Textsortenspezifische Grammatik",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.079",
+      "language": "de",
+      "lessonAlias": "C2::Stilistische Verdichtung",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.080",
+      "language": "de",
+      "lessonAlias": "C2::Pragmatische Feinsteuerung",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.081",
+      "language": "de",
+      "lessonAlias": "C2::Kohärenz langer Beiträge",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.082",
+      "language": "de",
+      "lessonAlias": "C2::Selbstreparatur im Sprechen",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.083",
+      "language": "de",
+      "lessonAlias": "C2::Mehrsprachige Interferenzkontrolle",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.084",
+      "language": "de",
+      "lessonAlias": "C2::Integrierte automatische Produktion",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.085",
+      "language": "de",
+      "lessonAlias": "A1::Imperativ mit du, ihr und Sie",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.086",
+      "language": "de",
+      "lessonAlias": "A1::Satzklammer im einfachen Hauptsatz",
+      "familyIds": [
+        "G01"
+      ],
+      "prerequisites": [],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.087",
+      "language": "de",
+      "lessonAlias": "A1::Uhrzeit, Datum und Reihenfolge",
+      "familyIds": [
+        "G07"
+      ],
+      "prerequisites": [
+        "de.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.088",
+      "language": "de",
+      "lessonAlias": "A1::Temporale Präpositionen am, um und im",
+      "familyIds": [
+        "G13"
+      ],
+      "prerequisites": [
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.089",
+      "language": "de",
+      "lessonAlias": "A1::Häufigkeitsadverbien",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "de.c.008",
+        "de.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.090",
+      "language": "de",
+      "lessonAlias": "A1::es gibt mit Akkusativ",
+      "familyIds": [
+        "G01"
+      ],
+      "prerequisites": [],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.091",
+      "language": "de",
+      "lessonAlias": "A1::man für allgemeine Aussagen",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.092",
+      "language": "de",
+      "lessonAlias": "A1::und, aber, denn und oder",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.093",
+      "language": "de",
+      "lessonAlias": "A1::Mengenwörter viel, wenig und genug",
+      "familyIds": [
+        "G03"
+      ],
+      "prerequisites": [
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.094",
+      "language": "de",
+      "lessonAlias": "A1::Akkusativpronomen",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.095",
+      "language": "de",
+      "lessonAlias": "A2::Adjektivdeklination nach Artikeln",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "de.c.008",
+        "de.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.096",
+      "language": "de",
+      "lessonAlias": "A2::Relativsätze mit der, die und das",
+      "familyIds": [
+        "G15"
+      ],
+      "prerequisites": [
+        "de.c.001",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.097",
+      "language": "de",
+      "lessonAlias": "A2::Nebensätze mit ob",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.098",
+      "language": "de",
+      "lessonAlias": "A2::darum, deshalb und deswegen",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.099",
+      "language": "de",
+      "lessonAlias": "A2::denn und sondern",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.100",
+      "language": "de",
+      "lessonAlias": "A2::Verben mit Dativ und Akkusativ",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.101",
+      "language": "de",
+      "lessonAlias": "A2::Verben mit Präpositionen Grundlagen",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.102",
+      "language": "de",
+      "lessonAlias": "A2::Futur I mit werden",
+      "familyIds": [
+        "G07"
+      ],
+      "prerequisites": [
+        "de.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.103",
+      "language": "de",
+      "lessonAlias": "A2::da- und wo-Komposita Grundlagen",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.104",
+      "language": "de",
+      "lessonAlias": "A2::Infinitiv mit zu Grundlagen",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "de.c.002"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.105",
+      "language": "de",
+      "lessonAlias": "B1::Adjektivdeklination vollständig",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "de.c.008",
+        "de.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.106",
+      "language": "de",
+      "lessonAlias": "B1::Pronominaladverbien",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.107",
+      "language": "de",
+      "lessonAlias": "B1::Futur I für Prognosen und Vermutungen",
+      "familyIds": [
+        "G07"
+      ],
+      "prerequisites": [
+        "de.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.108",
+      "language": "de",
+      "lessonAlias": "B1::Vorgangspassiv und Zustandspassiv",
+      "familyIds": [
+        "G11"
+      ],
+      "prerequisites": [
+        "de.c.003"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.109",
+      "language": "de",
+      "lessonAlias": "B1::Temporalsätze mit bevor, nachdem und seitdem",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.110",
+      "language": "de",
+      "lessonAlias": "B1::ohne zu und anstatt zu",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "de.c.002"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.111",
+      "language": "de",
+      "lessonAlias": "B1::lassen als Vollverb und Hilfsverb",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.112",
+      "language": "de",
+      "lessonAlias": "B1::brauchen nicht zu",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.113",
+      "language": "de",
+      "lessonAlias": "B1::Zweiteilige Konnektoren",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.114",
+      "language": "de",
+      "lessonAlias": "B1::Genitivpräpositionen",
+      "familyIds": [
+        "G13"
+      ],
+      "prerequisites": [
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.115",
+      "language": "de",
+      "lessonAlias": "B2::Indirekte Rede mit Konjunktiv I",
+      "familyIds": [
+        "G17"
+      ],
+      "prerequisites": [
+        "de.c.003",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.116",
+      "language": "de",
+      "lessonAlias": "B2::Modalpartikeln im Gespräch",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.117",
+      "language": "de",
+      "lessonAlias": "B2::Komplexe Temporalsätze",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.118",
+      "language": "de",
+      "lessonAlias": "B2::Konzessive Verknüpfung mit dennoch und gleichwohl",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.119",
+      "language": "de",
+      "lessonAlias": "B2::Kausale und konsekutive Verknüpfung",
+      "familyIds": [
+        "G14"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.120",
+      "language": "de",
+      "lessonAlias": "B2::Partizipialattribute erweitern",
+      "familyIds": [
+        "G05"
+      ],
+      "prerequisites": [
+        "de.c.008",
+        "de.c.007"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.121",
+      "language": "de",
+      "lessonAlias": "B2::Nominalisierte Adjektive",
+      "familyIds": [
+        "G02"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.122",
+      "language": "de",
+      "lessonAlias": "B2::Erweiterte Genitivpräpositionen",
+      "familyIds": [
+        "G13"
+      ],
+      "prerequisites": [
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.123",
+      "language": "de",
+      "lessonAlias": "B2::Funktionsverbgefüge systematisch",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.124",
+      "language": "de",
+      "lessonAlias": "B2::Informationsstruktur durch Vorfeldbesetzung",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.125",
+      "language": "de",
+      "lessonAlias": "C1::Diskurspartikeln und Registersteuerung",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.126",
+      "language": "de",
+      "lessonAlias": "C1::Tempusfolge in Berichten",
+      "familyIds": [
+        "G06"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.127",
+      "language": "de",
+      "lessonAlias": "C1::Komplexe Verbvalenz und Rektion",
+      "familyIds": [
+        "G08"
+      ],
+      "prerequisites": [
+        "de.c.086",
+        "de.c.008"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.128",
+      "language": "de",
+      "lessonAlias": "C1::Infinitiv- und Partizipialverdichtung",
+      "familyIds": [
+        "G09"
+      ],
+      "prerequisites": [
+        "de.c.002"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.129",
+      "language": "de",
+      "lessonAlias": "C1::Indirekte Rede mit Tempus und Modalität",
+      "familyIds": [
+        "G17"
+      ],
+      "prerequisites": [
+        "de.c.003",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.130",
+      "language": "de",
+      "lessonAlias": "C1::Komplexe Konditionalstrukturen",
+      "familyIds": [
+        "G16"
+      ],
+      "prerequisites": [
+        "de.c.003",
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.131",
+      "language": "de",
+      "lessonAlias": "C1::Kausale Zuschreibung und wissenschaftliche Positionierung",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.132",
+      "language": "de",
+      "lessonAlias": "C1::Thema-Rhema-Gliederung",
+      "familyIds": [
+        "G18"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.133",
+      "language": "de",
+      "lessonAlias": "C1::Interpunktion als Bedeutungssignal",
+      "familyIds": [
+        "G21"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.134",
+      "language": "de",
+      "lessonAlias": "C1::Syntax wissenschaftlicher Zitate",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.135",
+      "language": "de",
+      "lessonAlias": "C2::Deixis und Perspektivsteuerung",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.136",
+      "language": "de",
+      "lessonAlias": "C2::Anapher und Katapher",
+      "familyIds": [
+        "G04"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.137",
+      "language": "de",
+      "lessonAlias": "C2::Skopus und Negation",
+      "familyIds": [
+        "G12"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.138",
+      "language": "de",
+      "lessonAlias": "C2::Präsupposition und Implikatur",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.139",
+      "language": "de",
+      "lessonAlias": "C2::Informationsdichte kontrollieren",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.140",
+      "language": "de",
+      "lessonAlias": "C2::Regionale Variation und Standardregister",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.141",
+      "language": "de",
+      "lessonAlias": "C2::Modalität und Evidentialität",
+      "familyIds": [
+        "G10"
+      ],
+      "prerequisites": [
+        "de.c.086"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.142",
+      "language": "de",
+      "lessonAlias": "C2::Textsortentransformation",
+      "familyIds": [
+        "G19"
+      ],
+      "prerequisites": [
+        "de.c.022"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.143",
+      "language": "de",
+      "lessonAlias": "C2::Syntaktischer Rhythmus",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    },
+    {
+      "id": "de.c.144",
+      "language": "de",
+      "lessonAlias": "C2::Fehlerdiagnose und präzise Reformulierung",
+      "familyIds": [
+        "G20"
+      ],
+      "prerequisites": [
+        "de.c.022",
+        "de.c.066"
+      ],
+      "review": "authored"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+
+.pdf-reader-root {
+  --ink: #29233d;
+  --muted: #706982;
+  --teal: #8267a6;
+  --teal-dark: #45345f;
+  --ivory: #f7f4fa;
+  --line: #e2dce9;
+  --danger: #b83232;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+.pdf-reader-root { width: 100%; max-width: none !important; height: 100vh; height: 100dvh; min-height: 560px; margin: 0 !important; overflow: hidden; background: var(--ivory); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; flex-direction: column; }
+.pdf-reader-root button, .pdf-reader-root input, .pdf-reader-root textarea, .pdf-reader-root select { font: inherit; color: inherit; }
+.pdf-reader-root button { cursor: pointer; transition: transform 140ms cubic-bezier(.23, 1, .32, 1), border-color 160ms ease, background-color 160ms ease; }
+.pdf-reader-root button:active { transform: scale(.97); }
+.pdf-reader-root button:disabled { cursor: not-allowed; opacity: .48; }
+.pdf-reader-root :is(button, a, input, textarea, select):focus-visible { outline: 3px solid #8267a666; outline-offset: 2px; }
+

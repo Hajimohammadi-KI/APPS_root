@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "profile": {
+    "displayName": "Elahe",
+    "language": "de",
+    "timezone": "Europe/Berlin",
+    "humanAvatar": true
+  },
+  "planning": {
+    "dailyCapacityMinutes": 240,
+    "weeklyGoalMinutes": 1200,
+    "workdayStart": "09:00",
+    "restDays": [0, 6]
+  },
+  "accessibility": {
+    "focusMode": false,
+    "largerText": false,
+    "generousLineHeight": true,
+    "readingRuler": false,
+    "reducedMotion": false
+  },
+  "permissions": {
+    "googleCalendarRead": true,
+    "gmailRead": true,
+    "googleDriveRead": false
+  },
+  "ai": {
+    "explanationProvider": "openai",
+    "translationProvider": "deepl",
+    "targetLanguage": "fa"
+  },
+  "organization": {
+    "nestedFolders": true,
+    "defaultProjectFolder": "Projekte"
+  },
+  "integration": {
+    "trustedOrigins": [],
+    "notifyOnChange": true
+  },
+  "updatedAt": ""
+}

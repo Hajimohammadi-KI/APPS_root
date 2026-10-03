@@ -1,0 +1,306 @@
+.teacher-page {
+  min-height: 100vh;
+  padding: clamp(18px, 4vw, 48px);
+  background: linear-gradient(145deg, #faf7ff, #f4f7ff);
+  color: #17112b;
+}
+.teacher-hero,
+.teacher-editor,
+.teacher-library {
+  max-width: 1320px;
+  margin: 0 auto;
+  border: 1px solid #dfd5ef;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(73, 48, 108, 0.09);
+}
+.teacher-hero {
+  padding: clamp(22px, 4vw, 44px);
+  display: grid;
+  gap: 22px;
+}
+.teacher-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #64409c;
+  font-weight: 800;
+}
+.teacher-kicker {
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: #8055bd;
+}
+.teacher-hero h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1;
+  margin: 0.55rem 0 1rem;
+}
+.teacher-hero p {
+  max-width: 75ch;
+  color: #5d566d;
+  line-height: 1.7;
+}
+.teacher-review-queue {
+  max-width: 1320px;
+  margin: 22px auto 0;
+  border: 1px solid #d9ccea;
+  border-radius: 24px;
+  padding: clamp(20px, 3vw, 34px);
+  background: linear-gradient(135deg, #fff, #f7f2ff);
+  box-shadow: 0 18px 50px rgba(73, 48, 108, 0.08);
+}
+.teacher-review-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.teacher-review-heading h2 { margin: 0.35rem 0; }
+.teacher-review-heading p { margin: 0; color: #5d566d; line-height: 1.55; }
+.teacher-review-heading > strong { flex: 0 0 auto; border-radius: 999px; padding: 7px 11px; background: #eee5fb; color: #63379f; }
+.teacher-review-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; margin: 20px 0 0; padding: 0; list-style: none; }
+/* Native list semantics let screen readers announce the review queue size. */
+.teacher-review-items > li { min-width: 0; border: 1px solid #e0d5ee; border-radius: 18px; padding: 17px; background: rgba(255, 255, 255, 0.96); transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease; }
+.teacher-review-items > li:hover { border-color: #a98bcf; box-shadow: 0 12px 26px rgba(73, 48, 108, 0.1); transform: translateY(-1px); }
+.teacher-review-items header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.teacher-review-items header svg { width: 24px; color: #7345ad; }
+.teacher-review-items h3 { margin: 0.45rem 0 0; overflow-wrap: anywhere; }
+.teacher-review-priority { display: inline-flex; border-radius: 999px; padding: 4px 8px; font-size: 0.72rem; font-weight: 900; }
+.teacher-review-priority-now { background: #fff0e7; color: #a7460a; }
+.teacher-review-priority-planned { background: #e9f3ff; color: #1d5d92; }
+.teacher-review-items dl { display: grid; gap: 8px; margin: 16px 0; }
+.teacher-review-items dl > div { display: grid; grid-template-columns: minmax(105px, 0.38fr) minmax(0, 1fr); gap: 10px; border-top: 1px solid #eee8f4; padding-top: 8px; }
+.teacher-review-items dt { color: #73687f; font-size: 0.75rem; font-weight: 800; }
+.teacher-review-items dd { margin: 0; overflow-wrap: anywhere; color: #30263e; line-height: 1.45; }
+.teacher-review-action { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; border: 1px solid #cbb9e2; border-radius: 12px; padding: 9px 13px; background: #7043ad; color: #fff; font-weight: 850; text-decoration: none; }
+.teacher-review-empty { margin-top: 18px; border: 1px dashed #cdbce4; border-radius: 16px; padding: 22px; color: #655d72; text-align: center; }
+.teacher-assignment { max-width: 1320px; margin: 22px auto 0; border: 1px solid #d9ccea; border-radius: 24px; padding: clamp(20px, 3vw, 34px); background: #fff; box-shadow: 0 18px 50px rgba(73, 48, 108, 0.08); }
+.teacher-assignment-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.teacher-assignment-heading h2 { margin: 0.35rem 0 0; }
+.teacher-assignment-heading > span { border-radius: 999px; padding: 6px 10px; background: #eaf8ef; color: #17633a; font-weight: 850; }
+.teacher-assignment-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+.teacher-assignment label { display: grid; gap: 7px; font-weight: 800; }
+.teacher-assignment select, .teacher-assignment textarea { width: 100%; min-width: 0; border: 1px solid #d9cdea; border-radius: 13px; padding: 12px 14px; background: #fbf9ff; color: #17112b; font: inherit; }
+.teacher-assignment-source { margin: 18px 0; border: 1px solid #e1d8ed; border-radius: 17px; padding: 17px; background: #f9f6fd; }
+.teacher-assignment-source > span { color: #7043ad; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
+.teacher-assignment-source h3 { margin: 0.55rem 0 0.35rem; }
+.teacher-assignment-source p { margin: 0; color: #5d566d; line-height: 1.55; }
+.teacher-assignment-check { grid-template-columns: auto minmax(0, 1fr) !important; align-items: center; margin: 14px 0; }
+.teacher-assignment-check input { width: 20px; height: 20px; }
+.teacher-assignment .teacher-primary-button:disabled { cursor: not-allowed; opacity: 0.5; }
+.teacher-layout {
+  max-width: 1320px;
+  margin: 22px auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 22px;
+}
+.teacher-editor,
+.teacher-library {
+  padding: clamp(20px, 3vw, 34px);
+}
+.teacher-editor > label,
+.teacher-grid label {
+  display: grid;
+  gap: 8px;
+  font-weight: 800;
+  margin: 15px 0;
+}
+.teacher-editor input,
+.teacher-editor select,
+.teacher-editor textarea {
+  width: 100%;
+  border: 1px solid #d9cdea;
+  border-radius: 13px;
+  padding: 12px 14px;
+  background: #fbf9ff;
+  color: #17112b;
+  font: inherit;
+}
+.teacher-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.teacher-editor small {
+  font-weight: 500;
+  color: #716a7e;
+}
+.teacher-helper {
+  margin: 1rem 0;
+  border-left: 3px solid #7043ad;
+  border-radius: 0 12px 12px 0;
+  padding: 0.75rem 1rem;
+  background: #f4edff;
+  color: #563487;
+  line-height: 1.5;
+}
+.teacher-editor fieldset {
+  margin: 18px 0;
+  border: 1px solid #d9cdea;
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 13px;
+}
+.teacher-upload,
+.teacher-secondary-button,
+.teacher-primary-button,
+.teacher-item-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 11px 15px;
+  font-weight: 850;
+  cursor: pointer;
+}
+.teacher-upload,
+.teacher-secondary-button,
+.teacher-item-actions button {
+  border: 1px solid #cdbce4;
+  background: white;
+  color: #563487;
+}
+.teacher-upload input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  opacity: 0;
+}
+.teacher-primary-button {
+  border: 0;
+  background: #7043ad;
+  color: white;
+}
+.teacher-primary-button svg,
+.teacher-secondary-button svg,
+.teacher-upload svg,
+.teacher-item-actions svg {
+  width: 18px;
+}
+.teacher-message {
+  padding: 12px;
+  border-radius: 12px;
+  background: #eaf8ef;
+  color: #126b37;
+}
+.teacher-library-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.teacher-library-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+.teacher-import-button {
+  position: relative;
+}
+.teacher-import-button input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  opacity: 0;
+}
+.teacher-items {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+.teacher-items article {
+  border: 1px solid #e1d9eb;
+  border-radius: 17px;
+  padding: 18px;
+  background: #fdfcff;
+}
+.teacher-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+.teacher-item-meta span {
+  background: #eee6fa;
+  color: #68409d;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+.teacher-item-meta .teacher-status-draft {
+  background: #fff4df;
+  color: #8a4b00;
+}
+.teacher-item-meta .teacher-status-review {
+  background: #e9f3ff;
+  color: #1b5c93;
+}
+.teacher-item-meta .teacher-status-published {
+  background: #eaf8ef;
+  color: #17633a;
+}
+.teacher-items h3 {
+  margin: 0.8rem 0 0.35rem;
+}
+.teacher-items p {
+  white-space: pre-wrap;
+  color: #5d566d;
+}
+.teacher-item-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 13px;
+}
+.teacher-item-actions .danger {
+  color: #a12635;
+  border-color: #efc4c9;
+}
+.teacher-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #696174;
+}
+.teacher-empty svg {
+  width: 46px;
+  height: 46px;
+  margin: auto;
+  color: #8b63bd;
+}
+@media (max-width: 850px) {
+  .teacher-layout {
+    grid-template-columns: 1fr;
+  }
+  .teacher-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .teacher-page {
+    padding: 10px;
+  }
+  .teacher-hero,
+  .teacher-review-queue,
+  .teacher-assignment,
+  .teacher-editor,
+  .teacher-library {
+    border-radius: 17px;
+  }
+  .teacher-library-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .teacher-library-actions {
+    inline-size: 100%;
+  }
+  .teacher-review-heading { flex-direction: column; }
+  .teacher-assignment-heading { flex-direction: column; }
+  .teacher-assignment-grid { grid-template-columns: 1fr; }
+  .teacher-review-items dl > div { grid-template-columns: 1fr; gap: 3px; }
+  .teacher-review-action { width: 100%; }
+  .teacher-secondary-button,
+  .teacher-primary-button {
+    width: 100%;
+  }
+}

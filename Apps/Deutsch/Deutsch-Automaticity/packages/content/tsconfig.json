@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "isolatedDeclarations": false,
+    "lib": ["ES2024"],
+    "types": ["bun"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.json"]
+}

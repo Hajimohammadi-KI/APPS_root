@@ -1,5 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { watchDailyDashboard, type DailyDashboard } from "@automaticity/learning-core/automaticity";
+
 import {
   ArrowUpRight,
   Bell,
@@ -13,50 +17,33 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { grammarUnits } from "@grammar/content";
-import { currentDailyPlan, useAppStore } from "@/features/store/app-store";
+import { useAppStore } from "@/features/store/app-store";
 import { AutomaticityEvidenceSummary } from "@/features/components/automaticity-evidence-summary";
 
-const dayNames = ["M", "T", "W", "T", "F", "S", "S"];
-
-function dateKey(daysAgo: number) {
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
-  date.setDate(date.getDate() - daysAgo);
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-}
+const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
 
 export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => void }) {
   const { state } = useAppStore();
-  const plan = currentDailyPlan(state);
+  const [daily, setDaily] = useState<DailyDashboard | null>(null);
+  useEffect(() => watchDailyDashboard("en", setDaily), []);
   const name = state.learner.displayName.trim() || "Learner";
   const level = state.learner.selfDeclaredLevel ?? "A1";
   const levelUnits = grammarUnits.filter((unit) => unit.level === level);
   const practiced = levelUnits.filter((unit) => (state.mastery[unit.title]?.status ?? "new") !== "new").length;
   const finished = levelUnits.filter((unit) => ["stable", "automatic"].includes(state.mastery[unit.title]?.status ?? "new")).length;
   const progress = levelUnits.length ? Math.round((finished / levelUnits.length) * 100) : 0;
-  const todayProgress = Math.round((new Set(plan.completed).size / 3) * 100);
-  const week = Array.from({ length: 7 }, (_, index) => state.activity[dateKey(6 - index)] ?? 0);
+  const todayProgress = daily?.percentage ?? null;
+  const week = daily?.week.map((day) => day.count) ?? Array<number>(7).fill(0);
   const chartPoints = week.map((value, index) => {
     const x = 8 + index * 15.3;
     const y = value > 0 ? 82 - Math.min(68, value * 12) : 82;
     return `${x},${y}`;
   }).join(" ");
-  const streak = (() => {
-    let count = 0;
-    for (let index = 0; index < 60; index += 1) {
-      if ((state.activity[dateKey(index)] ?? 0) > 0) count += 1;
-      else break;
-    }
-    return count;
-  })();
-  const dueReviews = state.reviews.filter((review) => review.status === "pending" && review.dueAt <= Date.now()).length;
-  const completedDailySteps = new Set(plan.completed).size;
-  const remainingDailySteps = Math.max(0, 3 - completedDailySteps);
-  const continuePlan = dueReviews > 0
-    ? { screen: "progress", reason: `${dueReviews} review${dueReviews === 1 ? " is" : "s are"} due now, so recall comes before new material.` }
-    : remainingDailySteps > 0
-      ? { screen: "daily", reason: `${remainingDailySteps} practice step${remainingDailySteps === 1 ? " remains" : "s remain"} in today’s saved plan.` }
-      : { screen: "integrated-skills", reason: "Today’s core plan is complete; continue the exact Integrated Skills path saved on this device." };
+  const streak = daily?.streak ?? 0;
+  const dueReviews = daily?.dueReviews ?? 0;
+  const continueReason = daily?.paused
+    ? "Your learning plan is paused. Open it to resume when you are ready."
+    : "Continue from your saved responses. Error repair and due reviews come before new material.";
   const automatic = Object.values(state.mastery).filter((item) => item.status === "automatic").length;
   const averageRecordingSeconds = state.sessions.length
     ? Math.round(state.sessions.reduce((total, session) => total + session.seconds, 0) / state.sessions.length)
@@ -73,7 +60,7 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
       <header className="home-v2-heading">
         <div>
           <p className="home-v2-eyebrow"><Sparkles aria-hidden /> Personal learning dashboard</p>
-          <h1>Good morning, {name}</h1>
+          <h1>Welcome, {name}</h1>
           <p>Small, measurable practice that turns English into a usable skill.</p>
         </div>
         <div className="home-v2-tools" aria-label="Dashboard tools">
@@ -86,9 +73,8 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
       </header>
 
       <section className="home-v2-continue" aria-labelledby="continue-plan-title">
-        <div><p>Recommended next action</p><h2 id="continue-plan-title">Continue my plan</h2><span>{continuePlan.reason}</span></div>
-        {/* One state-driven CTA removes competing choices and always resumes real saved work. */}
-        <button type="button" onClick={() => navigate(continuePlan.screen)}>Continue my plan <ChevronRight /></button>
+        <div><p>Recommended next action</p><h2 id="continue-plan-title">Continue my plan</h2><span>{continueReason}</span></div>
+        <Link href="/practice">Continue my plan <ChevronRight /></Link>
       </section>
 
       <div className="home-v2-grid">
@@ -100,7 +86,7 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
               <button type="button" onClick={() => navigate("progress")}>View details <ArrowUpRight /></button>
             </div>
             <div className="home-v2-chart-summary">
-              <div><strong>+{todayProgress}%</strong><span>today’s mission</span></div>
+              <div><strong>{todayProgress === null ? "—" : `${todayProgress}%`}</strong><span>daily response goal · practice activity</span></div>
               <div><strong>{automatic}</strong><span>legacy practice thresholds reached</span></div>
               <div><strong>{averageRecordingSeconds === null ? "N/A" : `${averageRecordingSeconds}s`}</strong><span>average recording length</span></div>
             </div>
@@ -115,7 +101,7 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
                   return <circle key={point} cx={cx} cy={cy} r="1.4" />;
                 })}
               </svg>
-              <div className="home-v2-chart-days">{dayNames.map((day, index) => <span key={`${day}-${index}`}>{day}</span>)}</div>
+              <div className="home-v2-chart-days">{daily?.week.map((day) => <span key={day.date} title={day.date}>{dayNames[day.weekday]}</span>)}</div>
               {week.every((value) => value === 0) ? <p className="home-v2-chart-empty">Your chart will begin after your first saved practice.</p> : null}
             </div>
           </section>
@@ -124,7 +110,7 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
             <article className="home-v2-progress-card">
               <div className="home-v2-card-head"><div><p>Selected practice level · {level}</p><h2>Practice activity</h2></div><TrendingUp /></div>
               <ProgressRow label="Legacy practice thresholds" value={progress} />
-              <ProgressRow label="Today’s practice" value={todayProgress} />
+              <ProgressRow label="Daily response goal" value={todayProgress} />
               <p>{state.sessions.length} speaking sessions saved. Recording count does not measure speaking ability.</p>
               {/* Keep machine-derived practice signals visibly separate from human judgement. */}
               <div className="home-v2-evidence-legend" role="note">
@@ -153,8 +139,8 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
 
           <section className="home-v2-rhythm">
             <div className="home-v2-card-head"><div><p>Consistency</p><h2>{streak}-day rhythm</h2></div><CalendarDays /></div>
-            <div className="home-v2-week">{week.map((value, index) => <span className={value > 0 ? "is-active" : ""} key={index}>{dayNames[index]}</span>)}</div>
-            <p>{dueReviews ? `${dueReviews} review${dueReviews === 1 ? "" : "s"} ready today.` : "No urgent review is waiting. Keep your rhythm."}</p>
+            <div className="home-v2-week">{daily?.week.map((day) => <span className={day.count > 0 ? "is-active" : ""} key={day.date} title={day.date}>{dayNames[day.weekday]}</span>)}</div>
+            <p>{daily?.repairs ? `${daily.repairs} saved response${daily.repairs === 1 ? " needs" : "s need"} repair.` : dueReviews ? `${dueReviews} review${dueReviews === 1 ? "" : "s"} ready today.` : "Open your learning path for your next practice."}</p>
           </section>
         </aside>
       </div>
@@ -162,6 +148,6 @@ export function DashboardV2Screen({ navigate }: { navigate: (screen: string) => 
   );
 }
 
-function ProgressRow({ label, value }: { label: string; value: number }) {
-  return <div className="home-v2-progress-row"><div><span>{label}</span><strong>{value}%</strong></div><div className="home-v2-progress-track"><span style={{ width: `${value}%` }} /></div></div>;
+function ProgressRow({ label, value }: { label: string; value: number | null }) {
+  return <div className="home-v2-progress-row"><div><span>{label}</span><strong>{value === null ? "—" : `${value}%`}</strong></div>{value !== null && <div className="home-v2-progress-track"><span style={{ width: `${value}%` }} /></div>}</div>;
 }

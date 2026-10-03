@@ -48,5 +48,16 @@
     "OS capture does not validate browser getUserMedia or MediaRecorder.",
     "No human speech reference or acoustic loopback was used.",
     "Low signal does not identify a hardware fault or confirm the mute setting."
-  ]
+  ],
+  "browserFollowUp": {
+    "date": "2026-10-03",
+    "browser": "Connected Chrome",
+    "scope": "Local app UI with synthetic draft; no audio uploaded",
+    "cancelPassed": true,
+    "permissionTimeoutRecoveryPassed": true,
+    "practiceDraftPreservedOnCancel": true,
+    "browserRecordingConfirmed": false,
+    "audiblePlaybackConfirmed": false,
+    "limitation": "Permission did not resolve; browser permission popup is outside the available page controls. Earlier hardware results above remain historical."
+  }
 }

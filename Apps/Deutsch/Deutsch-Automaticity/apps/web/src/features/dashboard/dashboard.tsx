@@ -1,4 +1,9 @@
 "use client";
+import { useEffect, useState } from "react";
+import {
+  watchDailyDashboard,
+  type DailyDashboard,
+} from "@automaticity/learning-core/automaticity";
 import { AutomaticityEvidenceSummary } from "@/features/progress/automaticity-evidence-summary";
 
 import Link from "next/link";
@@ -16,26 +21,15 @@ import {
 } from "lucide-react";
 
 import { grammarUnits } from "@grammar/content";
-import {
-  calculateDailyProgress,
-  DAILY_PRACTICE_STEPS,
-  getDailyPlan,
-  getTodayKey,
-} from "@grammar/domain";
+import { calculateDailyProgress } from "@grammar/domain";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 
-const dayNames = ["M", "D", "M", "D", "F", "S", "S"];
-
-function dateKey(daysAgo: number) {
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
-  date.setDate(date.getDate() - daysAgo);
-  return getTodayKey(date);
-}
+const dayNames = ["S", "M", "D", "M", "D", "F", "S"];
 
 export function Dashboard() {
   const { state } = useLearnerState();
-  const plan = getDailyPlan(state);
+  const [daily, setDaily] = useState<DailyDashboard | null>(null);
+  useEffect(() => watchDailyDashboard("de", setDaily), []);
   const name = state.learner.displayName.trim() || "Lernende";
   const level = state.learningLevel ?? state.learner.selfDeclaredLevel ?? "A1";
   const levelUnits = grammarUnits.filter((unit) => unit.level === level);
@@ -68,13 +62,8 @@ export function Dashboard() {
         ) / levelRecords.length
       : 0,
   });
-  const todayProgress = Math.round(
-    (plan.completed.length / DAILY_PRACTICE_STEPS.length) * 100,
-  );
-  const week = Array.from(
-    { length: 7 },
-    (_, index) => state.activity[dateKey(6 - index)] ?? 0,
-  );
+  const todayProgress = daily?.percentage ?? null;
+  const week = daily?.week.map((day) => day.count) ?? Array<number>(7).fill(0);
   const hasWeekActivity = week.some((value) => value > 0);
   const chartPoints = week
     .map((value, index) => {
@@ -83,37 +72,11 @@ export function Dashboard() {
       return `${x},${y}`;
     })
     .join(" ");
-  const streak = (() => {
-    let count = 0;
-    for (let index = 0; index < 60; index += 1) {
-      if ((state.activity[dateKey(index)] ?? 0) > 0) count += 1;
-      else break;
-    }
-    return count;
-  })();
-  const dueReviews = state.reviews.filter(
-    (review) => !review.mastered && review.due <= Date.now(),
-  ).length;
-  const remainingDailySteps = Math.max(
-    0,
-    DAILY_PRACTICE_STEPS.length - new Set(plan.completed).size,
-  );
-  const continuePlan =
-    dueReviews > 0
-      ? {
-          href: "/wiederholungen" as const,
-          reason: `${dueReviews} Wiederholung${dueReviews === 1 ? " ist" : "en sind"} jetzt fällig; Abruf kommt vor neuem Stoff.`,
-        }
-      : remainingDailySteps > 0
-        ? {
-            href: "/heute" as const,
-            reason: `${remainingDailySteps} Schritt${remainingDailySteps === 1 ? " ist" : "e sind"} im heute gespeicherten Plan noch offen.`,
-          }
-        : {
-            href: "/fertigkeiten" as const,
-            reason:
-              "Der heutige Kernplan ist fertig; setze den auf diesem Gerät gespeicherten Fertigkeiten-Pfad fort.",
-          };
+  const streak = daily?.streak ?? 0;
+  const dueReviews = daily?.dueReviews ?? 0;
+  const continueReason = daily?.paused
+    ? "Dein Lernplan ist pausiert. Öffne ihn, wenn du bereit bist, weiterzuüben."
+    : "Setze bei deinen gespeicherten Antworten fort. Fehlerkorrektur und fällige Wiederholungen haben Vorrang vor neuem Stoff.";
   const automatic = levelRecords.filter(
     (record) => record.status === "automatic",
   ).length;
@@ -188,10 +151,9 @@ export function Dashboard() {
         <div>
           <p>Empfohlener nächster Schritt</p>
           <h2 id="continue-plan-title">Meinen Plan fortsetzen</h2>
-          <span>{continuePlan.reason}</span>
+          <span>{continueReason}</span>
         </div>
-        {/* Genau eine zustandsbasierte Aktion setzt den wirklich gespeicherten Lernweg fort. */}
-        <Link href={continuePlan.href}>
+        <Link href="/practice">
           Meinen Plan fortsetzen <ChevronRight />
         </Link>
       </section>
@@ -214,8 +176,10 @@ export function Dashboard() {
             </div>
             <div className="home-v2-chart-summary">
               <div>
-                <strong>+{todayProgress}%</strong>
-                <span>heutige Mission</span>
+                <strong>
+                  {todayProgress === null ? "—" : `${todayProgress}%`}
+                </strong>
+                <span>tägliches Antwortziel · Übungsaktivität</span>
               </div>
               <div>
                 <strong>{automatic}</strong>
@@ -257,8 +221,10 @@ export function Dashboard() {
                     })}
                   </svg>
                   <div className="home-v2-chart-days">
-                    {dayNames.map((day, index) => (
-                      <span key={`${day}-${index}`}>{day}</span>
+                    {daily?.week.map((day) => (
+                      <span key={day.date} title={day.date}>
+                        {dayNames[day.weekday]}
+                      </span>
                     ))}
                   </div>
                 </>
@@ -284,7 +250,10 @@ export function Dashboard() {
                 label="Bearbeitete Themen"
                 value={progressDimensions.coverage}
               />
-              <ProgressRow label="Heutige Übung" value={todayProgress} />
+              <ProgressRow
+                label="Tägliches Antwortziel"
+                value={todayProgress}
+              />
               {speakingAccuracy === null ? (
                 <p>Transkriptgenauigkeit noch nicht geprüft.</p>
               ) : (
@@ -345,21 +314,29 @@ export function Dashboard() {
             <div className="home-v2-card-head">
               <div>
                 <p>Beständigkeit</p>
-                <h2>{streak}-Tage-Rhythmus</h2>
+                <h2>
+                  {streak}-{streak === 1 ? "Tag" : "Tage"}-Rhythmus
+                </h2>
               </div>
               <CalendarDays />
             </div>
             <div className="home-v2-week">
-              {week.map((value, index) => (
-                <span className={value > 0 ? "is-active" : ""} key={index}>
-                  {dayNames[index]}
+              {daily?.week.map((day) => (
+                <span
+                  className={day.count > 0 ? "is-active" : ""}
+                  key={day.date}
+                  title={day.date}
+                >
+                  {dayNames[day.weekday]}
                 </span>
               ))}
             </div>
             <p>
-              {dueReviews
-                ? `${dueReviews} Wiederholung${dueReviews === 1 ? " ist" : "en sind"} heute fällig.`
-                : "Keine dringende Wiederholung wartet. Halte deinen Rhythmus."}
+              {daily?.repairs
+                ? `${daily.repairs} gespeicherte Antwort${daily.repairs === 1 ? " benötigt" : "en benötigen"} eine Korrektur.`
+                : dueReviews
+                  ? `${dueReviews} Wiederholung${dueReviews === 1 ? " ist" : "en sind"} heute fällig.`
+                  : "Öffne deinen Lernweg für die nächste Übung."}
             </p>
           </section>
         </aside>
@@ -368,16 +345,24 @@ export function Dashboard() {
   );
 }
 
-function ProgressRow({ label, value }: { label: string; value: number }) {
+function ProgressRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: number | null;
+}) {
   return (
     <div className="home-v2-progress-row">
       <div>
         <span>{label}</span>
-        <strong>{value}%</strong>
+        <strong>{value === null ? "—" : `${value}%`}</strong>
       </div>
-      <div className="home-v2-progress-track">
-        <span style={{ width: `${value}%` }} />
-      </div>
+      {value !== null && (
+        <div className="home-v2-progress-track">
+          <span style={{ width: `${value}%` }} />
+        </div>
+      )}
     </div>
   );
 }

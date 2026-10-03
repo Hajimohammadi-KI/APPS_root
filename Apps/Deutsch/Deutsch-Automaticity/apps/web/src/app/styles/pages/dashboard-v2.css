@@ -161,6 +161,10 @@
 }
 .home-v2-profile strong {
   font-size: 13px;
+  max-width: 8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .home-v2-grid {
   display: grid;

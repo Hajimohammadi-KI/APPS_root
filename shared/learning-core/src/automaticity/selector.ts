@@ -196,6 +196,7 @@ function rankDailyFocus(
   const scopedProgress = progress.filter((row) =>
     known.has(row.constructionId),
   );
+  const newLearner = !scopedProgress.some((row) => row.attempts > 0);
   const repairs = scopedProgress
     .filter(
       (row) =>
@@ -240,7 +241,7 @@ function rankDailyFocus(
         ),
   );
   const ranked = (eligible.length ? eligible : pack.units)
-    .map((unit) => {
+    .map((unit, curriculumOrder) => {
       const rows = byId.get(unit.id) ?? [];
       const dueDates = rows.flatMap((row) =>
         row.nextReviewAt && Date.parse(row.nextReviewAt) <= Date.parse(now)
@@ -253,6 +254,7 @@ function rankDailyFocus(
       const tried = rows.reduce((n, row) => n + row.attempts, 0);
       return {
         unit,
+        curriculumOrder,
         due,
         dueAt,
         repair,
@@ -276,6 +278,7 @@ function rankDailyFocus(
         (a.dueAt !== null && b.dueAt !== null ? a.dueAt - b.dueAt : 0) ||
         Number(b.repair) - Number(a.repair) ||
         a.unexploredPreparation - b.unexploredPreparation ||
+        (newLearner ? a.curriculumOrder - b.curriculumOrder : 0) ||
         a.score - b.score ||
         a.unit.id.localeCompare(b.unit.id),
     );

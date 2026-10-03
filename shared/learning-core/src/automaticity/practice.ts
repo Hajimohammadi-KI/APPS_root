@@ -29,6 +29,7 @@ import {
 } from "./assessment-feedback";
 import { createTransformerClient } from "./transformer-client";
 import { RecordingCapture } from "./recording-capture";
+import { requestMicrophone } from "./microphone-request";
 import { responseExposure } from "./response-exposure";
 import {
   captureCompleteBackup,
@@ -226,6 +227,7 @@ export async function mountPractice(
     stream: MediaStream | null = null,
     audioUrl: string | null = null;
   let stopRecording: (() => void) | null = null;
+  let microphoneRequest: AbortController | null = null;
   let busy = false,
     recordingPending = false;
   let lockRelease: (() => void) | null = null;
@@ -1059,7 +1061,7 @@ export async function mountPractice(
         ),
         element(
           "p",
-          `${row?.attempts ?? 0} ${t("attempts", "Versuche")} · ${row?.assessed ?? 0} ${t("practice checks", "Übungsprüfungen")}`,
+          `${row?.attempts ?? 0} ${row?.attempts === 1 ? t("attempt", "Versuch") : t("attempts", "Versuche")} · ${row?.assessed ?? 0} ${row?.assessed === 1 ? t("practice check", "Übungsprüfung") : t("practice checks", "Übungsprüfungen")}`,
         ),
         element(
           "p",
@@ -1072,7 +1074,7 @@ export async function mountPractice(
         ),
         element(
           "p",
-          `${row?.delayedSuccesses ?? 0} ${t("delayed checks", "verzögerte Prüfungen")} · ${row?.novelSuccesses ?? 0} ${t("new-context checks", "Prüfungen in neuem Kontext")}`,
+          `${row?.delayedSuccesses ?? 0} ${row?.delayedSuccesses === 1 ? t("delayed check", "verzögerte Prüfung") : t("delayed checks", "verzögerte Prüfungen")} · ${row?.novelSuccesses ?? 0} ${row?.novelSuccesses === 1 ? t("new-context check", "Prüfung in neuem Kontext") : t("new-context checks", "Prüfungen in neuem Kontext")}`,
         ),
       );
       const target = learningTarget(reduced, unit.id, modality);
@@ -1638,12 +1640,35 @@ export async function mountPractice(
             );
           recordingPending = true;
           recordButton.disabled = true;
+          cancelRequest.hidden = false;
+          const request = new AbortController();
+          microphoneRequest = request;
           try {
             try {
-              stream = await navigator.mediaDevices.getUserMedia({
-                audio: true,
-              });
-            } catch {
+              stream = await requestMicrophone(
+                () => navigator.mediaDevices.getUserMedia({ audio: true }),
+                { signal: request.signal },
+              );
+              microphoneRequest = null;
+              cancelRequest.hidden = true;
+            } catch (error) {
+              if (error instanceof DOMException && error.name === "AbortError")
+                throw new Error(
+                  t(
+                    "Microphone request cancelled. Your draft and previous recording were kept.",
+                    "Mikrofonanfrage abgebrochen. Dein Entwurf und deine vorherige Aufnahme bleiben erhalten.",
+                  ),
+                );
+              if (
+                error instanceof DOMException &&
+                error.name === "TimeoutError"
+              )
+                throw new Error(
+                  t(
+                    "No microphone permission response was received. Check this site's permission and try again, or continue with writing. Your draft was kept.",
+                    "Keine Antwort auf die Mikrofonanfrage erhalten. Prüfe die Berechtigung dieser Website und versuche es erneut oder übe schriftlich weiter. Dein Entwurf bleibt erhalten.",
+                  ),
+                );
               throw new Error(
                 t(
                   "The microphone is unavailable or permission was denied. Your draft is kept. Allow microphone access or continue with writing.",
@@ -1730,13 +1755,20 @@ export async function mountPractice(
             stopRecording = null;
             throw error;
           } finally {
+            microphoneRequest = null;
+            cancelRequest.hidden = true;
             recordingPending = false;
             recordButton.disabled = false;
           }
         },
       );
+      const cancelRequest = button(
+        t("Cancel microphone request", "Mikrofonanfrage abbrechen"),
+        () => microphoneRequest?.abort(),
+      );
+      cancelRequest.hidden = true;
       recordButton.disabled = !!session.submittedId || !editing;
-      media.append(recordButton);
+      media.append(recordButton, cancelRequest);
       drawAudio();
       form.append(
         media,
@@ -2237,9 +2269,10 @@ export async function mountPractice(
         button(t("Next task", "Nächste Aufgabe"), () => fresh(next)),
       );
   }
-  document.addEventListener("visibilitychange", () =>
-    timer?.visibility(!document.hidden),
-  );
+  document.addEventListener("visibilitychange", () => {
+    timer?.visibility(!document.hidden);
+    if (document.hidden) microphoneRequest?.abort();
+  });
   window.addEventListener("storage", (event) => {
     if (busy) return;
     if (
@@ -2251,6 +2284,7 @@ export async function mountPractice(
     }
   });
   window.addEventListener("pagehide", () => {
+    microphoneRequest?.abort();
     stream?.getTracks().forEach((track) => track.stop());
     lockRelease?.();
     if (audioUrl) URL.revokeObjectURL(audioUrl);

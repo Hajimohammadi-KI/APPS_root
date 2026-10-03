@@ -1,10 +1,11 @@
 {
-  "publishedAt": "2026-10-02",
-  "version": "20.9.0",
-  "webRelease": "2026.10.02.1",
+  "publishedAt": "2026-10-03",
+  "version": "20.9.3",
+  "webRelease": "2026.10.03.7",
   "changes": [
-    "Visible improvement roadmap with stable application links",
-    "Accessible mobile navigation and accurate service status",
-    "Offline cache preservation and API cache exclusion"
+    "Lesbare Navigation auf dem Handy ohne zusammengedrückte Beschriftungen",
+    "Direkt im gespeicherten Lernweg weiterüben",
+    "Tagesziel und Aktivitätsdiagramm nutzen gespeicherte Antworten",
+    "Unbeantwortete Mikrofonanfragen abbrechen und Entwürfe behalten"
   ]
 }

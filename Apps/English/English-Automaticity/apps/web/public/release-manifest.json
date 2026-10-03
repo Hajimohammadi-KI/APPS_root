@@ -1,10 +1,11 @@
 {
-  "publishedAt": "2026-10-02",
-  "version": "27.4.0",
-  "webRelease": "2026.10.02.1",
+  "publishedAt": "2026-10-03",
+  "version": "27.4.3",
+  "webRelease": "2026.10.03.7",
   "changes": [
-    "Visible improvement roadmap with stable application links",
-    "Accessible mobile navigation and accurate service status",
-    "Offline cache preservation and API cache exclusion"
+    "A clearer mobile heading with dashboard tools on their own row",
+    "Continue directly from your saved learning path",
+    "Daily goal and activity chart use your saved responses",
+    "Cancel unanswered microphone requests without losing your draft"
   ]
 }

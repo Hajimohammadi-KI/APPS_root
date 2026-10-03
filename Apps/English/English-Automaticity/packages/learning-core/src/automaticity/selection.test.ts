@@ -626,6 +626,35 @@ describe("scoped feedback and task selection", () => {
     expect(result.reason).toBe("diagnostic");
     expect(selectDailyFocus(pack, [], at, "A1", 99)).toEqual(result);
   });
+
+  test("a new learner starts in authored curriculum order across calendar days", () => {
+    const playablePack: CurriculumPack = {
+      ...pack,
+      units: pack.units.map((unit) => ({
+        ...unit,
+        tasks: [
+          { ...task, id: `${unit.id}.retrieve`, constructionId: unit.id },
+        ],
+      })),
+    };
+    for (const day of [
+      "2026-10-03T10:00:00Z",
+      "2026-10-04T10:00:00Z",
+      "2026-10-05T10:00:00Z",
+    ]) {
+      expect(
+        selectDailyFocus(pack, [], day, "A1").focus.map((unit) => unit.id),
+      ).toEqual(pack.units.slice(0, 2).map((unit) => unit.id));
+      expect(
+        selectNextLearningTask(
+          playablePack,
+          reduceAutomaticityEvents([], "de", day),
+          day,
+          "A1",
+        )?.unit.id,
+      ).toBe(pack.units[0]!.id);
+    }
+  });
   test("practice errors can request repair before a mastery score exists", () => {
     const result = assessControlledTask(
       {

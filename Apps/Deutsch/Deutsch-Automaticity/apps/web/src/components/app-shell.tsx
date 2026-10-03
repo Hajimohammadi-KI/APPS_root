@@ -4,6 +4,7 @@ import { AutomaticityEvidenceSummary } from "@/features/progress/automaticity-ev
 import { ChevronDown, Clock3, Folder, Settings } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import webRelease from "../../public/web-release.json";
 
 import { AppNavigation } from "@/components/app-navigation";
 import { ApiConnectionStatus } from "@/components/api-connection-status";
@@ -153,10 +154,10 @@ export function AppShell({
                 </span>
               </span>
             </div>
-            <div className="flex min-w-0 items-center gap-2 justify-self-end">
+            <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2 justify-self-end">
               <a
                 href="/roadmap.html"
-                className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm font-semibold"
+                className="inline-flex min-h-11 shrink-0 items-center rounded-lg border px-3 text-sm font-semibold"
                 lang="fa"
                 dir="rtl"
               >
@@ -173,7 +174,7 @@ export function AppShell({
               <UserGuideButton />
               <InstallAppButton surface="header" />
               <Badge variant="secondary" className="hidden xl:inline-flex">
-                Web · 2026.10.02.1
+                Web · {webRelease.release}
               </Badge>
             </div>
           </div>

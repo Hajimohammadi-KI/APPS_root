@@ -17,7 +17,7 @@ try {
   finally { await unlink(unlisted); }
   for (const relative of [
     "Apps/English/English-Automaticity/packages/learning-core/src/automaticity/evidence.ts",
-    "Apps/Deutsch-Automaticity/apps/web/public/learning-core/automaticity-v2.js",
+    "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/learning-core/automaticity-v2.js",
   ]) {
     const target = resolve(root, relative);
     assert(target.startsWith(root + "\\") || target.startsWith(root + "/"));

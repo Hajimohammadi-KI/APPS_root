@@ -233,15 +233,15 @@ export function mountEvidenceOverview(
           "p",
           mode.accuracy === null
             ? t("Accuracy not yet established", "Genauigkeit noch nicht belegt")
-            : `${Math.round(mode.accuracy * 100)}% · ${mode.assessed} ${t("independent checks", "unabhängige Prüfungen")}`,
+            : `${Math.round(mode.accuracy * 100)}% · ${mode.assessed} ${mode.assessed === 1 ? t("independent check", "unabhängige Prüfung") : t("independent checks", "unabhängige Prüfungen")}`,
         ),
         node(
           "p",
-          `${mode.attempts} ${t("saved attempts", "gespeicherte Versuche")} · ${mode.assisted} ${t("with recorded support", "mit erfasster Hilfe")}`,
+          `${mode.attempts} ${mode.attempts === 1 ? t("saved attempt", "gespeicherter Versuch") : t("saved attempts", "gespeicherte Versuche")} · ${mode.assisted} ${t("with recorded support", "mit erfasster Hilfe")}`,
         ),
         node(
           "p",
-          `${mode.delayed} ${t("delayed successes", "erfolgreiche verzögerte Abrufe")} · ${mode.transfer} ${t("new-context successes", "Erfolge in neuem Kontext")}`,
+          `${mode.delayed} ${mode.delayed === 1 ? t("delayed success", "erfolgreicher verzögerter Abruf") : t("delayed successes", "erfolgreiche verzögerte Abrufe")} · ${mode.transfer} ${mode.transfer === 1 ? t("new-context success", "Erfolg in neuem Kontext") : t("new-context successes", "Erfolge in neuem Kontext")}`,
         ),
         node(
           "p",

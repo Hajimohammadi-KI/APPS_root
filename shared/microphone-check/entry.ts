@@ -1,4 +1,5 @@
 import { RecordingCapture } from "../learning-core/src/automaticity/recording-capture";
+import { requestMicrophone } from "../learning-core/src/automaticity/microphone-request";
 import { summarizeSignal } from "./signal";
 const start = document.querySelector<HTMLButtonElement>("#start")!;
 const stop = document.querySelector<HTMLButtonElement>("#stop")!;
@@ -15,6 +16,7 @@ let url: string | null = null,
   generation = 0,
   active = false,
   hasSignal = false;
+let microphoneRequest: AbortController | null = null;
 function stopTracks() {
   stream?.getTracks().forEach((track) => track.stop());
   stream = null;
@@ -36,6 +38,10 @@ function discard() {
   confirmation.textContent = "";
 }
 function requestStop() {
+  if (microphoneRequest) {
+    cancel();
+    return;
+  }
   clearTimer();
   capture?.stop();
   if (recorder?.state === "recording") recorder.stop();
@@ -45,6 +51,8 @@ function requestStop() {
 }
 function friendlyError(error: unknown): string {
   const name = error instanceof DOMException ? error.name : "";
+  if (name === "TimeoutError")
+    return "پاسخ مجوز میکروفن دریافت نشد. درخواست پایان یافت؛ اجازهٔ همین سایت را بررسی کن و دوباره شروع کن.";
   if (name === "NotAllowedError" || name === "SecurityError")
     return "اجازهٔ میکروفن داده نشد. از تنظیمات همین سایت اجازه بده و دوباره امتحان کن.";
   if (name === "NotFoundError")
@@ -57,9 +65,11 @@ start.addEventListener("click", async () => {
   if (active) return;
   active = true;
   start.disabled = true;
-  stop.disabled = true;
-  discard();
-  result.textContent = "";
+  stop.disabled = false;
+  stop.textContent = "لغو درخواست میکروفن";
+  heard.disabled = true;
+  heard.checked = false;
+  confirmation.textContent = "";
   const attempt = ++generation;
   let context: AudioContext | null = null;
   try {
@@ -71,12 +81,19 @@ start.addEventListener("click", async () => {
     )
       throw Error("Unsupported browser");
     status.textContent = "در انتظار اجازهٔ میکروفن…";
-    const acquired = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const request = new AbortController();
+    microphoneRequest = request;
+    const acquired = await requestMicrophone(
+      () => navigator.mediaDevices.getUserMedia({ audio: true }),
+      { signal: request.signal },
+    );
     if (attempt !== generation) {
       acquired.getTracks().forEach((track) => track.stop());
       return;
     }
     stream = acquired;
+    microphoneRequest = null;
+    stop.textContent = "توقف ضبط";
     const current = new MediaRecorder(acquired),
       session = new RecordingCapture();
     recorder = current;
@@ -122,6 +139,7 @@ start.addEventListener("click", async () => {
     const summary = channels.sort(
       (a, b) => (b.rmsDb ?? -200) - (a.rmsDb ?? -200),
     )[0]!;
+    discard();
     hasSignal = summary.state !== "silence";
     const descriptions = {
       silence:
@@ -139,7 +157,8 @@ start.addEventListener("click", async () => {
   } catch (error) {
     if (attempt === generation) {
       status.textContent = friendlyError(error);
-      result.textContent = "آزمون کامل نشد؛ نتیجهٔ موفق ثبت نشده است.";
+      if (!url)
+        result.textContent = "آزمون کامل نشد؛ نتیجهٔ موفق ثبت نشده است.";
     }
   } finally {
     if (context) await context.close().catch(() => {});
@@ -148,9 +167,11 @@ start.addEventListener("click", async () => {
       stopTracks();
       recorder = null;
       capture = null;
+      microphoneRequest = null;
       active = false;
       start.disabled = false;
       stop.disabled = true;
+      stop.textContent = "توقف ضبط";
     }
   }
 });
@@ -164,8 +185,10 @@ heard.addEventListener("change", () => {
       ? "بازپخش را خودت تأیید کردی. این نتیجه فقط مربوط به ضبط و شنیدن صدا در همین دستگاه است و امتیاز یادگیری ایجاد نمی‌کند."
       : "";
 });
-function cancel() {
+function cancel(discardRecording = false) {
   generation++;
+  microphoneRequest?.abort();
+  microphoneRequest = null;
   clearTimer();
   capture?.fail();
   if (recorder?.state === "recording") recorder.stop();
@@ -175,10 +198,11 @@ function cancel() {
   active = false;
   start.disabled = false;
   stop.disabled = true;
-  discard();
+  stop.textContent = "توقف ضبط";
+  if (discardRecording) discard();
   status.textContent = "آزمون متوقف شد. برای ضبط دوباره دکمهٔ شروع را بزن.";
 }
 document.addEventListener("visibilitychange", () => {
   if (document.hidden && active) cancel();
 });
-window.addEventListener("pagehide", cancel);
+window.addEventListener("pagehide", () => cancel(true));

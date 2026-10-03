@@ -1,0 +1,14 @@
+{
+  "config": {
+    "candidateId": "qwen3-4b-pass-review-diagnostic",
+    "version": "2026-10-03.1",
+    "modelAlias": "Qwen3-4B-Q4_K_M",
+    "modelSha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+    "runtimeFingerprint": "b11146-7fe450e19",
+    "endpoint": "http://127.0.0.1:8769/v1/chat/completions",
+    "timeoutMs": 60000
+  },
+  "configurationSha256": "638afd1c29320bae16447cdc84d2058c23b90c75d8bcab6d5e293134855e8385",
+  "promptVersion": "grammar-review-2026-10-03.4",
+  "taskPrompt": "Proofread this original sentence as standard written language. Check grammar, spelling, capitalization, punctuation and word choice; do not change style. No additional construction or task facts are required, so targetObserved and meaningPreserved are true unless the sentence is unintelligible. Missing context or genuine ambiguity requires not_assessed. A correct sentence must be accepted unchanged."
+}

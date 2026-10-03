@@ -18,3 +18,12 @@ test("audio correlation cannot be manufactured by a constant baseline",()=>{
   expect(regressionMetrics(Array.from({length:100},(_,i)=>i%10),Array.from({length:100},(_,i)=>i%10)).diagnosticScreenPassed).toBe(true);
   expect(()=>regressionMetrics([1],[NaN])).toThrow();
 });
+
+test("even one false acceptance fails the zero-observed-error screen", () => {
+  const rows = Array.from({ length: 400 }, (_, i) => ({
+    label: i < 200 ? "error" as const : "clean" as const,
+    verdict: i > 0 && i < 200 ? "incorrect" as const : "correct" as const,
+  }));
+  expect(writingMetrics(rows).falseAccept).toBe(1);
+  expect(writingMetrics(rows).diagnosticScreenPassed).toBe(false);
+});

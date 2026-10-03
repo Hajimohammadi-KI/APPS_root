@@ -18,6 +18,7 @@ import {
 } from "./transformer-route";
 import { createTransformerClient } from "./transformer-client";
 import { assessControlledTask } from "./assessment";
+import { confirmsUnchangedText } from "./text-pass-check";
 
 const config: TransformerConfig = {
   candidateId: "fixture-model",
@@ -147,6 +148,168 @@ const mock = (
       ],
       ...extra,
     })) as typeof fetch;
+
+const passingFeedback = {
+  verdict: "pass",
+  grammar: "pass",
+  targetObserved: true,
+  meaningPreserved: true,
+  feedback: "The sentence is correct.",
+  minimalCorrection: null,
+  styleRewrite: null,
+  spans: [],
+};
+
+test("a false pass is withheld when the separate review finds an error", async () => {
+  const requests: { messages: { content: string }[] }[] = [];
+  const transport = (async (_url: unknown, init?: RequestInit) => {
+    requests.push(JSON.parse(String(init?.body)));
+    return mock(requests.length === 1 ? passingFeedback : rawFeedback)(
+      config.endpoint,
+    );
+  }) as typeof fetch;
+  const original = await attempt();
+  const result = await assessWithQualifiedTransformer(
+    original,
+    task,
+    config,
+    await approval(),
+    transport,
+  );
+  expect(requests).toHaveLength(2);
+  expect(requests[0]!.messages[0]!.content).not.toBe(
+    requests[1]!.messages[0]!.content,
+  );
+  // The second review sees the original input, not the first judgment.
+  expect(requests[1]!.messages[1]).toEqual(requests[0]!.messages[1]);
+  expect(result.verdict).toBe("not_assessed");
+  expect(result.dimensions.grammar).toBe("unknown");
+  expect(result.uncertainty).toBe(true);
+  expect(result.correction).toBeNull();
+  expect(result.spans).toEqual([]);
+});
+
+test("agreeing task reviews and a clean text check can accept a correct alternative", async () => {
+  let calls = 0;
+  const result = await proposeTransformerFeedback(
+    { ...input, response: "I enjoy drinking tea." },
+    config,
+    (async () => {
+      calls++;
+      return mock(
+        calls === 3
+          ? { verdict: "correct", correction: "I enjoy drinking tea." }
+          : passingFeedback,
+      )(config.endpoint);
+    }) as typeof fetch,
+  );
+  expect(calls).toBe(3);
+  expect(result.verdict).toBe("pass");
+});
+
+test("a text check vetoes a repeated false pass without issuing an unverified correction", async () => {
+  for (const value of [
+    { verdict: "incorrect", correction: "I like tea." },
+    { verdict: "correct", correction: "I like tea." },
+    { verdict: "uncertain", correction: input.response },
+    { verdict: "correct", correction: input.response, approved: true },
+    null,
+  ]) {
+    let calls = 0;
+    const result = await proposeTransformerFeedback(input, config, (async (
+      _url: unknown,
+      init?: RequestInit,
+    ) => {
+      calls++;
+      if (calls < 3) return mock(passingFeedback)(config.endpoint);
+      const body = JSON.parse(String(init?.body));
+      expect(JSON.parse(body.messages[1].content)).toEqual({
+        language: "en",
+        text: input.response,
+      });
+      return value === null
+        ? new Response("offline", { status: 503 })
+        : mock(value)(config.endpoint);
+    }) as typeof fetch);
+    expect(calls).toBe(3);
+    expect(result.verdict).toBe("not_assessed");
+    expect(result.minimalCorrection).toBeNull();
+  }
+  expect(
+    confirmsUnchangedText(
+      { verdict: "correct", correction: "  Ich trinke Tee im Cafe\u0301. " },
+      "Ich trinke Tee im Café.",
+    ),
+  ).toBe(true);
+});
+
+test("missing, uncertain or inconsistent second review cannot retain a pass", async () => {
+  for (const second of [
+    null,
+    { ...passingFeedback, verdict: "not_assessed", grammar: "unknown" },
+    { ...passingFeedback, meaningPreserved: false },
+    {
+      ...passingFeedback,
+      verdict: "target_not_observed",
+      targetObserved: false,
+    },
+  ]) {
+    let calls = 0;
+    const result = await proposeTransformerFeedback(
+      input,
+      config,
+      (async () => {
+        calls++;
+        if (calls === 1) return mock(passingFeedback)(config.endpoint);
+        return second === null
+          ? new Response("offline", { status: 503 })
+          : mock(second)(config.endpoint);
+      }) as typeof fetch,
+    );
+    expect(calls).toBe(2);
+    expect(result.verdict).toBe("not_assessed");
+  }
+});
+
+test("a definite repair uses one inference and preserves its evidence", async () => {
+  let calls = 0;
+  const result = await proposeTransformerFeedback(input, config, (async () => {
+    calls++;
+    return mock()(config.endpoint);
+  }) as typeof fetch);
+  expect(calls).toBe(1);
+  expect(result.verdict).toBe("needs_repair");
+  expect(result.minimalCorrection).toBe("I like tea.");
+});
+
+test("both reviews share one deadline and a failed second review is unscored in the installed route", async () => {
+  const signals: (AbortSignal | null | undefined)[] = [];
+  const original = await attempt();
+  const handler = createTransformerRoute({
+    language: "en",
+    loadRelease: release,
+    loadPack: async () => pack(),
+    transport: (async (_url: unknown, init?: RequestInit) => {
+      signals.push(init?.signal);
+      return signals.length === 1
+        ? mock(passingFeedback)(config.endpoint)
+        : new Response("offline", { status: 503 });
+    }) as typeof fetch,
+  });
+  const response = await handler(
+    new Request("http://localhost/api/automaticity/transformer", {
+      method: "POST",
+      body: JSON.stringify({ attempt: original }),
+    }),
+  );
+  const body = await response.json();
+  expect(signals).toHaveLength(2);
+  expect(signals[0]).toBeInstanceOf(AbortSignal);
+  expect(signals[1]).toBe(signals[0]);
+  expect(body.assessment.verdict).toBe("not_assessed");
+  expect(body.assessment.uncertainty).toBe(true);
+  expect(body.assessment.responseSha256).toBe(original.response.sha256);
+});
 test("real transport shape wraps minimal correction into the shared contract; style stays separate", async () => {
   const original = await attempt(),
     before = JSON.stringify(original);

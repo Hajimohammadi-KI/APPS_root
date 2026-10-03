@@ -46,8 +46,8 @@ export function writingMetrics(rows: { label: "error" | "clean"; verdict: Verdic
     abstentions: rows.filter(r => r.verdict === "uncertain").length,
     coverage: rows.length ? rows.filter(r => r.verdict !== "uncertain").length / rows.length : 0,
     falseAcceptance95, correctAcceptance95, detectedErrors, errorDetection95,
-    protocolVersion: 2,
-    diagnosticScreenPassed: errors.length >= 100 && clean.length >= 100 && falseAcceptance95!.high <= .05 && correctAcceptance95!.low >= .9 && errorDetection95!.low >= .9 };
+    protocolVersion: 3,
+    diagnosticScreenPassed: errors.length >= 100 && clean.length >= 100 && falseAccept === 0 && falseAcceptance95!.high <= .05 && correctAcceptance95!.low >= .9 && errorDetection95!.low >= .9 };
 }
 export function regressionMetrics(expected: number[], actual: number[]) {
   if (!expected.length || expected.length !== actual.length || [...expected,...actual].some(x => !Number.isFinite(x))) throw Error("Invalid paired scores");

@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T11:12:17.690Z",
+  "configurationSha256": "1b27f2d8cb461d3135a78b926f23982cc8d6facba34bf1e5a06304d340e94303",
+  "parentPredictionsSha256": "324447b8da4c910d8e3aec3920861dc6c1bcdf7badfbda3e611b90876c50ba75",
+  "predictionsSha256": "aa3bbd63a0feab38021635502fd0769e43554e4568f64b118957a5b1d87efffc",
+  "count": 453,
+  "textCheckCases": 225,
+  "languages": {
+    "en": {
+      "previous": {
+        "count": 197,
+        "errors": 101,
+        "clean": 96,
+        "falseAccept": 19,
+        "trueAccept": 67,
+        "falseAcceptanceRate": 0.18811881188118812,
+        "correctAcceptanceRate": 0.6979166666666666,
+        "abstentions": 15,
+        "coverage": 0.9238578680203046,
+        "falseAcceptance95": {
+          "low": 0.12387125256857148,
+          "high": 0.27522142785906156
+        },
+        "correctAcceptance95": {
+          "low": 0.5999149981303159,
+          "high": 0.7806884150093544
+        },
+        "detectedErrors": 74,
+        "errorDetection95": {
+          "low": 0.6390055396933065,
+          "high": 0.8092903971305228
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "twoTaskReviews": {
+        "count": 197,
+        "errors": 101,
+        "clean": 96,
+        "falseAccept": 26,
+        "trueAccept": 68,
+        "falseAcceptanceRate": 0.25742574257425743,
+        "correctAcceptanceRate": 0.7083333333333334,
+        "abstentions": 103,
+        "coverage": 0.47715736040609136,
+        "falseAcceptance95": {
+          "low": 0.1821524234251967,
+          "high": 0.3504752169074069
+        },
+        "correctAcceptance95": {
+          "low": 0.6108010969781356,
+          "high": 0.7898340747478333
+        },
+        "detectedErrors": 0,
+        "errorDetection95": {
+          "low": 0,
+          "high": 0.03664064639985608
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "candidate": {
+        "count": 197,
+        "errors": 101,
+        "clean": 96,
+        "falseAccept": 14,
+        "trueAccept": 55,
+        "falseAcceptanceRate": 0.13861386138613863,
+        "correctAcceptanceRate": 0.5729166666666666,
+        "abstentions": 128,
+        "coverage": 0.350253807106599,
+        "falseAcceptance95": {
+          "low": 0.08439988610512009,
+          "high": 0.21931068010467694
+        },
+        "correctAcceptance95": {
+          "low": 0.47304314124416946,
+          "high": 0.6671791688599197
+        },
+        "detectedErrors": 0,
+        "errorDetection95": {
+          "low": 0,
+          "high": 0.03664064639985608
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      }
+    },
+    "de": {
+      "previous": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 19,
+        "trueAccept": 87,
+        "falseAcceptanceRate": 0.1484375,
+        "correctAcceptanceRate": 0.6796875,
+        "abstentions": 33,
+        "coverage": 0.87109375,
+        "falseAcceptance95": {
+          "low": 0.09713463115350009,
+          "high": 0.22022729122631057
+        },
+        "correctAcceptance95": {
+          "low": 0.5946341124452171,
+          "high": 0.7542697938939907
+        },
+        "detectedErrors": 91,
+        "errorDetection95": {
+          "low": 0.6271668442501395,
+          "high": 0.7824160023219742
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "twoTaskReviews": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 38,
+        "trueAccept": 93,
+        "falseAcceptanceRate": 0.296875,
+        "correctAcceptanceRate": 0.7265625,
+        "abstentions": 125,
+        "coverage": 0.51171875,
+        "falseAcceptance95": {
+          "low": 0.22458166083566666,
+          "high": 0.3810052276504461
+        },
+        "correctAcceptance95": {
+          "low": 0.6435923144931466,
+          "high": 0.7963300021954198
+        },
+        "detectedErrors": 0,
+        "errorDetection95": {
+          "low": 0,
+          "high": 0.029136956273508416
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "candidate": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 17,
+        "trueAccept": 70,
+        "falseAcceptanceRate": 0.1328125,
+        "correctAcceptanceRate": 0.546875,
+        "abstentions": 169,
+        "coverage": 0.33984375,
+        "falseAcceptance95": {
+          "low": 0.08460228531840389,
+          "high": 0.20242016694495388
+        },
+        "correctAcceptance95": {
+          "low": 0.4605263667221713,
+          "high": 0.6304920436271872
+        },
+        "detectedErrors": 0,
+        "errorDetection95": {
+          "low": 0,
+          "high": 0.029136956273508416
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      }
+    }
+  },
+  "releaseEligible": false,
+  "limitations": "Offline staged diagnostic on the same development cases: reuse frozen outcomes of the unchanged first two requests, then invoke the added text-only checker for every retained pass. Remaining timeout is 60 seconds minus recorded parent elapsed time; this is not end-to-end latency validation. All three reviews use the same model and can repeat errors. No independent holdout, app-task qualification or human release approval."
+}

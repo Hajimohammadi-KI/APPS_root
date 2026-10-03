@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-03T11:11:05.460Z",
+  "configurationSha256": "1b27f2d8cb461d3135a78b926f23982cc8d6facba34bf1e5a06304d340e94303",
+  "parentConfigurationSha256": "638afd1c29320bae16447cdc84d2058c23b90c75d8bcab6d5e293134855e8385",
+  "parentPredictionsSha256": "324447b8da4c910d8e3aec3920861dc6c1bcdf7badfbda3e611b90876c50ba75",
+  "sourceSelectionSha256": "4f4323c6f6e1dd87746fa03147272e7e39be526b329d8b48f950771202eda6cb",
+  "cases": 453,
+  "limitations": "Offline staged diagnostic on the same development cases: reuse frozen outcomes of the unchanged first two requests, then invoke the added text-only checker for every retained pass. Remaining timeout is 60 seconds minus recorded parent elapsed time; this is not end-to-end latency validation. All three reviews use the same model and can repeat errors. No independent holdout, app-task qualification or human release approval."
+}

@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T11:07:07.872Z",
+  "configurationSha256": "638afd1c29320bae16447cdc84d2058c23b90c75d8bcab6d5e293134855e8385",
+  "selectionSha256": "4f4323c6f6e1dd87746fa03147272e7e39be526b329d8b48f950771202eda6cb",
+  "predictionsSha256": "324447b8da4c910d8e3aec3920861dc6c1bcdf7badfbda3e611b90876c50ba75",
+  "count": 453,
+  "twoReviewCases": 245,
+  "failedFirstReviews": 192,
+  "languages": {
+    "en": {
+      "previous": {
+        "count": 197,
+        "errors": 101,
+        "clean": 96,
+        "falseAccept": 19,
+        "trueAccept": 67,
+        "falseAcceptanceRate": 0.18811881188118812,
+        "correctAcceptanceRate": 0.6979166666666666,
+        "abstentions": 15,
+        "coverage": 0.9238578680203046,
+        "falseAcceptance95": {
+          "low": 0.12387125256857148,
+          "high": 0.27522142785906156
+        },
+        "correctAcceptance95": {
+          "low": 0.5999149981303159,
+          "high": 0.7806884150093544
+        },
+        "detectedErrors": 74,
+        "errorDetection95": {
+          "low": 0.6390055396933065,
+          "high": 0.8092903971305228
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "candidate": {
+        "count": 197,
+        "errors": 101,
+        "clean": 96,
+        "falseAccept": 26,
+        "trueAccept": 68,
+        "falseAcceptanceRate": 0.25742574257425743,
+        "correctAcceptanceRate": 0.7083333333333334,
+        "abstentions": 103,
+        "coverage": 0.47715736040609136,
+        "falseAcceptance95": {
+          "low": 0.1821524234251967,
+          "high": 0.3504752169074069
+        },
+        "correctAcceptance95": {
+          "low": 0.6108010969781356,
+          "high": 0.7898340747478333
+        },
+        "detectedErrors": 0,
+        "errorDetection95": {
+          "low": 0,
+          "high": 0.03664064639985608
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      }
+    },
+    "de": {
+      "previous": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 19,
+        "trueAccept": 87,
+        "falseAcceptanceRate": 0.1484375,
+        "correctAcceptanceRate": 0.6796875,
+        "abstentions": 33,
+        "coverage": 0.87109375,
+        "falseAcceptance95": {
+          "low": 0.09713463115350009,
+          "high": 0.22022729122631057
+        },
+        "correctAcceptance95": {
+          "low": 0.5946341124452171,
+          "high": 0.7542697938939907
+        },
+        "detectedErrors": 91,
+        "errorDetection95": {
+          "low": 0.6271668442501395,
+          "high": 0.7824160023219742
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "candidate": {
+        "count": 256,
+        "errors": 128,
+        "clean": 128,
+        "falseAccept": 38,
+        "trueAccept": 93,
+        "falseAcceptanceRate": 0.296875,
+        "correctAcceptanceRate": 0.7265625,
+        "abstentions": 125,
+        "coverage": 0.51171875,
+        "falseAcceptance95": {
+          "low": 0.22458166083566666,
+          "high": 0.3810052276504461
+        },
+        "correctAcceptance95": {
+          "low": 0.6435923144931466,
+          "high": 0.7963300021954198
+        },
+        "detectedErrors": 0,
+        "errorDetection95": {
+          "low": 0,
+          "high": 0.029136956273508416
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      }
+    }
+  },
+  "releaseEligible": false,
+  "limitations": "Same frozen public corpus subset as v1; development diagnostic, not a new holdout. Both reviews use the same model and may repeat errors. Changes include prompts, deterministic decoding and two-pass policy. Corpus labels include spelling, punctuation and word choice, not only grammar. No app task compliance qualification. No human release approval.",
+  "provenanceCorrection": {
+    "at": "2026-10-03T11:11:05.308Z",
+    "originalPredictionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reason": "The pre-writer BunFile cached an empty size. Recomputed from a fresh file handle; all 453 rows and aggregate metrics verified, predictions unchanged."
+  }
+}

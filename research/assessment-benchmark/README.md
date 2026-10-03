@@ -45,3 +45,7 @@ The original v1 writing identity was verified after the run and is explicitly la
 - Transformer repair validation rejects unchanged corrections, including whitespace/Unicode-only differences. Prompt version and configuration binding were advanced so old approvals cannot silently authorize the changed contract.
 
 Physical Windows capture was tested on 2026-10-03: default input for five seconds, default-output driver playback, one-second input reopening, and separate three-second captures from UGREEN and EPOS. Every buffer completed and all cleanup calls succeeded. UGREEN was low-level (−51.53 dBFS); EPOS was near silence (−96.19 dBFS). Speech clarity, acoustic output audibility, browser/app operation and phone/tablet operation remain unverified. The explicit device tests were capture-only. No raw audio was stored or uploaded. See `../../artifacts/physical-microphone-20261003/README.md` and `../../docs/physical-microphone-check.json`.
+
+## R55 follow-up
+
+See `../../docs/LANGUAGE-TEXT-ASSESSMENT-R55.md` for both failed experiments and the exact tradeoff. The final staged diagnostic reduces false accepts to 14/101 English and 17/128 German, with correct acceptance only 55/96 and 70/128 and no valid error corrections. Neither candidate is approved. `run-writing-pass-review.ts` runs the task-review pair; `run-writing-text-check.ts` adds a text-only veto to frozen intermediate outcomes. Existing runs refuse overwrite. Changes to the candidate require a new frozen version and qualification; these commands do not activate production models.

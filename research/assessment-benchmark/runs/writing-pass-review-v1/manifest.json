@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-03T10:54:03.711Z",
+  "selectionSha256": "4f4323c6f6e1dd87746fa03147272e7e39be526b329d8b48f950771202eda6cb",
+  "sourceSelectionSha256": "8d53ba64e620f583d218a4ed224880ce3b3a5dadd423616a8b4a40f4191c3058",
+  "previousPredictionsSha256": "18fd0d849a40bfa000db7549f67f5006b84e3665ab1b23a4fb7171bdc8523c74",
+  "count": 453,
+  "protocolVersion": 3,
+  "policy": "Zero observed false accepts plus prior confidence, correct-acceptance and error-detection minimums; abstaining on everything fails.",
+  "limitation": "Same frozen public corpus subset as v1; development diagnostic, not a new holdout. Both reviews use the same model and may repeat errors. Changes include prompts, deterministic decoding and two-pass policy. Corpus labels include spelling, punctuation and word choice, not only grammar. No app task compliance qualification. No human release approval."
+}

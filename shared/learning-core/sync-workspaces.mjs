@@ -53,6 +53,7 @@ const files = [
   "src/automaticity/representative-fixtures.ts",
   "src/automaticity/representative.test.ts",
   "src/automaticity/transformer.ts",
+  "src/automaticity/text-pass-check.ts",
   "src/automaticity/transformer.test.ts",
   "src/automaticity/transformer-route.ts",
   "src/automaticity/transformer-node.ts",

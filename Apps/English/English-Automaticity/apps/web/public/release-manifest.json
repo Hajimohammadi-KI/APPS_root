@@ -1,11 +1,10 @@
 {
   "publishedAt": "2026-10-03",
   "version": "27.4.3",
-  "webRelease": "2026.10.03.7",
+  "webRelease": "2026.10.03.8",
   "changes": [
-    "A clearer mobile heading with dashboard tools on their own row",
-    "Continue directly from your saved learning path",
-    "Daily goal and activity chart use your saved responses",
-    "Cancel unanswered microphone requests without losing your draft"
+    "Stricter task and text checks for model assessments; general grading is still unqualified",
+    "Disagreement or failed verification leaves the saved response unscored",
+    "Updated writing benchmark results and roadmap"
   ]
 }

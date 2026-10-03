@@ -1,11 +1,10 @@
 {
   "publishedAt": "2026-10-03",
   "version": "20.9.3",
-  "webRelease": "2026.10.03.7",
+  "webRelease": "2026.10.03.8",
   "changes": [
-    "Lesbare Navigation auf dem Handy ohne zusammengedrückte Beschriftungen",
-    "Direkt im gespeicherten Lernweg weiterüben",
-    "Tagesziel und Aktivitätsdiagramm nutzen gespeicherte Antworten",
-    "Unbeantwortete Mikrofonanfragen abbrechen und Entwürfe behalten"
+    "Strengere Aufgaben- und Textprüfungen; die allgemeine Bewertung ist noch nicht freigegeben",
+    "Bei Widerspruch oder fehlgeschlagener Prüfung bleibt die gespeicherte Antwort unbewertet",
+    "Aktualisierte Testergebnisse zur Textbewertung und Roadmap"
   ]
 }

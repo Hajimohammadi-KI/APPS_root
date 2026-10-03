@@ -98,3 +98,47 @@ test("even an accidentally closed speaking task cannot grade its typed transcrip
   expect(result.verdict).toBe("not_assessed");
   expect(result.uncertainty).toBe(true);
 });
+
+test.each([
+  ["Are you ready?.", "Are you ready?"],
+  ["You are ready!.", "You are ready!"],
+  ["You are ready...", "You are ready."],
+  ["You are ready. .", "You are ready."],
+  ["You are ready... .", "You are ready..."],
+])(
+  "optional full stop does not erase malformed punctuation: %s",
+  (text, expected) => {
+    const response = attempt();
+    response.response.text = text;
+    const currentTask = {
+      ...task,
+      acceptedAnswers: [expected],
+      solution: expected,
+    };
+    expect(
+      assessControlledTask(response, currentTask, at, "punctuation").verdict,
+    ).toBe("not_assessed");
+  },
+);
+
+test.each([
+  ["You are ready", "You are ready."],
+  ["You are ready.", "You are ready"],
+  ["Are you ready?", "Are you ready?"],
+  ["You are ready!", "You are ready!"],
+  ["You are ready...", "You are ready..."],
+])(
+  "accepts optional plain full stop and unchanged punctuation: %s",
+  (text, expected) => {
+    const response = attempt();
+    response.response.text = text;
+    const currentTask = {
+      ...task,
+      acceptedAnswers: [expected],
+      solution: expected,
+    };
+    expect(
+      assessControlledTask(response, currentTask, at, "punctuation").verdict,
+    ).toBe("pass");
+  },
+);

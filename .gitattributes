@@ -48,3 +48,7 @@ Apps/Study-Tracker/**/*.sh text eol=lf
 # repository. Keep it outside LFS so an exhausted LFS quota cannot break the
 # consent-based updater. The SHA-256 is published in the adjacent manifest.
 releases/CrossRepositoryCodeIntelligence-*-Version2-final.zip -filter -diff -merge -text
+
+# Benchmark hashes must survive a Windows checkout with core.autocrlf=true.
+research/assessment-benchmark/*.ts text eol=lf
+research/assessment-benchmark/runs/**/*.snapshot -text

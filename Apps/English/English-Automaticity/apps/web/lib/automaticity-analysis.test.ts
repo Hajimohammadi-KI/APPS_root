@@ -39,9 +39,12 @@ describe("Present Perfect offline analysis", () => {
 		expect(result.score).toBeLessThan(100);
 	});
 
-	it("normalizes punctuation in controlled answers", () => {
-		expect(practiceAnswerMatches("I have finished.", "i have finished")).toBe(
-			true,
-		);
+	it("preserves required capitalization and sentence punctuation", () => {
+		const expected = "I have worked on this project since May";
+		expect(practiceAnswerMatches(`${expected}.`, expected)).toBe(true);
+		expect(practiceAnswerMatches(`  ${expected}  `, expected)).toBe(true);
+		expect(practiceAnswerMatches("i have worked on this project since may", expected)).toBe(false);
+		expect(practiceAnswerMatches(`${expected}???`, expected)).toBe(false);
+		expect(practiceAnswerMatches("I have not worked on this project since May", expected)).toBe(false);
 	});
 });

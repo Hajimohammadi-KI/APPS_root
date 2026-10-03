@@ -13,7 +13,7 @@ import {
 export function normaliseAnswer(text: string, task: PracticeTask): string {
   let value = text.normalize("NFC").trim().replace(/\s+/gu, " ");
   if (task.normalisation.terminalFullStop)
-    value = value.replace(/(?<!\.)\.$/u, "");
+    value = value.replace(/(?<![.!?])\.$/u, "");
   return value;
 }
 /** Practice feedback is independent of approved mastery/evaluator scope. */

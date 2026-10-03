@@ -156,7 +156,7 @@ const closedAnswerNormalization = (value: string): string =>
   value
     .normalize("NFC")
     .trim()
-    .replace(/(?<!\.)\.$/u, "")
+    .replace(/(?<![.!?])\.$/u, "")
     .replace(/\s+/gu, " ");
 
 export function analyzeClosedAnswer(

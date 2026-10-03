@@ -1,4 +1,9 @@
 import {
+  matchesReferenceAnswer,
+  normalizeReferenceAnswer,
+} from "@automaticity/learning-core/reference-answer";
+
+import {
   discussionAudioMaterials,
   discussionGuideMaterials,
   driveMaterialCollections,
@@ -1464,20 +1469,16 @@ export function getMaterialPracticePlan(
 }
 
 export function normalizePracticeAnswer(value: string): string {
-  return value
-    .normalize("NFKC")
-    .trim()
-    .toLocaleLowerCase("de-DE")
-    .replace(/[.!?„“\"']/g, "")
-    .replace(/\s+/g, " ");
+  return normalizeReferenceAnswer(value);
 }
 
 export function isPracticeAnswerCorrect(
   answer: string,
   acceptedAnswers: readonly string[],
 ): boolean {
-  const normalized = normalizePracticeAnswer(answer);
-  return acceptedAnswers.some(
-    (accepted) => normalizePracticeAnswer(accepted) === normalized,
+  return acceptedAnswers.some((accepted) =>
+    matchesReferenceAnswer(answer, accepted, {
+      allowOptionalFinalPeriod: true,
+    }),
   );
 }

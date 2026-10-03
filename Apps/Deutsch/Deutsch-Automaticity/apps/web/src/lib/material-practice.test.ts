@@ -43,11 +43,43 @@ describe("material practice catalog", () => {
     }
   });
 
-  it("accepts harmless punctuation and capitalization differences", () => {
+  it("accepts spacing and one final period without erasing case or punctuation", () => {
     expect(
-      isPracticeAnswerCorrect("  WEIL sie heute länger arbeitet! ", [
+      isPracticeAnswerCorrect("  Weil sie heute länger arbeitet. ", [
+        "Weil sie heute länger arbeitet",
+      ]),
+    ).toBe(true);
+    expect(
+      isPracticeAnswerCorrect("WEIL sie heute länger arbeitet!", [
         "weil sie heute länger arbeitet",
       ]),
+    ).toBe(false);
+    expect(
+      isPracticeAnswerCorrect("Vor dem Schlafen. liest er zehn Minuten.", [
+        "Vor dem Schlafen liest er zehn Minuten",
+      ]),
+    ).toBe(false);
+  });
+
+  it("rejects the actual wrong nominalization choice and unchanged repair prompt", () => {
+    const plan = practiceMaterials
+      .map((material) => getMaterialPracticePlan(material.id))
+      .find((item) => item?.focusId === "nominalization");
+    expect(plan).toBeDefined();
+    const choice = plan!.exercises.find((item) => item.id.endsWith("-nom-1"))!;
+    const repair = plan!.exercises.find((item) => item.id.endsWith("-nom-3"))!;
+    expect(isPracticeAnswerCorrect("lesen", choice.acceptedAnswers)).toBe(
+      false,
+    );
+    expect(isPracticeAnswerCorrect("Lesen", choice.acceptedAnswers)).toBe(true);
+    expect(isPracticeAnswerCorrect(repair.prompt, repair.acceptedAnswers)).toBe(
+      false,
+    );
+    expect(
+      isPracticeAnswerCorrect(
+        "Vor dem Schlafen liest er zehn Minuten.",
+        repair.acceptedAnswers,
+      ),
     ).toBe(true);
   });
 });

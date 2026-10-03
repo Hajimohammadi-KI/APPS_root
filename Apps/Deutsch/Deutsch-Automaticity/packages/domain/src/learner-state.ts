@@ -2,6 +2,7 @@ import {
   calculateAutomaticityScore,
   calculateMasteryStatus,
   createEmptyMasteryRecord,
+  setMasteryCriticalErrors,
   MASTERY_MODES,
   type MasteryMode,
   type MasteryRecord,
@@ -89,6 +90,17 @@ export const REPAIR_STATUSES = [
 
 export type RepairStatus = (typeof REPAIR_STATUSES)[number];
 
+export const STRICT_REPAIR_POLICY_VERSION =
+  "reference-answer-case-punctuation-v1";
+
+const REPAIR_RECALL_DELAY_MS = 86_400_000;
+
+export interface HistoricalRepairEvidence {
+  readonly policyVersion: string;
+  readonly repairStatus: RepairStatus;
+  readonly successfulRepairs: number;
+}
+
 export const repairStatusLabels: Readonly<Record<RepairStatus, string>> = {
   new: "Neu",
   scheduled: "Eingeplant",
@@ -109,7 +121,117 @@ export interface ErrorRecord {
   readonly repairStatus: RepairStatus;
   readonly nextRepairAt: number;
   readonly successfulRepairs: number;
+  readonly repairPolicyVersion?: string;
+  readonly repairHistory?: readonly HistoricalRepairEvidence[];
+  readonly lastRepairHelpAt?: number;
+  readonly repairHelpOpen?: boolean;
   readonly critical: boolean;
+}
+
+/** Old matching policies remain readable, but cannot qualify a fresh repair. */
+function withCurrentRepairPolicy(error: ErrorRecord): ErrorRecord {
+  const nextRepairAt = Math.max(
+    error.nextRepairAt,
+    error.lastRepairHelpAt === undefined
+      ? 0
+      : error.lastRepairHelpAt + REPAIR_RECALL_DELAY_MS,
+  );
+  const current =
+    nextRepairAt === error.nextRepairAt ? error : { ...error, nextRepairAt };
+  if (current.repairPolicyVersion === STRICT_REPAIR_POLICY_VERSION) {
+    return current.repairStatus === "fixed" && current.successfulRepairs < 2
+      ? {
+          ...current,
+          repairStatus:
+            current.successfulRepairs === 1 ? "improving" : "scheduled",
+        }
+      : current;
+  }
+  return {
+    ...current,
+    repairPolicyVersion: STRICT_REPAIR_POLICY_VERSION,
+    successfulRepairs: 0,
+    repairStatus: current.repairStatus === "new" ? "new" : "scheduled",
+    repairHistory: [
+      ...(current.repairHistory ?? []),
+      {
+        policyVersion: current.repairPolicyVersion ?? "legacy-unversioned",
+        repairStatus: current.repairStatus,
+        successfulRepairs: current.successfulRepairs,
+      },
+    ],
+  };
+}
+
+export interface ErrorRepairResult {
+  readonly source: "strict_reference" | "legacy_review";
+  readonly successful: boolean;
+  readonly checkedAt: number;
+  readonly nextRepairAt: number;
+}
+
+/** Seeing or hearing the correction requires another delayed recall attempt. */
+export function applyErrorRepairHelp(
+  error: ErrorRecord,
+  helpedAt: number,
+): ErrorRecord {
+  const current = withCurrentRepairPolicy(error);
+  const lastRepairHelpAt = Math.max(current.lastRepairHelpAt ?? 0, helpedAt);
+  return {
+    ...current,
+    lastRepairHelpAt,
+    repairHelpOpen: true,
+    nextRepairAt: Math.max(
+      current.nextRepairAt,
+      lastRepairHelpAt + REPAIR_RECALL_DELAY_MS,
+    ),
+  };
+}
+
+/** Delay starts after the last exposure, including help left open overnight. */
+export function closeErrorRepairHelp(
+  error: ErrorRecord,
+  closedAt: number,
+): ErrorRecord {
+  const current = withCurrentRepairPolicy(error);
+  if (!current.repairHelpOpen) return current;
+  return {
+    ...applyErrorRepairHelp(current, closedAt),
+    repairHelpOpen: false,
+  };
+}
+
+/** Only a strict reference check may advance the current repair streak. */
+export function applyErrorRepairResult(
+  error: ErrorRecord,
+  result: ErrorRepairResult,
+): ErrorRecord {
+  const current = withCurrentRepairPolicy(error);
+  if (result.source === "legacy_review" && result.successful) {
+    return {
+      ...current,
+      nextRepairAt: Math.max(current.nextRepairAt, result.nextRepairAt),
+    };
+  }
+  if (
+    result.successful &&
+    (current.repairHelpOpen || result.checkedAt < current.nextRepairAt)
+  ) {
+    return current;
+  }
+  const successfulRepairs = result.successful
+    ? current.successfulRepairs + 1
+    : 0;
+  return {
+    ...current,
+    successfulRepairs,
+    repairStatus: !result.successful
+      ? "scheduled"
+      : successfulRepairs >= 2
+        ? "fixed"
+        : "improving",
+    nextRepairAt: result.nextRepairAt,
+  };
 }
 
 export const REVIEW_SOURCE_TYPES = ["grammar_topic", "error_item"] as const;
@@ -267,6 +389,27 @@ function isStringInSet(value: unknown, values: ReadonlySet<string>): boolean {
   return isString(value) && values.has(value);
 }
 
+function normalizeRepairHistory(
+  value: unknown,
+): readonly HistoricalRepairEvidence[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((row) =>
+    isRecord(row) &&
+    isString(row.policyVersion) &&
+    isStringInSet(row.repairStatus, REPAIR_STATUS_SET) &&
+    typeof row.successfulRepairs === "number" &&
+    Number.isFinite(row.successfulRepairs)
+      ? [
+          {
+            policyVersion: row.policyVersion,
+            repairStatus: row.repairStatus as RepairStatus,
+            successfulRepairs: Math.max(0, Math.floor(row.successfulRepairs)),
+          },
+        ]
+      : [],
+  );
+}
+
 function normalizeErrors(value: unknown): readonly ErrorRecord[] {
   if (!Array.isArray(value)) {
     return [];
@@ -291,8 +434,14 @@ function normalizeErrors(value: unknown): readonly ErrorRecord[] {
     const repairStatus = isStringInSet(row.repairStatus, REPAIR_STATUS_SET)
       ? (row.repairStatus as RepairStatus)
       : "new";
+    const lastRepairHelpAt =
+      typeof row.lastRepairHelpAt === "number" &&
+      Number.isFinite(row.lastRepairHelpAt) &&
+      row.lastRepairHelpAt >= 0
+        ? row.lastRepairHelpAt
+        : undefined;
     return [
-      {
+      withCurrentRepairPolicy({
         id: isString(row.id) ? row.id : `legacy-error-${index}`,
         date: row.date,
         topic: row.topic,
@@ -308,17 +457,33 @@ function normalizeErrors(value: unknown): readonly ErrorRecord[] {
             : 1,
         lastSeenAt: seenAt,
         repairStatus,
-        nextRepairAt:
-          typeof row.nextRepairAt === "number" ? row.nextRepairAt : seenAt,
+        nextRepairAt: Math.max(
+          typeof row.nextRepairAt === "number" &&
+            Number.isFinite(row.nextRepairAt)
+            ? row.nextRepairAt
+            : seenAt,
+          lastRepairHelpAt === undefined
+            ? 0
+            : lastRepairHelpAt + REPAIR_RECALL_DELAY_MS,
+        ),
         successfulRepairs:
-          typeof row.successfulRepairs === "number"
+          typeof row.successfulRepairs === "number" &&
+          Number.isFinite(row.successfulRepairs)
             ? Math.max(0, Math.floor(row.successfulRepairs))
             : 0,
+        ...(isString(row.repairPolicyVersion)
+          ? { repairPolicyVersion: row.repairPolicyVersion }
+          : {}),
+        repairHistory: normalizeRepairHistory(row.repairHistory),
+        ...(lastRepairHelpAt === undefined ? {} : { lastRepairHelpAt }),
+        ...(typeof row.repairHelpOpen === "boolean"
+          ? { repairHelpOpen: row.repairHelpOpen }
+          : {}),
         critical:
           typeof row.critical === "boolean"
             ? row.critical
             : errorClass !== "spelling" && errorClass !== "other",
-      },
+      }),
     ];
   });
 }
@@ -620,6 +785,28 @@ export function normalizeLearnerState(value: unknown): LearnerState {
   const learner = isRecord(value.learner) ? value.learner : {};
   const outcomes = isRecord(value.outcomes) ? value.outcomes : {};
   const todayGrammar = isRecord(value.todayGrammar) ? value.todayGrammar : null;
+  const errors = normalizeErrors(value.errors);
+  const previousMastery = normalizeMastery(value.mastery);
+  const topicsWithErrors = new Set(errors.map((error) => error.topic));
+  const mastery = {
+    // An imported aggregate can outlive its detailed records. Missing detail
+    // must not erase its historical critical errors and unlock mastery.
+    ...previousMastery,
+    ...Object.fromEntries(
+      [...topicsWithErrors].map((topic) => [
+        topic,
+        setMasteryCriticalErrors(
+          previousMastery[topic],
+          errors.filter(
+            (error) =>
+              error.topic === topic &&
+              error.critical &&
+              error.repairStatus !== "fixed",
+          ).length,
+        ),
+      ]),
+    ),
+  };
 
   return {
     ...initial,
@@ -740,12 +927,12 @@ export function normalizeLearnerState(value: unknown): LearnerState {
         ? outcomes.assessorNote.trim().slice(0, 500)
         : DEFAULT_OUTCOME_EVIDENCE.assessorNote,
     },
-    errors: normalizeErrors(value.errors),
+    errors,
     activity: normalizeActivity(value.activity),
     reviews: normalizeReviews(value.reviews),
     sessions: normalizeSessions(value.sessions),
     attempts: normalizeAttempts(value.attempts),
-    mastery: normalizeMastery(value.mastery),
+    mastery,
     dailyPlans: normalizeDailyPlans(value.dailyPlans),
     learningLevel:
       isString(value.learningLevel) && LEARNING_LEVELS.has(value.learningLevel)

@@ -1,3 +1,8 @@
+import {
+  matchesReferenceAnswer,
+  normalizeReferenceAnswer,
+} from "@automaticity/learning-core/reference-answer";
+
 export type AutomatikIssueCode =
   "missing_target" | "missing_comma" | "word_order" | "unfinished_sentence";
 
@@ -103,16 +108,14 @@ export function analyzeWeilClause(text: string): AutomatikAnalysis {
 }
 
 export function normalizePracticeAnswer(value: string): string {
-  return value
-    .trim()
-    .toLocaleLowerCase("de-DE")
-    .replace(/[.!?]+$/g, "")
-    .replace(/\s+/g, " ");
+  return normalizeReferenceAnswer(value);
 }
 
 export function practiceAnswerMatches(
   value: string,
   expected: string,
 ): boolean {
-  return normalizePracticeAnswer(value) === normalizePracticeAnswer(expected);
+  return matchesReferenceAnswer(value, expected, {
+    allowOptionalFinalPeriod: true,
+  });
 }

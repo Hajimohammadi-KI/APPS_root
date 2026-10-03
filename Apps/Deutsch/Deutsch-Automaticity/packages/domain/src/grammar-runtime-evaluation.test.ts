@@ -103,6 +103,11 @@ describe("active Grammar-Labor answer handler", () => {
     ["Wir helfen ihnen.", "Wir helfen Ihnen."],
     ["Sie kommt?", "Sie kommt."],
     ["Ich weiß dass er kommt.", "Ich weiß, dass er kommt."],
+    ["Bist du bereit?.", "Bist du bereit?"],
+    ["Du bist bereit!.", "Du bist bereit!"],
+    ["Du bist bereit...", "Du bist bereit."],
+    ["Du bist bereit. .", "Du bist bereit."],
+    ["Du bist bereit... .", "Du bist bereit..."],
   ])(
     "does not complete a changed orthographic answer: %s",
     async (answer, expected) => {
@@ -120,6 +125,9 @@ describe("active Grammar-Labor answer handler", () => {
     ["Die Tür ist offen.", "  Die  Tu\u0308r ist offen  "],
     ["geöffnet", "geöffnet"],
     ["Hotel", "Hotel"],
+    ["Bist du bereit?", "Bist du bereit?"],
+    ["Du bist bereit!", "Du bist bereit!"],
+    ["Du bist bereit...", "Du bist bereit..."],
   ])(
     "completes canonical German forms without relying on language clues: %s",
     async (expected, answer) => {

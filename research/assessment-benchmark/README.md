@@ -61,3 +61,7 @@ The unchanged held-out gate requires zero false accepts plus at least 29/32 corr
 `scripts/r59-benchmark-report.ts` reconstructs retained predictions from raw responses, verifies data/configuration/snapshot hashes and recomputes metrics before publishing. False corrections and review disagreements are shown separately from abstentions. Licensed learner text and raw predictions remain local; only aggregate results enter either app.
 
 R58 changes the application repair path: a fresh review must agree on the correction, meaning preservation and non-null target judgment. Otherwise the response remains unscored with unconfirmed feedback removed. The changed policy has a new configuration fingerprint, so prior approvals cannot authorize it.
+
+## R61 bounded-reasoning experiment
+
+See R61-PLAN.md. Run with: bun research/assessment-benchmark/run-edit-writing.ts 27b development v1 target-last reasoning. The optional final argument selects greedy (default, legacy sampling) or reasoning. Mode-specific immutable run paths and fingerprinted source snapshots preserve every configuration. Runtime reasoning budget remains 768; the reasoning profile allows 1800 output tokens and keeps the same two-review deadline, parser, data and gate. Completion diagnostics count truncations, timeouts, token usage and explicit uncertainty without publishing reasoning text. No production activation follows from this command.

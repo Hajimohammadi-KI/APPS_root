@@ -62,8 +62,13 @@ function speak(text: string) {
 }
 
 export function ReviewCenter() {
-  const { state, completeReview, markActivity, recordAttempt } =
-    useLearnerState();
+  const {
+    state,
+    completeReview,
+    markActivity,
+    recordAttempt,
+    recordErrorRepairHelp,
+  } = useLearnerState();
   const totalReviews = state.reviews.length;
   const masteredReviews = state.reviews.filter(
     (review) => review.mastered,
@@ -145,6 +150,9 @@ export function ReviewCenter() {
         taskPrompt: `Rufe die gespeicherte Korrektur zu „${selected.topic}“ ohne Nachsehen ab.`,
         spellingAffectsMastery: state.settings.spellingAffectsMastery,
       });
+      if (selected.sourceType === "error_item" && selected.sourceId) {
+        recordErrorRepairHelp(selected.sourceId);
+      }
       setReport(result);
       const closed = analyzeClosedAnswer(answer, selected.corrected);
       if (result.accuracyScore === null && closed.correct !== true) {
@@ -439,7 +447,15 @@ export function ReviewCenter() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => speak(selected.corrected)}
+                    onClick={() => {
+                      if (
+                        selected.sourceType === "error_item" &&
+                        selected.sourceId
+                      ) {
+                        recordErrorRepairHelp(selected.sourceId);
+                      }
+                      speak(selected.corrected);
+                    }}
                   >
                     <Volume2 data-icon="inline-start" />
                     Lösung anhören

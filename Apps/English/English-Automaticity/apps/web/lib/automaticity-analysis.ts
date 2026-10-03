@@ -1,3 +1,5 @@
+import { matchesReferenceAnswer, normalizeReferenceAnswer } from "@automaticity/learning-core/reference-answer";
+
 export type AutomaticityIssueCode =
 	| "missing_target"
 	| "auxiliary_agreement"
@@ -152,16 +154,12 @@ export function analyzePresentPerfect(text: string): AutomaticityAnalysis {
 }
 
 export function normalizePracticeAnswer(value: string): string {
-	return value
-		.trim()
-		.toLowerCase()
-		.replace(/[.!?]+$/g, "")
-		.replace(/\s+/g, " ");
+	return normalizeReferenceAnswer(value);
 }
 
 export function practiceAnswerMatches(
 	value: string,
 	expected: string,
 ): boolean {
-	return normalizePracticeAnswer(value) === normalizePracticeAnswer(expected);
+	return matchesReferenceAnswer(value, expected, { allowOptionalFinalPeriod: true });
 }

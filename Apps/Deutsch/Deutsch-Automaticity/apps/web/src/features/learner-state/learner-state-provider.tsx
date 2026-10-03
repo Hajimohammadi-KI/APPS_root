@@ -12,6 +12,9 @@ import {
 } from "react";
 
 import {
+  applyErrorRepairHelp,
+  applyErrorRepairResult,
+  closeErrorRepairHelp,
   canCompleteDailyStep,
   createInitialLearnerState,
   getDailyPlan,
@@ -23,6 +26,7 @@ import {
   recordMasteryAttempt,
   recordMasteryReview,
   setMasteryCriticalErrors,
+  STRICT_REPAIR_POLICY_VERSION,
   type ErrorClass,
   type ErrorRecord,
   type LearnerProfilePreferences,
@@ -90,6 +94,8 @@ interface LearnerStateContextValue {
     confidence?: ReviewConfidence,
   ) => void;
   readonly recordErrorRepair: (errorId: string, successful: boolean) => void;
+  readonly recordErrorRepairHelp: (errorId: string) => void;
+  readonly recordErrorRepairHelpClosed: (errorId: string) => void;
   readonly setMastery: (title: string, mastery: MasteryRecord) => void;
   readonly importState: (value: unknown) => void;
   readonly resetState: () => void;
@@ -502,37 +508,45 @@ export function LearnerStateProvider({
       const nextErrors: readonly ErrorRecord[] = existing
         ? current.errors.map((row) =>
             row.id === existing.id
-              ? {
-                  ...row,
-                  date: new Date(now).toISOString(),
-                  original: error.original,
-                  corrected: error.corrected,
-                  explanation: error.explanation,
-                  occurrenceCount: row.occurrenceCount + 1,
-                  lastSeenAt: now,
-                  repairStatus: "scheduled",
-                  nextRepairAt: now,
-                  critical: error.critical ?? row.critical,
-                }
+              ? applyErrorRepairHelp(
+                  {
+                    ...row,
+                    date: new Date(now).toISOString(),
+                    original: error.original,
+                    corrected: error.corrected,
+                    explanation: error.explanation,
+                    occurrenceCount: row.occurrenceCount + 1,
+                    lastSeenAt: now,
+                    repairStatus: "scheduled",
+                    successfulRepairs: 0,
+                    nextRepairAt: now,
+                    critical: error.critical ?? row.critical,
+                  },
+                  now,
+                )
               : row,
           )
         : [
             ...current.errors,
-            {
-              id: errorId,
-              date: new Date(now).toISOString(),
-              topic: error.topic,
-              original: error.original,
-              corrected: error.corrected,
-              errorClass: error.errorClass,
-              explanation: error.explanation,
-              occurrenceCount: 1,
-              lastSeenAt: now,
-              repairStatus: "new",
-              nextRepairAt: now,
-              successfulRepairs: 0,
-              critical: error.critical ?? error.errorClass !== "spelling",
-            },
+            applyErrorRepairHelp(
+              {
+                id: errorId,
+                date: new Date(now).toISOString(),
+                topic: error.topic,
+                original: error.original,
+                corrected: error.corrected,
+                errorClass: error.errorClass,
+                explanation: error.explanation,
+                occurrenceCount: 1,
+                lastSeenAt: now,
+                repairStatus: "new",
+                nextRepairAt: now,
+                successfulRepairs: 0,
+                repairPolicyVersion: STRICT_REPAIR_POLICY_VERSION,
+                critical: error.critical ?? error.errorClass !== "spelling",
+              },
+              now,
+            ),
           ];
       const reviewExists = current.reviews.some(
         (review) =>
@@ -737,21 +751,14 @@ export function LearnerStateProvider({
             if (error.id !== selected.sourceId) {
               return error;
             }
-            const successfulRepairs = successful
-              ? error.successfulRepairs + 1
-              : 0;
-            return {
-              ...error,
-              successfulRepairs,
-              repairStatus: successful
-                ? successfulRepairs >= 2
-                  ? ("fixed" as const)
-                  : ("improving" as const)
-                : ("scheduled" as const),
+            return applyErrorRepairResult(error, {
+              source: "legacy_review",
+              successful,
+              checkedAt: now.getTime(),
               nextRepairAt:
                 progress.dueAt?.getTime() ??
                 now.getTime() + DAY_IN_MILLISECONDS,
-            };
+            });
           });
         }
 
@@ -790,21 +797,15 @@ export function LearnerStateProvider({
         if (!selected) {
           return current;
         }
-        const successfulRepairs = successful
-          ? selected.successfulRepairs + 1
-          : 0;
+        const checkedAt = Date.now();
         const nextErrors = current.errors.map((error) =>
           error.id === errorId
-            ? {
-                ...error,
-                successfulRepairs,
-                repairStatus: successful
-                  ? successfulRepairs >= 2
-                    ? ("fixed" as const)
-                    : ("improving" as const)
-                  : ("scheduled" as const),
-                nextRepairAt: Date.now() + DAY_IN_MILLISECONDS,
-              }
+            ? applyErrorRepairResult(error, {
+                source: "strict_reference",
+                successful,
+                checkedAt,
+                nextRepairAt: checkedAt + DAY_IN_MILLISECONDS,
+              })
             : error,
         );
         return {
@@ -822,6 +823,42 @@ export function LearnerStateProvider({
     },
     [],
   );
+
+  const recordErrorRepairHelp = useCallback((errorId: string) => {
+    setState((current) => {
+      const selected = current.errors.find((error) => error.id === errorId);
+      if (!selected) return current;
+      const helpedAt = Date.now();
+      const nextErrors = current.errors.map((error) =>
+        error.id === errorId ? applyErrorRepairHelp(error, helpedAt) : error,
+      );
+      return {
+        ...current,
+        errors: nextErrors,
+        mastery: {
+          ...current.mastery,
+          [selected.topic]: setMasteryCriticalErrors(
+            current.mastery[selected.topic],
+            countActiveCriticalErrors(nextErrors, selected.topic),
+          ),
+        },
+      };
+    });
+  }, []);
+
+  const recordErrorRepairHelpClosed = useCallback((errorId: string) => {
+    setState((current) => {
+      const selected = current.errors.find((error) => error.id === errorId);
+      if (!selected?.repairHelpOpen) return current;
+      const closedAt = Date.now();
+      return {
+        ...current,
+        errors: current.errors.map((error) =>
+          error.id === errorId ? closeErrorRepairHelp(error, closedAt) : error,
+        ),
+      };
+    });
+  }, []);
 
   const setMastery = useCallback((title: string, mastery: MasteryRecord) => {
     setState((current) => ({
@@ -859,6 +896,8 @@ export function LearnerStateProvider({
       advanceReview,
       completeReview,
       recordErrorRepair,
+      recordErrorRepairHelp,
+      recordErrorRepairHelpClosed,
       setMastery,
       importState,
       resetState,
@@ -874,6 +913,8 @@ export function LearnerStateProvider({
       markActivity,
       recordAttempt,
       recordErrorRepair,
+      recordErrorRepairHelp,
+      recordErrorRepairHelpClosed,
       resetState,
       scheduleReview,
       setDailyAnswer,

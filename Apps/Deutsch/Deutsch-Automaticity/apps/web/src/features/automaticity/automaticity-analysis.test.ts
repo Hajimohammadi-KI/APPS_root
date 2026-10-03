@@ -43,12 +43,18 @@ describe("weil-Nebensatz Offline-Analyse", () => {
     );
   });
 
-  it("normalisiert Satzzeichen in kontrollierten Antworten", () => {
+  it("erhält Großschreibung und bedeutungstragende Satzzeichen", () => {
+    const expected = "Ich bleibe zu Hause, weil ich krank bin";
+    expect(practiceAnswerMatches(`${expected}.`, expected)).toBe(true);
     expect(
       practiceAnswerMatches(
-        "Ich bleibe zu Hause, weil ich krank bin.",
         "ich bleibe zu hause, weil ich krank bin",
+        expected,
       ),
-    ).toBe(true);
+    ).toBe(false);
+    expect(practiceAnswerMatches(`${expected}???`, expected)).toBe(false);
+    expect(
+      practiceAnswerMatches("Ich bleibe zu Hause weil ich krank bin", expected),
+    ).toBe(false);
   });
 });

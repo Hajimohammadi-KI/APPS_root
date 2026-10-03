@@ -56,7 +56,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     String(value ?? "")
       .normalize("NFC")
       .trim()
-      .replace(/(?<!\.)\.$/u, "")
+      .replace(/(?<![.!?])\.$/u, "")
       .replace(/\s+/gu, " ");
 
   const detectAnswerLanguage = (text) => {

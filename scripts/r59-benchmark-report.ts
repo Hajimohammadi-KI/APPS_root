@@ -1,10 +1,11 @@
 import { hash, writingMetrics } from "../research/assessment-benchmark/core";
 import { combineEditReviews, parseEditAssessment } from "../research/assessment-benchmark/edit-assessment";
 import { developmentCandidateReady } from "../research/assessment-benchmark/holdout-policy";
+import { completionDiagnostics } from "../research/assessment-benchmark/edit-decoding";
 
 type Verdict = "correct" | "incorrect" | "uncertain";
 type Metrics = ReturnType<typeof writingMetrics>;
-type Row = { id: string; language: "en" | "de"; label: "clean" | "error"; verdict: Verdict; correction: string; phases: { assessment: ReturnType<typeof parseEditAssessment> | null; raw: { choices?: { message?: { content?: string } }[] } | null; failure: string | null; requestStarted: boolean }[] };
+type Row = { id: string; language: "en" | "de"; label: "clean" | "error"; verdict: Verdict; correction: string; elapsedMs: number; phases: { assessment: ReturnType<typeof parseEditAssessment> | null; raw: { choices?: { message?: { content?: string } }[] } | null; failure: string | null; requestStarted: boolean }[] };
 export function editScopeDiagnostics(inputs: { content: string | undefined; target: string; before: string; after: string }[]) {
   const result = { quotedEdits: 0, uniqueTargetQuotes: 0, ambiguousTargetQuotes: 0, contextOnlyQuotes: 0, absentQuotes: 0, unchangedEdits: 0, unreadablePhases: 0 };
   const normalize = (text: string) => text.normalize("NFC").trim().replace(/\s+/gu, " ");
@@ -50,14 +51,20 @@ export async function loadEditCandidate(root: string, run: string, name: string)
     if (file === "edit-assessment.ts" && hash(await Bun.file(`${root}/research/assessment-benchmark/${file}`).text()) !== expected) throw Error("R59 parser changed after inference");
   }
   const dataset = await Bun.file(`${root}/research/assessment-benchmark/runs/writing-context-data-v2/development.jsonl`).text();
-  if (hash(dataset) !== report.selectionSha256 || config.split !== "development") throw Error("Wrong R59 development data");
+  if (config.split !== "development" || !["direct", "thinking"].includes(config.mode) ||
+    typeof config.candidateFingerprint !== "string" || !/^[a-f0-9]{64}$/.test(config.candidateFingerprint) ||
+    ["candidateFingerprint", "selectionSha256", "split", "mode"].some(key => report[key] !== config[key])) throw Error("Report/config identity mismatch");
+  if (hash(dataset) !== report.selectionSha256) throw Error("Wrong R59 development data");
   const cases = new Map(dataset.trim().split("\n").map(line => { const row = JSON.parse(line); return [row.id, row]; }));
   const rows: Row[] = predictions.trim().split("\n").map(line => JSON.parse(line));
   if (rows.length !== cases.size || new Set(rows.map(row => row.id)).size !== cases.size || rows.length !== report.count) throw Error("Missing or duplicate R59 predictions");
   for (const row of rows) {
     const source = cases.get(row.id);
     if (!source || row.label !== source.label || row.language !== source.language || row.phases.length !== 2) throw Error("R59 reference mismatch");
+    if (!Number.isSafeInteger(row.elapsedMs) || row.elapsedMs < 0) throw Error("Invalid operational evidence");
     for (const phase of row.phases) {
+      if (typeof phase.requestStarted !== "boolean" ||
+        (phase.failure !== null && (typeof phase.failure !== "string" || !phase.failure))) throw Error("Invalid operational evidence");
       if (phase.assessment) {
         const reconstructed = parseEditAssessment(JSON.parse(phase.raw!.choices![0]!.message!.content!), source.text);
         if (JSON.stringify(reconstructed) !== JSON.stringify(phase.assessment) || phase.failure || !phase.requestStarted) throw Error("R59 raw response mismatch");
@@ -72,6 +79,24 @@ export async function loadEditCandidate(root: string, run: string, name: string)
       const metrics = writingMetrics(subset.map(row => ({ label: row.label, verdict: index === null ? row.verdict : row.phases[index]!.assessment?.verdict ?? "uncertain" })));
       if (JSON.stringify(metrics) !== JSON.stringify(report.languages[language][key])) throw Error("R59 metric mismatch");
     }
+  }
+  const phases = rows.flatMap(row => row.phases);
+  const timings = rows.map(row => row.elapsedMs).sort((a, b) => a - b);
+  const failures = new Map<string, number>();
+  for (const phase of phases) if (phase.failure) failures.set(phase.failure, (failures.get(phase.failure) ?? 0) + 1);
+  if (!timings.length || report.attemptedPhases !== phases.length ||
+    report.requestsStarted !== phases.filter(phase => phase.requestStarted).length ||
+    report.structurallyValidCalls !== phases.filter(phase => phase.assessment).length ||
+    report.latencyMs?.median !== timings[Math.floor(timings.length / 2)] ||
+    report.latencyMs?.p95 !== timings[Math.floor(timings.length * .95)] ||
+    !report.failures || typeof report.failures !== "object" || Array.isArray(report.failures) ||
+    Object.keys(report.failures).length !== failures.size ||
+    [...failures].some(([reason, count]) => report.failures[reason] !== count)) throw Error("Operational diagnostics mismatch");
+  // Older direct runs predate these fields. New reasoning reports must include them.
+  if (config.mode === "thinking" || ["completionDiagnostics", "explicitUncertaintyCalls", "bothPhasesAssessed"].some(key => key in report)) {
+    if (JSON.stringify(completionDiagnostics(phases)) !== JSON.stringify(report.completionDiagnostics) ||
+      report.explicitUncertaintyCalls !== phases.filter(phase => phase.assessment?.verdict === "uncertain").length ||
+      report.bothPhasesAssessed !== rows.filter(row => row.phases.every(phase => phase.assessment)).length) throw Error("Completion diagnostics mismatch");
   }
   const scopeDiagnostics = editScopeDiagnostics(rows.flatMap(row => {
     const source = cases.get(row.id)!;

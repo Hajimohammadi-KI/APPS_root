@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./reference-answer": "./src/reference-answer.ts",
     "./adherence": "./src/adherence/index.ts",
     "./fsrs-shadow": "./src/fsrs-shadow/index.ts",
     "./automaticity": "./src/automaticity/index.ts",

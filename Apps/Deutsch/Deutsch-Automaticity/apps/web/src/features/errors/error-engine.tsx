@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { matchesReferenceAnswer } from "@automaticity/learning-core/reference-answer";
 import {
   Award,
   Bug,
@@ -44,14 +45,6 @@ function speak(text: string) {
   utterance.rate = 0.92;
   speechSynthesis.cancel();
   speechSynthesis.speak(utterance);
-}
-
-function normalizeAnswer(text: string): string {
-  return text
-    .trim()
-    .replace(/[.!?]+$/u, "")
-    .replace(/\s+/g, " ")
-    .toLocaleLowerCase("de");
 }
 
 function HighlightedCorrection({
@@ -220,22 +213,55 @@ export function ErrorEngine() {
 }
 
 function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
-  const { recordErrorRepair } = useLearnerState();
+  const {
+    recordErrorRepair,
+    recordErrorRepairHelp,
+    recordErrorRepairHelpClosed,
+  } = useLearnerState();
   const [answer, setAnswer] = useState("");
   const [message, setMessage] = useState("");
+  const [showCorrection, setShowCorrection] = useState(false);
+
+  useEffect(() => {
+    if (error.repairHelpOpen && !showCorrection) {
+      recordErrorRepairHelpClosed(error.id);
+    }
+  }, [
+    error.id,
+    error.repairHelpOpen,
+    showCorrection,
+    recordErrorRepairHelpClosed,
+  ]);
+
+  function revealCorrection(listen = false) {
+    recordErrorRepairHelp(error.id);
+    setShowCorrection(true);
+    setMessage(
+      "Die Hilfe ist geöffnet. Du kannst weiterüben; eine eigenständige Bestätigung zählt frühestens nach einem Tag. Das bleibt auch nach dem Neuladen gespeichert.",
+    );
+    if (listen) speak(error.corrected);
+  }
 
   function checkRepair() {
-    const successful =
-      normalizeAnswer(answer) === normalizeAnswer(error.corrected);
+    const successful = matchesReferenceAnswer(answer, error.corrected);
+    if (showCorrection) recordErrorRepairHelp(error.id);
     recordErrorRepair(error.id, successful);
     if (successful) {
+      const reviewNotDue = Date.now() < error.nextRepairAt;
       setMessage(
-        "Korrekt. Sprich die Fassung laut und verwende dieselbe Struktur anschließend in einem neuen Kontext.",
+        showCorrection
+          ? "Richtig geschrieben und mit Hilfe geübt. Eine eigenständige Bestätigung zählt frühestens nach einem Tag ohne Vorlage."
+          : reviewNotDue
+            ? `Richtig geschrieben. Eine eigenständige Bestätigung zählt erst ab ${new Intl.DateTimeFormat("de-DE", { dateStyle: "medium", timeStyle: "short" }).format(error.nextRepairAt)}. Hilfe und wiederholtes Prüfen ersetzen keine spätere Erinnerung.`
+            : error.successfulRepairs >= 1
+              ? "Korrekt. Diese Fassung wurde an zwei Terminen bestätigt. Übe dieselbe Struktur nun in einem neuen Kontext."
+              : "Korrekt. Die erste eigenständige Bestätigung ist gespeichert. Wiederhole die Fassung frühestens nach einem Tag ohne Hilfe.",
       );
-      speak(error.corrected);
     } else {
+      recordErrorRepairHelp(error.id);
+      setShowCorrection(true);
       setMessage(
-        `Noch nicht vollständig richtig. Vergleiche mit: ${error.corrected}`,
+        "Noch nicht vollständig richtig. Vergleiche mit der Korrektur und übe weiter. Eine eigenständige Bestätigung zählt frühestens nach einem Tag.",
       );
     }
   }
@@ -249,6 +275,19 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
       <CardHeader>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
+            {error.repairStatus !== "fixed" &&
+              error.repairHistory?.some(
+                (entry) =>
+                  entry.successfulRepairs > 0 ||
+                  entry.repairStatus === "fixed" ||
+                  entry.repairStatus === "improving",
+              ) && (
+                <p className="mb-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-950">
+                  Bitte erneut prüfen: Frühere Bestätigungen zählen nicht für
+                  diese genauere Kontrolle. Dein bisheriger Verlauf bleibt
+                  erhalten.
+                </p>
+              )}
             <div className="mb-2 flex flex-wrap gap-2">
               <Badge>{errorClassLabels[error.errorClass]}</Badge>
               <Badge variant="secondary">
@@ -274,10 +313,6 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="rounded-xl border bg-blue-50/60 p-3 text-sm leading-6 text-blue-950">
-          <strong>Diagnose:</strong> {error.explanation}
-        </p>
-
         <div className="grid gap-3 md:grid-cols-2">
           <div className="rounded-xl border bg-red-50/60 p-3 text-sm">
             <span className="mb-1 block text-xs font-semibold text-red-800">
@@ -285,16 +320,23 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
             </span>
             {error.original}
           </div>
-          <div className="rounded-xl border bg-sky-50/60 p-3 text-sm">
-            <span className="mb-1 block text-xs font-semibold text-sky-800">
-              Korrigiert
-            </span>
-            <HighlightedCorrection
-              original={error.original}
-              corrected={error.corrected}
-            />
-          </div>
+          {showCorrection && (
+            <div className="rounded-xl border bg-sky-50/60 p-3 text-sm">
+              <span className="mb-1 block text-xs font-semibold text-sky-800">
+                Korrigiert
+              </span>
+              <HighlightedCorrection
+                original={error.original}
+                corrected={error.corrected}
+              />
+            </div>
+          )}
         </div>
+        {showCorrection && (
+          <p className="rounded-xl border bg-blue-50/60 p-3 text-sm leading-6 text-blue-950">
+            <strong>Diagnose:</strong> {error.explanation}
+          </p>
+        )}
 
         <ol className="grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
           {[
@@ -318,7 +360,9 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
         </ol>
 
         <label className="grid gap-1.5 text-sm font-medium">
-          Korrekte Fassung ohne Vorlage schreiben
+          {showCorrection
+            ? "Korrekte Fassung mit Hilfe üben"
+            : "Korrekte Fassung ohne Vorlage schreiben"}
           <Input
             value={answer}
             onChange={(event) => setAnswer(event.target.value)}
@@ -333,17 +377,27 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
           <Button
             type="button"
             variant="outline"
-            onClick={() => speak(error.corrected)}
+            onClick={() => revealCorrection()}
+            aria-expanded={showCorrection}
+          >
+            Korrektur und Erklärung zeigen · mit Hilfe
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => revealCorrection(true)}
           >
             <Volume2 data-icon="inline-start" />
-            Korrektur anhören
+            Korrektur anhören · mit Hilfe
           </Button>
           <Button
             type="button"
             variant="ghost"
             onClick={() => {
+              if (showCorrection) recordErrorRepairHelpClosed(error.id);
               setAnswer("");
               setMessage("");
+              setShowCorrection(false);
             }}
           >
             <RotateCcw data-icon="inline-start" />

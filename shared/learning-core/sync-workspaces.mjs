@@ -18,6 +18,8 @@ const files = [
   "tsconfig.json",
   "src/index.ts",
   "src/index.test.ts",
+  "src/reference-answer.ts",
+  "src/reference-answer.test.ts",
   "src/automaticity/contracts.ts",
   "src/automaticity/evidence.ts",
   "src/automaticity/storage.ts",

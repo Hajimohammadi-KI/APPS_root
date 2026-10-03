@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-03T21:38:01.641Z",
+  "run": "writing-edits-gemma4-26b-development-direct-v1",
+  "candidateFingerprint": "f3400abc4547f453316d0111ea76758ce0b9888bb22ace24c9a63e74d6bad739",
+  "reportSha256": "ad3bc3e0d74e033b4388e9d14f81dd4ffc0f99ebe63d7e1830ab88a7495722fe",
+  "reconstructionPassed": true,
+  "developmentGatePassed": false,
+  "holdoutAccessed": false,
+  "productionApproved": false,
+  "comparison": [
+    {
+      "run": "writing-edits-27b-development-direct-v3",
+      "validCalls": 232,
+      "requests": 256,
+      "latencyMs": {
+        "median": 22157,
+        "p95": 115577
+      },
+      "languages": {
+        "en": {
+          "acceptedSourceEdited": 5,
+          "acceptedSourceClean": 30,
+          "detectedSourceEdited": 13,
+          "abstentions": 15,
+          "changedSourceClean": 1
+        },
+        "de": {
+          "acceptedSourceEdited": 1,
+          "acceptedSourceClean": 15,
+          "detectedSourceEdited": 16,
+          "abstentions": 25,
+          "changedSourceClean": 7
+        }
+      }
+    },
+    {
+      "run": "writing-edits-27b-development-thinking-v1",
+      "validCalls": 217,
+      "requests": 256,
+      "latencyMs": {
+        "median": 214904,
+        "p95": 240016
+      },
+      "languages": {
+        "en": {
+          "acceptedSourceEdited": 5,
+          "acceptedSourceClean": 27,
+          "detectedSourceEdited": 8,
+          "abstentions": 22,
+          "changedSourceClean": 2
+        },
+        "de": {
+          "acceptedSourceEdited": 1,
+          "acceptedSourceClean": 15,
+          "detectedSourceEdited": 4,
+          "abstentions": 42,
+          "changedSourceClean": 2
+        }
+      }
+    },
+    {
+      "run": "writing-edits-gemma4-26b-development-direct-v1",
+      "validCalls": 230,
+      "requests": 256,
+      "latencyMs": {
+        "median": 11459,
+        "p95": 28665
+      },
+      "languages": {
+        "en": {
+          "acceptedSourceEdited": 3,
+          "acceptedSourceClean": 23,
+          "detectedSourceEdited": 13,
+          "abstentions": 22,
+          "changedSourceClean": 3
+        },
+        "de": {
+          "acceptedSourceEdited": 0,
+          "acceptedSourceClean": 10,
+          "detectedSourceEdited": 16,
+          "abstentions": 30,
+          "changedSourceClean": 8
+        }
+      }
+    }
+  ],
+  "reviewDisagreement": {
+    "invalidCaseAbstentions": 20,
+    "differentCorrections": 19,
+    "differentVerdicts": 13
+  },
+  "persistentAcceptedSourceEdited": {
+    "current": 3,
+    "alsoR59": 2,
+    "alsoR61": 3
+  },
+  "scopeDiagnostics": {
+    "quotedEdits": 278,
+    "uniqueTargetQuotes": 276,
+    "ambiguousTargetQuotes": 2,
+    "contextOnlyQuotes": 0,
+    "absentQuotes": 0,
+    "unchangedEdits": 10,
+    "unreadablePhases": 0
+  },
+  "referenceAdjudication": {
+    "status": "not-independently-adjudicated",
+    "sourceCorrectionDisagreements": [
+      {
+        "language": "en",
+        "annotationTypes": [
+          "R:ADJ"
+        ]
+      },
+      {
+        "language": "en",
+        "annotationTypes": [
+          "M:PUNCT",
+          "R:PREP",
+          "R:NOUN:NUM"
+        ]
+      },
+      {
+        "language": "en",
+        "annotationTypes": [
+          "R:VERB"
+        ]
+      }
+    ]
+  },
+  "limitations": [
+    "Original source labels and all counts unchanged; source-edited is not identical to independently proven grammar error.",
+    "R64, R59 and R61 reuse the same128 development cases; not independent validation or proof of zero future errors.",
+    "Model family, quantization, embedded template and GPU placement differ; latency change is not isolated architectural causation.",
+    "Structural validity and matching corrections do not establish necessity, meaning preservation, task fulfillment or acceptable repair quality.",
+    "Real independent reviews, separate task-linked evidence and untouched final qualification remain missing; synthetic smoke is protocol-only."
+  ]
+}

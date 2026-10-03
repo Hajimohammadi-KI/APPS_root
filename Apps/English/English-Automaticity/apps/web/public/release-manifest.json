@@ -1,10 +1,10 @@
 {
   "publishedAt": "2026-10-03",
   "version": "27.4.3",
-  "webRelease": "2026.10.03.8",
+  "webRelease": "2026.10.03.9",
   "changes": [
-    "Stricter task and text checks for model assessments; general grading is still unqualified",
-    "Disagreement or failed verification leaves the saved response unscored",
-    "Updated writing benchmark results and roadmap"
+    "Stronger model qualification: zero false passes, larger samples and useful error detection",
+    "Duplicate evaluation content cannot inflate qualification evidence",
+    "New local model comparisons and an updated Persian roadmap; general grading remains unqualified"
   ]
 }

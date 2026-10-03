@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-03T11:43:04.884Z",
+  "inputs": {
+    "data/english/wi+locness/json/A.train.json": "443ba24134e3e0df2e0c4c4dcb56d240141288b0357b7505f9ec5172274db096",
+    "data/english/wi+locness/m2/A.train.gold.bea19.m2": "79cf56f7bd2ab22624e0308c205722ba9e2fe9a1b9dc1df7b35c3f9dba3a8497",
+    "data/english/wi+locness/json/B.train.json": "67170247c7a18cd725554af8dcb5f324ecbd978dca011f03d8132f210ff93546",
+    "data/english/wi+locness/m2/B.train.gold.bea19.m2": "22465faee67ca87329d5fde7555e8a24fcf6d968511b13ebf74882eccd3a836f",
+    "data/english/wi+locness/json/C.train.json": "e10ee9b01d85d2c143ff008e1ea30267108a4811ea396dd61fd846685340a76c",
+    "data/english/wi+locness/m2/C.train.gold.bea19.m2": "66aea2af43dcf7e0022dcfd703743e802076149f4d6433d82b758d74e123ecd3",
+    "data/german/data/source/falko-id-ctok-zh1.txt.train": "48cd20dd031652a516b8533efaad29a49f7b8149558ca355c2bef0586c1752f9",
+    "data/german/data/source/merlin-id-ctok-zh1.txt.train": "5e5b19cbfcbb30253217c87539db193f6f90d3ffee72cd339ee5d7cceefe0d3a",
+    "data/german/data/fm-train.m2": "c555ddf98af689e7613b596c18f2461f1b03fab286599866ba5a0907ea555ed7",
+    "data/german/data/source/falko-id-ctok-zh1.txt.dev": "2f162519f0bfc40d74a23e3c9e3ca0a816f37bb82d22afb7ffc25d82375d8aa6",
+    "data/german/data/source/merlin-id-ctok-zh1.txt.dev": "f0aea607f108816b0cef41d250c33e4bccefe5bfb66aeb69007ad4ffa3e49b27",
+    "data/german/data/fm-dev.m2": "24541dd8b6172083456f7e8cf4543a6225d8a285ebc9245030d73bbb4bd921d4"
+  },
+  "selections": {
+    "development": {
+      "count": 128,
+      "sha256": "d1c6c63f7e5e3a2a5c0e8fba0d4647aa7845276c35bb36769102c65721187e1c",
+      "groups": 124,
+      "authors": 62,
+      "available": {
+        "en": {
+          "error": 10109,
+          "clean": 4633
+        },
+        "de": {
+          "error": 14831,
+          "clean": 3648
+        }
+      }
+    },
+    "holdout": {
+      "count": 512,
+      "sha256": "60df3b027dc8cec3164e3c0672afb8d1aff237c4427666263e64499d74517be6",
+      "groups": 336,
+      "authors": 218,
+      "available": {
+        "en": {
+          "error": 10374,
+          "clean": 4739
+        },
+        "de": {
+          "error": 1951,
+          "clean": 465
+        }
+      }
+    }
+  },
+  "excluded": {
+    "ambiguous reference": 1437,
+    "en missing unique surface or author": 574,
+    "length bounds": 721,
+    "en ambiguous alignment": 1063,
+    "previously inspected group, author or surface": 843,
+    "de empty original segment": 1,
+    "de ambiguous alignment": 577,
+    "de missing unique surface": 22
+  },
+  "seed": "r56-selection / r56-split",
+  "maximumTargetsPerDocument": 4,
+  "context": "Original-only 1000 characters before and after uniquely aligned target; gold edits never input. German punctuation whitespace detokenized.",
+  "labels": "Original all-edit/no-correction labels unchanged. Annotation slices are not human re-adjudication.",
+  "splitPolicy": "EN official train partition by hashed author. DE official train for development, unused official dev for holdout. Exclude old groups, known EN authors and targets; exclude cross-split group/author/target duplicates before sampling.",
+  "limitations": "German author identity unavailable beyond document IDs. Within-document observations correlated; sentence Wilson bounds descriptive. Public pretraining exposure unknown. New holdout is untouched by this workflow, not proven uncontaminated. Not app-task qualification."
+}

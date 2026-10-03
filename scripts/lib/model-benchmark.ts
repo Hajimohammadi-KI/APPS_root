@@ -5,7 +5,8 @@ import {isRecord,type Verdict} from "../../shared/learning-core/src/automaticity
 import {parseBenchmarkInput,qualifyCandidate,type BenchmarkCase,type CandidatePrediction} from "../../shared/learning-core/src/automaticity/qualification";
 
 export const digest=(value:string)=>createHash("sha256").update(value).digest("hex");
-export const policy={version:"grammar-qualification-2026-09-05.2",minimumPerCategory:20,maximumConsequentialErrors:0,maximumSupportedAbstentionRate:0.2,automaticallyApprove:false} as const;
+export {qualificationPolicy as policy} from "../../shared/learning-core/src/automaticity/qualification";
+import {qualificationPolicy as policy} from "../../shared/learning-core/src/automaticity/qualification";
 export interface ReviewLabel {verdict:Verdict;targetObserved:boolean|null;meaningPreserved:boolean|null;note:string}
 export interface ReviewRecord {reviewerId:string;role:string;reviewedAt:string;caseSha256:string;label:ReviewLabel;evidence:{path:string;sha256:string}}
 export interface BenchmarkDraft extends BenchmarkCase {

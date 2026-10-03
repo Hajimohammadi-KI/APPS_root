@@ -1,0 +1,61 @@
+import { verifyDevelopmentSelection } from "./holdout-policy";
+import { mkdir, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { hash, writingMetrics, type Verdict } from "./core";
+import { attestContextCandidate, boundedResponse, candidateChoice, candidateModel, contextPrompt, contextSchema, parseContextVerdict } from "./context-candidate";
+import type { ContextCase } from "./prepare-context-writing";
+
+const [split, mode, version] = Bun.argv.slice(2);
+if (!["development", "holdout"].includes(split ?? "") || !["direct", "thinking"].includes(mode ?? "") || !/^v\d+$/.test(version ?? "")) throw Error("Usage: run-context-writing.ts development|holdout direct|thinking vN");
+const dataDir = resolve(import.meta.dir, "runs/writing-context-data-v2"), directory = resolve(import.meta.dir, `runs/writing-context-${split}-${mode}-${version}`);
+const bytes = await Bun.file(resolve(dataDir, `${split}.jsonl`)).text(), manifest = await Bun.file(resolve(dataDir, "manifest.json")).json();
+if (hash(bytes) !== manifest.selections[split!].sha256) throw Error("Frozen data changed");
+const cases = bytes.trim().split("\n").map(line => JSON.parse(line) as ContextCase);
+await mkdir(directory, { recursive: true });
+const predictions = resolve(directory, "predictions.jsonl");
+if (await Bun.file(predictions).exists()) throw Error("Existing immutable run; choose a new version");
+const thinking = mode === "thinking";
+const codeHashes: Record<string, string> = {};
+for (const name of ["run-context-writing.ts", "context-candidate.ts", "context-data.ts", "core.ts", "holdout-policy.ts", "attest-local-launch.ts"]) {
+  const source = await Bun.file(resolve(import.meta.dir, name)).text(); codeHashes[name] = hash(source);
+  await Bun.write(resolve(directory, `${name}.snapshot`), source);
+}
+const config = { model: candidateModel, codeHashes, prompt: contextPrompt, schema: contextSchema, temperature: thinking ? .6 : .7, top_p: thinking ? .95 : .8, top_k: 20, min_p: 0, presence_penalty: 1.5, seed: 56, max_tokens: thinking ? 1536 : 512, chat_template_kwargs: { enable_thinking: thinking }, parallel: 4, timeoutMs: 120000, contextPolicy: manifest.context, selectionSha256: hash(bytes), inputPolicy: "Only language, target, before, after. No IDs, labels, annotation types, reference corrections or author.", split, mode };
+// Freeze every candidate setting before any held-out model request.
+await Bun.write(resolve(directory, "config.json"), JSON.stringify(config, null, 2) + "\n");
+const identity = await attestContextCandidate();
+await Bun.write(resolve(directory, "identity-pre-run.json"), JSON.stringify(identity, null, 2) + "\n");
+const { selectionSha256: _selection, split: _split, ...candidateSettings } = config;
+const { pid: _pid, createdAt: _created, ...launchSettings } = identity.launch;
+const candidateFingerprint = hash(JSON.stringify({ ...candidateSettings, chatTemplateSha256: identity.chatTemplateSha256, serverDefaults: identity.defaults, launchSettings }));
+await Bun.write(resolve(directory, "candidate.json"), JSON.stringify({ candidateFingerprint, dataManifestSha256: hash(await Bun.file(resolve(dataDir, "manifest.json")).text()), serverReasoningBudget: 768 }, null, 2) + "\n");
+if (split === "holdout") {
+  await verifyDevelopmentSelection(dataDir, candidateFingerprint, manifest.selections.development.sha256);
+  // Exclusive reservation survives interruption; reuse must be explicitly classified as development.
+  await writeFile(resolve(dataDir, "holdout-consumed.json"), JSON.stringify({ reservedAt: new Date().toISOString(), directory, candidateFingerprint, selectionSha256: hash(bytes) }, null, 2) + "\n", { flag: "wx" });
+}
+const key = (await Bun.file(resolve(import.meta.dir, "data/llama-api-key.local")).text()).trim();
+type Result = { id: string; language: "en" | "de"; group: string; label: "error" | "clean"; slice: string; verdict: Verdict; correction: string; evidence: string[]; elapsedMs: number; failure?: string; raw: unknown };
+const rows: Result[] = [], writer = Bun.file(predictions).writer(); let cursor = 0;
+async function worker() {
+  while (cursor < cases.length) {
+    const row = cases[cursor++]!, start = performance.now(); let assessment: { verdict: Verdict; correction: string; evidence: string[] } = { verdict: "uncertain", correction: "", evidence: [] }, failure: string | undefined, raw: unknown = null;
+    try {
+      const response = await fetch("http://127.0.0.1:8769/v1/chat/completions", { method: "POST", redirect: "error", headers: { "content-type": "application/json", authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(config.timeoutMs), body: JSON.stringify({ model: candidateModel.name, temperature: config.temperature, top_p: config.top_p, top_k: config.top_k, min_p: config.min_p, presence_penalty: config.presence_penalty, seed: config.seed, max_tokens: config.max_tokens, chat_template_kwargs: config.chat_template_kwargs, messages: [{ role: "system", content: config.prompt }, { role: "user", content: JSON.stringify({ language: row.language, target: row.text, before: row.before, after: row.after }) }], response_format: { type: "json_schema", json_schema: { name: "assessment", strict: true, schema: config.schema } } }) });
+      if (!response.ok) throw Error(`HTTP ${response.status}`);
+      const result = await boundedResponse(response); raw = result;
+      assessment = parseContextVerdict(JSON.parse(candidateChoice(result).content), row.text);
+    } catch (error) { failure = error instanceof Error ? error.message : "Assessment failure"; }
+    const result = { id: row.id, language: row.language, group: row.group, label: row.label, slice: row.slice, ...assessment, elapsedMs: Math.round(performance.now() - start), ...(failure ? { failure } : {}), raw };
+    rows.push(result); writer.write(JSON.stringify(result) + "\n"); await writer.flush();
+    if (rows.length % 16 === 0) console.log(JSON.stringify({ completed: rows.length, total: cases.length }));
+  }
+}
+try { await Promise.all(Array.from({ length: 4 }, worker)); } finally { await writer.end(); }
+const postIdentity = await attestContextCandidate();
+await Bun.write(resolve(directory, "identity-post-run.json"), JSON.stringify(postIdentity, null, 2) + "\n");
+if (JSON.stringify(identity.launch) !== JSON.stringify(postIdentity.launch) || identity.chatTemplateSha256 !== postIdentity.chatTemplateSha256 || JSON.stringify(identity.defaults) !== JSON.stringify(postIdentity.defaults)) throw Error("Serving configuration changed during run");
+const timings = rows.map(x => x.elapsedMs).sort((a, b) => a - b);
+const report = { schemaVersion: 1, completedAt: new Date().toISOString(), split, mode, candidateFingerprint, configSha256: hash(JSON.stringify(config)), selectionSha256: hash(bytes), predictionsSha256: hash(new Uint8Array(await Bun.file(predictions).arrayBuffer())), count: rows.length, failures: Object.fromEntries([...new Set(rows.map(x => x.failure).filter(Boolean))].map(reason => [reason!, rows.filter(x => x.failure === reason).length])), latencyMs: { median: timings[Math.floor(timings.length * .5)], p95: timings[Math.floor(timings.length * .95)] }, languages: Object.fromEntries(["en", "de"].map(language => { const subset = rows.filter(x => x.language === language); return [language, { candidate: writingMetrics(subset), groups: new Set(subset.map(x => x.group)).size, slices: Object.fromEntries([...new Set(subset.map(x => x.slice))].map(slice => [slice, writingMetrics(subset.filter(x => x.slice === slice))])) }]; })), releaseEligible: false, limitations: manifest.limitations + " Evidence quotation validates localization syntax only, not correctness of the proposed repair. Diagnostic only; no app target/meaning qualification." };
+await Bun.write(resolve(directory, "public-report.json"), JSON.stringify(report, null, 2) + "\n");
+console.log(JSON.stringify(report, null, 2));

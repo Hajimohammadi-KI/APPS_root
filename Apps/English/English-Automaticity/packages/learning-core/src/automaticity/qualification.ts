@@ -4,6 +4,28 @@ import {
   type Modality,
   type Verdict,
 } from "./contracts";
+/** The same policy is hashed into frozen evaluations and enforced below. */
+export const qualificationPolicy = Object.freeze({
+  version: "grammar-qualification-2026-10-03.3",
+  reportVersion: 2,
+  minimumPerCategory: Object.freeze({
+    correct_alternative: 100,
+    grammar_error: 100,
+    ambiguous: 20,
+    off_target: 20,
+    asr_corruption: 20,
+  }),
+  maximumConsequentialErrors: 0,
+  maximumSupportedAbstentionRate: 0.2,
+  minimumCorrectAcceptanceLower95: 0.9,
+  minimumErrorDetectionLower95: 0.9,
+  maximumFalseAcceptanceUpper95: 0.05,
+  confidenceMethod: "Wilson two-sided 95%",
+  confidenceZ: 1.959963984540054,
+  coverageDenominator: "all original cases in each primary class",
+  duplicateContent: "reject within the same scope and partition",
+  automaticallyApprove: false,
+} as const);
 export interface BenchmarkCase {
   id: string;
   language: Language;
@@ -39,6 +61,7 @@ export interface CandidatePrediction {
 }
 export interface QualificationReport {
   version: 1;
+  policyVersion: 2;
   candidate: { id: string; version: string };
   eligibleForReleaseReview: boolean;
   automaticallyApproved: false;
@@ -57,6 +80,11 @@ export interface QualificationReport {
     missedErrors: number;
     grammarErrorCases: number;
     missedErrorRate: number | null;
+    falseAcceptanceUpper95: number | null;
+    correctAcceptances: number;
+    correctAcceptanceLower95: number | null;
+    detectedErrors: number;
+    errorDetectionLower95: number | null;
     abstentions: number;
     meaningChanges: number;
     unsafePasses: number;
@@ -77,7 +105,7 @@ const categories: BenchmarkCase["category"][] = [
 function upperWilson(errors: number, total: number): number | null {
   if (!total) return null;
   const p = errors / total,
-    z = 1.959963984540054,
+    z = qualificationPolicy.confidenceZ,
     z2 = z * z;
   return Math.min(
     1,
@@ -97,7 +125,8 @@ export function qualifyCandidate(
   if (!candidate.id.trim() || !candidate.version.trim())
     reasons.push("A pinned candidate identity is required.");
   const ids = new Set<string>(),
-    families = new Map<string, string>();
+    families = new Map<string, string>(),
+    scopedContents = new Set<string>();
   for (const row of cases) {
     if (
       !["writing", "speaking"].includes(row.modality) ||
@@ -110,6 +139,10 @@ export function qualifyCandidate(
       );
     if (ids.has(row.id)) reasons.push(`Duplicate case ${row.id}`);
     ids.add(row.id);
+    const scopedContent = `${row.language}:${row.modality}:${row.constructionId}:${row.contentVersion}:${row.rubricVersion}:${row.partition}:${row.contentFingerprint}`;
+    if (scopedContents.has(scopedContent))
+      reasons.push(`Duplicate content within assessment scope ${row.id}`);
+    scopedContents.add(scopedContent);
     if (
       !row.sourceGroup?.trim() ||
       !row.templateFamily?.trim() ||
@@ -166,7 +199,10 @@ export function qualifyCandidate(
   const scopes = [...groups.values()].map((rows) => {
     const first = rows[0]!;
     for (const category of categories)
-      if (rows.filter((row) => row.category === category).length < 20)
+      if (
+        rows.filter((row) => row.category === category).length <
+        qualificationPolicy.minimumPerCategory[category]
+      )
         reasons.push(
           `Insufficient ${category} coverage for ${first.constructionId}`,
         );
@@ -185,6 +221,53 @@ export function qualifyCandidate(
       ({ row, prediction }) =>
         row.category === "grammar_error" && prediction.verdict === "pass",
     ).length;
+    const correctAlternativeCases = rows.filter(
+      (row) => row.category === "correct_alternative",
+    ).length;
+    const grammarErrorCases = rows.filter(
+      (row) => row.category === "grammar_error",
+    ).length;
+    const correctAcceptances = available.filter(
+      ({ row, prediction }) =>
+        row.category === "correct_alternative" && prediction.verdict === "pass",
+    ).length;
+    const detectedErrors = available.filter(
+      ({ row, prediction }) =>
+        row.category === "grammar_error" &&
+        prediction.verdict === "needs_repair",
+    ).length;
+    // Missing and unassessed predictions remain in the original class totals.
+    // These sentence bounds are descriptive: clustered cases need separate review.
+    const correctAcceptanceUpperFailure = upperWilson(
+      correctAlternativeCases - correctAcceptances,
+      correctAlternativeCases,
+    );
+    const errorDetectionUpperFailure = upperWilson(
+      grammarErrorCases - detectedErrors,
+      grammarErrorCases,
+    );
+    const correctAcceptanceLower95 =
+      correctAcceptanceUpperFailure === null
+        ? null
+        : 1 - correctAcceptanceUpperFailure;
+    const errorDetectionLower95 =
+      errorDetectionUpperFailure === null
+        ? null
+        : 1 - errorDetectionUpperFailure;
+    const falseAcceptanceUpper95 = upperWilson(missedErrors, grammarErrorCases);
+    if (
+      correctAcceptanceLower95 === null ||
+      correctAcceptanceLower95 <
+        qualificationPolicy.minimumCorrectAcceptanceLower95 ||
+      errorDetectionLower95 === null ||
+      errorDetectionLower95 <
+        qualificationPolicy.minimumErrorDetectionLower95 ||
+      falseAcceptanceUpper95 === null ||
+      falseAcceptanceUpper95 > qualificationPolicy.maximumFalseAcceptanceUpper95
+    )
+      reasons.push(
+        `Insufficient reliable correct acceptance or error detection for ${first.constructionId}`,
+      );
     const meaningChanges = available.filter(
       ({ prediction }) => prediction.meaningPreserved === false,
     ).length;
@@ -203,12 +286,14 @@ export function qualifyCandidate(
         prediction.verdict === "pass" && prediction.targetObserved !== true,
     ).length;
     if (
-      falseCorrections ||
-      missedErrors ||
-      meaningChanges ||
-      riskyPasses ||
-      targetContradictions ||
-      disagreements
+      Math.max(
+        falseCorrections,
+        missedErrors,
+        meaningChanges,
+        riskyPasses,
+        targetContradictions,
+        disagreements,
+      ) > qualificationPolicy.maximumConsequentialErrors
     )
       reasons.push(`Consequential judgment errors in ${first.constructionId}`);
     const abstentions = available.filter(
@@ -223,7 +308,7 @@ export function qualifyCandidate(
         ({ prediction }) => prediction.verdict === "not_assessed",
       ).length /
         supported.length >
-        0.2
+        qualificationPolicy.maximumSupportedAbstentionRate
     )
       reasons.push(
         `Insufficient assessed coverage for ${first.constructionId}`,
@@ -251,9 +336,7 @@ export function qualifyCandidate(
       rubricVersion: first.rubricVersion,
       sampleSize: rows.length,
       falseCorrections,
-      correctAlternativeCases: rows.filter(
-        (row) => row.category === "correct_alternative",
-      ).length,
+      correctAlternativeCases,
       falseCorrectionRate: available.filter(
         ({ row }) => row.category === "correct_alternative",
       ).length
@@ -267,8 +350,12 @@ export function qualifyCandidate(
           .length,
       ),
       missedErrors,
-      grammarErrorCases: rows.filter((row) => row.category === "grammar_error")
-        .length,
+      grammarErrorCases,
+      falseAcceptanceUpper95,
+      correctAcceptances,
+      correctAcceptanceLower95,
+      detectedErrors,
+      errorDetectionLower95,
       missedErrorRate: available.filter(
         ({ row }) => row.category === "grammar_error",
       ).length
@@ -302,6 +389,7 @@ export function qualifyCandidate(
   });
   return {
     version: 1,
+    policyVersion: qualificationPolicy.reportVersion,
     candidate,
     eligibleForReleaseReview: reasons.length === 0,
     automaticallyApproved: false,

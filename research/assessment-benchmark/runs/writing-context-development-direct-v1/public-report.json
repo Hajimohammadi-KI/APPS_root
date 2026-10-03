@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T11:48:34.123Z",
+  "split": "development",
+  "mode": "direct",
+  "configSha256": "53dba5302e0a1df0df422c1cedb2a7254358d707ae8cb31e234b6fcf95565cad",
+  "selectionSha256": "d1c6c63f7e5e3a2a5c0e8fba0d4647aa7845276c35bb36769102c65721187e1c",
+  "predictionsSha256": "5b763dcf2015bbdeec80cc4307511cc63de2ddef6d9fa70c41e5b9c824d4399b",
+  "count": 128,
+  "failures": {
+    "Missing definite correction evidence": 24,
+    "Evidence not in original target": 9
+  },
+  "latencyMs": {
+    "median": 2966,
+    "p95": 9298
+  },
+  "languages": {
+    "en": {
+      "candidate": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 3,
+        "trueAccept": 20,
+        "falseAcceptanceRate": 0.09375,
+        "correctAcceptanceRate": 0.625,
+        "abstentions": 14,
+        "coverage": 0.78125,
+        "falseAcceptance95": {
+          "low": 0.032401551298366194,
+          "high": 0.24218154728387864
+        },
+        "correctAcceptance95": {
+          "low": 0.4525440735307745,
+          "high": 0.7706611269054578
+        },
+        "detectedErrors": 23,
+        "errorDetection95": {
+          "low": 0.5462549057408342,
+          "high": 0.8443541950225723
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "groups": 62,
+      "slices": {
+        "no-correction": {
+          "count": 32,
+          "errors": 0,
+          "clean": 32,
+          "falseAccept": 0,
+          "trueAccept": 20,
+          "falseAcceptanceRate": null,
+          "correctAcceptanceRate": 0.625,
+          "abstentions": 8,
+          "coverage": 0.75,
+          "falseAcceptance95": null,
+          "correctAcceptance95": {
+            "low": 0.4525440735307745,
+            "high": 0.7706611269054578
+          },
+          "detectedErrors": 0,
+          "errorDetection95": null,
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "morphology-syntax-present": {
+          "count": 10,
+          "errors": 10,
+          "clean": 0,
+          "falseAccept": 1,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0.1,
+          "correctAcceptanceRate": null,
+          "abstentions": 1,
+          "coverage": 0.9,
+          "falseAcceptance95": {
+            "low": 0.017876213095072896,
+            "high": 0.4041500267952385
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 8,
+          "errorDetection95": {
+            "low": 0.49016247153664183,
+            "high": 0.9433178485456247
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "other-or-contextual": {
+          "count": 21,
+          "errors": 21,
+          "clean": 0,
+          "falseAccept": 2,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0.09523809523809523,
+          "correctAcceptanceRate": null,
+          "abstentions": 5,
+          "coverage": 0.7619047619047619,
+          "falseAcceptance95": {
+            "low": 0.02651876743807452,
+            "high": 0.2891413907391826
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 14,
+          "errorDetection95": {
+            "low": 0.4537345197425524,
+            "high": 0.8280524739491653
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "orthography-only": {
+          "count": 1,
+          "errors": 1,
+          "clean": 0,
+          "falseAccept": 0,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0,
+          "correctAcceptanceRate": null,
+          "abstentions": 0,
+          "coverage": 1,
+          "falseAcceptance95": {
+            "low": 0,
+            "high": 0.7934506856227626
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 1,
+          "errorDetection95": {
+            "low": 0.20654931437723745,
+            "high": 1
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        }
+      }
+    },
+    "de": {
+      "candidate": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 1,
+        "trueAccept": 11,
+        "falseAcceptanceRate": 0.03125,
+        "correctAcceptanceRate": 0.34375,
+        "abstentions": 19,
+        "coverage": 0.703125,
+        "falseAcceptance95": {
+          "low": 0.005537860164003122,
+          "high": 0.15744263820012558
+        },
+        "correctAcceptance95": {
+          "low": 0.20410437924433172,
+          "high": 0.5168891202103778
+        },
+        "detectedErrors": 26,
+        "errorDetection95": {
+          "low": 0.6469084479862404,
+          "high": 0.9111045531043405
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "groups": 62,
+      "slices": {
+        "no-correction": {
+          "count": 32,
+          "errors": 0,
+          "clean": 32,
+          "falseAccept": 0,
+          "trueAccept": 11,
+          "falseAcceptanceRate": null,
+          "correctAcceptanceRate": 0.34375,
+          "abstentions": 14,
+          "coverage": 0.5625,
+          "falseAcceptance95": null,
+          "correctAcceptance95": {
+            "low": 0.20410437924433172,
+            "high": 0.5168891202103778
+          },
+          "detectedErrors": 0,
+          "errorDetection95": null,
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "morphology-syntax-present": {
+          "count": 20,
+          "errors": 20,
+          "clean": 0,
+          "falseAccept": 0,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0,
+          "correctAcceptanceRate": null,
+          "abstentions": 4,
+          "coverage": 0.8,
+          "falseAcceptance95": {
+            "low": 0,
+            "high": 0.16112515805281938
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 16,
+          "errorDetection95": {
+            "low": 0.5839825677481064,
+            "high": 0.919342337420202
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "other-or-contextual": {
+          "count": 10,
+          "errors": 10,
+          "clean": 0,
+          "falseAccept": 0,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0,
+          "correctAcceptanceRate": null,
+          "abstentions": 0,
+          "coverage": 1,
+          "falseAcceptance95": {
+            "low": 0,
+            "high": 0.2775327998628892
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 10,
+          "errorDetection95": {
+            "low": 0.7224672001371107,
+            "high": 0.9999999999999999
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "orthography-only": {
+          "count": 2,
+          "errors": 2,
+          "clean": 0,
+          "falseAccept": 1,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0.5,
+          "correctAcceptanceRate": null,
+          "abstentions": 1,
+          "coverage": 0.5,
+          "falseAcceptance95": {
+            "low": 0.09453120573423074,
+            "high": 0.9054687942657693
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 0,
+          "errorDetection95": {
+            "low": 0,
+            "high": 0.6576197724933469
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        }
+      }
+    }
+  },
+  "releaseEligible": false,
+  "limitations": "German author identity unavailable beyond document IDs. Within-document observations correlated; sentence Wilson bounds descriptive. Public pretraining exposure unknown. New holdout is untouched by this workflow, not proven uncontaminated. Not app-task qualification. Evidence quotation validates localization syntax only, not correctness of the proposed repair. Diagnostic only; no app target/meaning qualification."
+}

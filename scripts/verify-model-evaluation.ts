@@ -12,7 +12,7 @@ try{
  assert.equal(source.cases.length,20);assert(source.cases.every(row=>row.humanReviewIds.length===0&&row.partition==="development"));pass("real draft contains no invented review or final cases");
  await rejected("unreviewed seed cannot qualify",()=>reviewedManifest(root,source),/Two distinct/);
  const repeated=structuredClone(source);repeated.cases.push({...structuredClone(repeated.cases[0]!),id:"renamed-identical-case"});
- await rejected("duplicate input cannot inflate case counts",()=>parseManifest(repeated),/inflate sample counts/);
+ await rejected("duplicate input cannot inflate case counts",()=>parseManifest(repeated),/Duplicate content|inflate sample counts/);
  for(const field of ["sourceGroup","templateFamily","contentFingerprint","learnerGroup"] as const){
   const copy=structuredClone(source);copy.cases[0]!.learnerGroup="same-person";
   const duplicate={...copy.cases[0]!,id:"separate-partition",partition:"final" as const,itemFamily:"new",sourceGroup:"new",templateFamily:"new",learnerGroup:"new"};
@@ -39,6 +39,8 @@ try{
  const calibrationRef=await writeEvidence("calibration.json",calibration);
  const freeze:FrozenEvaluation={schemaVersion:1,benchmarkVersion:reviewed.version,manifestSha256:final.manifestSha256,policySha256:digest(JSON.stringify(policy)),frozenAt:"2026-09-04T11:00:00Z",candidate:final.candidate,configurationSha256:final.configurationSha256,calibration:calibrationRef,finalCaseIds:reviewed.cases.filter(row=>row.partition==="final").map(row=>row.id)};
  validateFreeze(reviewed,final,freeze);pass("earlier frozen configuration matches final run");
+ const previousPolicy={version:"grammar-qualification-2026-09-05.2",minimumPerCategory:20,maximumConsequentialErrors:0,maximumSupportedAbstentionRate:0.2,automaticallyApprove:false};
+ await rejected("pre-R57 policy freeze cannot certify current qualification",()=>validateFreeze(reviewed,final,{...freeze,policySha256:digest(JSON.stringify(previousPolicy))}),/frozen configuration/);
  for(const [name,changed] of [["post-hoc freeze",{...freeze,frozenAt:"2026-09-04T13:00:00Z"}],["changed candidate",{...freeze,candidate:{id:"different",version:"1"}}],["changed settings",{...freeze,configurationSha256:"c".repeat(64)}],["changed policy",{...freeze,policySha256:"c".repeat(64)}]] as const)await rejected(name,()=>validateFreeze(reviewed,final,changed),/frozen configuration/);
  await rejected("missing predictions",()=>validateRun(reviewed,{...final,predictions:[]}),/Missing/);
  await rejected("old content cannot inherit approval",()=>validateRun({...reviewed,version:"new"},final),/Stale/);

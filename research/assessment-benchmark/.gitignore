@@ -3,4 +3,6 @@ data/
 __pycache__/
 runs/**/cases.jsonl
 runs/**/predictions.jsonl
+runs/**/development.jsonl
+runs/**/holdout.jsonl
 *.local

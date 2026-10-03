@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T12:31:58.896Z",
+  "split": "development",
+  "mode": "direct",
+  "candidateFingerprint": "271003d9367c3a7668f22eef7cfe0c472c637ffe73157e7e96114daa7fc53a57",
+  "configSha256": "cdc1dd831df1c1a1a24ee3ccf90f9a8156a57f6a953675ca4991e28fa2d9e82a",
+  "selectionSha256": "d1c6c63f7e5e3a2a5c0e8fba0d4647aa7845276c35bb36769102c65721187e1c",
+  "predictionsSha256": "f102da3f45d05c91b6785c5ff77d3d90882dcbf82d98e36d5a9a64eb0bdee5e0",
+  "count": 128,
+  "failures": {
+    "Evidence not in original target": 18,
+    "Malformed assessment": 1
+  },
+  "latencyMs": {
+    "median": 1937,
+    "p95": 6862
+  },
+  "languages": {
+    "en": {
+      "candidate": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 6,
+        "trueAccept": 23,
+        "falseAcceptanceRate": 0.1875,
+        "correctAcceptanceRate": 0.71875,
+        "abstentions": 8,
+        "coverage": 0.875,
+        "falseAcceptance95": {
+          "low": 0.08889544689565954,
+          "high": 0.3530915520137596
+        },
+        "correctAcceptance95": {
+          "low": 0.5462549057408342,
+          "high": 0.8443541950225723
+        },
+        "detectedErrors": 21,
+        "errorDetection95": {
+          "low": 0.4831108797896222,
+          "high": 0.7958956207556682
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "groups": 62,
+      "slices": {
+        "no-correction": {
+          "count": 32,
+          "errors": 0,
+          "clean": 32,
+          "falseAccept": 0,
+          "trueAccept": 23,
+          "falseAcceptanceRate": null,
+          "correctAcceptanceRate": 0.71875,
+          "abstentions": 3,
+          "coverage": 0.90625,
+          "falseAcceptance95": null,
+          "correctAcceptance95": {
+            "low": 0.5462549057408342,
+            "high": 0.8443541950225723
+          },
+          "detectedErrors": 0,
+          "errorDetection95": null,
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "morphology-syntax-present": {
+          "count": 10,
+          "errors": 10,
+          "clean": 0,
+          "falseAccept": 1,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0.1,
+          "correctAcceptanceRate": null,
+          "abstentions": 1,
+          "coverage": 0.9,
+          "falseAcceptance95": {
+            "low": 0.017876213095072896,
+            "high": 0.4041500267952385
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 8,
+          "errorDetection95": {
+            "low": 0.49016247153664183,
+            "high": 0.9433178485456247
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "other-or-contextual": {
+          "count": 21,
+          "errors": 21,
+          "clean": 0,
+          "falseAccept": 5,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0.23809523809523808,
+          "correctAcceptanceRate": null,
+          "abstentions": 4,
+          "coverage": 0.8095238095238095,
+          "falseAcceptance95": {
+            "low": 0.10628013022636468,
+            "high": 0.4509117368295075
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 12,
+          "errorDetection95": {
+            "low": 0.3654655436930671,
+            "high": 0.7553003107462404
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "orthography-only": {
+          "count": 1,
+          "errors": 1,
+          "clean": 0,
+          "falseAccept": 0,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0,
+          "correctAcceptanceRate": null,
+          "abstentions": 0,
+          "coverage": 1,
+          "falseAcceptance95": {
+            "low": 0,
+            "high": 0.7934506856227626
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 1,
+          "errorDetection95": {
+            "low": 0.20654931437723745,
+            "high": 1
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        }
+      }
+    },
+    "de": {
+      "candidate": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 1,
+        "trueAccept": 15,
+        "falseAcceptanceRate": 0.03125,
+        "correctAcceptanceRate": 0.46875,
+        "abstentions": 12,
+        "coverage": 0.8125,
+        "falseAcceptance95": {
+          "low": 0.005537860164003122,
+          "high": 0.15744263820012558
+        },
+        "correctAcceptance95": {
+          "low": 0.30869387108068835,
+          "high": 0.6355048288102536
+        },
+        "detectedErrors": 22,
+        "errorDetection95": {
+          "low": 0.5143332169904459,
+          "high": 0.8204745836639026
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "groups": 62,
+      "slices": {
+        "no-correction": {
+          "count": 32,
+          "errors": 0,
+          "clean": 32,
+          "falseAccept": 0,
+          "trueAccept": 15,
+          "falseAcceptanceRate": null,
+          "correctAcceptanceRate": 0.46875,
+          "abstentions": 3,
+          "coverage": 0.90625,
+          "falseAcceptance95": null,
+          "correctAcceptance95": {
+            "low": 0.30869387108068835,
+            "high": 0.6355048288102536
+          },
+          "detectedErrors": 0,
+          "errorDetection95": null,
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "morphology-syntax-present": {
+          "count": 20,
+          "errors": 20,
+          "clean": 0,
+          "falseAccept": 1,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0.05,
+          "correctAcceptanceRate": null,
+          "abstentions": 7,
+          "coverage": 0.65,
+          "falseAcceptance95": {
+            "low": 0.008881448800795402,
+            "high": 0.23613119344674205
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 12,
+          "errorDetection95": {
+            "low": 0.3865815007622531,
+            "high": 0.781193467627183
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "other-or-contextual": {
+          "count": 10,
+          "errors": 10,
+          "clean": 0,
+          "falseAccept": 0,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0,
+          "correctAcceptanceRate": null,
+          "abstentions": 2,
+          "coverage": 0.8,
+          "falseAcceptance95": {
+            "low": 0,
+            "high": 0.2775327998628892
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 8,
+          "errorDetection95": {
+            "low": 0.49016247153664183,
+            "high": 0.9433178485456247
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        },
+        "orthography-only": {
+          "count": 2,
+          "errors": 2,
+          "clean": 0,
+          "falseAccept": 0,
+          "trueAccept": 0,
+          "falseAcceptanceRate": 0,
+          "correctAcceptanceRate": null,
+          "abstentions": 0,
+          "coverage": 1,
+          "falseAcceptance95": {
+            "low": 0,
+            "high": 0.6576197724933469
+          },
+          "correctAcceptance95": null,
+          "detectedErrors": 2,
+          "errorDetection95": {
+            "low": 0.34238022750665303,
+            "high": 1
+          },
+          "protocolVersion": 3,
+          "diagnosticScreenPassed": false
+        }
+      }
+    }
+  },
+  "releaseEligible": false,
+  "limitations": "German author identity unavailable beyond document IDs. Within-document observations correlated; sentence Wilson bounds descriptive. Public pretraining exposure unknown. New holdout is untouched by this workflow, not proven uncontaminated. Not app-task qualification. Evidence quotation validates localization syntax only, not correctness of the proposed repair. Diagnostic only; no app target/meaning qualification."
+}

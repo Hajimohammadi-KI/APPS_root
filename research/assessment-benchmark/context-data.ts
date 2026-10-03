@@ -1,0 +1,33 @@
+import { hash } from "./core";
+
+const punctuation: Record<string, string> = { "’": "'", "´": "'", "‘": "'", "′": "'", "`": "'", "“": '"', "”": '"', "˝": '"', "¨": '"', "„": '"', "『": '"', "』": '"', "–": "-", "—": "-", "―": "-", "¬": "-", "、": ",", "，": ",", "：": ":", "；": ";", "？": "?", "！": "!", "ِ": " ", "\u200b": " " };
+export const compact = (text: string) => [...text].map(c => punctuation[c] ?? c).join("").replace(/\s/g, "");
+export const surfaceKey = (text: string) => hash(compact(text.normalize("NFC")).toLocaleLowerCase("en"));
+export function originalContext(document: string, tokenized: string) {
+  let normalized = ""; const offsets: number[] = [];
+  for (let i = 0; i < document.length; i++) { const c = punctuation[document[i]!] ?? document[i]!; if (/\s/.test(c)) continue; normalized += c; offsets.push(i); }
+  const target = compact(tokenized), start = normalized.indexOf(target);
+  if (start < 0 || normalized.indexOf(target, start + 1) !== -1) return null;
+  const begin = offsets[start]!, end = offsets[start + target.length - 1]! + 1;
+  const word = (c: string) => /[\p{L}\p{N}]/u.test(c);
+  if ((begin > 0 && word(document[begin - 1]!) && word(document[begin]!)) || (end < document.length && word(document[end - 1]!) && word(document[end]!))) return null;
+  const tidy = (text: string) => text.replace(/\s+/g, " ").trim();
+  return { text: tidy(document.slice(begin, end)), before: tidy(document.slice(Math.max(0, begin - 1000), begin)), after: tidy(document.slice(end, end + 1000)) };
+}
+export const detokenize = (text: string) => text.replace(/\s+([.,!?;:])/g, "$1").replace(/\(\s+/g, "(").replace(/\s+\)/g, ")");
+export function annotationSlice(types: string[]): string {
+  const edits = types.filter(t => t !== "noop");
+  if (!edits.length) return "no-correction";
+  if (edits.every(t => /:(PUNCT|ORTH|SPELL)$/.test(t))) return "orthography-only";
+  if (edits.some(t => /:(VERB:SVA|VERB:FORM|VERB:INFL|NOUN:INFL|NOUN:FORM|ADJ:FORM|DET:FORM|PRON:FORM|MORPH|WO|VERB:TENSE)$/.test(t))) return "morphology-syntax-present";
+  return "other-or-contextual";
+}
+export interface Grouped { group: string; author: string | null; text: string }
+export function assertDisjoint(left: Grouped[], right: Grouped[]) {
+  for (const field of ["group", "author"] as const) {
+    const seen = new Set(left.map(x => x[field]).filter(Boolean));
+    if (right.some(x => x[field] && seen.has(x[field]))) throw Error(`Overlapping ${field}`);
+  }
+  const seen = new Set(left.map(x => surfaceKey(x.text)));
+  if (right.some(x => seen.has(surfaceKey(x.text)))) throw Error("Overlapping target surface");
+}

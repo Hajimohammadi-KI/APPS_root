@@ -542,6 +542,13 @@
     flex-direction: row;
   }
 }
+html[data-low-stimulation="true"] .learning-home *,
+html[data-low-stimulation="true"] .learning-home *::before,
+html[data-low-stimulation="true"] .learning-home *::after {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
 @media (prefers-reduced-motion: reduce) {
   .learning-home *,
   .learning-home *::before,

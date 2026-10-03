@@ -1,10 +1,10 @@
 {
   "publishedAt": "2026-10-03",
   "version": "27.4.3",
-  "webRelease": "2026.10.03.9",
+  "webRelease": "2026.10.03.10",
   "changes": [
-    "Stronger model qualification: zero false passes, larger samples and useful error detection",
-    "Duplicate evaluation content cannot inflate qualification evidence",
-    "New local model comparisons and an updated Persian roadmap; general grading remains unqualified"
+    "Proposed grammar repairs now require a fresh agreeing review of the original answer",
+    "Conflicting corrections or uncertain meaning remain unscored without unverified feedback",
+    "New necessary-edit model experiments report false approvals, needless corrections and abstentions separately"
   ]
 }

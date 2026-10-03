@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T15:26:38.750Z",
+  "split": "development",
+  "mode": "direct",
+  "candidateFingerprint": "ed4599e0e0977de238499d05f5c0e0dd551c4015871883d3cd28403b53897e60",
+  "configSha256": "cfa04aa3743b8e0e0843401761ddc2ecde125061782d9210ba761a49af06cff0",
+  "selectionSha256": "d1c6c63f7e5e3a2a5c0e8fba0d4647aa7845276c35bb36769102c65721187e1c",
+  "predictionsSha256": "df55b25acb3de7f2c8689a863f619076b3c1cf3e61e1e1ec6f20735c309c5cfd",
+  "count": 128,
+  "attemptedPhases": 256,
+  "requestsStarted": 256,
+  "structurallyValidCalls": 79,
+  "failures": {
+    "Edit quotation absent or ambiguous": 131,
+    "Edit makes no substantive change": 43,
+    "Overlapping edits": 1,
+    "Uncertain output contains a correction": 2
+  },
+  "latencyMs": {
+    "median": 20059,
+    "p95": 51651
+  },
+  "languages": {
+    "en": {
+      "candidate": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 0,
+        "trueAccept": 2,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0.0625,
+        "abstentions": 49,
+        "coverage": 0.234375,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.1071791982550706
+        },
+        "correctAcceptance95": {
+          "low": 0.017310567031640967,
+          "high": 0.2014712314415458
+        },
+        "detectedErrors": 11,
+        "errorDetection95": {
+          "low": 0.20410437924433172,
+          "high": 0.5168891202103778
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "firstPass": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 0,
+        "trueAccept": 2,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0.0625,
+        "abstentions": 42,
+        "coverage": 0.34375,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.1071791982550706
+        },
+        "correctAcceptance95": {
+          "low": 0.017310567031640967,
+          "high": 0.2014712314415458
+        },
+        "detectedErrors": 17,
+        "errorDetection95": {
+          "low": 0.3644951711897464,
+          "high": 0.6913061289193116
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "reviewPass": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 0,
+        "trueAccept": 5,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0.15625,
+        "abstentions": 43,
+        "coverage": 0.328125,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.1071791982550706
+        },
+        "correctAcceptance95": {
+          "low": 0.0686442028250571,
+          "high": 0.3175414959753039
+        },
+        "detectedErrors": 13,
+        "errorDetection95": {
+          "low": 0.2551963484266544,
+          "high": 0.5773997512461713
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "groups": 62
+    },
+    "de": {
+      "candidate": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 0,
+        "trueAccept": 1,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0.03125,
+        "abstentions": 55,
+        "coverage": 0.140625,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.1071791982550706
+        },
+        "correctAcceptance95": {
+          "low": 0.005537860164003122,
+          "high": 0.15744263820012558
+        },
+        "detectedErrors": 7,
+        "errorDetection95": {
+          "low": 0.11023836252604186,
+          "high": 0.3875499364924353
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "firstPass": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 0,
+        "trueAccept": 1,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0.03125,
+        "abstentions": 46,
+        "coverage": 0.28125,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.1071791982550706
+        },
+        "correctAcceptance95": {
+          "low": 0.005537860164003122,
+          "high": 0.15744263820012558
+        },
+        "detectedErrors": 15,
+        "errorDetection95": {
+          "low": 0.30869387108068835,
+          "high": 0.6355048288102536
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "reviewPass": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 0,
+        "trueAccept": 2,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0.0625,
+        "abstentions": 46,
+        "coverage": 0.28125,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.1071791982550706
+        },
+        "correctAcceptance95": {
+          "low": 0.017310567031640967,
+          "high": 0.2014712314415458
+        },
+        "detectedErrors": 15,
+        "errorDetection95": {
+          "low": 0.30869387108068835,
+          "high": 0.6355048288102536
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "groups": 62
+    }
+  },
+  "releaseEligible": false,
+  "limitations": "German author identity unavailable beyond document IDs. Within-document observations correlated; sentence Wilson bounds descriptive. Public pretraining exposure unknown. New holdout is untouched by this workflow, not proven uncontaminated. Not app-task qualification. Two reviews share a model and are correlated. First-pass results are diagnostic only. Exact quotation/reconstruction does not certify linguistic validity. No app task/meaning qualification."
+}

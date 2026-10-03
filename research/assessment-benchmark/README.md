@@ -49,3 +49,15 @@ Physical Windows capture was tested on 2026-10-03: default input for five second
 ## R55 follow-up
 
 See `../../docs/LANGUAGE-TEXT-ASSESSMENT-R55.md` for both failed experiments and the exact tradeoff. The final staged diagnostic reduces false accepts to 14/101 English and 17/128 German, with correct acceptance only 55/96 and 70/128 and no valid error corrections. Neither candidate is approved. `run-writing-pass-review.ts` runs the task-review pair; `run-writing-text-check.ts` adds a text-only veto to frozen intermediate outcomes. Existing runs refuse overwrite. Changes to the candidate require a new frozen version and qualification; these commands do not activate production models.
+
+## R58 and R59 follow-up
+
+`R59-PLAN.md` records the experiment before inference. `run-edit-writing.ts 14b|27b development|holdout vN [baseline|target-last]` reconstructs corrections from anchored edits and runs two fresh original-only reviews. Every disagreement, malformed output or deadline failure abstains. First-pass results are diagnostic only. The optional target-last profile marks context as read-only and demonstrates an empty-edit output; it has its own fingerprint. No inference output qualifies the app model automatically.
+
+`download-writing-candidate.ts qwen35-27b` retrieves the pinned Unsloth Q4_K_M quantization of [Qwen3.5-27B](https://huggingface.co/Qwen/Qwen3.5-27B); the revision and publisher SHA-256 are checked and saved in a local receipt. It is an Apache-2.0 third-party quantization, not an official Qwen GGUF release. The runtime, launch hash, model hash, all experiment source snapshots and request settings are stored for each run. Do not overwrite an interrupted run: reserve a new version.
+
+The unchanged held-out gate requires zero false accepts plus at least 29/32 correct accepts and 29/32 detected errors in each language on development. `holdout-policy.ts` verifies the selected configuration and report hash before any held-out bytes are read by this runner. The 512-case held-out result is still a diagnostic; independent task/meaning review and production qualification are separate requirements.
+
+`scripts/r59-benchmark-report.ts` reconstructs retained predictions from raw responses, verifies data/configuration/snapshot hashes and recomputes metrics before publishing. False corrections and review disagreements are shown separately from abstentions. Licensed learner text and raw predictions remain local; only aggregate results enter either app.
+
+R58 changes the application repair path: a fresh review must agree on the correction, meaning preservation and non-null target judgment. Otherwise the response remains unscored with unconfirmed feedback removed. The changed policy has a new configuration fingerprint, so prior approvals cannot authorize it.

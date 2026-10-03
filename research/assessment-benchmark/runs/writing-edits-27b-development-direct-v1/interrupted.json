@@ -1,0 +1,8 @@
+{
+  "nextVersion": "v2",
+  "status": "interrupted",
+  "reason": "Operational restart before inspecting candidate metrics: 48 GPU layers used 12878/16311 MiB but only about 4.2 generated tokens/s per slot; increase offload to 58 with unchanged prompts/data/criteria.",
+  "gpuLayers": 48,
+  "stoppedAt": "2026-10-03T17:29:39.3820225+02:00",
+  "qualityResult": "Incomplete; never used for model selection"
+}

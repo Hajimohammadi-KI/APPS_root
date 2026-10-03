@@ -4,6 +4,13 @@ import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 
 const candidates = {
+"qwen35-27b": {
+  id: "qwen35-27b-q4", name: "Qwen3.5-27B-Q4_K_M.gguf", license: "Apache-2.0",
+  repository: "unsloth/Qwen3.5-27B-GGUF", baseModel: "Qwen/Qwen3.5-27B",
+  revision: "3221f178a6b842d04f1fb42f1c413534adcc0a6a",
+  sha256: "84b5f7f112156d63836a01a69dc3f11a6ba63b10a23b8ca7a7efaf52d5a2d806",
+  bytes: 16740812704,
+},
 "qwen3-14b": {
   id: "qwen3-14b-q5", name: "Qwen3-14B-Q5_K_M.gguf", license: "Apache-2.0",
   repository: "Qwen/Qwen3-14B-GGUF", baseModel: "Qwen/Qwen3-14B",

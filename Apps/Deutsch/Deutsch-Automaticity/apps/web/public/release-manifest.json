@@ -1,10 +1,10 @@
 {
   "publishedAt": "2026-10-03",
   "version": "20.9.3",
-  "webRelease": "2026.10.03.9",
+  "webRelease": "2026.10.03.10",
   "changes": [
-    "Strengere Modellprüfung: keine falschen Freigaben, größere Stichproben und ausreichende Fehlererkennung",
-    "Doppelte Prüfinhalte können die erforderliche Evidenz nicht künstlich erhöhen",
-    "Neue lokale Modellvergleiche und aktualisierte persische Roadmap; allgemeine Bewertung bleibt unbestätigt"
+    "Grammatikkorrekturen brauchen jetzt eine erneute, übereinstimmende Prüfung der ursprünglichen Antwort",
+    "Widersprüchliche Korrekturen oder unklare Bedeutung bleiben ohne Bewertung und unbestätigtes Feedback",
+    "Neue Modelltests weisen falsche Freigaben, unnötige Korrekturen und unsichere Antworten getrennt aus"
   ]
 }

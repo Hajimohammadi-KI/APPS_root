@@ -271,15 +271,96 @@ test("missing, uncertain or inconsistent second review cannot retain a pass", as
   }
 });
 
-test("a definite repair uses one inference and preserves its evidence", async () => {
+test("a definite repair requires a fresh agreeing review and preserves its evidence", async () => {
+  let calls = 0;
+  const requests: { messages: { content: string }[] }[] = [];
+  const signals: (AbortSignal | null | undefined)[] = [];
+  const result = await proposeTransformerFeedback(input, config, (async (
+    _url: unknown,
+    init?: RequestInit,
+  ) => {
+    calls++;
+    requests.push(JSON.parse(String(init?.body)));
+    signals.push(init?.signal);
+    return mock()(config.endpoint);
+  }) as typeof fetch);
+  expect(calls).toBe(2);
+  expect(requests[1]!.messages[0]!.content).not.toBe(
+    requests[0]!.messages[0]!.content,
+  );
+  expect(requests[1]!.messages[1]).toEqual(requests[0]!.messages[1]);
+  expect(signals[1]).toBe(signals[0]);
+  expect(result.verdict).toBe("needs_repair");
+  expect(result.minimalCorrection).toBe("I like tea.");
+});
+
+test("unconfirmed, stylistic or meaning-changing repair stays unscored", async () => {
+  for (const second of [
+    passingFeedback,
+    { ...passingFeedback, verdict: "not_assessed", grammar: "unknown" },
+    { ...rawFeedback, minimalCorrection: "I liked tea." },
+    { ...rawFeedback, meaningPreserved: false },
+    { ...rawFeedback, meaningPreserved: null },
+    { ...rawFeedback, targetObserved: false },
+    { ...rawFeedback, targetObserved: null },
+    { ...rawFeedback, minimalCorrection: "I Like tea." },
+    { ...rawFeedback, minimalCorrection: "I like tea!" },
+    { ...rawFeedback, minimalCorrection: input.response },
+    null,
+  ]) {
+    let calls = 0;
+    const result = await proposeTransformerFeedback(
+      input,
+      config,
+      (async () => {
+        calls++;
+        if (calls === 1) return mock()(config.endpoint);
+        return second === null
+          ? new Response("offline", { status: 503 })
+          : mock(second)(config.endpoint);
+      }) as typeof fetch,
+    );
+    expect(calls).toBe(2);
+    expect(result.verdict).toBe("not_assessed");
+    expect(result.grammar).toBe("unknown");
+    expect(result.minimalCorrection).toBeNull();
+    expect(result.spans).toEqual([]);
+  }
+});
+
+test("repair review cannot preserve missing judgments or a changed model identity", async () => {
+  for (const unknownField of ["targetObserved", "meaningPreserved"] as const) {
+    const result = await proposeTransformerFeedback(
+      input,
+      config,
+      mock({ ...rawFeedback, [unknownField]: null }),
+    );
+    expect(result.verdict).toBe("not_assessed");
+    expect(result.minimalCorrection).toBeNull();
+  }
   let calls = 0;
   const result = await proposeTransformerFeedback(input, config, (async () => {
     calls++;
-    return mock()(config.endpoint);
+    return mock(
+      rawFeedback,
+      calls === 2 ? { system_fingerprint: "changed" } : {},
+    )(config.endpoint);
   }) as typeof fetch);
-  expect(calls).toBe(1);
+  expect(result.verdict).toBe("not_assessed");
+  expect(result.styleRewrite).toBeNull();
+  expect(result.spans).toEqual([]);
+});
+
+test("repair comparison allows whitespace normalization without changing German case", async () => {
+  let calls = 0;
+  const result = await proposeTransformerFeedback(input, config, (async () => {
+    calls++;
+    return mock({
+      ...rawFeedback,
+      minimalCorrection: calls === 2 ? "  I   like tea.  " : "I like tea.",
+    })(config.endpoint);
+  }) as typeof fetch);
   expect(result.verdict).toBe("needs_repair");
-  expect(result.minimalCorrection).toBe("I like tea.");
 });
 
 test("both reviews share one deadline and a failed second review is unscored in the installed route", async () => {

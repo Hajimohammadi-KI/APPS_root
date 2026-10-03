@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T15:57:15.196Z",
+  "split": "development",
+  "mode": "direct",
+  "candidateFingerprint": "052c9f9ea72e1e5912cda6b2114631d5390bc4ef863d6064534918dcfef378cf",
+  "configSha256": "cbe193e6475c0d99f427cabea45fb9d47daaa6591549c65447690a4d60634ffa",
+  "selectionSha256": "d1c6c63f7e5e3a2a5c0e8fba0d4647aa7845276c35bb36769102c65721187e1c",
+  "predictionsSha256": "ce867b7f1cc10c74d581729d2295b1900d18f4b5ec746a27fbeb5d0c7a14c071",
+  "count": 128,
+  "attemptedPhases": 256,
+  "requestsStarted": 256,
+  "structurallyValidCalls": 189,
+  "failures": {
+    "Overlapping edits": 12,
+    "Edit quotation absent or ambiguous": 22,
+    "Edit makes no substantive change": 26,
+    "Uncertain output contains a correction": 2,
+    "Invalid edit fields": 2,
+    "Incomplete or changed model response": 3
+  },
+  "latencyMs": {
+    "median": 35710,
+    "p95": 116688
+  },
+  "languages": {
+    "en": {
+      "candidate": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 1,
+        "trueAccept": 16,
+        "falseAcceptanceRate": 0.03125,
+        "correctAcceptanceRate": 0.5,
+        "abstentions": 33,
+        "coverage": 0.484375,
+        "falseAcceptance95": {
+          "low": 0.005537860164003122,
+          "high": 0.15744263820012558
+        },
+        "correctAcceptance95": {
+          "low": 0.33630882869327483,
+          "high": 0.6636911713067252
+        },
+        "detectedErrors": 12,
+        "errorDetection95": {
+          "low": 0.22933887309454212,
+          "high": 0.5474559264692255
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "firstPass": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 1,
+        "trueAccept": 16,
+        "falseAcceptanceRate": 0.03125,
+        "correctAcceptanceRate": 0.5,
+        "abstentions": 15,
+        "coverage": 0.765625,
+        "falseAcceptance95": {
+          "low": 0.005537860164003122,
+          "high": 0.15744263820012558
+        },
+        "correctAcceptance95": {
+          "low": 0.33630882869327483,
+          "high": 0.6636911713067252
+        },
+        "detectedErrors": 25,
+        "errorDetection95": {
+          "low": 0.6124500635075647,
+          "high": 0.8897616374739581
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "reviewPass": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 4,
+        "trueAccept": 19,
+        "falseAcceptanceRate": 0.125,
+        "correctAcceptanceRate": 0.59375,
+        "abstentions": 13,
+        "coverage": 0.796875,
+        "falseAcceptance95": {
+          "low": 0.04970134387480073,
+          "high": 0.2806830548165022
+        },
+        "correctAcceptance95": {
+          "low": 0.42260024875382873,
+          "high": 0.7448036515733456
+        },
+        "detectedErrors": 23,
+        "errorDetection95": {
+          "low": 0.5462549057408342,
+          "high": 0.8443541950225723
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "groups": 62
+    },
+    "de": {
+      "candidate": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 0,
+        "trueAccept": 1,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0.03125,
+        "abstentions": 37,
+        "coverage": 0.421875,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.1071791982550706
+        },
+        "correctAcceptance95": {
+          "low": 0.005537860164003122,
+          "high": 0.15744263820012558
+        },
+        "detectedErrors": 14,
+        "errorDetection95": {
+          "low": 0.2816533111504036,
+          "high": 0.6067440886314801
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "firstPass": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 0,
+        "trueAccept": 1,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0.03125,
+        "abstentions": 19,
+        "coverage": 0.703125,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.1071791982550706
+        },
+        "correctAcceptance95": {
+          "low": 0.005537860164003122,
+          "high": 0.15744263820012558
+        },
+        "detectedErrors": 26,
+        "errorDetection95": {
+          "low": 0.6469084479862404,
+          "high": 0.9111045531043405
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "reviewPass": {
+        "count": 64,
+        "errors": 32,
+        "clean": 32,
+        "falseAccept": 0,
+        "trueAccept": 2,
+        "falseAcceptanceRate": 0,
+        "correctAcceptanceRate": 0.0625,
+        "abstentions": 20,
+        "coverage": 0.6875,
+        "falseAcceptance95": {
+          "low": 0,
+          "high": 0.1071791982550706
+        },
+        "correctAcceptance95": {
+          "low": 0.017310567031640967,
+          "high": 0.2014712314415458
+        },
+        "detectedErrors": 24,
+        "errorDetection95": {
+          "low": 0.5789344100575552,
+          "high": 0.8674759908149096
+        },
+        "protocolVersion": 3,
+        "diagnosticScreenPassed": false
+      },
+      "groups": 62
+    }
+  },
+  "releaseEligible": false,
+  "limitations": "German author identity unavailable beyond document IDs. Within-document observations correlated; sentence Wilson bounds descriptive. Public pretraining exposure unknown. New holdout is untouched by this workflow, not proven uncontaminated. Not app-task qualification. Two reviews share a model and are correlated. First-pass results are diagnostic only. Exact quotation/reconstruction does not certify linguistic validity. No app task/meaning qualification."
+}

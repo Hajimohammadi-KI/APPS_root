@@ -21,15 +21,6 @@ import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
 import { AvaCoachAvatar } from "@/components/ava-coach-avatar";
 
-const nav = [
-  "Tägliches Training",
-  "Lektionen",
-  "Gesprächsstudio",
-  "Wiederholen",
-  "Fortschritt",
-  "Wortschatz",
-  "Notizbuch",
-];
 const paths = ["Komplettes Deutsch"] as const;
 
 type RecordingState = "idle" | "recording" | "paused";
@@ -665,63 +656,8 @@ export default function Home() {
         ] as const);
 
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand">
-          <div className="brand-mark">{language === "de" ? "D" : "E"}</div>
-          <div>
-            <strong>
-              {language === "de" ? (
-                <>
-                  Deutsch
-                  <br />
-                  Automaticity
-                </>
-              ) : (
-                <>
-                  English
-                  <br />
-                  Automaticity
-                </>
-              )}
-            </strong>
-          </div>
-        </div>
-        <nav aria-label="Hauptnavigation">
-          {nav.map((item, index) => (
-            <button key={item} className={index === 2 ? "nav-active" : ""}>
-              <Icon>{["⌂", "▤", "♩", "◴", "▥", "▧", "▣"][index]}</Icon>
-              {item}
-            </button>
-          ))}
-        </nav>
-        <div className="nav-divider" />
-        <nav aria-label="Hilfe">
-          <button>
-            <Icon>⚙</Icon>Einstellungen
-          </button>
-          <button>
-            <Icon>?</Icon>Hilfe und Support
-          </button>
-        </nav>
-        <div className="growth">
-          <Icon>♔</Icon>
-          <div>
-            <b>
-              {language === "de"
-                ? "Du automatisierst dein Deutsch."
-                : "You’re building English automaticity."}
-            </b>
-            <span>
-              {language === "de"
-                ? "Regelmäßige Produktion schafft Sicherheit."
-                : "Consistent production creates lasting progress."}
-            </span>
-          </div>
-        </div>
-      </aside>
-
-      <main>
+    <div className="conversation-page">
+      <div className="studio-main">
         <header>
           <div>
             <h1>{text.title}</h1>
@@ -757,129 +693,145 @@ export default function Home() {
           </section>
         )}
 
-        <section
-          className="conversation-filter"
-          aria-labelledby="filter-heading"
-        >
-          <h2 id="filter-heading">{text.filterTitle}</h2>
-          <div className="conversation-filter-grid">
-            <input type="hidden" value={path} readOnly />
-            <label>
-              <span>{text.labels[1]}</span>
-              <select
+        <details className="studio-options">
+          <summary>
+            Thema & Übungsart{" "}
+            <span>
+              {selected.level} · {selected.topic}
+            </span>
+          </summary>{" "}
+          <section
+            className="conversation-filter"
+            aria-labelledby="filter-heading"
+          >
+            <h2 id="filter-heading">{text.filterTitle}</h2>
+            <div className="conversation-filter-grid">
+              <input type="hidden" value={path} readOnly />
+              <label>
+                <span>{text.labels[1]}</span>
+                <select
+                  disabled={recordingState !== "idle"}
+                  value={levels.includes(level) ? level : allLabel}
+                  onChange={(event) => {
+                    setLevel(event.target.value);
+                    setSkill(allLabel);
+                    setCategory(allLabel);
+                    setTopicId("");
+                    resetSession();
+                  }}
+                >
+                  {levels.map((item) => (
+                    <option key={item}>{item}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span>{text.labels[2]}</span>
+                <select
+                  disabled={recordingState !== "idle"}
+                  value={skills.includes(skill) ? skill : allLabel}
+                  onChange={(event) => {
+                    setSkill(event.target.value);
+                    setCategory(allLabel);
+                    setTopicId("");
+                    resetSession();
+                  }}
+                >
+                  {skills.map((item) => (
+                    <option key={item}>{item}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span>{text.labels[3]}</span>
+                <select
+                  disabled={recordingState !== "idle"}
+                  value={categories.includes(category) ? category : allLabel}
+                  onChange={(event) => {
+                    setCategory(event.target.value);
+                    setTopicId("");
+                    resetSession();
+                  }}
+                >
+                  {categories.map((item) => (
+                    <option key={item}>{item}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span>{text.labels[4]}</span>
+                <select
+                  disabled={recordingState !== "idle"}
+                  value={selected.id}
+                  onChange={(event) => {
+                    setTopicId(event.target.value);
+                    resetSession();
+                    setMessage(
+                      "Thema geändert. Die vorige Antwort wurde verworfen; es wird keine alte Bewertung übernommen.",
+                    );
+                  }}
+                >
+                  {filteredTopics.map((topic) => (
+                    <option value={topic.id} key={topic.id}>
+                      {topic.topic}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </section>
+          <section className="mode-cards" aria-label="Practice mode">
+            {modeCards.map(([mode, icon, title, description], index) => (
+              <button
                 disabled={recordingState !== "idle"}
-                value={levels.includes(level) ? level : allLabel}
-                onChange={(event) => {
-                  setLevel(event.target.value);
-                  setSkill(allLabel);
-                  setCategory(allLabel);
-                  setTopicId("");
+                key={mode}
+                className={`mode ${practiceMode === mode ? "active-mode" : ""}`}
+                onClick={() => {
+                  setPracticeMode(mode);
                   resetSession();
                 }}
               >
-                {levels.map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              <span>{text.labels[2]}</span>
-              <select
-                disabled={recordingState !== "idle"}
-                value={skills.includes(skill) ? skill : allLabel}
-                onChange={(event) => {
-                  setSkill(event.target.value);
-                  setCategory(allLabel);
-                  setTopicId("");
-                  resetSession();
-                }}
-              >
-                {skills.map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              <span>{text.labels[3]}</span>
-              <select
-                disabled={recordingState !== "idle"}
-                value={categories.includes(category) ? category : allLabel}
-                onChange={(event) => {
-                  setCategory(event.target.value);
-                  setTopicId("");
-                  resetSession();
-                }}
-              >
-                {categories.map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              <span>{text.labels[4]}</span>
-              <select
-                disabled={recordingState !== "idle"}
-                value={selected.id}
-                onChange={(event) => {
-                  setTopicId(event.target.value);
-                  resetSession();
-                  setMessage(
-                    "Thema geändert. Die vorige Antwort wurde verworfen; es wird keine alte Bewertung übernommen.",
-                  );
-                }}
-              >
-                {filteredTopics.map((topic) => (
-                  <option value={topic.id} key={topic.id}>
-                    {topic.topic}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </section>
-
-        <section className="mode-cards" aria-label="Practice mode">
-          {modeCards.map(([mode, icon, title, description], index) => (
-            <button
-              disabled={recordingState !== "idle"}
-              key={mode}
-              className={`mode ${practiceMode === mode ? "active-mode" : ""}`}
-              onClick={() => {
-                setPracticeMode(mode);
-                resetSession();
-              }}
-            >
-              <span
-                className={
-                  index === 1 ? "orange-mode" : index === 2 ? "green-mode" : ""
-                }
-              >
-                {icon}
-              </span>
-              <div>
-                <b>{title}</b>
-                <small>{description}</small>
-              </div>
-              {practiceMode === mode && <i>✓</i>}
-            </button>
-          ))}
-        </section>
-
+                <span
+                  className={
+                    index === 1
+                      ? "orange-mode"
+                      : index === 2
+                        ? "green-mode"
+                        : ""
+                  }
+                >
+                  {icon}
+                </span>
+                <div>
+                  <b>{title}</b>
+                  <small>{description}</small>
+                </div>
+                {practiceMode === mode && <i>✓</i>}
+              </button>
+            ))}
+          </section>
+        </details>
         <div className="workspace">
           <section className="studio">
-            <div className="steps" aria-label="Practice steps">
-              {stepLabels.map((step, index) => (
-                <button
-                  key={step}
-                  onClick={() => setActive(index)}
-                  className={active === index ? "active" : ""}
-                >
-                  <b>{index + 1}</b>
-                  <Icon>{["♧", "♩", "▷", "▧", "✓", "↗", "▯"][index]}</Icon>
-                  <span>{step}</span>
-                </button>
-              ))}
-            </div>
+            <details className="studio-step-picker">
+              <summary>
+                Schritt {active + 1} / {stepLabels.length} ·{" "}
+                {stepLabels[active]}
+              </summary>
+              <div className="steps" aria-label="Practice steps">
+                {stepLabels.map((step, index) => (
+                  <button
+                    key={step}
+                    onClick={() => setActive(index)}
+                    className={active === index ? "active" : ""}
+                  >
+                    <b>{index + 1}</b>
+                    <Icon>{["♧", "♩", "▷", "▧", "✓", "↗", "▯"][index]}</Icon>
+                    <span>{step}</span>
+                  </button>
+                ))}
+              </div>
+            </details>
 
             <div className="coach-card">
               <div className="coach-topic">
@@ -1313,126 +1265,129 @@ export default function Home() {
             )}
           </section>
 
-          <aside className="evidence">
-            <section className="panel feedback">
-              <h3>
-                {language === "de"
-                  ? "Echte Sprechdaten"
-                  : "Real speaking evidence"}
-              </h3>
-              <div className="feedback-row f0">
-                <span>◫</span>
-                <div>
-                  <b>Fluency</b>
-                  <small>
-                    {seconds
-                      ? `${wordsPerMinute} WPM from ${formatTime(seconds)} audio`
-                      : "Waiting for recorded timing"}
-                  </small>
-                </div>
-                <strong>{seconds ? `${wordsPerMinute}` : "—"}</strong>
-              </div>
-              <div className="feedback-row f1">
-                <span>◉</span>
-                <div>
-                  <b>Pronunciation</b>
-                  <small>{text.pronunciation}</small>
-                </div>
-                <strong>—</strong>
-              </div>
-              <div className="feedback-row f2">
-                <span>G</span>
-                <div>
-                  <b>Grammar</b>
-                  <small>
-                    {evaluation
-                      ? `${evaluation.issues.length} LanguageTool issue(s)`
-                      : "Not checked"}
-                  </small>
-                </div>
-                <strong>{evaluation ? evaluation.issues.length : "—"}</strong>
-              </div>
-              <div className="feedback-row f3">
-                <span>Aa</span>
-                <div>
-                  <b>Transcript</b>
-                  <small>
-                    {transcript
-                      ? "Browser transcript reviewed by learner"
-                      : "Waiting for speech"}
-                  </small>
-                </div>
-                <strong>{wordCount || "—"}</strong>
-              </div>
-              <div className="coach-tip">
-                <b>☼ Evidence rule</b>
-                <p>
+          <details className="studio-results">
+            <summary>Sitzungsdetails & Rückmeldung</summary>
+            <aside className="evidence">
+              <section className="panel feedback">
+                <h3>
                   {language === "de"
-                    ? "Keine Bewertung wird angezeigt, wenn der echte Anbieter nicht geantwortet hat."
-                    : "No evaluation is shown when the real provider has not responded."}
-                </p>
-              </div>
-            </section>
-            <section className="panel">
-              <h3>Session evidence</h3>
-              <div className="metrics">
-                <div>
-                  <b>{attempts}</b>
-                  <span>Turns</span>
-                </div>
-                <div>
-                  <b>{formatTime(seconds)}</b>
-                  <span>Speaking</span>
-                </div>
-                <div>
-                  <b>{wordCount}</b>
-                  <span>Words</span>
-                </div>
-                <div>
-                  <b>{wordsPerMinute}</b>
-                  <span>WPM</span>
-                </div>
-              </div>
-              <p className="encourage">♙ {selected.goal}</p>
-            </section>
-            <section className="panel correction">
-              <div className="panel-title">
-                <h3>Grammar correction</h3>
-                <label>
-                  Show{" "}
-                  <input
-                    type="checkbox"
-                    checked={showCorrections}
-                    onChange={(event) =>
-                      setShowCorrections(event.target.checked)
-                    }
-                  />
-                </label>
-              </div>
-              {showCorrections && (
-                <>
-                  <div className="original">
-                    <b>Original</b>
-                    <p>{evaluation?.original ?? "—"}</p>
+                    ? "Echte Sprechdaten"
+                    : "Real speaking evidence"}
+                </h3>
+                <div className="feedback-row f0">
+                  <span>◫</span>
+                  <div>
+                    <b>Fluency</b>
+                    <small>
+                      {seconds
+                        ? `${wordsPerMinute} WPM from ${formatTime(seconds)} audio`
+                        : "Waiting for recorded timing"}
+                    </small>
                   </div>
-                  <div className="corrected">
-                    <b>
-                      {evaluation?.issues.length
-                        ? "Corrected"
-                        : "Provider result"}
-                    </b>
-                    <p>{evaluation?.corrected ?? "—"}</p>
+                  <strong>{seconds ? `${wordsPerMinute}` : "—"}</strong>
+                </div>
+                <div className="feedback-row f1">
+                  <span>◉</span>
+                  <div>
+                    <b>Pronunciation</b>
+                    <small>{text.pronunciation}</small>
                   </div>
-                </>
-              )}
-            </section>
-            <section className="panel goal">
-              <span>{selected.level}</span>
-              <h3>{language === "de" ? "Heutiges Ziel" : "Today’s goal"}</h3>
-              <b>{selected.topic}</b>
-              <p>{selected.goal}</p>
-            </section>
-          </aside>
+                  <strong>—</strong>
+                </div>
+                <div className="feedback-row f2">
+                  <span>G</span>
+                  <div>
+                    <b>Grammar</b>
+                    <small>
+                      {evaluation
+                        ? `${evaluation.issues.length} LanguageTool issue(s)`
+                        : "Not checked"}
+                    </small>
+                  </div>
+                  <strong>{evaluation ? evaluation.issues.length : "—"}</strong>
+                </div>
+                <div className="feedback-row f3">
+                  <span>Aa</span>
+                  <div>
+                    <b>Transcript</b>
+                    <small>
+                      {transcript
+                        ? "Browser transcript reviewed by learner"
+                        : "Waiting for speech"}
+                    </small>
+                  </div>
+                  <strong>{wordCount || "—"}</strong>
+                </div>
+                <div className="coach-tip">
+                  <b>☼ Evidence rule</b>
+                  <p>
+                    {language === "de"
+                      ? "Keine Bewertung wird angezeigt, wenn der echte Anbieter nicht geantwortet hat."
+                      : "No evaluation is shown when the real provider has not responded."}
+                  </p>
+                </div>
+              </section>
+              <section className="panel">
+                <h3>Session evidence</h3>
+                <div className="metrics">
+                  <div>
+                    <b>{attempts}</b>
+                    <span>Turns</span>
+                  </div>
+                  <div>
+                    <b>{formatTime(seconds)}</b>
+                    <span>Speaking</span>
+                  </div>
+                  <div>
+                    <b>{wordCount}</b>
+                    <span>Words</span>
+                  </div>
+                  <div>
+                    <b>{wordsPerMinute}</b>
+                    <span>WPM</span>
+                  </div>
+                </div>
+                <p className="encourage">♙ {selected.goal}</p>
+              </section>
+              <section className="panel correction">
+                <div className="panel-title">
+                  <h3>Grammar correction</h3>
+                  <label>
+                    Show{" "}
+                    <input
+                      type="checkbox"
+                      checked={showCorrections}
+                      onChange={(event) =>
+                        setShowCorrections(event.target.checked)
+                      }
+                    />
+                  </label>
+                </div>
+                {showCorrections && (
+                  <>
+                    <div className="original">
+                      <b>Original</b>
+                      <p>{evaluation?.original ?? "—"}</p>
+                    </div>
+                    <div className="corrected">
+                      <b>
+                        {evaluation?.issues.length
+                          ? "Corrected"
+                          : "Provider result"}
+                      </b>
+                      <p>{evaluation?.corrected ?? "—"}</p>
+                    </div>
+                  </>
+                )}
+              </section>
+              <section className="panel goal">
+                <span>{selected.level}</span>
+                <h3>{language === "de" ? "Heutiges Ziel" : "Today’s goal"}</h3>
+                <b>{selected.topic}</b>
+                <p>{selected.goal}</p>
+              </section>
+            </aside>
+          </details>
         </div>
         <footer>
           <div className="turns">
@@ -1466,7 +1421,7 @@ export default function Home() {
               : `${language === "de" ? "Weiter" : "Continue"} →`}
           </button>
         </footer>
-      </main>
+      </div>
       {dailyComplete && (
         <div
           className="daily-complete-backdrop"

@@ -504,6 +504,7 @@ export async function mountPractice(
   const nav = element("nav");
   nav.setAttribute("aria-label", t("App navigation", "App-Navigation"));
   for (const [label, href] of [
+    [t("Home", "Start"), "/"],
     [t("Today", "Heute"), en ? "/daily" : "/heute"],
     [
       t("Grammar library", "Grammatikbibliothek"),
@@ -618,21 +619,64 @@ export async function mountPractice(
     recordChoice("learner_level_preference"),
   );
   if (editing) recordChoice(resume ? "resume" : "daily_selection");
-  const focusSection = element("section", undefined, "card");
+  const focusSection = element("details", undefined, "card practice-options");
+  focusSection.open = loadDailyPlan(localStorage, language, now()).plan.paused;
   focusSection.append(
-    element("h2", t("Today's focus", "Dein Fokus heute")),
+    element(
+      "summary",
+      t("My plan & practice options", "Mein Plan & Übungseinstellungen"),
+    ),
     dailyPanel,
     controls,
     focusPanel,
   );
   const aside = element("div", undefined, "side-column");
-  aside.append(progressPanel, historyPanel);
+  const evidenceDisclosure = element(
+    "details",
+    undefined,
+    "card practice-disclosure",
+  );
+  evidenceDisclosure.append(
+    element(
+      "summary",
+      t("Progress for this topic", "Fortschritt zu diesem Thema"),
+    ),
+    progressPanel,
+  );
+  const historyDisclosure = element(
+    "details",
+    undefined,
+    "card practice-disclosure",
+  );
+  historyDisclosure.append(
+    element("summary", t("My recent responses", "Meine letzten Antworten")),
+    historyPanel,
+  );
+  aside.append(
+    element(
+      "p",
+      t(
+        "One response at a time. Your work is saved on this device.",
+        "Eine Antwort nach der anderen. Deine Arbeit bleibt auf diesem Gerät.",
+      ),
+      "practice-side-note",
+    ),
+    evidenceDisclosure,
+    historyDisclosure,
+  );
   const grid = element("div", undefined, "practice-grid");
   grid.append(taskPanel, aside);
-  const tools = element("section", undefined, "card backup-tools");
+  const tools = element(
+    "details",
+    undefined,
+    "card backup-tools practice-disclosure",
+  );
   tools.id = "backup-tools";
   tools.append(
-    element("h2", t("Keep your work", "Deine Arbeit sichern")),
+    element(
+      "summary",
+      t("Backup & transfer my work", "Meine Arbeit sichern & übertragen"),
+    ),
     element(
       "p",
       t(
@@ -901,6 +945,7 @@ export async function mountPractice(
   function renderDailyPlan(): void {
     const focusedControl = document.activeElement?.id;
     const { plan, unreadable } = loadDailyPlan(localStorage, language, now());
+    if (plan.paused) focusSection.open = true;
     const count = dailyResponseCount(
       ledger().attempts.map((row) => row.attempt),
       language,
@@ -1428,8 +1473,19 @@ export async function mountPractice(
       btn.setAttribute("aria-pressed", String(task.stage === stage));
       stageNav.append(btn);
     });
-    taskPanel.append(stageNav);
-    taskPanel.append(
+    const stageOptions = element(
+      "details",
+      undefined,
+      "practice-stage-options",
+    );
+    stageOptions.append(
+      element(
+        "summary",
+        `${t("Current step", "Aktueller Schritt")}: ${stageNames[stages.indexOf(task.stage)]} · ${t("change", "ändern")}`,
+      ),
+      stageNav,
+    );
+    stageOptions.append(
       element(
         "p",
         t(
@@ -1439,6 +1495,7 @@ export async function mountPractice(
         "muted",
       ),
     );
+    taskPanel.append(stageOptions);
     const modalityNav = element("div", undefined, "toolbar");
     for (const mode of ["writing", "speaking"] as Modality[]) {
       const other = activeTasks.find(
@@ -2367,7 +2424,23 @@ export async function mountPractice(
   }
   renderFocus();
   const reviews = element("section", undefined, "card");
-  root.append(reviews);
+  const reviewsDisclosure = element(
+    "details",
+    undefined,
+    "card practice-disclosure",
+  );
+  reviewsDisclosure.open = requested.has("review") || requested.has("attempt");
+  reviewsDisclosure.append(
+    element(
+      "summary",
+      t(
+        "Saved responses & independent review",
+        "Gespeicherte Antworten & unabhängige Prüfung",
+      ),
+    ),
+    reviews,
+  );
+  root.append(reviewsDisclosure);
   const refreshReviews = mountReviewPanel(
     reviews,
     language,
@@ -2380,6 +2453,7 @@ export async function mountPractice(
     editing,
   );
   if (location.hash === "#backup-tools") {
+    tools.open = true;
     transferGuide.open = true;
     tools.scrollIntoView({ block: "start" });
   }

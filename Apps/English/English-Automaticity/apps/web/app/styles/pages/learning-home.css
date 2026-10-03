@@ -566,3 +566,49 @@ html[data-low-stimulation="true"] .learning-home *::after {
     border: 2px solid ButtonText !important;
   }
 }
+
+/* Editorial headings and a single strong focal card; body copy stays in the reading font. */
+.learning-home .lh-heading h1,
+.learning-home .lh-hero h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+.learning-home .lh-hero {
+  background: #192d50;
+  border-color: #192d50;
+  color: #fff;
+}
+.learning-home .lh-hero h2,
+.learning-home .lh-method h3 {
+  color: #fff;
+}
+.learning-home .lh-hero-copy > p,
+.learning-home .lh-method,
+.learning-home .lh-method > p {
+  color: #d8e2f3;
+}
+.learning-home .lh-method {
+  background: #21395e;
+  border-color: #486183;
+}
+.learning-home .lh-method li > span {
+  background: #314c77;
+  color: #fff;
+  border-color: #58739c;
+}
+.learning-home .lh-primary {
+  background: #f5f8ff !important;
+  color: #192d50 !important;
+  border-color: #f5f8ff !important;
+}
+.learning-home .lh-primary:hover {
+  background: #dfe9ff !important;
+}
+.learning-home .lh-status-mark {
+  background: #9cbaff;
+  box-shadow: none;
+}
+.learning-home .lh-local {
+  color: #d8e2f3;
+}

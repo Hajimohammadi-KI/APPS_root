@@ -1,4 +1,4 @@
-:root {
+.conversation-page {
   --violet: #5b2bc9;
   --violet2: #7444da;
   --ink: #11113d;
@@ -6,11 +6,11 @@
   --line: #e6e3f1;
   --lav: #f5f1ff;
 }
-.app-shell {
+.conversation-page {
   background: #f7f7fb;
   font-size: 13px;
 }
-.app-shell {
+.conversation-page {
   display: block;
   max-width: 1600px;
   min-height: 0;
@@ -18,25 +18,25 @@
   box-shadow: none;
   background: #fbfbfe;
 }
-.app-shell > .sidebar {
+.conversation-page > .sidebar {
   display: none;
 }
-.app-shell > main {
+.conversation-page > .studio-main {
   width: 100%;
   min-width: 0;
 }
-.sidebar {
+.conversation-page .sidebar {
   padding: 18px;
   background: linear-gradient(180deg, #fbfaff, #fff);
   position: sticky;
   top: 0;
   height: 100vh;
 }
-.brand {
+.conversation-page .brand {
   padding: 0 0 34px;
   gap: 12px;
 }
-.brand-mark {
+.conversation-page .brand-mark {
   width: 46px;
   height: 46px;
   display: grid;
@@ -45,63 +45,63 @@
   font-size: 26px;
   padding: 0;
 }
-.brand strong {
+.conversation-page .brand strong {
   font-size: 18px;
   line-height: 1.05;
 }
-.sidebar nav {
+.conversation-page .sidebar nav {
   gap: 7px;
 }
-.sidebar nav button {
+.conversation-page .sidebar nav button {
   font-size: 15px;
   padding: 12px;
   border-radius: 10px;
 }
-.sidebar nav .icon {
+.conversation-page .sidebar nav .icon {
   font-size: 19px;
   width: 22px;
 }
-.nav-divider {
+.conversation-page .nav-divider {
   height: 1px;
   background: var(--line);
   margin: 18px 5px 10px;
 }
-.growth {
+.conversation-page .growth {
   padding: 15px;
   margin: 18px 0 0;
 }
-.growth b {
+.conversation-page .growth b {
   font-size: 11px;
 }
-.growth span {
+.conversation-page .growth span {
   font-size: 10px;
 }
-.app-shell > main > header {
+.conversation-page > .studio-main > header {
   height: auto;
   min-height: 0;
   padding: 20px 22px 12px;
   border-bottom: 0;
   background: transparent;
 }
-.app-shell > main > header h1 {
+.conversation-page > .studio-main > header h1 {
   font-size: 26px;
   letter-spacing: -0.02em;
 }
-.app-shell > main > header p {
+.conversation-page > .studio-main > header p {
   font-size: 14px;
 }
-.header-actions {
+.conversation-page .header-actions {
   gap: 18px;
 }
-.app-shell > main > header .header-actions {
+.conversation-page > .studio-main > header .header-actions {
   display: none;
 }
-.header-actions > span {
+.conversation-page .header-actions > span {
   border: 0;
   padding: 0;
   color: var(--ink);
 }
-.profile {
+.conversation-page .profile {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -111,13 +111,13 @@
   place-items: center;
   font-weight: 800;
 }
-.mode-cards {
+.conversation-page .mode-cards {
   display: grid;
   grid-template-columns: 1.15fr 0.95fr 1fr;
   gap: 16px;
   padding: 20px 22px 10px;
 }
-.mode {
+.conversation-page .mode {
   position: relative;
   text-align: left;
   display: flex;
@@ -129,7 +129,7 @@
   background: #fff;
   box-shadow: 0 5px 18px #251a5010;
 }
-.mode > span {
+.conversation-page .mode > span {
   width: 64px;
   height: 64px;
   border-radius: 16px;
@@ -139,24 +139,24 @@
   place-items: center;
   font-size: 30px;
 }
-.mode .orange-mode {
+.conversation-page .mode .orange-mode {
   background: #fff0e3;
   color: #e34a20;
 }
-.mode .green-mode {
+.conversation-page .mode .green-mode {
   background: #e6f7f0;
   color: #00966e;
 }
-.mode b {
+.conversation-page .mode b {
   font-size: 15px;
 }
-.mode small {
+.conversation-page .mode small {
   display: block;
   color: var(--muted);
   line-height: 1.5;
   margin-top: 6px;
 }
-.mode i {
+.conversation-page .mode i {
   position: absolute;
   right: 14px;
   top: 12px;
@@ -168,69 +168,69 @@
   display: grid;
   place-items: center;
 }
-.active-mode {
+.conversation-page .active-mode {
   border-color: #7540df;
 }
-.workspace {
+.conversation-page .workspace {
   grid-template-columns: minmax(620px, 1fr) 370px;
   gap: 16px;
   padding: 0 22px 14px;
 }
-.steps {
+.conversation-page .steps {
   margin-top: 0;
   min-height: 78px;
   height: auto;
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
-.steps button {
+.conversation-page .steps button {
   min-width: 0;
   font-size: 11px;
 }
-.steps button span {
+.conversation-page .steps button span {
   min-width: 0;
   overflow-wrap: anywhere;
 }
-.steps button .icon {
+.conversation-page .steps button .icon {
   font-size: 19px;
 }
-.coach-card {
+.conversation-page .coach-card {
   display: block;
   margin-top: 14px;
   padding: 0;
   overflow: hidden;
   background: white;
 }
-.coach-topic {
+.conversation-page .coach-topic {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 22px 4px;
 }
-.coach-topic h2 {
+.conversation-page .coach-topic h2 {
   font-size: 20px;
   margin: 0;
 }
-.coach-topic span {
+.conversation-page .coach-topic span {
   background: #f1ebff;
   color: var(--violet);
   border-radius: 99px;
   padding: 7px 11px;
 }
-.coach-stage {
+.conversation-page .coach-stage {
   display: grid;
   grid-template-columns: 42% 1fr;
   align-items: center;
   min-height: 250px;
   padding: 0 34px;
 }
-.coach-glow {
+.conversation-page .coach-glow {
   height: 230px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   position: relative;
 }
-.coach-glow:before {
+.conversation-page .coach-glow:before {
   content: "";
   position: absolute;
   width: 210px;
@@ -239,7 +239,7 @@
   background: radial-gradient(circle, #e7dcff, #f7f2ff 65%, transparent 66%);
   animation: coachGlow 3s ease-in-out infinite;
 }
-.coach-glow .coach-avatar {
+.conversation-page .coach-glow .coach-avatar {
   height: 225px;
   max-width: 100%;
   object-fit: contain;
@@ -259,13 +259,13 @@
     opacity: 0.8;
   }
 }
-.coach-dialogue {
+.conversation-page .coach-dialogue {
   align-self: center;
 }
-.coach-dialogue strong {
+.conversation-page .coach-dialogue strong {
   font-size: 15px;
 }
-.coach-dialogue p {
+.conversation-page .coach-dialogue p {
   position: relative;
   background: linear-gradient(135deg, #faf8ff, #f1ecff);
   border: 1px solid #ded4f5;
@@ -275,35 +275,35 @@
   line-height: 1.5;
   max-width: 350px;
 }
-.record-card {
+.conversation-page .record-card {
   margin-top: 0;
   border-radius: 0 0 18px 18px;
   min-height: 310px;
   grid-template-columns: 132px 1fr 55px;
   padding: 16px 20px;
 }
-.mic {
+.conversation-page .mic {
   width: 105px;
   height: 105px;
   font-size: 50px;
 }
-.wave {
+.conversation-page .wave {
   height: 42px;
   margin: 10px 0;
 }
-.transcript {
+.conversation-page .transcript {
   min-height: 94px;
   background: #fff;
 }
-.evidence {
+.conversation-page .evidence {
   gap: 10px;
 }
-.panel {
+.conversation-page .panel {
   background: #fff;
   border-radius: 16px;
   padding: 13px;
 }
-.feedback-row {
+.conversation-page .feedback-row {
   display: grid;
   grid-template-columns: 38px 1fr auto 30px;
   gap: 8px;
@@ -311,7 +311,7 @@
   padding: 10px 0;
   border-bottom: 1px solid var(--line);
 }
-.feedback-row > span {
+.conversation-page .feedback-row > span {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -321,174 +321,174 @@
   color: var(--violet);
   font-weight: 800;
 }
-.feedback-row div {
+.conversation-page .feedback-row div {
   display: grid;
   gap: 3px;
 }
-.feedback-row small {
+.conversation-page .feedback-row small {
   color: var(--muted);
   font-size: 9px;
 }
-.feedback-row i {
+.conversation-page .feedback-row i {
   font-style: normal;
   font-size: 9px;
   letter-spacing: 2px;
   color: var(--violet);
 }
-.feedback-row > strong {
+.conversation-page .feedback-row > strong {
   color: var(--violet);
   font-size: 11px;
 }
-.f1 > span {
+.conversation-page .f1 > span {
   background: #e7f8f1;
   color: #008b68;
 }
-.f1 i,
-.f1 > strong {
+.conversation-page .f1 i,
+.conversation-page .f1 > strong {
   color: #008b68;
 }
-.f2 > span {
+.conversation-page .f2 > span {
   background: #fff1e7;
   color: #ee5a25;
 }
-.f2 i,
-.f2 > strong {
+.conversation-page .f2 i,
+.conversation-page .f2 > strong {
   color: #ee5a25;
 }
-.f3 > span {
+.conversation-page .f3 > span {
   background: #eaf4ff;
   color: #1477d4;
 }
-.f3 i,
-.f3 > strong {
+.conversation-page .f3 i,
+.conversation-page .f3 > strong {
   color: #1477d4;
 }
-.coach-tip {
+.conversation-page .coach-tip {
   margin-top: 10px;
   background: #f1ebff;
   border-radius: 10px;
   padding: 11px;
   color: var(--violet);
 }
-.coach-tip p {
+.conversation-page .coach-tip p {
   color: var(--ink);
   font-size: 10px;
   margin: 5px 0 0;
   line-height: 1.4;
 }
-.metrics div {
+.conversation-page .metrics div {
   padding: 11px;
 }
-.app-shell > main > footer {
+.conversation-page > .studio-main > footer {
   grid-template-columns: auto 1fr auto minmax(270px, 320px);
   align-items: center;
   gap: 18px;
   background: white;
   padding: 10px 22px;
 }
-.turns {
+.conversation-page .turns {
   display: flex;
   gap: 14px;
   align-items: center;
 }
-.turns span {
+.conversation-page .turns span {
   color: var(--violet);
   letter-spacing: 4px;
 }
-.footer-coach {
+.conversation-page .footer-coach {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.footer-coach > span {
+.conversation-page .footer-coach > span {
   font-size: 30px;
 }
-.footer-coach p {
+.conversation-page .footer-coach p {
   margin: 0;
   color: var(--muted);
   font-size: 11px;
 }
-.save-lite {
+.conversation-page .save-lite {
   border-color: var(--violet);
   color: var(--violet);
   font-weight: 700;
 }
-.continue {
+.conversation-page .continue {
   font-size: 14px;
 }
-.flow-panel,
-.improve-panel {
+.conversation-page .flow-panel,
+.conversation-page .improve-panel {
   margin-top: 14px;
 }
 @media (max-width: 1200px) {
-  .workspace {
+  .conversation-page .workspace {
     grid-template-columns: 1fr;
   }
-  .evidence {
+  .conversation-page .evidence {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
-  .feedback {
+  .conversation-page .feedback {
     grid-column: 1/-1;
   }
-  .mode-cards {
+  .conversation-page .mode-cards {
     grid-template-columns: 1fr;
   }
-  .mode {
+  .conversation-page .mode {
     min-height: 84px;
   }
-  .coach-stage {
+  .conversation-page .coach-stage {
     grid-template-columns: 36% 1fr;
   }
 }
 @media (max-width: 760px) {
-  .mode-cards {
+  .conversation-page .mode-cards {
     padding: 12px;
   }
-  .workspace {
+  .conversation-page .workspace {
     padding: 0 12px;
   }
-  .coach-stage {
+  .conversation-page .coach-stage {
     grid-template-columns: 1fr;
     padding: 0 18px;
   }
-  .coach-glow {
+  .conversation-page .coach-glow {
     height: 190px;
   }
-  .coach-glow .coach-avatar {
+  .conversation-page .coach-glow .coach-avatar {
     height: 185px;
   }
-  .coach-dialogue {
+  .conversation-page .coach-dialogue {
     padding-bottom: 10px;
   }
-  .record-card {
+  .conversation-page .record-card {
     border-radius: 18px;
     grid-template-columns: 1fr;
   }
-  .evidence {
+  .conversation-page .evidence {
     grid-template-columns: 1fr;
   }
-  .review-grid,
-  .correction-grid,
-  .improve-compare,
-  .save-summary {
+  .conversation-page .review-grid,
+  .conversation-page .correction-grid,
+  .conversation-page .improve-compare,
+  .conversation-page .save-summary {
     grid-template-columns: 1fr;
   }
-  .flow-actions,
-  .improve-actions {
+  .conversation-page .flow-actions,
+  .conversation-page .improve-actions {
     flex-direction: column;
   }
-  .header-actions > span,
-  .header-actions > b {
+  .conversation-page .header-actions > span,
+  .conversation-page .header-actions > b {
     display: none;
   }
-  .app-shell > main > footer {
+  .conversation-page > .studio-main > footer {
     grid-template-columns: 1fr 1fr;
   }
-  .footer-coach {
+  .conversation-page .footer-coach {
     display: none;
   }
-  .continue {
+  .conversation-page .continue {
     grid-column: 1/-1;
   }
 }
@@ -498,49 +498,49 @@
    is still present. Container queries keep controls readable at that real
    content width instead of waiting for a viewport-only mobile breakpoint. */
 @container (max-width: 1100px) {
-  .workspace {
+  .conversation-page .workspace {
     grid-template-columns: minmax(0, 1fr) !important;
   }
 
-  .evidence {
+  .conversation-page .evidence {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .feedback {
+  .conversation-page .feedback {
     grid-column: 1 / -1;
   }
 }
 
 @container (max-width: 720px) {
-  .record-card {
+  .conversation-page .record-card {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .mic {
+  .conversation-page .mic {
     margin-inline: auto;
   }
 
-  .record-controls {
+  .conversation-page .record-controls {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .record-controls .primary {
+  .conversation-page .record-controls .primary {
     grid-column: 1 / -1;
   }
 
-  .evidence {
+  .conversation-page .evidence {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .feedback {
+  .conversation-page .feedback {
     grid-column: auto;
   }
 }
 
 /* Conversation catalog: intentionally separate from the app shell so host apps
    can reuse the visual language without replacing their navigation. */
-.conversation-filter {
+.conversation-page .conversation-filter {
   margin: 20px 22px 10px;
   padding: 18px 20px 20px;
   border: 1px solid #e1d8ef;
@@ -548,17 +548,17 @@
   background: linear-gradient(135deg, #fff 0%, #fbf8ff 100%);
   box-shadow: 0 12px 34px rgba(43, 27, 82, 0.07);
 }
-.conversation-filter h2 {
+.conversation-page .conversation-filter h2 {
   margin: 0 0 14px;
   font-size: 15px;
   color: var(--ink);
 }
-.conversation-filter-grid {
+.conversation-page .conversation-filter-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
 }
-.conversation-filter-grid label {
+.conversation-page .conversation-filter-grid label {
   display: grid;
   gap: 8px;
   min-width: 0;
@@ -566,7 +566,7 @@
   font-size: 13px;
   font-weight: 800;
 }
-.conversation-filter-grid select {
+.conversation-page .conversation-filter-grid select {
   width: 100%;
   min-width: 0;
   height: 48px;
@@ -584,21 +584,21 @@
     box-shadow 0.18s ease,
     transform 0.18s ease;
 }
-.conversation-filter-grid select:hover {
+.conversation-page .conversation-filter-grid select:hover {
   border-color: #bca8db;
 }
-.conversation-filter-grid select:focus-visible {
+.conversation-page .conversation-filter-grid select:focus-visible {
   border-color: #7444da;
   box-shadow: 0 0 0 4px rgba(116, 68, 218, 0.13);
   transform: translateY(-1px);
 }
-.conversation-filter-grid select:disabled,
-.mode:disabled {
+.conversation-page .conversation-filter-grid select:disabled,
+.conversation-page .mode:disabled {
   cursor: not-allowed;
   opacity: 0.58;
   transform: none;
 }
-.prompt-audio {
+.conversation-page .prompt-audio {
   margin-top: 10px;
   border: 1px solid #d8cef0;
   border-radius: 10px;
@@ -607,11 +607,11 @@
   padding: 9px 13px;
   font-weight: 800;
 }
-.transcript {
+.conversation-page .transcript {
   display: grid !important;
   gap: 8px;
 }
-.transcript textarea {
+.conversation-page .transcript textarea {
   width: 100%;
   min-height: 76px;
   resize: vertical;
@@ -624,74 +624,74 @@
   line-height: 1.5;
   outline: none;
 }
-.transcript textarea:focus-visible {
+.conversation-page .transcript textarea:focus-visible {
   border-color: #7444da;
   box-shadow: 0 0 0 3px rgba(116, 68, 218, 0.12);
 }
-.issue-list {
+.conversation-page .issue-list {
   display: grid;
   gap: 8px;
   margin: 14px 0 0;
   padding: 0;
   list-style: none;
 }
-.issue-list li {
+.conversation-page .issue-list li {
   border-left: 3px solid #e56035;
   border-radius: 8px;
   background: #fff6f1;
   padding: 10px 12px;
   line-height: 1.45;
 }
-.feedback-row {
+.conversation-page .feedback-row {
   grid-template-columns: 38px 1fr auto;
 }
-.feedback-row > strong {
+.conversation-page .feedback-row > strong {
   min-width: 32px;
   text-align: right;
 }
 
 @media (max-width: 1000px) {
-  .app-shell {
+  .conversation-page {
     display: block;
     max-width: none;
     width: 100%;
   }
-  .sidebar {
+  .conversation-page .sidebar {
     display: none;
   }
-  .app-shell > main > header,
-  .topic-bar,
-  .workspace,
-  .app-shell > main > footer {
+  .conversation-page > .studio-main > header,
+  .conversation-page .topic-bar,
+  .conversation-page .workspace,
+  .conversation-page > .studio-main > footer {
     max-width: 100%;
     min-width: 0;
   }
 }
-.mode {
+.conversation-page .mode {
   cursor: pointer;
 }
-.mode:focus-visible,
-.steps button:focus-visible,
-.record-controls button:focus-visible,
-.flow-actions button:focus-visible,
-.improve-actions button:focus-visible {
+.conversation-page .mode:focus-visible,
+.conversation-page .steps button:focus-visible,
+.conversation-page .record-controls button:focus-visible,
+.conversation-page .flow-actions button:focus-visible,
+.conversation-page .improve-actions button:focus-visible {
   outline: 3px solid rgba(116, 68, 218, 0.25);
   outline-offset: 2px;
 }
 @media (max-width: 1180px) {
-  .conversation-filter-grid {
+  .conversation-page .conversation-filter-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 @media (max-width: 760px) {
-  .conversation-filter {
+  .conversation-page .conversation-filter {
     margin: 12px;
     padding: 16px;
   }
-  .conversation-filter-grid {
+  .conversation-page .conversation-filter-grid {
     grid-template-columns: 1fr;
   }
-  .conversation-filter-grid select {
+  .conversation-page .conversation-filter-grid select {
     height: 46px;
   }
 }

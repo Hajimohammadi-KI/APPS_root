@@ -1,0 +1,287 @@
+.conversation-page {
+  --violet: #3d5a9e;
+  --violet2: #314d84;
+  --ink: #24344d;
+  --muted: #52627a;
+  --line: #d9e0eb;
+  --lav: #edf1f8;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: transparent;
+  display: block;
+  box-shadow: none;
+  max-width: none;
+  min-height: 0;
+}
+.conversation-page.conversation-standalone {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+}
+.conversation-page .sidebar {
+  padding: 28px 18px;
+  background: #fff;
+  overflow-y: auto;
+}
+.conversation-page .studio-brand {
+  font-family: Georgia, serif;
+  color: #24344d;
+  font-size: 1.4rem;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 32px;
+}
+.conversation-page .studio-main {
+  min-width: 0;
+}
+.conversation-page .studio-main > header {
+  height: auto;
+  min-height: 90px;
+  padding: 16px 24px 24px;
+  border-bottom: 1px solid #d9e0eb;
+  display: block;
+  background: transparent;
+}
+.conversation-page .studio-main > header h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.2;
+  color: #24344d;
+}
+.conversation-page .studio-main > header p {
+  font-size: 1rem;
+  color: #52627a;
+  max-width: 65ch;
+}
+.conversation-page .header-actions {
+  display: none;
+}
+.conversation-page .studio-options,
+.conversation-page .studio-results,
+.conversation-page .studio-step-picker {
+  border: 1px solid #d9e0eb;
+  border-radius: 16px;
+  background: #fff;
+}
+.conversation-page .studio-options {
+  margin: 24px;
+}
+.conversation-page
+  :is(.studio-options, .studio-results, .studio-step-picker)
+  > summary {
+  cursor: pointer;
+  min-height: 54px;
+  padding: 16px 20px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #334c76;
+}
+.conversation-page .studio-options > summary > span {
+  display: block;
+  margin-top: 4px;
+  padding-inline-start: 18px;
+  font-weight: 400;
+  color: #52627a;
+}
+.conversation-page .conversation-filter {
+  margin: 12px 20px;
+  padding: 20px;
+}
+.conversation-page .workspace {
+  display: block;
+  padding: 0 24px;
+}
+.conversation-page .studio-results {
+  margin-top: 24px;
+}
+.conversation-page .evidence {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+.conversation-page .evidence .panel {
+  margin: 0;
+}
+.conversation-page .steps {
+  height: auto;
+  border: 0;
+  box-shadow: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+}
+.conversation-page .steps button {
+  min-height: 44px;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  font-size: 0.875rem;
+}
+.conversation-page .steps button span {
+  font-size: 0.875rem;
+}
+.conversation-page .steps button > .icon {
+  display: none;
+}
+.conversation-page .coach-stage {
+  grid-template-columns: 150px minmax(0, 1fr);
+  min-height: 180px;
+  padding: 20px;
+}
+.conversation-page .coach-glow,
+.conversation-page .coach-glow .coach-avatar {
+  height: 150px;
+  max-width: 140px;
+}
+.conversation-page .coach-topic {
+  padding: 24px 24px 8px;
+}
+.conversation-page .coach-topic h2 {
+  font-size: 1.5rem;
+}
+.conversation-page :is(.flow-panel, .coach-card, .panel, .record-card) {
+  border-color: #d9e0eb;
+  box-shadow: none;
+}
+.conversation-page p,
+.conversation-page textarea {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.conversation-page
+  :is(
+    small,
+    .feedback-row small,
+    .spoken-chunk-list li p,
+    .spoken-chunk-list li small,
+    .coach-tip p,
+    .flow-panel label,
+    .conversation-filter-grid label > span
+  ) {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.conversation-page button,
+.conversation-page select {
+  font-size: 0.9375rem;
+  min-height: 44px;
+}
+.conversation-page button:hover {
+  transform: none;
+  box-shadow: none;
+}
+.conversation-page .mode-cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.conversation-page .mode {
+  min-height: 80px;
+  box-shadow: none;
+}
+.conversation-page .mode > span {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.conversation-page .mode b {
+  font-size: 0.9375rem;
+}
+.conversation-page .studio-saved-evidence {
+  margin: 24px;
+}
+.conversation-page .studio-mobile-navigation {
+  display: none;
+}
+.conversation-page footer {
+  margin: 24px;
+  padding: 18px;
+  border: 1px solid #d9e0eb;
+  border-radius: 16px;
+  position: static;
+  background: #fff;
+}
+.conversation-page :is(a, summary, button, select, textarea):focus-visible {
+  outline: 3px solid #3d5a9e;
+  outline-offset: 3px;
+}
+@media (max-width: 1000px) {
+  .conversation-page.conversation-standalone {
+    display: block;
+  }
+  .conversation-page .studio-mobile-navigation {
+    display: block;
+    margin: 16px;
+  }
+  .conversation-page .studio-mobile-navigation > summary {
+    min-height: 44px;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .conversation-page .mode-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .conversation-page .studio-main > header {
+    padding: 16px 0;
+  }
+  .conversation-standalone .studio-main > header {
+    padding-inline: 16px;
+  }
+  .conversation-page .workspace {
+    padding: 0;
+  }
+  .conversation-standalone .workspace {
+    padding-inline: 16px;
+  }
+  .conversation-page .studio-options {
+    margin: 20px 0;
+  }
+  .conversation-standalone .studio-options {
+    margin-inline: 16px;
+  }
+  .conversation-page .evidence {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .conversation-page .coach-stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .conversation-page .coach-glow {
+    display: none;
+  }
+  .conversation-page .coach-topic {
+    align-items: start;
+    flex-direction: column;
+    padding: 20px;
+  }
+  .conversation-page .coach-topic > span {
+    max-width: 100%;
+    font-size: 0.875rem;
+  }
+  .conversation-page .coach-dialogue {
+    padding: 0;
+  }
+  .conversation-page footer {
+    margin-inline: 0;
+  }
+  .conversation-standalone footer {
+    margin-inline: 16px;
+  }
+}
+html[data-low-stimulation="true"] .conversation-page *,
+html[data-low-stimulation="true"] .conversation-page *::before,
+html[data-low-stimulation="true"] .conversation-page *::after {
+  animation: none !important;
+  transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .conversation-page *,
+  .conversation-page *::before,
+  .conversation-page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

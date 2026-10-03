@@ -2,18 +2,16 @@
 import {AutomaticityEvidenceSummary} from "./components/automaticity-evidence-summary";
 
 import * as React from "react";
+import { LearningNavigation } from "@/components/learning-navigation";
 import dynamic from "next/dynamic";
 import {
 	BookOpenText,
 	BrainCircuit,
-	ChevronDown,
 	CircleAlert,
 	CloudDownload,
 	Flame,
 	FileMusic,
 	BookMarked,
-	Clock3,
-	Folder,
 	House,
 	LibraryBig,
 	Menu,
@@ -163,60 +161,6 @@ const navigation: NavigationItem[] = [
 	},
 ];
 
-type NavigationGroupId = "practice" | "curriculum" | "evidence" | "system";
-
-interface NavigationGroup {
-	id: NavigationGroupId;
-	label: string;
-	caption: string;
-	icon: React.ComponentType<{ className?: string }>;
-	items: NavigationItem[];
-}
-
-const navigationGroups: NavigationGroup[] = [
-	{
-		id: "practice",
-		label: "Daily Practice",
-		caption: "Practice and speak today",
-		icon: Clock3,
-		items: navigation.slice(0, 3),
-	},
-	{
-		id: "curriculum",
-		label: "Learning Paths",
-		caption: "Grammar and English study",
-		icon: Settings,
-		items: navigation.filter((item) =>
-			["grammar", "integrated-skills", "resources"].includes(item.id),
-		),
-	},
-	{
-		id: "evidence",
-		label: "Learning Evidence",
-		caption: "Errors and recordings",
-		icon: Clock3,
-		items: navigation.filter((item) =>
-			["errors", "progress", "library", "notebook", "flashcards"].includes(
-				item.id,
-			),
-		),
-	},
-	{
-		id: "system",
-		label: "App and Settings",
-		caption: "Storage and personal options",
-		icon: Folder,
-		items: navigation.filter((item) => ["settings", "teacher"].includes(item.id)),
-	},
-];
-
-const defaultOpenGroups: Record<NavigationGroupId, boolean> = {
-	practice: true,
-	curriculum: true,
-	evidence: true,
-	system: true,
-};
-
 function isScreenId(value: string | null): value is ScreenId {
 	return navigation.some((item) => item.id === value);
 }
@@ -248,8 +192,6 @@ export function AppShell() {
 	const { state, mutate } = useAppStore();
 	const [screen, setScreen] = React.useState<ScreenId>("home");
 	const [menuOpen, setMenuOpen] = React.useState(false);
-	const [openGroups, setOpenGroups] =
-		React.useState<Record<NavigationGroupId, boolean>>(defaultOpenGroups);
 	const sidebarRef = React.useRef<HTMLElement>(null);
 	const current =
 		navigation.find((item) => item.id === screen) ?? homeNavigation;
@@ -288,23 +230,12 @@ export function AppShell() {
 		};
 	}, []);
 
-	React.useEffect(() => {
-		const group = navigationGroups.find((candidate) =>
-			candidate.items.some((item) => item.id === screen),
-		);
-		if (!group) return;
-		setOpenGroups((currentGroups) =>
-			currentGroups[group.id]
-				? currentGroups
-				: { ...currentGroups, [group.id]: true },
-		);
-	}, [screen]);
 
 	React.useEffect(() => {
 		if (!menuOpen) return;
 		if (window.matchMedia("(max-width: 860px)").matches) {
 			sidebarRef.current
-				?.querySelector<HTMLElement>(".nav-button, .nav-group-trigger")
+				?.querySelector<HTMLElement>(".learning-navigation a")
 				?.focus();
 		}
 		const closeOnEscape = (event: KeyboardEvent) => {
@@ -331,9 +262,9 @@ export function AppShell() {
 			}
 			const focusable = [
 				...(sidebarRef.current?.querySelectorAll<HTMLElement>(
-					'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+					'a[href], summary, button:not([disabled]), [tabindex]:not([tabindex="-1"])',
 				) ?? []),
-			];
+			].filter((node) => node.getClientRects().length > 0);
 			if (!focusable.length) return;
 			const first = focusable[0];
 			const last = focusable.at(-1);
@@ -406,76 +337,7 @@ export function AppShell() {
 						<span>Measurable daily language practice</span>
 					</span>
 				</div>
-				<nav aria-label="Product navigation" className="sidebar-nav">
-					{navigationGroups.map((group) => {
-						const expanded = openGroups[group.id];
-						const GroupIcon = group.icon;
-						const groupIsActive = group.items.some(
-							(item) => item.id === screen,
-						);
-						return (
-							<section
-								className="nav-group"
-								data-active={groupIsActive}
-								key={group.id}
-							>
-								<p className="nav-section-label">{group.label}</p>
-								<button
-									aria-controls={`nav-group-${group.id}`}
-									aria-expanded={expanded}
-									className="nav-group-trigger"
-									onClick={() =>
-										setOpenGroups((groups) => ({
-											...groups,
-											[group.id]: !groups[group.id],
-										}))
-									}
-									type="button"
-								>
-									<GroupIcon aria-hidden className="nav-group-icon size-5" />
-									<span className="nav-group-copy">
-										<strong>{group.caption}</strong>
-									</span>
-									<ChevronDown
-										aria-hidden
-										className="nav-group-chevron size-4"
-									/>
-								</button>
-								{expanded ? (
-									<div className="nav-group-panel" id={`nav-group-${group.id}`}>
-										{group.items.map((item) => {
-											const Icon = item.icon;
-											return (
-												<a
-													className="nav-button"
-													data-active={item.id === screen}
-												href={replacementRoutes[item.id] ?? (item.id === "home" ? "/" : `/?screen=${item.id}`)}
-													key={item.id}
-													onClick={(event) => {
-														if (
-															event.button !== 0 ||
-															event.metaKey ||
-															event.ctrlKey ||
-															event.shiftKey ||
-															event.altKey
-														) {
-															return;
-														}
-														event.preventDefault();
-														navigate(item.id);
-													}}
-												>
-													<Icon aria-hidden className="size-4.5" />
-													{item.label}
-												</a>
-											);
-										})}
-									</div>
-								) : null}
-							</section>
-						);
-					})}
-				</nav>
+				<LearningNavigation language="en" current={replacementRoutes[screen] ?? (screen === "home" ? "/" : `/?screen=${screen}`)} onNavigate={() => setMenuOpen(false)} />
 			</aside>
 			{menuOpen ? (
 				<button
@@ -486,9 +348,7 @@ export function AppShell() {
 				/>
 			) : null}
 			<main className="app-main" id="main-content" tabIndex={-1}>
-        {screen !== "home" ? <Button asChild className="mb-4 w-fit">
-          <a href="/practice">Practise grammar with your own responses</a>
-        </Button> : null}
+        
 				<header className="app-topbar">
 					<div className="flex min-w-0 items-center gap-3">
 						<Button
@@ -512,7 +372,7 @@ export function AppShell() {
 							</p>
 						</div>
 					</div>
-					<div className="topbar-actions flex min-w-0 max-w-full flex-wrap items-center gap-2">
+					<details className="app-tools"><summary>Tools & help</summary><div className="app-tools-panel">
 						<a href="/roadmap.html" className="inline-flex min-h-11 shrink-0 items-center rounded-lg border px-3 text-sm font-semibold" lang="fa" dir="rtl">رودمپ</a>
 						<ApiConnectionStatus baseUrl={state.settings.apiBaseUrl} />
 						<NeuroReader
@@ -526,12 +386,12 @@ export function AppShell() {
 						/>
 						<UserGuideButton navigate={navigate} />
 						<InstallAppControl />
-					</div>
+					</div></details>
 				</header>
 				<div className="app-content" data-screen={screen}>
-{["errors", "progress"].includes(screen) ? <AutomaticityEvidenceSummary /> : null}
+{screen === "errors" ? <details className="quiet-disclosure"><summary>Saved responses & learning evidence</summary><div><AutomaticityEvidenceSummary /></div></details> : null}
 					{screen === "home" ? <DashboardV2Screen /> : null}
-					{screen === "progress" ? <AutomaticityScreen /> : null}
+					{screen === "progress" ? <div className="learning-progress-page"><header><p>YOUR LEARNING RECORD</p><h1>Progress you can see.</h1><p>Review saved work, find what needs attention and check the evidence behind each result.</p></header><AutomaticityEvidenceSummary /><details className="quiet-disclosure"><summary>Additional practice & earlier learning tools</summary><div><AutomaticityScreen /></div></details></div> : null}
 					{screen === "integrated-skills" ? (
 						<IntegratedSkillsScreen navigate={navigate} />
 					) : null}

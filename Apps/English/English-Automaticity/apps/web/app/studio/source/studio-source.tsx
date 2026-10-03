@@ -1,4 +1,5 @@
 "use client";
+import { LearningNavigation } from "@/components/learning-navigation";
 import {AutomaticityEvidenceSummary} from "@/features/components/automaticity-evidence-summary";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -27,27 +28,6 @@ import {
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import { AvaCoachAvatar } from "@/features/components/ava-coach-avatar";
 
-const nav = [
-  "Home",
-  "Today’s Practice",
-  "Lessons",
-  "Speaking Studio",
-  "Review",
-  "Progress",
-  "Vocabulary",
-  "Notebook",
-];
-const navRoutes = [
-  "/",
-  "/daily",
-  "/grammar",
-  "/studio",
-  "/?screen=errors",
-  "/?screen=progress",
-  "/flashcards",
-  "/notebook",
-];
-const navIcons = ["⌂", "◷", "▤", "♩", "◴", "▥", "▧", "▣"];
 
 type RecordingState = "idle" | "recording" | "paused";
 type PracticeMode = "guided" | "challenge" | "pronunciation";
@@ -755,78 +735,12 @@ export default function Home() {
         ] as const);
 
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand">
-          <div className="brand-mark">{language === "de" ? "D" : "E"}</div>
-          <div>
-            <strong>
-              {language === "de" ? (
-                <>
-                  Deutsch
-                  <br />
-                  Automaticity
-                </>
-              ) : (
-                <>
-                  English
-                  <br />
-                  Automaticity
-                </>
-              )}
-            </strong>
-          </div>
-        </div>
-        <nav aria-label="Main navigation">
-          {nav.map((item, index) => (
-            <button
-              key={item}
-              className={index === 3 ? "nav-active" : ""}
-              onClick={() => {
-                window.location.href = navRoutes[index] ?? "/";
-              }}
-            >
-              <Icon>{navIcons[index]}</Icon>
-              {item}
-            </button>
-          ))}
-        </nav>
-        <div className="nav-divider" />
-        <nav aria-label="Support navigation">
-          <button
-            onClick={() => {
-              window.location.href = "/settings";
-            }}
-          >
-            <Icon>⚙</Icon>Settings
-          </button>
-          <button
-            onClick={() => {
-              window.location.href = "/support";
-            }}
-          >
-            <Icon>?</Icon>Help & support
-          </button>
-        </nav>
-        <div className="growth">
-          <Icon>♔</Icon>
-          <div>
-            <b>
-              {language === "de"
-                ? "Du automatisierst dein Deutsch."
-                : "You’re building English automaticity."}
-            </b>
-            <span>
-              {language === "de"
-                ? "Regelmäßige Produktion schafft Sicherheit."
-                : "Consistent production creates lasting progress."}
-            </span>
-          </div>
-        </div>
-      </aside>
+    <div className="conversation-page conversation-standalone">
+<aside className="sidebar"><a className="studio-brand" href="/">English Automaticity</a><LearningNavigation language="en" current="/studio" /></aside>
 
-      <main>
-<AutomaticityEvidenceSummary />
+      <main className="studio-main">
+<details className="studio-mobile-navigation"><summary>Navigation</summary><LearningNavigation language="en" current="/studio" /></details>
+
         <header>
           <div>
             <h1>{text.title}</h1>
@@ -885,7 +799,7 @@ export default function Home() {
           </section>
         )}
 
-        <section
+<details className="studio-options"><summary>Topic & practice mode <span>{selected.level} · {selected.topic}</span></summary>        <section
           className="conversation-filter"
           aria-labelledby="filter-heading"
         >
@@ -990,9 +904,10 @@ export default function Home() {
           ))}
         </section>
 
+</details>
         <div className="workspace">
           <section className="studio">
-            <div className="steps" aria-label="Practice steps">
+            <details className="studio-step-picker"><summary>Step {active + 1} / {stepLabels.length} · {stepLabels[active]}</summary><div className="steps" aria-label="Practice steps">
               {stepLabels.map((step, index) => (
                 <button
                   key={step}
@@ -1004,7 +919,7 @@ export default function Home() {
                   <span>{step}</span>
                 </button>
               ))}
-            </div>
+            </div></details>
 
             <div className="coach-card">
               <div className="coach-topic">
@@ -1496,7 +1411,7 @@ export default function Home() {
             )}
           </section>
 
-          <aside className="evidence">
+          <details className="studio-results"><summary>Session details & feedback</summary><aside className="evidence">
             <section className="panel feedback">
               <h3>
                 {language === "de"
@@ -1627,8 +1542,9 @@ export default function Home() {
               <b>{selected.topic}</b>
               <p>{selected.goal}</p>
             </section>
-          </aside>
+          </aside></details>
         </div>
+<details className="quiet-disclosure studio-saved-evidence"><summary>Saved responses & learning evidence</summary><div><AutomaticityEvidenceSummary /></div></details>
         <footer>
           <div className="turns">
             <b>

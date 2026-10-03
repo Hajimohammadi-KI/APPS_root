@@ -1,0 +1,277 @@
+/* Calm shared navigation and reading surfaces. No learner-state or score overrides. */
+.learning-navigation {
+  color: #27344a;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.learning-navigation .ln-label {
+  margin: 0 12px 12px;
+  color: #58677e;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.learning-navigation ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+.learning-navigation a,
+.learning-navigation summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+  line-height: 1.45;
+  cursor: pointer;
+}
+.learning-navigation a:hover,
+.learning-navigation summary:hover {
+  background: #edf1f8;
+  box-shadow: none;
+  transform: none;
+}
+.learning-navigation a[aria-current="page"] {
+  background: #263e70;
+  color: #fff;
+  font-weight: 650;
+}
+.learning-navigation svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.learning-navigation summary {
+  list-style: none;
+}
+.learning-navigation summary::-webkit-details-marker {
+  display: none;
+}
+.learning-navigation summary svg:last-child {
+  margin-inline-start: auto;
+  width: 16px;
+}
+.learning-navigation details[open] summary svg:last-child {
+  transform: rotate(180deg);
+}
+.learning-navigation .ln-more {
+  border-top: 1px solid #d9e0eb;
+  margin-top: 20px;
+  padding-top: 16px;
+}
+.learning-navigation .ln-more ul {
+  padding-inline-start: 10px;
+  margin-top: 8px;
+  border-inline-start: 2px solid #d9e0eb;
+}
+.learning-navigation .ln-more a {
+  font-size: 0.875rem;
+}
+.learning-navigation .ln-settings {
+  margin-top: 12px;
+}
+.learning-navigation .ln-roadmap {
+  margin-top: 16px;
+  color: #52627a;
+  font-size: 0.8125rem;
+}
+.learning-navigation :is(a, summary):focus-visible,
+.app-tools > summary:focus-visible {
+  outline: 3px solid #3d5a9e !important;
+  outline-offset: 3px;
+}
+.app-tools {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.app-tools > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  cursor: pointer;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #d9e0eb;
+  border-radius: 12px;
+  background: #fff;
+  color: #344563;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.app-tools > summary::-webkit-details-marker {
+  display: none;
+}
+.app-tools > summary::after {
+  content: "+";
+  font-size: 1.1rem;
+}
+.app-tools[open] > summary::after {
+  content: "−";
+}
+.app-tools-panel {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 8px);
+  width: min(360px, calc(100vw - 32px));
+  padding: 18px;
+  border: 1px solid #d9e0eb;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 40px #1b2e5120;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  z-index: 45;
+}
+.app-tools-panel > p {
+  flex-basis: 100%;
+  margin: 0;
+  color: #52627a;
+  font-size: 0.875rem;
+}
+.app-shell[data-screen] {
+  grid-template-columns: 264px minmax(0, 1fr);
+}
+.app-shell[data-screen] .app-sidebar {
+  padding: 26px 18px;
+  background: #fff !important;
+  border-right: 1px solid #d9e0eb;
+}
+.app-shell[data-screen] .brand-mark {
+  padding: 0 8px 30px;
+}
+.app-shell[data-screen] .brand-copy > span {
+  display: none;
+}
+.app-shell[data-screen] .app-main {
+  padding-top: 0 !important;
+}
+.app-shell[data-screen] .app-topbar {
+  padding: 16px 30px;
+  min-height: 80px;
+  border-bottom: 1px solid #e0e5ed;
+  background: #fff;
+}
+.app-shell[data-screen] .app-content {
+  max-width: 1250px;
+  margin-inline: auto;
+  padding: 32px;
+}
+.german-app-sidebar {
+  width: 264px !important;
+  padding: 26px 18px;
+  background: #fff !important;
+}
+.german-sidebar-groups {
+  overflow-y: auto;
+  padding-top: 4px;
+}
+.german-shell-body {
+  min-width: 0;
+}
+.german-app-topbar {
+  background: #fff !important;
+}
+.german-app-sidebar .brand-logo {
+  background: #263e70;
+}
+.german-app-sidebar a[aria-label] > span:last-child > span {
+  display: none;
+}
+.german-app-main {
+  max-width: 1250px;
+}
+.app-content[data-screen="progress"] > .automaticity-overview {
+  margin-bottom: 24px;
+}
+.quiet-disclosure {
+  border: 1px solid #d9e0eb;
+  border-radius: 16px;
+  background: #fff;
+  margin: 0 0 20px;
+  overflow: clip;
+}
+.quiet-disclosure > summary {
+  padding: 18px 22px;
+  min-height: 56px;
+  cursor: pointer;
+  color: #2e446b;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.quiet-disclosure > div {
+  padding: 0 20px 20px;
+}
+.learning-progress-page > header {
+  padding: 28px;
+  margin-bottom: 24px;
+  border: 1px solid #d9e0eb;
+  border-radius: 20px;
+  background: #eef2f9;
+}
+.learning-progress-page > header h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  line-height: 1.25;
+  font-weight: 400;
+  margin: 8px 0 16px;
+  color: #24344d;
+}
+.learning-progress-page > header > p {
+  color: #52627a;
+  max-width: 65ch;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.learning-progress-page > header > p:first-child {
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+}
+@media (min-width: 1280px) {
+  .german-shell-body {
+    padding-left: 264px;
+  }
+}
+@media (max-width: 860px) {
+  .app-shell[data-screen] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app-shell[data-screen] .app-topbar {
+    padding: 12px 16px;
+  }
+  .app-shell[data-screen] .app-content {
+    padding: 24px 16px;
+  }
+  .app-shell[data-screen] .app-sidebar {
+    width: min(320px, 86vw);
+  }
+  .app-tools-panel {
+    max-height: calc(100dvh - 120px);
+    overflow-y: auto;
+  }
+}
+html[data-low-stimulation="true"] .learning-navigation *,
+html[data-low-stimulation="true"] .app-tools * {
+  transition: none !important;
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .learning-navigation *,
+  .app-tools * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

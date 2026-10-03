@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-03T21:25:44.426Z",
+  "scope": "independently-authored-protocol-only",
+  "ready": true,
+  "model": {
+    "name": "gemma-4-26B-A4B-it-Q4_0.gguf",
+    "sha256": "d208665ab1cd3a69f7a9a4bc59430e8448c8093d9b06334f566ac59d6d504a03",
+    "runtime": "b11146-7fe450e19"
+  },
+  "identity": {
+    "model": {
+      "name": "gemma-4-26B-A4B-it-Q4_0.gguf",
+      "sha256": "d208665ab1cd3a69f7a9a4bc59430e8448c8093d9b06334f566ac59d6d504a03",
+      "runtime": "b11146-7fe450e19"
+    },
+    "launch": {
+      "pid": 16408,
+      "createdAt": "/Date(1791062626758)/",
+      "executableSha256": "7b886298b688509ced3e92b420edd57dd3d665da72c1fc207d7a537be5870352",
+      "argumentsSha256": "cb1dcf7ac6ee1641aca81f7343e3e4e814fcf19bb4cbbd39f201ff4b5b583458",
+      "contextPerSlot": 4096,
+      "reasoningBudget": 768
+    },
+    "templateSha256": "6a1015c47ccfcfa67c3b772385bccee357a4d37c3cda37bd202e9047f391ab82",
+    "defaults": {
+      "params": {
+        "seed": 4294967295,
+        "temperature": 1,
+        "dynatemp_range": 0,
+        "dynatemp_exponent": 1,
+        "top_k": 64,
+        "top_p": 0.949999988079071,
+        "min_p": 0.05000000074505806,
+        "top_n_sigma": -1,
+        "xtc_probability": 0,
+        "xtc_threshold": 0.10000000149011612,
+        "typical_p": 1,
+        "repeat_last_n": 64,
+        "repeat_penalty": 1,
+        "presence_penalty": 0,
+        "frequency_penalty": 0,
+        "dry_multiplier": 0,
+        "dry_base": 1.75,
+        "dry_allowed_length": 2,
+        "dry_penalty_last_n": 64,
+        "mirostat": 0,
+        "mirostat_tau": 5,
+        "mirostat_eta": 0.10000000149011612,
+        "adaptive_target": -1,
+        "adaptive_decay": 0.8999999761581421,
+        "max_tokens": -1,
+        "n_predict": -1,
+        "n_keep": 0,
+        "n_discard": 0,
+        "ignore_eos": false,
+        "stream": false,
+        "n_probs": 0,
+        "min_keep": 0,
+        "chat_format": "Content-only",
+        "reasoning_format": "none",
+        "reasoning_in_content": false,
+        "generation_prompt": "",
+        "samplers": [
+          "penalties",
+          "dry",
+          "top_n_sigma",
+          "top_k",
+          "typ_p",
+          "top_p",
+          "min_p",
+          "xtc",
+          "temperature"
+        ],
+        "speculative.types": "none",
+        "timings_per_token": false,
+        "post_sampling_probs": false,
+        "backend_sampling": false,
+        "lora": []
+      },
+      "n_ctx": 4096
+    }
+  },
+  "codeHashes": {
+    "smoke-gemma-writing.ts": "ca367c482d02db8c8b173a926c2906ac69efc4322a0172161b7cc33fbce62515",
+    "edit-assessment.ts": "f6324538f0ad8b87b5f4f3560e0b7eea50da5d256c7857b724e9074973201e08",
+    "target-writing-input.ts": "aa4ca66a745b2e5f00da39f3db406b57d90e56f711573f7cd0456f0a175c8acd",
+    "edit-decoding.ts": "dfdfb4d4bd599cf5db14a62ce476ac5bc82785706ec86c85c05221fd33bccf51",
+    "attest-local-launch.ts": "2e759a0f2879db097bac47a91326d4a04733bccb322e4d9760e3fd9931afb3e4"
+  },
+  "decodingSha256": "86d09368a09c376dba9e72f0c2c690f2c326e2b7f3e7ebe0fa973ab9411f8e72",
+  "schemaSha256": "bc7d75507a97ca9361828dd5f599a4d6ffd1ece56d60a80a79584293868b29ea",
+  "checksSha256": "4a08c6ddaa30170f113a4008245c697717fb89d602659e0715d825cb704caded",
+  "checks": [
+    {
+      "name": "system-empty-edits",
+      "passed": true,
+      "failure": null,
+      "elapsedMs": 12049
+    },
+    {
+      "name": "unicode-exact-anchor",
+      "passed": true,
+      "failure": null,
+      "elapsedMs": 941
+    },
+    {
+      "name": "en-assessment",
+      "passed": true,
+      "failure": null,
+      "elapsedMs": 23605
+    },
+    {
+      "name": "en-review",
+      "passed": true,
+      "failure": null,
+      "elapsedMs": 1018
+    },
+    {
+      "name": "de-assessment",
+      "passed": true,
+      "failure": null,
+      "elapsedMs": 744
+    },
+    {
+      "name": "de-review",
+      "passed": true,
+      "failure": null,
+      "elapsedMs": 924
+    }
+  ],
+  "completionDiagnostics": {
+    "finishReasons": {
+      "stop": 6
+    },
+    "reasoningResponses": 0,
+    "reasoningCharacters": 0,
+    "finalCharacters": 295,
+    "responsesWithUsage": 6,
+    "promptTokens": 1808,
+    "completionTokens": 123,
+    "requestsNotStarted": 0,
+    "timeoutFailures": 0
+  },
+  "pairedVerdicts": {
+    "en": "correct",
+    "de": "correct"
+  },
+  "limitations": "Protocol transport only. Independently authored examples are not human-reviewed qualification evidence and do not establish accuracy."
+}

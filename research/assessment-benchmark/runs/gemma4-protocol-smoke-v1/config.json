@@ -1,0 +1,82 @@
+{
+  "model": {
+    "name": "gemma-4-26B-A4B-it-Q4_0.gguf",
+    "sha256": "d208665ab1cd3a69f7a9a4bc59430e8448c8093d9b06334f566ac59d6d504a03",
+    "runtime": "b11146-7fe450e19"
+  },
+  "decoding": {
+    "decodingProfile": "greedy",
+    "mode": "direct",
+    "temperature": 0,
+    "top_p": 1,
+    "top_k": 0,
+    "min_p": 0,
+    "presence_penalty": 0,
+    "repeat_penalty": 1,
+    "seed": 59,
+    "max_tokens": 900,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "edits": {
+        "type": "array",
+        "maxItems": 8,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "original": {
+              "type": "string",
+              "minLength": 1
+            },
+            "replacement": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "grammar",
+                "spelling",
+                "punctuation",
+                "word_use"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "original",
+            "replacement",
+            "kind",
+            "reason"
+          ]
+        }
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "complete",
+          "uncertain"
+        ]
+      }
+    },
+    "required": [
+      "edits",
+      "status"
+    ]
+  },
+  "codeHashes": {
+    "smoke-gemma-writing.ts": "ca367c482d02db8c8b173a926c2906ac69efc4322a0172161b7cc33fbce62515",
+    "edit-assessment.ts": "f6324538f0ad8b87b5f4f3560e0b7eea50da5d256c7857b724e9074973201e08",
+    "target-writing-input.ts": "aa4ca66a745b2e5f00da39f3db406b57d90e56f711573f7cd0456f0a175c8acd",
+    "edit-decoding.ts": "dfdfb4d4bd599cf5db14a62ce476ac5bc82785706ec86c85c05221fd33bccf51",
+    "attest-local-launch.ts": "2e759a0f2879db097bac47a91326d4a04733bccb322e4d9760e3fd9931afb3e4"
+  }
+}

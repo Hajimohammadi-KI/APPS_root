@@ -1,0 +1,7 @@
+{
+  "pid": 16408,
+  "stoppedAt": "2026-10-03T21:36:46.1292306Z",
+  "verifiedCreatedUnixMs": 1791062626758,
+  "verifiedCommandSha256": "cb1dcf7ac6ee1641aca81f7343e3e4e814fcf19bb4cbbd39f201ff4b5b583458",
+  "reason": "Completed run, post-attestation and independent reconstruction; release GPU for UI QA"
+}

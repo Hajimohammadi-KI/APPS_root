@@ -486,9 +486,9 @@ export function AppShell() {
 				/>
 			) : null}
 			<main className="app-main" id="main-content" tabIndex={-1}>
-        <Button asChild className="mb-4 w-fit">
+        {screen !== "home" ? <Button asChild className="mb-4 w-fit">
           <a href="/practice">Practise grammar with your own responses</a>
-        </Button>
+        </Button> : null}
 				<header className="app-topbar">
 					<div className="flex min-w-0 items-center gap-3">
 						<Button
@@ -530,7 +530,7 @@ export function AppShell() {
 				</header>
 				<div className="app-content" data-screen={screen}>
 {["errors", "progress"].includes(screen) ? <AutomaticityEvidenceSummary /> : null}
-					{screen === "home" ? <DashboardV2Screen navigate={navigate} /> : null}
+					{screen === "home" ? <DashboardV2Screen /> : null}
 					{screen === "progress" ? <AutomaticityScreen /> : null}
 					{screen === "integrated-skills" ? (
 						<IntegratedSkillsScreen navigate={navigate} />

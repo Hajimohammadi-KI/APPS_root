@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.03.10",
+  "release": "2026.10.03.11",
   "sources": [
     {
       "name": "Write & Improve",
@@ -1744,6 +1744,289 @@
       "limitations": "German author identity unavailable beyond document IDs. Within-document observations correlated; sentence Wilson bounds descriptive. Public pretraining exposure unknown. New holdout is untouched by this workflow, not proven uncontaminated. Not app-task qualification."
     },
     "holdout": null,
+    "holdoutState": "unused",
+    "productionApproved": false
+  },
+  "reasoningEvaluation": {
+    "candidate": {
+      "name": "Qwen3.5-27B · bounded reasoning",
+      "run": "writing-edits-27b-development-thinking-v1",
+      "report": {
+        "schemaVersion": 1,
+        "completedAt": "2026-10-03T20:43:26.661Z",
+        "split": "development",
+        "mode": "thinking",
+        "candidateFingerprint": "d6fb0e07b040fd7beba66e0e12f02233bd90676e7081c0279f5fe972b5c0036d",
+        "configSha256": "f7e20f28dac11db6046a4a518f290d7537e681c9fa0b28ab7e5c617baceb8100",
+        "selectionSha256": "d1c6c63f7e5e3a2a5c0e8fba0d4647aa7845276c35bb36769102c65721187e1c",
+        "predictionsSha256": "32f30a1822649c923de1f3e7376f2065b143f819f9bb7484cfc6c33a9fb43448",
+        "count": 128,
+        "attemptedPhases": 256,
+        "requestsStarted": 256,
+        "structurallyValidCalls": 217,
+        "completionDiagnostics": {
+          "finishReasons": {
+            "stop": 232,
+            "no-finish-reason": 24
+          },
+          "reasoningResponses": 232,
+          "reasoningCharacters": 737960,
+          "finalCharacters": 51797,
+          "responsesWithUsage": 232,
+          "promptTokens": 148943,
+          "completionTokens": 192787,
+          "requestsNotStarted": 0,
+          "timeoutFailures": 24
+        },
+        "explicitUncertaintyCalls": 0,
+        "bothPhasesAssessed": 97,
+        "failures": {
+          "The operation timed out.": 24,
+          "Uncertain output contains a correction": 5,
+          "Overlapping edits": 6,
+          "Edit makes no substantive change": 2,
+          "Edit quotation absent or ambiguous": 2
+        },
+        "latencyMs": {
+          "median": 214904,
+          "p95": 240016
+        },
+        "languages": {
+          "en": {
+            "candidate": {
+              "count": 64,
+              "errors": 32,
+              "clean": 32,
+              "falseAccept": 5,
+              "trueAccept": 27,
+              "falseAcceptanceRate": 0.15625,
+              "correctAcceptanceRate": 0.84375,
+              "abstentions": 22,
+              "coverage": 0.65625,
+              "falseAcceptance95": {
+                "low": 0.0686442028250571,
+                "high": 0.3175414959753039
+              },
+              "correctAcceptance95": {
+                "low": 0.682458504024696,
+                "high": 0.9313557971749429
+              },
+              "detectedErrors": 8,
+              "errorDetection95": {
+                "low": 0.1325240091850904,
+                "high": 0.4210655899424448
+              },
+              "protocolVersion": 3,
+              "diagnosticScreenPassed": false
+            },
+            "firstPass": {
+              "count": 64,
+              "errors": 32,
+              "clean": 32,
+              "falseAccept": 7,
+              "trueAccept": 28,
+              "falseAcceptanceRate": 0.21875,
+              "correctAcceptanceRate": 0.875,
+              "abstentions": 2,
+              "coverage": 0.96875,
+              "falseAcceptance95": {
+                "low": 0.11023836252604186,
+                "high": 0.3875499364924353
+              },
+              "correctAcceptance95": {
+                "low": 0.7193169451834978,
+                "high": 0.9502986561251991
+              },
+              "detectedErrors": 23,
+              "errorDetection95": {
+                "low": 0.5462549057408342,
+                "high": 0.8443541950225723
+              },
+              "protocolVersion": 3,
+              "diagnosticScreenPassed": false
+            },
+            "reviewPass": {
+              "count": 64,
+              "errors": 32,
+              "clean": 32,
+              "falseAccept": 7,
+              "trueAccept": 29,
+              "falseAcceptanceRate": 0.21875,
+              "correctAcceptanceRate": 0.90625,
+              "abstentions": 7,
+              "coverage": 0.890625,
+              "falseAcceptance95": {
+                "low": 0.11023836252604186,
+                "high": 0.3875499364924353
+              },
+              "correctAcceptance95": {
+                "low": 0.7578184527161212,
+                "high": 0.9675984487016337
+              },
+              "detectedErrors": 18,
+              "errorDetection95": {
+                "low": 0.3932559113685198,
+                "high": 0.7183466888495963
+              },
+              "protocolVersion": 3,
+              "diagnosticScreenPassed": false
+            },
+            "groups": 62
+          },
+          "de": {
+            "candidate": {
+              "count": 64,
+              "errors": 32,
+              "clean": 32,
+              "falseAccept": 1,
+              "trueAccept": 15,
+              "falseAcceptanceRate": 0.03125,
+              "correctAcceptanceRate": 0.46875,
+              "abstentions": 42,
+              "coverage": 0.34375,
+              "falseAcceptance95": {
+                "low": 0.005537860164003122,
+                "high": 0.15744263820012558
+              },
+              "correctAcceptance95": {
+                "low": 0.30869387108068835,
+                "high": 0.6355048288102536
+              },
+              "detectedErrors": 4,
+              "errorDetection95": {
+                "low": 0.04970134387480073,
+                "high": 0.2806830548165022
+              },
+              "protocolVersion": 3,
+              "diagnosticScreenPassed": false
+            },
+            "firstPass": {
+              "count": 64,
+              "errors": 32,
+              "clean": 32,
+              "falseAccept": 1,
+              "trueAccept": 18,
+              "falseAcceptanceRate": 0.03125,
+              "correctAcceptanceRate": 0.5625,
+              "abstentions": 10,
+              "coverage": 0.84375,
+              "falseAcceptance95": {
+                "low": 0.005537860164003122,
+                "high": 0.15744263820012558
+              },
+              "correctAcceptance95": {
+                "low": 0.3932559113685198,
+                "high": 0.7183466888495963
+              },
+              "detectedErrors": 27,
+              "errorDetection95": {
+                "low": 0.682458504024696,
+                "high": 0.9313557971749429
+              },
+              "protocolVersion": 3,
+              "diagnosticScreenPassed": false
+            },
+            "reviewPass": {
+              "count": 64,
+              "errors": 32,
+              "clean": 32,
+              "falseAccept": 1,
+              "trueAccept": 21,
+              "falseAcceptanceRate": 0.03125,
+              "correctAcceptanceRate": 0.65625,
+              "abstentions": 20,
+              "coverage": 0.6875,
+              "falseAcceptance95": {
+                "low": 0.005537860164003122,
+                "high": 0.15744263820012558
+              },
+              "correctAcceptance95": {
+                "low": 0.4831108797896222,
+                "high": 0.7958956207556682
+              },
+              "detectedErrors": 16,
+              "errorDetection95": {
+                "low": 0.33630882869327483,
+                "high": 0.6636911713067252
+              },
+              "protocolVersion": 3,
+              "diagnosticScreenPassed": false
+            },
+            "groups": 62
+          }
+        },
+        "releaseEligible": false,
+        "limitations": "German author identity unavailable beyond document IDs. Within-document observations correlated; sentence Wilson bounds descriptive. Public pretraining exposure unknown. New holdout is untouched by this workflow, not proven uncontaminated. Not app-task qualification. Two reviews share a model and are correlated. First-pass results are diagnostic only. Exact quotation/reconstruction does not certify linguistic validity. No app task/meaning qualification."
+      },
+      "diagnostics": {
+        "en": {
+          "falseCorrections": 2,
+          "firstFalseCorrections": 4,
+          "reviewFalseCorrections": 3,
+          "reviewDisagreements": 14
+        },
+        "de": {
+          "falseCorrections": 2,
+          "firstFalseCorrections": 8,
+          "reviewFalseCorrections": 6,
+          "reviewDisagreements": 19
+        }
+      },
+      "scopeDiagnostics": {
+        "quotedEdits": 196,
+        "uniqueTargetQuotes": 194,
+        "ambiguousTargetQuotes": 1,
+        "contextOnlyQuotes": 0,
+        "absentQuotes": 1,
+        "unchangedEdits": 2,
+        "unreadablePhases": 24
+      },
+      "referenceAdjudication": {
+        "status": "not-independently-adjudicated",
+        "sourceCorrectionDisagreements": [
+          {
+            "language": "de",
+            "annotationTypes": [
+              "R:ORTH"
+            ]
+          },
+          {
+            "language": "en",
+            "annotationTypes": [
+              "R:ADJ"
+            ]
+          },
+          {
+            "language": "en",
+            "annotationTypes": [
+              "M:PUNCT",
+              "R:DET"
+            ]
+          },
+          {
+            "language": "en",
+            "annotationTypes": [
+              "M:PUNCT",
+              "R:PREP",
+              "R:NOUN:NUM"
+            ]
+          },
+          {
+            "language": "en",
+            "annotationTypes": [
+              "R:VERB"
+            ]
+          },
+          {
+            "language": "en",
+            "annotationTypes": [
+              "M:NOUN",
+              "R:VERB:TENSE"
+            ]
+          }
+        ]
+      }
+    },
     "holdoutState": "unused",
     "productionApproved": false
   },

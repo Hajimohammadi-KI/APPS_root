@@ -1,10 +1,10 @@
 {
   "publishedAt": "2026-10-03",
   "version": "20.9.3",
-  "webRelease": "2026.10.03.10",
+  "webRelease": "2026.10.03.11",
   "changes": [
-    "Grammatikkorrekturen brauchen jetzt eine erneute, übereinstimmende Prüfung der ursprünglichen Antwort",
-    "Widersprüchliche Korrekturen oder unklare Bedeutung bleiben ohne Bewertung und unbestätigtes Feedback",
-    "Neue Modelltests weisen falsche Freigaben, unnötige Korrekturen und unsichere Antworten getrennt aus"
+    "Reference matching preserves letter case and required punctuation, including malformed terminal sequences",
+    "German error repair preserves history and requires fresh, spaced confirmations without visible or recently used help",
+    "The complete bounded-reasoning experiment reports acceptance, correction, abstention and latency without qualifying an unreliable evaluator"
   ]
 }

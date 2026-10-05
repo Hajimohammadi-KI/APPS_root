@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@import "./styles/00-design-system.css";
+@import "./styles/01-components.css";
+@import "./styles/02-layout.css";
 @import "./styles/00-foundation.css";
 @import "./styles/pages/dashboard.css";
 @import "./styles/pages/dashboard-v2.css";

@@ -64,7 +64,7 @@ function readinessForState(
 }
 
 function routeForAction(action: ImplementationIntention["action"]): string {
-	if (action === "review_only") return "/flashcards";
+	if (action === "review_only") return "/practice?review=1";
 	if (action === "booster") return "/daily?mode=booster";
 	return "/daily";
 }

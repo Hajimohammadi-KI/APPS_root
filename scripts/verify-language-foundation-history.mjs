@@ -9,7 +9,7 @@ import { pathToFileURL } from "node:url";
 
 const root = resolve(import.meta.dirname, "..");
 const en = "Apps/English/English-Automaticity";
-const de = "Apps/Deutsch-Automaticity";
+const de = "Apps/Deutsch/Deutsch-Automaticity";
 const git = (...args) => execFileSync("git", args, { cwd: root, stdio: ["ignore", "pipe", "pipe"] });
 const revision = git("rev-parse", "ee98a08^").toString().trim();
 const output = resolve(root, `artifacts/language-foundation-history/${new Date().toISOString().replace(/[:.]/g, "-")}`);

@@ -90,7 +90,7 @@ const receipts: { path: string; sha256: string }[] = [];
 const types = Bun.spawn(
   [
     "node",
-    "Apps/Deutsch-Automaticity/node_modules/typescript/bin/tsc",
+    "Apps/Deutsch/Deutsch-Automaticity/node_modules/typescript/bin/tsc",
     "-p",
     "scripts/tsconfig.language-tools.json",
   ],
@@ -113,7 +113,7 @@ await writeFile(
     at: new Date().toISOString(),
     command: [
       "node",
-      "Apps/Deutsch-Automaticity/node_modules/typescript/bin/tsc",
+      "Apps/Deutsch/Deutsch-Automaticity/node_modules/typescript/bin/tsc",
       "-p",
       "scripts/tsconfig.language-tools.json",
     ],

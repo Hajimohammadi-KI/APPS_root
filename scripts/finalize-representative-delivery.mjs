@@ -83,7 +83,7 @@ for (const spec of [
     language: "de",
     version: "20.8.41",
     previous: "20.8.40",
-    source: "Apps/Deutsch-Automaticity",
+    source: "Apps/Deutsch/Deutsch-Automaticity",
     directory: "DeutschFlow",
     setup: "DeutschFlow",
     port: 3210,

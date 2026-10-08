@@ -11,7 +11,7 @@ const server=createServer(async(req,res)=>{try{const path=new URL(req.url,"http:
  if(path==="/review")file=resolve(root,"docs/model-evaluation/REVIEW.html");
  else if(path==="/practice")file=resolve(root,`shared/learning-core/browser/practice-${language}.html`);
  else if(path==="/overview"){res.setHeader("Content-Type","text/html; charset=utf-8");res.end(`<html lang="${language}"><meta name="viewport" content="width=device-width,initial-scale=1"><section data-automaticity-overview></section><script src="/learning-core/overview.js"></script></html>`);return;}
- else if(path===`/learning-core/curriculum-${language}.json`)file=resolve(root,`${language==="en"?"Apps/English/English-Automaticity":"Apps/Deutsch-Automaticity"}/apps/web/public${path}`);
+ else if(path===`/learning-core/curriculum-${language}.json`)file=resolve(root,`${language==="en"?"Apps/English/English-Automaticity":"Apps/Deutsch/Deutsch-Automaticity"}/apps/web/public${path}`);
  else if(["/learning-core/practice.js","/learning-core/practice.css","/learning-core/overview.js"].includes(path))file=resolve(root,"shared/learning-core/browser",path.split("/").at(-1));
  else {res.writeHead(404);res.end();return;}res.setHeader("Content-Type",file.endsWith(".js")?"text/javascript; charset=utf-8":file.endsWith(".css")?"text/css":file.endsWith(".json")?"application/json":"text/html; charset=utf-8");res.end(await readFile(file));}catch(error){res.writeHead(500);res.end(String(error));}});
 await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));const local=`http://127.0.0.1:${server.address().port}`;

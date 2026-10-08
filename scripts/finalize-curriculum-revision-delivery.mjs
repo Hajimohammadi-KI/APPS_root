@@ -83,7 +83,7 @@ for (const product of [
     name: "German",
     key: "german",
     language: "de",
-    source: "Apps/Deutsch-Automaticity",
+    source: "Apps/Deutsch/Deutsch-Automaticity",
     directory: "DeutschFlow",
     setup: "DeutschFlow",
     port: 3210,
@@ -205,7 +205,7 @@ await writeFile(
         repeatedExactArtifact: args["german-cycle"],
         startupFailureCause: "not_established",
         earlierGermanApiTestTimeout:
-          "Apps/Deutsch-Automaticity/artifacts/curriculum-revision-final-verify-api-timeout.log",
+          "Apps/Deutsch/Deutsch-Automaticity/artifacts/curriculum-revision-final-verify-api-timeout.log",
         browserNavigationObservations:
           "artifacts/installed-navigation/2026-09-05T16-57-45-378Z/report.json",
       },

@@ -106,58 +106,6 @@
       ]
     },
     {
-      "id": "tracker",
-      "name": "Cross Repository Tracker",
-      "projectDir": "Apps/Study-Tracker",
-      "owner": {
-        "name": "Elahe Hajimohammadi",
-        "github": "Hajimohammadi-KI",
-        "status": "assigned",
-        "assignedOn": "2026-09-01",
-        "reviewBy": "2026-12-01"
-      },
-      "deployment": {
-        "provider": "vercel",
-        "projectName": "study-tracker-plan-old",
-        "rootDirectory": "Apps/Study-Tracker",
-        "configFile": "Apps/Study-Tracker/vercel.json"
-      },
-      "build": {
-        "command": "bun",
-        "args": [
-          "run",
-          "build:all"
-        ]
-      },
-      "localChecks": [
-        {
-          "url": "http://127.0.0.1:4312/",
-          "kind": "html",
-          "includes": [
-            "dir=\"ltr\""
-          ]
-        },
-        {
-          "url": "http://127.0.0.1:4313/v1/health",
-          "kind": "json",
-          "expected": {
-            "ok": true,
-            "service": "cross-repository-api"
-          }
-        }
-      ],
-      "publicAccess": "public",
-      "publicChecks": [
-        {
-          "url": "https://study-tracker-plan-five.vercel.app/",
-          "kind": "html",
-          "includes": [
-            "Cross-Repository"
-          ]
-        }
-      ]
-    },
-    {
       "id": "settings",
       "name": "Settings",
       "projectDir": "Apps/Apps-For-Integeration/Einstellungen-APP",

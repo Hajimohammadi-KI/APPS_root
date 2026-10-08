@@ -12,7 +12,7 @@ const browser = await chromium.launch({ channel: "msedge", headless: true });
 const report = { createdAt: new Date().toISOString(), scope: "Source worker and practice assets on isolated HTTP origins with synthetic drafts", cases: [] };
 try {
   for (const language of ["en", "de"]) {
-    const app = language === "en" ? "Apps/English/English-Automaticity" : "Apps/Deutsch-Automaticity";
+    const app = language === "en" ? "Apps/English/English-Automaticity" : "Apps/Deutsch/Deutsch-Automaticity";
     const server = createServer(async (req, res) => {
       const path = new URL(req.url, "http://localhost").pathname;
       const mapped = path === "/sw.js" ? `${app}/apps/web/public/sw.js` : path.startsWith("/learning-core/") ? `${app}/apps/web/public${path}` : path === "/practice" ? `shared/learning-core/browser/practice-${language}.html` : null;

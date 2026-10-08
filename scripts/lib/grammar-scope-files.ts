@@ -34,7 +34,7 @@ export const SCOPE_INPUTS = [
 ].map((path) => `docs/grammar-scope/${path}`);
 export const PACK_PATHS = [
   "Apps/English/English-Automaticity/apps/web/public/learning-core/curriculum-en.json",
-  "Apps/Deutsch-Automaticity/apps/web/public/learning-core/curriculum-de.json",
+  "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/learning-core/curriculum-de.json",
 ];
 const parse = async (root: string, path: string) =>
   JSON.parse(

@@ -15,7 +15,7 @@
       "type": "process",
       "command": "bun",
       "args": ["run", "verify"],
-      "options": { "cwd": "${workspaceFolder}/Apps/Deutsch-Automaticity" },
+      "options": { "cwd": "${workspaceFolder}/Apps/Deutsch/Deutsch-Automaticity" },
       "group": "test",
       "problemMatcher": []
     },

@@ -9,7 +9,7 @@
     "noEmit": true,
     "skipLibCheck": true,
     "types": ["bun", "node"],
-    "typeRoots": ["../Apps/Deutsch-Automaticity/node_modules/@types"]
+    "typeRoots": ["../Apps/Deutsch/Deutsch-Automaticity/node_modules/@types"]
   },
   "include": [
     "compile-transformer-release.ts",

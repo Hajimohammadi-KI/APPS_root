@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 const product = Bun.argv[2];
 if (product !== "English" && product !== "German") throw Error("Choose English or German");
-const root = resolve(import.meta.dir, ".."), app = resolve(root, product === "English" ? "Apps/English/English-Automaticity" : "Apps/Deutsch-Automaticity");
+const root = resolve(import.meta.dir, ".."), app = resolve(root, product === "English" ? "Apps/English/English-Automaticity" : "Apps/Deutsch/Deutsch-Automaticity");
 const check = product === "English" ? "check" : "verify", output = resolve(app, "artifacts");
 await mkdir(output, { recursive: true });
 const receipt = { startedAt: new Date().toISOString(), finishedAt: "", product, check, checkExit: null as number | null, packageExit: null as number | null,

@@ -25,7 +25,7 @@ const browser = await chromium.launch({ channel: "msedge", headless: true });
 try {
   for (const [language, port, app, unitId] of [
     ["en", 3202, "Apps/English/English-Automaticity", "en.c.001"],
-    ["de", 3210, "Apps/Deutsch-Automaticity", "de.c.002"],
+    ["de", 3210, "Apps/Deutsch/Deutsch-Automaticity", "de.c.002"],
   ]) {
     const pack = JSON.parse(
       await readFile(

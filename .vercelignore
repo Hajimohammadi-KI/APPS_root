@@ -1,0 +1,33 @@
+# Deployments are uploaded from this repository root with the Vercel CLI; each
+# language project builds its own Apps/<Language>/<App>/apps/web root directory.
+# Only the two self-contained app folders are needed for those builds.
+.git/
+.git.backup-*/
+.codex-tmp/
+.vercel/
+.vscode/
+archive/
+artifacts/
+backups/
+delete/
+docs/
+research/
+scripts/
+shared/
+tmp/
+Apps/Apps-For-Integeration/
+Apps/Starter-App/
+**/node_modules/
+**/.next/
+**/dist/
+**/coverage/
+**/test-results/
+**/playwright-report/
+**/.bun-install-cache/
+**/.tmp/
+**/distribution/build/
+**/distribution/windows-modern/.staging/
+**/apps/api/dist/
+**/*.exe
+**/*.payload.zip
+**/*.log

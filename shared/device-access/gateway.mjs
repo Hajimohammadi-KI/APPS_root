@@ -158,7 +158,7 @@ export async function startGateway({
     },
     {
       name: "German web",
-      root: "Apps/Deutsch-Automaticity",
+      root: "Apps/Deutsch/Deutsch-Automaticity",
       port: 3210,
       route: "/",
       runtime: "node",
@@ -180,7 +180,7 @@ export async function startGateway({
     },
     {
       name: "German API",
-      root: "Apps/Deutsch-Automaticity",
+      root: "Apps/Deutsch/Deutsch-Automaticity",
       port: 4210,
       route: "/api/v1/health",
       runtime: "bun",

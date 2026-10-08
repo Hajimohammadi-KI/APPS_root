@@ -24,7 +24,7 @@ try {
       const hash=value=>createHash("sha256").update(value).digest("hex");
       assert.equal(hash(served),hash(expected));row.practiceBundleSha256=hash(served);
       row.runtimeAssets=[];
-      const app=language==="en"?"Apps/English/English-Automaticity":"Apps/Deutsch-Automaticity";
+      const app=language==="en"?"Apps/English/English-Automaticity":"Apps/Deutsch/Deutsch-Automaticity";
       for(const path of ["sw.js",`learning-core/curriculum-${language}.json`]){
         const actual=await (await context.request.get(`${base}/${path}`)).body();
         const canonical=await readFile(resolve(root,`${app}/apps/web/public/${path}`));

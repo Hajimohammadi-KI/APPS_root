@@ -8,7 +8,7 @@ import json
 root = Path(__file__).resolve().parents[2]
 report = []
 for language, relative, product in [
-    ("de", "Apps/Deutsch-Automaticity", "DeutschFlow"),
+    ("de", "Apps/Deutsch/Deutsch-Automaticity", "DeutschFlow"),
     ("en", "Apps/English/English-Automaticity", "EnglishGrammar"),
 ]:
     app = root / relative

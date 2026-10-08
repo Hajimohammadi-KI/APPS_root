@@ -29,7 +29,7 @@ try {
         root,
         language === "en"
           ? "Apps/English/English-Automaticity/apps/web/public"
-          : "Apps/Deutsch-Automaticity/apps/web/public",
+          : "Apps/Deutsch/Deutsch-Automaticity/apps/web/public",
       ),
       pack = JSON.parse(
         await readFile(

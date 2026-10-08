@@ -180,7 +180,7 @@ async function prepareGermanClosedTask(page) {
   await expect(page.locator("#answerInput")).toBeVisible();
   const runtimeResponse = await page.request.get(`${germanUrl}/replacements/de/grammar-runtime.js`);
   assert.equal(runtimeResponse.status(), 200);
-  const source = await readFile(resolve(root, "Apps/Deutsch-Automaticity/apps/web/public/replacements/de/grammar-runtime.js"));
+  const source = await readFile(resolve(root, "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/replacements/de/grammar-runtime.js"));
   const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
   assert.equal(digest(await runtimeResponse.body()), digest(source), "German live runtime differs from current source; rebuild/restart before claiming verification");
   const task = await page.evaluate(() => {

@@ -20,7 +20,7 @@ const digest = async (path) =>
     .digest("hex");
 const protectedPaths = [
   "Apps/English/English-Automaticity/apps/web/public/learning-core/curriculum-en.json",
-  "Apps/Deutsch-Automaticity/apps/web/public/learning-core/curriculum-de.json",
+  "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/learning-core/curriculum-de.json",
   "docs/automaticity-release-reviews.json",
   "docs/automaticity-coverage.json",
   "docs/automaticity-coverage-backlog.json",

@@ -12,7 +12,7 @@ import {
   validateSchedulerPilotPlan,
 } from "../shared/learning-core/src/automaticity/scheduler-pilot";
 import { reduceAutomaticityEvents } from "../shared/learning-core/src/automaticity/evidence";
-import { buildQualifiedFsrsCandidates } from "../Apps/Deutsch-Automaticity/packages/learning-core/src/fsrs-shadow/qualified";
+import { buildQualifiedFsrsCandidates } from "../Apps/Deutsch/Deutsch-Automaticity/packages/learning-core/src/fsrs-shadow/qualified";
 import {
   parseReviewLedger,
   validateReleaseReviews,

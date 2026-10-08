@@ -37,7 +37,7 @@ for (const ledger of ["docs/automaticity-release-reviews.json", "docs/automatici
 const products = [];
 for (const spec of [
   {key:"english",name:"English",language:"en",version:"27.3.38",previous:"27.3.37",source:"Apps/English/English-Automaticity",directory:"English Grammar Automaticity Desktop",setup:"EnglishGrammar",port:3202,release:"english-grammar-update.json"},
-  {key:"german",name:"German",language:"de",version:"20.8.42",previous:"20.8.41",source:"Apps/Deutsch-Automaticity",directory:"DeutschFlow",setup:"DeutschFlow",port:3210,release:"deutschflow-update.json"}
+  {key:"german",name:"German",language:"de",version:"20.8.42",previous:"20.8.41",source:"Apps/Deutsch/Deutsch-Automaticity",directory:"DeutschFlow",setup:"DeutschFlow",port:3210,release:"deutschflow-update.json"}
 ]) {
   const cycle = evidence[`${spec.key}-cycle`], update = evidence[`${spec.key}-update`];
   assert.equal(cycle.version, spec.version); assert.equal(cycle.previousVersion, spec.previous);

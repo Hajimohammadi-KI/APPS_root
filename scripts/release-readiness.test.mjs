@@ -6,7 +6,8 @@ import { loadTargets, probeCheck, verifyReleaseReadiness } from "./release-readi
 
 test("every canonical target has a build and an honest access contract", async () => {
   const targets = await loadTargets();
-  assert.deepEqual(targets.map((target) => target.id), ["english", "german", "tracker", "settings", "pdf"]);
+  // The Cross Repository Tracker is released from its own repository.
+  assert.deepEqual(targets.map((target) => target.id), ["english", "german", "settings", "pdf"]);
   for (const target of targets) {
     assert.ok(target.projectDir);
     assert.equal(target.owner?.status, "assigned");

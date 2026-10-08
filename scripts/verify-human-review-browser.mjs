@@ -27,7 +27,7 @@ try {
   for (const language of ["en", "de"]) {
     const publicRoot = resolve(
         root,
-        `${language === "en" ? "Apps/English/English-Automaticity" : "Apps/Deutsch-Automaticity"}/apps/web/public`,
+        `${language === "en" ? "Apps/English/English-Automaticity" : "Apps/Deutsch/Deutsch-Automaticity"}/apps/web/public`,
       ),
       source = await readFile(
         resolve(publicRoot, `learning-core/curriculum-${language}.json`),

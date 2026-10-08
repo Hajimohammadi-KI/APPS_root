@@ -33,7 +33,7 @@ try {
       const source = await readFile(
         resolve(
           root,
-          `${language === "en" ? "Apps/English/English-Automaticity" : "Apps/Deutsch-Automaticity"}/apps/web/public/learning-core/curriculum-${language}.json`,
+          `${language === "en" ? "Apps/English/English-Automaticity" : "Apps/Deutsch/Deutsch-Automaticity"}/apps/web/public/learning-core/curriculum-${language}.json`,
         ),
       );
       const response = await context.request.get(

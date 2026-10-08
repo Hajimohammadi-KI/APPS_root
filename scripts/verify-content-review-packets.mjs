@@ -26,7 +26,7 @@ const ledgerBefore = await readFile(
 const packs = new Map();
 for (const [lang, app] of [
   ["en", "Apps/English/English-Automaticity"],
-  ["de", "Apps/Deutsch-Automaticity"],
+  ["de", "Apps/Deutsch/Deutsch-Automaticity"],
 ])
   packs.set(
     lang,

@@ -5,7 +5,7 @@ import {developmentSeeds} from "./lib/model-benchmark-seeds";
 import type {CurriculumPack} from "../shared/learning-core/src/automaticity/curriculum";
 const root=resolve(import.meta.dir,".."),folder=resolve(root,"docs/model-evaluation");
 await mkdir(folder,{recursive:true});
-const packs=await Promise.all((["en","de"] as const).map(async language=>JSON.parse(await readFile(resolve(root,`${language==="en"?"Apps/English/English-Automaticity":"Apps/Deutsch-Automaticity"}/apps/web/public/learning-core/curriculum-${language}.json`),"utf8")) as CurriculumPack));
+const packs=await Promise.all((["en","de"] as const).map(async language=>JSON.parse(await readFile(resolve(root,`${language==="en"?"Apps/English/English-Automaticity":"Apps/Deutsch/Deutsch-Automaticity"}/apps/web/public/learning-core/curriculum-${language}.json`),"utf8")) as CurriculumPack));
 const categories=["correct_alternative","grammar_error","ambiguous","off_target","asr_corruption"] as const;
 const cases:BenchmarkDraft[]=developmentSeeds.flatMap(seed=>{
  const pack=packs.find(pack=>seed.id.startsWith(pack.language))!,unit=pack.units.find(unit=>unit.id===seed.id)!;

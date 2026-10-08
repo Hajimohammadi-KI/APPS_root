@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { grammarUnits as deUnits } from "../../Apps/Deutsch-Automaticity/packages/content/src/index";
+import { grammarUnits as deUnits } from "../../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/index";
 import { grammarUnits as enUnits } from "../../Apps/English/English-Automaticity/packages/content/src/index";
-import { worksheets } from "../../Apps/Deutsch-Automaticity/packages/content/src/grammar-worksheets";
-import { a1Worksheets } from "../../Apps/Deutsch-Automaticity/packages/content/src/worksheet-seeds-a1";
+import { worksheets } from "../../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/grammar-worksheets";
+import { a1Worksheets } from "../../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/worksheet-seeds-a1";
 import { germanSeeds } from "./seeds-de";
 import { englishSeeds } from "./seeds-en";
 import { catalogWorksheets } from "./build";

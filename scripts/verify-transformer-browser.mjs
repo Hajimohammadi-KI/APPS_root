@@ -12,7 +12,7 @@ const browser=await chromium.launch({channel:'msedge',headless:true});
 const hash=value=>createHash('sha256').update(value).digest('hex');
 try{
  for(const language of ['en','de']){
-  const base=`http://127.0.0.1:${language==='en'?3202:3210}`,app=language==='en'?'Apps/English/English-Automaticity':'Apps/Deutsch-Automaticity';
+  const base=`http://127.0.0.1:${language==='en'?3202:3210}`,app=language==='en'?'Apps/English/English-Automaticity':'Apps/Deutsch/Deutsch-Automaticity';
   const request=await browser.newContext();
   const endpoint=base+'/api/automaticity/transformer';
   const response=await request.request.get(endpoint);assert.equal(response.status(),200);assert.deepEqual(await response.json(),{enabled:false,approvals:[]});assert.equal(response.headers()['cache-control'],'no-store');

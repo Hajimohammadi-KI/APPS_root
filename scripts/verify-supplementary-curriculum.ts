@@ -66,7 +66,7 @@ try {
     const app =
       language === "en"
         ? "Apps/English/English-Automaticity"
-        : "Apps/Deutsch-Automaticity";
+        : "Apps/Deutsch/Deutsch-Automaticity";
     const path = `${app}/apps/web/public/learning-core/curriculum-${language}.json`;
     const pack = JSON.parse(
       await readFile(resolve(root, path), "utf8"),

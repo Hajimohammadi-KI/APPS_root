@@ -40,7 +40,7 @@ for (const language of ["en", "de"] as const) {
   const app =
     language === "en"
       ? "Apps/English/English-Automaticity"
-      : "Apps/Deutsch-Automaticity";
+      : "Apps/Deutsch/Deutsch-Automaticity";
   const file = `${app}/apps/web/public/learning-core/curriculum-${language}.json`;
   const bytes = await readFile(resolve(root, file)),
     pack = JSON.parse(bytes.toString("utf8")) as CurriculumPack;

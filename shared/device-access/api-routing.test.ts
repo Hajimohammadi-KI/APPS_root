@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { normalizeApiOrigin } from "../../Apps/English/English-Automaticity/apps/web/lib/api-origin";
 import english from "../../Apps/English/English-Automaticity/apps/web/next.config.mjs";
-import german from "../../Apps/Deutsch-Automaticity/apps/web/next.config";
+import german from "../../Apps/Deutsch/Deutsch-Automaticity/apps/web/next.config";
 import { acceptsRequest, isPrivateAddress } from "./gateway.mjs";
 
 test("old desktop API settings migrate while custom endpoints survive", () => {

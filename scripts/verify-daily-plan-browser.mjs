@@ -20,7 +20,7 @@ const publicRoot = (language) =>
     root,
     language === "en"
       ? "Apps/English/English-Automaticity/apps/web/public"
-      : "Apps/Deutsch-Automaticity/apps/web/public",
+      : "Apps/Deutsch/Deutsch-Automaticity/apps/web/public",
   );
 let language = "en";
 const server = createServer(async (request, response) => {

@@ -16,7 +16,9 @@ test("every public target declares one explicit Vercel project root", async () =
   const projectNames = new Set();
   const rootDirectories = new Set();
 
-  assert.equal(publicTargets.length, 4);
+  // English, German, and Research PDF Studio. The Cross Repository Tracker is
+  // released from its own repository, not from here.
+  assert.equal(publicTargets.length, 3);
 
   for (const target of publicTargets) {
     const deployment = target.deployment;
@@ -77,7 +79,6 @@ test("public smoke checks use the canonical production aliases", () => {
   const canonicalAliases = new Map([
     ["english", "https://english-grammar-automaticity-pwa.vercel.app/"],
     ["german", "https://deutschflow-grammar.vercel.app/"],
-    ["tracker", "https://study-tracker-plan-five.vercel.app/"],
     ["pdf", "https://research-pdf-studio.vercel.app/"],
   ]);
 

@@ -33,7 +33,7 @@ const server = createServer(async (req, res) => {
         root,
         language === "en"
           ? "Apps/English/English-Automaticity/apps/web/public/learning-core/curriculum-en.json"
-          : "Apps/Deutsch-Automaticity/apps/web/public/learning-core/curriculum-de.json",
+          : "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/learning-core/curriculum-de.json",
       );
     else if (
       ["/learning-core/practice.js", "/learning-core/practice.css"].includes(
@@ -95,7 +95,7 @@ try {
             root,
             language === "en"
               ? "Apps/English/English-Automaticity/apps/web/public/learning-core/curriculum-en.json"
-              : "Apps/Deutsch-Automaticity/apps/web/public/learning-core/curriculum-de.json",
+              : "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/learning-core/curriculum-de.json",
           ),
           "utf8",
         ),

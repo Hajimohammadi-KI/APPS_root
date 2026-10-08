@@ -17,7 +17,7 @@ const commands: [
     "tool-types",
     [
       "node",
-      "Apps/Deutsch-Automaticity/node_modules/typescript/bin/tsc",
+      "Apps/Deutsch/Deutsch-Automaticity/node_modules/typescript/bin/tsc",
       "-p",
       "scripts/tsconfig.language-tools.json",
     ],
@@ -40,10 +40,10 @@ const commands: [
     [
       "bun",
       "test",
-      "./Apps/Deutsch-Automaticity/packages/learning-core/src/automaticity/assessment-boundary.test.ts",
-      "./Apps/Deutsch-Automaticity/packages/learning-core/src/automaticity/prospective.test.ts",
-      "./Apps/Deutsch-Automaticity/packages/learning-core/src/automaticity/human-review.test.ts",
-      "./Apps/Deutsch-Automaticity/packages/learning-core/src/fsrs-shadow/evaluation.test.ts",
+      "./Apps/Deutsch/Deutsch-Automaticity/packages/learning-core/src/automaticity/assessment-boundary.test.ts",
+      "./Apps/Deutsch/Deutsch-Automaticity/packages/learning-core/src/automaticity/prospective.test.ts",
+      "./Apps/Deutsch/Deutsch-Automaticity/packages/learning-core/src/automaticity/human-review.test.ts",
+      "./Apps/Deutsch/Deutsch-Automaticity/packages/learning-core/src/fsrs-shadow/evaluation.test.ts",
     ],
     "pass",
   ],

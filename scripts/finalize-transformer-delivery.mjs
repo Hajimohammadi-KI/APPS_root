@@ -15,7 +15,7 @@ assert(capture.files.some(row=>row.path==='shared/learning-core/src/automaticity
 const products=[];
 for(const product of [
  {name:'English',key:'english',language:'en',source:'Apps/English/English-Automaticity',directory:'English Grammar Automaticity Desktop',setup:'EnglishGrammar',port:3202,api:'http://127.0.0.1:4201/api/health'},
- {name:'German',key:'german',language:'de',source:'Apps/Deutsch-Automaticity',directory:'DeutschFlow',setup:'DeutschFlow',port:3210,api:'http://127.0.0.1:4210/api/v1/health'},
+ {name:'German',key:'german',language:'de',source:'Apps/Deutsch/Deutsch-Automaticity',directory:'DeutschFlow',setup:'DeutschFlow',port:3210,api:'http://127.0.0.1:4210/api/v1/health'},
 ]){
  const config=await read(product.source+'/distribution/windows-modern/language-release-config.json'),version=config.version;
  const cycle=await read(args[product.key+'-cycle']),update=await read(args[product.key+'-update']);

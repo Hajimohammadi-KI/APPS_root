@@ -13,8 +13,8 @@ test("canonical app shells expose one reusable keyboard entry contract", async (
   const [englishShell, englishDashboard, germanShell, germanDashboard, tracker, settings, pdf] = await Promise.all([
     source("Apps/English/English-Automaticity/apps/web/features/app-shell.tsx"),
     source("Apps/English/English-Automaticity/apps/web/features/screens/dashboard-v2-screen.tsx"),
-    source("Apps/Deutsch-Automaticity/apps/web/src/components/app-shell.tsx"),
-    source("Apps/Deutsch-Automaticity/apps/web/src/features/dashboard/dashboard.tsx"),
+    source("Apps/Deutsch/Deutsch-Automaticity/apps/web/src/components/app-shell.tsx"),
+    source("Apps/Deutsch/Deutsch-Automaticity/apps/web/src/features/dashboard/dashboard.tsx"),
     // Keep the accessibility contract attached to the same Tracker directory used by release tooling.
     source("Apps/Study-Tracker/app/study-tracker.tsx"),
     source("Apps/Apps-For-Integeration/Einstellungen-APP/components/settings-app.tsx"),
@@ -40,7 +40,7 @@ test("canonical app shells expose one reusable keyboard entry contract", async (
 
 test("navigation landmarks and async states have accessible names", async () => {
   const [germanNavigation, tracker, settings, pdf] = await Promise.all([
-    source("Apps/Deutsch-Automaticity/apps/web/src/components/app-navigation.tsx"),
+    source("Apps/Deutsch/Deutsch-Automaticity/apps/web/src/components/app-navigation.tsx"),
     source("Apps/Study-Tracker/app/study-tracker.tsx"),
     source("Apps/Apps-For-Integeration/Einstellungen-APP/components/settings-app.tsx"),
     source("Apps/Apps-For-Integeration/Reader-PDF-App/app/page.tsx"),
@@ -66,7 +66,7 @@ test("PDF settings dialog supports Escape, focus containment, and focus restorat
 test("narrow layouts do not require horizontal scrolling for essential controls", async () => {
   const [englishFoundation, germanResponsive, settingsResponsive] = await Promise.all([
     source("Apps/English/English-Automaticity/apps/web/app/styles/00-foundation.css"),
-    source("Apps/Deutsch-Automaticity/apps/web/src/app/styles/90-responsive.css"),
+    source("Apps/Deutsch/Deutsch-Automaticity/apps/web/src/app/styles/90-responsive.css"),
     source("Apps/Apps-For-Integeration/Einstellungen-APP/app/styles/90-responsive.css"),
   ]);
 

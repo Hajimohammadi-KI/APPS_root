@@ -35,7 +35,7 @@ const seen = new Set<string>();
 let total = 0;
 for (const [language, app] of [
   ["en", "Apps/English/English-Automaticity"],
-  ["de", "Apps/Deutsch-Automaticity"],
+  ["de", "Apps/Deutsch/Deutsch-Automaticity"],
 ] as const) {
   const pack = JSON.parse(
     await readFile(

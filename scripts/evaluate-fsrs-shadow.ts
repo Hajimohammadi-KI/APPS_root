@@ -10,7 +10,7 @@ import {
 import {
   buildQualifiedFsrsCandidates,
   evaluateFsrsShadowHistory,
-} from "../Apps/Deutsch-Automaticity/packages/learning-core/src/fsrs-shadow";
+} from "../Apps/Deutsch/Deutsch-Automaticity/packages/learning-core/src/fsrs-shadow";
 import { loadRepresentativeRuntime } from "./lib/representative-model-candidate";
 import { sha256 } from "./lib/automaticity-release-reviews";
 const root = resolve(import.meta.dir, ".."),

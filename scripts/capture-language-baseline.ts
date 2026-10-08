@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve, sep } from "node:path";
 import { grammarUnits as englishUnits } from "../Apps/English/English-Automaticity/packages/content/src/index";
-import { grammarUnits as germanUnits } from "../Apps/Deutsch-Automaticity/packages/content/src/index";
+import { grammarUnits as germanUnits } from "../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/index";
 
 // Source catalogs contain authored teaching material, never learner responses.
 // This capture probes HTTP but does not start services, edit profiles or install.
@@ -32,7 +32,7 @@ const targets = [
   {
     id: "german",
     language: "de",
-    path: "Apps/Deutsch-Automaticity",
+    path: "Apps/Deutsch/Deutsch-Automaticity",
     configPath: "apps/web/next.config.ts",
     web: "http://127.0.0.1:3210",
     api: "http://127.0.0.1:4210/api/v1/health",

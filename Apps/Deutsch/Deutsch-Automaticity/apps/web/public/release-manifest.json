@@ -1,10 +1,10 @@
 {
-  "publishedAt": "2026-10-03",
-  "version": "20.9.3",
-  "webRelease": "2026.10.03.12",
+  "publishedAt": "2026-10-08",
+  "version": "20.9.4",
+  "webRelease": "2026.10.08.1",
   "changes": [
-    "Eine übersichtliche Startseite mit gut lesbarem Text und einem klaren nächsten Übungsschritt",
-    "Echte Wiederholungs- und Korrekturzahlen; gespeicherte Antworten bleiben erhalten",
-    "Eine weitere Modellfamilie wurde geprüft; die allgemeine Bewertung ist weiterhin nicht freigegeben"
+    "Der Projektordner ist eigenständig: Kopieren genügt zum Installieren, Prüfen, Bauen und Veröffentlichen",
+    "Build-Fehler in den Stilen der Startseite behoben; Formatierung vereinheitlicht",
+    "Nur Wartung: Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
   ]
 }

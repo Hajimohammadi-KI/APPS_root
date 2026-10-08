@@ -72,7 +72,7 @@ try {
   for (const language of ["en", "de"]) {
     const base = `http://127.0.0.1:${language === "en" ? 3202 : 3210}`;
     const grammarRoute = language === "en" ? "/grammar" : "/grammatik";
-    const app = language === "en" ? "Apps/English/English-Automaticity" : "Apps/Deutsch-Automaticity";
+    const app = language === "en" ? "Apps/English/English-Automaticity" : "Apps/Deutsch/Deutsch-Automaticity";
     const coreBytes = await readFile(resolve(root, "shared/learning-core/browser/automaticity-v2.js"));
     await run("node-browser-evidence-parity", language, async page => {
       await page.goto(base + grammarRoute);

@@ -76,7 +76,7 @@ const filesystemPaths = filesystemOnly
         "scripts",
         "docs",
         "Apps/English/English-Automaticity",
-        "Apps/Deutsch-Automaticity",
+        "Apps/Deutsch/Deutsch-Automaticity",
       ],
       { cwd: root, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 },
     )

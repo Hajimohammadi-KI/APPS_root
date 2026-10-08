@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from "bun:test";
-import { POST as german } from "../../Apps/Deutsch-Automaticity/apps/web/src/app/api/conversation/evaluate/route";
+import { POST as german } from "../../Apps/Deutsch/Deutsch-Automaticity/apps/web/src/app/api/conversation/evaluate/route";
 import { POST as english } from "../../Apps/English/English-Automaticity/apps/web/app/api/conversation/evaluate/route";
 
 const originalFetch = globalThis.fetch;

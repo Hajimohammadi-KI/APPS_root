@@ -8,7 +8,7 @@ const root = resolve(import.meta.dir, ".."),
     root,
     product === "English"
       ? "Apps/English/English-Automaticity"
-      : "Apps/Deutsch-Automaticity",
+      : "Apps/Deutsch/Deutsch-Automaticity",
   );
 const check = product === "English" ? "check" : "verify",
   output = resolve(app, "artifacts");

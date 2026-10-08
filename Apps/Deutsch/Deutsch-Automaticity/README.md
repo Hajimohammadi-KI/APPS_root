@@ -44,6 +44,27 @@ The original static PWA remains available under `legacy/v20.8-static/` and at
 - A modern browser
 - Supabase is optional until account synchronization is enabled
 
+## Self-contained project folder
+
+This folder is the whole application. Copy it anywhere (or hand it to someone)
+and it installs, tests, builds, and deploys on its own:
+
+```powershell
+bun install --frozen-lockfile
+bun run verify
+```
+
+Nothing is imported from outside the folder. The shared learning core, home
+screen, and mobile assets are kept as full copies under `packages/learning-core`,
+`apps/web/src/components`, and `apps/web/public/device-access`; the Windows
+installer helpers are under `distribution/windows-release`. Local Vercel links
+(`.vercel/`) and `node_modules/` are machine-specific and are not part of the
+hand-over. The Vercel project `deutschflow-grammar` builds `apps/web` with
+`apps/web/vercel.json`.
+
+Only `bun run parity:check` needs the English project; it reads
+`ENGLISH_APP_ROOT` or the sibling folder in the shared checkout.
+
 ## Commands
 
 ```powershell

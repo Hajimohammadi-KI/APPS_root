@@ -8,19 +8,21 @@ type Scope = {
   filter?: (relativePath: string) => boolean;
 };
 
-// Both dated applications live below D:\APPS_root\Apps.  Keeping this
-// relative to the script avoids silently auditing an obsolete checkout.
-const appsRoot = resolve(import.meta.dir, "..", "..");
-const englishRoot = join(appsRoot, "English", "English-Automaticity");
+// This audit compares two separate projects. The English project is found
+// through ENGLISH_APP_ROOT, or at its usual place beside this project in the
+// shared checkout (Apps/English/English-Automaticity). A copied German project
+// without that sibling cannot run the audit and says so instead of failing late.
 const germanRoot = resolve(import.meta.dir, "..");
+const englishRoot = process.env.ENGLISH_APP_ROOT?.trim()
+  ? resolve(process.env.ENGLISH_APP_ROOT.trim())
+  : resolve(germanRoot, "..", "..", "English", "English-Automaticity");
 
-for (const [label, directory] of [
-  ["English", englishRoot],
-  ["German", germanRoot],
-] as const) {
-  if (!existsSync(directory)) {
-    throw new Error(`${label} repository was not found: ${directory}`);
-  }
+if (!existsSync(englishRoot)) {
+  console.error(
+    `English project was not found: ${englishRoot}\n` +
+      "Set ENGLISH_APP_ROOT to the English Automaticity project folder to run the parity audit.",
+  );
+  process.exit(2);
 }
 
 function isSharedPublicAsset(relativePath: string): boolean {

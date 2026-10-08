@@ -24,19 +24,19 @@
     ],
     "extraResources": [
       {
-        "from": "../../../../../shared/google-calendar-bridge.cjs",
+        "from": "../windows-release/google-calendar-bridge.cjs",
         "to": "google-calendar-bridge.cjs"
       },
       {
-        "from": "../../../../../shared/learner-profile-bridge.cjs",
+        "from": "../windows-release/learner-profile-bridge.cjs",
         "to": "learner-profile-bridge.cjs"
       },
       {
-        "from": "../../../../../shared/ai-provider-bridge.cjs",
+        "from": "../windows-release/ai-provider-bridge.cjs",
         "to": "ai-provider-bridge.cjs"
       },
       {
-        "from": "../../../../../shared/windows-release/check-for-updates.ps1",
+        "from": "../windows-release/check-for-updates.ps1",
         "to": "update/check-for-updates.ps1"
       },
       {
@@ -44,7 +44,7 @@
         "to": "update/update-config.json"
       },
       {
-        "from": "../../../../../shared/windows-release/setup-language-payload.ps1",
+        "from": "../windows-release/setup-language-payload.ps1",
         "to": "update/setup-language-payload.ps1"
       },
       {

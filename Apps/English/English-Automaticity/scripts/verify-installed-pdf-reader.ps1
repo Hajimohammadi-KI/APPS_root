@@ -10,8 +10,14 @@ $readerPort = 4332
 $webPort = 3201
 $apiPort = 4201
 $projectRoot = Split-Path -Parent $PSScriptRoot
-$readerProject = Resolve-Path (Join-Path $projectRoot '..\..\Apps-For-Integeration\Reader-PDF-App')
-$runRoot = Join-Path 'D:\APPS_root\artifacts\installed-reader-cycle' (
+# Research PDF Studio is a separate product. Point ENGLISH_GRAMMAR_READER_PROJECT
+# at it when this project is used outside the shared checkout.
+$readerProject = if ([string]::IsNullOrWhiteSpace($env:ENGLISH_GRAMMAR_READER_PROJECT)) {
+  Join-Path $projectRoot '..\..\Apps-For-Integeration\Reader-PDF-App'
+} else {
+  $env:ENGLISH_GRAMMAR_READER_PROJECT
+}
+$runRoot = Join-Path (Join-Path $projectRoot 'artifacts\installed-reader-cycle') (
   'English-' + $Version + '-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' +
   [Guid]::NewGuid().ToString('N').Substring(0, 8)
 )

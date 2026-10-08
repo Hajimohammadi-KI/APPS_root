@@ -3,11 +3,11 @@ import path from "node:path";
 
 const nextConfig: NextConfig = {
   // Vercel builds apps/web directly; desktop builds keep standalone output.
+  // The tracing root is always this project's own folder (two levels above
+  // apps/web). Nothing outside the project folder is imported, so a copy of
+  // the folder builds the same way on its own as inside a larger checkout.
   ...(!process.env.VERCEL ? { output: "standalone" } : {}),
-  outputFileTracingRoot: path.resolve(
-    import.meta.dirname,
-    process.env.VERCEL ? "../../../../.." : "../..",
-  ),
+  outputFileTracingRoot: path.resolve(import.meta.dirname, "../.."),
   experimental: {
     useTypeScriptCli: true,
   },

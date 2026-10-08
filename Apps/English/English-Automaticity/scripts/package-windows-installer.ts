@@ -98,7 +98,7 @@ const publisher = Bun.spawn(
     "-ExecutionPolicy",
     "Bypass",
     "-File",
-    resolve(projectRoot, "../../../shared/windows-release/publish-language-update.ps1"),
+    resolve(projectRoot, "distribution/windows-release/publish-language-update.ps1"),
     "-ProjectRoot",
     projectRoot,
     "-ProductId",

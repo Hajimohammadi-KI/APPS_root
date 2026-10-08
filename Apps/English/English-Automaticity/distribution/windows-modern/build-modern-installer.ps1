@@ -197,6 +197,11 @@ $configDirectory = Split-Path -Parent $configurationPath
 $projectRoot = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.projectRoot)
 $desktopProject = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.desktopProject)
 $readerProject = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.readerProject)
+# The English desktop installer embeds Research PDF Studio, a separate product.
+# A copied project folder points at it with ENGLISH_GRAMMAR_READER_PROJECT.
+if (-not [string]::IsNullOrWhiteSpace($env:ENGLISH_GRAMMAR_READER_PROJECT)) {
+  $readerProject = [System.IO.Path]::GetFullPath($env:ENGLISH_GRAMMAR_READER_PROJECT)
+}
 $iconSource = Resolve-ConfiguredPath -Base $configDirectory -Value ([string]$config.iconSource)
 $outputFile = Resolve-ConfiguredPath -Base $projectRoot -Value ([string]$config.outputFile)
 
@@ -242,7 +247,9 @@ if (-not (Test-Path -LiteralPath $desktopProject -PathType Container)) {
   throw "Electron desktop project does not exist: $desktopProject"
 }
 if (-not (Test-Path -LiteralPath $readerProject -PathType Container)) {
-  throw "PDF Reader project does not exist: $readerProject"
+  throw ("PDF Reader project does not exist: $readerProject. " +
+    'The Windows installer embeds Research PDF Studio (Reader-PDF-App). Place that project ' +
+    'where setup.config.json readerProject points, or set ENGLISH_GRAMMAR_READER_PROJECT to its folder.')
 }
 if (-not (Test-Path -LiteralPath $iconSource -PathType Leaf)) {
   throw "Setup icon does not exist: $iconSource"
@@ -490,22 +497,15 @@ if (Test-Path -LiteralPath $compatibilityLauncherArchive -PathType Leaf) {
   Write-Warning "Compatibility launcher archive is unavailable; retaining the newly built launcher."
 }
 
-$workspaceRoot = $null
-$workspaceCandidate = [System.IO.DirectoryInfo]$projectRoot
-while ($null -ne $workspaceCandidate) {
-  $packagerCandidate = Join-Path $workspaceCandidate.FullName 'shared\GoogleOAuthPackaging.ps1'
-  if (Test-Path -LiteralPath $packagerCandidate -PathType Leaf) {
-    $workspaceRoot = $workspaceCandidate.FullName
-    . $packagerCandidate
-    break
-  }
-  $workspaceCandidate = $workspaceCandidate.Parent
+# The packager and the desktop bridges live inside this project
+# (distribution\windows-release), so a copied project folder builds alone.
+$packagerScript = Join-Path $projectRoot 'distribution\windows-release\GoogleOAuthPackaging.ps1'
+if (-not (Test-Path -LiteralPath $packagerScript -PathType Leaf)) {
+  throw "The Google OAuth packager is missing from the project: $packagerScript"
 }
-if ([string]::IsNullOrWhiteSpace($workspaceRoot)) {
-  throw 'The shared Google OAuth packager could not be found.'
-}
+. $packagerScript
 Install-StudyGoogleOAuthResources `
-  -WorkspaceRoot $workspaceRoot `
+  -WorkspaceRoot $projectRoot `
   -ResourcesDirectory (Join-Path $portableApp 'resources') `
   -IncludeDesktopBridge
 

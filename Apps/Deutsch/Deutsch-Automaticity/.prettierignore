@@ -12,6 +12,8 @@ legacy
 packages/content/src/data
 apps/web/public
 packages/learning-core/browser
+# Vendored copies of the Windows desktop bridges and updater scripts.
+distribution/windows-release
 *.exe
 *.exe.sha256
 *.zip

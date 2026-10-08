@@ -87,7 +87,7 @@ const publisher = Bun.spawn(
     "-File",
     resolve(
       projectRoot,
-      "../../../shared/windows-release/publish-language-update.ps1",
+      "distribution/windows-release/publish-language-update.ps1",
     ),
     "-ProjectRoot",
     projectRoot,

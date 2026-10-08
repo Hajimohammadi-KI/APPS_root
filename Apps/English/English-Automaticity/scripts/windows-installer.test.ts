@@ -32,7 +32,7 @@ const updateConfig = JSON.parse(
   ),
 ) as Record<string, string>;
 const updaterSource = readFileSync(
-  resolve(projectRoot, "../../../shared/windows-release/check-for-updates.ps1"),
+  resolve(projectRoot, "distribution/windows-release/check-for-updates.ps1"),
   "utf8",
 );
 const desktopPackage = JSON.parse(
@@ -286,12 +286,21 @@ describe("Windows installation roadmap", () => {
     for (const resource of desktopPackage.build.extraResources) {
       expect(resource.from).not.toMatch(/^[A-Za-z]:[\\/]/);
       expect(resource.from).not.toContain("APPS_root");
-      expect(
-        existsSync(
-          // electron-builder resolves extraResources from the desktop package directory.
-          resolve(projectRoot, "distribution/windows-desktop", resource.from),
-        ),
-      ).toBe(true);
+      // electron-builder resolves extraResources from the desktop package directory.
+      const resolved = resolve(projectRoot, "distribution/windows-desktop", resource.from);
+      expect(existsSync(resolved)).toBe(true);
+      // Every installer input lives inside this project, so copying the project folder is enough.
+      expect(resolved.startsWith(projectRoot)).toBe(true);
+    }
+    expect(buildScript).not.toContain("shared\\GoogleOAuthPackaging.ps1");
+    expect(buildScript).toContain("distribution\\windows-release\\GoogleOAuthPackaging.ps1");
+    for (const file of [
+      "GoogleOAuthPackaging.ps1",
+      "publish-language-update.ps1",
+      "setup-language-payload.ps1",
+      "check-for-updates.ps1",
+    ]) {
+      expect(existsSync(resolve(projectRoot, "distribution/windows-release", file))).toBe(true);
     }
     const icon = readFileSync(
       resolve(

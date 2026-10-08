@@ -1,10 +1,13 @@
 import path from "node:path";
 
 // Vercel builds apps/web directly; desktop builds keep standalone output.
+// The tracing root is always this project's own folder (two levels above
+// apps/web). Nothing outside the project folder is imported, so a copy of the
+// folder builds the same way on its own as inside a larger checkout.
 const nextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
   ...(!process.env.VERCEL ? { output: "standalone" } : {}),
-  outputFileTracingRoot: path.resolve(process.cwd(), process.env.VERCEL ? "../../../../.." : "../.."),
+  outputFileTracingRoot: path.resolve(process.cwd(), "../.."),
   reactStrictMode: true,
   transpilePackages: ["@grammar/content"],
   async rewrites() {

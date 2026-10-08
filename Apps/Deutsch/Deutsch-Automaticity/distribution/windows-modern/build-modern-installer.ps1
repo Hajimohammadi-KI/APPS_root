@@ -451,22 +451,15 @@ if (Test-Path -LiteralPath $compatibilityLauncherZip -PathType Leaf) {
   Write-Warning "Compatibility launcher payload is unavailable; retaining the newly built launcher."
 }
 
-$workspaceRoot = $null
-$workspaceCandidate = [System.IO.DirectoryInfo]$projectRoot
-while ($null -ne $workspaceCandidate) {
-  $packagerCandidate = Join-Path $workspaceCandidate.FullName 'shared\GoogleOAuthPackaging.ps1'
-  if (Test-Path -LiteralPath $packagerCandidate -PathType Leaf) {
-    $workspaceRoot = $workspaceCandidate.FullName
-    . $packagerCandidate
-    break
-  }
-  $workspaceCandidate = $workspaceCandidate.Parent
+# The packager and the desktop bridges live inside this project
+# (distribution\windows-release), so a copied project folder builds alone.
+$packagerScript = Join-Path $projectRoot 'distribution\windows-release\GoogleOAuthPackaging.ps1'
+if (-not (Test-Path -LiteralPath $packagerScript -PathType Leaf)) {
+  throw "The Google OAuth packager is missing from the project: $packagerScript"
 }
-if ([string]::IsNullOrWhiteSpace($workspaceRoot)) {
-  throw 'The shared Google OAuth packager could not be found.'
-}
+. $packagerScript
 Install-StudyGoogleOAuthResources `
-  -WorkspaceRoot $workspaceRoot `
+  -WorkspaceRoot $projectRoot `
   -ResourcesDirectory (Join-Path $portableApp 'resources') `
   -IncludeDesktopBridge
 

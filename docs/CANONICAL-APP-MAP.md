@@ -47,5 +47,5 @@ built or released from here.
 that used to sit at `Apps/Deutsch-Automaticity`, the `App_*` prototypes, the
 Tracker's historical documents, unused shared prototypes, one-shot scripts
 from finished rounds, and local backups. `delete/README.md` lists each group
-with its reason. Nothing reads from `delete/`; remove the folder when the
-review is done.
+with its reason. The folder is gitignored, so its contents are already out
+of the repository (Git history keeps them); empty it when the review is done.

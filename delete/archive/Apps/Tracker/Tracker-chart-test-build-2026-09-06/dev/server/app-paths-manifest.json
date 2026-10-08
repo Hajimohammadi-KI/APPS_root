@@ -1,5 +1,0 @@
-{
-  "/api/expose/route": "app/api/expose/route.js",
-  "/api/learning-lab/progress/route": "app/api/learning-lab/progress/route.js",
-  "/page": "app/page.js"
-}

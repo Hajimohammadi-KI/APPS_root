@@ -14,7 +14,7 @@ just the map to get there.
 | `Apps/Apps-For-Integeration/Reader-PDF-App` | Research PDF Studio (active, own Vercel project) |
 | `Apps/Apps-For-Integeration/Einstellungen-APP` | Settings (active, local-only) |
 | `Apps/Starter-App` | Local launcher that starts the products together |
-| `delete/` | Files and code with no remaining function, staged for removal; see `delete/README.md` for each reason |
+| `delete/` | Files and code with no remaining function, removed from Git and kept locally until you empty the folder (gitignored); `delete/README.md` lists each reason |
 | `research/cefr-classification` | Standalone CEFR text-difficulty research pipeline (own venv, own tests) |
 | `docs/` | Governance: canonical app map, release readiness, the Persian roadmap and its JSON source, audits |
 | `scripts/` | Cross-app tooling (`release-readiness.mjs`, `language-apps-roadmap.mjs`, sync helpers) and dated verification scripts |

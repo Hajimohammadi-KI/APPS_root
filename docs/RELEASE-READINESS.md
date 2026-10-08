@@ -43,6 +43,11 @@ $env:VERCEL_PROJECT_ID = "prj_HSS6qoLFIE52MzTl06B105rdKTXK"   # deutschflow-gram
 bun x vercel deploy --prod --yes
 ```
 
+Keep `outputFileTracingRoot` in each app's Next config as it is: the app
+folder locally, five levels up (the container root) when `VERCEL` is set. The
+Vercel Next builder fails its page-data and output-tracing steps with a
+narrower root (seen on 2026-10-08).
+
 ## 4. Confirm the release marker on the canonical URL
 
 ```powershell

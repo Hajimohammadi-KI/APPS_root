@@ -1,0 +1,10564 @@
+(globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push([typeof document === "object" ? document.currentScript : undefined,
+"[project]/app/study-tracker.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>StudyTracker
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/plan-data.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/study-progress.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$RecallCheck$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/RecallCheck.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$recall$2f$useRecallEntries$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/recall/useRecallEntries.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$device$2d$session$2d$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/device-session-store.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/storage-mode.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$project$2d$schedule$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/project-schedule.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/daily-work-mode.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$session$2d$prompt$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/daily-session-prompt.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$pdf$2d$reader$2d$link$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/pdf-reader-link.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$nlp$2d$course$2d$calendar$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/nlp-course-calendar.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$projekt$2d$fahrplan$2f$roadmap$2d$client$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/projekt-fahrplan/roadmap-client.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+"use client";
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+const EMPTY_DAILY_NOTE = {
+    concept: "",
+    problem: "",
+    method: "",
+    projectLink: "",
+    recallResult: "",
+    errors: "",
+    tomorrowAction: ""
+};
+function parseDailyNote(raw) {
+    if (!raw) return {
+        ...EMPTY_DAILY_NOTE
+    };
+    try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object" && parsed.__dailyNoteV1) {
+            return {
+                concept: typeof parsed.concept === "string" ? parsed.concept : "",
+                problem: typeof parsed.problem === "string" ? parsed.problem : "",
+                method: typeof parsed.method === "string" ? parsed.method : "",
+                projectLink: typeof parsed.projectLink === "string" ? parsed.projectLink : "",
+                recallResult: parsed.recallResult === "weak" || parsed.recallResult === "medium" || parsed.recallResult === "good" ? parsed.recallResult : "",
+                errors: typeof parsed.errors === "string" ? parsed.errors : "",
+                tomorrowAction: typeof parsed.tomorrowAction === "string" ? parsed.tomorrowAction : ""
+            };
+        }
+    } catch  {
+    // Not JSON -- this is an older plain-text note; keep it visible below.
+    }
+    return {
+        ...EMPTY_DAILY_NOTE,
+        concept: raw
+    };
+}
+function serializeDailyNote(fields) {
+    return JSON.stringify({
+        __dailyNoteV1: true,
+        ...fields
+    });
+}
+function dailyNoteSearchText(raw) {
+    const fields = parseDailyNote(raw);
+    return [
+        fields.concept,
+        fields.problem,
+        fields.method,
+        fields.projectLink,
+        fields.errors,
+        fields.tomorrowAction
+    ].join(" ");
+}
+const baseSettings = {
+    ...__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"],
+    planRevisionHistory: [],
+    sourceOverrides: {
+        ...__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].sourceOverrides
+    },
+    sourceLinkOverrides: {}
+};
+const validItemIds = new Set(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].flatMap((day)=>day.tasks.flatMap((task)=>task.items.map((item)=>item.id))));
+const LOCAL_STATE_KEY = "cross-repository-study-tracker:state:v2";
+const LOCAL_FOCUS_KEY = "cross-repository-study-tracker:focus:v1";
+const articleReadingsById = new Map(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["articleReadings"].map((reading)=>[
+        reading.id,
+        reading
+    ]));
+function getCourseReadings(readingIds) {
+    return readingIds.map((readingId)=>articleReadingsById.get(readingId)).filter((reading)=>Boolean(reading));
+}
+function formatCourseReading(reading) {
+    return `C${String(reading.courseOrder).padStart(2, "0")}/O${String(reading.order).padStart(2, "0")} ${__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["sources"][reading.sourceId]?.label ?? reading.sourceId} [${reading.mode}]`;
+}
+const priorityMeta = {
+    core: {
+        label: "Kernquelle",
+        stars: "★★★★★"
+    },
+    important: {
+        label: "Wichtig",
+        stars: "★★★★☆"
+    },
+    support: {
+        label: "Technische Referenz",
+        stars: "★★★☆☆"
+    },
+    optional: {
+        label: "Optional",
+        stars: "★★☆☆☆"
+    },
+    course: {
+        label: "Kursquelle",
+        stars: "★★★☆☆"
+    }
+};
+function Icon({ name, size = 20 }) {
+    const paths = {
+        spark: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3Z"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 251,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M5 15l.8 2.2L8 18l-2.2.8L5 21l-.8-2.2L2 18l2.2-.8L5 15Z"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 252,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        calendar: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
+                    x: "3",
+                    y: "5",
+                    width: "18",
+                    height: "16",
+                    rx: "3"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 257,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M8 3v4M16 3v4M3 10h18"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 258,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        search: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
+                    cx: "11",
+                    cy: "11",
+                    r: "7"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 263,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "m20 20-4-4"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 264,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        settings: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
+                    cx: "12",
+                    cy: "12",
+                    r: "3"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 269,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 270,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        arrow: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+            d: "m9 18 6-6-6-6"
+        }, void 0, false, {
+            fileName: "[project]/app/study-tracker.tsx",
+            lineNumber: 273,
+            columnNumber: 12
+        }, this),
+        check: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+            d: "m5 12 4 4L19 6"
+        }, void 0, false, {
+            fileName: "[project]/app/study-tracker.tsx",
+            lineNumber: 274,
+            columnNumber: 12
+        }, this),
+        link: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 277,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 278,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        download: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M12 3v12m0 0 4-4m-4 4-4-4"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 283,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M4 19h16"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 284,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        upload: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M12 21V9m0 0 4 4m-4-4-4 4"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 289,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M4 5h16"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 290,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        clock: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
+                    cx: "12",
+                    cy: "12",
+                    r: "9"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 295,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M12 7v5l3 2"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 296,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        note: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M5 3h11l3 3v15H5Z"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 301,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M8 10h8M8 14h8M8 18h5"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 302,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        book: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M4 5a3 3 0 0 1 3-3h5v18H7a3 3 0 0 0-3 3Z"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 307,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M20 5a3 3 0 0 0-3-3h-5v18h5a3 3 0 0 1 3 3Z"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 308,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        paperclip: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+            d: "m21.4 11.6-8.9 8.9a6 6 0 0 1-8.5-8.5l9.6-9.6a4 4 0 0 1 5.7 5.7l-9.6 9.6a2 2 0 0 1-2.8-2.8l8.9-8.9"
+        }, void 0, false, {
+            fileName: "[project]/app/study-tracker.tsx",
+            lineNumber: 312,
+            columnNumber: 7
+        }, this),
+        trash: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 316,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M10 11v6M14 11v6"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 317,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        eye: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 322,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
+                    cx: "12",
+                    cy: "12",
+                    r: "2.5"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 323,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        file: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M6 2h8l4 4v16H6Z"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 328,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M14 2v5h5"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 329,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        image: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
+                    x: "3",
+                    y: "4",
+                    width: "18",
+                    height: "16",
+                    rx: "3"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 334,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
+                    cx: "9",
+                    cy: "10",
+                    r: "2"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 335,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "m4 18 5-5 3 3 2-2 6 6"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 336,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        home: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "m3 11 9-8 9 8"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 341,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M5 10v11h14V10M9 21v-7h6v7"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 342,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        bell: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 347,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M10 21h4"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 348,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        flag: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M5 22V4"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 353,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                    d: "M5 5h11l-2 4 2 4H5"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 354,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true),
+        play: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+            d: "m8 5 11 7-11 7Z"
+        }, void 0, false, {
+            fileName: "[project]/app/study-tracker.tsx",
+            lineNumber: 357,
+            columnNumber: 11
+        }, this),
+        pulse: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+            d: "M3 12h4l2-7 4 14 2-7h6"
+        }, void 0, false, {
+            fileName: "[project]/app/study-tracker.tsx",
+            lineNumber: 358,
+            columnNumber: 12
+        }, this),
+        flame: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+            d: "M13 22c4 0 7-3 7-7 0-3-1.5-5-4-7 .2 2-1 3-2 3-1-3-3-5-5-7 0 4-5 6-5 11 0 4 3 7 7 7 2 0 4-1 5-3-3 .3-5-2-4-5 2 1 5 3 5 6 0 3-2 5-5 5"
+        }, void 0, false, {
+            fileName: "[project]/app/study-tracker.tsx",
+            lineNumber: 360,
+            columnNumber: 7
+        }, this)
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+        "aria-hidden": "true",
+        viewBox: "0 0 24 24",
+        width: size,
+        height: size,
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: "1.8",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        children: paths[name] ?? paths.spark
+    }, void 0, false, {
+        fileName: "[project]/app/study-tracker.tsx",
+        lineNumber: 365,
+        columnNumber: 5
+    }, this);
+}
+_c = Icon;
+function formatDate(date, compact = false) {
+    return new Intl.DateTimeFormat("de-DE", {
+        weekday: compact ? undefined : "long",
+        day: "numeric",
+        month: compact ? "short" : "long",
+        year: "numeric"
+    }).format(new Date(`${date}T12:00:00Z`));
+}
+function systemLocalIsoDate(now = new Date()) {
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+function displayNumber(value) {
+    return new Intl.NumberFormat("de-DE").format(value);
+}
+function addDaysToIsoDate(date, days) {
+    const parsed = new Date(`${date}T12:00:00Z`);
+    if (Number.isNaN(parsed.getTime())) return "";
+    parsed.setUTCDate(parsed.getUTCDate() + days);
+    return parsed.toISOString().slice(0, 10);
+}
+function daysBetweenIsoDates(from, to) {
+    const fromDate = new Date(`${from}T12:00:00Z`);
+    const toDate = new Date(`${to}T12:00:00Z`);
+    if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) return 0;
+    return Math.round((toDate.getTime() - fromDate.getTime()) / 86_400_000);
+}
+function shiftedPlanDate(originalDate, selectedStart) {
+    const offset = daysBetweenIsoDates(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].start, selectedStart);
+    return addDaysToIsoDate(originalDate, offset) || originalDate;
+}
+function suggestedPlanEnd(startDate) {
+    return shiftedPlanDate(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].end, startDate);
+}
+function attachmentKind(attachment) {
+    const mime = attachment.mimeType.toLowerCase();
+    const extension = attachment.name.split(".").pop()?.toLowerCase() ?? "";
+    if (/^image\/(?:png|jpe?g|gif|webp|avif)$/.test(mime)) return "image";
+    if (mime === "application/pdf" || extension === "pdf") return "pdf";
+    if (mime.startsWith("audio/")) return "audio";
+    if (mime.startsWith("video/")) return "video";
+    if (/^(docx|xlsx|pptx|odt|ods|odp)$/.test(extension)) return "office";
+    if (mime.startsWith("text/") || /^(application\/(?:json|xml|javascript)|application\/x-(?:httpd-php|sh))$/.test(mime) || /^(txt|md|markdown|csv|tsv|json|xml|yaml|yml|js|jsx|ts|tsx|py|java|cs|cpp|c|h|css|html|sql|sh|log)$/.test(extension)) {
+        return "text";
+    }
+    return "other";
+}
+function formatFileSize(bytes) {
+    if (bytes < 1024) return `${displayNumber(bytes)} B`;
+    if (bytes < 1024 * 1024) return `${new Intl.NumberFormat("de-DE", {
+        maximumFractionDigits: 1
+    }).format(bytes / 1024)} KB`;
+    return `${new Intl.NumberFormat("de-DE", {
+        maximumFractionDigits: 1
+    }).format(bytes / (1024 * 1024))} MB`;
+}
+function focusSeconds(session, now = Date.now()) {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$device$2d$session$2d$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["currentSessionSeconds"])(session, session.accumulatedSeconds, now);
+}
+function isFocusSession(value) {
+    if (!(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$device$2d$session$2d$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isTimedSessionState"])(value)) return false;
+    const session = value;
+    return typeof session.id === "string" && typeof session.contextId === "string" && typeof session.contextTitle === "string" && typeof session.source === "string" && typeof session.accumulatedSeconds === "number" && Number.isFinite(session.accumulatedSeconds) && (typeof session.startedAt === "string" || session.startedAt === null);
+}
+const readLocalFocusSessions = ()=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$device$2d$session$2d$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["readDeviceSessions"])(LOCAL_FOCUS_KEY, isFocusSession);
+const writeLocalFocusSessions = (sessions)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$device$2d$session$2d$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["writeDeviceSessions"])(LOCAL_FOCUS_KEY, sessions);
+function formatFocusDuration(totalSeconds) {
+    const seconds = Math.max(0, Math.floor(totalSeconds));
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor(seconds % 3600 / 60);
+    const remainder = seconds % 60;
+    return hours > 0 ? `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}` : `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
+}
+const DEFAULT_EXPOSE_FOCUS = "Projektziel, Forschungsfragen, Scope, Architektur und Erfolgskriterien";
+function exposeReaderHref(pdfReaderUrl, focus = DEFAULT_EXPOSE_FOCUS, context = "Projekt-Exposé") {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$pdf$2d$reader$2d$link$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["buildPdfReaderHref"])({
+        readerUrl: pdfReaderUrl,
+        document: "expose",
+        name: "Cross_Repository_Code_Intelligence – Exposé",
+        focus,
+        context
+    });
+}
+function internalLinkProps(href) {
+    return href.startsWith("/") ? {} : {
+        target: "_blank",
+        rel: "noopener noreferrer"
+    };
+}
+async function extractOfficeText(blob, name) {
+    const extension = name.split(".").pop()?.toLowerCase() ?? "";
+    const { default: JSZip } = await __turbopack_context__.A("[project]/node_modules/jszip/lib/index.js [app-client] (ecmascript, async loader)");
+    const archive = await JSZip.loadAsync(blob);
+    const paths = Object.keys(archive.files).filter((path)=>{
+        if (extension === "docx") return /^word\/(?:document|header\d+|footer\d+)\.xml$/.test(path);
+        if (extension === "pptx") return /^ppt\/(?:slides\/slide\d+|notesSlides\/notesSlide\d+)\.xml$/.test(path);
+        if (extension === "xlsx") return /^(?:xl\/sharedStrings|xl\/worksheets\/sheet\d+)\.xml$/.test(path);
+        return path === "content.xml";
+    }).sort((left, right)=>left.localeCompare(right, undefined, {
+            numeric: true
+        })).slice(0, 80);
+    const sections = [];
+    let totalLength = 0;
+    for (const path of paths){
+        const file = archive.file(path);
+        if (!file) continue;
+        const xml = await file.async("string");
+        const withBreaks = xml.replace(/<\/(?:w:p|a:p|text:p|text:h|row|c|si)>/gi, "$&\n");
+        const document1 = new DOMParser().parseFromString(withBreaks, "application/xml");
+        const text = (document1.documentElement.textContent ?? "").replace(/[\t ]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
+        if (!text) continue;
+        const heading = extension === "pptx" ? `\n\n── ${path.split("/").pop()} ──\n` : "\n";
+        const remaining = 500_000 - totalLength;
+        if (remaining <= 0) break;
+        sections.push(`${heading}${text.slice(0, remaining)}`);
+        totalLength += text.length;
+    }
+    return sections.join("\n").trim() || "In dieser Datei wurde kein lesbarer Text gefunden.";
+}
+function isOctoberRestartSettings(value) {
+    if (!value || typeof value !== "object") return false;
+    const partial = value;
+    return partial.planStartDate === "2026-10-19" && partial.planEndDate === "2027-04-10";
+}
+function isLegacy25WeekSettings(value) {
+    if (!value || typeof value !== "object") return false;
+    const partial = value;
+    return partial.planEndDate === "2027-03-06" || partial.totalPlanWeeks === 25 || typeof partial.planName === "string" && partial.planName.includes("25-Wochen");
+}
+function safeSettings(value) {
+    if (!value || typeof value !== "object") return baseSettings;
+    const partial = value;
+    const planRevisionHistory = Array.isArray(partial.planRevisionHistory) ? partial.planRevisionHistory.filter((entry)=>Boolean(entry) && typeof entry === "object").filter((entry)=>typeof entry.id === "string" && typeof entry.createdAt === "string" && [
+            "started",
+            "paused",
+            "resumed",
+            "route_changed"
+        ].includes(entry.action) && typeof entry.reason === "string" && typeof entry.previousStartDate === "string" && typeof entry.previousEndDate === "string" && typeof entry.nextStartDate === "string" && typeof entry.nextEndDate === "string").slice(0, 50) : [];
+    const migrateOctoberRestart = isOctoberRestartSettings(partial);
+    const migrateCapacityPlan = isLegacy25WeekSettings(partial);
+    let migratedRevisionHistory = migrateOctoberRestart && !planRevisionHistory.some((entry)=>entry.id === "medical-recovery-replan-v7") ? [
+        {
+            id: "medical-recovery-replan-v7",
+            createdAt: "2026-08-30T00:00:00.000Z",
+            action: "started",
+            reason: "Planstart auf den 30. August korrigiert; medizinische Ruhe- und Papierphasen geschützt.",
+            previousStartDate: "2026-10-19",
+            previousEndDate: "2027-04-10",
+            nextStartDate: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].planStartDate,
+            nextEndDate: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].planEndDate
+        },
+        ...planRevisionHistory
+    ].slice(0, 50) : planRevisionHistory;
+    if (migrateCapacityPlan && !migratedRevisionHistory.some((entry)=>entry.id === "capacity-plan-v11")) {
+        migratedRevisionHistory = [
+            {
+                id: "capacity-plan-v11",
+                createdAt: "2026-08-31T00:00:00.000Z",
+                action: "route_changed",
+                reason: "25-Wochen-Plan durch den bestätigten 37-Wochen-Vollzeitplan mit 16 Stunden pro Pflichtartikel ersetzt.",
+                previousStartDate: partial.planStartDate ?? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].planStartDate,
+                previousEndDate: partial.planEndDate ?? "2027-03-06",
+                nextStartDate: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].planStartDate,
+                nextEndDate: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].planEndDate
+            },
+            ...migratedRevisionHistory
+        ].slice(0, 50);
+    }
+    const normalizeLegacyAppUrl = (url, app)=>{
+        const text = typeof url === "string" ? url.trim() : "";
+        if (!text) return app === "reader" ? "/pdf-reader" : "/settings";
+        if (/^https:\/\/[^/]+\.chatgpt\.site(?:\/|$)/i.test(text)) {
+            if (app === "settings") return "/settings";
+            const query = text.includes("?") ? `?${text.split("?").slice(1).join("?")}` : "";
+            return `/pdf-reader${query}`;
+        }
+        return text;
+    };
+    return {
+        ...baseSettings,
+        ...partial,
+        planName: migrateCapacityPlan ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].planName : partial.planName ?? baseSettings.planName,
+        planStartDate: migrateOctoberRestart ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].planStartDate : partial.planStartDate ?? baseSettings.planStartDate,
+        planEndDate: migrateOctoberRestart || migrateCapacityPlan ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].planEndDate : partial.planEndDate ?? baseSettings.planEndDate,
+        planStatus: migrateOctoberRestart ? "running" : partial.planStatus === "paused" || partial.planStatus === "running" ? partial.planStatus : "not_started",
+        planPausedAt: /^\d{4}-\d{2}-\d{2}$/.test(partial.planPausedAt ?? "") ? partial.planPausedAt : "",
+        planRevisionHistory: migratedRevisionHistory,
+        dailyWorkMode: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeDailyWorkMode"])(partial.dailyWorkMode),
+        pdfReaderUrl: normalizeLegacyAppUrl(partial.pdfReaderUrl, "reader"),
+        settingsAppUrl: normalizeLegacyAppUrl(partial.settingsAppUrl, "settings"),
+        sourceOverrides: partial.sourceOverrides && typeof partial.sourceOverrides === "object" ? partial.sourceOverrides : {},
+        sourceLinkOverrides: partial.sourceLinkOverrides && typeof partial.sourceLinkOverrides === "object" ? partial.sourceLinkOverrides : {}
+    };
+}
+function addPlanRevision(current, next) {
+    const id = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `plan-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    return [
+        {
+            id,
+            createdAt: new Date().toISOString(),
+            action: next.action,
+            reason: next.reason,
+            previousStartDate: current.planStartDate,
+            previousEndDate: current.planEndDate,
+            nextStartDate: next.nextStartDate,
+            nextEndDate: next.nextEndDate
+        },
+        ...current.planRevisionHistory
+    ].slice(0, 50);
+}
+function normalizeState(payload) {
+    if (!payload || typeof payload !== "object") return {};
+    const root = payload;
+    const value = root.state && typeof root.state === "object" ? root.state : root;
+    const progress = Array.isArray(value.progress) ? value.progress : [];
+    const progressObject = value.progress && typeof value.progress === "object" && !Array.isArray(value.progress) ? value.progress : null;
+    const completed = Array.isArray(value.completedIds) ? value.completedIds : Array.isArray(value.completedTaskIds) ? value.completedTaskIds : progressObject ? Object.entries(progressObject).filter(([, isDone])=>Boolean(isDone)).map(([id])=>id) : progress.filter((item)=>Boolean(item) && typeof item === "object").filter((item)=>item.completed).map((item)=>item.taskId ?? item.itemId);
+    let notes = {};
+    if (value.notes && typeof value.notes === "object" && !Array.isArray(value.notes)) {
+        notes = Object.fromEntries(Object.entries(value.notes).filter((entry)=>typeof entry[1] === "string"));
+    } else if (Array.isArray(value.notes)) {
+        notes = Object.fromEntries(value.notes.filter((item)=>Boolean(item) && typeof item === "object").filter((item)=>typeof item.dayId === "string" && typeof item.note === "string").map((item)=>[
+                item.dayId,
+                item.note
+            ]));
+    }
+    return {
+        completedIds: completed.filter((id)=>typeof id === "string" && validItemIds.has(id)),
+        notes,
+        settings: safeSettings(value.settings)
+    };
+}
+function readLocalState() {
+    try {
+        return normalizeState(JSON.parse(localStorage.getItem(LOCAL_STATE_KEY) || "{}"));
+    } catch  {
+        return {};
+    }
+}
+function writeLocalState(body) {
+    try {
+        const current = readLocalState();
+        const completed = new Set(current.completedIds ?? []);
+        const notes = {
+            ...current.notes ?? {}
+        };
+        let settings = safeSettings(current.settings);
+        if (body.action === "toggle" && typeof body.taskId === "string" && typeof body.completed === "boolean") {
+            if (body.completed) completed.add(body.taskId);
+            else completed.delete(body.taskId);
+        } else if (body.action === "note" && typeof body.dayId === "string" && typeof body.note === "string") {
+            if (body.note.trim()) notes[body.dayId] = body.note;
+            else delete notes[body.dayId];
+        } else if (body.action === "settings") {
+            settings = safeSettings(body.settings);
+        } else if (body.action === "import") {
+            completed.clear();
+            for (const id of Array.isArray(body.completedIds) ? body.completedIds : []){
+                if (typeof id === "string" && validItemIds.has(id)) completed.add(id);
+            }
+            Object.keys(notes).forEach((key)=>delete notes[key]);
+            if (body.notes && typeof body.notes === "object" && !Array.isArray(body.notes)) {
+                for (const [dayId, note] of Object.entries(body.notes)){
+                    if (typeof note === "string" && note.trim()) notes[dayId] = note;
+                }
+            }
+            settings = safeSettings(body.settings);
+        } else if (body.action === "reset") {
+            completed.clear();
+            Object.keys(notes).forEach((key)=>delete notes[key]);
+            settings = baseSettings;
+        }
+        localStorage.setItem(LOCAL_STATE_KEY, JSON.stringify({
+            completedIds: [
+                ...completed
+            ],
+            notes,
+            settings
+        }));
+        return true;
+    } catch  {
+        return false;
+    }
+}
+function Highlight({ text, query }) {
+    const clean = query.trim();
+    if (!clean) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+        children: text
+    }, void 0, false);
+    const escaped = clean.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const pieces = text.split(new RegExp(`(${escaped})`, "gi"));
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+        children: pieces.map((piece, index)=>piece.toLocaleLowerCase().includes(clean.toLocaleLowerCase()) ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("mark", {
+                children: piece
+            }, `${piece}-${index}`, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 785,
+                columnNumber: 11
+            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                children: piece
+            }, `${piece}-${index}`, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 787,
+                columnNumber: 11
+            }, this))
+    }, void 0, false);
+}
+_c1 = Highlight;
+function sourceText(source, settings) {
+    return settings.sourceOverrides[source.id]?.trim() || source.label;
+}
+function sourceHref(source, settings) {
+    return settings.sourceLinkOverrides[source.id]?.trim() || source.href;
+}
+function pdfReaderHref(source, settings, options = {}) {
+    const href = sourceHref(source, settings) || "";
+    const driveId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$pdf$2d$reader$2d$link$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["googleDriveFileId"])(href);
+    if (source.id === "proposal" || href.includes("document=expose")) {
+        return exposeReaderHref(settings.pdfReaderUrl, options.focus, options.context);
+    }
+    if (!driveId && !(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$pdf$2d$reader$2d$link$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isDirectPdfUrl"])(href)) return null;
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$pdf$2d$reader$2d$link$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["buildPdfReaderHref"])({
+        readerUrl: settings.pdfReaderUrl,
+        sourceUrl: href,
+        driveId: driveId ?? undefined,
+        name: source.driveName || sourceText(source, settings),
+        focus: options.focus,
+        context: options.context
+    });
+}
+function googleDriveDownloadHref(href) {
+    const driveId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$pdf$2d$reader$2d$link$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["googleDriveFileId"])(href);
+    return driveId ? `https://drive.google.com/uc?export=download&id=${encodeURIComponent(driveId)}` : null;
+}
+function ProgressRing({ percent, label, compact = false }) {
+    const safePercent = Math.max(0, Math.min(100, Math.round(percent)));
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+        className: `circular-progress ${compact ? "compact" : ""}`,
+        style: {
+            "--progress": `${safePercent * 3.6}deg`
+        },
+        role: "img",
+        "aria-label": `${label}: ${safePercent} Prozent`,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                    children: [
+                        displayNumber(safePercent),
+                        "%"
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 854,
+                    columnNumber: 9
+                }, this),
+                !compact && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                    children: label
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 855,
+                    columnNumber: 22
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/study-tracker.tsx",
+            lineNumber: 853,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/app/study-tracker.tsx",
+        lineNumber: 847,
+        columnNumber: 5
+    }, this);
+}
+_c2 = ProgressRing;
+function StudyTracker({ displayName, today }) {
+    _s();
+    const [completed, setCompleted] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(new Set());
+    const [systemToday, setSystemToday] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(today);
+    const [notes, setNotes] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
+    const [settings, setSettings] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(baseSettings);
+    const [settingsDraft, setSettingsDraft] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(baseSettings);
+    const [query, setQuery] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [phaseFilter, setPhaseFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("all");
+    const [statusFilter, setStatusFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("all");
+    const [activeDayId, setActiveDayId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [activeView, setActiveView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("plan");
+    const [showFullPlan, setShowFullPlan] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [planMode, setPlanMode] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("details");
+    const [showProgressOverview, setShowProgressOverview] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showJourneyOverview, setShowJourneyOverview] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [acknowledgedPlanVersion, setAcknowledgedPlanVersion] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [showPlanChangelog, setShowPlanChangelog] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [settingsOpen, setSettingsOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [resumeDate, setResumeDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(today);
+    const [requestedStartDate, setRequestedStartDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["defaultSettings"].planStartDate);
+    const [routeChangeReason, setRouteChangeReason] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [attachments, setAttachments] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
+    const [exposeMeta, setExposeMeta] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        name: "Cross_Repository_Code_Intelligence_Expose_DE_2026_v2_4.pdf",
+        size: 0,
+        updatedAt: null,
+        custom: false
+    });
+    const [exposeUploading, setExposeUploading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [uploadingDayId, setUploadingDayId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [previewAttachment, setPreviewAttachment] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [previewUrl, setPreviewUrl] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [previewText, setPreviewText] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [previewLoading, setPreviewLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [syncState, setSyncState] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("loading");
+    const [toast, setToast] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [expandedIntegration, setExpandedIntegration] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [focusSessions, setFocusSessions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [focusActive, setFocusActive] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [focusOpen, setFocusOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [focusTargetDayId, setFocusTargetDayId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"][0]?.id ?? "");
+    const [focusBusy, setFocusBusy] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [focusNow, setFocusNow] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        "StudyTracker.useState": ()=>Date.now()
+    }["StudyTracker.useState"]);
+    const [focusStoredSeconds, setFocusStoredSeconds] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
+    const [installPrompt, setInstallPrompt] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [appInstalled, setAppInstalled] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const importInputRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const exposeInputRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            const refreshSystemDate = {
+                "StudyTracker.useEffect.refreshSystemDate": ()=>setSystemToday(systemLocalIsoDate())
+            }["StudyTracker.useEffect.refreshSystemDate"];
+            const refreshWhenVisible = {
+                "StudyTracker.useEffect.refreshWhenVisible": ()=>{
+                    if (document.visibilityState === "visible") refreshSystemDate();
+                }
+            }["StudyTracker.useEffect.refreshWhenVisible"];
+            refreshSystemDate();
+            const timer = window.setInterval(refreshSystemDate, 60_000);
+            window.addEventListener("focus", refreshSystemDate);
+            document.addEventListener("visibilitychange", refreshWhenVisible);
+            return ({
+                "StudyTracker.useEffect": ()=>{
+                    window.clearInterval(timer);
+                    window.removeEventListener("focus", refreshSystemDate);
+                    document.removeEventListener("visibilitychange", refreshWhenVisible);
+                }
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            // Silent on first-ever load (a brand-new user hasn't "missed" any
+            // version); from then on, a stored value lower than PLAN_VERSION means
+            // the plan changed since they last looked, so the changelog banner shows.
+            const key = "cross-repo-tracker:acknowledged-plan-version";
+            const stored = Number(localStorage.getItem(key));
+            const acknowledged = Number.isFinite(stored) && stored > 0 ? stored : __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION"];
+            if (!(Number.isFinite(stored) && stored > 0)) {
+                localStorage.setItem(key, String(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION"]));
+            }
+            const timer = window.setTimeout({
+                "StudyTracker.useEffect.timer": ()=>setAcknowledgedPlanVersion(acknowledged)
+            }["StudyTracker.useEffect.timer"], 0);
+            return ({
+                "StudyTracker.useEffect": ()=>window.clearTimeout(timer)
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], []);
+    const acknowledgePlanVersion = ()=>{
+        localStorage.setItem("cross-repo-tracker:acknowledged-plan-version", String(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION"]));
+        setAcknowledgedPlanVersion(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION"]);
+    };
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            const standalone = window.matchMedia("(display-mode: standalone)");
+            const navigatorStandalone = Boolean(navigator.standalone);
+            const refresh = {
+                "StudyTracker.useEffect.refresh": ()=>setAppInstalled(standalone.matches || navigatorStandalone)
+            }["StudyTracker.useEffect.refresh"];
+            const installed = {
+                "StudyTracker.useEffect.installed": ()=>{
+                    setAppInstalled(true);
+                    setInstallPrompt(null);
+                }
+            }["StudyTracker.useEffect.installed"];
+            refresh();
+            standalone.addEventListener("change", refresh);
+            window.addEventListener("appinstalled", installed);
+            return ({
+                "StudyTracker.useEffect": ()=>{
+                    standalone.removeEventListener("change", refresh);
+                    window.removeEventListener("appinstalled", installed);
+                }
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            const capture = {
+                "StudyTracker.useEffect.capture": (event)=>{
+                    event.preventDefault();
+                    setInstallPrompt(event);
+                }
+            }["StudyTracker.useEffect.capture"];
+            window.addEventListener("beforeinstallprompt", capture);
+            return ({
+                "StudyTracker.useEffect": ()=>window.removeEventListener("beforeinstallprompt", capture)
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            const syncHashView = {
+                "StudyTracker.useEffect.syncHashView": ()=>{
+                    if (window.location.hash === "#plan" || window.location.hash === "#projekt-fahrplan") {
+                        setActiveView("plan");
+                        setShowFullPlan(true);
+                        setPlanMode(window.location.hash === "#projekt-fahrplan" ? "roadmap" : "details");
+                        window.requestAnimationFrame({
+                            "StudyTracker.useEffect.syncHashView": ()=>{
+                                document.getElementById("plan")?.scrollIntoView({
+                                    block: "start"
+                                });
+                            }
+                        }["StudyTracker.useEffect.syncHashView"]);
+                    } else if ([
+                        "",
+                        "#rhythm",
+                        "#start-dashboard"
+                    ].includes(window.location.hash)) {
+                        setShowFullPlan(false);
+                        if (window.location.hash === "#rhythm") {
+                            setShowProgressOverview(true);
+                            window.requestAnimationFrame({
+                                "StudyTracker.useEffect.syncHashView": ()=>{
+                                    document.getElementById("rhythm")?.scrollIntoView({
+                                        block: "start"
+                                    });
+                                }
+                            }["StudyTracker.useEffect.syncHashView"]);
+                        }
+                    }
+                }
+            }["StudyTracker.useEffect.syncHashView"];
+            syncHashView();
+            window.addEventListener("hashchange", syncHashView);
+            return ({
+                "StudyTracker.useEffect": ()=>window.removeEventListener("hashchange", syncHashView)
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            let active = true;
+            async function load() {
+                try {
+                    const statePromise = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEVICE_ONLY_STORAGE"] ? Promise.resolve(readLocalState()) : fetch("/api/state", {
+                        cache: "no-store"
+                    }).then({
+                        "StudyTracker.useEffect.load": async (response)=>{
+                            if (!response.ok) throw new Error("state-load-failed");
+                            return normalizeState(await response.json());
+                        }
+                    }["StudyTracker.useEffect.load"]).catch({
+                        "StudyTracker.useEffect.load": ()=>readLocalState()
+                    }["StudyTracker.useEffect.load"]);
+                    const centralSettingsPromise = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEVICE_ONLY_STORAGE"] ? Promise.resolve(null) : fetch("/api/settings", {
+                        cache: "no-store"
+                    }).then({
+                        "StudyTracker.useEffect.load": async (response)=>response.ok ? response.json() : null
+                    }["StudyTracker.useEffect.load"]).then({
+                        "StudyTracker.useEffect.load": (payload)=>payload?.settings?.planning ?? null
+                    }["StudyTracker.useEffect.load"]).catch({
+                        "StudyTracker.useEffect.load": ()=>null
+                    }["StudyTracker.useEffect.load"]);
+                    const attachmentsPromise = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEVICE_ONLY_STORAGE"] ? Promise.resolve([]) : fetch("/api/attachments", {
+                        cache: "no-store"
+                    }).then({
+                        "StudyTracker.useEffect.load": async (response)=>response.ok ? (await response.json()).attachments ?? [] : []
+                    }["StudyTracker.useEffect.load"]).catch({
+                        "StudyTracker.useEffect.load": ()=>[]
+                    }["StudyTracker.useEffect.load"]);
+                    const exposePromise = fetch("/api/expose?meta=1", {
+                        cache: "no-store"
+                    }).then({
+                        "StudyTracker.useEffect.load.exposePromise": async (response)=>response.ok ? (await response.json()).expose ?? null : null
+                    }["StudyTracker.useEffect.load.exposePromise"]).catch({
+                        "StudyTracker.useEffect.load.exposePromise": ()=>null
+                    }["StudyTracker.useEffect.load.exposePromise"]);
+                    const [state, planning, attachmentList, expose] = await Promise.all([
+                        statePromise,
+                        centralSettingsPromise,
+                        attachmentsPromise,
+                        exposePromise
+                    ]);
+                    if (!active) return;
+                    // Data saved under the pre-stable-id scheme (day/task/item id ==
+                    // the date-derived string) would otherwise be silently invisible
+                    // now that ids are stable across schedule recalculations -- remap
+                    // on read so existing completions/notes/attachments stay intact
+                    // instead of only working for data saved from now on.
+                    setCompleted(new Set((state.completedIds ?? []).map({
+                        "StudyTracker.useEffect.load": (id)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["migrateLegacyId"])(id)
+                    }["StudyTracker.useEffect.load"])));
+                    setNotes(Object.fromEntries(Object.entries(state.notes ?? {}).map({
+                        "StudyTracker.useEffect.load": ([dayId, note])=>[
+                                (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["migrateLegacyId"])(dayId),
+                                note
+                            ]
+                    }["StudyTracker.useEffect.load"])));
+                    const stateNeedsMedicalReplan = isOctoberRestartSettings(state.settings);
+                    const centralNeedsMedicalReplan = isOctoberRestartSettings(planning);
+                    const stateNeedsCapacityPlan = isLegacy25WeekSettings(state.settings);
+                    const centralNeedsCapacityPlan = isLegacy25WeekSettings(planning);
+                    let nextSettings = safeSettings(state.settings);
+                    if (planning) {
+                        nextSettings = safeSettings({
+                            ...nextSettings,
+                            projectName: planning.projectName || nextSettings.projectName,
+                            planName: planning.planName || nextSettings.planName,
+                            planStartDate: planning.planStartDate || nextSettings.planStartDate,
+                            planEndDate: planning.planEndDate || nextSettings.planEndDate,
+                            planStatus: planning.planStatus === "paused" || planning.planStatus === "running" ? planning.planStatus : nextSettings.planStatus,
+                            planPausedAt: planning.planPausedAt || nextSettings.planPausedAt,
+                            dailyWorkMode: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeDailyWorkMode"])(planning.dailyWorkMode ?? nextSettings.dailyWorkMode),
+                            dailyStart: planning.workdayStart || nextSettings.dailyStart
+                        });
+                    }
+                    setSettings(nextSettings);
+                    setSettingsDraft(nextSettings);
+                    setRequestedStartDate(nextSettings.planStartDate);
+                    setSyncState("saved");
+                    if (stateNeedsMedicalReplan || centralNeedsMedicalReplan || stateNeedsCapacityPlan || centralNeedsCapacityPlan) {
+                        await Promise.all([
+                            postState({
+                                action: "settings",
+                                settings: nextSettings
+                            }),
+                            saveCentralPlanning(nextSettings)
+                        ]);
+                    }
+                    if (!__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEVICE_ONLY_STORAGE"] && attachmentList.length) {
+                        const grouped = {};
+                        for (const attachment of attachmentList){
+                            const dayId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["migrateLegacyId"])(attachment.dayId);
+                            (grouped[dayId] ??= []).push(attachment);
+                        }
+                        setAttachments(grouped);
+                    }
+                    if (expose) setExposeMeta(expose);
+                } catch  {
+                    if (active) setSyncState("error");
+                } finally{
+                    if (active) setLoading(false);
+                }
+            }
+            void load();
+            return ({
+                "StudyTracker.useEffect": ()=>{
+                    active = false;
+                }
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            let active = true;
+            if (__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEVICE_ONLY_STORAGE"]) {
+                const sessions = readLocalFocusSessions();
+                queueMicrotask({
+                    "StudyTracker.useEffect": ()=>{
+                        if (!active) return;
+                        setFocusActive(sessions.find({
+                            "StudyTracker.useEffect": (session)=>session.status !== "completed"
+                        }["StudyTracker.useEffect"]) ?? null);
+                        setFocusSessions(sessions);
+                        setFocusStoredSeconds(sessions.filter({
+                            "StudyTracker.useEffect": (session)=>session.status === "completed"
+                        }["StudyTracker.useEffect"]).reduce({
+                            "StudyTracker.useEffect": (sum, session)=>sum + session.accumulatedSeconds
+                        }["StudyTracker.useEffect"], 0));
+                    }
+                }["StudyTracker.useEffect"]);
+                return ({
+                    "StudyTracker.useEffect": ()=>{
+                        active = false;
+                    }
+                })["StudyTracker.useEffect"];
+            }
+            void fetch("/api/focus", {
+                cache: "no-store"
+            }).then({
+                "StudyTracker.useEffect": async (response)=>{
+                    if (!response.ok) throw new Error("focus-load-failed");
+                    return response.json();
+                }
+            }["StudyTracker.useEffect"]).then({
+                "StudyTracker.useEffect": (payload)=>{
+                    if (!active) return;
+                    setFocusActive(payload.active ?? null);
+                    setFocusSessions(payload.sessions ?? []);
+                    setFocusStoredSeconds(Number(payload.storedSeconds ?? 0));
+                }
+            }["StudyTracker.useEffect"]).catch({
+                "StudyTracker.useEffect": ()=>{
+                    if (active) setToast("Fokuszeiten konnten noch nicht geladen werden.");
+                }
+            }["StudyTracker.useEffect"]);
+            return ({
+                "StudyTracker.useEffect": ()=>{
+                    active = false;
+                }
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            if (focusActive?.status !== "running") return;
+            const interval = window.setInterval({
+                "StudyTracker.useEffect.interval": ()=>setFocusNow(Date.now())
+            }["StudyTracker.useEffect.interval"], 1000);
+            return ({
+                "StudyTracker.useEffect": ()=>window.clearInterval(interval)
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], [
+        focusActive?.status
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            return ({
+                "StudyTracker.useEffect": ()=>{
+                    if (previewUrl) URL.revokeObjectURL(previewUrl);
+                }
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], [
+        previewUrl
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudyTracker.useEffect": ()=>{
+            if (!toast) return;
+            const timeout = window.setTimeout({
+                "StudyTracker.useEffect.timeout": ()=>setToast("")
+            }["StudyTracker.useEffect.timeout"], 3000);
+            return ({
+                "StudyTracker.useEffect": ()=>window.clearTimeout(timeout)
+            })["StudyTracker.useEffect"];
+        }
+    }["StudyTracker.useEffect"], [
+        toast
+    ]);
+    async function installUnifiedApp() {
+        if (appInstalled) {
+            setToast("Die vollständige App ist bereits installiert.");
+            return;
+        }
+        if (!installPrompt) {
+            setToast("Wähle im Browser-Menü „App installieren“, um alle drei Bereiche gemeinsam zu installieren.");
+            return;
+        }
+        await installPrompt.prompt();
+        const choice = await installPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+            setInstallPrompt(null);
+            setAppInstalled(true);
+            setToast("Study Tracker, PDF Visual und Einstellungen wurden gemeinsam installiert.");
+        }
+    }
+    async function postState(body) {
+        setSyncState("saving");
+        if (__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEVICE_ONLY_STORAGE"]) {
+            const savedLocally = writeLocalState(body);
+            setSyncState(savedLocally ? "saved" : "error");
+            return savedLocally;
+        }
+        try {
+            const response = await fetch("/api/state", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+            if (!response.ok) throw new Error("state-save-failed");
+            writeLocalState(body);
+            setSyncState("saved");
+            return true;
+        } catch  {
+            const savedLocally = writeLocalState(body);
+            setSyncState(savedLocally ? "saved" : "error");
+            return savedLocally;
+        }
+    }
+    function itemCount(day) {
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countCompletedItems"])(day, completed);
+    }
+    function outputCount(day) {
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countCompletedOutputs"])(day, completed);
+    }
+    function dayStatus(day) {
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getDayOutputStatus"])(day, completed);
+    }
+    const phaseGroups = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "StudyTracker.useMemo[phaseGroups]": ()=>{
+            const map = new Map();
+            for (const week of __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planWeeks"]){
+                const existing = map.get(week.phaseId);
+                if (existing) existing.weeks.push(week);
+                else map.set(week.phaseId, {
+                    id: week.phaseId,
+                    title: week.phase,
+                    weeks: [
+                        week
+                    ]
+                });
+            }
+            return [
+                ...map.values()
+            ];
+        }
+    }["StudyTracker.useMemo[phaseGroups]"], []);
+    const selectedCourseSession = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "StudyTracker.useMemo[selectedCourseSession]": ()=>{
+            if (!phaseFilter.startsWith("course:")) return null;
+            const sessionNumber = Number(phaseFilter.slice("course:".length));
+            return __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["nlpCourseSessions"].find({
+                "StudyTracker.useMemo[selectedCourseSession]": (session)=>session.number === sessionNumber
+            }["StudyTracker.useMemo[selectedCourseSession]"]) ?? null;
+        }
+    }["StudyTracker.useMemo[selectedCourseSession]"], [
+        phaseFilter
+    ]);
+    const selectedCourseDays = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "StudyTracker.useMemo[selectedCourseDays]": ()=>{
+            if (!selectedCourseSession) return [];
+            const relatedTitles = new Set(selectedCourseSession.relatedDayTitles);
+            return __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].filter({
+                "StudyTracker.useMemo[selectedCourseDays]": (day)=>relatedTitles.has(day.title)
+            }["StudyTracker.useMemo[selectedCourseDays]"]);
+        }
+    }["StudyTracker.useMemo[selectedCourseDays]"], [
+        selectedCourseSession
+    ]);
+    const selectedCourseTransfer = selectedCourseSession ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["courseTransferForSession"])(selectedCourseSession.number) : null;
+    const filteredGroups = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "StudyTracker.useMemo[filteredGroups]": ()=>{
+            const relatedTitles = new Set(selectedCourseSession?.relatedDayTitles ?? []);
+            return phaseGroups.filter({
+                "StudyTracker.useMemo[filteredGroups]": (phase)=>Boolean(selectedCourseSession) || phaseFilter === "all" || phase.id === phaseFilter
+            }["StudyTracker.useMemo[filteredGroups]"]).map({
+                "StudyTracker.useMemo[filteredGroups]": (phase)=>({
+                        ...phase,
+                        weeks: phase.weeks.map({
+                            "StudyTracker.useMemo[filteredGroups]": (week)=>({
+                                    ...week,
+                                    days: week.days.filter({
+                                        "StudyTracker.useMemo[filteredGroups]": (day)=>(!selectedCourseSession || relatedTitles.has(day.title)) && (statusFilter === "all" || dayStatus(day) === statusFilter)
+                                    }["StudyTracker.useMemo[filteredGroups]"])
+                                })
+                        }["StudyTracker.useMemo[filteredGroups]"]).filter({
+                            "StudyTracker.useMemo[filteredGroups]": (week)=>week.days.length > 0
+                        }["StudyTracker.useMemo[filteredGroups]"])
+                    })
+            }["StudyTracker.useMemo[filteredGroups]"]).filter({
+                "StudyTracker.useMemo[filteredGroups]": (phase)=>phase.weeks.length > 0
+            }["StudyTracker.useMemo[filteredGroups]"]);
+        // dayStatus intentionally depends on the current completion snapshot.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }
+    }["StudyTracker.useMemo[filteredGroups]"], [
+        phaseGroups,
+        phaseFilter,
+        selectedCourseSession,
+        statusFilter,
+        completed
+    ]);
+    const searchResults = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "StudyTracker.useMemo[searchResults]": ()=>{
+            const needle = query.trim().toLocaleLowerCase();
+            if (!needle) return [];
+            return __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].filter({
+                "StudyTracker.useMemo[searchResults]": (day)=>{
+                    const haystack = [
+                        day.title,
+                        day.phase,
+                        day.weekTitle,
+                        day.why,
+                        day.module,
+                        day.deliverable,
+                        ...day.lookFor,
+                        ...day.proposal,
+                        ...(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["learningResourcesForDay"])(day).flatMap({
+                            "StudyTracker.useMemo[searchResults].haystack": (resource)=>[
+                                    resource.title,
+                                    resource.provider,
+                                    resource.read,
+                                    resource.apply
+                                ]
+                        }["StudyTracker.useMemo[searchResults].haystack"]),
+                        ...day.sourceIds.flatMap({
+                            "StudyTracker.useMemo[searchResults].haystack": (id)=>{
+                                const source = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["sources"][id];
+                                return source ? [
+                                    sourceText(source, settings),
+                                    source.driveName ?? ""
+                                ] : [];
+                            }
+                        }["StudyTracker.useMemo[searchResults].haystack"])
+                    ].join(" ").toLocaleLowerCase();
+                    return haystack.includes(needle);
+                }
+            }["StudyTracker.useMemo[searchResults]"]).slice(0, 12);
+        }
+    }["StudyTracker.useMemo[searchResults]"], [
+        query,
+        settings
+    ]);
+    const completedOutputs = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].reduce((sum, day)=>sum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countRequiredCompletedOutputs"])(day, completed), 0);
+    const totalRequiredOutputs = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].reduce((sum, day)=>sum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day), 0);
+    const nextDay = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].find((day)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day) > 0 && outputCount(day) < (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day)) ?? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].findLast((day)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day) > 0) ?? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].at(-1);
+    const systemTodayDay = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].find((day)=>shiftedPlanDate(day.date, settings.planStartDate) === systemToday);
+    const planCanRecordToday = settings.planStatus === "running" && Boolean(systemTodayDay);
+    const todayCourseSession = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["nlpCourseSessions"].find((session)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isNlpRemainingLiveSession"])(session.number) && session.date === systemToday);
+    const dashboardDay = systemTodayDay ?? nextDay;
+    const activeFocusSeconds = focusActive ? focusSeconds(focusActive, focusNow) : 0;
+    const measuredFocusSeconds = focusStoredSeconds + (focusActive?.status === "running" && focusActive.lastStartedAt ? Math.max(0, Math.floor((focusNow - new Date(focusActive.lastStartedAt).getTime()) / 1000)) : 0);
+    const designMilestoneDate = shiftedPlanDate(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].designEnd, settings.planStartDate);
+    const milestoneDaysRemaining = Math.max(0, daysBetweenIsoDates(systemToday, designMilestoneDate));
+    const firstName = displayName?.trim().split(/\s+/)[0] || "Forscherin";
+    const dashboardDayWeekNumber = Math.max(1, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planWeeks"].findIndex((week)=>week.days.some((day)=>day.id === dashboardDay.id)) + 1);
+    const displayedProjectName = settings.projectName.replace(/^Cross_Repository/i, "Cross-Repository").replaceAll("_", " ");
+    const activeDailyWorkMode = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DAILY_WORK_MODES"][settings.dailyWorkMode];
+    const requiredTodayTaskIndexes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["workModeRequiredTaskIndexes"])(settings.dailyWorkMode);
+    const requiredTodayTasks = dashboardDay.tasks.filter((_, taskIndex)=>requiredTodayTaskIndexes.includes(taskIndex));
+    const completedTaskGroups = requiredTodayTasks.filter((task)=>task.items.every((item)=>completed.has(item.id))).length;
+    const currentTodayTask = requiredTodayTasks.find((task)=>task.items.some((item)=>!completed.has(item.id))) ?? requiredTodayTasks.at(-1) ?? dashboardDay.tasks.at(-1);
+    const currentTodayTaskIndex = Math.max(0, dashboardDay.tasks.findIndex((task)=>task.id === currentTodayTask?.id));
+    const activeModePlanHours = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["effectivePlanHours"])(settings.dailyWorkMode, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalDays);
+    const activeDayCount = new Set([
+        ...__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].filter((day)=>itemCount(day) > 0).map((day)=>day.id),
+        ...focusSessions.filter((session)=>focusSeconds(session, focusNow) > 0).map((session)=>session.contextId)
+    ]).size;
+    const designDays = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].filter((day)=>day.phaseId.startsWith("design-") && (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day) > 0);
+    const designCompletedItems = designDays.reduce((sum, day)=>sum + outputCount(day), 0);
+    const designPercent = Math.round(designCompletedItems / Math.max(1, designDays.reduce((sum, day)=>sum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day), 0)) * 100);
+    const nextWeekIndex = Math.max(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planWeeks"].findIndex((week)=>week.days.some((day)=>day.id === nextDay.id)));
+    const rhythmStart = Math.max(0, Math.min(nextWeekIndex, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planWeeks"].length - 5));
+    const rhythmWeeks = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planWeeks"].slice(rhythmStart, rhythmStart + 5);
+    const rhythmTotalItems = rhythmWeeks.reduce((sum, week)=>sum + week.days.reduce((daySum, day)=>daySum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day), 0), 0);
+    const rhythmCompletedItems = rhythmWeeks.reduce((sum, week)=>sum + week.days.reduce((daySum, day)=>daySum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countRequiredCompletedOutputs"])(day, completed), 0), 0);
+    const rhythmActiveDays = rhythmWeeks.reduce((sum, week)=>sum + week.days.filter((day)=>itemCount(day) > 0).length, 0);
+    const rhythmPercent = rhythmTotalItems ? Math.round(rhythmCompletedItems / rhythmTotalItems * 100) : 0;
+    const journeyStages = [
+        {
+            number: 1,
+            title: "Design",
+            weeks: "Woche 1–9",
+            start: 1,
+            end: 9
+        },
+        {
+            number: 2,
+            title: "Extraktion",
+            weeks: "Woche 10–18",
+            start: 10,
+            end: 18
+        },
+        {
+            number: 3,
+            title: "Graph & Retrieval",
+            weeks: "Woche 19–24",
+            start: 19,
+            end: 24
+        },
+        {
+            number: 4,
+            title: "Evaluation",
+            weeks: "Woche 25–30",
+            start: 25,
+            end: 30
+        },
+        {
+            number: 5,
+            title: "Abgabe",
+            weeks: "Woche 31–37",
+            start: 31,
+            end: 37
+        }
+    ];
+    function upsertFocusSession(session) {
+        const previous = focusSessions.find((item)=>item.id === session.id);
+        if (previous && session.accumulatedSeconds !== previous.accumulatedSeconds) {
+            setFocusStoredSeconds((current)=>current + session.accumulatedSeconds - previous.accumulatedSeconds);
+        }
+        setFocusSessions((current)=>[
+                session,
+                ...current.filter((item)=>item.id !== session.id)
+            ].slice(0, 30));
+        setFocusActive(session.status === "completed" ? null : session);
+    }
+    async function focusAction(action, targetDayId) {
+        if (action === "start" && settings.planStatus !== "running") {
+            setToast("Starte oder setze den Lernplan zuerst fort. Vorher wird keine Fokuszeit gespeichert.");
+            return;
+        }
+        setFocusBusy(true);
+        try {
+            const selectedDay = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].find((day)=>day.id === (targetDayId || focusTargetDayId)) ?? nextDay;
+            const body = action === "start" ? {
+                action,
+                contextId: selectedDay.id,
+                contextTitle: selectedDay.title
+            } : {
+                action,
+                id: focusActive?.id
+            };
+            if (__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEVICE_ONLY_STORAGE"]) {
+                const now = new Date();
+                const timestamp = now.toISOString();
+                const storedSessions = readLocalFocusSessions();
+                let session;
+                if (action === "start") {
+                    session = {
+                        id: `local-focus-${crypto.randomUUID()}`,
+                        contextId: selectedDay.id,
+                        contextTitle: selectedDay.title,
+                        source: "tracker",
+                        status: "running",
+                        accumulatedSeconds: 0,
+                        startedAt: timestamp,
+                        lastStartedAt: timestamp,
+                        endedAt: null
+                    };
+                } else {
+                    const current = storedSessions.find((item)=>item.id === focusActive?.id) ?? focusActive;
+                    if (!current) throw new Error("Keine aktive Fokuszeit gefunden.");
+                    const timing = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$device$2d$session$2d$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["transitionTimedSession"])(current, action, current.accumulatedSeconds, now);
+                    session = {
+                        ...current,
+                        status: timing.status,
+                        accumulatedSeconds: timing.storedSeconds,
+                        lastStartedAt: timing.lastStartedAt,
+                        endedAt: timing.endedAt
+                    };
+                }
+                const nextSessions = [
+                    session,
+                    ...storedSessions.filter((item)=>item.id !== session.id)
+                ].slice(0, 30);
+                if (!writeLocalFocusSessions(nextSessions)) throw new Error("Die Fokuszeit konnte auf diesem Gerät nicht gespeichert werden.");
+                upsertFocusSession(session);
+                setFocusNow(now.getTime());
+                setToast(action === "start" ? "Fokuszeit gestartet." : action === "pause" ? "Fokuszeit pausiert." : action === "resume" ? "Fokuszeit wird fortgesetzt." : "Fokussitzung auf diesem Gerät gespeichert.");
+                return;
+            }
+            const response = await fetch("/api/focus", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+            if (!response.ok) {
+                throw new Error(await responseError(response, "Die Fokuszeit konnte nicht gespeichert werden."));
+            }
+            const payload = await response.json();
+            if (!payload.session) throw new Error("Die Fokuszeit wurde nicht zurückgegeben.");
+            upsertFocusSession(payload.session);
+            setToast(action === "start" ? "Fokuszeit gestartet." : action === "pause" ? "Fokuszeit pausiert." : action === "resume" ? "Fokuszeit wird fortgesetzt." : "Fokussitzung abgeschlossen und gespeichert.");
+        } catch (error) {
+            setToast(error instanceof Error ? error.message : "Die Fokuszeit konnte nicht gespeichert werden.");
+        } finally{
+            setFocusBusy(false);
+        }
+    }
+    const weekProgress = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "StudyTracker.useMemo[weekProgress]": ()=>__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planWeeks"].map({
+                "StudyTracker.useMemo[weekProgress]": (week)=>{
+                    const total = week.days.reduce({
+                        "StudyTracker.useMemo[weekProgress].total": (sum, day)=>sum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day)
+                    }["StudyTracker.useMemo[weekProgress].total"], 0);
+                    const done = week.days.reduce({
+                        "StudyTracker.useMemo[weekProgress].done": (sum, day)=>sum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countRequiredCompletedOutputs"])(day, completed)
+                    }["StudyTracker.useMemo[weekProgress].done"], 0);
+                    return {
+                        number: week.number,
+                        title: week.title,
+                        percent: total ? Math.round(done / total * 100) : 0
+                    };
+                }
+            }["StudyTracker.useMemo[weekProgress]"])
+    }["StudyTracker.useMemo[weekProgress]"], [
+        completed
+    ]);
+    async function toggleItem(itemId, checked, day) {
+        const next = new Set(completed);
+        if (checked) next.add(itemId);
+        else next.delete(itemId);
+        setCompleted(next);
+        if (checked) {
+            const dayDone = day.tasks.every((task)=>task.items.every((item)=>next.has(item.id)));
+            setToast(dayDone ? "Tag abgeschlossen – du hast ein echtes Ergebnis erstellt. Stark!" : "Gut gemacht – ein weiterer Schritt ist erledigt.");
+        }
+        await postState({
+            action: "toggle",
+            itemId,
+            taskId: itemId,
+            completed: checked
+        });
+    }
+    async function toggleRoadmapDay(day, checked) {
+        const previous = new Set(completed);
+        const next = new Set(completed);
+        for (const task of day.tasks){
+            for (const item of task.items){
+                if (checked) next.add(item.id);
+                else next.delete(item.id);
+            }
+        }
+        setCompleted(next);
+        const ok = await postState({
+            action: "import",
+            completedIds: [
+                ...next
+            ],
+            notes,
+            settings
+        });
+        if (!ok) setCompleted(previous);
+        setToast(ok ? checked ? `„${day.title}“ im gemeinsamen Projekt-Lernplan abgeschlossen.` : `„${day.title}“ im gemeinsamen Projekt-Lernplan wieder geöffnet.` : "Die Änderung konnte noch nicht dauerhaft gespeichert werden.");
+        return ok;
+    }
+    async function toggleTaskGroup(day, task, checked) {
+        const next = new Set(completed);
+        for (const item of task.items){
+            if (checked) next.add(item.id);
+            else next.delete(item.id);
+        }
+        setCompleted(next);
+        const ok = await postState({
+            action: "import",
+            completedIds: [
+                ...next
+            ],
+            notes,
+            settings
+        });
+        setToast(ok ? checked ? "Große Aufgabe mit allen drei Schritten abgeschlossen." : "Aufgabe wieder geöffnet." : "Die Änderung konnte noch nicht dauerhaft gespeichert werden.");
+    }
+    async function saveNote(dayId) {
+        const ok = await postState({
+            action: "note",
+            dayId,
+            note: notes[dayId] ?? ""
+        });
+        if (ok) setToast("Tagesnotiz gespeichert.");
+    }
+    async function responseError(response, fallback) {
+        try {
+            const payload = await response.json();
+            return payload.error || fallback;
+        } catch  {
+            return fallback;
+        }
+    }
+    async function uploadDayFiles(dayId, selectedFiles) {
+        const files = selectedFiles.slice(0, 10);
+        if (!files.length) return;
+        const oversized = files.find((file)=>file.size > 25 * 1024 * 1024);
+        if (oversized) {
+            setToast(`„${oversized.name}“ ist größer als 25 MB.`);
+            return;
+        }
+        setUploadingDayId(dayId);
+        let uploadedCount = 0;
+        let lastError = "";
+        try {
+            for (const file of files){
+                const form = new FormData();
+                form.set("dayId", dayId);
+                form.set("file", file);
+                const response = await fetch("/api/attachments", {
+                    method: "POST",
+                    body: form
+                });
+                if (!response.ok) {
+                    lastError = await responseError(response, `„${file.name}“ konnte nicht hochgeladen werden.`);
+                    continue;
+                }
+                const payload = await response.json();
+                if (!payload.attachment) continue;
+                uploadedCount += 1;
+                setAttachments((current)=>({
+                        ...current,
+                        [dayId]: [
+                            payload.attachment,
+                            ...current[dayId] ?? []
+                        ]
+                    }));
+            }
+        } catch  {
+            lastError = "Die Verbindung zum Dateispeicher wurde unterbrochen.";
+        } finally{
+            setUploadingDayId(null);
+        }
+        if (uploadedCount > 0) {
+            setToast(`${displayNumber(uploadedCount)} Datei(en) dauerhaft gespeichert.${lastError ? ` ${lastError}` : ""}`);
+        } else {
+            setToast(lastError || "Es wurde keine Datei gespeichert.");
+        }
+    }
+    function closeAttachmentPreview() {
+        setPreviewAttachment(null);
+        setPreviewText("");
+        setPreviewLoading(false);
+        setPreviewUrl("");
+    }
+    async function openAttachment(attachment) {
+        closeAttachmentPreview();
+        setPreviewAttachment(attachment);
+        const kind = attachmentKind(attachment);
+        if (kind === "other") return;
+        if (kind === "text" && attachment.size > 3 * 1024 * 1024) {
+            setToast("Große Textdateien werden aus Sicherheitsgründen heruntergeladen.");
+            return;
+        }
+        if (kind === "office" && attachment.size > 8 * 1024 * 1024) {
+            setToast("Große Office-Dateien werden aus Sicherheitsgründen heruntergeladen.");
+            return;
+        }
+        setPreviewLoading(true);
+        try {
+            const response = await fetch(`/api/attachments?id=${encodeURIComponent(attachment.id)}`, {
+                cache: "no-store"
+            });
+            if (!response.ok) {
+                throw new Error(await responseError(response, "Die Datei konnte nicht geöffnet werden."));
+            }
+            if (kind === "text") {
+                setPreviewText(await response.text());
+            } else if (kind === "office") {
+                setPreviewText(await extractOfficeText(await response.blob(), attachment.name));
+            } else {
+                setPreviewUrl(URL.createObjectURL(await response.blob()));
+            }
+        } catch (error) {
+            setToast(error instanceof Error ? error.message : "Die Datei konnte nicht geöffnet werden.");
+            setPreviewAttachment(null);
+        } finally{
+            setPreviewLoading(false);
+        }
+    }
+    async function deleteAttachment(attachment) {
+        const confirmed = window.confirm(`„${attachment.name}“ wirklich dauerhaft löschen?`);
+        if (!confirmed) return;
+        const response = await fetch(`/api/attachments?id=${encodeURIComponent(attachment.id)}`, {
+            method: "DELETE"
+        });
+        if (!response.ok) {
+            setToast(await responseError(response, "Die Datei konnte nicht gelöscht werden."));
+            return;
+        }
+        setAttachments((current)=>({
+                ...current,
+                [attachment.dayId]: (current[attachment.dayId] ?? []).filter((item)=>item.id !== attachment.id)
+            }));
+        if (previewAttachment?.id === attachment.id) closeAttachmentPreview();
+        setToast("Datei gelöscht.");
+    }
+    async function uploadExpose(event) {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (!file) return;
+        if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+            setToast("Bitte wähle eine PDF-Datei für das Exposé aus.");
+            return;
+        }
+        if (file.size > 50 * 1024 * 1024) {
+            setToast("Die Exposé-PDF darf höchstens 50 MB groß sein.");
+            return;
+        }
+        setExposeUploading(true);
+        try {
+            const form = new FormData();
+            form.set("file", file);
+            const response = await fetch("/api/expose", {
+                method: "POST",
+                body: form
+            });
+            const payload = await response.json().catch(()=>({}));
+            if (!response.ok || !payload.expose) throw new Error(payload.message || "Das Exposé konnte nicht gespeichert werden.");
+            setExposeMeta(payload.expose);
+            setToast("Die neue Exposé-Version wurde lokal gespeichert.");
+        } catch (error) {
+            setToast(error instanceof Error ? error.message : "Das Exposé konnte nicht gespeichert werden.");
+        } finally{
+            setExposeUploading(false);
+        }
+    }
+    async function restoreBundledExpose() {
+        if (!window.confirm("Die eigene Exposé-Version entfernen und wieder die mitgelieferte Version verwenden?")) return;
+        try {
+            const response = await fetch("/api/expose", {
+                method: "DELETE"
+            });
+            const payload = await response.json().catch(()=>({}));
+            if (!response.ok || !payload.expose) throw new Error(payload.message || "Die Standardversion konnte nicht wiederhergestellt werden.");
+            setExposeMeta(payload.expose);
+            setToast("Die mitgelieferte Exposé-Version ist wieder aktiv.");
+        } catch (error) {
+            setToast(error instanceof Error ? error.message : "Die Standardversion konnte nicht wiederhergestellt werden.");
+        }
+    }
+    async function saveSettings() {
+        if (!settingsDraft.planName.trim()) {
+            setToast("Bitte gib einen Namen für den Lernplan ein.");
+            return;
+        }
+        if (!settingsDraft.planStartDate || !settingsDraft.planEndDate || settingsDraft.planEndDate < settingsDraft.planStartDate) {
+            setToast("Das Enddatum muss am oder nach dem Startdatum liegen.");
+            return;
+        }
+        setSettings(settingsDraft);
+        const ok = await postState({
+            action: "settings",
+            settings: settingsDraft
+        });
+        const centralSaved = await saveCentralPlanning(settingsDraft);
+        if (ok) {
+            setSettingsOpen(false);
+            setToast(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEVICE_ONLY_STORAGE"] ? "Lernplan und Einstellungen wurden auf diesem Gerät gespeichert." : centralSaved ? "Lernplan und zentrale Einstellungen wurden gemeinsam gespeichert." : "Lernplan gespeichert; die zentrale Einstellung wird beim nächsten Versuch abgeglichen.");
+        }
+    }
+    async function saveCentralPlanning(nextSettings) {
+        if (__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$storage$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEVICE_ONLY_STORAGE"]) return true;
+        try {
+            const current = await fetch("/api/settings", {
+                cache: "no-store"
+            });
+            if (!current.ok) return false;
+            const payload = await current.json();
+            const centralSettings = payload.settings;
+            if (!centralSettings) return false;
+            const response = await fetch("/api/settings", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    settings: {
+                        ...centralSettings,
+                        planning: {
+                            ...centralSettings.planning ?? {},
+                            projectName: nextSettings.projectName,
+                            planName: nextSettings.planName,
+                            planStartDate: nextSettings.planStartDate,
+                            planEndDate: nextSettings.planEndDate,
+                            planStatus: nextSettings.planStatus,
+                            planPausedAt: nextSettings.planPausedAt,
+                            dailyWorkMode: nextSettings.dailyWorkMode,
+                            totalPlanWeeks: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalWeeks,
+                            dailyCapacityMinutes: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DAILY_WORK_MODES"][nextSettings.dailyWorkMode].totalMinutes,
+                            weeklyGoalMinutes: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DAILY_WORK_MODES"][nextSettings.dailyWorkMode].totalMinutes * 5,
+                            workdayStart: nextSettings.dailyStart
+                        }
+                    }
+                })
+            });
+            return response.ok;
+        } catch  {
+            return false;
+        }
+    }
+    async function setDailyWorkMode(mode) {
+        const nextSettings = safeSettings({
+            ...settings,
+            dailyWorkMode: mode
+        });
+        setSettings(nextSettings);
+        setSettingsDraft(nextSettings);
+        const [stateSaved, centralSaved] = await Promise.all([
+            postState({
+                action: "settings",
+                settings: nextSettings
+            }),
+            saveCentralPlanning(nextSettings)
+        ]);
+        setToast(stateSaved && centralSaved ? `${__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DAILY_WORK_MODES"][mode].label} ist jetzt dein Arbeitsmodus.` : "Der Arbeitsmodus konnte nicht vollständig gespeichert werden.");
+    }
+    async function pausePlan() {
+        if (settings.planStatus !== "running") return;
+        const nextSettings = safeSettings({
+            ...settings,
+            planStatus: "paused",
+            planPausedAt: systemToday,
+            planRevisionHistory: addPlanRevision(settings, {
+                action: "paused",
+                reason: "Plan wurde vorübergehend pausiert.",
+                nextStartDate: settings.planStartDate,
+                nextEndDate: settings.planEndDate
+            })
+        });
+        setSettings(nextSettings);
+        setSettingsDraft(nextSettings);
+        setResumeDate(systemToday);
+        const [ok, centralSaved] = await Promise.all([
+            postState({
+                action: "settings",
+                settings: nextSettings
+            }),
+            saveCentralPlanning(nextSettings)
+        ]);
+        setToast(ok && centralSaved ? `Lernplan seit ${formatDate(systemToday)} pausiert. Fortschritt und Dateien bleiben erhalten.` : "Die Pause konnte nicht gespeichert werden.");
+    }
+    async function startPlan() {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(requestedStartDate)) {
+            setToast("Bitte wähle ein gültiges Startdatum.");
+            return;
+        }
+        if (requestedStartDate < __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["trackerRestartPlan"].mainPlanStart) {
+            setToast(`Der Neustart beginnt frühestens am ${formatDate(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["trackerRestartPlan"].mainPlanStart)}.`);
+            return;
+        }
+        const isRouteChange = settings.planStatus === "running";
+        const reason = routeChangeReason.trim();
+        if (isRouteChange && !reason) {
+            setToast("Bitte dokumentiere kurz, warum der Projektweg geändert wird.");
+            return;
+        }
+        if (isRouteChange && !window.confirm("Den Zeitplan wirklich neu berechnen? Erledigte Aufgaben, Notizen und Dateien bleiben erhalten.")) return;
+        const nextEndDate = suggestedPlanEnd(requestedStartDate);
+        const nextSettings = safeSettings({
+            ...settings,
+            planStartDate: requestedStartDate,
+            planEndDate: nextEndDate,
+            planStatus: "running",
+            planPausedAt: "",
+            planRevisionHistory: addPlanRevision(settings, {
+                action: isRouteChange ? "route_changed" : "started",
+                reason: isRouteChange ? reason : "Lernplan wurde gestartet.",
+                nextStartDate: requestedStartDate,
+                nextEndDate
+            })
+        });
+        setSettings(nextSettings);
+        setSettingsDraft(nextSettings);
+        setRouteChangeReason("");
+        const [ok, centralSaved] = await Promise.all([
+            postState({
+                action: "settings",
+                settings: nextSettings
+            }),
+            saveCentralPlanning(nextSettings)
+        ]);
+        setToast(ok && centralSaved ? isRouteChange ? `Projektweg ab ${formatDate(requestedStartDate)} neu geplant. Erledigte Arbeit blieb erhalten.` : `Plan am ${formatDate(requestedStartDate)} gestartet. Das Enddatum und alle Plantage wurden neu berechnet.` : "Der Planstart konnte nicht gespeichert werden.");
+    }
+    async function resumePlan() {
+        if (settings.planStatus !== "paused" || !settings.planPausedAt) return;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(resumeDate) || resumeDate < settings.planPausedAt) {
+            setToast("Das Fortsetzungsdatum darf nicht vor dem Pausendatum liegen.");
+            return;
+        }
+        const recalculated = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$project$2d$schedule$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["rescheduleAfterPause"])({
+            planStartDate: settings.planStartDate,
+            pausedAt: settings.planPausedAt,
+            resumeDate,
+            calculateEnd: suggestedPlanEnd
+        });
+        const nextSettings = safeSettings({
+            ...settings,
+            planStartDate: recalculated.planStartDate,
+            planEndDate: recalculated.planEndDate,
+            planStatus: "running",
+            planPausedAt: "",
+            planRevisionHistory: addPlanRevision(settings, {
+                action: "resumed",
+                reason: `Nach ${recalculated.pauseDays} Pausentagen fortgesetzt.`,
+                nextStartDate: recalculated.planStartDate,
+                nextEndDate: recalculated.planEndDate
+            })
+        });
+        setSettings(nextSettings);
+        setSettingsDraft(nextSettings);
+        const [ok, centralSaved] = await Promise.all([
+            postState({
+                action: "settings",
+                settings: nextSettings
+            }),
+            saveCentralPlanning(nextSettings)
+        ]);
+        setToast(ok && centralSaved ? `Plan fortgesetzt. Alle Termine wurden um ${displayNumber(recalculated.pauseDays)} Tage neu berechnet; erledigte Arbeit blieb erhalten.` : "Der neue Zeitplan konnte nicht gespeichert werden.");
+    }
+    function revealDay(day, searchQuery = query, preservePhaseFilter = false) {
+        setActiveView("plan");
+        setShowFullPlan(true);
+        setPlanMode("details");
+        window.history.replaceState(null, "", "#plan");
+        if (!preservePhaseFilter && phaseFilter !== "all" && phaseFilter !== day.phaseId) {
+            setPhaseFilter(day.phaseId);
+        }
+        setStatusFilter("all");
+        setActiveDayId(day.id);
+        if (searchQuery && !query) setQuery(searchQuery);
+        window.setTimeout(()=>{
+            const element = document.getElementById(`day-${day.id}`);
+            if (!element) return;
+            if (element instanceof HTMLDetailsElement) element.open = true;
+            let parent = element.parentElement;
+            while(parent){
+                if (parent instanceof HTMLDetailsElement) parent.open = true;
+                parent = parent.parentElement;
+            }
+            window.requestAnimationFrame(()=>{
+                window.requestAnimationFrame(()=>{
+                    const headerOffset = 92;
+                    const top = Math.max(0, window.scrollY + element.getBoundingClientRect().top - headerOffset);
+                    window.scrollTo({
+                        top,
+                        behavior: "smooth"
+                    });
+                    element.focus({
+                        preventScroll: true
+                    });
+                });
+            });
+        }, 140);
+    }
+    function openFullPlan(focusSearch = false, mode = "details") {
+        setActiveView("plan");
+        setShowFullPlan(true);
+        setPlanMode(mode);
+        window.history.replaceState(null, "", mode === "roadmap" ? "#projekt-fahrplan" : "#plan");
+        window.setTimeout(()=>{
+            document.getElementById("plan")?.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+            if (focusSearch && mode === "details") document.getElementById("plan-search")?.focus();
+        }, 80);
+    }
+    function openToday() {
+        const currentDate = systemLocalIsoDate();
+        const currentPlanDay = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].find((day)=>shiftedPlanDate(day.date, settings.planStartDate) === currentDate);
+        setSystemToday(currentDate);
+        if (currentPlanDay) {
+            setFocusTargetDayId(currentPlanDay.id);
+            setToast(`Systemdatum erkannt: ${formatDate(currentDate)}. Der zugehörige Plantag wird geöffnet.`);
+            window.history.replaceState(null, "", `#day-${currentPlanDay.id}`);
+            revealDay(currentPlanDay, "");
+            return;
+        }
+        setActiveView("plan");
+        setShowFullPlan(false);
+        setActiveDayId(null);
+        window.history.replaceState(null, "", "#start-dashboard");
+        setToast(`Systemdatum erkannt: ${formatDate(currentDate)}. Für heute ist kein Lernplan-Eintrag geplant.`);
+        window.setTimeout(()=>{
+            document.getElementById("start-dashboard")?.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }, 40);
+    }
+    function exportJson() {
+        downloadText(`${settings.projectName || "study-plan"}-progress.json`, JSON.stringify({
+            schema: "cross-repository-study-tracker.v1",
+            exportedAt: new Date().toISOString(),
+            completedIds: [
+                ...completed
+            ],
+            notes,
+            settings
+        }, null, 2), "application/json");
+    }
+    async function importJson(event) {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (!file) return;
+        try {
+            const parsed = JSON.parse(await file.text());
+            const normalized = normalizeState(parsed);
+            const nextCompleted = new Set(normalized.completedIds ?? []);
+            const nextNotes = normalized.notes ?? {};
+            const nextSettings = safeSettings(normalized.settings);
+            setCompleted(nextCompleted);
+            setNotes(nextNotes);
+            setSettings(nextSettings);
+            setSettingsDraft(nextSettings);
+            const ok = await postState({
+                action: "import",
+                completedIds: [
+                    ...nextCompleted
+                ],
+                notes: nextNotes,
+                settings: nextSettings
+            });
+            setToast(ok ? "Fortschrittsdatei geprüft und importiert." : "Datei gelesen, aber nicht auf dem Server gespeichert.");
+        } catch  {
+            setToast("Diese Datei ist keine gültige JSON-Datei des Lernplans.");
+        }
+    }
+    function exportIcs(remainingOnly = false) {
+        const visibleDays = remainingOnly ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].filter((day)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day) > 0 && outputCount(day) < (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day)) : __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"];
+        const days = visibleDays.filter((day)=>!settings.planEndDate || shiftedPlanDate(day.date, settings.planStartDate) <= settings.planEndDate);
+        const [hours, minutes] = settings.dailyStart.split(":").map((value)=>Number(value));
+        const startMinutes = (Number.isFinite(hours) ? hours : 9) * 60 + (Number.isFinite(minutes) ? minutes : 0);
+        const planEvents = days.map((day)=>{
+            const effectiveDate = shiftedPlanDate(day.date, settings.planStartDate);
+            const start = localIcsDate(effectiveDate, startMinutes);
+            const end = localIcsDate(effectiveDate, startMinutes + activeDailyWorkMode.totalMinutes);
+            return [
+                "BEGIN:VEVENT",
+                `UID:${day.id}-${settings.projectName.replace(/\s+/g, "-")}@study-tracker`,
+                `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")}`,
+                `DTSTART;TZID=Europe/Berlin:${start}`,
+                `DTEND;TZID=Europe/Berlin:${end}`,
+                `SUMMARY:${escapeIcs(`${settings.planName || settings.projectName} — ${day.title}`)}`,
+                `DESCRIPTION:${escapeIcs(`Tagesergebnis: ${day.deliverable}\nModul: ${day.module}\nMedium: ${day.workMode === "paper" ? "Papier, ohne Bildschirm" : "Bildschirmarbeit erlaubt"}\nArbeitsmodus: ${activeDailyWorkMode.label}\nMaximal ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["workModeRequiredTaskIndexes"])(settings.dailyWorkMode).length} verpflichtende Ergebnisse; übrige Details sind Qualitätsleitfaden.`)}`,
+                "END:VEVENT"
+            ].join("\r\n");
+        }).join("\r\n");
+        const courseEvents = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["nlpCourseSessions"].filter((session)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isNlpRemainingLiveSession"])(session.number)).map((session)=>{
+            const start = localIcsDate(session.date, 19 * 60 + 30);
+            const end = localIcsDate(session.date, 21 * 60 + 10);
+            const readingPlanDescription = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$nlp$2d$course$2d$calendar$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["buildCourseReadingPlanDescription"])(session, (readingId)=>{
+                const reading = articleReadingsById.get(readingId);
+                return reading ? formatCourseReading(reading) : readingId;
+            });
+            return [
+                "BEGIN:VEVENT",
+                `UID:nlp-live-${session.number}-2026@study-tracker`,
+                `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")}`,
+                `DTSTART;TZID=Europe/Berlin:${start}`,
+                `DTEND;TZID=Europe/Berlin:${end}`,
+                `SUMMARY:${escapeIcs(`Study Tracker · NLP ${String(session.number).padStart(2, "0")}/10 · ${session.title}`)}`,
+                `DESCRIPTION:${escapeIcs(readingPlanDescription)}`,
+                "END:VEVENT"
+            ].join("\r\n");
+        }).join("\r\n");
+        const events = [
+            planEvents,
+            courseEvents
+        ].filter(Boolean).join("\r\n");
+        const calendar = [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//Cross Repository Study Tracker//FA",
+            "CALSCALE:GREGORIAN",
+            "METHOD:PUBLISH",
+            events,
+            "END:VCALENDAR"
+        ].join("\r\n");
+        downloadText(`${settings.projectName || "study-plan"}.ics`, calendar, "text/calendar;charset=utf-8");
+    }
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "app-shell",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                className: "skip-link",
+                href: "#main-content",
+                children: "Zum Hauptinhalt springen"
+            }, void 0, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 2185,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                className: "topbar",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                        className: "brand",
+                        href: "#start-dashboard",
+                        "aria-label": "Startseite des Lernplans",
+                        onClick: ()=>{
+                            setActiveView("plan");
+                            setShowFullPlan(false);
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "brand-mark",
+                                "aria-hidden": "true",
+                                children: "CR"
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 2196,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                    children: displayedProjectName
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 2200,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 2199,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 2190,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
+                        className: "top-actions dashboard-top-actions",
+                        "aria-label": "Schnellaktionen",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: "top-icon-button",
+                                type: "button",
+                                "aria-label": "Lernplan durchsuchen",
+                                onClick: ()=>{
+                                    openFullPlan(true);
+                                },
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                    name: "search",
+                                    size: 22
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 2212,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 2204,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: `top-icon-button sync-icon ${syncState}`,
+                                type: "button",
+                                "aria-label": `Speicherstatus: ${syncState === "saved" ? "gespeichert" : syncState === "saving" ? "wird gespeichert" : syncState === "loading" ? "wird geladen" : "Fehler"}`,
+                                title: syncState === "error" ? "Speicherverbindung nicht verfügbar" : "Speicherstatus",
+                                onClick: ()=>setToast(syncState === "saved" ? "Alle Änderungen sind sicher gespeichert." : "Der Speicherstatus wird geprüft."),
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                        name: "bell",
+                                        size: 21
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2221,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("i", {
+                                        "aria-hidden": "true"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2222,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 2214,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: "top-icon-button",
+                                type: "button",
+                                onClick: ()=>void installUnifiedApp(),
+                                title: "Lernplan, PDF Visual und Einstellungen gemeinsam installieren",
+                                "aria-label": appInstalled ? "App ist installiert" : installPrompt ? "Gesamte App installieren" : "Installationshinweis öffnen",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                    name: "download",
+                                    size: 21
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 2231,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 2224,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "top-avatar",
+                                title: displayName || "Persönlicher Lernpfad",
+                                children: displayName?.trim().slice(0, 1) || "F"
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 2233,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 2203,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 2189,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "workspace",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
+                        className: "sidebar",
+                        "aria-label": "Hauptnavigation",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
+                                className: "side-nav",
+                                "aria-label": "Arbeitsbereiche",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: "#start-dashboard",
+                                        className: activeView === "plan" ? "active" : "",
+                                        onClick: (event)=>{
+                                            event.preventDefault();
+                                            openToday();
+                                        },
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "home"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2250,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Heute"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2242,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: "#plan",
+                                        onClick: (event)=>{
+                                            event.preventDefault();
+                                            openFullPlan();
+                                        },
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "calendar"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2253,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Lernplan"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2252,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
+                                        onClick: ()=>exportIcs(false),
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "calendar"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2256,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Kalender"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2255,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: settings.pdfReaderUrl,
+                                        ...internalLinkProps(settings.pdfReaderUrl),
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "book"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2259,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Bibliothek"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2258,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: "#rhythm",
+                                        onClick: ()=>{
+                                            setActiveView("plan");
+                                            setShowFullPlan(false);
+                                            setShowProgressOverview(true);
+                                        },
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "pulse"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2262,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Fortschritt"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2261,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: settings.settingsAppUrl,
+                                        ...internalLinkProps(settings.settingsAppUrl),
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "settings"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2265,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Einstellungen"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2264,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 2241,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "sidebar-quick",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: "Schnellzugriff"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2269,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: settings.pdfReaderUrl,
+                                        ...internalLinkProps(settings.pdfReaderUrl),
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "file"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2271,
+                                                columnNumber: 15
+                                            }, this),
+                                            " PDF Visual"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2270,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: exposeReaderHref(settings.pdfReaderUrl),
+                                        title: "Normal klicken: hier öffnen. Rechtsklick: in neuem Tab oder Fenster öffnen.",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "book"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2274,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Exposé"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2273,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: "/nlp-lab",
+                                        ...internalLinkProps("/nlp-lab"),
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "pulse"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2277,
+                                                columnNumber: 15
+                                            }, this),
+                                            " NLP Retrieval Lab"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2276,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
+                                        className: focusActive?.status ?? "",
+                                        onClick: ()=>{
+                                            if (!focusActive) setFocusTargetDayId(nextDay.id);
+                                            setFocusOpen(true);
+                                        },
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "clock"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2287,
+                                                columnNumber: 15
+                                            }, this),
+                                            " ",
+                                            focusActive ? formatFocusDuration(activeFocusSeconds) : "Fokus-Timer"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2279,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 2268,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "sidebar-foot",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "profile-card",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "profile-avatar",
+                                                "aria-hidden": "true",
+                                                children: displayName?.trim().slice(0, 1) || "F"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2292,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                        children: displayName || "Forscherin"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 2296,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                        children: "Persönlicher Lernpfad"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 2297,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2295,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2291,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        ref: importInputRef,
+                                        className: "visually-hidden",
+                                        type: "file",
+                                        accept: "application/json,.json",
+                                        onChange: importJson,
+                                        "aria-label": "JSON-Fortschrittsdatei auswählen"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 2300,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 2290,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 2240,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
+                        className: "main-content",
+                        id: "main-content",
+                        tabIndex: -1,
+                        children: activeView === "plan" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                    className: "start-dashboard",
+                                    id: "start-dashboard",
+                                    "aria-labelledby": "dashboard-title",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                                            className: "dashboard-welcome",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                                    id: "dashboard-title",
+                                                    children: [
+                                                        "Guten Morgen, ",
+                                                        firstName
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2316,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("time", {
+                                                    dateTime: systemToday,
+                                                    children: formatDate(systemToday)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2317,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    children: "Ein klarer Schritt für heute."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2318,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2315,
+                                            columnNumber: 13
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                            className: `plan-control-panel ${settings.planStatus}`,
+                                            "aria-labelledby": "plan-control-title",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "plan-control-copy",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "eyebrow quiet",
+                                                            children: "Projektzeitplan"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2323,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                            id: "plan-control-title",
+                                                            children: settings.planStatus === "not_started" ? "Lernplan starten" : settings.planStatus === "paused" ? "Lernplan pausiert" : "Lernplan aktiv"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2324,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            children: settings.planStatus === "not_started" ? `Wähle erst dann dein tatsächliches Startdatum, wenn du bereit bist. Ein späterer Start verschiebt alle ${__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalWeeks} Wochen gemeinsam; nichts wird verdichtet oder doppelt geplant.` : settings.planStatus === "paused" ? `Seit ${formatDate(settings.planPausedAt)} pausiert. Fortschritt, Notizen und Dateien bleiben erhalten.` : `Beginn ${formatDate(settings.planStartDate)} · geplantes Ende ${formatDate(settings.planEndDate)}`
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2327,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2322,
+                                                    columnNumber: 15
+                                                }, this),
+                                                settings.planStatus === "paused" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "plan-control-actions",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "Fortsetzen am"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2338,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                    dir: "ltr",
+                                                                    type: "date",
+                                                                    min: settings.planPausedAt,
+                                                                    value: resumeDate,
+                                                                    onChange: (event)=>setResumeDate(event.target.value)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2339,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    className: "localized-date-preview",
+                                                                    children: formatDate(resumeDate, true)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2340,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2337,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            className: "button primary",
+                                                            type: "button",
+                                                            onClick: ()=>void resumePlan(),
+                                                            children: "Plan fortsetzen und Termine neu berechnen"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2342,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2336,
+                                                    columnNumber: 17
+                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "plan-control-actions",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: settings.planStatus === "running" ? "Neues Startdatum" : "Startdatum"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2349,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                    dir: "ltr",
+                                                                    type: "date",
+                                                                    min: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["trackerRestartPlan"].mainPlanStart,
+                                                                    value: requestedStartDate,
+                                                                    onChange: (event)=>setRequestedStartDate(event.target.value)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2350,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    className: "localized-date-preview",
+                                                                    children: formatDate(requestedStartDate, true)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2351,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: "Standardstart 15. Oktober · medizinische Pausen bleiben geschützt."
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2352,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2348,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            className: "button primary",
+                                                            type: "button",
+                                                            onClick: ()=>void startPlan(),
+                                                            children: settings.planStatus === "running" ? "Mit neuem Datum erneut starten" : "Lernplan starten"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2354,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        settings.planStatus === "running" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            className: "button secondary",
+                                                            type: "button",
+                                                            onClick: ()=>void pausePlan(),
+                                                            children: "Plan vorübergehend pausieren"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2358,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2347,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2321,
+                                            columnNumber: 13
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                            className: "restart-plan-card",
+                                            "aria-labelledby": "restart-plan-title",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "eyebrow quiet",
+                                                            children: "Medizinisch geschützter Plan"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2368,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                            id: "restart-plan-title",
+                                                            children: "Planstart 15. Oktober · Neustart"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2369,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                    children: [
+                                                                        "0 / ",
+                                                                        displayNumber(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalItems),
+                                                                        " ist korrekt:"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2370,
+                                                                    columnNumber: 20
+                                                                }, this),
+                                                                " Der kapazitätsbasierte Plan beginnt frisch am 15. Oktober. Frühere Sitzungen 1–7 bleiben archiviert und sind kein Rückstand."
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2370,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2367,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
+                                                    className: "restart-catchup-rule",
+                                                    "aria-label": "Regel für alte Kurssitzungen",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                            children: "Sitzungen 1–7 bleiben archiviert"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2373,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            children: "Erst nach dem verpflichtenden Wochenartefakt und höchstens eine Sitzung pro Woche. Nur öffnen, wenn sie Artefakt, Test oder Evidence der aktuellen Woche direkt blockiert; sonst endgültig überspringen."
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2374,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2372,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "restart-health-priority",
+                                                    children: "Bei Beschwerden wird der ganze Plan verschoben, nicht verdichtet. Die individuelle Anweisung des Operateurs hat Vorrang vor allgemeinen Internet-Empfehlungen, Uhrzeit, Startdatum und Streak."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2376,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2366,
+                                            columnNumber: 13
+                                        }, this),
+                                        todayCourseSession ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                            className: "live-course-banner",
+                                            "aria-label": "Heutige NLP-Live-Sitzung",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: [
+                                                                "Live-Kurs · Sitzung ",
+                                                                todayCourseSession.number,
+                                                                " von 10"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2382,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                            children: todayCourseSession.title
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2383,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            children: [
+                                                                todayCourseSession.berlinTime,
+                                                                " Berlin · nur beobachten, keine Vorbereitung · danach höchstens drei Notizzeilen"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2384,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2381,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                    className: "button primary",
+                                                    href: "/nlp-lab",
+                                                    ...internalLinkProps("/nlp-lab"),
+                                                    children: [
+                                                        "Sitzung ohne Vorbereitung öffnen ",
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                            name: "arrow",
+                                                            size: 17
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2387,
+                                                            columnNumber: 52
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2386,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2380,
+                                            columnNumber: 15
+                                        }, this) : null,
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                            className: "course-schedule-panel",
+                                            open: Boolean(todayCourseSession),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "summary-marker",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                name: "calendar",
+                                                                size: 18
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 2394,
+                                                                columnNumber: 50
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2394,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "course-schedule-heading",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                    children: "Onlinekurs · NLP, RNN, Transformer und LLM"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2396,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: [
+                                                                        __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["nlpCourseMeta"].instructor,
+                                                                        " · 8–10 nur live beobachten · 1–7 archiviert, kein Rückstand"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2397,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2395,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "course-schedule-time",
+                                                            children: [
+                                                                "10 × 100 Min. · ",
+                                                                __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["nlpCourseMeta"].berlinTime,
+                                                                " Berlin"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2401,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2393,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "course-session-grid",
+                                                    children: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["nlpCourseSessions"].map((session)=>{
+                                                        const readings = getCourseReadings(session.readingIds);
+                                                        const transfer = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["courseTransferForSession"])(session.number);
+                                                        const catchUpSession = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isNlpCatchUpSession"])(session.number);
+                                                        const liveObserverSession = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isNlpRemainingLiveSession"])(session.number);
+                                                        const transferDeferred = Boolean(transfer) && (catchUpSession || liveObserverSession);
+                                                        const sessionState = catchUpSession ? "catchup" : session.date === systemToday ? "today" : session.date < systemToday ? "past" : "upcoming";
+                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                            className: `course-session-card ${sessionState}`,
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: catchUpSession ? `Archiviert · kein Rückstand · ${session.number}/10` : `Live beobachten · ${session.number}/10`
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2424,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("time", {
+                                                                            dateTime: session.date,
+                                                                            children: formatDate(session.date, true)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2425,
+                                                                            columnNumber: 25
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2423,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                    children: session.title
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2427,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    className: "course-session-clock",
+                                                                    children: [
+                                                                        session.berlinTime,
+                                                                        " Berlin · 100 Minuten"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2428,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                                    className: "course-topic-list",
+                                                                    children: session.topics.map((topic)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                            children: topic
+                                                                        }, topic, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2430,
+                                                                            columnNumber: 56
+                                                                        }, this))
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2429,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                transfer && !transferDeferred ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                                                    className: `course-transfer-brief ${transfer.relevance}`,
+                                                                    "aria-label": `Transferplan für Sitzung ${session.number}`,
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                            children: "Kurs → Thesis · kein Zusatz-Backlog"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2434,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    children: "≤ 24 h"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2436,
+                                                                                    columnNumber: 29
+                                                                                }, this),
+                                                                                " Notiz bis ",
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("time", {
+                                                                                    dateTime: transfer.noteDue,
+                                                                                    children: formatDate(transfer.noteDue)
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2436,
+                                                                                    columnNumber: 59
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2435,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    children: "≤ 7 Tage"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2439,
+                                                                                    columnNumber: 29
+                                                                                }, this),
+                                                                                " ",
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("code", {
+                                                                                    dir: "ltr",
+                                                                                    children: transfer.artifact
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2439,
+                                                                                    columnNumber: 51
+                                                                                }, this),
+                                                                                " bis ",
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("time", {
+                                                                                    dateTime: transfer.artifactDue,
+                                                                                    children: formatDate(transfer.artifactDue)
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2439,
+                                                                                    columnNumber: 98
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2438,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                            children: [
+                                                                                "Max. ",
+                                                                                displayNumber(transfer.maxMinutes),
+                                                                                " Min. · ersetzt ein Tagesergebnis · ",
+                                                                                transfer.acceptance
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2441,
+                                                                            columnNumber: 27
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2433,
+                                                                    columnNumber: 25
+                                                                }, this) : transfer ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                                                    className: "course-transfer-brief deferred",
+                                                                    "aria-label": `Nachholregel für Sitzung ${session.number}`,
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                            children: catchUpSession ? "Archiviert · nur bei direktem Wochenblocker" : "Keine Vorarbeit · maximal drei Zeilen danach"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2445,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        catchUpSession ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                    children: [
+                                                                                        "Frühestens ab ",
+                                                                                        formatDate(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["trackerRestartPlan"].catchUpPolicy.earliestDate),
+                                                                                        ", erst nach dem Wochenartefakt und höchstens einmal pro Woche."
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2448,
+                                                                                    columnNumber: 31
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                                    children: "Frage zuerst: Blockiert diese Sitzung Artefakt, Test oder Evidence dieser Woche? Wenn nein, überspringen."
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2449,
+                                                                                    columnNumber: 31
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                    children: "Nur teilnehmen, wenn es möglich ist. Bei Teilnahme: verstanden · Thesis-Bezug · offene Frage."
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2453,
+                                                                                    columnNumber: 31
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                                    children: "Wenn verpasst, vor dem Projektneustart nicht nachholen. Frühere Transferfristen sind aufgehoben."
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2454,
+                                                                                    columnNumber: 31
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2444,
+                                                                    columnNumber: 25
+                                                                }, this) : null,
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                                                    className: "course-session-readings",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                                            children: catchUpSession ? `Archiviertes Referenzmaterial anzeigen · ${readings.length} Artikel` : `Referenzmaterial anzeigen · keine Vorablektüre · ${readings.length} Artikel`
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2460,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                            className: "course-reference-boundary",
+                                                                            children: "Diese Dateien erzeugen keine Pflichtaufgabe. Erst nach dem Neustart und nur bei direktem Wochenblocker verwenden."
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2465,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                                            children: readings.map((reading)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                                    children: reading.fileName
+                                                                                }, reading.id, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2468,
+                                                                                    columnNumber: 29
+                                                                                }, this))
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2466,
+                                                                            columnNumber: 25
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2459,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, session.number, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2422,
+                                                            columnNumber: 21
+                                                        }, this);
+                                                    })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2405,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
+                                                    className: "course-schedule-footer",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: "Der Kurskalender enthält keine Vorablektüre und keinen automatischen Nachholtermin."
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2477,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                            className: "button secondary",
+                                                            href: "/nlp-lab",
+                                                            ...internalLinkProps("/nlp-lab"),
+                                                            children: [
+                                                                "NLP-Lab und Artikelauswahl öffnen ",
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                    name: "arrow",
+                                                                    size: 17
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2479,
+                                                                    columnNumber: 53
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2478,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2476,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2392,
+                                            columnNumber: 13
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "dashboard-primary-grid",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                    className: "today-card",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                                                            className: "dashboard-card-title",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                            name: "calendar",
+                                                                            size: 21
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2487,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        " Heute · ",
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("time", {
+                                                                            dateTime: systemToday,
+                                                                            children: formatDate(systemToday, true)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2487,
+                                                                            columnNumber: 68
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2487,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "today-card-controls",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            className: "button primary focus-start-button focus-start-button-top",
+                                                                            type: "button",
+                                                                            disabled: !planCanRecordToday,
+                                                                            onClick: ()=>{
+                                                                                if (!planCanRecordToday || !systemTodayDay) return;
+                                                                                setFocusTargetDayId(systemTodayDay.id);
+                                                                                if (focusActive) setFocusOpen(true);
+                                                                                else void focusAction("start", systemTodayDay.id);
+                                                                            },
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                                    name: "play",
+                                                                                    size: 18
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2500,
+                                                                                    columnNumber: 23
+                                                                                }, this),
+                                                                                settings.planStatus === "not_started" ? "Erst Lernplan starten" : settings.planStatus === "paused" ? "Lernplan ist pausiert" : !systemTodayDay ? "Heute kein Lerneintrag" : focusActive ? "Fokus öffnen" : `Fokus starten · ${displayNumber((0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["workModeTaskMinutes"])(settings.dailyWorkMode, currentTodayTaskIndex))} Min.`
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2489,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        planCanRecordToday && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                                    name: "clock",
+                                                                                    size: 17
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2511,
+                                                                                    columnNumber: 51
+                                                                                }, this),
+                                                                                " ",
+                                                                                displayNumber(activeDailyWorkMode.totalMinutes),
+                                                                                " Min."
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2511,
+                                                                            columnNumber: 44
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2488,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2486,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        !planCanRecordToday && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "today-empty-state",
+                                                            children: settings.planStatus === "not_started" ? "Dies ist nur eine Vorschau. Wähle oben dein echtes Startdatum und starte den Lernplan; vorher wird kein Fortschritt gespeichert." : settings.planStatus === "paused" ? "Der Lernplan ist pausiert. Du kannst Inhalte ansehen, aber bis zum Fortsetzen wird kein Fortschritt gespeichert." : `Für ${formatDate(systemToday)} ist kein eigener Lernplan-Eintrag vorgesehen. Der nächste offene Plantag wird nur als Vorschau angezeigt und nicht als heutige Aktivität gespeichert.`
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2515,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "today-phase-chip",
+                                                            children: [
+                                                                planCanRecordToday ? "Heutiger Plantag" : "Vorschau",
+                                                                " · ",
+                                                                dashboardDay.phaseId.startsWith("design-") ? `Design ${dashboardDayWeekNumber}` : `Woche ${dashboardDayWeekNumber}`,
+                                                                " · ",
+                                                                dashboardDay.weekTitle
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2523,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                                            className: "daily-mode-control",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                                    name: "clock",
+                                                                                    size: 17
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2528,
+                                                                                    columnNumber: 27
+                                                                                }, this),
+                                                                                " Arbeitsmodus"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2528,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                            children: activeDailyWorkMode.label
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2529,
+                                                                            columnNumber: 21
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2527,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: activeDailyWorkMode.description
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2531,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    className: "daily-mode-budget",
+                                                                    children: [
+                                                                        "Mit diesem Modus umfasst der gesamte ",
+                                                                        displayNumber(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalWeeks),
+                                                                        "-Wochen-Plan ungefähr ",
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                            children: [
+                                                                                displayNumber(activeModePlanHours),
+                                                                                " Stunden"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2533,
+                                                                            columnNumber: 116
+                                                                        }, this),
+                                                                        settings.dailyWorkMode !== "full" ? ` statt ${displayNumber(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].plannedHours)} Stunden im Vollzeitmodus.` : "."
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2532,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "daily-mode-options",
+                                                                    role: "group",
+                                                                    "aria-label": "Arbeitsmodus für heute wählen",
+                                                                    children: Object.keys(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DAILY_WORK_MODES"]).map((mode)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            type: "button",
+                                                                            className: settings.dailyWorkMode === mode ? "active" : "",
+                                                                            "aria-pressed": settings.dailyWorkMode === mode,
+                                                                            onClick: ()=>void setDailyWorkMode(mode),
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                                    children: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DAILY_WORK_MODES"][mode].shortLabel
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2545,
+                                                                                    columnNumber: 25
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    children: [
+                                                                                        displayNumber(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DAILY_WORK_MODES"][mode].totalMinutes),
+                                                                                        " Min."
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2546,
+                                                                                    columnNumber: 25
+                                                                                }, this)
+                                                                            ]
+                                                                        }, mode, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2538,
+                                                                            columnNumber: 23
+                                                                        }, this))
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2536,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2526,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                            children: dashboardDay.title
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2551,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "today-task-list",
+                                                            children: requiredTodayTasks.map((task)=>{
+                                                                const checked = task.items.every((item)=>completed.has(item.id));
+                                                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                            type: "checkbox",
+                                                                            disabled: !planCanRecordToday,
+                                                                            checked: checked,
+                                                                            onChange: (event)=>{
+                                                                                if (planCanRecordToday && systemTodayDay) void toggleTaskGroup(systemTodayDay, task, event.target.checked);
+                                                                            }
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2557,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: task.title.replace(/^\d+\.\s*/, "")
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2565,
+                                                                            columnNumber: 25
+                                                                        }, this)
+                                                                    ]
+                                                                }, task.id, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2556,
+                                                                    columnNumber: 23
+                                                                }, this);
+                                                            })
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2552,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "today-progress",
+                                                            "aria-label": `${completedTaskGroups} von ${requiredTodayTasks.length} Tagesergebnissen erledigt`,
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("i", {
+                                                                        style: {
+                                                                            width: `${completedTaskGroups / Math.max(1, requiredTodayTasks.length) * 100}%`
+                                                                        }
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 2571,
+                                                                        columnNumber: 25
+                                                                    }, this)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2571,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: [
+                                                                        displayNumber(completedTaskGroups),
+                                                                        " von ",
+                                                                        displayNumber(requiredTodayTasks.length),
+                                                                        " Ergebnissen"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2572,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2570,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        requiredTodayTasks.length < dashboardDay.tasks.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "today-optional-note",
+                                                            children: [
+                                                                displayNumber(dashboardDay.tasks.length - requiredTodayTasks.length),
+                                                                " weiteres Ergebnis ist heute optional und erzeugt keinen Rückstand."
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2575,
+                                                            columnNumber: 19
+                                                        }, this) : null,
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "today-actions",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                className: "dashboard-text-action",
+                                                                type: "button",
+                                                                onClick: ()=>revealDay(dashboardDay),
+                                                                children: [
+                                                                    planCanRecordToday ? "Heutigen Tagesplan öffnen" : "Plantag als Vorschau ansehen",
+                                                                    " ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                        name: "arrow",
+                                                                        size: 17
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 2581,
+                                                                        columnNumber: 105
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 2580,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2579,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2485,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                    className: "milestone-card",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                                                            className: "dashboard-card-title milestone-title",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                        name: "flag",
+                                                                        size: 22
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 2588,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    " Nächster Meilenstein"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 2588,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2587,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("time", {
+                                                            dateTime: designMilestoneDate,
+                                                            children: formatDate(designMilestoneDate, true)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2590,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                            children: "Softwaredesign abgeschlossen"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2591,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "milestone-progress",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressRing, {
+                                                                    percent: designPercent,
+                                                                    label: "Design"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2593,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                            children: displayNumber(milestoneDaysRemaining)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2594,
+                                                                            columnNumber: 22
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: "Tage verbleiben"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2594,
+                                                                            columnNumber: 78
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2594,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2592,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2586,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2484,
+                                            columnNumber: 13
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                            className: "dashboard-metrics",
+                                            "aria-label": "Deine Lernkennzahlen",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>setFocusOpen(true),
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "dashboard-metric-icon",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                name: "clock"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 2601,
+                                                                columnNumber: 57
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2601,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: "Fokuszeit"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2602,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                    children: formatFocusDuration(measuredFocusSeconds)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2602,
+                                                                    columnNumber: 47
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2602,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2600,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "dashboard-metric-icon",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                name: "book"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 2605,
+                                                                columnNumber: 57
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2605,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: "Planergebnisse"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2606,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                    children: [
+                                                                        displayNumber(completedOutputs),
+                                                                        " / ",
+                                                                        displayNumber(totalRequiredOutputs)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2606,
+                                                                    columnNumber: 52
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2606,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2604,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "dashboard-metric-icon",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                name: "flame"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 2609,
+                                                                columnNumber: 57
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2609,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: "Aktive Tage"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2610,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                    children: displayNumber(activeDayCount)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2610,
+                                                                    columnNumber: 49
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2610,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2608,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2599,
+                                            columnNumber: 13
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                            className: "critical-path-card dashboard-disclosure",
+                                            open: true,
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                    name: "flag",
+                                                                    size: 20
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2616,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                " Kritischer Pfad · erste 6 Wochen"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2616,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: "W1 startet am 15. Oktober · Ruhe- und Papierphasen erzeugen keinen Rückstand"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2617,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2615,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ol", {
+                                                    className: "critical-path-list",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                    children: "W1"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2620,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "Scope + eine prüfbare End-to-End-Frage"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2620,
+                                                                    columnNumber: 30
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2620,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                    children: "W2"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2621,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "Modulverträge + Walking-Skeleton-Grenze"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2621,
+                                                                    columnNumber: 30
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2621,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                            className: "is-gate",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                    children: "W3"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2622,
+                                                                    columnNumber: 41
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "Roslyn → EvidenceRecord → JSONL + Golden Test"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2622,
+                                                                    columnNumber: 50
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2622,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                    children: "W4"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2623,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "Goldstandard-Fixture + messbare RQ1/RQ2-Kriterien"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2623,
+                                                                    columnNumber: 30
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2623,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                    children: "W5"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2624,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "Reproduzierbarer Build + Flat-Retrieval-Contract"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2624,
+                                                                    columnNumber: 30
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2624,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                            className: "is-gate",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                    children: "W6"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2625,
+                                                                    columnNumber: 41
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "Mini-Demo + Readiness Gate; kein Design ohne Laufbeleg"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2625,
+                                                                    columnNumber: 50
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2625,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2619,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: "W1 läuft vom 15. bis 19. Oktober. Papierentwürfe werden erst nach der Bildschirmfreigabe digital geprüft und abgehakt."
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2628,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            className: "button secondary",
+                                                            type: "button",
+                                                            onClick: ()=>openFullPlan(false, "roadmap"),
+                                                            children: [
+                                                                "Projekt-Fahrplan im Lernplan öffnen ",
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                    name: "arrow",
+                                                                    size: 16
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2629,
+                                                                    columnNumber: 151
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2629,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2627,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2614,
+                                            columnNumber: 13
+                                        }, this),
+                                        acknowledgedPlanVersion !== null && acknowledgedPlanVersion < __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                            className: "plan-version-banner",
+                                            "aria-label": "Planänderung",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                            children: [
+                                                                "Änderungsprotokoll · keine Aufgabenliste (Version ",
+                                                                __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION"],
+                                                                ")"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2636,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            children: "Diese Box erklärt nur, was am Plan geändert wurde. Sie zählt nicht als Arbeit und verändert den Fortschritt nicht."
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2637,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                                    children: "Neueste Änderung anzeigen"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2639,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION_HISTORY"].slice(-1).map((entry)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "plan-version-entry",
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                children: [
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("em", {
+                                                                                        children: formatDate(entry.effectiveDate)
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                                        lineNumber: 2642,
+                                                                                        columnNumber: 28
+                                                                                    }, this),
+                                                                                    " — ",
+                                                                                    entry.reason
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 2642,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            entry.tasksRemoved.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                children: [
+                                                                                    "Entfernt: ",
+                                                                                    entry.tasksRemoved.join(", ")
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 2643,
+                                                                                columnNumber: 59
+                                                                            }, this),
+                                                                            entry.tasksMoved.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                children: [
+                                                                                    "Verschoben: ",
+                                                                                    entry.tasksMoved.join(", ")
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 2644,
+                                                                                columnNumber: 57
+                                                                            }, this),
+                                                                            entry.tasksAdded.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                children: [
+                                                                                    "Neu: ",
+                                                                                    entry.tasksAdded.join(", ")
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 2645,
+                                                                                columnNumber: 57
+                                                                            }, this)
+                                                                        ]
+                                                                    }, entry.version, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 2641,
+                                                                        columnNumber: 23
+                                                                    }, this))
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2638,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2635,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    className: "button secondary compact",
+                                                    onClick: acknowledgePlanVersion,
+                                                    type: "button",
+                                                    "aria-label": "Änderungshinweis schließen; keine Aufgabe abschließen",
+                                                    children: "Verstanden · Hinweis schließen"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2650,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2634,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                            className: "dashboard-recall",
+                                            "aria-label": "Fällige Wiederholungen",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$RecallCheck$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["RecallCheck"], {}, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2657,
+                                                columnNumber: 15
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2656,
+                                            columnNumber: 13
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                            className: "plan-changelog-disclosure",
+                                            open: showPlanChangelog,
+                                            onToggle: (event)=>setShowPlanChangelog(event.currentTarget.open),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                    children: [
+                                                        "Planänderungen (",
+                                                        __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION_HISTORY"].length,
+                                                        " Version",
+                                                        __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION_HISTORY"].length === 1 ? "" : "en",
+                                                        ")"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2661,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "plan-changelog-list",
+                                                    children: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PLAN_VERSION_HISTORY"].toSorted((a, b)=>b.version - a.version).map((entry)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                            className: "plan-version-entry",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                            children: [
+                                                                                "Version ",
+                                                                                entry.version
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2665,
+                                                                            columnNumber: 24
+                                                                        }, this),
+                                                                        " · ",
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("em", {
+                                                                            children: formatDate(entry.effectiveDate)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2665,
+                                                                            columnNumber: 67
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2665,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: entry.reason
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2666,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                entry.tasksRemoved.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: [
+                                                                        "Entfernt: ",
+                                                                        entry.tasksRemoved.join(", ")
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2667,
+                                                                    columnNumber: 55
+                                                                }, this),
+                                                                entry.tasksMoved.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: [
+                                                                        "Verschoben: ",
+                                                                        entry.tasksMoved.join(", ")
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2668,
+                                                                    columnNumber: 53
+                                                                }, this),
+                                                                entry.tasksAdded.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: [
+                                                                        "Neu: ",
+                                                                        entry.tasksAdded.join(", ")
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2669,
+                                                                    columnNumber: 53
+                                                                }, this),
+                                                                entry.tasksRemoved.length === 0 && entry.tasksMoved.length === 0 && entry.tasksAdded.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    className: "plan-version-empty",
+                                                                    children: "Keine Aufgabenänderungen -- nur Zeitplan/Datierung."
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2671,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, entry.version, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2664,
+                                                            columnNumber: 19
+                                                        }, this))
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2662,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2660,
+                                            columnNumber: 13
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                            className: "rhythm-card dashboard-disclosure",
+                                            id: "rhythm",
+                                            open: showProgressOverview,
+                                            onToggle: (event)=>setShowProgressOverview(event.currentTarget.open),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                            id: "rhythm-title",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                    name: "pulse",
+                                                                    size: 22
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2685,
+                                                                    columnNumber: 39
+                                                                }, this),
+                                                                " Dein Rhythmus"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2685,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: [
+                                                                displayNumber(rhythmWeeks.length),
+                                                                " Wochen"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2686,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2684,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "rhythm-content",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "rhythm-weeks",
+                                                            children: rhythmWeeks.map((week)=>{
+                                                                const firstDay = shiftedPlanDate(week.days[0].date, settings.planStartDate);
+                                                                const lastDay = shiftedPlanDate(week.days.at(-1).date, settings.planStartDate);
+                                                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "rhythm-week",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                                    children: [
+                                                                                        "Woche ",
+                                                                                        displayNumber(week.number)
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2696,
+                                                                                    columnNumber: 27
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    children: [
+                                                                                        formatDate(firstDay, true),
+                                                                                        " – ",
+                                                                                        formatDate(lastDay, true)
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2697,
+                                                                                    columnNumber: 27
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2695,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "rhythm-days",
+                                                                            children: week.days.map((day)=>{
+                                                                                const done = itemCount(day);
+                                                                                const level = done === 9 ? 3 : done >= 4 ? 2 : done > 0 ? 1 : 0;
+                                                                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                    type: "button",
+                                                                                    className: `activity-level-${level}`,
+                                                                                    title: `${formatDate(shiftedPlanDate(day.date, settings.planStartDate), true)}: ${done} von 9 Schritten`,
+                                                                                    "aria-label": `${formatDate(shiftedPlanDate(day.date, settings.planStartDate), true)}: ${done} von 9 Schritten erledigt`,
+                                                                                    onClick: ()=>revealDay(day),
+                                                                                    children: [
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                                            children: new Intl.DateTimeFormat("de-DE", {
+                                                                                                weekday: "short"
+                                                                                            }).format(new Date(`${shiftedPlanDate(day.date, settings.planStartDate)}T12:00:00Z`)).slice(0, 2)
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                                            lineNumber: 2712,
+                                                                                            columnNumber: 33
+                                                                                        }, this),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("i", {
+                                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                                children: displayNumber(done)
+                                                                                            }, void 0, false, {
+                                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                                lineNumber: 2713,
+                                                                                                columnNumber: 36
+                                                                                            }, this)
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                                            lineNumber: 2713,
+                                                                                            columnNumber: 33
+                                                                                        }, this)
+                                                                                    ]
+                                                                                }, day.id, true, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2704,
+                                                                                    columnNumber: 31
+                                                                                }, this);
+                                                                            })
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2699,
+                                                                            columnNumber: 25
+                                                                        }, this)
+                                                                    ]
+                                                                }, week.number, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2694,
+                                                                    columnNumber: 23
+                                                                }, this);
+                                                            })
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2689,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
+                                                            className: "rhythm-summary",
+                                                            "aria-label": "Zusammenfassung der letzten fünf Planwochen",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressRing, {
+                                                                    percent: rhythmPercent,
+                                                                    label: "5-Wochen-Fortschritt"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2723,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                            children: [
+                                                                                displayNumber(rhythmActiveDays),
+                                                                                " aktive Tage"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2725,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: [
+                                                                                displayNumber(rhythmCompletedItems),
+                                                                                " von ",
+                                                                                displayNumber(rhythmTotalItems),
+                                                                                " Lernschritten"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2726,
+                                                                            columnNumber: 21
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2724,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "activity-legend",
+                                                                    "aria-label": "Farblegende",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("i", {
+                                                                                    className: "activity-level-0"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2729,
+                                                                                    columnNumber: 27
+                                                                                }, this),
+                                                                                " Offen"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2729,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("i", {
+                                                                                    className: "activity-level-1"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2730,
+                                                                                    columnNumber: 27
+                                                                                }, this),
+                                                                                " Begonnen"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2730,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("i", {
+                                                                                    className: "activity-level-3"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2731,
+                                                                                    columnNumber: 27
+                                                                                }, this),
+                                                                                " Erledigt"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2731,
+                                                                            columnNumber: 21
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2728,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: rhythmActiveDays === 0 ? "Starte heute mit einem Lernschritt. Jede ausgefüllte Kachel macht deinen Fortschritt sichtbar." : "Dein Rhythmus wächst. Klicke auf eine Tageskachel, um direkt weiterzumachen."
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2733,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2722,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2688,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2678,
+                                            columnNumber: 13
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                            className: "journey-card dashboard-disclosure",
+                                            open: showJourneyOverview,
+                                            onToggle: (event)=>setShowJourneyOverview(event.currentTarget.open),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                            id: "journey-title",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                    name: "book",
+                                                                    size: 22
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2744,
+                                                                    columnNumber: 40
+                                                                }, this),
+                                                                " Lernreise"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2744,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: [
+                                                                displayNumber(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalWeeks),
+                                                                " Wochen · 5 Phasen"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2745,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2743,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "journey-actions",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        className: "button secondary compact",
+                                                        type: "button",
+                                                        "aria-expanded": showFullPlan,
+                                                        "aria-controls": "plan",
+                                                        onClick: ()=>openFullPlan(false, "roadmap"),
+                                                        children: [
+                                                            "Projekt-Lernplan öffnen ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                name: "flag",
+                                                                size: 17
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 2749,
+                                                                columnNumber: 43
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 2748,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2747,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "journey-track",
+                                                    children: journeyStages.map((stage)=>{
+                                                        const stageWeeks = weekProgress.filter((week)=>week.number >= stage.start && week.number <= stage.end);
+                                                        const stagePercent = stageWeeks.length ? Math.round(stageWeeks.reduce((sum, week)=>sum + week.percent, 0) / stageWeeks.length) : 0;
+                                                        const current = nextWeekIndex + 1 >= stage.start && nextWeekIndex + 1 <= stage.end;
+                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            type: "button",
+                                                            className: current ? "current" : stagePercent === 100 ? "complete" : "",
+                                                            onClick: ()=>{
+                                                                const target = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planWeeks"].find((week)=>week.number === stage.start)?.days[0];
+                                                                if (target) revealDay(target);
+                                                            },
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: stage.number
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2769,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                    children: stage.title
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2770,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: stage.weeks
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2771,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                current && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("em", {
+                                                                    children: "Aktuell"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2772,
+                                                                    columnNumber: 35
+                                                                }, this)
+                                                            ]
+                                                        }, stage.number, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2760,
+                                                            columnNumber: 21
+                                                        }, this);
+                                                    })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2752,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2738,
+                                            columnNumber: 13
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 2314,
+                                    columnNumber: 11
+                                }, this),
+                                showFullPlan && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                    className: "plan-section",
+                                    id: "plan",
+                                    "aria-labelledby": "plan-title",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "section-heading plan-heading",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "eyebrow quiet",
+                                                            children: "Phase → Woche → Tag → Aufgabe"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2783,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                            id: "plan-title",
+                                                            children: "Projekt-Lernplan"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2784,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            children: "Fahrplan und Tagesdetails sind jetzt ein gemeinsamer Lernplan mit demselben Fortschritt."
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2785,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2782,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "plan-count",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                            children: displayNumber(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalWeeks)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2788,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: "Wochen"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2789,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2787,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2781,
+                                            columnNumber: 13
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "plan-view-tabs",
+                                            role: "tablist",
+                                            "aria-label": "Ansicht des Projekt-Lernplans",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    id: "plan-details-tab",
+                                                    type: "button",
+                                                    role: "tab",
+                                                    "aria-selected": planMode === "details",
+                                                    "aria-controls": "plan-details-panel",
+                                                    onClick: ()=>{
+                                                        setPlanMode("details");
+                                                        window.history.replaceState(null, "", "#plan");
+                                                    },
+                                                    children: "Detailplan"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2794,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    id: "plan-roadmap-tab",
+                                                    type: "button",
+                                                    role: "tab",
+                                                    "aria-selected": planMode === "roadmap",
+                                                    "aria-controls": "plan-roadmap-panel",
+                                                    onClick: ()=>{
+                                                        setPlanMode("roadmap");
+                                                        window.history.replaceState(null, "", "#projekt-fahrplan");
+                                                    },
+                                                    children: "Projekt-Fahrplan"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2807,
+                                                    columnNumber: 15
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2793,
+                                            columnNumber: 13
+                                        }, this),
+                                        planMode === "roadmap" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            id: "plan-roadmap-panel",
+                                            role: "tabpanel",
+                                            "aria-labelledby": "plan-roadmap-tab",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$projekt$2d$fahrplan$2f$roadmap$2d$client$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                completed: completed,
+                                                loading: loading,
+                                                planStatus: settings.planStatus,
+                                                onOpenDay: (day)=>revealDay(day, ""),
+                                                onToggleDay: toggleRoadmapDay
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 2824,
+                                                columnNumber: 17
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2823,
+                                            columnNumber: 15
+                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            id: "plan-details-panel",
+                                            role: "tabpanel",
+                                            "aria-labelledby": "plan-details-tab",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                    className: "expose-plan-card",
+                                                    id: "expose",
+                                                    "aria-labelledby": "expose-plan-title",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "expose-plan-icon",
+                                                            "aria-hidden": "true",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                name: "book",
+                                                                size: 24
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 2836,
+                                                                columnNumber: 68
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2836,
+                                                            columnNumber: 15
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "expose-plan-copy",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: exposeMeta.custom ? "Eigene aktuelle Version" : "Mitgelieferte Ausgangsversion"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2838,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                    id: "expose-plan-title",
+                                                                    children: "Projekt-Exposé"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2839,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                    children: exposeMeta.name
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2840,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: [
+                                                                        exposeMeta.size && exposeMeta.size > 0 ? `${formatFileSize(exposeMeta.size)} · ` : "",
+                                                                        exposeMeta.updatedAt ? `aktualisiert am ${formatDate(exposeMeta.updatedAt.slice(0, 10), true)}` : "lokal in dieser App enthalten"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2841,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    className: "expose-focus",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                            children: "Lesefokus:"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2845,
+                                                                            columnNumber: 45
+                                                                        }, this),
+                                                                        " ",
+                                                                        DEFAULT_EXPOSE_FOCUS
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2845,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: "Wenn sich die Anforderungen deines Professors ändern, kannst du hier jederzeit die überarbeitete PDF als neue aktuelle Version einsetzen."
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2846,
+                                                                    columnNumber: 17
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2837,
+                                                            columnNumber: 15
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "expose-plan-actions",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                                    className: "button primary",
+                                                                    href: exposeReaderHref(settings.pdfReaderUrl),
+                                                                    title: "Normal klicken: hier öffnen. Rechtsklick: in neuem Tab oder Fenster öffnen.",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                            name: "eye",
+                                                                            size: 18
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2850,
+                                                                            columnNumber: 19
+                                                                        }, this),
+                                                                        " Im PDF Visual lesen"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2849,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    className: "button secondary",
+                                                                    type: "button",
+                                                                    disabled: exposeUploading,
+                                                                    onClick: ()=>exposeInputRef.current?.click(),
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                            name: "upload",
+                                                                            size: 18
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2853,
+                                                                            columnNumber: 19
+                                                                        }, this),
+                                                                        " ",
+                                                                        exposeUploading ? "Wird gespeichert …" : "Neue PDF-Version wählen"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2852,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                exposeMeta.custom && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    className: "button ghost",
+                                                                    type: "button",
+                                                                    onClick: ()=>void restoreBundledExpose(),
+                                                                    children: "Standardversion verwenden"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2856,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                    ref: exposeInputRef,
+                                                                    className: "visually-hidden",
+                                                                    type: "file",
+                                                                    accept: "application/pdf,.pdf",
+                                                                    onChange: (event)=>void uploadExpose(event)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2860,
+                                                                    columnNumber: 17
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2848,
+                                                            columnNumber: 15
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2835,
+                                                    columnNumber: 13
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "filter-panel",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                            className: "search-field",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "visually-hidden",
+                                                                    children: "Im Lernplan suchen"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2866,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                    name: "search",
+                                                                    size: 19
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2867,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                    id: "plan-search",
+                                                                    value: query,
+                                                                    onChange: (event)=>setQuery(event.target.value),
+                                                                    placeholder: "Artikel, Modul, Ergebnis oder genauer Begriff …"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2868,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                query && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    type: "button",
+                                                                    "aria-label": "Suche löschen",
+                                                                    onClick: ()=>{
+                                                                        setQuery("");
+                                                                        setActiveDayId(null);
+                                                                    },
+                                                                    children: "×"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2875,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2865,
+                                                            columnNumber: 15
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "visually-hidden",
+                                                                    children: "Nach Phase oder Kursthema filtern"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2888,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                                    "aria-label": "Nach Phase oder Kursthema filtern",
+                                                                    value: phaseFilter,
+                                                                    onChange: (event)=>setPhaseFilter(event.target.value),
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                            value: "all",
+                                                                            children: "Alle Phasen"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2894,
+                                                                            columnNumber: 19
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("optgroup", {
+                                                                            label: "Kursthemen · Advanced Deep Learning",
+                                                                            children: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["nlpCourseSessions"].map((session)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                                    value: `course:${session.number}`,
+                                                                                    children: `Kurs ${session.number} · ${session.title}`
+                                                                                }, `course-filter-${session.number}`, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2897,
+                                                                                    columnNumber: 23
+                                                                                }, this))
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2895,
+                                                                            columnNumber: 19
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("optgroup", {
+                                                                            label: "Projektphasen",
+                                                                            children: phaseGroups.map((phase)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                                    value: phase.id,
+                                                                                    children: phase.title
+                                                                                }, phase.id, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2904,
+                                                                                    columnNumber: 23
+                                                                                }, this))
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2902,
+                                                                            columnNumber: 19
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2889,
+                                                                    columnNumber: 17
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2887,
+                                                            columnNumber: 15
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "visually-hidden",
+                                                                    children: "Nach Status filtern"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2912,
+                                                                    columnNumber: 17
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                                    value: statusFilter,
+                                                                    onChange: (event)=>setStatusFilter(event.target.value),
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                            value: "all",
+                                                                            children: "Alle Status"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2919,
+                                                                            columnNumber: 19
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                            value: "open",
+                                                                            children: "Noch nicht begonnen"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2920,
+                                                                            columnNumber: 19
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                            value: "started",
+                                                                            children: "In Arbeit"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2921,
+                                                                            columnNumber: 19
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                            value: "optional",
+                                                                            children: "Optional · kein Rückstand"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2922,
+                                                                            columnNumber: 19
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                            value: "done",
+                                                                            children: "Abgeschlossen"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2923,
+                                                                            columnNumber: 19
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2913,
+                                                                    columnNumber: 17
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2911,
+                                                            columnNumber: 15
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2864,
+                                                    columnNumber: 13
+                                                }, this),
+                                                query.trim() && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "search-results",
+                                                    "aria-live": "polite",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            children: [
+                                                                displayNumber(searchResults.length),
+                                                                " passende Ergebnisse – anklicken, um direkt zum Tag zu springen"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2930,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        searchResults.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            children: searchResults.map((day)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    type: "button",
+                                                                    onClick: ()=>revealDay(day),
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Highlight, {
+                                                                                text: day.title,
+                                                                                query: query
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 2938,
+                                                                                columnNumber: 31
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2938,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                            children: [
+                                                                                formatDate(shiftedPlanDate(day.date, settings.planStartDate), true),
+                                                                                " · ",
+                                                                                day.phase
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2939,
+                                                                            columnNumber: 25
+                                                                        }, this)
+                                                                    ]
+                                                                }, day.id, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2937,
+                                                                    columnNumber: 23
+                                                                }, this))
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2935,
+                                                            columnNumber: 19
+                                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "empty-state",
+                                                            children: "Versuche einen anderen Suchbegriff."
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2944,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2929,
+                                                    columnNumber: 15
+                                                }, this),
+                                                selectedCourseSession && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                                    className: "course-topic-guide",
+                                                    "aria-labelledby": "selected-course-topic-title",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "course-topic-guide__heading",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "course-topic-guide__eyebrow",
+                                                                            children: [
+                                                                                "موضوع کلاس ",
+                                                                                displayNumber(selectedCourseSession.number),
+                                                                                " · ",
+                                                                                formatDate(selectedCourseSession.date, true)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2953,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                            id: "selected-course-topic-title",
+                                                                            children: selectedCourseSession.title
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2956,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                            children: [
+                                                                                selectedCourseSession.berlinTime,
+                                                                                " به وقت آلمان · ",
+                                                                                selectedCourseSession.iranTime,
+                                                                                " به وقت ایران"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2957,
+                                                                            columnNumber: 21
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2952,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "course-topic-guide__count",
+                                                                    children: [
+                                                                        displayNumber(selectedCourseDays.length),
+                                                                        " روز مرتبط"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2961,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2951,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "course-topic-guide__grid",
+                                                            dir: "rtl",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                                    className: "course-topic-guide__questions",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                                            children: "سؤال‌هایی که از مدرس می‌پرسم"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2968,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ol", {
+                                                                            children: selectedCourseSession.classQuestionsFa.map((question)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                                    children: question
+                                                                                }, question, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 2971,
+                                                                                    columnNumber: 25
+                                                                                }, this))
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2969,
+                                                                            columnNumber: 21
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2967,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                                            children: "اگر پرسید «چرا؟»"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2976,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                            children: selectedCourseSession.whyThisMattersFa
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2977,
+                                                                            columnNumber: 21
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2975,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                                            children: "اگر پرسید «چه کاری می‌خواهی انجام بدهی؟»"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2980,
+                                                                            columnNumber: 21
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                            children: selectedCourseSession.plannedActionFa
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2981,
+                                                                            columnNumber: 21
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2979,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2966,
+                                                            columnNumber: 17
+                                                        }, this),
+                                                        selectedCourseTransfer ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
+                                                            className: "course-topic-guide__transfer",
+                                                            "aria-label": "برنامه انتقال فوری کلاس به پایان‌نامه",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    lang: "fa",
+                                                                    dir: "rtl",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                                            children: "انتقال فوری به پایان‌نامه"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2988,
+                                                                            columnNumber: 23
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                            children: "این کار جای یکی از خروجی‌های همان روز را می‌گیرد و کار چهارم ایجاد نمی‌کند."
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2989,
+                                                                            columnNumber: 23
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2987,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                            children: "≤ ۲۴ ساعت:"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2991,
+                                                                            columnNumber: 24
+                                                                        }, this),
+                                                                        " یادداشت تا ",
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("time", {
+                                                                            dateTime: selectedCourseTransfer.noteDue,
+                                                                            children: formatDate(selectedCourseTransfer.noteDue, true)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2991,
+                                                                            columnNumber: 53
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2991,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                            children: "≤ ۷ روز:"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2992,
+                                                                            columnNumber: 24
+                                                                        }, this),
+                                                                        " ",
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("code", {
+                                                                            dir: "ltr",
+                                                                            children: selectedCourseTransfer.artifact
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2992,
+                                                                            columnNumber: 40
+                                                                        }, this),
+                                                                        " تا ",
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("time", {
+                                                                            dateTime: selectedCourseTransfer.artifactDue,
+                                                                            children: formatDate(selectedCourseTransfer.artifactDue, true)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 2992,
+                                                                            columnNumber: 100
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2992,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: [
+                                                                        "حداکثر ",
+                                                                        displayNumber(selectedCourseTransfer.maxMinutes),
+                                                                        " دقیقه · ",
+                                                                        selectedCourseTransfer.acceptance
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2993,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2986,
+                                                            columnNumber: 19
+                                                        }, this) : null,
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "course-topic-guide__days",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                                    children: "Natürliche Zuordnung im Lernplan"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2998,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    children: "Die folgenden Tage und Wochen werden unten automatisch gefiltert."
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 2999,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    children: selectedCourseDays.map((day)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            type: "button",
+                                                                            onClick: ()=>revealDay(day, "", true),
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    children: [
+                                                                                        "Woche ",
+                                                                                        displayNumber(day.week),
+                                                                                        " · ",
+                                                                                        formatDate(shiftedPlanDate(day.date, settings.planStartDate), true)
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 3007,
+                                                                                    columnNumber: 25
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                                    children: day.title
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 3008,
+                                                                                    columnNumber: 25
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                                    children: day.phase
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 3009,
+                                                                                    columnNumber: 25
+                                                                                }, this)
+                                                                            ]
+                                                                        }, `course-day-${day.id}`, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 3002,
+                                                                            columnNumber: 23
+                                                                        }, this))
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3000,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 2997,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 2950,
+                                                    columnNumber: 15
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "phase-stack",
+                                                    children: [
+                                                        filteredGroups.map((phase)=>{
+                                                            const phaseDays = phase.weeks.flatMap((week)=>week.days);
+                                                            const phaseDone = phaseDays.reduce((sum, day)=>sum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countRequiredCompletedOutputs"])(day, completed), 0);
+                                                            const phaseTotal = phaseDays.reduce((sum, day)=>sum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day), 0);
+                                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                                                className: "phase-card",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "summary-marker",
+                                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                                    name: "arrow",
+                                                                                    size: 18
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 3031,
+                                                                                    columnNumber: 56
+                                                                                }, this)
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 3031,
+                                                                                columnNumber: 23
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "phase-number",
+                                                                                children: displayNumber(phase.weeks[0].number)
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 3032,
+                                                                                columnNumber: 23
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "summary-main",
+                                                                                children: [
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                                        children: phase.title
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                                        lineNumber: 3034,
+                                                                                        columnNumber: 25
+                                                                                    }, this),
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                                        children: [
+                                                                                            displayNumber(phase.weeks.length),
+                                                                                            " Woche(n) · ",
+                                                                                            displayNumber(phaseDays.length),
+                                                                                            " Tage"
+                                                                                        ]
+                                                                                    }, void 0, true, {
+                                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                                        lineNumber: 3035,
+                                                                                        columnNumber: 25
+                                                                                    }, this)
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 3033,
+                                                                                columnNumber: 23
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressRing, {
+                                                                                percent: phaseTotal ? phaseDone / phaseTotal * 100 : 0,
+                                                                                label: `Fortschritt ${phase.title}`,
+                                                                                compact: true
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 3039,
+                                                                                columnNumber: 23
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 3030,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "phase-content",
+                                                                        children: phase.weeks.map((week)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(WeekCard, {
+                                                                                week: week,
+                                                                                completed: completed,
+                                                                                activeDayId: activeDayId,
+                                                                                query: query,
+                                                                                settings: settings,
+                                                                                notes: notes,
+                                                                                attachments: attachments,
+                                                                                uploadingDayId: uploadingDayId,
+                                                                                setNotes: setNotes,
+                                                                                onToggle: toggleItem,
+                                                                                onSaveNote: saveNote,
+                                                                                onUploadFiles: uploadDayFiles,
+                                                                                onOpenAttachment: openAttachment,
+                                                                                onDeleteAttachment: deleteAttachment,
+                                                                                onReveal: revealDay,
+                                                                                onStartFocus: (day)=>{
+                                                                                    setFocusTargetDayId(day.id);
+                                                                                    if (focusActive) setFocusOpen(true);
+                                                                                    else void focusAction("start", day.id);
+                                                                                }
+                                                                            }, week.number, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 3047,
+                                                                                columnNumber: 25
+                                                                            }, this))
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 3045,
+                                                                        columnNumber: 21
+                                                                    }, this)
+                                                                ]
+                                                            }, phase.id, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 3029,
+                                                                columnNumber: 19
+                                                            }, this);
+                                                        }),
+                                                        filteredGroups.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "empty-card",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                    name: "search"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3077,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                    children: "Für diesen Filter wurde kein Tag gefunden."
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3078,
+                                                                    columnNumber: 19
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    type: "button",
+                                                                    className: "text-button",
+                                                                    onClick: ()=>{
+                                                                        setPhaseFilter("all");
+                                                                        setStatusFilter("all");
+                                                                    },
+                                                                    children: "Filter zurücksetzen"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3079,
+                                                                    columnNumber: 19
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3076,
+                                                            columnNumber: 17
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3017,
+                                                    columnNumber: 13
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 2833,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 2780,
+                                    columnNumber: 28
+                                }, this)
+                            ]
+                        }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                            className: "integrations-section settings-workspace",
+                            id: "settings-workspace",
+                            "aria-labelledby": "integration-title",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "section-heading",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "eyebrow quiet",
+                                                    children: "Lernplan, Quellen und verbundene Apps"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3101,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                    id: "integration-title",
+                                                    children: "Einstellungen"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3102,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    children: "Diese Seite wird nur über den Menüpunkt „Einstellungen“ geöffnet. Schlüssel, Tokens und Passwörter werden weder angezeigt noch exportiert."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3103,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3100,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            className: "button secondary compact",
+                                            type: "button",
+                                            "aria-expanded": expandedIntegration,
+                                            onClick: ()=>setExpandedIntegration((value)=>!value),
+                                            children: expandedIntegration ? "Details schließen" : "Details anzeigen"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3105,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3099,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "settings-plan-overview",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "metric-icon violet",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                        name: "calendar"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3116,
+                                                        columnNumber: 54
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3116,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                            children: "Lernplan"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3118,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                            children: settings.planName
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3119,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            children: [
+                                                                displayNumber(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalWeeks),
+                                                                " Planwochen · ",
+                                                                displayNumber(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalDays),
+                                                                " aktive Tage"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3120,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3117,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3115,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                    children: "Startdatum"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3124,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                    children: formatDate(settings.planStartDate)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3125,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3123,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                    children: "Enddatum"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3128,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                    children: formatDate(settings.planEndDate)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3129,
+                                                    columnNumber: 17
+                                                }, this),
+                                                settings.planEndDate !== suggestedPlanEnd(settings.planStartDate) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    children: [
+                                                        "Planvorschlag: ",
+                                                        formatDate(suggestedPlanEnd(settings.planStartDate))
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3131,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3127,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                            className: `plan-status-card ${settings.planStatus}`,
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                    children: "Planstatus"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3135,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                    children: settings.planStatus === "paused" ? "Pausiert" : settings.planStatus === "running" ? "Aktiv" : "Noch nicht gestartet"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3136,
+                                                    columnNumber: 17
+                                                }, this),
+                                                settings.planStatus === "paused" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    children: [
+                                                        "Seit ",
+                                                        formatDate(settings.planPausedAt)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3138,
+                                                    columnNumber: 19
+                                                }, this) : settings.planStatus === "not_started" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    children: "Wähle zuerst das tatsächliche Startdatum."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3140,
+                                                    columnNumber: 19
+                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    children: "Termine werden nach dem Startdatum berechnet."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3142,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3134,
+                                            columnNumber: 15
+                                        }, this),
+                                        settings.planStatus === "running" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            className: "button secondary",
+                                            type: "button",
+                                            onClick: ()=>void pausePlan(),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "clock",
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3147,
+                                                    columnNumber: 19
+                                                }, this),
+                                                " Plan pausieren"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3146,
+                                            columnNumber: 17
+                                        }, this) : settings.planStatus === "paused" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "plan-resume-control",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: "Fortsetzen am"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3152,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                            dir: "ltr",
+                                                            type: "date",
+                                                            min: settings.planPausedAt,
+                                                            value: resumeDate,
+                                                            onChange: (event)=>setResumeDate(event.target.value)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3153,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3151,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    className: "button primary",
+                                                    type: "button",
+                                                    onClick: ()=>void resumePlan(),
+                                                    children: "Plan fortsetzen und Termine neu berechnen"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3161,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3150,
+                                            columnNumber: 17
+                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "plan-pause-help",
+                                            children: "Der Plan wird über die Startkarte auf dem Tagesdashboard gestartet."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3166,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            className: "button primary",
+                                            type: "button",
+                                            onClick: ()=>{
+                                                setSettingsDraft(settings);
+                                                setSettingsOpen(true);
+                                            },
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "settings",
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3176,
+                                                    columnNumber: 17
+                                                }, this),
+                                                " Lernplan bearbeiten"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3168,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3114,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                    className: "settings-subtitle",
+                                    children: "Quellen und verbundene Apps"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3179,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "integration-grid",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(IntegrationCard, {
+                                            name: "Google Drive",
+                                            status: "Geprüft",
+                                            tone: "ready",
+                                            summary: "Quellenordner und 45 PDF-Dateien wurden identifiziert.",
+                                            href: settings.driveFolderUrl,
+                                            expanded: expandedIntegration,
+                                            children: "Artikel aus dem Lernplan führen direkt zur jeweiligen Drive-Datei, zum Download und zum PDF Reader."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3181,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(IntegrationCard, {
+                                            name: "PDF Visual",
+                                            status: "Verknüpft",
+                                            tone: "ready",
+                                            summary: "Öffnet die ausgewählte Drive-PDF direkt im integrierten PDF Visual.",
+                                            href: settings.pdfReaderUrl,
+                                            expanded: expandedIntegration,
+                                            children: "Private Drive-Dateien werden ausschließlich über die offizielle Google-Freigabe im PDF Reader geöffnet; Tokens stehen niemals in der URL."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3191,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(IntegrationCard, {
+                                            name: "Einstellungen",
+                                            status: "Verknüpft",
+                                            tone: "ready",
+                                            summary: "Die zentrale Konfiguration ist als interner Bereich dieser installierten App verfügbar.",
+                                            href: settings.settingsAppUrl,
+                                            expanded: expandedIntegration,
+                                            children: "OpenAI, Google Translation, Drive, Kalender und persönliche Einstellungen werden innerhalb derselben App verwaltet. Geheimnisse werden nie exportiert."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3201,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(IntegrationCard, {
+                                            name: "Notion",
+                                            status: "Synchronisierung aus",
+                                            tone: "warning",
+                                            summary: "Die vorhandene Datenbank „DbEviGraph Daily Reports“ wurde gefunden.",
+                                            href: settings.notionUrl,
+                                            expanded: expandedIntegration,
+                                            children: "Der Connector war im Chat verfügbar; diese Website hat jedoch noch keine Freigabe für eine Live-Synchronisierung und der Datenbankname ist veraltet."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3211,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(IntegrationCard, {
+                                            name: "GitHub",
+                                            status: "Kein Zugriff",
+                                            tone: "blocked",
+                                            summary: "Das eingetragene Repository war mit der aktuellen Freigabe nicht lesbar.",
+                                            href: settings.githubUrl,
+                                            expanded: expandedIntegration,
+                                            children: "Für die Synchronisierung müssen Repository und GitHub-Zugriff separat bestätigt werden. Die Website hat das Repository nicht verändert."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3221,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(IntegrationCard, {
+                                            name: "Google Calendar",
+                                            status: "Kalenderkonflikt",
+                                            tone: "warning",
+                                            summary: "Die vorhandenen Ruhetermine bis 20. Oktober überschneiden sich mit dem Start am 1. Oktober.",
+                                            expanded: expandedIntegration,
+                                            children: "Die direkte Synchronisierung bleibt aus. Nutze vorerst den sicheren ICS-Export; Termine werden nur nach deiner ausdrücklichen Bestätigung geändert oder gelöscht."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3231,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(IntegrationCard, {
+                                            name: "Sider Scholar",
+                                            status: "Manuell geprüft",
+                                            tone: "neutral",
+                                            summary: "Für die Quellensuche geprüft; automatische Synchronisierung ist nicht aktiv.",
+                                            expanded: expandedIntegration,
+                                            children: "Nur genaue und relevante Quellen wurden in den Kernplan übernommen."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3240,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3180,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "integration-actions",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            className: "button secondary",
+                                            type: "button",
+                                            onClick: ()=>exportIcs(false),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "calendar",
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3252,
+                                                    columnNumber: 17
+                                                }, this),
+                                                " Gesamten Plan als ICS exportieren"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3251,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            className: "button secondary",
+                                            type: "button",
+                                            onClick: exportJson,
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "download",
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3255,
+                                                    columnNumber: 17
+                                                }, this),
+                                                " Fortschritt als JSON exportieren"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3254,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            className: "button secondary",
+                                            type: "button",
+                                            onClick: ()=>importInputRef.current?.click(),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "upload",
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3258,
+                                                    columnNumber: 17
+                                                }, this),
+                                                " Fortschrittsdatei importieren"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3257,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            className: "button secondary",
+                                            type: "button",
+                                            onClick: ()=>{
+                                                setSettingsDraft(settings);
+                                                setSettingsOpen(true);
+                                            },
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "settings",
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3268,
+                                                    columnNumber: 17
+                                                }, this),
+                                                " Lernplan, Namen und Links bearbeiten"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3260,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3250,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3098,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 2311,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 2239,
+                columnNumber: 7
+            }, this),
+            settingsOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "modal-backdrop",
+                role: "presentation",
+                onMouseDown: ()=>setSettingsOpen(false),
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                    className: "settings-modal",
+                    role: "dialog",
+                    "aria-modal": "true",
+                    "aria-labelledby": "settings-title",
+                    onMouseDown: (event)=>event.stopPropagation(),
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "eyebrow quiet",
+                                            children: "Alle Namen und Links sind bearbeitbar"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3287,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                            id: "settings-title",
+                                            children: "Lernplan-Einstellungen"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3288,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3286,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "icon-button",
+                                    type: "button",
+                                    "aria-label": "Einstellungen schließen",
+                                    onClick: ()=>setSettingsOpen(false),
+                                    children: "×"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3290,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3285,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "settings-scroll",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "form-grid",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "full-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Lernplan"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3297,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    value: settingsDraft.planName,
+                                                    onChange: (event)=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            planName: event.target.value
+                                                        })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3298,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3296,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "full-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Projektname"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3304,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    value: settingsDraft.projectName,
+                                                    onChange: (event)=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            projectName: event.target.value
+                                                        })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3305,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3303,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Startdatum"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3311,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    dir: "ltr",
+                                                    type: "date",
+                                                    value: settingsDraft.planStartDate,
+                                                    onChange: (event)=>{
+                                                        const nextStart = event.target.value;
+                                                        const previousSuggestion = suggestedPlanEnd(settingsDraft.planStartDate);
+                                                        const shouldFollowSuggestion = !settingsDraft.planEndDate || settingsDraft.planEndDate === previousSuggestion;
+                                                        setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            planStartDate: nextStart,
+                                                            planEndDate: shouldFollowSuggestion ? suggestedPlanEnd(nextStart) : settingsDraft.planEndDate
+                                                        });
+                                                    }
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3312,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3310,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Enddatum"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3333,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    dir: "ltr",
+                                                    type: "date",
+                                                    min: settingsDraft.planStartDate,
+                                                    value: settingsDraft.planEndDate,
+                                                    onChange: (event)=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            planEndDate: event.target.value
+                                                        })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3334,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3332,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "plan-date-suggestion full-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                            children: "Vorgeschlagenes Enddatum"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3344,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: formatDate(suggestedPlanEnd(settingsDraft.planStartDate))
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3345,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                            children: [
+                                                                "Aus ",
+                                                                displayNumber(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["planMeta"].totalWeeks),
+                                                                " Planwochen und den darin enthaltenen aktiven Tagen berechnet. Die geschützte Pause liegt vollständig vor dem Neustart."
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3346,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3343,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    className: "button secondary compact",
+                                                    type: "button",
+                                                    onClick: ()=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            planEndDate: suggestedPlanEnd(settingsDraft.planStartDate)
+                                                        }),
+                                                    children: "Vorschlag übernehmen"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3351,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3342,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "plan-pause-help full-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                    children: "Unterbrechungen sicher behandeln"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3365,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    children: "„Plan pausieren“ hält den Zeitplan an. Beim Fortsetzen wählst du das neue Datum; Start- und Enddatum sowie alle Kalendertermine werden neu berechnet. Erledigte Aufgaben, Notizen, Nachweise und Anhänge bleiben unverändert gespeichert."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3366,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3364,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Täglicher Start"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3373,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    dir: "ltr",
+                                                    type: "time",
+                                                    value: settingsDraft.dailyStart,
+                                                    onChange: (event)=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            dailyStart: event.target.value
+                                                        })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3374,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3372,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "timezone-note",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "clock",
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3382,
+                                                    columnNumber: 19
+                                                }, this),
+                                                " Zeitzone: Europe/Berlin · ",
+                                                __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DAILY_WORK_MODES"][settingsDraft.dailyWorkMode].label,
+                                                " ab ",
+                                                settingsDraft.dailyStart || __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["trackerRestartPlan"].dailyStart
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3381,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "full-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Google-Drive-Ordner"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3385,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    dir: "ltr",
+                                                    type: "url",
+                                                    value: settingsDraft.driveFolderUrl,
+                                                    onChange: (event)=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            driveFolderUrl: event.target.value
+                                                        })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3386,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3384,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "full-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "GitHub-Link"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3394,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    dir: "ltr",
+                                                    type: "url",
+                                                    value: settingsDraft.githubUrl,
+                                                    onChange: (event)=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            githubUrl: event.target.value
+                                                        })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3395,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3393,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "full-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Notion-Link"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3403,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    dir: "ltr",
+                                                    type: "url",
+                                                    value: settingsDraft.notionUrl,
+                                                    onChange: (event)=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            notionUrl: event.target.value
+                                                        })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3404,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3402,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "full-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Interner PDF-Visual-Pfad"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3412,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    dir: "ltr",
+                                                    type: "url",
+                                                    value: settingsDraft.pdfReaderUrl,
+                                                    onChange: (event)=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            pdfReaderUrl: event.target.value
+                                                        })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3413,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3411,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "full-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Interner Einstellungen-Pfad"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3421,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    dir: "ltr",
+                                                    type: "url",
+                                                    value: settingsDraft.settingsAppUrl,
+                                                    onChange: (event)=>setSettingsDraft({
+                                                            ...settingsDraft,
+                                                            settingsAppUrl: event.target.value
+                                                        })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3422,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3420,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3295,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                    className: "source-settings",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Namen und Links aller Quellen bearbeiten"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3432,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                    children: [
+                                                        displayNumber(Object.keys(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["sources"]).length),
+                                                        " Quellen"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3433,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3431,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: Object.values(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["sources"]).map((source)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("fieldset", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("legend", {
+                                                            children: source.label
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3438,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "Anzeigename"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3440,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                    value: settingsDraft.sourceOverrides[source.id] ?? "",
+                                                                    placeholder: source.label,
+                                                                    onChange: (event)=>setSettingsDraft({
+                                                                            ...settingsDraft,
+                                                                            sourceOverrides: {
+                                                                                ...settingsDraft.sourceOverrides,
+                                                                                [source.id]: event.target.value
+                                                                            }
+                                                                        })
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3441,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3439,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "Link"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3456,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                    dir: "ltr",
+                                                                    type: "url",
+                                                                    value: settingsDraft.sourceLinkOverrides[source.id] ?? "",
+                                                                    placeholder: source.href || "Kein Link",
+                                                                    onChange: (event)=>setSettingsDraft({
+                                                                            ...settingsDraft,
+                                                                            sourceLinkOverrides: {
+                                                                                ...settingsDraft.sourceLinkOverrides,
+                                                                                [source.id]: event.target.value
+                                                                            }
+                                                                        })
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3457,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3455,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    ]
+                                                }, source.id, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3437,
+                                                    columnNumber: 21
+                                                }, this))
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3435,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3430,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3294,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "button ghost",
+                                    type: "button",
+                                    onClick: ()=>setSettingsOpen(false),
+                                    children: "Abbrechen"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3479,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "button primary",
+                                    type: "button",
+                                    onClick: saveSettings,
+                                    children: "Einstellungen speichern"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3482,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3478,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 3278,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3277,
+                columnNumber: 9
+            }, this),
+            previewAttachment && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "modal-backdrop",
+                role: "presentation",
+                onMouseDown: closeAttachmentPreview,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                    className: "file-preview-modal",
+                    role: "dialog",
+                    "aria-modal": "true",
+                    "aria-labelledby": "file-preview-title",
+                    onMouseDown: (event)=>event.stopPropagation(),
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "eyebrow quiet",
+                                            children: "Dateivorschau"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3505,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                            id: "file-preview-title",
+                                            children: previewAttachment.name
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3506,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            children: [
+                                                formatFileSize(previewAttachment.size),
+                                                " · ",
+                                                previewAttachment.mimeType || "Unbekannter Dateityp"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3507,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3504,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "icon-button",
+                                    type: "button",
+                                    "aria-label": "Dateivorschau schließen",
+                                    onClick: closeAttachmentPreview,
+                                    children: "×"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3509,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3503,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "file-preview-body",
+                            children: previewLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "preview-loading",
+                                role: "status",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {}, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3521,
+                                        columnNumber: 19
+                                    }, this),
+                                    " Datei wird geöffnet …"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3520,
+                                columnNumber: 17
+                            }, this) : attachmentKind(previewAttachment) === "image" && previewUrl ? // eslint-disable-next-line @next/next/no-img-element
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                src: previewUrl,
+                                alt: previewAttachment.name
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3525,
+                                columnNumber: 17
+                            }, this) : attachmentKind(previewAttachment) === "pdf" && previewUrl ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("iframe", {
+                                src: previewUrl,
+                                title: previewAttachment.name
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3527,
+                                columnNumber: 17
+                            }, this) : attachmentKind(previewAttachment) === "audio" && previewUrl ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("audio", {
+                                src: previewUrl,
+                                controls: true,
+                                autoPlay: false
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3529,
+                                columnNumber: 17
+                            }, this) : attachmentKind(previewAttachment) === "video" && previewUrl ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("video", {
+                                src: previewUrl,
+                                controls: true
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3531,
+                                columnNumber: 17
+                            }, this) : attachmentKind(previewAttachment) === "text" && previewAttachment.size <= 3 * 1024 * 1024 || attachmentKind(previewAttachment) === "office" && previewAttachment.size <= 8 * 1024 * 1024 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("pre", {
+                                children: previewText
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3537,
+                                columnNumber: 17
+                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "preview-unavailable",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                            name: "file",
+                                            size: 34
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3540,
+                                            columnNumber: 25
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3540,
+                                        columnNumber: 19
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                        children: "Für diesen Dateityp gibt es keine sichere Browser-Vorschau."
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3541,
+                                        columnNumber: 19
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: "Die Datei ist gespeichert. Du kannst sie herunterladen und mit dem passenden Programm öffnen."
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3542,
+                                        columnNumber: 19
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3539,
+                                columnNumber: 17
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3518,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                    className: "button primary",
+                                    href: `/api/attachments?id=${encodeURIComponent(previewAttachment.id)}&download=1`,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                            name: "download",
+                                            size: 18
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3551,
+                                            columnNumber: 17
+                                        }, this),
+                                        " Datei herunterladen"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3547,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "button ghost",
+                                    type: "button",
+                                    onClick: closeAttachmentPreview,
+                                    children: "Schließen"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3553,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3546,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 3496,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3491,
+                columnNumber: 9
+            }, this),
+            focusOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "modal-backdrop",
+                role: "presentation",
+                onMouseDown: ()=>setFocusOpen(false),
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                    className: "focus-modal",
+                    role: "dialog",
+                    "aria-modal": "true",
+                    "aria-labelledby": "focus-title",
+                    onMouseDown: (event)=>event.stopPropagation(),
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "eyebrow quiet",
+                                            children: "Studienzeit messen und speichern"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3576,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                            id: "focus-title",
+                                            children: "Fokus-Timer"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3577,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3575,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "icon-button",
+                                    type: "button",
+                                    "aria-label": "Fokus-Timer schließen",
+                                    onClick: ()=>setFocusOpen(false),
+                                    children: "×"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3579,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3574,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "focus-modal-body",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: `focus-clock ${focusActive?.status ?? "idle"}`,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "focus-pulse",
+                                            "aria-hidden": "true"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3591,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                            children: formatFocusDuration(activeFocusSeconds)
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3592,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                            children: focusActive?.status === "running" ? "Läuft – konzentrierte Lernzeit wird gemessen" : focusActive?.status === "paused" ? "Pausiert – die Pause wird nicht mitgezählt" : "Bereit für eine neue Fokussitzung"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3593,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3590,
+                                    columnNumber: 15
+                                }, this),
+                                focusActive ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                    className: "focus-current",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            children: "Aktueller Lerntag"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3604,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                            children: focusActive.contextTitle
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3605,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "focus-actions",
+                                            children: [
+                                                focusActive.status === "running" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    className: "button secondary",
+                                                    type: "button",
+                                                    disabled: focusBusy,
+                                                    onClick: ()=>void focusAction("pause"),
+                                                    children: "Pause"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3608,
+                                                    columnNumber: 23
+                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    className: "button primary",
+                                                    type: "button",
+                                                    disabled: focusBusy,
+                                                    onClick: ()=>void focusAction("resume"),
+                                                    children: "Fortsetzen"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3612,
+                                                    columnNumber: 23
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    className: "button finish",
+                                                    type: "button",
+                                                    disabled: focusBusy,
+                                                    onClick: ()=>void focusAction("finish"),
+                                                    children: "Sitzung beenden und speichern"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3616,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3606,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3603,
+                                    columnNumber: 17
+                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "focus-start-panel",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            htmlFor: "focus-day",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Lerntag auswählen"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3624,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                    id: "focus-day",
+                                                    value: focusTargetDayId,
+                                                    onChange: (event)=>setFocusTargetDayId(event.target.value),
+                                                    children: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["allDays"].map((day)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                            value: day.id,
+                                                            children: [
+                                                                formatDate(shiftedPlanDate(day.date, settings.planStartDate), true),
+                                                                " · ",
+                                                                day.title
+                                                            ]
+                                                        }, day.id, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3627,
+                                                            columnNumber: 25
+                                                        }, this))
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3625,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3623,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            className: "button primary",
+                                            type: "button",
+                                            disabled: focusBusy || settings.planStatus !== "running",
+                                            onClick: ()=>void focusAction("start"),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "clock",
+                                                    size: 18
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3634,
+                                                    columnNumber: 21
+                                                }, this),
+                                                " ",
+                                                settings.planStatus === "running" ? "Fokus starten" : "Erst Lernplan starten"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3633,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3622,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                    className: "focus-history",
+                                    "aria-labelledby": "focus-history-title",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                    id: "focus-history-title",
+                                                    children: "Letzte Sitzungen"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3641,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: [
+                                                        "Gesamt: ",
+                                                        formatFocusDuration(measuredFocusSeconds)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3642,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3640,
+                                            columnNumber: 17
+                                        }, this),
+                                        focusSessions.filter((session)=>session.status === "completed").length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                            children: focusSessions.filter((session)=>session.status === "completed").slice(0, 8).map((session)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                    children: session.contextTitle
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3652,
+                                                                    columnNumber: 29
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                    children: session.startedAt ? formatDate(session.startedAt.slice(0, 10), true) : "Gespeichert"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 3653,
+                                                                    columnNumber: 29
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3651,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                            children: formatFocusDuration(session.accumulatedSeconds)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3655,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, session.id, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3650,
+                                                    columnNumber: 25
+                                                }, this))
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3645,
+                                            columnNumber: 19
+                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "empty-state",
+                                            children: "Nach dem Beenden erscheint deine erste gespeicherte Sitzung hier."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3660,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3639,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3589,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 3567,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3562,
+                columnNumber: 9
+            }, this),
+            loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "loading-line",
+                role: "status",
+                "aria-live": "polite",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                    className: "sr-only",
+                    children: "Wird geladen"
+                }, void 0, false, {
+                    fileName: "[project]/app/study-tracker.tsx",
+                    lineNumber: 3670,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3669,
+                columnNumber: 9
+            }, this),
+            toast && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "toast",
+                role: "status",
+                children: toast
+            }, void 0, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3673,
+                columnNumber: 17
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/app/study-tracker.tsx",
+        lineNumber: 2183,
+        columnNumber: 5
+    }, this);
+}
+_s(StudyTracker, "PIzmwzwh/HZidpBYWai87T56xj4=");
+_c3 = StudyTracker;
+function WeekCard({ week, completed, activeDayId, query, settings, notes, attachments, uploadingDayId, setNotes, onToggle, onSaveNote, onUploadFiles, onOpenAttachment, onDeleteAttachment, onReveal, onStartFocus }) {
+    const weekDone = week.days.reduce((sum, day)=>sum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countRequiredCompletedOutputs"])(day, completed), 0);
+    const weekTotal = week.days.reduce((sum, day)=>sum + (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(day), 0);
+    const weeklyOutputDay = week.days.find((day)=>day.id === week.weeklyOutput.dayId);
+    const weeklyOutputDone = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countRequiredCompletedOutputs"])(weeklyOutputDay, completed) === (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["requiredOutputTotal"])(weeklyOutputDay);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+        className: "week-card",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "summary-marker",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                            name: "arrow",
+                            size: 18
+                        }, void 0, false, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3728,
+                            columnNumber: 42
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3728,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "week-badge",
+                        children: [
+                            "Woche ",
+                            displayNumber(week.number)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3729,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "summary-main",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                children: week.title
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3731,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                children: week.goal
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3732,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3730,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "week-progress-group",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "completion-chip",
+                                children: [
+                                    displayNumber(weekDone),
+                                    " / ",
+                                    displayNumber(weekTotal)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3735,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressRing, {
+                                percent: weekTotal ? weekDone / weekTotal * 100 : 0,
+                                label: `Fortschritt Woche ${week.number}`,
+                                compact: true
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3736,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3734,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3727,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
+                className: `week-output-rule ${weeklyOutputDone ? "done" : "open"}`,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        children: [
+                            "Mindestens 1 verbindlicher Wochenoutput · ",
+                            weeklyOutputDone ? "erledigt" : "offen"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3744,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                        children: week.weeklyOutput.deliverable
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3745,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        className: "text-button",
+                        type: "button",
+                        onClick: ()=>onReveal(weeklyOutputDay),
+                        children: "Zugehörigen Tag öffnen"
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3746,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3743,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "day-stack",
+                children: week.days.map((day)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DayCard, {
+                        day: day,
+                        active: activeDayId === day.id,
+                        query: query,
+                        completed: completed,
+                        settings: settings,
+                        note: notes[day.id] ?? "",
+                        attachments: attachments[day.id] ?? [],
+                        uploading: uploadingDayId === day.id,
+                        onNoteChange: (note)=>setNotes({
+                                ...notes,
+                                [day.id]: note
+                            }),
+                        onToggle: onToggle,
+                        onSaveNote: onSaveNote,
+                        onUploadFiles: onUploadFiles,
+                        onOpenAttachment: onOpenAttachment,
+                        onDeleteAttachment: onDeleteAttachment,
+                        onReveal: onReveal,
+                        onStartFocus: onStartFocus
+                    }, day.id, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3752,
+                        columnNumber: 11
+                    }, this))
+            }, void 0, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3750,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/app/study-tracker.tsx",
+        lineNumber: 3726,
+        columnNumber: 5
+    }, this);
+}
+_c4 = WeekCard;
+function DayCard({ day, active, query, completed, settings, note, attachments, uploading, onNoteChange, onToggle, onSaveNote, onUploadFiles, onOpenAttachment, onDeleteAttachment, onReveal, onStartFocus }) {
+    _s1();
+    const count = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countCompletedOutputs"])(day, completed);
+    const state = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$study$2d$progress$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getDayOutputStatus"])(day, completed);
+    const stateLabel = state === "done" ? "Abgeschlossen" : state === "started" ? "In Arbeit" : state === "optional" ? "Optional · kein Rückstand" : "Noch nicht begonnen";
+    const effectiveDate = shiftedPlanDate(day.date, settings.planStartDate);
+    const taskProgress = day.tasks.map((task)=>task.items.filter((item)=>completed.has(item.id)).length);
+    const requiredTaskIndexes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["workModeRequiredTaskIndexes"])(settings.dailyWorkMode);
+    const currentTaskIndex = requiredTaskIndexes.find((taskIndex)=>(taskProgress[taskIndex] ?? 0) < 3) ?? -1;
+    const focusTaskIndex = currentTaskIndex < 0 ? requiredTaskIndexes.at(-1) ?? day.tasks.length - 1 : currentTaskIndex;
+    const focusMinutes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["workModeTaskMinutes"])(settings.dailyWorkMode, focusTaskIndex);
+    const planIsRunning = settings.planStatus === "running";
+    const canStartDigitalFocus = planIsRunning && day.workMode === "screen";
+    const relatedCourseSessions = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["nlpSessionsRelatedToPlanDay"])(day.title);
+    const dailyLearningResources = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["learningResourcesForDay"])(day);
+    const prerequisiteMinutes = dailyLearningResources.reduce((sum, resource)=>sum + resource.minutes, 0);
+    const dailySourceAssignments = day.sourceIds.flatMap((sourceId)=>{
+        const source = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["sources"][sourceId];
+        if (!source) return [];
+        const isResearchSource = source.id === day.researchTrack.sourceId;
+        const focus = isResearchSource ? day.researchTrack.question : source.id === "proposal" ? `Exposé-Abschnitte: ${day.proposal.map((item)=>`§ ${item}`).join(" · ")}` : day.lookFor.join(" · ");
+        const requiredSections = isResearchSource ? [
+            day.researchTrack.readOnly
+        ] : source.id === "proposal" ? day.proposal.map((item)=>`Exposé § ${item}`) : day.lookFor;
+        return [
+            {
+                source,
+                focus,
+                readingPolicy: isResearchSource ? {
+                    scope: "sections",
+                    label: day.researchTrack.mode === "article" ? `Heute nur Block ${day.researchTrack.block}/5 des 16-Stunden-Zyklus` : "Heute nur die genannte Lerneinheit",
+                    requiredSections
+                } : (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["sourceReadingPolicy"])(source.id, requiredSections)
+            }
+        ];
+    });
+    const [dailySessionCommand, setDailySessionCommand] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("start");
+    const [dailyPromptCopied, setDailyPromptCopied] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const primaryResearchSource = __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["sources"][day.researchTrack.sourceId];
+    const dailySessionPrompt = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$session$2d$prompt$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["buildDailySessionPrompt"])({
+        command: dailySessionCommand,
+        day,
+        effectiveDate,
+        sourceLabel: primaryResearchSource ? sourceText(primaryResearchSource, settings) : day.researchTrack.title
+    });
+    const courseRelated = relatedCourseSessions.length > 0;
+    const relatedCourseSessionNumbers = relatedCourseSessions.map((session)=>session.number);
+    // The spaced-recall pipeline (RecallCheck, lib/recall/*) was fully built
+    // -- concept, exact Exposé section, Persian/German answers, next review
+    // date -- but nothing ever called addEntry() at the end of a "Finden und
+    // verstehen" block, so it never received real data. Wiring it in here
+    // once "Finden und verstehen" (task 0) is complete.
+    const { entries: recallEntries, addEntry: addRecallEntry } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$recall$2f$useRecallEntries$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRecallEntries"])();
+    const [recallFA, setRecallFA] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [recallDE, setRecallDE] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const findenUndVerstehenDone = (taskProgress[0] ?? 0) === 3;
+    const alreadyRegisteredForRecall = recallEntries.some((entry)=>entry.concept === day.title);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+        className: `day-card ${state} ${day.workMode === "paper" ? "paper-mode" : ""} ${courseRelated ? "course-related" : ""} ${active ? "search-hit" : ""}`,
+        id: `day-${day.id}`,
+        tabIndex: -1,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "summary-marker",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                            name: "arrow",
+                            size: 17
+                        }, void 0, false, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 3892,
+                            columnNumber: 42
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3892,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("time", {
+                        dateTime: effectiveDate,
+                        children: formatDate(effectiveDate)
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3893,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "summary-main",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Highlight, {
+                                    text: day.title,
+                                    query: active ? query : ""
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 3895,
+                                    columnNumber: 19
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3895,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                children: [
+                                    day.module,
+                                    " · Ergebnis: ",
+                                    day.deliverable
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3896,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3894,
+                        columnNumber: 9
+                    }, this),
+                    day.workMode === "paper" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "paper-mode-chip",
+                        children: "Papiermodus · ohne Bildschirm"
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3898,
+                        columnNumber: 37
+                    }, this) : null,
+                    courseRelated ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "course-related-chip",
+                        title: relatedCourseSessions.map((session)=>`Sitzung ${session.number}: ${session.title}`).join(" · "),
+                        children: [
+                            "Kursrelevant · ",
+                            relatedCourseSessionNumbers.length === 1 ? "Sitzung" : "Sitzungen",
+                            " ",
+                            relatedCourseSessionNumbers.join(" + ")
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3900,
+                        columnNumber: 11
+                    }, this) : null,
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: `status-chip ${state}`,
+                        children: [
+                            stateLabel,
+                            " · ",
+                            displayNumber(count),
+                            "/3 Ergebnisse"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3909,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        className: "day-focus-button",
+                        type: "button",
+                        disabled: !canStartDigitalFocus,
+                        onClick: (event)=>{
+                            event.preventDefault();
+                            event.stopPropagation();
+                            if (!canStartDigitalFocus) return;
+                            onStartFocus(day);
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                name: "play",
+                                size: 17
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3921,
+                                columnNumber: 11
+                            }, this),
+                            " ",
+                            day.workMode === "paper" ? "Papiermodus" : planIsRunning ? `Fokus starten · ${displayNumber(focusMinutes)} Min.` : "Vorschau"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3910,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3891,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "day-body",
+                children: [
+                    day.workMode === "paper" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "paper-mode-note",
+                        role: "note",
+                        children: "Nur auf Papier arbeiten. Tablet und Computer bleiben bis zum Ende der ärztlich festgelegten 14-Tage-Pause geschlossen; digitale Übertragung, Test und Häkchen folgen erst nach der Freigabe."
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3926,
+                        columnNumber: 11
+                    }, this) : null,
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "day-intro-grid",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                className: "reason-card",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: "Warum heute?"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3932,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Highlight, {
+                                            text: day.why,
+                                            query: active ? query : ""
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3933,
+                                            columnNumber: 16
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3933,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3931,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                className: "output-card",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: "Heutige Ziellinie"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3936,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "ltr-inline",
+                                        children: day.deliverable
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3937,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        className: "text-button",
+                                        type: "button",
+                                        onClick: ()=>onReveal(day),
+                                        children: "Direktlink zu diesem Tag"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3938,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3935,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3930,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "context-grid",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                        children: "Wonach soll ich suchen?"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3946,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                        children: day.lookFor.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Highlight, {
+                                                    text: item,
+                                                    query: active ? query : ""
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 3948,
+                                                    columnNumber: 57
+                                                }, this)
+                                            }, item, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3948,
+                                                columnNumber: 42
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3947,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3945,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                        children: "Bezug zum Exposé"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3952,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "tag-list",
+                                        children: day.proposal.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                children: [
+                                                    "§ ",
+                                                    item
+                                                ]
+                                            }, item, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3954,
+                                                columnNumber: 43
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3953,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "module-line",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                children: "Projektmodul:"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3956,
+                                                columnNumber: 40
+                                            }, this),
+                                            " ",
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "ltr-inline",
+                                                children: day.module
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3956,
+                                                columnNumber: 71
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3956,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3951,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3944,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                        className: "daily-study-guide",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "summary-marker",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                            name: "arrow",
+                                            size: 17
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 3962,
+                                            columnNumber: 46
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3962,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "daily-study-guide-title",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                        name: "book",
+                                                        size: 18
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3964,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    " Tagesanleitung · Schritt für Schritt"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3964,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                children: "Eine kleine Einheit verstehen → mit eigenen Worten erklären → Projektwissen anwenden → testen → Beleg speichern"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3965,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3963,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "daily-study-guide-duration",
+                                        children: day.workMode === "paper" ? "Papiermodus · medizinische Grenze zuerst" : "8 Stunden · 4 Std. Forschung + 4 Std. Projekt"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3967,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3961,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "daily-study-guide-body",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                        className: "daily-study-guide-focus",
+                                        "aria-labelledby": `guide-focus-${day.id}`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "eyebrow",
+                                                        children: "Nur für diesen Tag"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3975,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                        id: `guide-focus-${day.id}`,
+                                                        children: day.researchTrack.title
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3976,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3974,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                children: [
+                                                    "Acht Stunden sind dein Kapazitätsrahmen, keine Deadline. Heute entstehen ein kleiner Forschungsbeleg",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "ltr-inline",
+                                                        children: [
+                                                            " ",
+                                                            day.researchTrack.expectedOutput
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3980,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    " und das Projektartefakt",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "ltr-inline",
+                                                        children: [
+                                                            " ",
+                                                            day.deliverable
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3981,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    ". Wenn eine verstandene Einheit länger braucht, wird der Plan weitergeschoben und nicht verdichtet."
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3978,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ol", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                children: "Nur lesen:"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 3984,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            " ",
+                                                            day.researchTrack.readOnly
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3984,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                children: "Heute nicht lesen:"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 3985,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            " ",
+                                                            day.researchTrack.doNotRead
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3985,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                children: "Leitfrage:"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 3986,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            " ",
+                                                            day.researchTrack.question
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3986,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3983,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3973,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                        className: "daily-ai-session",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "summary-marker",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                            name: "arrow",
+                                                            size: 16
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 3992,
+                                                            columnNumber: 50
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3992,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                children: "KI-Arbeitssitzung für genau diesen Tag"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 3994,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                children: "Start, Weiterarbeiten, Hilfe oder Tagesabschluss auswählen und den fertigen Kontext kopieren"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 3995,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3993,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "daily-ai-session-badge",
+                                                        children: "AGENTS.md · ein nächster Schritt"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 3997,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3991,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "daily-ai-session-body",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ol", {
+                                                        className: "daily-ai-session-workflow",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                        children: "Quelle öffnen:"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4001,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    " Nur die oben genannte kleine Einheit lesen; nicht den ganzen Artikel auf einmal."
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4001,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                        children: "Selbst versuchen:"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4002,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    " Zuerst eigene Antwort geben. Die KI darf vorher weder zusammenfassen noch übersetzen."
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4002,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                        children: "Verstehen prüfen:"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4003,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    " Höchstens drei Fragen beantworten; bei Bedarf erst Hinweis-Modus, danach Builder Mode."
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4003,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                        children: "Zotero:"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4004,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    " Nur Highlight, Seitenbeleg, Citation und höchstens zwei wirklich notwendige Begriffe speichern."
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4004,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                        children: "Recall:"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4005,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    " Quelle schließen, kurz auf Persisch erklären und danach höchstens drei kurze englische Sätze formulieren. Deutsch bleibt optional."
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4005,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                        children: "Projekt verbinden:"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4006,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    " Eine These-Entscheidung und genau ein kleines sichtbares Artefakt mit Test und Beleg erzeugen."
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4006,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                        children: "Tag schließen:"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4007,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    " Im Tracker höchstens drei Ergebniszeilen und genau den nächsten kleinen Schritt für morgen speichern."
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4007,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4000,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "daily-ai-session-commands",
+                                                        role: "group",
+                                                        "aria-label": "Befehl für die KI-Arbeitssitzung auswählen",
+                                                        children: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$session$2d$prompt$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DAILY_SESSION_COMMANDS"].map((command)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                type: "button",
+                                                                className: dailySessionCommand === command.id ? "active" : "",
+                                                                "aria-pressed": dailySessionCommand === command.id,
+                                                                title: command.shortInstruction,
+                                                                onClick: ()=>{
+                                                                    setDailySessionCommand(command.id);
+                                                                    setDailyPromptCopied(false);
+                                                                },
+                                                                children: command.label
+                                                            }, command.id, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4012,
+                                                                columnNumber: 21
+                                                            }, this))
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4010,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                        className: "daily-ai-session-prompt",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: "Fertiger Prompt mit dem Kontext dieses Tages"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4029,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                                readOnly: true,
+                                                                rows: 18,
+                                                                value: dailySessionPrompt,
+                                                                spellCheck: false,
+                                                                dir: "ltr"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4030,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4028,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "daily-ai-session-actions",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                className: "button secondary",
+                                                                type: "button",
+                                                                onClick: ()=>{
+                                                                    void navigator.clipboard.writeText(dailySessionPrompt).then(()=>{
+                                                                        setDailyPromptCopied(true);
+                                                                    });
+                                                                },
+                                                                children: dailyPromptCopied ? "Prompt kopiert ✓" : "Prompt kopieren"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4034,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                                className: "button ghost",
+                                                                href: "/prompts/complete-daily-thesis-work-prompt.md",
+                                                                download: true,
+                                                                children: "Vollständigen Master-Prompt herunterladen"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4045,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4033,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "daily-ai-session-permission",
+                                                        children: "Der kopierte Prompt startet immer lesend. Bearbeiten, Commit, Push und Deployment bleiben getrennte Berechtigungen und werden niemals automatisch angenommen."
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4049,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 3999,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 3990,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ol", {
+                                        className: "daily-study-guide-steps",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "daily-study-guide-number",
+                                                        children: "1"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4057,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                children: "Forschungsblock · insgesamt 4 Stunden · in kleinen Einheiten"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4059,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                children: "Orientieren:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4061,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            " Öffne nur die angegebene Quelle und suche genau die heutige Einheit. Keine zusätzlichen Tabs."
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4061,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                children: "Langsam verstehen:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4062,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            " Bearbeite nur einen Absatz, eine Figure, eine Table, eine Definition oder einen kleinen Subsection gleichzeitig."
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4062,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                children: "Wörter:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4063,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            " Kläre höchstens zwei Begriffe, die das Verstehen dieser Einheit wirklich blockieren. Nicht jedes unbekannte Wort."
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4063,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                children: "Geschlossenes Buch:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4064,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            " Schließe die Quelle und erkläre drei Sätze zuerst auf Persisch. Danach schreibe drei kurze englische Sätze; Deutsch ist nur bei Bedarf optional."
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4064,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                children: "Forschungsbeleg:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4065,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            " Speichere ",
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "ltr-inline",
+                                                                                children: day.researchTrack.expectedOutput
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4065,
+                                                                                columnNumber: 59
+                                                                            }, this),
+                                                                            " mit Seitenzahl, Abschnitt oder Link."
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4065,
+                                                                        columnNumber: 21
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4060,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            day.workMode === "paper" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "daily-study-guide-mode-note",
+                                                                children: "Ohne Bildschirm: Einheit, zwei Begriffe, drei eigene Sätze und Seitenbeleg auf Papier notieren. Erst nach der ärztlichen Freigabe nach Zotero übertragen."
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4068,
+                                                                columnNumber: 21
+                                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "daily-study-guide-mode-note",
+                                                                children: "Zotero enthält Highlight, zwei Begriffe, Seite und Citation. Im Tracker bleiben nur Auftrag, Ergebnisdatei, Status und höchstens drei Ergebniszeilen."
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4072,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("code", {
+                                                                className: "vocabulary-template",
+                                                                dir: "ltr",
+                                                                children: "TERM: … | FA: … | EN: … | DE: … | Context: … | My sentence: …"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4076,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "daily-study-guide-done-rule",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                        children: "Stoppregel:"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4077,
+                                                                        columnNumber: 62
+                                                                    }, this),
+                                                                    " ",
+                                                                    day.researchTrack.stopRule
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4077,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4058,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4056,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                className: "daily-study-guide-break",
+                                                "aria-label": "Pause",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                            name: "clock",
+                                                            size: 17
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4082,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        " Große Pause · Augen weg von Text und Bildschirm; ärztliche Grenzen haben Vorrang"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4082,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4081,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "daily-study-guide-number",
+                                                        children: "2"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4086,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                children: "Projektblock · insgesamt 4 Stunden · lernen, bauen, prüfen"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4088,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                children: "Vorwissen ist enthalten:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4090,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            " Nutze innerhalb des ersten Projektabschnitts höchstens ",
+                                                                            displayNumber(prerequisiteMinutes),
+                                                                            " Minuten für die Lernkarten unten; es kommt keine Zusatzzeit dazu."
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4090,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    day.tasks.map((task, taskIndex)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                    children: [
+                                                                                        displayNumber((0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["workModeTaskMinutes"])("full", taskIndex)),
+                                                                                        " Min. · ",
+                                                                                        task.title.slice(3),
+                                                                                        ":"
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                                    lineNumber: 4093,
+                                                                                    columnNumber: 25
+                                                                                }, this),
+                                                                                " ",
+                                                                                task.items[0]?.label
+                                                                            ]
+                                                                        }, task.id, true, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 4092,
+                                                                            columnNumber: 23
+                                                                        }, this)),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                children: "Ziellinie:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4096,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            " Erzeuge ",
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "ltr-inline",
+                                                                                children: day.deliverable
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4096,
+                                                                                columnNumber: 51
+                                                                            }, this),
+                                                                            ", führe mindestens einen Test oder Sanity Check aus und speichere den Beleg."
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4096,
+                                                                        columnNumber: 21
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4089,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "daily-study-guide-source-list",
+                                                                children: dailySourceAssignments.map(({ source, readingPolicy })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                children: [
+                                                                                    sourceText(source, settings),
+                                                                                    ":"
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4101,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            " ",
+                                                                            readingPolicy.label,
+                                                                            " — ",
+                                                                            readingPolicy.requiredSections.join(" · ")
+                                                                        ]
+                                                                    }, source.id, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4100,
+                                                                        columnNumber: 23
+                                                                    }, this))
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4098,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4087,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4085,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                className: "daily-study-guide-break",
+                                                "aria-label": "Pause",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                            name: "clock",
+                                                            size: 17
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4109,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        " Tagesabschluss · nicht mit neuer Lektüre oder einer zweiten Funktion beginnen"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4109,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4108,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "daily-study-guide-number",
+                                                        children: "3"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4113,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                children: "Abhaken · nur mit sichtbarem Beleg"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4115,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: "Eine kleine Idee ist in eigenen Worten verstanden und mit einer genauen Quelle verbunden."
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4117,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: "Das Projektartefakt ist sichtbar; ein Test, Query, Build, Sanity Check oder Dokumentencheck wurde tatsächlich ausgeführt."
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4118,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                        children: "Im Tagesbericht stehen Ergebnis, Fehler oder Grenze und genau der nächste kleine Schritt."
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4119,
+                                                                        columnNumber: 21
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4116,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "daily-study-guide-done-rule",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                        children: "Erst dann abhaken:"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4122,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    " Forschungsbeleg ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        "aria-hidden": "true",
+                                                                        children: "+"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4122,
+                                                                        columnNumber: 63
+                                                                    }, this),
+                                                                    " Projektartefakt ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        "aria-hidden": "true",
+                                                                        children: "+"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4122,
+                                                                        columnNumber: 113
+                                                                    }, this),
+                                                                    " Test/Prüfung sind vorhanden. Wenn die Einheit mehr Zeit braucht, bleibt sie offen und der restliche Plan wird verschoben; nichts wird verdichtet."
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4121,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4114,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4112,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4055,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                        className: "prerequisite-learning",
+                                        "aria-labelledby": `learning-${day.id}`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "prerequisite-learning-heading",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "eyebrow",
+                                                                children: "Vorwissen für diesen Tag"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4131,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                                id: `learning-${day.id}`,
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                        name: "book",
+                                                                        size: 18
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4132,
+                                                                        columnNumber: 49
+                                                                    }, this),
+                                                                    " Zuerst kurz lernen, dann die Aufgabe machen"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4132,
+                                                                columnNumber: 19
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4130,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                        children: [
+                                                            displayNumber(prerequisiteMinutes),
+                                                            " Min. · im ersten Projektabschnitt enthalten"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4134,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4129,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "prerequisite-learning-intro",
+                                                children: "Du musst das Thema nicht schon kennen. Öffne die Lernseite, lies nur den genannten Abschnitt und wende ihn danach direkt auf das heutige Ergebnis an. Diese Zeit ist bereits im vierstündigen Projektblock enthalten und kommt nicht zusätzlich zum Acht-Stunden-Tag dazu."
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4136,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "prerequisite-learning-list",
+                                                children: dailyLearningResources.map((resource, resourceIndex)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "prerequisite-learning-order",
+                                                                "aria-hidden": "true",
+                                                                children: displayNumber(resourceIndex + 1)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4142,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "prerequisite-learning-content",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        children: [
+                                                                            resource.provider,
+                                                                            " · ca. ",
+                                                                            displayNumber(resource.minutes),
+                                                                            " Min."
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4144,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h5", {
+                                                                        children: resource.title
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4145,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                                children: "Genau lesen:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4146,
+                                                                                columnNumber: 26
+                                                                            }, this),
+                                                                            " ",
+                                                                            resource.read
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4146,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                                children: "Danach anwenden:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4147,
+                                                                                columnNumber: 26
+                                                                            }, this),
+                                                                            " ",
+                                                                            resource.apply
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4147,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                                        href: resource.href,
+                                                                        target: "_blank",
+                                                                        rel: "noopener noreferrer",
+                                                                        children: [
+                                                                            "Lernseite öffnen ",
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                "aria-hidden": "true",
+                                                                                children: "↗"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4149,
+                                                                                columnNumber: 42
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4148,
+                                                                        columnNumber: 23
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4143,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, resource.id, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4141,
+                                                        columnNumber: 19
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4139,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4128,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                                        className: "sources-block",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                        name: "book",
+                                                        size: 18
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4158,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    " Genaue Quelle für heute"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4158,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "source-list",
+                                                children: dailySourceAssignments.map(({ source, focus, readingPolicy })=>{
+                                                    const href = sourceHref(source, settings);
+                                                    const meta = priorityMeta[source.priority];
+                                                    const driveId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$pdf$2d$reader$2d$link$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["googleDriveFileId"])(href);
+                                                    const readerHref = pdfReaderHref(source, settings, {
+                                                        focus,
+                                                        context: `${day.title} · ${day.module}`
+                                                    });
+                                                    const downloadHref = googleDriveDownloadHref(href);
+                                                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: `priority priority-${source.priority}`,
+                                                                        title: meta.label,
+                                                                        children: meta.stars
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4172,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Highlight, {
+                                                                            text: sourceText(source, settings),
+                                                                            query: active ? query : ""
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 4175,
+                                                                            columnNumber: 29
+                                                                        }, this)
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4175,
+                                                                        columnNumber: 21
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4171,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            source.driveName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("code", {
+                                                                dir: "ltr",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Highlight, {
+                                                                    text: source.driveName,
+                                                                    query: active ? query : ""
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 4178,
+                                                                    columnNumber: 37
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4178,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: `source-reading-plan ${readingPolicy.scope}`,
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                        children: readingPolicy.label
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4181,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    readingPolicy.scope === "full" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        children: readingPolicy.requiredSections[0]
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4183,
+                                                                        columnNumber: 23
+                                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                                        children: readingPolicy.requiredSections.map((section)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                                children: section
+                                                                            }, section, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4186,
+                                                                                columnNumber: 74
+                                                                            }, this))
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4185,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                                                                children: "Fokus für heute:"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4189,
+                                                                                columnNumber: 28
+                                                                            }, this),
+                                                                            " ",
+                                                                            focus
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4189,
+                                                                        columnNumber: 21
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4180,
+                                                                columnNumber: 19
+                                                            }, this),
+                                                            readerHref ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "source-actions",
+                                                                "aria-label": `Aktionen für ${sourceText(source, settings)}`,
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                                        className: "source-action primary",
+                                                                        href: readerHref,
+                                                                        title: "Normal klicken: hier öffnen. Rechtsklick: in neuem Tab oder Fenster öffnen.",
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                                name: "book",
+                                                                                size: 15
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4198,
+                                                                                columnNumber: 25
+                                                                            }, this),
+                                                                            " Im PDF Reader öffnen"
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4193,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    driveId && href && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                                                        className: "source-more",
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                                                                "aria-label": `Weitere Aktionen für ${sourceText(source, settings)}`,
+                                                                                children: "⋯"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4202,
+                                                                                columnNumber: 27
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                children: [
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                                                        href: href,
+                                                                                        target: "_blank",
+                                                                                        rel: "noopener noreferrer",
+                                                                                        children: [
+                                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                                                name: "link",
+                                                                                                size: 15
+                                                                                            }, void 0, false, {
+                                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                                lineNumber: 4205,
+                                                                                                columnNumber: 31
+                                                                                            }, this),
+                                                                                            " In Google Drive öffnen"
+                                                                                        ]
+                                                                                    }, void 0, true, {
+                                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                                        lineNumber: 4204,
+                                                                                        columnNumber: 29
+                                                                                    }, this),
+                                                                                    downloadHref && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                                                        href: downloadHref,
+                                                                                        target: "_blank",
+                                                                                        rel: "noopener noreferrer",
+                                                                                        children: [
+                                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                                                name: "download",
+                                                                                                size: 15
+                                                                                            }, void 0, false, {
+                                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                                lineNumber: 4209,
+                                                                                                columnNumber: 33
+                                                                                            }, this),
+                                                                                            " PDF herunterladen"
+                                                                                        ]
+                                                                                    }, void 0, true, {
+                                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                                        lineNumber: 4208,
+                                                                                        columnNumber: 31
+                                                                                    }, this)
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                                lineNumber: 4203,
+                                                                                columnNumber: 27
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                                        lineNumber: 4201,
+                                                                        columnNumber: 25
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4192,
+                                                                columnNumber: 21
+                                                            }, this) : href ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "source-actions",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                                    className: "source-action primary",
+                                                                    href: href,
+                                                                    ...internalLinkProps(href),
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                            name: "link",
+                                                                            size: 15
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                                            lineNumber: 4219,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        " Originalquelle öffnen"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                                    lineNumber: 4218,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4217,
+                                                                columnNumber: 21
+                                                            }, this) : null
+                                                        ]
+                                                    }, source.id, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4170,
+                                                        columnNumber: 17
+                                                    }, this);
+                                                })
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4159,
+                                                columnNumber: 15
+                                            }, this),
+                                            day.recording && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "recording",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                        children: "Kurs/Aufzeichnung:"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4227,
+                                                        columnNumber: 58
+                                                    }, this),
+                                                    " ",
+                                                    day.recording
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4227,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4157,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 3972,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 3960,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "task-stack",
+                        children: day.tasks.map((task, taskIndex)=>{
+                            const taskDone = taskProgress[taskIndex] ?? 0;
+                            const taskState = taskDone === 3 ? "done" : taskIndex === currentTaskIndex ? "current" : "open";
+                            const taskStateLabel = taskState === "done" ? "Erledigt" : taskState === "current" ? "In Arbeit" : "Offen";
+                            const plannedMinutes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["workModeTaskMinutes"])(settings.dailyWorkMode, taskIndex);
+                            const requiredToday = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$daily$2d$work$2d$mode$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isTaskRequiredForMode"])(settings.dailyWorkMode, taskIndex);
+                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("details", {
+                                className: `task-card ${taskState} ${requiredToday ? "required-today" : "optional-today"}`,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("summary", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "summary-marker",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "arrow",
+                                                    size: 16
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4242,
+                                                    columnNumber: 52
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4242,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "task-index",
+                                                children: task.title.slice(0, 2)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4243,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "summary-main",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                        children: task.title.slice(3)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4245,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                        children: requiredToday ? `${displayNumber(plannedMinutes)} Minuten Fokus` : "Heute optional · kein Rückstand"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4246,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4244,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "task-metadata",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: `task-state ${taskState}`,
+                                                        children: requiredToday ? taskStateLabel : "Optional"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4249,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    requiredToday ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        children: [
+                                                            displayNumber(plannedMinutes),
+                                                            " Min."
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4250,
+                                                        columnNumber: 38
+                                                    }, this) : null,
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        children: [
+                                                            displayNumber(taskDone),
+                                                            "/3 Qualitätskriterien"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4251,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4248,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4241,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "checklist",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "checklist-guidance",
+                                                children: "Diese drei Punkte sind Qualitätskriterien für ein Ergebnis — keine drei zusätzlichen Tagesaufgaben."
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4255,
+                                                columnNumber: 19
+                                            }, this),
+                                            task.items.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                    className: completed.has(item.id) ? "checked" : "",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                            type: "checkbox",
+                                                            disabled: !planIsRunning,
+                                                            checked: completed.has(item.id),
+                                                            onChange: (event)=>{
+                                                                if (planIsRunning) onToggle(item.id, event.target.checked, day);
+                                                            }
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4258,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "custom-check",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                name: "check",
+                                                                size: 15
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4266,
+                                                                columnNumber: 54
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4266,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: item.label
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4267,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    ]
+                                                }, item.id, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4257,
+                                                    columnNumber: 21
+                                                }, this))
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4254,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, task.id, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 4240,
+                                columnNumber: 15
+                            }, this);
+                        })
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 4232,
+                        columnNumber: 9
+                    }, this),
+                    findenUndVerstehenDone && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                        className: "recall-register-box",
+                        children: alreadyRegisteredForRecall ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "recall-register-done",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                    name: "check",
+                                    size: 16
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 4280,
+                                    columnNumber: 17
+                                }, this),
+                                " Für die Wiederholungs-Pipeline registriert. Sieh unter „Was solltest du heute wiederholen?“ nach, sobald es fällig ist."
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/study-tracker.tsx",
+                            lineNumber: 4279,
+                            columnNumber: 15
+                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                    htmlFor: `recall-fa-${day.id}`,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                            name: "note",
+                                            size: 18
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4285,
+                                            columnNumber: 19
+                                        }, this),
+                                        " Für Wiederholung registrieren"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 4284,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                    className: "recall-register-hint",
+                                    children: "Schreib deine Antwort ohne in die Quelle zu schauen. Ab morgen fragt „Was solltest du heute wiederholen?“ genau das ab, bevor es die Originalnotiz zeigt."
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 4287,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "structured-note-grid",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "structured-note-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "فارسی"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4292,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                    id: `recall-fa-${day.id}`,
+                                                    value: recallFA,
+                                                    onChange: (event)=>setRecallFA(event.target.value),
+                                                    dir: "rtl",
+                                                    placeholder: "بدون نگاه به منبع، از حافظه بنویس..."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4293,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4291,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "structured-note-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Deutsch"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4296,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                    value: recallDE,
+                                                    onChange: (event)=>setRecallDE(event.target.value),
+                                                    placeholder: "Schreibe es auf Deutsch, ohne nachzuschauen..."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4297,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4295,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 4290,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        className: "button secondary compact",
+                                        type: "button",
+                                        disabled: !recallFA.trim() && !recallDE.trim(),
+                                        onClick: ()=>{
+                                            addRecallEntry({
+                                                concept: day.title,
+                                                sourceId: day.proposal.length ? `§ ${day.proposal.join(", § ")}` : undefined,
+                                                sourceTitle: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$plan$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["sources"][day.sourceIds[0]]?.label,
+                                                originalNoteFA: recallFA.trim() || undefined,
+                                                originalNoteDE: recallDE.trim() || undefined
+                                            });
+                                            setRecallFA("");
+                                            setRecallDE("");
+                                        },
+                                        children: "Für Wiederholung registrieren"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4301,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 4300,
+                                    columnNumber: 17
+                                }, this)
+                            ]
+                        }, void 0, true)
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 4277,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "break-note",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                name: "clock",
+                                size: 17
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 4326,
+                                columnNumber: 11
+                            }, this),
+                            settings.dailyWorkMode === "rescue" ? "12 Minuten für genau ein Tagesergebnis. Die übrigen Ergebnisse bleiben optional und erzeugen keinen Rückstand." : settings.dailyWorkMode === "light" ? "70 Minuten für zwei Tagesergebnisse + eine Pause von 10 Minuten. Das dritte Ergebnis ist optional." : "8 Stunden Vollzeitkapazität: 4 Stunden Forschung + 4 Stunden Projekt. Pausen und medizinische Grenzen haben Vorrang; offene Arbeit verschiebt den Plan statt Rückstand zu erzeugen."
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 4325,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                        className: "note-box structured-note-box",
+                        "aria-labelledby": `daily-note-${day.id}`,
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "structured-note-heading",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                        id: `daily-note-${day.id}`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                name: "note",
+                                                size: 18
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4337,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Tagesabschlussnotiz"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4336,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: "Halte die wichtigsten Erkenntnisse des Tages kurz fest. Alle Felder bieten ausreichend Platz und können zusätzlich nach unten vergrößert werden."
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4339,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 4335,
+                                columnNumber: 11
+                            }, this),
+                            (()=>{
+                                const noteFields = parseDailyNote(note);
+                                const updateField = (key, value)=>{
+                                    onNoteChange(serializeDailyNote({
+                                        ...noteFields,
+                                        [key]: value
+                                    }));
+                                };
+                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "structured-note-grid",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "structured-note-field structured-note-field-wide structured-note-field-primary",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Konzept"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4348,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                    rows: 5,
+                                                    id: `note-${day.id}`,
+                                                    value: noteFields.concept,
+                                                    onChange: (event)=>updateField("concept", event.target.value),
+                                                    placeholder: "Was habe ich heute inhaltlich gelernt?"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4349,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4347,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "structured-note-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Problem"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4352,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                    rows: 5,
+                                                    value: noteFields.problem,
+                                                    onChange: (event)=>updateField("problem", event.target.value),
+                                                    placeholder: "Welches Problem oder welche Frage stand im Zentrum?"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4353,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4351,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "structured-note-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Methode"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4356,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                    rows: 5,
+                                                    value: noteFields.method,
+                                                    onChange: (event)=>updateField("method", event.target.value),
+                                                    placeholder: "Womit habe ich es untersucht oder gelöst?"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4357,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4355,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "structured-note-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Bezug zur Thesis"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4360,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                    rows: 5,
+                                                    value: noteFields.projectLink,
+                                                    onChange: (event)=>updateField("projectLink", event.target.value),
+                                                    placeholder: "Bezug zu Forschungsfrage, Architektur, Code, Daten oder Evaluation"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4361,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4359,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "structured-note-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Recall-Ergebnis"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4364,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                    value: noteFields.recallResult,
+                                                    onChange: (event)=>updateField("recallResult", event.target.value),
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                            value: "",
+                                                            children: "— nicht bewertet —"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4366,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                            value: "weak",
+                                                            children: "Schwach"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4367,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                            value: "medium",
+                                                            children: "Mittel"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4368,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                            value: "good",
+                                                            children: "Gut"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4369,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4365,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4363,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "structured-note-field",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Fehler"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4373,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                    rows: 5,
+                                                    value: noteFields.errors,
+                                                    onChange: (event)=>updateField("errors", event.target.value),
+                                                    placeholder: "Was ist schiefgelaufen oder unklar geblieben?"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4374,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4372,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "structured-note-field structured-note-field-wide",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Genaue Aktion für morgen"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4377,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                    rows: 5,
+                                                    value: noteFields.tomorrowAction,
+                                                    onChange: (event)=>updateField("tomorrowAction", event.target.value),
+                                                    placeholder: "Womit mache ich morgen konkret weiter?"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4378,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4376,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/study-tracker.tsx",
+                                    lineNumber: 4346,
+                                    columnNumber: 20
+                                }, this);
+                            })(),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "structured-note-actions",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: [
+                                            displayNumber(dailyNoteSearchText(note).length),
+                                            " Zeichen"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4383,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        className: "button secondary",
+                                        type: "button",
+                                        onClick: ()=>onSaveNote(day.id),
+                                        children: "Notiz speichern"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4384,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 4382,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 4334,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                        className: "attachment-box",
+                        "aria-labelledby": `attachments-${day.id}`,
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "attachment-heading",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                id: `attachments-${day.id}`,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                        name: "paperclip",
+                                                        size: 18
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4394,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    " Dateien und Bilder"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4393,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                children: "Die Dateien bleiben dauerhaft mit diesem Lerntag verknüpft."
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4396,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4392,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: [
+                                            displayNumber(attachments.length),
+                                            " Datei(en)"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4398,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 4391,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                className: `attachment-dropzone ${uploading ? "uploading" : ""}`,
+                                htmlFor: `files-${day.id}`,
+                                onDragOver: (event)=>event.preventDefault(),
+                                onDrop: (event)=>{
+                                    event.preventDefault();
+                                    if (!uploading) onUploadFiles(day.id, Array.from(event.dataTransfer.files));
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        id: `files-${day.id}`,
+                                        className: "visually-hidden",
+                                        type: "file",
+                                        multiple: true,
+                                        disabled: uploading,
+                                        onChange: (event)=>{
+                                            onUploadFiles(day.id, Array.from(event.target.files ?? []));
+                                            event.target.value = "";
+                                        }
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4410,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "attachment-upload-icon",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                            name: "upload",
+                                            size: 21
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/study-tracker.tsx",
+                                            lineNumber: 4422,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4421,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                children: uploading ? "Dateien werden gespeichert …" : "Dateien hier ablegen oder auswählen"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4425,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                children: "Bilder, PDF, Office, Text, Audio, Video und weitere Formate · maximal 25 MB je Datei"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4426,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4424,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 4401,
+                                columnNumber: 11
+                            }, this),
+                            attachments.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "attachment-grid",
+                                children: attachments.map((attachment)=>{
+                                    const kind = attachmentKind(attachment);
+                                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                        className: "attachment-card",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                className: "attachment-open",
+                                                type: "button",
+                                                onClick: ()=>onOpenAttachment(attachment),
+                                                "aria-label": `${attachment.name} ansehen`,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: `attachment-thumb ${kind}`,
+                                                        children: kind === "image" ? // The same-origin route enforces the signed-in owner before serving bytes.
+                                                        // eslint-disable-next-line @next/next/no-img-element
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                            src: `/api/attachments?id=${encodeURIComponent(attachment.id)}`,
+                                                            alt: "",
+                                                            loading: "lazy"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4446,
+                                                            columnNumber: 27
+                                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                            name: kind === "pdf" ? "book" : kind === "text" ? "note" : "file"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/study-tracker.tsx",
+                                                            lineNumber: 4452,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4442,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "attachment-meta",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                title: attachment.name,
+                                                                children: attachment.name
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4456,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                                                children: [
+                                                                    formatFileSize(attachment.size),
+                                                                    " · ",
+                                                                    kind === "other" ? "Datei" : kind.toUpperCase()
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4457,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4455,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "attachment-view",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                                name: "eye",
+                                                                size: 17
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/study-tracker.tsx",
+                                                                lineNumber: 4459,
+                                                                columnNumber: 57
+                                                            }, this),
+                                                            " Ansehen"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/study-tracker.tsx",
+                                                        lineNumber: 4459,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4436,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                className: "attachment-delete",
+                                                type: "button",
+                                                onClick: ()=>onDeleteAttachment(attachment),
+                                                "aria-label": `${attachment.name} löschen`,
+                                                title: "Datei löschen",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                    name: "trash",
+                                                    size: 16
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/study-tracker.tsx",
+                                                    lineNumber: 4468,
+                                                    columnNumber: 23
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/study-tracker.tsx",
+                                                lineNumber: 4461,
+                                                columnNumber: 21
+                                            }, this)
+                                        ]
+                                    }, attachment.id, true, {
+                                        fileName: "[project]/app/study-tracker.tsx",
+                                        lineNumber: 4435,
+                                        columnNumber: 19
+                                    }, this);
+                                })
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 4431,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 4390,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 3924,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/app/study-tracker.tsx",
+        lineNumber: 3886,
+        columnNumber: 5
+    }, this);
+}
+_s1(DayCard, "nglnMCNT/ttN7Vev0ghp1pMF+70=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$recall$2f$useRecallEntries$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRecallEntries"]
+    ];
+});
+_c5 = DayCard;
+function IntegrationCard({ name, status, tone, summary, href, expanded, children }) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+        className: "integration-card",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "integration-logo",
+                        children: name.slice(0, 1)
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 4501,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                children: name
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 4503,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: `connection-state ${tone}`,
+                                children: status
+                            }, void 0, false, {
+                                fileName: "[project]/app/study-tracker.tsx",
+                                lineNumber: 4504,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 4502,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 4500,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                children: summary
+            }, void 0, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 4507,
+                columnNumber: 7
+            }, this),
+            expanded && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "integration-detail",
+                children: children
+            }, void 0, false, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 4508,
+                columnNumber: 20
+            }, this),
+            href && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                href: href,
+                ...internalLinkProps(href),
+                children: [
+                    href.startsWith("/") ? "In dieser App öffnen" : "Adresse öffnen",
+                    " ",
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                        name: "link",
+                        size: 15
+                    }, void 0, false, {
+                        fileName: "[project]/app/study-tracker.tsx",
+                        lineNumber: 4511,
+                        columnNumber: 78
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/study-tracker.tsx",
+                lineNumber: 4510,
+                columnNumber: 9
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/app/study-tracker.tsx",
+        lineNumber: 4499,
+        columnNumber: 5
+    }, this);
+}
+_c6 = IntegrationCard;
+function downloadText(filename, content, mime) {
+    const blob = new Blob([
+        content
+    ], {
+        type: mime
+    });
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = href;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+}
+function escapeIcs(value) {
+    return value.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+}
+function localIcsDate(date, minutesFromMidnight) {
+    const dayOffset = Math.floor(minutesFromMidnight / 1440);
+    const minuteOfDay = (minutesFromMidnight % 1440 + 1440) % 1440;
+    const base = new Date(`${date}T12:00:00Z`);
+    base.setUTCDate(base.getUTCDate() + dayOffset);
+    const datePart = base.toISOString().slice(0, 10).replace(/-/g, "");
+    const hours = String(Math.floor(minuteOfDay / 60)).padStart(2, "0");
+    const minutes = String(minuteOfDay % 60).padStart(2, "0");
+    return `${datePart}T${hours}${minutes}00`;
+}
+var _c, _c1, _c2, _c3, _c4, _c5, _c6;
+__turbopack_context__.k.register(_c, "Icon");
+__turbopack_context__.k.register(_c1, "Highlight");
+__turbopack_context__.k.register(_c2, "ProgressRing");
+__turbopack_context__.k.register(_c3, "StudyTracker");
+__turbopack_context__.k.register(_c4, "WeekCard");
+__turbopack_context__.k.register(_c5, "DayCard");
+__turbopack_context__.k.register(_c6, "IntegrationCard");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+]);
+
+//# sourceMappingURL=app_study-tracker_tsx_0q73p.v._.js.map

@@ -1,0 +1,4 @@
+{
+  "/api/learning-lab/progress/route": "app/api/learning-lab/progress/route.js",
+  "/career/page": "app/career/page.js"
+}

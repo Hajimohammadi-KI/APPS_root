@@ -40,10 +40,12 @@ The Cross Repository Tracker (https://study-tracker-plan-five.vercel.app/)
 lives in `D:\Bachelor-Thesis\Thesis-Study-Workspace\Study-Tracker` and is not
 built or released from here.
 
-## Archive
+## Staged for deletion
 
-`archive/Apps` holds dated snapshots and retired prototypes that Git history
-already preserves: `English-07082026`, `Deutsch-V10.08.2026`, a stale
-`learning-core` copy that used to sit at `Apps/Deutsch-Automaticity`, the
-`App_*` prototypes, and the Tracker's historical documents. Nothing reads
-from `archive/`.
+`delete/` holds everything that no longer has a function: dated snapshots
+(`English-07082026`, `Deutsch-V10.08.2026`), the stale `learning-core` copy
+that used to sit at `Apps/Deutsch-Automaticity`, the `App_*` prototypes, the
+Tracker's historical documents, unused shared prototypes, one-shot scripts
+from finished rounds, and local backups. `delete/README.md` lists each group
+with its reason. Nothing reads from `delete/`; remove the folder when the
+review is done.

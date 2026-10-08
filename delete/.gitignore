@@ -1,0 +1,8 @@
+# Untracked material moved here for deletion; never commit it.
+.codex-tmp/
+.git.backup-*/
+backups/
+APPS_root/
+Apps/Study-Tracker.zip
+archive/Apps/Tracker/Tracker-chart-test-build-2026-09-06/
+archive/Apps/Tracker/Tracker-test-build-2026-09-06/

@@ -11,5 +11,5 @@
 Der Projektordner ist eigenständig: Kopieren genügt, um die App zu
 installieren, zu prüfen, zu bauen und zu veröffentlichen (siehe README,
 Abschnitt „Self-contained project folder“). Die datierten Ordner
-`Deutsch-V10.08.2026` und `English-07082026` im gemeinsamen Checkout sind
-unveränderte Wiederherstellungsquellen und werden nicht gebaut.
+`Deutsch-V10.08.2026` und `English-07082026` liegen im gemeinsamen Checkout
+unter `delete/` zur Löschung bereit; die Git-Historie bewahrt sie.

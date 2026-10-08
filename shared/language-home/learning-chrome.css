@@ -1,273 +1,379 @@
-/* Calm shared navigation and reading surfaces. No learner-state or score overrides. */
+/* Calm shared navigation and reading surfaces. */
+
+/* ── Navigation ─────────────────────────────────────────────────────────────── */
 .learning-navigation {
   color: #27344a;
   font-size: 0.9375rem;
   line-height: 1.5;
 }
+
 .learning-navigation .ln-label {
-  margin: 0 12px 12px;
-  color: #58677e;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  margin: 0 12px 10px;
+  color: #8592a8;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
+
 .learning-navigation ul {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 5px;
+  gap: 2px;
 }
+
 .learning-navigation a,
 .learning-navigation summary {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-height: 48px;
-  padding: 12px;
+  gap: 11px;
+  min-height: 44px;
+  padding: 10px 12px;
   border: 1px solid transparent;
-  border-radius: 12px;
-  color: inherit;
-  font-size: 0.9375rem;
+  border-radius: 10px;
+  color: #374a64;
+  font-size: 0.9rem;
   font-weight: 500;
   text-decoration: none;
-  line-height: 1.45;
+  line-height: 1.4;
   cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
 }
+
 .learning-navigation a:hover,
 .learning-navigation summary:hover {
-  background: #edf1f8;
-  box-shadow: none;
-  transform: none;
+  background: #f0f4fb;
+  color: #1a2d4e;
 }
+
 .learning-navigation a[aria-current="page"] {
-  background: #263e70;
+  background: #1f3566;
   color: #fff;
-  font-weight: 650;
+  font-weight: 600;
+  border-color: #1f3566;
+  box-shadow: 0 2px 8px rgba(31, 53, 102, 0.25);
 }
+
 .learning-navigation svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
 }
+
 .learning-navigation summary {
   list-style: none;
 }
+
 .learning-navigation summary::-webkit-details-marker {
   display: none;
 }
+
 .learning-navigation summary svg:last-child {
   margin-inline-start: auto;
-  width: 16px;
+  width: 15px;
+  opacity: 0.6;
+  transition: transform 160ms ease;
 }
+
 .learning-navigation details[open] summary svg:last-child {
   transform: rotate(180deg);
 }
+
 .learning-navigation .ln-more {
-  border-top: 1px solid #d9e0eb;
-  margin-top: 20px;
-  padding-top: 16px;
+  border-top: 1px solid #e4e9f2;
+  margin-top: 16px;
+  padding-top: 12px;
 }
+
 .learning-navigation .ln-more ul {
-  padding-inline-start: 10px;
-  margin-top: 8px;
-  border-inline-start: 2px solid #d9e0eb;
+  padding-inline-start: 8px;
+  margin-top: 4px;
+  border-inline-start: 2px solid #e4e9f2;
 }
+
 .learning-navigation .ln-more a {
   font-size: 0.875rem;
+  min-height: 40px;
 }
+
 .learning-navigation .ln-settings {
-  margin-top: 12px;
+  margin-top: 10px;
+  border-top: 1px solid #e4e9f2;
+  padding-top: 10px;
 }
+
 .learning-navigation .ln-roadmap {
-  margin-top: 16px;
-  color: #52627a;
+  margin-top: 12px;
+  color: #7a8fa8;
   font-size: 0.8125rem;
+  text-decoration: none;
+  display: block;
+  padding: 8px 12px;
 }
+
 .learning-navigation :is(a, summary):focus-visible,
 .app-tools > summary:focus-visible {
   outline: 3px solid #3d5a9e !important;
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
+
+/* ── Tools panel ────────────────────────────────────────────────────────────── */
 .app-tools {
   position: relative;
   margin: 0;
   padding: 0;
   border: 0;
 }
+
 .app-tools > summary {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   list-style: none;
   cursor: pointer;
-  min-height: 44px;
-  padding: 10px 14px;
-  border: 1px solid #d9e0eb;
-  border-radius: 12px;
-  background: #fff;
+  min-height: 40px;
+  padding: 9px 14px;
+  border: 1px solid #dce4f0;
+  border-radius: 10px;
+  background: #f8fafd;
   color: #344563;
   font-size: 0.875rem;
   font-weight: 600;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
 }
+
 .app-tools > summary::-webkit-details-marker {
   display: none;
 }
+
 .app-tools > summary::after {
-  content: "+";
-  font-size: 1.1rem;
+  content: "⌄";
+  font-size: 1rem;
+  line-height: 1;
+  margin-inline-start: 2px;
+  opacity: 0.55;
+  transition: transform 160ms ease;
 }
+
+.app-tools[open] > summary {
+  background: #fff;
+  border-color: #bfcce0;
+}
+
 .app-tools[open] > summary::after {
-  content: "−";
+  transform: rotate(180deg);
 }
+
+.app-tools > summary:hover {
+  background: #eef3fb;
+  border-color: #c2cedf;
+}
+
 .app-tools-panel {
   position: absolute;
   inset-inline-end: 0;
   top: calc(100% + 8px);
-  width: min(360px, calc(100vw - 32px));
-  padding: 18px;
-  border: 1px solid #d9e0eb;
-  border-radius: 16px;
+  width: min(380px, calc(100vw - 32px));
+  padding: 16px;
+  border: 1px solid #dce4f0;
+  border-radius: 14px;
   background: #fff;
-  box-shadow: 0 16px 40px #1b2e5120;
+  box-shadow:
+    0 12px 36px rgba(20, 35, 70, 0.12),
+    0 2px 8px rgba(20, 35, 70, 0.06);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   z-index: 45;
 }
+
 .app-tools-panel > p {
   flex-basis: 100%;
   margin: 0;
   color: #52627a;
   font-size: 0.875rem;
 }
+
+/* ── App shell overrides ────────────────────────────────────────────────────── */
 .app-shell[data-screen] {
   grid-template-columns: 264px minmax(0, 1fr);
 }
+
 .app-shell[data-screen] .app-sidebar {
-  padding: 26px 18px;
+  padding: 24px 16px;
   background: #fff !important;
-  border-right: 1px solid #d9e0eb;
+  border-right: 1px solid #e4e9f2;
 }
+
 .app-shell[data-screen] .brand-mark {
-  padding: 0 8px 30px;
+  padding: 0 8px 26px;
+  margin-bottom: 0;
 }
+
 .app-shell[data-screen] .brand-copy > span {
   display: none;
 }
+
 .app-shell[data-screen] .app-main {
   padding-top: 0 !important;
 }
+
 .app-shell[data-screen] .app-topbar {
-  padding: 16px 30px;
-  min-height: 80px;
-  border-bottom: 1px solid #e0e5ed;
-  background: #fff;
+  padding: 14px 28px;
+  min-height: 72px;
+  border-bottom: 1px solid #e6ebf4;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
+
 .app-shell[data-screen] .app-content {
-  max-width: 1250px;
+  max-width: 1260px;
   margin-inline: auto;
-  padding: 32px;
+  padding: 32px 36px;
 }
+
+/* ── German app ─────────────────────────────────────────────────────────────── */
 .german-app-sidebar {
   width: 264px !important;
-  padding: 26px 18px;
+  padding: 24px 16px;
   background: #fff !important;
 }
+
 .german-sidebar-groups {
   overflow-y: auto;
   padding-top: 4px;
 }
+
 .german-shell-body {
   min-width: 0;
 }
+
 .german-app-topbar {
   background: #fff !important;
 }
+
 .german-app-sidebar .brand-logo {
-  background: #263e70;
+  background: #1f3566;
 }
+
 .german-app-sidebar a[aria-label] > span:last-child > span {
   display: none;
 }
+
 .german-app-main {
-  max-width: 1250px;
+  max-width: 1260px;
 }
+
+/* ── Page overlays ──────────────────────────────────────────────────────────── */
 .app-content[data-screen="progress"] > .automaticity-overview {
   margin-bottom: 24px;
 }
+
 .quiet-disclosure {
-  border: 1px solid #d9e0eb;
-  border-radius: 16px;
+  border: 1px solid #e2e8f2;
+  border-radius: 14px;
   background: #fff;
   margin: 0 0 20px;
   overflow: clip;
+  transition: border-color 160ms ease;
 }
+
+.quiet-disclosure:focus-within {
+  border-color: #b8c8e0;
+}
+
 .quiet-disclosure > summary {
-  padding: 18px 22px;
-  min-height: 56px;
+  padding: 16px 22px;
+  min-height: 52px;
   cursor: pointer;
   color: #2e446b;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
 }
+
 .quiet-disclosure > div {
   padding: 0 20px 20px;
 }
+
 .learning-progress-page > header {
-  padding: 28px;
-  margin-bottom: 24px;
-  border: 1px solid #d9e0eb;
+  padding: 32px 36px;
+  margin-bottom: 28px;
+  border: 1px solid #d8e2f0;
   border-radius: 20px;
-  background: #eef2f9;
+  background: linear-gradient(135deg, #eef3fb, #f8fafd);
 }
+
 .learning-progress-page > header h1 {
   font-family: Georgia, serif;
-  font-size: clamp(2rem, 3vw, 2.7rem);
-  line-height: 1.25;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 1.2;
   font-weight: 400;
-  margin: 8px 0 16px;
-  color: #24344d;
+  margin: 10px 0 18px;
+  color: #1a2d4e;
 }
+
 .learning-progress-page > header > p {
   color: #52627a;
-  max-width: 65ch;
+  max-width: 60ch;
   font-size: 1rem;
-  line-height: 1.65;
+  line-height: 1.7;
 }
+
 .learning-progress-page > header > p:first-child {
-  font-size: 0.8125rem;
-  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #3d5a9e;
+  margin-bottom: 0;
 }
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
 @media (min-width: 1280px) {
   .german-shell-body {
     padding-left: 264px;
   }
 }
+
 @media (max-width: 860px) {
   .app-shell[data-screen] {
     grid-template-columns: minmax(0, 1fr);
   }
+
   .app-shell[data-screen] .app-topbar {
     padding: 12px 16px;
+    min-height: 64px;
   }
+
   .app-shell[data-screen] .app-content {
-    padding: 24px 16px;
+    padding: 20px 16px 40px;
   }
+
   .app-shell[data-screen] .app-sidebar {
-    width: min(320px, 86vw);
+    width: min(300px, 88vw);
   }
+
   .app-tools-panel {
     max-height: calc(100dvh - 120px);
     overflow-y: auto;
   }
 }
+
+/* ── Motion & forced-colors ─────────────────────────────────────────────────── */
 html[data-low-stimulation="true"] .learning-navigation *,
 html[data-low-stimulation="true"] .app-tools * {
   transition: none !important;
   animation: none !important;
 }
+
 @media (prefers-reduced-motion: reduce) {
   .learning-navigation *,
   .app-tools * {

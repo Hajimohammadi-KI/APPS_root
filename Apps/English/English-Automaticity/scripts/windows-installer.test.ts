@@ -292,6 +292,14 @@ describe("Windows installation roadmap", () => {
       // Every installer input lives inside this project, so copying the project folder is enough.
       expect(resolved.startsWith(projectRoot)).toBe(true);
     }
+    // The PDF Reader is a separate product: the installer builds without it and
+    // the desktop app then opens the online reader instead of failing to start.
+    expect(buildScript).toContain("ENGLISH_GRAMMAR_READER_PROJECT");
+    expect(buildScript).toContain("Skipping the embedded PDF Reader");
+    expect(buildScript).not.toContain('throw "PDF Reader project does not exist');
+    expect(desktopMain).toContain("https://research-pdf-studio.vercel.app/");
+    expect(desktopMain).toContain("localReaderAvailable ? [waitForReaderHealth()] : []");
+    expect(desktopMain).not.toContain("readerEntry,\n    path.join(readerRoot");
     expect(buildScript).not.toContain("shared\\GoogleOAuthPackaging.ps1");
     expect(buildScript).toContain("distribution\\windows-release\\GoogleOAuthPackaging.ps1");
     for (const file of [

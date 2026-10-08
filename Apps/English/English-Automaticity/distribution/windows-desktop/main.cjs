@@ -21,6 +21,12 @@ const APP_ORIGIN = new URL(APP_URL).origin;
 const READER_PORT = 4332;
 const READER_URL = `http://127.0.0.1:${READER_PORT}/`;
 const READER_ORIGIN = new URL(READER_URL).origin;
+// Research PDF Studio is a separate product. Installers built without it fall
+// back to the online reader; local PDF import then needs the reader's own
+// upload instead of the desktop import folder.
+const ONLINE_READER_URL = "https://research-pdf-studio.vercel.app/";
+const ONLINE_READER_ORIGIN = new URL(ONLINE_READER_URL).origin;
+let localReaderAvailable = false;
 const DESKTOP_VERSION = "27.3.30";
 const DESKTOP_USER_AGENT_TOKEN = `EnglishGrammarAutomaticityDesktop/${DESKTOP_VERSION}`;
 const ALLOWED_PERMISSIONS = new Set(["media", "notifications"]);
@@ -312,13 +318,21 @@ async function startLocalApplication() {
     path.join(localRoot, "runtime", "bun.exe"),
     apiEntry,
     webEntry,
-    readerEntry,
-    path.join(readerRoot, "dist", "server", "index.js"),
-    path.join(readerRoot, "package.json"),
   ]) {
     if (!fs.existsSync(requiredFile)) {
       throw new Error(`The offline installation is incomplete: ${requiredFile}`);
     }
+  }
+  const readerFiles = [
+    readerEntry,
+    path.join(readerRoot, "dist", "server", "index.js"),
+    path.join(readerRoot, "package.json"),
+  ];
+  localReaderAvailable = readerFiles.every((file) => fs.existsSync(file));
+  if (!localReaderAvailable && fs.existsSync(readerRoot)) {
+    throw new Error(
+      `The embedded PDF reader is incomplete: ${readerFiles.find((file) => !fs.existsSync(file))}`,
+    );
   }
 
   apiProcess = spawnLocalService(apiEntry, apiRoot, {
@@ -331,20 +345,22 @@ async function startLocalApplication() {
     NEXT_TELEMETRY_DISABLED: "1",
     PORT: String(WEB_PORT),
   });
-  fs.mkdirSync(readerImportsRoot, { recursive: true });
-  if (!matchesReaderHealth(await readJsonEndpoint(`${READER_URL}api/health`))) {
-    readerProcess = spawnLocalService(readerEntry, readerRoot, {
-      HOSTNAME: "127.0.0.1",
-      PDF_READER_IMPORT_ROOT: readerImportsRoot,
-      PDF_READER_RELEASE_VERSION: DESKTOP_VERSION,
-      PORT: String(READER_PORT),
-    });
-    readerManagedByDesktop = true;
+  if (localReaderAvailable) {
+    fs.mkdirSync(readerImportsRoot, { recursive: true });
+    if (!matchesReaderHealth(await readJsonEndpoint(`${READER_URL}api/health`))) {
+      readerProcess = spawnLocalService(readerEntry, readerRoot, {
+        HOSTNAME: "127.0.0.1",
+        PDF_READER_IMPORT_ROOT: readerImportsRoot,
+        PDF_READER_RELEASE_VERSION: DESKTOP_VERSION,
+        PORT: String(READER_PORT),
+      });
+      readerManagedByDesktop = true;
+    }
   }
   await Promise.all([
     waitForEndpoint(`${APP_URL}`),
     waitForEndpoint(`http://127.0.0.1:${API_PORT}/api/health`),
-    waitForReaderHealth(),
+    ...(localReaderAvailable ? [waitForReaderHealth()] : []),
   ]);
 }
 
@@ -358,10 +374,15 @@ function isAppUrl(value) {
 
 function isReaderUrl(value) {
   try {
-    return new URL(value).origin === READER_ORIGIN;
+    const origin = new URL(value).origin;
+    return origin === READER_ORIGIN || origin === ONLINE_READER_ORIGIN;
   } catch {
     return false;
   }
+}
+
+function readerBaseUrl() {
+  return localReaderAvailable ? READER_URL : ONLINE_READER_URL;
 }
 
 function isSafeExternalUrl(value) {
@@ -383,7 +404,7 @@ function fileSha256(pdfPath) {
   });
 }
 
-function createReaderWindow(url = READER_URL) {
+function createReaderWindow(url = readerBaseUrl()) {
   const readerWindow = new BrowserWindow({
     width: 1380,
     height: 900,
@@ -453,6 +474,18 @@ async function chooseAndOpenPdf(ownerWindow) {
   }
 
   try {
+    if (!localReaderAvailable) {
+      // Without the embedded reader the file cannot be imported locally; the
+      // online reader opens and the learner adds the file there.
+      createReaderWindow(ONLINE_READER_URL);
+      return {
+        status: "opened",
+        fileName: path.basename(pdfPath),
+        viewer: "Research PDF Studio (online)",
+        message:
+          "This installation has no embedded PDF reader. The online Research PDF Studio opened; add the file there.",
+      };
+    }
     const readerImportsRoot = path.join(app.getPath("userData"), "PDF Reader Imports");
     fs.mkdirSync(readerImportsRoot, { recursive: true });
     const id = await fileSha256(pdfPath);

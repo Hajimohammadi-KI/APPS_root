@@ -46,7 +46,7 @@ export async function GET(
     return Response.json(
       {
         message:
-          "Der lokale Ordner D:\\APPS_root\\Sources\\German wurde nicht gefunden.",
+          "Der lokale Materialordner wurde nicht gefunden. Setze GERMAN_SOURCE_ROOT auf den Ordner mit den Original-PDFs.",
       },
       { status: 404 },
     );

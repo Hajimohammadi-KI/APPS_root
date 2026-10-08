@@ -39,7 +39,9 @@
   text-decoration: none;
   line-height: 1.4;
   cursor: pointer;
-  transition: background-color 140ms ease, color 140ms ease;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
 }
 
 .learning-navigation a:hover,
@@ -141,7 +143,9 @@
   color: #344563;
   font-size: 0.875rem;
   font-weight: 600;
-  transition: background-color 140ms ease, border-color 140ms ease;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
 }
 
 .app-tools > summary::-webkit-details-marker {
@@ -180,7 +184,9 @@
   border: 1px solid #dce4f0;
   border-radius: 14px;
   background: #fff;
-  box-shadow: 0 12px 36px rgba(20, 35, 70, 0.12), 0 2px 8px rgba(20, 35, 70, 0.06);
+  box-shadow:
+    0 12px 36px rgba(20, 35, 70, 0.12),
+    0 2px 8px rgba(20, 35, 70, 0.06);
   display: flex;
   flex-wrap: wrap;
   align-items: center;

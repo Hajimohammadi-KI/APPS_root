@@ -42,10 +42,11 @@ installer helpers are under `distribution/windows-release`. Local Vercel links
 (`.vercel/`) and `node_modules/` are machine-specific and are not part of the
 hand-over.
 
-One optional piece still lives outside the folder: the Windows desktop
-installer (`bun run package:windows-exe`) embeds Research PDF Studio, a
-separate product. Keep `Apps-For-Integeration/Reader-PDF-App` beside this
-project, or set `ENGLISH_GRAMMAR_READER_PROJECT` to its folder.
+The Windows desktop installer (`bun run package:windows-exe`) can embed
+Research PDF Studio, a separate product, for offline PDF reading. If that
+project is not beside this one (or named by `ENGLISH_GRAMMAR_READER_PROJECT`),
+the installer is built without it and the desktop app opens the online reader
+at `https://research-pdf-studio.vercel.app/` instead.
 
 ## Free Vercel deployment
 

@@ -86,7 +86,8 @@
 }
 .lh-heading p:not(.lh-eyebrow),
 .lh-section-heading p {
-  color: var(--lh-muted);
+  color: #475569;
+  font-weight: 500;
 }
 .learning-home .lh-eyebrow {
   color: var(--lh-primary);
@@ -154,17 +155,26 @@
   align-items: center;
   justify-content: center;
   gap: 18px;
-  background: var(--lh-primary);
+  background: #2563EB;
   color: white;
-  border: 1px solid var(--lh-primary);
+  border: none;
   border-radius: 12px;
   padding: 14px 20px;
   min-height: 52px;
   font-weight: 650;
   margin: 24px 0 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
 }
 .learning-home .lh-primary:hover {
-  background: var(--lh-primary-hover);
+  background: #1d4ed8;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+  transform: translateY(-2px);
+}
+.learning-home .lh-primary:focus-visible {
+  outline: 3px solid var(--lh-primary);
+  outline-offset: 2px;
 }
 .learning-home .lh-local {
   display: flex;
@@ -263,6 +273,7 @@
   gap: 12px;
   font-size: 0.9375rem;
   font-weight: 600;
+  min-height: 24px;
 }
 .lh-metric-label > svg {
   color: var(--lh-primary);
@@ -408,10 +419,18 @@
   border-radius: 14px;
   padding: 16px;
   min-height: 80px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 .lh-course-list > a:hover {
   border-color: var(--lh-primary);
   background: var(--lh-soft);
+  box-shadow: 0 4px 12px rgba(21, 59, 128, 0.1);
+  transform: translateY(-2px);
+}
+.lh-course-list > a:focus-visible {
+  outline: 3px solid var(--lh-primary);
+  outline-offset: 2px;
 }
 .lh-course-icon {
   background: var(--lh-soft);

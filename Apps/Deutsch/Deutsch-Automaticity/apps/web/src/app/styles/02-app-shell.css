@@ -234,16 +234,16 @@
   display: flex;
   width: 100%;
   min-height: 40px;
-  align-items: flex-start;
+  align-items: center;
   gap: 11px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   background: transparent;
   padding: 8px 10px;
-  color: #384963;
+  color: #64748B;
   cursor: pointer;
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 550;
   line-height: 1.45;
   text-align: left;
   text-decoration: none;
@@ -255,8 +255,13 @@
 }
 
 .nav-button:hover {
-  background: #f1f5fb;
-  color: #183a67;
+  background: #EFF6FF;
+  color: #153B80;
+}
+
+.nav-button:focus-visible {
+  outline: 2px solid #153B80;
+  outline-offset: -2px;
 }
 
 .nav-group-trigger:active,
@@ -265,13 +270,10 @@
 }
 
 .nav-button[data-active="true"] {
-  background: linear-gradient(
-    135deg,
-    var(--screen-accent),
-    var(--screen-accent-strong)
-  );
-  color: white;
-  box-shadow: 0 8px 20px var(--screen-glow);
+  background: #E3F0FF;
+  color: #153B80;
+  font-weight: 650;
+  box-shadow: inset 0 0 0 2px #153B80;
 }
 
 .sidebar-scrim {
@@ -561,5 +563,71 @@ details[open] {
 
 .learning-home details[open] {
   z-index: 50;
+}
+
+/* ── Form Input Styling ────────────────────────────────────────── */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+  border: 1px solid #D8E3F0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+input[type="text"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="password"]:focus-visible,
+input[type="search"]:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: #153B80;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(21, 59, 128, 0.1);
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* ── Accessibility & Animation ────────────────────────────────────────── */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  :root {
+    --lh-ink: #000;
+    --lh-primary: #0a3fa8;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .learning-home {
+    --lh-ink: #f5f5f5;
+    --lh-muted: #b0b0b0;
+    --lh-primary: #60a5fa;
+    --lh-line: #404040;
+    --lh-paper: #1f1f1f;
+    --lh-soft: #2d2d2d;
+  }
 }
 }

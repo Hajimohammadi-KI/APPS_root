@@ -4,21 +4,21 @@
    Mirrored into both apps by scripts/sync-language-web.mjs. */
 :root {
   --calm-font: "Segoe UI Variable", "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
-  --calm-bg: #f6f7fb;
+  --calm-bg: #F3F7FC;
   --calm-surface: #ffffff;
-  --calm-surface-2: #eef2f8;
-  --calm-line: #d9e0eb;
-  --calm-line-strong: #b9c5d8;
-  --calm-ink: #1f2a3d;
-  --calm-muted: #52627a;
-  --calm-primary: #2d477d;
-  --calm-primary-hover: #213760;
-  --calm-primary-soft: #e7edf7;
-  --calm-positive: #1f6f5b;
-  --calm-positive-soft: #e3f3ec;
-  --calm-warning: #8a5a00;
-  --calm-warning-soft: #fff4dc;
-  --calm-danger: #b42318;
+  --calm-surface-2: #EFF6FF;
+  --calm-line: #D8E3F0;
+  --calm-line-strong: #B5D4E8;
+  --calm-ink: #0F2547;
+  --calm-muted: #64748B;
+  --calm-primary: #153B80;
+  --calm-primary-hover: #0F2547;
+  --calm-primary-soft: #E3F0FF;
+  --calm-positive: #059669;
+  --calm-positive-soft: #D1FAE5;
+  --calm-warning: #b45309;
+  --calm-warning-soft: #fef3c7;
+  --calm-danger: #dc2626;
   --calm-radius: 14px;
   --calm-radius-lg: 18px;
   --calm-shadow: 0 1px 2px rgba(31, 41, 55, 0.06);
@@ -33,7 +33,7 @@ body {
 }
 h1, h2, h3, h4 { font-family: var(--calm-font); font-weight: 650; letter-spacing: -0.015em; }
 :is(a, summary, button, input, select, textarea):focus-visible {
-  outline: 3px solid #3d5a9e;
+  outline: 3px solid #153B80;
   outline-offset: 3px;
   box-shadow: none;
 }
@@ -125,25 +125,25 @@ body.daily-workspace .calm-primary-nav a {
   min-height: 44px;
   padding: 10px 12px;
   border-radius: 10px;
-  color: #374a64;
+  color: #64748B;
   font-size: 0.9375rem;
   font-weight: 500;
   text-decoration: none;
 }
-body.daily-workspace .calm-primary-nav a:hover { background: #f0f4fb; color: var(--calm-ink); }
-body.daily-workspace .calm-primary-nav a[aria-current="page"] { background: #1f3566; color: #fff; font-weight: 600; }
+body.daily-workspace .calm-primary-nav a:hover { background: #f0f6ff; color: var(--calm-ink); }
+body.daily-workspace .calm-primary-nav a[aria-current="page"] { background: #153B80; color: #fff; font-weight: 600; }
 body.daily-workspace .calm-nav-more { border-top: 1px solid var(--calm-line); padding-top: 8px; }
 body.daily-workspace .calm-nav-more > summary {
   cursor: pointer;
   min-height: 44px;
   padding: 10px 12px;
   font-size: 0.9rem;
-  color: #374a64;
+  color: #64748B;
 }
 body.daily-workspace .calm-nav-more .nav-section { border: 0; padding: 0 0 6px; margin: 0; }
-body.daily-workspace .calm-nav-more .nav-heading { margin: 10px 12px 4px; color: #8592a8; font-size: 0.6875rem; letter-spacing: 0.09em; }
+body.daily-workspace .calm-nav-more .nav-heading { margin: 10px 12px 4px; color: #9ca3af; font-size: 0.6875rem; letter-spacing: 0.09em; }
 body.daily-workspace .calm-nav-more .nav-parent { display: none; }
-body.daily-workspace .calm-nav-more .nav-item { min-height: 40px; padding: 8px 12px; font-size: 0.875rem; color: #374a64; }
+body.daily-workspace .calm-nav-more .nav-item { min-height: 40px; padding: 8px 12px; font-size: 0.875rem; color: #64748B; }
 body.daily-workspace .calm-nav-more .nav-item.active { background: var(--calm-primary-soft); color: var(--calm-primary); font-weight: 600; }
 body.daily-workspace .calm-nav-more .nav-item .nav-glyph { display: none; }
 body.daily-workspace .nav-section.is-collapsed .nav-item { display: flex; }
@@ -194,20 +194,20 @@ body.daily-workspace .done .number { background: var(--calm-positive); }
 body.daily-workspace .act-icon { background: var(--calm-surface-2); color: var(--calm-primary); font-size: 26px; }
 body.daily-workspace .done .act-icon { background: var(--calm-positive-soft); color: var(--calm-positive); }
 body.daily-workspace .act-head b { font-size: 0.9875rem; }
-body.daily-workspace .tag { background: var(--calm-surface-2); color: #3f4f68; font-weight: 600; }
+body.daily-workspace .tag { background: var(--calm-surface-2); color: #64748B; font-weight: 600; }
 body.daily-workspace .tag.green { background: var(--calm-positive-soft); color: var(--calm-positive); }
 body.daily-workspace .tag.purple { background: var(--calm-primary-soft); color: var(--calm-primary); }
 body.daily-workspace .tag.orange { background: var(--calm-warning-soft); color: var(--calm-warning); }
 body.daily-workspace .desc { color: var(--calm-muted); font-size: 0.875rem; }
-body.daily-workspace .bar { background: #e6ebf3; }
+body.daily-workspace .bar { background: #d8e3f0; }
 body.daily-workspace .bar span { background: var(--calm-primary); }
 body.daily-workspace .done .bar span { background: var(--calm-positive); }
 body.daily-workspace .minutes, body.daily-workspace .activity-time-label { color: var(--calm-muted); font-weight: 500; }
 body.daily-workspace .open { border-color: var(--calm-line); font-weight: 600; color: var(--calm-ink); border-radius: 10px; }
-body.daily-workspace .open:hover { border-color: var(--calm-line-strong); background: #f7f9fc; }
+body.daily-workspace .open:hover { border-color: var(--calm-line-strong); background: #f0f6ff; }
 body.daily-workspace .open.primary-mini { background: var(--calm-primary); color: #fff; border-color: var(--calm-primary); }
 body.daily-workspace .open.primary-mini:hover { background: var(--calm-primary-hover); }
-body.daily-workspace .scaffold { border-color: var(--calm-line); background: #fafbfd; }
+body.daily-workspace .scaffold { border-color: var(--calm-line); background: #f0f6ff; }
 body.daily-workspace .scaffold summary { color: var(--calm-primary); }
 body.daily-workspace .tip {
   height: auto;
@@ -247,15 +247,15 @@ body.daily-workspace .support-disclosure { border-color: var(--calm-line); }
 /* ── Grammar lab pages (grammar.html / grammatik.html) ───────────────────── */
 .language-workspace .brand-mark { background: var(--calm-primary); box-shadow: none; }
 .language-workspace .nav-link.active { background: var(--calm-primary-soft); color: var(--calm-primary); }
-.language-workspace .nav-link:hover { color: var(--calm-primary); background: #f0f4fb; }
-.language-workspace .nav-title { color: #8592a8; }
+.language-workspace .nav-link:hover { color: var(--calm-primary); background: #f0f6ff; }
+.language-workspace .nav-title { color: #9ca3af; }
 .language-workspace .page-icon { background: var(--calm-surface-2); color: var(--calm-primary); }
 .language-workspace .level summary { color: var(--calm-ink); }
 .language-workspace .level[open] summary { background: var(--calm-surface-2); }
 .language-workspace .level-progress-bar > span { background: var(--calm-primary); }
 .language-workspace .level-tag.a2, .language-workspace .level-tag.b1, .language-workspace .level-tag.b2,
 .language-workspace .level-tag.c1, .language-workspace .level-tag.c2 { color: var(--calm-primary); }
-.language-workspace .topic:hover { background: #f0f4fb; }
+.language-workspace .topic:hover { background: #f0f6ff; }
 .language-workspace .topic.active { color: var(--calm-primary); border-color: var(--calm-line-strong); background: var(--calm-primary-soft); }
 .language-workspace .topic-dot { background: var(--calm-primary); }
 .language-workspace .badge { color: var(--calm-primary); background: var(--calm-primary-soft); }
@@ -265,7 +265,7 @@ body.daily-workspace .support-disclosure { border-color: var(--calm-line); }
 .language-workspace .eyebrow { color: var(--calm-primary); }
 .language-workspace .exercise-card { border-top-color: var(--calm-primary); background: var(--calm-surface); }
 .language-workspace .primary-btn:hover { background: var(--calm-primary-hover); transform: none; }
-.language-workspace .ghost-btn:hover, .language-workspace .pill:hover { border-color: var(--calm-line-strong); background: #f7f9fc; }
+.language-workspace .ghost-btn:hover, .language-workspace .pill:hover { border-color: var(--calm-line-strong); background: #f0f6ff; }
 .language-workspace .path-status strong { color: var(--calm-primary); }
 .language-workspace .rule-heading { color: var(--calm-primary); background: var(--calm-surface); }
 .language-workspace:not(.daily-workspace) .number { color: var(--calm-primary); background: var(--calm-primary-soft); }

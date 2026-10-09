@@ -1,10 +1,10 @@
 .conversation-page {
-  --violet: #3d5a9e;
+  --violet: #153B80;
   --violet2: #314d84;
-  --ink: #24344d;
-  --muted: #52627a;
-  --line: #d9e0eb;
-  --lav: #edf1f8;
+  --ink: #0F2547;
+  --muted: #64748B;
+  --line: #D8E3F0;
+  --lav: #EFF6FF;
   font-size: 1rem;
   line-height: 1.6;
   background: transparent;
@@ -24,7 +24,7 @@
 }
 .conversation-page .studio-brand {
   font-family: Georgia, serif;
-  color: #24344d;
+  color: #0F2547;
   font-size: 1.4rem;
   text-decoration: none;
   display: block;
@@ -37,7 +37,7 @@
   height: auto;
   min-height: 90px;
   padding: 16px 24px 24px;
-  border-bottom: 1px solid #d9e0eb;
+  border-bottom: 1px solid #D8E3F0;
   display: block;
   background: transparent;
 }
@@ -46,11 +46,11 @@
   font-size: clamp(2rem, 3vw, 2.8rem);
   font-weight: 400;
   line-height: 1.2;
-  color: #24344d;
+  color: #0F2547;
 }
 .conversation-page .studio-main > header p {
   font-size: 1rem;
-  color: #52627a;
+  color: #64748B;
   max-width: 65ch;
 }
 .conversation-page .header-actions {
@@ -59,7 +59,7 @@
 .conversation-page .studio-options,
 .conversation-page .studio-results,
 .conversation-page .studio-step-picker {
-  border: 1px solid #d9e0eb;
+  border: 1px solid #D8E3F0;
   border-radius: 16px;
   background: #fff;
 }
@@ -74,14 +74,14 @@
   padding: 16px 20px;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #334c76;
+  color: #0F2547;
 }
 .conversation-page .studio-options > summary > span {
   display: block;
   margin-top: 4px;
   padding-inline-start: 18px;
   font-weight: 400;
-  color: #52627a;
+  color: #64748B;
 }
 .conversation-page .conversation-filter {
   margin: 12px 20px;
@@ -142,7 +142,7 @@
   font-size: 1.5rem;
 }
 .conversation-page :is(.flow-panel, .coach-card, .panel, .record-card) {
-  border-color: #d9e0eb;
+  border-color: #D8E3F0;
   box-shadow: none;
 }
 .conversation-page p,
@@ -197,13 +197,13 @@
 .conversation-page footer {
   margin: 24px;
   padding: 18px;
-  border: 1px solid #d9e0eb;
+  border: 1px solid #D8E3F0;
   border-radius: 16px;
   position: static;
   background: #fff;
 }
 .conversation-page :is(a, summary, button, select, textarea):focus-visible {
-  outline: 3px solid #3d5a9e;
+  outline: 3px solid #153B80;
   outline-offset: 3px;
 }
 @media (max-width: 1000px) {

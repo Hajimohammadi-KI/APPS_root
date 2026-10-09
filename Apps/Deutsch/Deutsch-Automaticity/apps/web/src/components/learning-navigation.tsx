@@ -124,8 +124,8 @@ export function LearningNavigation({
         <Settings aria-hidden="true" />
         <span>{en ? "Settings" : "Einstellungen"}</span>
       </a>
-      <a className="ln-roadmap" href="/roadmap.html" lang="fa" dir="rtl">
-        رودمپ و وضعیت اصلاحات
+      <a className="ln-roadmap" href="/roadmap.html" hrefLang="fa">
+        {en ? "Roadmap & improvements" : "Roadmap & Verbesserungen"}
       </a>
     </nav>
   );

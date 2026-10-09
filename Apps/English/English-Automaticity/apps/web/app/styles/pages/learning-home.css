@@ -79,6 +79,11 @@
   margin: 8px 0;
   overflow-wrap: anywhere;
 }
+/* Headings wrap at spaces: automatic hyphenation inherited from the page
+   split "Willkommen zurück" into "zu-rück" on a 390px phone. */
+.learning-home :is(h1, h2, h3) {
+  hyphens: manual;
+}
 .lh-heading p:not(.lh-eyebrow),
 .lh-section-heading p {
   color: var(--lh-muted);

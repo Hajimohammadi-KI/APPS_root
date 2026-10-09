@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
     "@grammar/domain",
   ],
   typedRoutes: true,
+  // The English app names the same screens /grammar, /daily and /settings;
+  // a link or test written for one app should land on the matching screen
+  // here instead of a 404. The German paths stay canonical.
+  async redirects() {
+    return [
+      { source: "/grammar", destination: "/grammatik", permanent: true },
+      { source: "/daily", destination: "/heute", permanent: true },
+      { source: "/settings", destination: "/einstellungen", permanent: true },
+    ];
+  },
   async rewrites() {
     return {
       beforeFiles: [

@@ -13,6 +13,16 @@ const nextConfig = {
   outputFileTracingRoot: path.resolve(process.cwd(), process.env.VERCEL ? "../../../../.." : "../.."),
   reactStrictMode: true,
   transpilePackages: ["@grammar/content"],
+  // The German app names the same screens /grammatik, /heute and
+  // /einstellungen; a link or test written for one app should land on the
+  // matching screen here instead of a 404. The English paths stay canonical.
+  async redirects() {
+    return [
+      { source: "/grammatik", destination: "/grammar", permanent: true },
+      { source: "/heute", destination: "/daily", permanent: true },
+      { source: "/einstellungen", destination: "/settings", permanent: true },
+    ];
+  },
   async rewrites() {
     return {
       beforeFiles: [

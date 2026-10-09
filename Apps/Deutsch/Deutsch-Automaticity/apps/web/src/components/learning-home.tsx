@@ -17,6 +17,7 @@ const copy = {
     language: "English",
     eyebrow: "Your daily learning space",
     welcome: "Welcome back,",
+    welcomeNew: "Welcome,",
     fallback: "Learner",
     intro: "A little practice. A clearer voice. One step at a time.",
     settings: "Learning settings",
@@ -79,6 +80,7 @@ const copy = {
     language: "Deutsch",
     eyebrow: "Dein täglicher Lernraum",
     welcome: "Willkommen zurück,",
+    welcomeNew: "Willkommen,",
     fallback: "Lernende",
     intro: "Ein wenig Übung. Mehr Ausdruck. Schritt für Schritt.",
     settings: "Lerneinstellungen",
@@ -158,6 +160,15 @@ export function LearningHome({
 }) {
   const t = copy[language];
   const usable = daily !== null && daily.percentage !== null;
+  // A learner with no saved practice has nothing to come "back" to; a wrong
+  // "Welcome back" on the first visit reads as a bug, so greet them plainly.
+  const firstVisit =
+    usable &&
+    daily.responses === 0 &&
+    daily.dueReviews === 0 &&
+    daily.repairs === 0 &&
+    daily.streak === 0 &&
+    daily.week.every((day) => day.count === 0);
   const priority = daily?.paused
     ? "paused"
     : usable && daily.repairs > 0
@@ -205,7 +216,8 @@ export function LearningHome({
             {t.language} / {t.eyebrow}
           </p>
           <h1>
-            {t.welcome} <bdi>{name.trim() || t.fallback}</bdi>
+            {firstVisit ? t.welcomeNew : t.welcome}{" "}
+            <bdi>{name.trim() || t.fallback}</bdi>
           </h1>
           <p>{t.intro}</p>
         </div>

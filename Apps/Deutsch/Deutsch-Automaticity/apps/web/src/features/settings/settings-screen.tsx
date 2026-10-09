@@ -418,8 +418,9 @@ export function SettingsScreen() {
             </h2>
           </CardTitle>
           <CardDescription>
-            Getrennter, widerrufbarer Forschungs-Export für Sprech- und
-            Schreibresultate. Es wird nichts automatisch hochgeladen.
+            Wenn du helfen möchtest zu prüfen, ob diese App dein Sprechen und
+            Schreiben verbessert, kannst du eine anonyme Zusammenfassung deiner
+            Übungen herunterladen. Es wird nichts automatisch gesendet.
           </CardDescription>
         </CardHeader>
         <CardContent className="settings-controls">
@@ -436,24 +437,24 @@ export function SettingsScreen() {
                 Ich willige in die optionale Wirksamkeitsmessung ein
               </strong>
               <small>
-                Enthalten: zufällige lokale Teilnehmer-ID, Ereignis- und
-                Nachweis-IDs, Zeitstempel, Versionen, Scores, Gates und – falls
-                vorhanden – Herkunft einer menschlichen Bewertung.
-                Ausgeschlossen: Antworttext, Transkript, Audio, E-Mail,
-                Hardware-ID und freie Absichten.
+                Die Zusammenfassung enthält nur Zahlen: eine zufällige ID für
+                dieses Gerät, Datum und Uhrzeit, App-Versionen, Ergebnisse,
+                bestandene Prüfungen und ob eine Person eine Antwort beurteilt
+                hat. Sie enthält nie deine Antworten, Transkripte, Aufnahmen,
+                E-Mail-Adresse oder Gerätekennung.
               </small>
             </span>
           </label>
           <div className="settings-measurement-summary">
             <p>
-              Nur lokal auf diesem Gerät, höchstens 365 Tage. Eine Übertragung
-              erfolgt nur durch deinen manuellen Download. Widerruf stoppt den
-              Export.
+              Die Zusammenfassung bleibt höchstens 365 Tage auf diesem Gerät und
+              verlässt es nur, wenn du die Datei herunterlädst. Nach einem
+              Widerruf kann keine weitere Datei exportiert werden.
             </p>
             <p>
-              Ausgangsmessung:{" "}
-              {measurementBaseline ? "erfasst" : "nicht erfasst"}.
-              Kohortenstatistik: N/A — keine Produktionstelemetrie verbunden.
+              Ausgangswert:{" "}
+              {measurementBaseline ? "erfasst" : "noch nicht erfasst"}. Diese
+              App sammelt im Hintergrund keine Nutzungsstatistiken.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">

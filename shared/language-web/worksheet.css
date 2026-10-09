@@ -649,7 +649,9 @@ body.daily-workspace .current {
   padding-top: 50px !important;
 }
 .learning-card:not(.group\/card) > div:first-child > h3,
-[data-slot="card"]:not(.group\/card) > [data-slot="card-header"] [data-slot="card-title"] {
+[data-slot="card"]:not(.group\/card)
+  > [data-slot="card-header"]
+  [data-slot="card-title"] {
   position: absolute;
   top: -1px;
   inset-inline-end: -1px;
@@ -786,6 +788,13 @@ html .conversation-page .studio-step-picker > summary {
 }
 
 @media (max-width: 640px) {
+  html .conversation-page .studio-main > header,
+  html .conversation-page .workspace,
+  html .conversation-page footer,
+  html .conversation-page .studio-options {
+    margin-inline: 0;
+    padding-inline: 16px;
+  }
   .ws-tab,
   .language-workspace #exerciseEyebrow,
   body.daily-workspace .phase-title,

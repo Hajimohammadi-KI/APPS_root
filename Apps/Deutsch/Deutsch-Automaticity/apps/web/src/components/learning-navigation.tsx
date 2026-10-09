@@ -3,7 +3,6 @@ import {
   ChevronDown,
   House,
   Library,
-  MessagesSquare,
   Play,
   Settings,
 } from "lucide-react";

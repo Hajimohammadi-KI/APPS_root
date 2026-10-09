@@ -23,8 +23,8 @@ export function AvaCoachAvatar({ className }: AvaCoachAvatarProps) {
           y2="236"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#F2E9FF" />
-          <stop offset="1" stopColor="#DCCBFA" />
+          <stop stopColor="#E7EDF7" />
+          <stop offset="1" stopColor="#D9E0EB" />
         </linearGradient>
         <linearGradient
           id="ava-hair"
@@ -34,14 +34,14 @@ export function AvaCoachAvatar({ className }: AvaCoachAvatarProps) {
           y2="150"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#3E2767" />
-          <stop offset="1" stopColor="#69429E" />
+          <stop stopColor="#1f2a3d" />
+          <stop offset="1" stopColor="#2d477d" />
         </linearGradient>
       </defs>
       <rect width="220" height="250" rx="104" fill="url(#ava-background)" />
       <path
         d="M28 250C35 188 67 166 110 166C153 166 185 188 192 250H28Z"
-        fill="#5930A3"
+        fill="#2d477d"
       />
       <path
         d="M50 111C50 63 75 35 111 35C150 35 173 66 170 113L163 155H57L50 111Z"
@@ -54,44 +54,44 @@ export function AvaCoachAvatar({ className }: AvaCoachAvatarProps) {
       />
       <path
         d="M54 101C46 115 46 143 61 158L67 135L62 105L54 101Z"
-        fill="#4B2E78"
+        fill="#1f2a3d"
       />
       <path
         d="M166 101C174 115 174 143 159 158L153 135L158 105L166 101Z"
-        fill="#4B2E78"
+        fill="#1f2a3d"
       />
-      <circle cx="89" cy="115" r="6" fill="#2B1C46" />
-      <circle cx="132" cy="115" r="6" fill="#2B1C46" />
+      <circle cx="89" cy="115" r="6" fill="#1f2a3d" />
+      <circle cx="132" cy="115" r="6" fill="#1f2a3d" />
       <path
         d="M101 142C107 147 115 147 121 142"
-        stroke="#B95872"
+        stroke="#52627a"
         strokeLinecap="round"
         strokeWidth="5"
       />
       <path
         d="M91 99L80 96"
-        stroke="#4B2E78"
+        stroke="#1f2a3d"
         strokeLinecap="round"
         strokeWidth="5"
       />
       <path
         d="M130 99L141 96"
-        stroke="#4B2E78"
+        stroke="#1f2a3d"
         strokeLinecap="round"
         strokeWidth="5"
       />
       <path
         d="M89 180C96 188 124 188 131 180L142 207H78L89 180Z"
-        fill="#F1ECFF"
+        fill="#EEF2F8"
       />
       <path
         d="M73 250C80 218 94 202 110 202C126 202 140 218 147 250H73Z"
-        fill="#7646C9"
+        fill="#213760"
       />
       <circle cx="183" cy="57" r="13" fill="#FFF" opacity=".9" />
       <path
         d="M183 48V66M174 57H192"
-        stroke="#8A58D0"
+        stroke="#2d477d"
         strokeLinecap="round"
         strokeWidth="3"
       />

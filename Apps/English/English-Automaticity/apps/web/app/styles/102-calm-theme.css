@@ -110,22 +110,29 @@ html .conversation-page .panel { box-shadow: none; }
 html .conversation-page .improve-compare article.better { border-color: var(--calm-line-strong); }
 html .conversation-page .conversation-filter-grid select:focus-visible,
 html .conversation-page .transcript textarea:focus-visible { border-color: #3d5a9e; box-shadow: 0 0 0 3px rgba(61, 90, 158, 0.15); transform: none; }
-.conversation-path-field:focus-within { border-color: #3d5a9e; box-shadow: 0 0 0 3px rgba(61, 90, 158, 0.15); }
-.conversation-path-symbol,
-.conversation-mode-icon,
-.conversation-path-field[data-tone="violet"] .conversation-path-symbol { background: var(--calm-primary-soft); color: var(--calm-primary); }
-.conversation-step-button[data-active="true"] { background: var(--calm-primary); border-color: var(--calm-primary); box-shadow: none; }
-.conversation-step-button[data-active="true"] > span { color: var(--calm-primary); }
-.conversation-step-guidance { background: var(--calm-surface-2); border-color: var(--calm-line); }
-.conversation-step-guidance strong { color: var(--calm-primary); }
-.conversation-studio-redesign .coach-stage { background: var(--calm-surface-2); border-color: var(--calm-line); }
-.conversation-studio-redesign .coach-question { box-shadow: none; }
-.conversation-studio-redesign .control-dock { background: var(--calm-surface-2); border-color: var(--calm-line); }
-.conversation-studio-redesign .control-button[data-tone="primary"] { background: var(--calm-primary); }
-.conversation-studio-redesign .studio-grid > .page-stack > [data-slot="card"],
-.conversation-topic-card,
-.conversation-path-field { border-color: var(--calm-line); box-shadow: none; }
-.daily-context-bar { border-color: var(--calm-line); }
-.daily-context-bar button { border-color: var(--calm-primary); color: var(--calm-primary); }
-.daily-complete-card .primary { background: var(--calm-primary); }
-.daily-complete-backdrop { background: rgba(31, 41, 55, 0.5); }
+html .conversation-path-field:focus-within { border-color: #3d5a9e; box-shadow: 0 0 0 3px rgba(61, 90, 158, 0.15); }
+html .conversation-path-symbol,
+html .conversation-mode-icon,
+html .conversation-path-field[data-tone="violet"] .conversation-path-symbol { background: var(--calm-primary-soft); color: var(--calm-primary); }
+html .conversation-step-button[data-active="true"] { background: var(--calm-primary); border-color: var(--calm-primary); box-shadow: none; }
+html .conversation-step-button[data-active="true"] > span { color: var(--calm-primary); }
+html .conversation-step-guidance { background: var(--calm-surface-2); border-color: var(--calm-line); }
+html .conversation-step-guidance strong { color: var(--calm-primary); }
+html .conversation-studio-redesign .coach-stage { background: var(--calm-surface-2); border-color: var(--calm-line); }
+html .conversation-studio-redesign .coach-question { box-shadow: none; }
+html .conversation-studio-redesign .control-dock { background: var(--calm-surface-2); border-color: var(--calm-line); }
+html .conversation-studio-redesign .control-button[data-tone="primary"] { background: var(--calm-primary); }
+html .conversation-studio-redesign .studio-grid > .page-stack > [data-slot="card"],
+html .conversation-topic-card,
+html .conversation-path-field { border-color: var(--calm-line); box-shadow: none; }
+html .daily-context-bar { border-color: var(--calm-line); }
+html .daily-context-bar button { border-color: var(--calm-primary); color: var(--calm-primary); }
+html .daily-complete-card .primary { background: var(--calm-primary); }
+html .daily-complete-backdrop { background: rgba(31, 41, 55, 0.5); }
+
+/* Studio heading: same family and weight as every other page title. */
+html .conversation-page .studio-main > header h1 { font-weight: 650; font-size: clamp(1.75rem, 2.8vw, 2.25rem); }
+
+/* Coach stage and studio brand: the base rule has no page prefix, so override it directly. */
+html .coach-stage { background: var(--calm-surface-2); border-color: var(--calm-line); }
+html .conversation-page .studio-brand { font-family: var(--calm-font); font-weight: 650; }

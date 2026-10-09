@@ -189,7 +189,7 @@ body.daily-workspace .activity {
 }
 body.daily-workspace .activity.active { border: 1px solid var(--calm-primary); box-shadow: inset 0 0 0 1px var(--calm-primary); }
 body.daily-workspace .activity.done { border-color: #bcdccd; }
-body.daily-workspace .number { background: var(--calm-primary); }
+body.daily-workspace .number { background: var(--calm-primary); color: #fff; }
 body.daily-workspace .done .number { background: var(--calm-positive); }
 body.daily-workspace .act-icon { background: var(--calm-surface-2); color: var(--calm-primary); font-size: 26px; }
 body.daily-workspace .done .act-icon { background: var(--calm-positive-soft); color: var(--calm-positive); }
@@ -268,7 +268,7 @@ body.daily-workspace .support-disclosure { border-color: var(--calm-line); }
 .language-workspace .ghost-btn:hover, .language-workspace .pill:hover { border-color: var(--calm-line-strong); background: #f7f9fc; }
 .language-workspace .path-status strong { color: var(--calm-primary); }
 .language-workspace .rule-heading { color: var(--calm-primary); background: var(--calm-surface); }
-.language-workspace .number { color: var(--calm-primary); background: var(--calm-primary-soft); }
+.language-workspace:not(.daily-workspace) .number { color: var(--calm-primary); background: var(--calm-primary-soft); }
 .language-workspace .pattern-title { color: var(--calm-primary); }
 .language-workspace .mini-icon { color: var(--calm-primary); background: var(--calm-primary-soft); }
 .language-workspace .formula { color: var(--calm-ink); background: var(--calm-surface-2); border-color: var(--calm-line); }

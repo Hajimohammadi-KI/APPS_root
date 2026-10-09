@@ -1408,7 +1408,7 @@ export default function Home() {
             </p>
           </div>
           <button className="save-lite" onClick={() => setActive(6)}>
-            ▯ Save practice
+            ▯ Übung speichern
           </button>
           <button
             className="continue"

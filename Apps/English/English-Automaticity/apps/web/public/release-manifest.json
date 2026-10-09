@@ -1,12 +1,11 @@
 {
   "publishedAt": "2026-10-09",
   "version": "27.4.4",
-  "webRelease": "2026.10.09.1",
+  "webRelease": "2026.10.09.2",
   "changes": [
-    "Home greets a first visit with “Welcome” instead of “Welcome back”",
-    "Today’s practice no longer overflows the window on desktop; Grammar Lab text is at least 12 px on phones",
-    "Roadmap link labelled in English and kept with the other header tools; install guide added to Settings",
-    "Effectiveness-measurement settings rewritten in plain language",
-    "/grammatik, /heute and /einstellungen redirect to the English screens"
+    "One calm design across Home, Practice, Grammar Lab, Today, Conversation and Settings: navy on white, one type family, flat surfaces",
+    "Today page: mascot, progress ring and emoji controls removed; the same five-item navigation as every other page",
+    "Conversation studio recoloured to the shared palette",
+    "Learner data, saved responses and all links are unchanged"
   ]
 }

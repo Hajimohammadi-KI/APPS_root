@@ -291,34 +291,50 @@ html .conversation-page .transcript textarea:focus-visible {
   box-shadow: 0 0 0 3px rgba(61, 90, 158, 0.15);
   transform: none;
 }
-.conversation-filter-card {
+html .conversation-filter-card {
   background: var(--calm-surface);
   border-color: var(--calm-line);
   box-shadow: none;
 }
-.conversation-path-field {
+html .conversation-path-field {
   border-color: var(--calm-line);
   box-shadow: none;
 }
-.conversation-path-field:focus-within {
+html .conversation-path-field:focus-within {
   border-color: #3d5a9e;
   box-shadow: 0 0 0 3px rgba(61, 90, 158, 0.15);
 }
-.conversation-path-symbol,
-.conversation-path-field[data-tone="violet"] .conversation-path-symbol {
+html .conversation-path-symbol,
+html .conversation-path-field[data-tone="violet"] .conversation-path-symbol {
   background: var(--calm-primary-soft);
   color: var(--calm-primary);
 }
-.daily-context-bar {
+html .daily-context-bar {
   border-color: var(--calm-line);
 }
-.daily-context-bar button {
+html .daily-context-bar button {
   border-color: var(--calm-primary);
   color: var(--calm-primary);
 }
-.daily-complete-card .primary {
+html .daily-complete-card .primary {
   background: var(--calm-primary);
 }
-.daily-complete-backdrop {
+html .daily-complete-backdrop {
   background: rgba(31, 41, 55, 0.5);
+}
+
+/* Studio heading: same family and weight as every other page title. */
+html .conversation-page .studio-main > header h1 {
+  font-weight: 650;
+  font-size: clamp(1.75rem, 2.8vw, 2.25rem);
+}
+
+/* Coach stage and studio brand: the base rule has no page prefix, so override it directly. */
+html .coach-stage {
+  background: var(--calm-surface-2);
+  border-color: var(--calm-line);
+}
+html .conversation-page .studio-brand {
+  font-family: var(--calm-font);
+  font-weight: 650;
 }

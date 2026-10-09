@@ -1368,7 +1368,22 @@ export async function mountPractice(
     );
     const retirement = unit.retiredTasks?.find((row) => row.taskId === task.id);
     topicSelect.value = unit.id;
+    // Worksheet chrome: a teal corner tab names the step; a circular badge marks the task.
+    const stepTab = element(
+      "span",
+      `${stageNames[stages.indexOf(task.stage)]} · ${task.modality === "writing" ? t("Write", "Schreiben") : t("Speak", "Sprechen")}`,
+      "ws-tab",
+    );
+    stepTab.setAttribute("aria-hidden", "true");
+    const taskBadge = element(
+      "span",
+      undefined,
+      `ws-icon ${task.modality === "speaking" ? "ws-icon--mic" : "ws-icon--search"}`,
+    );
+    taskBadge.setAttribute("aria-hidden", "true");
     taskPanel.replaceChildren(
+      stepTab,
+      taskBadge,
       element(
         "p",
         `${unit.level} · ${unit.familyIds.map((family) => GRAMMAR_FAMILIES.find((row) => row[0] === family)?.[en ? 1 : 2] ?? family).join(" · ")}`,

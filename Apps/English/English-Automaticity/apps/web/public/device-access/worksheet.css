@@ -1,0 +1,842 @@
+/* Worksheet components shared by both language apps (R80).
+   Canonical copy: shared/language-web/worksheet.css. Mirrored by
+   scripts/sync-language-web.mjs into public/device-access (static pages)
+   and app/styles/103-worksheet.css (React pages). Visual layer only:
+   content, practice logic and learner data are untouched. */
+:root {
+  --ws-navy: #08364a;
+  --ws-teal: #007f83;
+  --ws-teal-dark: #00696d;
+  --ws-cyan: #eaf6f7;
+  --ws-cyan-strong: #d6ecee;
+  --ws-blue: #dce9f3;
+  --ws-yellow: #fff5d7;
+  --ws-yellow-line: #efe3bd;
+  --ws-line: #d9e7e8;
+  --ws-icon-bg: #d4ebed;
+  --ws-radius: 22px;
+  --ws-shadow: 0 6px 18px rgba(8, 54, 74, 0.06);
+  --ws-ico-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='M21 21l-5.5-5.5'/%3E%3C/svg%3E");
+  --ws-ico-bulb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z'/%3E%3C/svg%3E");
+  --ws-ico-timer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='13' r='8'/%3E%3Cpath d='M12 9v4l2.5 2M9 2h6M12 2v3'/%3E%3C/svg%3E");
+  --ws-ico-card: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Ccircle cx='8' cy='11' r='2'/%3E%3Cpath d='M13 10h5M13 14h5M5 17c.8-1.5 2-2 3-2s2.2.5 3 2'/%3E%3C/svg%3E");
+  --ws-ico-scale: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v18M6 21h12M3 7h18M6 7l-3 6a3 3 0 0 0 6 0zM18 7l-3 6a3 3 0 0 0 6 0z'/%3E%3C/svg%3E");
+  --ws-ico-refresh: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6'/%3E%3C/svg%3E");
+  --ws-ico-chat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a8 8 0 0 1-11.4 7.2L4 21l1.8-4.6A8 8 0 1 1 21 12z'/%3E%3Ccircle cx='8.5' cy='12' r='.6'/%3E%3Ccircle cx='12' cy='12' r='.6'/%3E%3Ccircle cx='15.5' cy='12' r='.6'/%3E%3C/svg%3E");
+  --ws-ico-calendar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='17' rx='2'/%3E%3Cpath d='M3 9h18M8 2v4M16 2v4M9 15l2 2 4-4'/%3E%3C/svg%3E");
+  --ws-ico-pencil: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z'/%3E%3C/svg%3E");
+  --ws-ico-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z'/%3E%3C/svg%3E");
+  --ws-ico-mic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='3' width='6' height='11' rx='3'/%3E%3Cpath d='M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6'/%3E%3C/svg%3E");
+}
+
+/* ── Generic components ─────────────────────────────────────────────────── */
+.ws-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius);
+  box-shadow: var(--ws-shadow);
+}
+.ws-tab {
+  position: absolute;
+  top: -1px;
+  inset-inline-end: -1px;
+  z-index: 1;
+  max-width: calc(100% - 92px);
+  padding: 9px 20px;
+  background: var(--ws-teal);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  border-start-start-radius: 18px;
+  border-start-end-radius: var(--ws-radius);
+  border-end-end-radius: 0;
+  border-end-start-radius: 18px;
+}
+.ws-tab--navy {
+  background: var(--ws-navy);
+}
+.ws-icon {
+  position: absolute;
+  top: 20px;
+  inset-inline-start: 20px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--ws-icon-bg);
+  --ws-ico: var(--ws-ico-search);
+  --ws-ico-color: var(--ws-navy);
+}
+.ws-icon::before {
+  content: "";
+  position: absolute;
+  inset: 13px;
+  background: var(--ws-ico-color);
+  -webkit-mask: var(--ws-ico) center / contain no-repeat;
+  mask: var(--ws-ico) center / contain no-repeat;
+}
+.ws-icon::after {
+  content: "";
+  position: absolute;
+  top: 66px;
+  inset-inline-start: 6px;
+  width: 42px;
+  height: 42px;
+  background-image: radial-gradient(#a6d0d3 1.7px, transparent 1.9px);
+  background-size: 10px 10px;
+}
+.ws-icon--solid {
+  background: var(--ws-teal);
+  --ws-ico-color: #fff;
+}
+.ws-icon--bulb {
+  --ws-ico: var(--ws-ico-bulb);
+}
+.ws-icon--timer {
+  --ws-ico: var(--ws-ico-timer);
+}
+.ws-icon--card {
+  --ws-ico: var(--ws-ico-card);
+}
+.ws-icon--scale {
+  --ws-ico: var(--ws-ico-scale);
+}
+.ws-icon--refresh {
+  --ws-ico: var(--ws-ico-refresh);
+}
+.ws-icon--chat {
+  --ws-ico: var(--ws-ico-chat);
+}
+.ws-icon--calendar {
+  --ws-ico: var(--ws-ico-calendar);
+}
+.ws-icon--pencil {
+  --ws-ico: var(--ws-ico-pencil);
+}
+.ws-icon--star {
+  --ws-ico: var(--ws-ico-star);
+}
+.ws-icon--mic {
+  --ws-ico: var(--ws-ico-mic);
+}
+.ws-num {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ws-teal);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+.ws-chip {
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1px solid var(--ws-line);
+  border-radius: 10px;
+  background: var(--ws-cyan);
+  color: var(--ws-navy);
+  font-weight: 600;
+}
+.ws-chip--blue {
+  background: var(--ws-blue);
+  border-color: #c7dcea;
+}
+.ws-chip--yellow {
+  background: var(--ws-yellow);
+  border-color: var(--ws-yellow-line);
+}
+.ws-answer {
+  min-height: 48px;
+  border: 1.5px dashed #7aa3a7;
+  border-radius: 12px;
+  background: #fff;
+}
+.ws-tip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--ws-yellow-line);
+  border-radius: 14px;
+  background: var(--ws-yellow);
+  color: var(--ws-navy);
+  font-weight: 700;
+}
+.ws-table {
+  width: 100%;
+  border: 1px solid var(--ws-line);
+  border-radius: 14px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+.ws-table th {
+  padding: 10px 14px;
+  background: var(--ws-navy);
+  color: #fff;
+  font-weight: 800;
+  text-align: start;
+}
+.ws-table td {
+  padding: 10px 14px;
+  background: var(--ws-cyan);
+  border-top: 1px solid #fff;
+  color: var(--ws-navy);
+}
+.ws-table tr:nth-child(even) td {
+  background: #f5fafa;
+}
+
+/* ── Practice page (shared renderer) ─────────────────────────────────────── */
+.task-panel {
+  position: relative;
+  padding-top: 64px !important;
+}
+.task-panel > .ws-tab {
+  font-size: 0.95rem;
+}
+.task-panel .eyebrow {
+  padding-inline-start: 78px;
+}
+.task-panel .worksheet-lesson-title {
+  padding-inline-start: 78px;
+  min-height: 34px;
+}
+.worksheet-phase-header {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 18px 0 12px;
+}
+.worksheet-phase-label {
+  flex: none;
+  border-radius: 14px 14px 14px 5px;
+  background: var(--ws-navy);
+}
+.worksheet-phase-track {
+  flex: 1 1 320px;
+  margin: 0;
+}
+.worksheet-current-stage {
+  flex-basis: 100%;
+}
+.task-prompt {
+  border-radius: 12px;
+}
+.task-panel textarea {
+  border: 1.5px dashed #7aa3a7;
+}
+.reference:not(:empty) {
+  position: relative;
+  padding-inline-start: 64px;
+  border-inline-start-width: 1px !important;
+}
+.reference:not(:empty)::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  inset-inline-start: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--ws-teal);
+  -webkit-mask: none;
+  mask: none;
+}
+.reference:not(:empty)::after {
+  content: "";
+  position: absolute;
+  top: 24px;
+  inset-inline-start: 24px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  -webkit-mask: var(--ws-ico-bulb) center / contain no-repeat;
+  mask: var(--ws-ico-bulb) center / contain no-repeat;
+}
+.practice-grid > .card:not(.task-panel),
+.practice-options,
+.practice-disclosure {
+  border-radius: var(--ws-radius);
+}
+.review-form blockquote {
+  border-radius: 12px;
+}
+.review-form table,
+.task-panel table {
+  width: 100%;
+  border: 1px solid var(--ws-line);
+  border-radius: 14px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+.review-form th,
+.task-panel th {
+  padding: 10px 14px;
+  background: var(--ws-navy);
+  color: #fff;
+  text-align: start;
+}
+.review-form td,
+.task-panel td {
+  padding: 10px 14px;
+  background: var(--ws-cyan);
+  border-top: 1px solid #fff;
+}
+
+/* ── Static grammar lab ─────────────────────────────────────────────────── */
+.language-workspace .exercise-card {
+  padding: 66px 24px 24px 96px;
+}
+.language-workspace .exercise-card::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--ws-icon-bg);
+  -webkit-mask: none;
+  mask: none;
+}
+.language-workspace .exercise-card::after {
+  content: "";
+  position: absolute;
+  top: 33px;
+  left: 33px;
+  width: 28px;
+  height: 28px;
+  background: var(--ws-navy);
+  -webkit-mask: var(--ws-ico-search) center / contain no-repeat;
+  mask: var(--ws-ico-search) center / contain no-repeat;
+}
+.language-workspace .exercise-title {
+  position: static;
+  margin-bottom: 14px;
+}
+.language-workspace #exerciseEyebrow {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  margin: 0;
+  padding: 9px 20px;
+  max-width: calc(100% - 100px);
+  border-radius: 18px 24px 0 18px;
+  font-size: 0.95rem;
+}
+.language-workspace .audio-btn {
+  position: absolute;
+  top: 56px;
+  right: 22px;
+}
+.language-workspace #exercisePrompt {
+  border-radius: 12px;
+  margin-inline-end: 60px;
+}
+.language-workspace .answer-field :is(input, textarea),
+.language-workspace #answerInput,
+.language-workspace #repairInput {
+  border: 1.5px dashed #7aa3a7;
+  border-radius: 12px;
+}
+.language-workspace .goal-card {
+  position: relative;
+  padding: 16px 20px 16px 84px;
+  border: 1px solid var(--ws-yellow-line);
+}
+.language-workspace .goal-star {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  transform: translateY(-50%);
+  background: var(--ws-teal);
+  color: #fff;
+}
+.language-workspace .goal-star .icon {
+  color: #fff;
+  stroke: #fff;
+}
+.language-workspace .rule-panel,
+.language-workspace .accordion {
+  border-radius: 18px;
+}
+.language-workspace .rule-panel > summary,
+.language-workspace .accordion summary {
+  gap: 12px;
+}
+.language-workspace .rule-panel > summary .number,
+.language-workspace .accordion summary .number {
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
+}
+.language-workspace .rule-intro {
+  position: relative;
+  padding: 14px 16px 14px 64px;
+  border: 1px solid var(--ws-yellow-line);
+  border-radius: 14px;
+  font-weight: 700;
+}
+.language-workspace .rule-intro::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--ws-teal);
+}
+.language-workspace .rule-intro::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 22px;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  background: #fff;
+  -webkit-mask: var(--ws-ico-bulb) center / contain no-repeat;
+  mask: var(--ws-ico-bulb) center / contain no-repeat;
+}
+.language-workspace .pattern-card {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--ws-line);
+  border-radius: 14px;
+  background: #fff;
+}
+.language-workspace .pattern-title {
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--ws-navy);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  border-radius: 0;
+}
+.language-workspace .pattern-card:nth-child(even) .pattern-title {
+  background: var(--ws-teal);
+}
+.language-workspace .pattern-title .mini-icon {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  color: var(--ws-navy);
+  font-size: 0.8rem;
+}
+.language-workspace .pattern-card .formula {
+  margin: 12px 14px 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ws-yellow);
+  border-color: var(--ws-yellow-line);
+  font-weight: 700;
+}
+.language-workspace .pattern-card p {
+  margin: 6px 14px;
+  padding: 6px 0 6px 14px;
+  border-left: 3px solid var(--ws-cyan-strong);
+}
+.language-workspace .pattern-card p:last-child {
+  margin-bottom: 14px;
+}
+.language-workspace .pattern-card p strong {
+  color: var(--ws-teal);
+}
+.language-workspace .accordion-list {
+  display: grid;
+  gap: 8px;
+}
+.language-workspace .accordion summary {
+  background: var(--ws-cyan);
+}
+.language-workspace .accordion:nth-child(even) summary {
+  background: #f5fafa;
+}
+.language-workspace .accordion-content {
+  background: #fff;
+}
+.language-workspace .feedback.good,
+.language-workspace .feedback.bad {
+  border-radius: 12px;
+}
+.language-workspace .repair-box {
+  border-radius: 14px;
+  background: var(--ws-yellow);
+  border: 1px solid var(--ws-yellow-line);
+}
+.language-workspace .learning-control,
+.language-workspace .writing-guide {
+  border-radius: 16px;
+}
+.language-workspace .learning-control > summary,
+.language-workspace .writing-guide > summary {
+  font-weight: 800;
+  color: var(--ws-navy);
+}
+.language-workspace table {
+  width: 100%;
+  border: 1px solid var(--ws-line);
+  border-radius: 14px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+.language-workspace th {
+  padding: 10px 14px;
+  background: var(--ws-navy);
+  color: #fff;
+  text-align: start;
+}
+.language-workspace td {
+  padding: 10px 14px;
+  background: var(--ws-cyan);
+  border-top: 1px solid #fff;
+}
+
+/* ── Static today pages ─────────────────────────────────────────────────── */
+body.daily-workspace .phase {
+  position: relative;
+  padding: 64px 20px 20px 92px;
+}
+body.daily-workspace .phase-title {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  margin: 0;
+  padding: 9px 20px;
+  max-width: calc(100% - 100px);
+  border-radius: 18px 24px 0 18px;
+  font-weight: 800;
+}
+body.daily-workspace .phase::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--ws-teal);
+}
+body.daily-workspace .phase::after {
+  content: "";
+  position: absolute;
+  top: 33px;
+  left: 33px;
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  -webkit-mask: var(--ws-ico-refresh) center / contain no-repeat;
+  mask: var(--ws-ico-refresh) center / contain no-repeat;
+}
+body.daily-workspace .phase:nth-of-type(1)::after {
+  -webkit-mask-image: var(--ws-ico-search);
+  mask-image: var(--ws-ico-search);
+}
+body.daily-workspace .phase:nth-of-type(1)::before {
+  background: var(--ws-icon-bg);
+}
+body.daily-workspace .phase:nth-of-type(1)::after {
+  background: var(--ws-navy);
+}
+body.daily-workspace .phase:nth-of-type(3)::after {
+  -webkit-mask-image: var(--ws-ico-pencil);
+  mask-image: var(--ws-ico-pencil);
+}
+body.daily-workspace .activity .number {
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
+}
+body.daily-workspace .act-icon {
+  background: var(--ws-cyan);
+  border-color: var(--ws-cyan-strong);
+}
+body.daily-workspace .tag {
+  border-radius: 8px;
+  background: var(--ws-cyan);
+  color: var(--ws-navy);
+}
+body.daily-workspace .tag.green,
+body.daily-workspace .tag.purple {
+  background: var(--ws-blue);
+  color: var(--ws-navy);
+}
+body.daily-workspace .tag.orange {
+  background: var(--ws-yellow);
+  color: #66561f;
+}
+body.daily-workspace .scaffold > summary {
+  font-weight: 800;
+  color: var(--ws-navy);
+}
+body.daily-workspace .tip {
+  position: relative;
+  padding-left: 64px;
+  font-weight: 600;
+}
+body.daily-workspace .tip::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--ws-teal);
+}
+body.daily-workspace .tip::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 22px;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  background: #fff;
+  -webkit-mask: var(--ws-ico-bulb) center / contain no-repeat;
+  mask: var(--ws-ico-bulb) center / contain no-repeat;
+}
+body.daily-workspace .panel {
+  border-radius: var(--ws-radius);
+}
+body.daily-workspace .panel h3 {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 14px 14px 14px 5px;
+  background: var(--ws-navy);
+  color: #fff;
+  font-size: 1rem;
+}
+body.daily-workspace .choice.active,
+body.daily-workspace .time.active {
+  background: var(--ws-cyan);
+}
+body.daily-workspace .current {
+  background: var(--ws-yellow);
+  border: 1px solid var(--ws-yellow-line);
+}
+
+/* ── React pages (home, studio, settings, progress, resources) ──────────── */
+.learning-card,
+[data-slot="card"] {
+  position: relative;
+  padding-top: 50px !important;
+  border-radius: var(--ws-radius) !important;
+}
+.learning-card > div:first-child > h3,
+[data-slot="card-header"] [data-slot="card-title"] {
+  position: absolute;
+  top: -1px;
+  inset-inline-end: -1px;
+  z-index: 1;
+  max-width: calc(100% - 40px);
+  margin: 0;
+  padding: 9px 20px;
+  border-start-start-radius: 18px;
+  border-start-end-radius: var(--ws-radius);
+  border-end-end-radius: 0;
+  border-end-start-radius: 18px;
+  font-weight: 800;
+}
+.learning-card > div:first-child {
+  min-height: 0;
+}
+.learning-card > div:first-child > p:only-of-type:empty {
+  display: none;
+}
+.learning-home .lh-section-heading h2 {
+  border-radius: 14px 14px 14px 5px;
+  font-weight: 800;
+}
+.learning-home .lh-hero,
+.learning-home .lh-metric,
+.learning-home .lh-days,
+.learning-home .lh-empty,
+.learning-home .lh-course-list > a,
+.learning-home .lh-evidence {
+  border-radius: var(--ws-radius);
+}
+.learning-home .lh-method li > span {
+  width: 28px;
+  height: 28px;
+  font-weight: 800;
+}
+.learning-home .lh-empty {
+  border: 1.5px dashed #d9c98f;
+}
+.app-content table,
+.conversation-page table {
+  width: 100%;
+  border: 1px solid var(--ws-line);
+  border-radius: 14px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+.app-content th,
+.conversation-page th {
+  padding: 10px 14px;
+  background: var(--ws-navy);
+  color: #fff;
+  text-align: start;
+}
+.app-content td,
+.conversation-page td {
+  padding: 10px 14px;
+  background: var(--ws-cyan);
+  border-top: 1px solid #fff;
+}
+.app-content tr:nth-child(even) td,
+.conversation-page tr:nth-child(even) td {
+  background: #f5fafa;
+}
+.quiet-disclosure {
+  border-radius: var(--ws-radius) !important;
+}
+.quiet-disclosure > summary {
+  font-weight: 800;
+}
+html .conversation-page :is(.flow-panel, .improve-panel) {
+  position: relative;
+  padding-top: 64px;
+}
+html .conversation-page :is(.flow-title, .improve-heading) {
+  position: static;
+  margin-bottom: 12px;
+}
+html .conversation-page :is(.flow-title, .improve-heading) h3 {
+  position: absolute;
+  top: -1px;
+  inset-inline-end: -1px;
+  margin: 0;
+  padding: 9px 20px;
+  border-start-start-radius: 18px;
+  border-start-end-radius: var(--ws-radius);
+  border-end-end-radius: 0;
+  border-end-start-radius: 18px;
+}
+html .conversation-page :is(.flow-title, .improve-heading) > span {
+  position: absolute;
+  top: 18px;
+  inset-inline-start: 18px;
+  width: 44px;
+  height: 44px;
+  background: var(--ws-icon-bg);
+  color: var(--ws-navy);
+}
+html .conversation-page .coach-card {
+  position: relative;
+  padding-top: 50px;
+}
+html .conversation-page .coach-topic {
+  padding-top: 8px;
+}
+html .conversation-page .coach-topic h2 {
+  position: absolute;
+  top: -1px;
+  inset-inline-end: -1px;
+  margin: 0;
+  padding: 9px 20px;
+  border-start-start-radius: 18px;
+  border-start-end-radius: var(--ws-radius);
+  border-end-end-radius: 0;
+  border-end-start-radius: 18px;
+}
+html .conversation-page .spoken-chunk-heading > strong {
+  border-radius: 10px;
+}
+html .conversation-page .spoken-chunk-list li {
+  border-radius: 12px;
+}
+html .conversation-page .record-card {
+  border-radius: var(--ws-radius);
+}
+html .conversation-page .studio-step-picker > summary {
+  border-radius: 14px 14px 14px 5px;
+}
+.settings-page fieldset.settings-row legend,
+.settings-row > span:first-child {
+  font-weight: 800;
+  color: var(--ws-navy);
+}
+
+@media (max-width: 640px) {
+  .ws-tab,
+  .language-workspace #exerciseEyebrow,
+  body.daily-workspace .phase-title,
+  .learning-card > div:first-child > h3,
+  [data-slot="card-header"] [data-slot="card-title"],
+  html .conversation-page :is(.flow-title, .improve-heading) h3,
+  html .conversation-page .coach-topic h2 {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    max-width: calc(100% - 70px);
+  }
+  .task-panel {
+    padding-top: 58px !important;
+  }
+  .task-panel .eyebrow,
+  .task-panel .worksheet-lesson-title {
+    padding-inline-start: 0;
+  }
+  .task-panel .eyebrow {
+    margin-top: 48px;
+  }
+  .ws-icon,
+  .language-workspace .exercise-card::before,
+  body.daily-workspace .phase::before {
+    width: 40px;
+    height: 40px;
+    top: 14px;
+    inset-inline-start: 14px;
+    left: 14px;
+  }
+  .ws-icon::before {
+    inset: 10px;
+  }
+  .ws-icon::after {
+    display: none;
+  }
+  .language-workspace .exercise-card::after,
+  body.daily-workspace .phase::after {
+    top: 24px;
+    left: 24px;
+    width: 20px;
+    height: 20px;
+  }
+  .language-workspace .exercise-card {
+    padding: 58px 16px 18px 16px;
+  }
+  .language-workspace .audio-btn {
+    top: 50px;
+    right: 14px;
+  }
+  .language-workspace #exercisePrompt {
+    margin-top: 12px;
+    margin-inline-end: 0;
+  }
+  body.daily-workspace .phase {
+    padding: 58px 14px 16px 14px;
+  }
+  .worksheet-phase-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

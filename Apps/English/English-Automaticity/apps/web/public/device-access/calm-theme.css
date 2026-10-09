@@ -641,6 +641,12 @@ body.daily-workspace .calm-primary-nav a[aria-current="page"] {
 .language-workspace .calm-primary-nav a:hover {
   background: var(--calm-primary-soft);
 }
+/* The active item keeps its navy surface on hover; otherwise its white label vanished on cyan. */
+.language-workspace .calm-primary-nav a[aria-current="page"]:hover,
+body.daily-workspace .calm-primary-nav a[aria-current="page"]:hover {
+  background: #08364a;
+  color: #fff;
+}
 .language-workspace .topbar h2 {
   color: var(--calm-ink);
   font-weight: 800;

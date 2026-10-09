@@ -132,8 +132,53 @@ fieldset.settings-row {
   line-height: 1.45;
 }
 
+/* Installation card: the same three-device guide the German app shows in
+   its settings, so both apps explain installation in the same place. */
+.settings-installation {
+  display: grid;
+  gap: 14px;
+}
+
+.settings-device-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.settings-device-grid article {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 4px 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 35%, white);
+}
+
+.settings-device-grid article svg {
+  grid-row: span 2;
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+}
+
+.settings-device-grid h3 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 700;
+}
+
+.settings-device-grid p {
+  margin: 0;
+  color: var(--muted-foreground);
+  line-height: 1.45;
+}
+
 @media (max-width: 760px) {
-  .settings-backup-guide {
+  .settings-backup-guide,
+  .settings-device-grid {
     grid-template-columns: 1fr;
   }
 }

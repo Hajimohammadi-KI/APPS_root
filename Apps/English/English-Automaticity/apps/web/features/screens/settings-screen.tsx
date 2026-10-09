@@ -7,8 +7,10 @@ import {
 	Download,
 	Eye,
 	House,
+	MonitorDown,
 	PenLine,
 	ShieldCheck,
+	Smartphone,
 	Trash2,
 	Upload,
 	Wand2,
@@ -47,6 +49,7 @@ import {
 	writeBackupToDirectory,
 } from "@/lib/backup-directory";
 import { ImplementationIntentionsCard } from "@/features/settings/implementation-intentions-card";
+import { InstallAppControl } from "@/features/components/install-app-control";
 
 const TEXT_SCALE_OPTIONS: Array<{
 	value: Settings["textScale"];
@@ -340,13 +343,14 @@ export function SettingsScreen() {
 						Optional effectiveness measurement
 					</CardTitle>
 					<CardDescription>
-						A separate, revocable research export for evaluating speaking and
-						writing outcomes. Nothing is uploaded automatically.
+						If you want to help check whether this app improves your speaking
+							and writing, you can download an anonymous summary of your
+							practice. Nothing is sent automatically.
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="settings-section">
 					<div className="settings-row">
-						<span>Purpose and consent</span>
+						<span>Your consent</span>
 						<label className="settings-toggle">
 							<input
 								checked={measurementConsent?.status === "granted"}
@@ -358,25 +362,27 @@ export function SettingsScreen() {
 							<span>
 								<strong>I consent to optional effectiveness measurement</strong>
 								<small>
-									Included: a random local participant ID, event/evidence IDs,
-									timestamps, versions, scores, gates, and human-rating
-									provenance if a human rating exists. Excluded: response text,
-									transcripts, audio, email, hardware IDs, and free-form
-									intentions.
+									The summary contains only numbers: a random ID for this
+										device, dates and times, app versions, scores, which checks
+										were passed, and whether a person reviewed an answer. It never
+										contains your written answers, transcripts, recordings, email
+										address or device identity.
 								</small>
 							</span>
 						</label>
 					</div>
 					<div className="settings-row">
-						<span>Retention and baseline</span>
+						<span>What happens to it</span>
 						<div className="settings-measurement-summary">
 							<p>
-								Stored only on this device for up to 365 days; transfer happens
-								only when you download a file. Revocation stops export.
+								The summary stays on this device for up to 365 days and leaves
+									it only when you download the file. If you withdraw consent, no
+									further file can be exported.
 							</p>
 							<p>
-								Baseline: {measurementBaseline ? "captured" : "not captured"}.
-								Cohort statistics: N/A — no production telemetry is connected.
+								Starting point:{" "}
+									{measurementBaseline ? "recorded" : "not recorded yet"}. This
+									app collects no usage statistics in the background.
 							</p>
 						</div>
 					</div>
@@ -479,6 +485,38 @@ export function SettingsScreen() {
 				</CardContent>
 			</Card>
 
+			<Card>
+				<CardHeader>
+					<CardTitle>
+						<MonitorDown aria-hidden className="mr-2 inline size-5" />
+						Install on your device
+					</CardTitle>
+					<CardDescription>
+						The web app works without installation. You can also add it to
+						your home screen or desktop like an app.
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="settings-installation">
+					<InstallAppControl />
+					<div className="settings-device-grid">
+						<article>
+							<MonitorDown aria-hidden="true" />
+							<h3>Windows</h3>
+							<p>Choose “Install app” in the browser.</p>
+						</article>
+						<article>
+							<Smartphone aria-hidden="true" />
+							<h3>Android</h3>
+							<p>Choose “Add to Home screen” in the browser menu.</p>
+						</article>
+						<article>
+							<Smartphone aria-hidden="true" />
+							<h3>iPhone &amp; iPad</h3>
+							<p>Open Safari, tap Share, then “Add to Home Screen”.</p>
+						</article>
+					</div>
+				</CardContent>
+			</Card>
 			<Card>
 				<CardHeader>
 					<CardTitle>

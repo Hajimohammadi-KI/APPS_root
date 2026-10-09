@@ -26,6 +26,13 @@ describe("home evidence and navigation", () => {
     expect(loading).not.toContain("could not be read");
     expect(render("en", null)).toContain("could not be read");
   });
+  test("a learner without any saved practice is not welcomed back", () => {
+    expect(render("en", daily)).toContain("Welcome, <bdi>");
+    expect(render("de", daily)).toContain("Willkommen, <bdi>");
+    expect(render("en", {...daily, responses: 1, week: [{date: "2026-10-03", weekday: 6, count: 1}]})).toContain("Welcome back, <bdi>");
+    expect(render("de", {...daily, dueReviews: 2})).toContain("Willkommen zurück, <bdi>");
+    expect(render("en", null)).not.toContain("Welcome, <bdi>");
+  });
   test("paused plan takes precedence over repair and review prompts", () => {
     const html = render("en", {...daily, paused: true, repairs: 3, dueReviews: 2});
     expect(html).toContain("Your plan is paused.");

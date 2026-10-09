@@ -15,7 +15,7 @@ const navigationConfig = {
       { href: "/practice", label: "My practice", icon: "▶" },
       { href: "/grammar", label: "Grammar", icon: "▣" },
       { href: "/studio", label: "Conversation", icon: "▢" },
-      { href: "/?screen=progress", label: "My progress", icon: "◷" }
+      { href: "/?screen=progress", label: "My progress", icon: "◷" },
     ],
     more: [
       { href: "/daily", label: "Daily activities" },
@@ -25,9 +25,9 @@ const navigationConfig = {
       { href: "/?screen=resources", label: "Learning resources" },
       { href: "/?screen=errors", label: "Error workshop" },
       { href: "/?screen=library", label: "Audio library" },
-      { href: "/teacher", label: "Teacher studio" }
+      { href: "/teacher", label: "Teacher studio" },
     ],
-    settings: "/settings"
+    settings: "/settings",
   },
   de: {
     main: [
@@ -35,7 +35,7 @@ const navigationConfig = {
       { href: "/practice", label: "Meine Übungen", icon: "▶" },
       { href: "/grammatik", label: "Grammatik", icon: "▣" },
       { href: "/studio", label: "Gespräche", icon: "▢" },
-      { href: "/fortschritt", label: "Mein Fortschritt", icon: "◷" }
+      { href: "/fortschritt", label: "Mein Fortschritt", icon: "◷" },
     ],
     more: [
       { href: "/heute", label: "Tagesaktivitäten" },
@@ -46,10 +46,10 @@ const navigationConfig = {
       { href: "/audio", label: "Audio-Bibliothek" },
       { href: "/lehrkraft", label: "Lehrkraft-Studio" },
       { href: "/support", label: "Hilfe" },
-      { href: "/privacy", label: "Datenschutz" }
+      { href: "/privacy", label: "Datenschutz" },
     ],
-    settings: "/einstellungen"
-  }
+    settings: "/einstellungen",
+  },
 };
 
 /** Shared route presentation only; existing exercise and storage logic stays in its app. */
@@ -116,9 +116,7 @@ export function LearningNavigation({
       <a
         className="ln-settings"
         href={config.settings}
-        aria-current={
-          current === config.settings ? "page" : undefined
-        }
+        aria-current={current === config.settings ? "page" : undefined}
         onClick={onNavigate}
       >
         <Settings aria-hidden="true" />

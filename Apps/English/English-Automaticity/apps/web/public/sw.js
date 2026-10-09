@@ -1,5 +1,5 @@
 // Use only local, valid assets so installation can complete without unretrievable LFS media.
-const CACHE = "english-automaticity-web-2026.10.08.1";
+const CACHE = "english-automaticity-web-2026.10.09.1";
 const PRECACHE = [
   "/device-access/learning-path.js",
   "/device-access/grammar-drafts.js",

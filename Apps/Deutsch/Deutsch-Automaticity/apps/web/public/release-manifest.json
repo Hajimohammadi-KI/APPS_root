@@ -1,10 +1,12 @@
 {
-  "publishedAt": "2026-10-08",
+  "publishedAt": "2026-10-09",
   "version": "20.9.4",
-  "webRelease": "2026.10.08.1",
+  "webRelease": "2026.10.09.1",
   "changes": [
-    "Der Projektordner ist eigenständig: Kopieren genügt zum Installieren, Prüfen, Bauen und Veröffentlichen",
-    "Build-Fehler in den Stilen der Startseite behoben; Formatierung vereinheitlicht",
-    "Nur Wartung: Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
+    "Startseite begrüßt den ersten Besuch mit „Willkommen“ statt „Willkommen zurück“; Überschriften werden nicht mehr mit Trennstrich umbrochen",
+    "„Dein nächster Schritt“ auf der dunklen Karte wieder lesbar; Tagesplan läuft am Desktop nicht mehr über den Fensterrand",
+    "Ein Produktname: DeutschFlow auch im Grammatik-Labor und im Tagesplan; Roadmap-Link auf Deutsch und bei den Kopfzeilen-Werkzeugen",
+    "Text zur Wirksamkeitsmessung in einfacher Sprache",
+    "/grammar, /daily und /settings leiten auf die deutschen Seiten weiter"
   ]
 }

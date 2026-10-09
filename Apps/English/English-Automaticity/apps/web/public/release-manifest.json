@@ -1,10 +1,12 @@
 {
-  "publishedAt": "2026-10-08",
+  "publishedAt": "2026-10-09",
   "version": "27.4.4",
-  "webRelease": "2026.10.08.1",
+  "webRelease": "2026.10.09.1",
   "changes": [
-    "The app folder is self-contained: copying it is enough to install, test, build and deploy",
-    "The Windows installer no longer requires the separate PDF Reader project; without it the desktop app opens the online reader",
-    "Housekeeping only: learner data, saved responses and all links are unchanged"
+    "Home greets a first visit with “Welcome” instead of “Welcome back”",
+    "Today’s practice no longer overflows the window on desktop; Grammar Lab text is at least 12 px on phones",
+    "Roadmap link labelled in English and kept with the other header tools; install guide added to Settings",
+    "Effectiveness-measurement settings rewritten in plain language",
+    "/grammatik, /heute and /einstellungen redirect to the English screens"
   ]
 }

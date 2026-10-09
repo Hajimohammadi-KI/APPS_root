@@ -131,6 +131,7 @@ button:focus-visible, [role="button"]:focus-visible, a:focus-visible, summary:fo
 .settings-choice:focus-within, .settings-toggle:focus-within { outline: 3px solid var(--worksheet-teal); outline-offset: 3px; }
 .settings-measurement-summary, .settings-intentions-empty, .settings-nudge-consent { background: var(--worksheet-yellow); border-color: var(--worksheet-line); }
 .settings-device-grid article svg { color: var(--worksheet-teal); }
+.settings-intention-eyebrow { color: var(--worksheet-teal) !important; }
 .automaticity-overview { background: #fff !important; border-color: var(--worksheet-line) !important; color: var(--worksheet-ink) !important; border-radius: 22px; box-shadow: var(--worksheet-shadow); }
 .automaticity-overview h2, .automaticity-overview h3, .automaticity-overview summary { color: var(--worksheet-ink) !important; }
 .automaticity-secondary-action { border-color: #98c9c8 !important; background: var(--worksheet-cyan) !important; color: var(--worksheet-ink) !important; }

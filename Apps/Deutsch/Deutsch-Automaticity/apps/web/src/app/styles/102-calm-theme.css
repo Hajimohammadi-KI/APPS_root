@@ -465,6 +465,9 @@ textarea:focus-visible,
 .settings-device-grid article svg {
   color: var(--worksheet-teal);
 }
+.settings-intention-eyebrow {
+  color: var(--worksheet-teal) !important;
+}
 .automaticity-overview {
   background: #fff !important;
   border-color: var(--worksheet-line) !important;

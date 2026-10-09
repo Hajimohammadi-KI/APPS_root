@@ -4,18 +4,18 @@
 :root {
   --calm-font:
     "Segoe UI Variable", "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
-  --calm-bg: #f6f7fb;
+  --calm-bg: #F3F7FC;
   --calm-surface: #ffffff;
-  --calm-surface-2: #eef2f8;
-  --calm-line: #d9e0eb;
-  --calm-line-strong: #b9c5d8;
-  --calm-ink: #1f2a3d;
-  --calm-muted: #52627a;
-  --calm-primary: #2d477d;
-  --calm-primary-hover: #213760;
-  --calm-primary-soft: #e7edf7;
-  --calm-positive: #1f6f5b;
-  --calm-positive-soft: #e3f3ec;
+  --calm-surface-2: #EFF6FF;
+  --calm-line: #D8E3F0;
+  --calm-line-strong: #B5D4E8;
+  --calm-ink: #0F2547;
+  --calm-muted: #64748B;
+  --calm-primary: #153B80;
+  --calm-primary-hover: #0F2547;
+  --calm-primary-soft: #E3F0FF;
+  --calm-positive: #059669;
+  --calm-positive-soft: #D1FAE5;
 
   --app-font: var(--calm-font);
   --background: var(--calm-bg);

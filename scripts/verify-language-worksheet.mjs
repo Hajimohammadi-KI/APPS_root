@@ -32,13 +32,14 @@ try {
           page.on("pageerror", onError);
           const response = await page.goto(app.base + route, { waitUntil: "domcontentloaded" });
           assert.equal(response?.status(), 200, `${app.id} ${route} responds successfully`);
-          await expect(page.locator("h1").first()).toBeVisible();
+          // Static grammar and today pages carry their visible title in an h2 at phone width.
+          await expect(page.locator("h1:visible, h2:visible").first()).toBeVisible();
           if (route === "/practice") await expect(page.locator("#practice-response")).toBeVisible();
           const measures = await page.evaluate(() => ({
             width: innerWidth,
             scrollWidth: document.documentElement.scrollWidth,
             background: getComputedStyle(document.body).backgroundColor,
-            heading: getComputedStyle(document.querySelector("h1")).color,
+            heading: getComputedStyle(document.querySelector("h1, h2")).color,
             primary: getComputedStyle(document.documentElement).getPropertyValue("--calm-primary").trim(),
           }));
           assert(measures.scrollWidth <= measures.width + 1, `${app.id} ${route} fits width ${width}`);

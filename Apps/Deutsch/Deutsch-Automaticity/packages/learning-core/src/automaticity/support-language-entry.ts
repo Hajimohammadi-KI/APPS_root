@@ -1,5 +1,10 @@
 import type { Language } from "./contracts";
-import { getSupportGuide, mountSupportLanguageGuide, readSupportLanguage, saveSupportLanguage } from "./support-language";
+import {
+  getSupportGuide,
+  mountSupportLanguageGuide,
+  readSupportLanguage,
+  saveSupportLanguage,
+} from "./support-language";
 
 function setup() {
   // Practice embeds its own task-aware guide in the bundled renderer.
@@ -14,9 +19,15 @@ function setup() {
   }
   const controller = mountSupportLanguageGuide(host, target);
   const existingButton = (language: string) => {
-    const value = target === "de" ? ({ fa: "فارسی", en: "English", de: "Deutsch" }[language] ?? language) : language;
-    return Array.from(document.querySelectorAll<HTMLButtonElement>("#languageChoices [data-language], #language-choices [data-language]"))
-      .find(button => button.dataset.language === value);
+    const value =
+      target === "de"
+        ? ({ fa: "فارسی", en: "English", de: "Deutsch" }[language] ?? language)
+        : language;
+    return Array.from(
+      document.querySelectorAll<HTMLButtonElement>(
+        "#languageChoices [data-language], #language-choices [data-language]",
+      ),
+    ).find((button) => button.dataset.language === value);
   };
   const syncOriginal = () => {
     const language = readSupportLanguage(target);
@@ -27,7 +38,8 @@ function setup() {
   const reference = document.getElementById("ruleReference");
   const fallback = sourceRule ? document.createElement("p") : null;
   if (sourceRule && fallback) {
-    sourceRule.lang = target; sourceRule.dir = "ltr";
+    sourceRule.lang = target;
+    sourceRule.dir = "ltr";
     fallback.className = "support-language-fallback";
     // Keep the disclosure hidden with the source rule; no answer text is copied.
     sourceRule.prepend(fallback);
@@ -37,31 +49,69 @@ function setup() {
     // Static grammar replaces ruleBody when selecting a topic.
     if (!fallback.isConnected) sourceRule.prepend(fallback);
     const language = readSupportLanguage(target);
-    const guide = getSupportGuide(language, target, { sourceRule: "source", allowSourceRule: true });
-    fallback.textContent = guide.fallbackNote; fallback.lang = language; fallback.dir = guide.dir;
+    const guide = getSupportGuide(language, target, {
+      sourceRule: "source",
+      allowSourceRule: true,
+    });
+    fallback.textContent = guide.fallbackNote;
+    fallback.lang = language;
+    fallback.dir = guide.dir;
     fallback.hidden = !guide.fallbackNote;
   };
-  window.addEventListener("automaticity:support-language", () => { syncOriginal(); updateFallback(); });
-  window.addEventListener("storage", () => { syncOriginal(); updateFallback(); });
-  document.addEventListener("click", event => {
-    const element = event.target instanceof Element ? event.target.closest("#languageChoices [data-language], #language-choices [data-language]") : null;
+  window.addEventListener("automaticity:support-language", () => {
+    syncOriginal();
+    updateFallback();
+  });
+  window.addEventListener("storage", () => {
+    syncOriginal();
+    updateFallback();
+  });
+  document.addEventListener("click", (event) => {
+    const element =
+      event.target instanceof Element
+        ? event.target.closest(
+            "#languageChoices [data-language], #language-choices [data-language]",
+          )
+        : null;
     if (!element) return;
     queueMicrotask(() => {
       const language = readSupportLanguage(target);
-      window.dispatchEvent(new CustomEvent("automaticity:support-language", { detail: { target, language } }));
+      window.dispatchEvent(
+        new CustomEvent("automaticity:support-language", {
+          detail: { target, language },
+        }),
+      );
     });
   });
   reference?.addEventListener("toggle", updateFallback);
   // Persist nothing during first render. Legacy controls own their matching key.
-  controller.update({}); syncOriginal(); updateFallback();
+  controller.update({});
+  syncOriginal();
+  updateFallback();
   // Static grammar renders its language buttons during its own DOMContentLoaded setup,
   // after this deferred script; align once they exist and again after full load.
-  const legacyHost = document.getElementById("languageChoices") ?? document.getElementById("language-choices");
+  const legacyHost =
+    document.getElementById("languageChoices") ??
+    document.getElementById("language-choices");
   if (legacyHost && typeof MutationObserver !== "undefined") {
-    const observer = new MutationObserver(() => { if (legacyHost.querySelector("[data-language]")) { observer.disconnect(); syncOriginal(); updateFallback(); } });
+    const observer = new MutationObserver(() => {
+      if (legacyHost.querySelector("[data-language]")) {
+        observer.disconnect();
+        syncOriginal();
+        updateFallback();
+      }
+    });
     observer.observe(legacyHost, { childList: true });
   }
-  window.addEventListener("load", () => { syncOriginal(); updateFallback(); }, { once: true });
+  window.addEventListener(
+    "load",
+    () => {
+      syncOriginal();
+      updateFallback();
+    },
+    { once: true },
+  );
 }
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setup, { once: true });
+if (document.readyState === "loading")
+  document.addEventListener("DOMContentLoaded", setup, { once: true });
 else setup();

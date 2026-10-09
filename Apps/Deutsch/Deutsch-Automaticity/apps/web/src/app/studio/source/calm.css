@@ -226,7 +226,8 @@
   /* Two rows below desktop: attempts + coach note, then save + continue.
      The original four-column row squeezed the note to one character per line. */
   .conversation-page footer {
-    grid-template-columns: auto minmax(0, 1fr);
+    /* The original selector (.conversation-page > .studio-main > footer) is more specific. */
+    grid-template-columns: auto minmax(0, 1fr) !important;
     gap: 12px 16px;
   }
   .conversation-page .footer-coach {

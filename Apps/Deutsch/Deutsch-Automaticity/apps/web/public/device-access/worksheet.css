@@ -209,7 +209,7 @@
 }
 .worksheet-phase-header {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px 18px;
@@ -225,7 +225,7 @@
   margin: 0;
 }
 .worksheet-current-stage {
-  flex-basis: 100%;
+  width: 100%;
 }
 .task-prompt {
   border-radius: 12px;
@@ -321,7 +321,14 @@
 }
 .language-workspace .exercise-title {
   position: static;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   margin-bottom: 14px;
+}
+.language-workspace .exercise-title > div {
+  flex: 1;
+  min-width: 0;
 }
 .language-workspace #exerciseEyebrow {
   position: absolute;
@@ -334,13 +341,11 @@
   font-size: 0.95rem;
 }
 .language-workspace .audio-btn {
-  position: absolute;
-  top: 56px;
-  right: 22px;
+  position: static;
+  margin-top: 4px;
 }
 .language-workspace #exercisePrompt {
   border-radius: 12px;
-  margin-inline-end: 60px;
 }
 .language-workspace .answer-field :is(input, textarea),
 .language-workspace #answerInput,
@@ -636,12 +641,15 @@ body.daily-workspace .current {
 /* ── React pages (home, studio, settings, progress, resources) ──────────── */
 .learning-card,
 [data-slot="card"] {
-  position: relative;
-  padding-top: 50px !important;
   border-radius: var(--ws-radius) !important;
 }
-.learning-card > div:first-child > h3,
-[data-slot="card-header"] [data-slot="card-title"] {
+.learning-card:not(.group\/card),
+[data-slot="card"]:not(.group\/card) {
+  position: relative;
+  padding-top: 50px !important;
+}
+.learning-card:not(.group\/card) > div:first-child > h3,
+[data-slot="card"]:not(.group\/card) > [data-slot="card-header"] [data-slot="card-title"] {
   position: absolute;
   top: -1px;
   inset-inline-end: -1px;
@@ -824,13 +832,8 @@ html .conversation-page .studio-step-picker > summary {
   .language-workspace .exercise-card {
     padding: 58px 16px 18px 16px;
   }
-  .language-workspace .audio-btn {
-    top: 50px;
-    right: 14px;
-  }
   .language-workspace #exercisePrompt {
-    margin-top: 12px;
-    margin-inline-end: 0;
+    margin-top: 0;
   }
   body.daily-workspace .phase {
     padding: 58px 14px 16px 14px;
@@ -838,5 +841,9 @@ html .conversation-page .studio-step-picker > summary {
   .worksheet-phase-header {
     flex-direction: column;
     align-items: stretch;
+  }
+  .worksheet-phase-track {
+    flex: 0 0 auto;
+    width: 100%;
   }
 }

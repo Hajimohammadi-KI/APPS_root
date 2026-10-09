@@ -268,6 +268,8 @@ export async function playTeacherAudioByContextKey(
   audio.addEventListener("error", () => URL.revokeObjectURL(url), {
     once: true,
   });
-  await audio.play();
+  audio.play().catch(() => {
+    URL.revokeObjectURL(url);
+  });
   return true;
 }

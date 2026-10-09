@@ -621,7 +621,7 @@ textarea::placeholder {
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  .learning-home {
+  :root {
     --lh-ink: #f5f5f5;
     --lh-muted: #b0b0b0;
     --lh-primary: #60a5fa;
@@ -629,5 +629,4 @@ textarea::placeholder {
     --lh-paper: #1f1f1f;
     --lh-soft: #2d2d2d;
   }
-}
 }

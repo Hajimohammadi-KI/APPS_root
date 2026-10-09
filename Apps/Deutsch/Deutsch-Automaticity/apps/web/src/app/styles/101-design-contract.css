@@ -3,25 +3,25 @@
   --background: #faf8f4 !important;
   --foreground: #1f2937 !important;
   --card: #ffffff !important;
-  --primary: #153B80 !important;
+  --primary: #153b80 !important;
   --primary-foreground: #ffffff !important;
   --secondary: #efe7da !important;
   --muted: #f1eee8 !important;
-  --muted-foreground: #64748B !important;
+  --muted-foreground: #64748b !important;
   --border: #d8d3ca !important;
   --input: #d8d3ca !important;
-  --ring: #153B80 !important;
-  --screen-accent: #153B80 !important;
+  --ring: #153b80 !important;
+  --screen-accent: #153b80 !important;
   --screen-accent-strong: #2f477e !important;
 }
 
 .german-app-main,
 .german-app-topbar {
-  --screen-accent: #153B80 !important;
+  --screen-accent: #153b80 !important;
   --screen-accent-strong: #2f477e !important;
   --screen-soft: #efe7da !important;
   --screen-glow: rgb(61 90 158 / 12%) !important;
-  --primary: #153B80 !important;
+  --primary: #153b80 !important;
 }
 
 body {
@@ -101,8 +101,8 @@ textarea:focus-visible {
 [class~="bg-violet-700"],
 [class~="bg-purple-700"],
 [class~="bg-purple-800"] {
-  background: #153B80 !important;
-  border-color: #153B80 !important;
+  background: #153b80 !important;
+  border-color: #153b80 !important;
   color: #ffffff !important;
 }
 
@@ -165,7 +165,7 @@ textarea:focus-visible {
 [class~="text-purple-800"],
 [class~="text-purple-900"],
 [class~="text-purple-950"] {
-  color: #153B80 !important;
+  color: #153b80 !important;
 }
 
 [class~="border-emerald-200"],
@@ -193,30 +193,30 @@ textarea:focus-visible {
 }
 
 .dashboard-hero-actions > :first-child {
-  background-color: #153B80 !important;
+  background-color: #153b80 !important;
 }
 
 .brand-icon {
-  background: linear-gradient(145deg, #153B80, #2f477e) !important;
+  background: linear-gradient(145deg, #153b80, #2f477e) !important;
 }
 
 .brand-logo,
 .german-install-button {
-  background: linear-gradient(145deg, #153B80, #2f477e) !important;
+  background: linear-gradient(145deg, #153b80, #2f477e) !important;
   color: #ffffff !important;
 }
 
 [class*="bg-gradient"][class*="from-violet"],
 [class*="bg-gradient"][class*="from-purple"],
 [class*="bg-gradient"][class*="from-blue"] {
-  background-image: linear-gradient(145deg, #153B80, #2f477e) !important;
+  background-image: linear-gradient(145deg, #153b80, #2f477e) !important;
 }
 
 .persian-word-help-card {
   width: min(28rem, calc(100vw - 2rem)) !important;
   max-height: min(40rem, calc(100vh - 2rem)) !important;
   overflow: auto !important;
-  border: 2px solid #153B80 !important;
+  border: 2px solid #153b80 !important;
   background: #ffffff !important;
   color: #1f2937 !important;
   box-shadow:
@@ -241,7 +241,7 @@ textarea:focus-visible {
 
 .persian-word-help-section strong,
 .persian-word-help-example strong {
-  color: #153B80 !important;
+  color: #153b80 !important;
 }
 
 .persian-word-help-card::after {
@@ -250,7 +250,7 @@ textarea:focus-visible {
   margin-top: 0.65rem;
   border-top: 1px solid rgb(61 90 158 / 20%);
   padding: 0.65rem 0.55rem 0.1rem;
-  color: #64748B;
+  color: #64748b;
   font-size: 0.75rem;
   font-weight: 700;
 }

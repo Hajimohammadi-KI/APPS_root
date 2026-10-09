@@ -1,15 +1,15 @@
 .conversation-page {
-  --violet: #153B80;
-  --violet2: #314d84;
-  --ink: #0F2547;
-  --muted: #64748B;
-  --line: #D8E3F0;
-  --lav: #EFF6FF;
+  --violet: var(--worksheet-teal, #007f83);
+  --violet2: var(--worksheet-teal-hover, #00676b);
+  --ink: var(--worksheet-ink, #08364a);
+  --muted: var(--worksheet-muted, #526a73);
+  --line: var(--worksheet-line, #dce9e8);
+  --lav: var(--worksheet-cyan, #eaf6f7);
   font-size: 1rem;
   line-height: 1.6;
-  background: transparent;
+  background: var(--worksheet-paper, #fffefd);
   display: block;
-  box-shadow: none;
+  box-shadow: var(--worksheet-shadow, 0 4px 14px rgba(8, 54, 74, 0.055));
   max-width: none;
   min-height: 0;
 }
@@ -23,8 +23,8 @@
   overflow-y: auto;
 }
 .conversation-page .studio-brand {
-  font-family: Georgia, serif;
-  color: #0F2547;
+  font-family: var(--calm-font, "Segoe UI", Tahoma, sans-serif);
+  color: var(--worksheet-ink, #08364a);
   font-size: 1.4rem;
   text-decoration: none;
   display: block;
@@ -37,20 +37,20 @@
   height: auto;
   min-height: 90px;
   padding: 16px 24px 24px;
-  border-bottom: 1px solid #D8E3F0;
+  border-bottom: 1px solid var(--worksheet-line, #dce9e8);
   display: block;
-  background: transparent;
+  background: var(--worksheet-paper, #fffefd);
 }
 .conversation-page .studio-main > header h1 {
-  font-family: Georgia, serif;
-  font-size: clamp(2rem, 3vw, 2.8rem);
-  font-weight: 400;
+  font-family: var(--calm-font, "Segoe UI", Tahoma, sans-serif);
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-weight: 800;
   line-height: 1.2;
-  color: #0F2547;
+  color: var(--worksheet-ink, #08364a);
 }
 .conversation-page .studio-main > header p {
   font-size: 1rem;
-  color: #64748B;
+  color: var(--worksheet-muted, #526a73);
   max-width: 65ch;
 }
 .conversation-page .header-actions {
@@ -59,8 +59,8 @@
 .conversation-page .studio-options,
 .conversation-page .studio-results,
 .conversation-page .studio-step-picker {
-  border: 1px solid #D8E3F0;
-  border-radius: 16px;
+  border: 1px solid var(--worksheet-line, #dce9e8);
+  border-radius: 22px;
   background: #fff;
 }
 .conversation-page .studio-options {
@@ -74,14 +74,14 @@
   padding: 16px 20px;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #0F2547;
+  color: var(--worksheet-ink, #08364a);
 }
 .conversation-page .studio-options > summary > span {
   display: block;
   margin-top: 4px;
   padding-inline-start: 18px;
-  font-weight: 400;
-  color: #64748B;
+  font-weight: 800;
+  color: var(--worksheet-muted, #526a73);
 }
 .conversation-page .conversation-filter {
   margin: 12px 20px;
@@ -106,7 +106,7 @@
 .conversation-page .steps {
   height: auto;
   border: 0;
-  box-shadow: none;
+  box-shadow: var(--worksheet-shadow, 0 4px 14px rgba(8, 54, 74, 0.055));
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -142,8 +142,8 @@
   font-size: 1.5rem;
 }
 .conversation-page :is(.flow-panel, .coach-card, .panel, .record-card) {
-  border-color: #D8E3F0;
-  box-shadow: none;
+  border-color: var(--worksheet-line, #dce9e8);
+  box-shadow: var(--worksheet-shadow, 0 4px 14px rgba(8, 54, 74, 0.055));
 }
 .conversation-page p,
 .conversation-page textarea {
@@ -170,14 +170,14 @@
 }
 .conversation-page button:hover {
   transform: none;
-  box-shadow: none;
+  box-shadow: var(--worksheet-shadow, 0 4px 14px rgba(8, 54, 74, 0.055));
 }
 .conversation-page .mode-cards {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .conversation-page .mode {
   min-height: 80px;
-  box-shadow: none;
+  box-shadow: var(--worksheet-shadow, 0 4px 14px rgba(8, 54, 74, 0.055));
 }
 .conversation-page .mode > span {
   width: 40px;
@@ -197,13 +197,13 @@
 .conversation-page footer {
   margin: 24px;
   padding: 18px;
-  border: 1px solid #D8E3F0;
-  border-radius: 16px;
+  border: 1px solid var(--worksheet-line, #dce9e8);
+  border-radius: 22px;
   position: static;
   background: #fff;
 }
 .conversation-page :is(a, summary, button, select, textarea):focus-visible {
-  outline: 3px solid #153B80;
+  outline: 3px solid var(--worksheet-teal, #007f83);
   outline-offset: 3px;
 }
 @media (max-width: 1000px) {
@@ -284,4 +284,58 @@ html[data-low-stimulation="true"] .conversation-page *::after {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Worksheet sections resolve hard-coded colors in the original studio. */
+html .conversation-page { --violet: #007f83; --violet2: #00676b; --ink: #08364a; --muted: #526a73; --line: #dce9e8; --lav: #eaf6f7; font-family: var(--calm-font, "Segoe UI", Tahoma, sans-serif); }
+html .conversation-page :is(.flow-panel, .coach-card, .panel, .record-card, .improve-panel, .conversation-filter) { background: #fff; border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--worksheet-shadow, 0 4px 14px rgba(8, 54, 74, .055)); }
+html .conversation-page .studio-main > header h1 { font-weight: 800; color: var(--ink); }
+html .conversation-page .studio-step-picker > summary { background: var(--ink); color: #fff; border-radius: 20px; }
+html .conversation-page .studio-step-picker[open] > summary { border-radius: 20px 20px 0 0; }
+html .conversation-page .steps { background: #fff; box-shadow: none; gap: 8px; }
+html .conversation-page .steps button { border: 1px solid var(--line); border-radius: 16px; color: var(--ink); background: #fff; }
+html .conversation-page .steps button > b { display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; border: 1px solid var(--line); background: #eaf6f7; color: var(--ink); }
+html .conversation-page .steps .active { border-color: var(--violet); background: var(--violet); color: #fff; box-shadow: none; }
+html .conversation-page .steps .active > b { background: #fff; border-color: #fff; color: var(--violet); }
+html .conversation-page .mode { background: #fff; border: 1px solid var(--line); box-shadow: none; border-radius: 20px; }
+html .conversation-page .active-mode { border-color: var(--violet); background: #eaf6f7; }
+html .conversation-page .mode > span { background: #eaf6f7; color: var(--violet); border-radius: 50%; }
+html .conversation-page .coach-stage { background: #fff; border-color: var(--line); }
+html .conversation-page .coach-glow::before { background: #eaf6f7; animation: none; }
+html .conversation-page .coach-glow :is(img, .coach-avatar) { animation: none; filter: none; }
+html .conversation-page .coach-dialogue p { background: #eaf6f7; border-color: var(--line); box-shadow: none; }
+html .conversation-page .coach-topic > span, html .conversation-page .spoken-chunk-heading > strong { background: #eaf6f7; color: var(--violet); }
+html .conversation-page .flow-title, html .conversation-page .improve-heading { align-items: flex-start; }
+html .conversation-page :is(.flow-title, .improve-heading) > span { border-radius: 50%; width: 48px; height: 48px; flex-shrink: 0; background: var(--violet); color: #fff; }
+html .conversation-page :is(.flow-title, .improve-heading) h3 { width: fit-content; max-width: 100%; padding: 9px 15px; border-radius: 15px 15px 5px 15px; background: var(--violet); color: #fff; font-size: 1.0625rem; line-height: 1.4; }
+html .conversation-page .coach-topic h2 { padding: 9px 15px; border-radius: 16px 16px 5px 16px; background: var(--violet); color: #fff; font-size: 1.125rem; }
+html .conversation-page :is(.flow-note, .coach-tip, .speaking-tip, .spoken-chunk-review) { background: #fff5d7; color: var(--ink); border-color: var(--line); border-radius: 14px; }
+html .conversation-page .spoken-chunk-bank { background: #fff; border-color: var(--line); }
+html .conversation-page .spoken-chunk-list li { background: #eaf6f7; border-color: var(--line); }
+html .conversation-page .spoken-chunk-actions button { background: #fff; border-color: #98c9c8; color: var(--violet); }
+html .conversation-page .spoken-chunk-actions button:hover { background: #fff5d7; border-color: var(--violet); }
+html .conversation-page .flow-panel blockquote, html .conversation-page .improve-compare article { background: #eaf6f7; color: var(--ink); border-color: var(--line); }
+html .conversation-page .improve-compare article.better, html .conversation-page .corrected { background: #fff5d7; border-color: #e2d6aa; }
+html .conversation-page .original { background: #eaf6f7; }
+html .conversation-page .transcript textarea { min-height: 100px; border: 1px dashed #98b9b8; border-radius: 14px; background: #fff; color: var(--ink); }
+html .conversation-page .conversation-filter-grid select { background: #fff; border-color: #b8d2d1; color: var(--ink); }
+html .conversation-page .conversation-filter-grid select:focus-visible, html .conversation-page .transcript textarea:focus-visible { border-color: var(--violet); box-shadow: none; transform: none; }
+html .conversation-page button:hover { transform: none; box-shadow: none; }
+html .conversation-page .mic { background: #eaf6f7; color: var(--violet); border-color: var(--line); box-shadow: none; }
+html .conversation-page .mic.recording { background: #fff0ed; color: #b42318; border-color: #e8b5ab; }
+html .conversation-page .wave i { background: var(--violet); }
+html .conversation-page .levels { display: none; }
+html .conversation-page :is(.feedback-row.f0, .feedback-row.f3, .feedback-row.f4) > span { background: #eaf6f7; color: var(--violet); }
+html .conversation-page .primary, html .conversation-page .continue { background: var(--violet); color: #fff; border-color: var(--violet); }
+html .conversation-page .primary:hover, html .conversation-page .continue:hover { background: var(--violet2); }
+html .daily-context-bar { background: #fff5d7; color: #08364a; border-color: #dce9e8; }
+html .daily-context-bar button { color: #007f83; border-color: #007f83; }
+html .daily-complete-card { background: #fff; border: 1px solid #dce9e8; border-radius: 24px; box-shadow: var(--worksheet-shadow); }
+html .daily-complete-card .primary { background: #007f83; color: #fff; }
+html .daily-complete-backdrop { background: rgba(8,54,74,.45); }
+html .conversation-page :is(a, summary, button, select, textarea):focus-visible { outline: 3px solid #007f83 !important; outline-offset: 3px; }
+@media (max-width: 640px) {
+  html .conversation-page :is(.review-grid, .correction-grid, .improve-compare, .spoken-chunk-list, .save-summary) { grid-template-columns: minmax(0, 1fr); }
+  html .conversation-page :is(.flow-title, .improve-heading) h3 { font-size: 1rem; padding: 8px 12px; }
+  html .conversation-page .steps button { flex: 1 1 140px; }
 }

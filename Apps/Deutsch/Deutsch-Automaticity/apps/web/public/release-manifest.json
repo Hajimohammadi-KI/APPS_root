@@ -1,8 +1,9 @@
 {
   "publishedAt": "2026-10-09",
   "version": "20.9.4",
-  "webRelease": "2026.10.09.2",
+  "webRelease": "2026.10.09.3",
   "changes": [
+    "Restore local app startup and repair English CSS build syntax; verify the existing local URLs.",
     "Ein ruhiges Design auf allen Seiten: Dunkelblau auf Weiß, eine Schriftfamilie, flache Flächen",
     "Seitenleiste am Desktop wieder sichtbar; Fortschrittsbereich „Bisherige Übungswerte“ wieder lesbar; Produktname überall DeutschFlow",
     "Tagesplan ohne Maskottchen und Fortschrittsring, mit derselben Navigation wie alle anderen Seiten; Gesprächsstudio in der gemeinsamen Farbwelt",

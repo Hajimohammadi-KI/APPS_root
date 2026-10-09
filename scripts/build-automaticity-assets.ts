@@ -4,6 +4,8 @@ for (const [entry, file] of [
   ["browser-entry.ts", "automaticity-v2.js"],
   ["practice-entry.ts", "practice.js"],
   ["overview-entry.ts", "overview.js"],
+  // R77: explanation-language guide for the static grammar and today pages.
+  ["support-language-entry.ts", "support-language.js"],
 ]) {
   const result = await Bun.build({
     entrypoints: [

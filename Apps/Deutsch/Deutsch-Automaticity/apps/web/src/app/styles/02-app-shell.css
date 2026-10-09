@@ -240,7 +240,7 @@
   border-radius: 10px;
   background: transparent;
   padding: 8px 10px;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   font-size: 13px;
   font-weight: 550;
@@ -255,12 +255,12 @@
 }
 
 .nav-button:hover {
-  background: #EFF6FF;
-  color: #153B80;
+  background: #eff6ff;
+  color: #153b80;
 }
 
 .nav-button:focus-visible {
-  outline: 2px solid #153B80;
+  outline: 2px solid #153b80;
   outline-offset: -2px;
 }
 
@@ -270,10 +270,10 @@
 }
 
 .nav-button[data-active="true"] {
-  background: #E3F0FF;
-  color: #153B80;
+  background: #e3f0ff;
+  color: #153b80;
   font-weight: 650;
-  box-shadow: inset 0 0 0 2px #153B80;
+  box-shadow: inset 0 0 0 2px #153b80;
 }
 
 .sidebar-scrim {
@@ -490,7 +490,6 @@
     auto;
 }
 
-
 /* ── Topbar polish (2026-10 refresh) ────────────────────────────────────────── */
 
 /* Cleaner topbar background */
@@ -573,7 +572,7 @@ input[type="password"],
 input[type="search"],
 textarea,
 select {
-  border: 1px solid #D8E3F0;
+  border: 1px solid #d8e3f0;
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 0.9375rem;
@@ -588,7 +587,7 @@ input[type="password"]:focus-visible,
 input[type="search"]:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  border-color: #153B80;
+  border-color: #153b80;
   outline: none;
   box-shadow: 0 0 0 3px rgba(21, 59, 128, 0.1);
 }

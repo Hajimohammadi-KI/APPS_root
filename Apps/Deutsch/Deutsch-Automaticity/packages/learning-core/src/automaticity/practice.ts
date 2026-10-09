@@ -68,6 +68,7 @@ import { syncLegacyPractice } from "./legacy";
 import { promptTextParts } from "./prompt-text";
 import { disablePracticeControls } from "./practice-controls";
 import { LEARNING_TARGET, learningTarget } from "./learning-target";
+import { mountSupportLanguageGuide } from "./support-language.js";
 import {
   grammarFeedbackAssessment,
   parseGrammarFeedback,
@@ -239,6 +240,16 @@ export async function mountPractice(
   errorBox.id = "practice-error";
   errorBox.setAttribute("role", "alert");
   const taskPanel = element("section", undefined, "card task-panel");
+  const languageGuideHost = element(
+    "div",
+    undefined,
+    "practice-language-guide",
+  );
+  const languageGuide = mountSupportLanguageGuide(languageGuideHost, language, {
+    stage: task.stage,
+    constructionId: unit.id,
+    familyId: unit.familyIds[0],
+  });
   const progressPanel = element("section", undefined, "card");
   const focusPanel = element("div", undefined, "focus-list");
   const dailyPanel = element("div", undefined, "daily-plan");
@@ -1363,7 +1374,7 @@ export async function mountPractice(
         `${unit.level} · ${unit.familyIds.map((family) => GRAMMAR_FAMILIES.find((row) => row[0] === family)?.[en ? 1 : 2] ?? family).join(" · ")}`,
         "eyebrow",
       ),
-      element("h2", unit.title),
+      element("h2", unit.title, "worksheet-lesson-title"),
     );
     if (
       !retirement &&
@@ -1399,6 +1410,58 @@ export async function mountPractice(
           "Übertragen",
           "Später abrufen",
         ];
+    // These phases describe the current task; they are not mastery evidence.
+    const currentPhase =
+      task.stage === "notice"
+        ? 1
+        : task.stage === "retrieve" || task.stage === "vary"
+          ? 2
+          : 3;
+    const phaseNames = en
+      ? ["Discover the pattern", "Decide and build", "Use, repair and review"]
+      : [
+          "Muster entdecken",
+          "Entscheiden und bilden",
+          "Anwenden, korrigieren und wiederholen",
+        ];
+    const phaseHeader = element("section", undefined, "worksheet-phase-header");
+    phaseHeader.setAttribute(
+      "aria-label",
+      t("Current learning phase", "Aktuelle Lernphase"),
+    );
+    const phaseTrack = element("ol", undefined, "worksheet-phase-track");
+    phaseNames.forEach((name, index) => {
+      const phase = element("li", undefined, "worksheet-phase");
+      if (index + 1 === currentPhase)
+        phase.setAttribute("aria-current", "step");
+      const number = element(
+        "span",
+        String(index + 1),
+        "worksheet-phase-number",
+      );
+      number.setAttribute("aria-hidden", "true");
+      phase.append(number, element("span", `${index + 1} · ${name}`));
+      phaseTrack.append(phase);
+    });
+    phaseHeader.append(
+      element(
+        "p",
+        `${t("Phase", "Phase")} ${currentPhase} / 3 · ${phaseNames[currentPhase - 1]}`,
+        "worksheet-phase-label",
+      ),
+      phaseTrack,
+      element(
+        "p",
+        `${t("Current step", "Aktueller Schritt")}: ${stageNames[stages.indexOf(task.stage)]}`,
+        "worksheet-current-stage",
+      ),
+    );
+    taskPanel.append(phaseHeader, languageGuideHost);
+    languageGuide.update({
+      stage: task.stage,
+      constructionId: unit.id,
+      familyId: unit.familyIds[0],
+    });
     const currentRepairId =
       session.previousAttemptId ??
       new URLSearchParams(location.search).get("repairOf");
@@ -1523,6 +1586,28 @@ export async function mountPractice(
       prompt.append(segment);
     }
     prompt.id = "practice-prompt";
+    const promptIcon = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg",
+    );
+    promptIcon.setAttribute("viewBox", "0 0 48 48");
+    promptIcon.setAttribute("class", "worksheet-prompt-icon");
+    promptIcon.setAttribute("aria-hidden", "true");
+    promptIcon.setAttribute("focusable", "false");
+    const lens = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "circle",
+    );
+    lens.setAttribute("cx", "20");
+    lens.setAttribute("cy", "20");
+    lens.setAttribute("r", "12");
+    const handle = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path",
+    );
+    handle.setAttribute("d", "M29 29 40 40");
+    promptIcon.append(lens, handle);
+    prompt.prepend(promptIcon);
     if (retirement) {
       const message = element(
         "p",
@@ -1589,13 +1674,22 @@ export async function mountPractice(
         ),
       );
     const reference = element("div", undefined, "reference");
+    reference.lang = language;
+    reference.dir = "ltr";
+    const referenceLabel = () =>
+      element(
+        "p",
+        t("Source explanation · English", "Erklärung im Original · Deutsch"),
+        "reference-language-label",
+      );
     const showExamples = () => {
-      reference.replaceChildren(element("p", unit.rule));
+      reference.replaceChildren(referenceLabel(), element("p", unit.rule));
       for (const example of unit.examples)
         reference.append(element("p", example));
     };
     const showHint = () => {
       reference.replaceChildren(
+        referenceLabel(),
         element(
           "p",
           task.hints[

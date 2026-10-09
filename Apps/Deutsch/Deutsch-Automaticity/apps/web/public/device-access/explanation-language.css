@@ -1,0 +1,14 @@
+.native-language-guide-host { position: relative; max-width: 76rem; margin: .75rem auto; padding-inline: 1rem; z-index: 1; }
+.support-language-guide { border: 1px solid #cfe2e3; border-radius: 1rem; background: #fff; color: #08364a; box-shadow: 0 3px 12px rgb(8 54 74 / 4%); font: inherit; overflow: hidden; margin-block: .65rem; }
+.support-language-guide > summary { min-height: 44px; padding: .7rem 1rem; cursor: pointer; font-weight: 750; color: #00767a; background: #eaf6f7; }
+.support-language-guide > label { display: block; padding: .8rem 1rem .2rem; }
+.support-language-guide .explanation-language-select { min-height: 44px; min-width: 9rem; border: 1px solid #007f83; border-radius: .65rem; background: #fff; color: #08364a; padding: .5rem .8rem; font: inherit; direction: ltr; }
+.support-language-copy { background: #fff5d7; border-radius: .7rem; padding: .65rem 1rem; margin: .6rem 1rem 1rem; line-height: 1.85; overflow-wrap: anywhere; }
+.support-language-copy p { margin: .35rem 0; }
+.support-language-guide [dir=rtl], .support-language-guide[dir=rtl] { text-align: right; }
+.support-language-source { border-block-start: 1px dashed #a5bcbc; padding-block-start: .6rem; text-align: left; }
+.support-language-status:empty { display: none; }
+.support-language-status { margin: .7rem 1rem; font-size: .9rem; }
+.support-language-fallback { background: #fff5d7; color: #08364a; border-radius: .6rem; padding: .6rem .8rem; line-height: 1.7; }
+.support-language-guide :is(select, summary):focus-visible { outline: 3px solid #007f83; outline-offset: 3px; }
+@media (max-width: 600px) { .native-language-guide-host { padding-inline: .6rem; } .support-language-copy { margin-inline: .65rem; } }

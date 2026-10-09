@@ -1253,7 +1253,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
 
   const setupLearningControls = () => {
     const selectedTime = localStorage.getItem("deutsch-automaticity:study-time") || "15";
-    const selectedLanguage = localStorage.getItem("deutsch-automaticity:explanation-language") || "Deutsch";
+    const selectedLanguage = localStorage.getItem("deutsch-automaticity:explanation-language") || "فارسی"; // R77: Persian guidance until the learner chooses otherwise
     const renderTime = (value) => {
       $("#timeSummary").textContent = `${value} Minuten`;
       $("#timeChoices").innerHTML = [10, 15, 20, 25, 30, 40, 50, 60]

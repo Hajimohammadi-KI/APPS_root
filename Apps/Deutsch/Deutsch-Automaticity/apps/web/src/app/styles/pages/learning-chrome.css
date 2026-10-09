@@ -9,7 +9,7 @@
 
 .learning-navigation .ln-label {
   margin: 0 12px 10px;
-  color: #9ca3af;
+  color: #8592a8;
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -33,7 +33,7 @@
   padding: 10px 12px;
   border: 1px solid transparent;
   border-radius: 10px;
-  color: #64748B;
+  color: #374a64;
   font-size: 0.9rem;
   font-weight: 500;
   text-decoration: none;
@@ -46,15 +46,15 @@
 
 .learning-navigation a:hover,
 .learning-navigation summary:hover {
-  background: #f0f6ff;
+  background: #f0f4fb;
   color: #1a2d4e;
 }
 
 .learning-navigation a[aria-current="page"] {
-  background: #153B80;
+  background: #1f3566;
   color: #fff;
   font-weight: 600;
-  border-color: #153B80;
+  border-color: #1f3566;
   box-shadow: 0 2px 8px rgba(31, 53, 102, 0.25);
 }
 
@@ -117,7 +117,7 @@
 
 .learning-navigation :is(a, summary):focus-visible,
 .app-tools > summary:focus-visible {
-  outline: 3px solid #153B80 !important;
+  outline: 3px solid #3d5a9e !important;
   outline-offset: 2px;
 }
 
@@ -197,7 +197,7 @@
 .app-tools-panel > p {
   flex-basis: 100%;
   margin: 0;
-  color: #64748B;
+  color: #52627a;
   font-size: 0.875rem;
 }
 
@@ -261,7 +261,7 @@
 }
 
 .german-app-sidebar .brand-logo {
-  background: #153B80;
+  background: #1f3566;
 }
 
 .german-app-sidebar a[aria-label] > span:last-child > span {
@@ -321,7 +321,7 @@
 }
 
 .learning-progress-page > header > p {
-  color: #64748B;
+  color: #52627a;
   max-width: 60ch;
   font-size: 1rem;
   line-height: 1.7;
@@ -332,7 +332,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #153B80;
+  color: #3d5a9e;
   margin-bottom: 0;
 }
 

@@ -1,12 +1,12 @@
 /* R66: scoped to the home screen; preserves learner reading preferences. */
 .learning-home {
-  --lh-ink: #0F2547;
-  --lh-muted: #64748B;
-  --lh-primary: #153B80;
-  --lh-primary-hover: #0F2547;
-  --lh-line: #D8E3F0;
+  --lh-ink: #0f2547;
+  --lh-muted: #64748b;
+  --lh-primary: #153b80;
+  --lh-primary-hover: #0f2547;
+  --lh-line: #d8e3f0;
   --lh-paper: #ffffff;
-  --lh-soft: #EFF6FF;
+  --lh-soft: #eff6ff;
   --lh-positive: #059669;
   color: var(--lh-ink);
   font-size: 1rem;
@@ -155,7 +155,7 @@
   align-items: center;
   justify-content: center;
   gap: 18px;
-  background: #2563EB;
+  background: #2563eb;
   color: white;
   border: none;
   border-radius: 12px;
@@ -187,7 +187,7 @@
   height: 16px;
 }
 .lh-method {
-  background: #F3F7FC;
+  background: #f3f7fc;
   border-inline-start: 1px solid var(--lh-line);
   padding: clamp(24px, 3.5vw, 40px);
   display: flex;
@@ -304,11 +304,11 @@
   height: 6px;
   border-radius: 99px;
   overflow: hidden;
-  background: #D8E3F0;
+  background: #d8e3f0;
   margin-top: 14px;
 }
 .lh-metric progress::-webkit-progress-bar {
-  background: #D8E3F0;
+  background: #d8e3f0;
 }
 .lh-metric progress::-webkit-progress-value {
   background: var(--lh-primary);
@@ -666,7 +666,10 @@ html[data-low-stimulation="true"] .learning-home *::after {
 
 /* Metric cards: subtle lift on hover */
 .lh-metric {
-  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
 }
 .lh-metric:hover {
   box-shadow: 0 8px 24px rgba(54, 79, 140, 0.1) !important;
@@ -675,7 +678,10 @@ html[data-low-stimulation="true"] .learning-home *::after {
 
 /* Course cards: lift */
 .lh-course-list > a {
-  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
 }
 .lh-course-list > a:hover {
   box-shadow: 0 6px 18px rgba(54, 79, 140, 0.09) !important;
@@ -685,7 +691,9 @@ html[data-low-stimulation="true"] .learning-home *::after {
 /* Settings chip: shadow */
 .lh-settings {
   box-shadow: 0 2px 6px rgba(40, 60, 100, 0.06);
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
 }
 .lh-settings:hover {
   box-shadow: 0 4px 12px rgba(54, 79, 140, 0.12) !important;
@@ -701,7 +709,9 @@ html[data-low-stimulation="true"] .learning-home *::after {
 /* CTA button in dark hero */
 .learning-home .lh-primary {
   font-weight: 700 !important;
-  transition: background-color 150ms ease, transform 120ms ease;
+  transition:
+    background-color 150ms ease,
+    transform 120ms ease;
 }
 .learning-home .lh-primary:hover {
   transform: translateY(-1px);

@@ -1,8 +1,9 @@
 {
   "publishedAt": "2026-10-09",
   "version": "27.4.4",
-  "webRelease": "2026.10.09.2",
+  "webRelease": "2026.10.09.3",
   "changes": [
+    "Restore local app startup and repair English CSS build syntax; verify the existing local URLs.",
     "One calm design across Home, Practice, Grammar Lab, Today, Conversation and Settings: navy on white, one type family, flat surfaces",
     "Today page: mascot, progress ring and emoji controls removed; the same five-item navigation as every other page",
     "Conversation studio recoloured to the shared palette",

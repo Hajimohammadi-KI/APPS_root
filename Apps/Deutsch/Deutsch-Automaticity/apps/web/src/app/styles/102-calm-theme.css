@@ -2,7 +2,8 @@
    Loaded last so it only overrides what still differs from the shared
    calm-theme.css that the static pages use. Keep the two in step. */
 :root {
-  --calm-font: "Segoe UI Variable", "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
+  --calm-font:
+    "Segoe UI Variable", "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
   --calm-bg: #f6f7fb;
   --calm-surface: #ffffff;
   --calm-surface-2: #eef2f8;
@@ -67,51 +68,157 @@
   --shadow-xl: 0 8px 20px rgb(31 41 55 / 0.08);
 }
 
-html, body { background: var(--calm-bg); }
-body { color: var(--calm-ink); font-family: var(--calm-font); }
-h1, h2, h3, h4 { font-family: var(--calm-font) !important; font-weight: 650; letter-spacing: -0.015em; }
+html,
+body {
+  background: var(--calm-bg);
+}
+body {
+  color: var(--calm-ink);
+  font-family: var(--calm-font);
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--calm-font) !important;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
 
 /* App shell. The sidebar's Tailwind "hidden" utility outranked "xl:flex" in
    the built stylesheet, so the desktop rail never appeared while the main
    column still reserved its width. Show it whenever the layout reserves it. */
 @media (min-width: 1181px) {
-  .german-app-sidebar { display: flex !important; }
-  .german-app-topbar .xl\:hidden { display: none !important; }
+  .german-app-sidebar {
+    display: flex !important;
+  }
+  .german-app-topbar .xl\:hidden {
+    display: none !important;
+  }
 }
-.german-app-sidebar { background: var(--calm-surface); border-right-color: var(--calm-line); box-shadow: none; }
-.german-app-topbar { background: var(--calm-surface); box-shadow: none; border-bottom-color: var(--calm-line); }
-.brand-logo { background: var(--calm-primary) !important; box-shadow: none !important; }
-.learning-card { border-color: var(--calm-line); box-shadow: var(--shadow-sm); }
-.learning-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+.german-app-sidebar {
+  background: var(--calm-surface);
+  border-right-color: var(--calm-line);
+  box-shadow: none;
+}
+.german-app-topbar {
+  background: var(--calm-surface);
+  box-shadow: none;
+  border-bottom-color: var(--calm-line);
+}
+.brand-logo {
+  background: var(--calm-primary) !important;
+  box-shadow: none !important;
+}
+.learning-card {
+  border-color: var(--calm-line);
+  box-shadow: var(--shadow-sm);
+}
+.learning-card:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
 .learning-page-intro,
 .learning-progress-page > header,
-.daily-mission-hero { background: var(--calm-surface); border-color: var(--calm-line); box-shadow: none; }
-.learning-page-intro h1, .learning-progress-page > header h1, .daily-mission-hero h1 { color: var(--calm-ink); font-weight: 650; }
-.learning-page-intro-orb { display: none; }
-.learning-accordion { border-color: var(--calm-line); box-shadow: var(--shadow-sm); }
+.daily-mission-hero {
+  background: var(--calm-surface);
+  border-color: var(--calm-line);
+  box-shadow: none;
+}
+.learning-page-intro h1,
+.learning-progress-page > header h1,
+.daily-mission-hero h1 {
+  color: var(--calm-ink);
+  font-weight: 650;
+}
+.learning-page-intro-orb {
+  display: none;
+}
+.learning-accordion {
+  border-color: var(--calm-line);
+  box-shadow: var(--shadow-sm);
+}
 /* The gradient recolouring in 101-design-contract turned this light accordion
    shell dark while its text stayed dark. Keep the shell light. */
 .learning-accordion[class*="from-violet"],
 .learning-accordion[class*="from-sky"],
 .learning-accordion[class*="from-fuchsia"],
 .learning-accordion[class*="from-amber"],
-.learning-accordion[class*="from-rose"] { background: var(--calm-surface) !important; background-image: none !important; }
-.learning-accordion .text-violet-700, .learning-accordion .text-sky-700, .learning-accordion .text-fuchsia-700 { color: var(--calm-primary); }
-.learning-accordion .bg-violet-100, .learning-accordion .bg-sky-100, .learning-accordion .bg-fuchsia-100 { background: var(--calm-primary-soft); color: var(--calm-primary); }
-.neuro-ruler-toggle, .standalone-neuro-ruler-toggle { border-color: var(--calm-line) !important; background: var(--calm-surface) !important; color: var(--calm-ink) !important; box-shadow: none !important; }
+.learning-accordion[class*="from-rose"] {
+  background: var(--calm-surface) !important;
+  background-image: none !important;
+}
+.learning-accordion .text-violet-700,
+.learning-accordion .text-sky-700,
+.learning-accordion .text-fuchsia-700 {
+  color: var(--calm-primary);
+}
+.learning-accordion .bg-violet-100,
+.learning-accordion .bg-sky-100,
+.learning-accordion .bg-fuchsia-100 {
+  background: var(--calm-primary-soft);
+  color: var(--calm-primary);
+}
+.neuro-ruler-toggle,
+.standalone-neuro-ruler-toggle {
+  border-color: var(--calm-line) !important;
+  background: var(--calm-surface) !important;
+  color: var(--calm-ink) !important;
+  box-shadow: none !important;
+}
 
 /* Home: no entrance animations, flat navy hero, plain eyebrow. */
-.learning-home, .learning-home * { animation: none !important; }
-.learning-home .lh-hero { background: #1f3566; border-color: #1f3566; box-shadow: none; }
-.learning-home .lh-method { background: #263e70; border-inline-start-color: #35508a; }
-.learning-home .lh-method li > span { background: #35508a; border-color: #35508a; }
-.learning-home .lh-eyebrow { background: transparent; padding: 0; color: var(--calm-muted); font-weight: 600; letter-spacing: 0.08em; }
-.learning-home .lh-hero-copy > .lh-eyebrow { color: #c9d4ea; background: transparent; }
-.learning-home .lh-status-mark { background: #7fd1b0; }
-.learning-home .lh-primary { background: var(--calm-surface) !important; color: #1f3566 !important; }
-.learning-home .lh-metric, .learning-home .lh-course-list > a, .learning-home .lh-evidence, .learning-home .lh-week, .learning-home .lh-empty { box-shadow: none; border-color: var(--calm-line); }
-.learning-home :is(.lh-metric, .lh-course-list > a, .lh-settings):hover { transform: none; box-shadow: var(--shadow-sm); }
-.learning-home .lh-course-icon { background: var(--calm-primary-soft); color: var(--calm-primary); }
+.learning-home,
+.learning-home * {
+  animation: none !important;
+}
+.learning-home .lh-hero {
+  background: #1f3566;
+  border-color: #1f3566;
+  box-shadow: none;
+}
+.learning-home .lh-method {
+  background: #263e70;
+  border-inline-start-color: #35508a;
+}
+.learning-home .lh-method li > span {
+  background: #35508a;
+  border-color: #35508a;
+}
+.learning-home .lh-eyebrow {
+  background: transparent;
+  padding: 0;
+  color: var(--calm-muted);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.learning-home .lh-hero-copy > .lh-eyebrow {
+  color: #c9d4ea;
+  background: transparent;
+}
+.learning-home .lh-status-mark {
+  background: #7fd1b0;
+}
+.learning-home .lh-primary {
+  background: var(--calm-surface) !important;
+  color: #1f3566 !important;
+}
+.learning-home .lh-metric,
+.learning-home .lh-course-list > a,
+.learning-home .lh-evidence,
+.learning-home .lh-week,
+.learning-home .lh-empty {
+  box-shadow: none;
+  border-color: var(--calm-line);
+}
+.learning-home :is(.lh-metric, .lh-course-list > a, .lh-settings):hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+.learning-home .lh-course-icon {
+  background: var(--calm-primary-soft);
+  color: var(--calm-primary);
+}
 
 /* Conversation studio: the page carries its own violet variables. */
 html .conversation-page {
@@ -124,35 +231,94 @@ html .conversation-page {
   background: var(--calm-bg);
   font-family: var(--calm-font);
 }
-html .conversation-page .coach-glow::before { background: radial-gradient(circle, #e7edf7, #f3f6fb 65%, transparent 66%); animation: none; }
-html .conversation-page .coach-glow img { animation: none; }
+html .conversation-page .coach-glow::before {
+  background: radial-gradient(circle, #e7edf7, #f3f6fb 65%, transparent 66%);
+  animation: none;
+}
+html .conversation-page .coach-glow img {
+  animation: none;
+}
 html .conversation-page .coach-dialogue p,
 html .conversation-page .improve-panel,
 html .conversation-page .spoken-chunk-bank,
 html .conversation-page .conversation-filter,
 html .conversation-page .coach-card,
-html .conversation-page .sidebar { background: var(--calm-surface); border-color: var(--calm-line); box-shadow: none; }
+html .conversation-page .sidebar {
+  background: var(--calm-surface);
+  border-color: var(--calm-line);
+  box-shadow: none;
+}
 html .conversation-page .coach-topic span,
 html .conversation-page .mode > span,
 html .conversation-page .f4 > span,
-html .conversation-page .goal > span { background: var(--calm-primary-soft); color: var(--calm-primary); }
-html .conversation-page .steps { box-shadow: none; }
-html .conversation-page .steps .active { background: var(--calm-primary); }
-html .conversation-page .mic { border-color: var(--calm-primary-soft); box-shadow: 0 0 0 8px var(--calm-surface-2); }
-html .conversation-page .wave i { background: var(--calm-primary); }
-html .conversation-page .levels { display: none; }
-html .conversation-page button:hover { border-color: var(--calm-line-strong); transform: none; }
-html .conversation-page .mode { box-shadow: none; border: 1px solid var(--calm-line); }
-html .conversation-page .panel { box-shadow: none; }
-html .conversation-page .improve-compare article.better { border-color: var(--calm-line-strong); }
+html .conversation-page .goal > span {
+  background: var(--calm-primary-soft);
+  color: var(--calm-primary);
+}
+html .conversation-page .steps {
+  box-shadow: none;
+}
+html .conversation-page .steps .active {
+  background: var(--calm-primary);
+}
+html .conversation-page .mic {
+  border-color: var(--calm-primary-soft);
+  box-shadow: 0 0 0 8px var(--calm-surface-2);
+}
+html .conversation-page .wave i {
+  background: var(--calm-primary);
+}
+html .conversation-page .levels {
+  display: none;
+}
+html .conversation-page button:hover {
+  border-color: var(--calm-line-strong);
+  transform: none;
+}
+html .conversation-page .mode {
+  box-shadow: none;
+  border: 1px solid var(--calm-line);
+}
+html .conversation-page .panel {
+  box-shadow: none;
+}
+html .conversation-page .improve-compare article.better {
+  border-color: var(--calm-line-strong);
+}
 html .conversation-page .conversation-filter-grid select:focus-visible,
-html .conversation-page .transcript textarea:focus-visible { border-color: #3d5a9e; box-shadow: 0 0 0 3px rgba(61, 90, 158, 0.15); transform: none; }
-.conversation-filter-card { background: var(--calm-surface); border-color: var(--calm-line); box-shadow: none; }
-.conversation-path-field { border-color: var(--calm-line); box-shadow: none; }
-.conversation-path-field:focus-within { border-color: #3d5a9e; box-shadow: 0 0 0 3px rgba(61, 90, 158, 0.15); }
+html .conversation-page .transcript textarea:focus-visible {
+  border-color: #3d5a9e;
+  box-shadow: 0 0 0 3px rgba(61, 90, 158, 0.15);
+  transform: none;
+}
+.conversation-filter-card {
+  background: var(--calm-surface);
+  border-color: var(--calm-line);
+  box-shadow: none;
+}
+.conversation-path-field {
+  border-color: var(--calm-line);
+  box-shadow: none;
+}
+.conversation-path-field:focus-within {
+  border-color: #3d5a9e;
+  box-shadow: 0 0 0 3px rgba(61, 90, 158, 0.15);
+}
 .conversation-path-symbol,
-.conversation-path-field[data-tone="violet"] .conversation-path-symbol { background: var(--calm-primary-soft); color: var(--calm-primary); }
-.daily-context-bar { border-color: var(--calm-line); }
-.daily-context-bar button { border-color: var(--calm-primary); color: var(--calm-primary); }
-.daily-complete-card .primary { background: var(--calm-primary); }
-.daily-complete-backdrop { background: rgba(31, 41, 55, 0.5); }
+.conversation-path-field[data-tone="violet"] .conversation-path-symbol {
+  background: var(--calm-primary-soft);
+  color: var(--calm-primary);
+}
+.daily-context-bar {
+  border-color: var(--calm-line);
+}
+.daily-context-bar button {
+  border-color: var(--calm-primary);
+  color: var(--calm-primary);
+}
+.daily-complete-card .primary {
+  background: var(--calm-primary);
+}
+.daily-complete-backdrop {
+  background: rgba(31, 41, 55, 0.5);
+}

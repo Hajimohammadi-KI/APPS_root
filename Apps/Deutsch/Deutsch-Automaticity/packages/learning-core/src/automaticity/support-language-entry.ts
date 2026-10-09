@@ -54,6 +54,14 @@ function setup() {
   reference?.addEventListener("toggle", updateFallback);
   // Persist nothing during first render. Legacy controls own their matching key.
   controller.update({}); syncOriginal(); updateFallback();
+  // Static grammar renders its language buttons during its own DOMContentLoaded setup,
+  // after this deferred script; align once they exist and again after full load.
+  const legacyHost = document.getElementById("languageChoices") ?? document.getElementById("language-choices");
+  if (legacyHost && typeof MutationObserver !== "undefined") {
+    const observer = new MutationObserver(() => { if (legacyHost.querySelector("[data-language]")) { observer.disconnect(); syncOriginal(); updateFallback(); } });
+    observer.observe(legacyHost, { childList: true });
+  }
+  window.addEventListener("load", () => { syncOriginal(); updateFallback(); }, { once: true });
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setup, { once: true });
 else setup();

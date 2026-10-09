@@ -479,7 +479,7 @@ button.selected {
 /* Worksheet presentation. Stage selection, response storage and evidence stay unchanged. */
 :root {
   color: #08364a;
-  background: #fffefd;
+  background: #ffffff;
   font-family: "Segoe UI Variable", "Segoe UI", Tahoma, system-ui, sans-serif;
   line-height: 1.7;
   --worksheet-teal: #007f83;
@@ -676,7 +676,7 @@ summary:focus-visible {
   stroke: #007f83;
 }
 textarea {
-  background-color: #fffefd;
+  background-color: #ffffff;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0,

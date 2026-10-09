@@ -1,7 +1,7 @@
 /* R74–R76: worksheet presentation. Important declarations resolve earlier
    visual contracts; teaching content and all learner state remain untouched. */
 :root {
-  --worksheet-paper: #fffefd;
+  --worksheet-paper: #ffffff;
   --worksheet-ink: #08364a;
   --worksheet-teal: #007f83;
   --worksheet-teal-hover: #00676b;
@@ -545,6 +545,11 @@ textarea:focus-visible,
   .app-shell[data-screen] .app-sidebar {
     width: 264px;
     max-width: 264px;
+  }
+  /* The utility "hidden" class must not win over the desktop rail above the drawer breakpoint. */
+  .german-app-sidebar {
+    display: flex !important;
+    flex-direction: column;
   }
 }
 @media (max-width: 1180px) {

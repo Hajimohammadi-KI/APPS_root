@@ -4,7 +4,7 @@
 :lang(fa){font-family:Tahoma,"Segoe UI",sans-serif;letter-spacing:normal;word-spacing:normal}
 .prompt-instruction,.prompt-example{unicode-bidi:isolate;line-height:1.8}
 .prompt-instruction[dir=rtl]{display:block;text-align:right}
-.prompt-example{display:block;text-align:left;margin-block:10px;padding:10px 12px;background:#f2eef9;border-radius:9px}
+.prompt-example{display:block;text-align:left;margin-block:10px;padding:10px 12px;background:#fff;border:1px dashed #9bbfc2;border-radius:9px}
 #exercisePrompt{font-size:1.125rem;line-height:1.7;letter-spacing:normal;overflow-wrap:anywhere}
 .exercise-title>div,.answer-field,.content,.lesson-stack{min-width:0}
 .exercise-title>div{flex:1}

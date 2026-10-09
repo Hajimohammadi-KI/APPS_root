@@ -7,7 +7,7 @@
   --lav: var(--worksheet-cyan, #eaf6f7);
   font-size: 1rem;
   line-height: 1.6;
-  background: var(--worksheet-paper, #fffefd);
+  background: var(--worksheet-paper, #ffffff);
   display: block;
   box-shadow: var(--worksheet-shadow, 0 4px 14px rgba(8, 54, 74, 0.055));
   max-width: none;
@@ -39,7 +39,7 @@
   padding: 16px 24px 24px;
   border-bottom: 1px solid var(--worksheet-line, #dce9e8);
   display: block;
-  background: var(--worksheet-paper, #fffefd);
+  background: var(--worksheet-paper, #ffffff);
 }
 .conversation-page .studio-main > header h1 {
   font-family: var(--calm-font, "Segoe UI", Tahoma, sans-serif);

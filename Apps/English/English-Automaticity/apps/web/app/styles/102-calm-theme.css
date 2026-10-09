@@ -1,7 +1,7 @@
 /* R74–R76: worksheet presentation. Important declarations resolve earlier
    visual contracts; teaching content and all learner state remain untouched. */
 :root {
-  --worksheet-paper: #fffefd;
+  --worksheet-paper: #ffffff;
   --worksheet-ink: #08364a;
   --worksheet-teal: #007f83;
   --worksheet-teal-hover: #00676b;

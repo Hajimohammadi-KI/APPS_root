@@ -1,13 +1,13 @@
 /* R66: scoped to the home screen; preserves learner reading preferences. */
 .learning-home {
-  --lh-ink: #202b3b;
-  --lh-muted: #526075;
-  --lh-primary: #354f8c;
-  --lh-primary-hover: #263d73;
-  --lh-line: #d9dcd9;
+  --lh-ink: #0F2547;
+  --lh-muted: #64748B;
+  --lh-primary: #153B80;
+  --lh-primary-hover: #0F2547;
+  --lh-line: #D8E3F0;
   --lh-paper: #ffffff;
-  --lh-soft: #f0f3fa;
-  --lh-positive: #305d50;
+  --lh-soft: #EFF6FF;
+  --lh-positive: #059669;
   color: var(--lh-ink);
   font-size: 1rem;
   line-height: 1.6;
@@ -115,10 +115,15 @@
 .lh-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-  border: 1px solid #d1d9e9;
+  border: 1px solid var(--lh-line);
   border-radius: 24px;
-  background: #eef2fa;
+  background: var(--lh-soft);
   overflow: hidden;
+}
+@media (max-width: 768px) {
+  .lh-hero {
+    grid-template-columns: 1fr;
+  }
 }
 .lh-hero-copy {
   padding: clamp(24px, 3.5vw, 44px);
@@ -172,12 +177,19 @@
   height: 16px;
 }
 .lh-method {
-  background: #f8f9fc;
-  border-inline-start: 1px solid #d1d9e9;
+  background: #F3F7FC;
+  border-inline-start: 1px solid var(--lh-line);
   padding: clamp(24px, 3.5vw, 40px);
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+@media (max-width: 768px) {
+  .lh-method {
+    border-inline-start: none;
+    border-top: 1px solid var(--lh-line);
+    padding: clamp(16px, 3.5vw, 24px);
+  }
 }
 .lh-method ol {
   padding: 20px 0;
@@ -199,11 +211,12 @@
   width: 32px;
   height: 32px;
   flex-shrink: 0;
-  border: 1px solid #c5d0e5;
-  background: white;
+  border: 2px solid var(--lh-primary);
+  background: var(--lh-soft);
   color: var(--lh-primary);
   border-radius: 50%;
   font-size: 0.875rem;
+  font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
 .lh-method > p {
@@ -222,8 +235,13 @@
 }
 .lh-metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
+}
+@media (max-width: 768px) {
+  .lh-metrics {
+    grid-template-columns: 1fr;
+  }
 }
 .lh-metric {
   display: flex;
@@ -235,7 +253,8 @@
 }
 .lh-metric:hover {
   border-color: var(--lh-primary);
-  background: #fcfcff;
+  background: var(--lh-soft);
+  box-shadow: 0 4px 12px rgba(21, 59, 128, 0.08);
 }
 .lh-metric-label {
   display: flex;
@@ -274,11 +293,11 @@
   height: 6px;
   border-radius: 99px;
   overflow: hidden;
-  background: #e3e8ef;
+  background: #D8E3F0;
   margin-top: 14px;
 }
 .lh-metric progress::-webkit-progress-bar {
-  background: #e3e8ef;
+  background: #D8E3F0;
 }
 .lh-metric progress::-webkit-progress-value {
   background: var(--lh-primary);
@@ -298,6 +317,12 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 28px;
+}
+@media (max-width: 768px) {
+  .lh-bottom-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 .lh-week,
 .lh-explore {
@@ -353,7 +378,7 @@
   justify-content: center;
   gap: 10px;
   background: var(--lh-paper);
-  border: 1px dashed #aeb7c6;
+  border: 2px dashed var(--lh-line);
   border-radius: 16px;
   padding: 26px;
   min-height: 220px;
@@ -493,7 +518,7 @@
   }
   .lh-method {
     border-inline-start: 0;
-    border-top: 1px solid #d1d9e9;
+    border-top: 1px solid var(--lh-line);
   }
   .lh-method ol {
     grid-template-columns: minmax(0, 1fr);

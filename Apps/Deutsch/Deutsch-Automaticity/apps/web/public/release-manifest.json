@@ -1,12 +1,11 @@
 {
   "publishedAt": "2026-10-09",
   "version": "20.9.4",
-  "webRelease": "2026.10.09.3",
+  "webRelease": "2026.10.09.4",
   "changes": [
-    "Restore local app startup and repair English CSS build syntax; verify the existing local URLs.",
-    "Ein ruhiges Design auf allen Seiten: Dunkelblau auf Weiß, eine Schriftfamilie, flache Flächen",
-    "Seitenleiste am Desktop wieder sichtbar; Fortschrittsbereich „Bisherige Übungswerte“ wieder lesbar; Produktname überall DeutschFlow",
-    "Tagesplan ohne Maskottchen und Fortschrittsring, mit derselben Navigation wie alle anderen Seiten; Gesprächsstudio in der gemeinsamen Farbwelt",
-    "Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
+    "Arbeitsblatt-Design nach den Vorlagen: weißes Papier, dunkelblaue Titel, türkise Abschnittsreiter, hellblaue Aufgabenfelder, gelbe Hinweisfelder und gestrichelte Antwortfelder auf allen Seiten",
+    "Übung zeigt die echte Lernphase (1 bis 3 von 3) über jeder Aufgabe; die sieben Schritte und Beherrschungskriterien bleiben gleich",
+    "Erklärungssprache (Persisch, Englisch oder Deutsch) in Übung, Grammatik-Labor und Heute; Persisch bis zur eigenen Wahl, Auswahl und Entwurf bleiben erhalten",
+    "Seitenleiste am Desktop zuverlässig sichtbar; Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
   ]
 }

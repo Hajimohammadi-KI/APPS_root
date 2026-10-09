@@ -414,10 +414,9 @@ export function AppShell() {
 							<a
 								href="/roadmap.html"
 								className="inline-flex min-h-11 shrink-0 items-center rounded-lg border px-3 text-sm font-semibold"
-								lang="fa"
-								dir="rtl"
+								hrefLang="fa"
 							>
-								رودمپ
+								Roadmap
 							</a>
 							<ApiConnectionStatus baseUrl={state.settings.apiBaseUrl} />
 							<NeuroReader

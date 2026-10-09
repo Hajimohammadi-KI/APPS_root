@@ -52,14 +52,6 @@ const navigationConfig = {
   }
 };
 
-const iconMap: Record<string, React.ReactNode> = {
-  "⌂": <House aria-hidden="true" />,
-  "▶": <Play aria-hidden="true" />,
-  "▣": null,
-  "▢": null,
-  "◷": <ChartNoAxesCombined aria-hidden="true" />,
-};
-
 /** Shared route presentation only; existing exercise and storage logic stays in its app. */
 export function LearningNavigation({
   language,
@@ -132,8 +124,8 @@ export function LearningNavigation({
         <Settings aria-hidden="true" />
         <span>{en ? "Settings" : "Einstellungen"}</span>
       </a>
-      <a className="ln-roadmap" href="/roadmap.html" lang="fa" dir="rtl">
-        رودمپ و وضعیت اصلاحات
+      <a className="ln-roadmap" href="/roadmap.html" hrefLang="fa">
+        {en ? "Roadmap & improvements" : "Roadmap & Verbesserungen"}
       </a>
     </nav>
   );

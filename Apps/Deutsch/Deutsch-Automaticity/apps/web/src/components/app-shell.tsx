@@ -56,8 +56,8 @@ export function AppShell({
                 />
                 <UserGuideButton />
                 <InstallAppButton surface="header" />
-                <a href="/roadmap.html" lang="fa" dir="rtl">
-                  رودمپ
+                <a href="/roadmap.html" hrefLang="fa">
+                  Roadmap
                 </a>
                 <p>Web · {webRelease.release}</p>
               </div>

@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
 	canonicalScreenId,
+	isAppShellPath,
 	legacyScreenRedirect,
 	screenHref,
 	screenIds,
@@ -48,6 +49,15 @@ describe("English screen routes", () => {
 			"/?lang=fa",
 		);
 		expect(legacyScreenRedirect({ screen: "home" })).toBe("/");
+	});
+
+	test("shell screens are told apart from standalone pages", () => {
+		for (const path of ["/", "/progress", "/errors", "/library"]) {
+			expect(isAppShellPath(path)).toBe(true);
+		}
+		for (const path of ["/settings", "/studio", "/daily", "/grammar", null]) {
+			expect(isAppShellPath(path)).toBe(false);
+		}
 	});
 
 	test("ordinary home visits are not redirected", () => {

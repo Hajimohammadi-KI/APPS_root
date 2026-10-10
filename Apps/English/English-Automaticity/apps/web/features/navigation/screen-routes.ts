@@ -32,6 +32,21 @@ export const screenPaths: Record<ScreenId, string> = {
 	teacher: "/teacher",
 };
 
+// Screens rendered inside the AppShell (its top bar already carries the
+// reading-ruler control); every other path is a standalone page.
+export const appShellScreens: readonly ScreenId[] = [
+	"home",
+	"progress",
+	"integrated-skills",
+	"resources",
+	"errors",
+	"library",
+];
+
+export function isAppShellPath(pathname: string | null | undefined) {
+	return appShellScreens.some((screen) => screenPaths[screen] === pathname);
+}
+
 // "automaticity" was the daily screen's name before it became /daily.
 const legacyScreenAliases: Record<string, ScreenId> = { automaticity: "daily" };
 

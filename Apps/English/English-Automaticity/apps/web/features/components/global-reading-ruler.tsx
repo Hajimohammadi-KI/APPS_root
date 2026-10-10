@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
+import { isAppShellPath } from "@/features/navigation/screen-routes";
 import { useAppStore } from "@/features/store/app-store";
 
 export function GlobalReadingRuler() {
@@ -12,7 +13,7 @@ export function GlobalReadingRuler() {
   const [rulerHeight, setRulerHeight] = useState(
     Math.round(32 * (state.settings.textScale / 100)),
   );
-  const isStandalonePage = pathname !== "/";
+  const isStandalonePage = !isAppShellPath(pathname);
   const enabled = state.settings.readingRuler;
 
   useEffect(() => {

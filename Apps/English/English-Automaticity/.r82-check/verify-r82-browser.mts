@@ -18,13 +18,21 @@ for (const width of [390, 1280]) {
   check(/Error Workshop/.test(await page.locator(".app-topbar").innerText()), `${width}px /errors shows the Error Workshop title`);
 
   if (width === 390) await page.locator("#mobile-menu-trigger").click();
-  await page.locator('.learning-navigation details.ln-more summary').click();
+  const more = page.locator(".learning-navigation details.ln-more");
+  check((await more.getAttribute("open")) !== null, `${width}px /errors opens the tool group that contains it`);
+  if ((await more.getAttribute("open")) === null) await more.locator("summary").click();
   await page.locator('.learning-navigation a[href="/library"]').click();
   await page.waitForURL(`${base}/library`);
   check(/Audio Library/.test(await page.locator(".app-topbar").innerText()), `${width}px menu link opens /library`);
 
   // In-app navigate() now uses the Next router; /daily is a rewrite to a static page.
-  await page.locator('summary:has-text("Tools")').click();
+  const toolsSummary = page.locator("details.app-tools > summary");
+  const box = await toolsSummary.boundingBox();
+  const covering = box
+    ? await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.closest("summary, label")?.className ?? "", [box.x + box.width / 2, box.y + box.height / 2])
+    : "";
+  check(!covering.includes("neuro-ruler"), `${width}px "Tools & help" is not covered by the reading-ruler toggle (${covering || "clear"})`);
+  await page.locator("details.app-tools").evaluate((node) => { (node as HTMLDetailsElement).open = true; });
   await page.locator('button[aria-label="Open help"]').click();
   await page.locator('button:has-text("Start with Step 1")').click();
   await page.waitForURL(`${base}/daily**`, { timeout: 15000 });

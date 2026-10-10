@@ -6,6 +6,8 @@ import { grammarUnits } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Notice } from "@/components/ui/notice";
+import { PageHeading } from "@/components/ui/page-heading";
 import {
   Empty,
   EmptyDescription,
@@ -75,18 +77,15 @@ export function ErrorsScreen() {
           Review and repair responses from independent practice
         </a>
       </Button>
-      <div className="page-heading">
-        <div>
-          <h1>Error Workshop</h1>
-          <p>
-            Personal language errors are organized, merged, and re-practiced as
-            correction, explanation, review, and transfer.
-          </p>
-        </div>
-        <Badge variant={errors.length > 0 ? "warning" : "success"}>
-          {errors.length} {filter === "all" ? "saved" : "active"}
-        </Badge>
-      </div>
+      <PageHeading
+        actions={
+          <Badge variant={errors.length > 0 ? "warning" : "success"}>
+            {errors.length} {filter === "all" ? "saved" : "active"}
+          </Badge>
+        }
+        description="Personal language errors are organized, merged, and re-practiced as correction, explanation, review, and transfer."
+        title="Error Workshop"
+      />
 
       <Card>
         <CardContent className="pt-5">
@@ -163,18 +162,18 @@ export function ErrorsScreen() {
               </CardHeader>
               <CardContent>
                 <div className="grid gap-3 md:grid-cols-2">
-                  <div className="rounded-xl border border-red-200 bg-red-50 p-3">
+                  <Notice tone="danger">
                     <p className="text-xs font-bold uppercase text-red-700">
                       Original
                     </p>
                     <p className="mt-1 text-sm">{selected.originalText}</p>
-                  </div>
-                  <div className="rounded-xl border border-primary/25 bg-primary/5 p-3">
-                    <p className="text-xs font-bold uppercase text-primary">
+                  </Notice>
+                  <Notice tone="success">
+                    <p className="text-xs font-bold uppercase text-emerald-700">
                       Corrected
                     </p>
                     <p className="mt-1 text-sm">{selected.correctedText}</p>
-                  </div>
+                  </Notice>
                 </div>
                 <p className="mt-3 text-sm leading-6">
                   <strong>Reason:</strong> {selected.explanation}

@@ -6,6 +6,7 @@ import { onlineResources } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageHeading } from "@/components/ui/page-heading";
 import {
 	Accordion,
 	AccordionContent,
@@ -36,16 +37,11 @@ export function ResourcesScreen() {
 
 	return (
 		<div className="page-stack">
-			<div className="page-heading">
-				<div>
-					<h1>Online Learning Resources</h1>
-					<p>
-						All 43 verified legacy collections and tests. Every link goes
-						directly to the exact skill or level page, not a generic homepage.
-					</p>
-				</div>
-				<Badge>{rows.length} direct resources</Badge>
-			</div>
+			<PageHeading
+				actions={<Badge>{rows.length} direct resources</Badge>}
+				description="All 43 verified legacy collections and tests. Every link goes directly to the exact skill or level page, not a generic homepage."
+				title="Online Learning Resources"
+			/>
 			<Card>
 				<CardContent className="pt-5">
 					<div className="grid gap-3 md:grid-cols-3">

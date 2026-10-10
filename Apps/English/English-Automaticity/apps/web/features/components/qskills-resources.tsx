@@ -6,6 +6,7 @@ import type { CefrLevel } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Notice } from "@/components/ui/notice";
 
 type AssetKind = "audio" | "video" | "document";
 type Asset = { kind: AssetKind; label: string; path: string };
@@ -124,9 +125,9 @@ export function QSkillsResources({ cefr }: { cefr: CefrLevel }) {
       <CardContent className="space-y-4">
         {loading ? <p className="text-sm text-slate-700">Checking your local QSkills library…</p> : null}
         {!loading && !catalog?.available ? (
-          <p className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
+          <Notice tone="warning">
             QSkills was not found at the local course location. The automaticity mission still works, but companion audio, video, and book files are unavailable on this device.
-          </p>
+          </Notice>
         ) : null}
         {!loading && catalog?.available ? (
           <>

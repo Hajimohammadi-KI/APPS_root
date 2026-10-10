@@ -3,6 +3,7 @@
 import * as React from "react";
 import { KeyRound, Save, Unplug } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Disclosure } from "@/components/ui/disclosure";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
@@ -68,14 +69,18 @@ export function AIProviderSettings({
   }
 
   return (
-    <details className="rounded-xl border p-4">
-      <summary className="flex cursor-pointer items-center gap-2 text-sm font-bold">
-        <KeyRound aria-hidden className="size-4" />
-        Connected AI for "Explain More"
-        <span className="ml-auto text-xs font-medium text-muted-foreground">
-          {status?.connected ? status.providerLabel : "Optional"}
-        </span>
-      </summary>
+    <Disclosure
+      summary={
+        <>
+          <KeyRound aria-hidden className="size-4" />
+          Connected AI for "Explain More"
+          <span className="ml-auto text-xs font-medium text-muted-foreground">
+            {status?.connected ? status.providerLabel : "Optional"}
+          </span>
+        </>
+      }
+      variant="boxed"
+    >
       <div className="mt-4 grid gap-4">
         <p className="text-sm leading-6 text-muted-foreground">
           A ChatGPT subscription is not an API connection. Use an API key from
@@ -189,6 +194,6 @@ export function AIProviderSettings({
           </p>
         ) : null}
       </div>
-    </details>
+    </Disclosure>
   );
 }

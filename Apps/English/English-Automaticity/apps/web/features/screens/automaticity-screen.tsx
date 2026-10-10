@@ -22,6 +22,8 @@ import {
 } from "@automaticity/learning-core";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Notice } from "@/components/ui/notice";
+import { PageHeading } from "@/components/ui/page-heading";
 import {
   Card,
   CardContent,
@@ -669,27 +671,25 @@ export function AutomaticityScreen({
   return (
     <div className="page-stack">
       {!embedded ? (
-        <div className="page-heading automaticity-hero">
-          <div>
-            <Badge>Today · {missionMinutes} minutes</Badge>
-            <h1>Automaticity Mission</h1>
-            <p>
-              Activate, use accurately, automate aloud, and transfer into free
-              speech. The mission ends with saved evidence, not a simple click.
-            </p>
-          </div>
-          <Button
-            className="automaticity-hero-action"
-            size="lg"
-            onClick={() =>
-              document
-                .getElementById("mission")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-          >
-            <Play className="size-4" /> Start evidence practice
-          </Button>
-        </div>
+        <PageHeading
+          actions={
+            <Button
+              className="automaticity-hero-action"
+              size="lg"
+              onClick={() =>
+                document
+                  .getElementById("mission")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+            >
+              <Play className="size-4" /> Start evidence practice
+            </Button>
+          }
+          className="automaticity-hero"
+          description="Activate, use accurately, automate aloud, and transfer into free speech. The mission ends with saved evidence, not a simple click."
+          eyebrow={<Badge>Today · {missionMinutes} minutes</Badge>}
+          title="Automaticity Mission"
+        />
       ) : focusedStep === undefined ? (
         <Card className="border-violet-300 bg-violet-50/70">
           <CardHeader>
@@ -1042,14 +1042,11 @@ export function AutomaticityScreen({
                 </Badge>
               </div>
               {/* External app checks are evidence signals, not a teacher decision. */}
-              <p
-                className="rounded-xl border border-violet-200 bg-violet-50 p-3 text-sm"
-                role="note"
-              >
+              <Notice role="note" tone="info">
                 <strong>Teacher-verified mastery:</strong> not recorded. The
                 score above is externally app-checked evidence and remains
                 labelled separately from human verification.
-              </p>
+              </Notice>
             </CardContent>
           </Card>
           <Card>
@@ -1089,10 +1086,10 @@ export function AutomaticityScreen({
               {(journalAnalysis?.issues.length ?? 0) +
                 (speechAnalysis?.issues.length ?? 0) >
               0 ? (
-                <p className="mt-3 flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-sm">
+                <Notice className="mt-3 flex items-start gap-2" tone="warning">
                   <CircleAlert className="mt-0.5 size-4 shrink-0" /> Detected
                   errors were also added to Error Workshop for spaced repair.
-                </p>
+                </Notice>
               ) : null}
             </CardContent>
           </Card>

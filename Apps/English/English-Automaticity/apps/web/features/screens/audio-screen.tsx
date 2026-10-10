@@ -11,6 +11,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Notice } from "@/components/ui/notice";
+import { PageHeading } from "@/components/ui/page-heading";
 import {
   Empty,
   EmptyDescription,
@@ -87,18 +89,18 @@ function AudioRecordCard({
         <track kind="captions" />
       </audio>
       <div className="mt-3 grid gap-3 md:grid-cols-2">
-        <div className="rounded-xl border bg-slate-50 p-3 text-sm">
+        <Notice>
           <p className="text-xs font-bold uppercase text-muted-foreground">
             Transcript
           </p>
           <p className="mt-1 leading-6">{record.transcript}</p>
-        </div>
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm">
+        </Notice>
+        <Notice tone="success">
           <p className="text-xs font-bold uppercase text-emerald-700">
             Corrected model
           </p>
           <p className="mt-1 leading-6">{record.corrected}</p>
-        </div>
+        </Notice>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         <Button onClick={() => speak(record.corrected)} variant="secondary">
@@ -143,19 +145,16 @@ export function AudioScreen() {
 
   return (
     <div className="page-stack">
-      <div className="page-heading">
-        <div>
-          <h1>Audio Library</h1>
-          <p>
-            Local legacy recordings combine original voice, transcript,
-            corrected model, listening comparison, and clear review status.
-          </p>
-        </div>
-        <Button onClick={refresh} variant="outline">
-          <RefreshCcw aria-hidden className="size-4" />
-          Refresh
-        </Button>
-      </div>
+      <PageHeading
+        actions={
+          <Button onClick={refresh} variant="outline">
+            <RefreshCcw aria-hidden className="size-4" />
+            Refresh
+          </Button>
+        }
+        description="Local legacy recordings combine original voice, transcript, corrected model, listening comparison, and clear review status."
+        title="Audio Library"
+      />
       {loading ? (
         <Card>
           <CardContent className="pt-5 text-sm text-muted-foreground">

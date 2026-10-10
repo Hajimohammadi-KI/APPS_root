@@ -17,7 +17,7 @@
     "content:sync": "bun scripts/sync-grammar-replacement.ts",
     "content:check": "bun scripts/sync-grammar-replacement.ts --check",
     "typecheck": "bun run --cwd packages/content typecheck && bun run --cwd apps/api typecheck && bun run --cwd apps/web typecheck",
-    "test": "bun test packages/content/src/content.test.ts apps/web/app/studio/source/conversation-data.test.ts apps/web/lib/assessment.test.ts apps/web/lib/automaticity-analysis.test.ts apps/web/lib/adaptive-daily-plan.test.ts apps/web/lib/learning-home.test.tsx apps/web/lib/pdf-reader-link.test.ts apps/web/lib/deepl-integration.test.ts apps/web/features/navigation/screen-routes.test.ts apps/web/proxy.test.ts && bun run --cwd apps/api test",
+    "test": "bun test packages/content/src/content.test.ts apps/web/app/studio/source/conversation-data.test.ts apps/web/lib/assessment.test.ts apps/web/lib/automaticity-analysis.test.ts apps/web/lib/adaptive-daily-plan.test.ts apps/web/lib/learning-home.test.tsx apps/web/lib/pdf-reader-link.test.ts apps/web/lib/deepl-integration.test.ts apps/web/features/navigation/screen-routes.test.ts apps/web/proxy.test.ts apps/web/components/ui/primitives.test.tsx && bun run --cwd apps/api test",
     "test:e2e": "playwright test",
     "test:installer": "bun test scripts/windows-installer.test.ts",
     "legacy:preview": "bun scripts/serve-legacy.ts",

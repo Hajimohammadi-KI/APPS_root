@@ -32,6 +32,7 @@ import {
 	type MeasurementConsent,
 } from "@automaticity/learning-core";
 import { Button } from "@/components/ui/button";
+import { PageHeading } from "@/components/ui/page-heading";
 import {
 	Card,
 	CardContent,
@@ -230,21 +231,19 @@ export function SettingsScreen() {
 
 	return (
 		<div className="page-stack settings-screen">
-			<div className="page-heading settings-heading">
-				<div>
-					<h1>Settings</h1>
-					<p>
-						Reading, focus, grammar-accuracy, and local backup preferences.
-						Changes apply immediately and stay on this device.
-					</p>
-				</div>
-				<Button asChild variant="outline">
-					<Link href="/">
-						<House aria-hidden className="size-4" />
-						Back to Home
-					</Link>
-				</Button>
-			</div>
+			<PageHeading
+				actions={
+					<Button asChild variant="outline">
+						<Link href="/">
+							<House aria-hidden className="size-4" />
+							Back to Home
+						</Link>
+					</Button>
+				}
+				className="settings-heading"
+				description="Reading, focus, grammar-accuracy, and local backup preferences. Changes apply immediately and stay on this device."
+				title="Settings"
+			/>
 
 			<Card>
 				<CardHeader>

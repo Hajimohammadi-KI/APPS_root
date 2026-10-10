@@ -1,5 +1,6 @@
 "use client";
 import { LearningNavigation } from "@/components/learning-navigation";
+import { Disclosure } from "@/components/ui/disclosure";
 import {AutomaticityEvidenceSummary} from "@/features/components/automaticity-evidence-summary";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -1544,7 +1545,7 @@ export default function Home() {
             </section>
           </aside></details>
         </div>
-<details className="quiet-disclosure studio-saved-evidence"><summary>Saved responses & learning evidence</summary><div><AutomaticityEvidenceSummary /></div></details>
+<Disclosure className="studio-saved-evidence" summary="Saved responses & learning evidence"><AutomaticityEvidenceSummary /></Disclosure>
         <footer>
           <div className="turns">
             <b>

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Languages, X } from "lucide-react";
+import { Notice } from "@/components/ui/notice";
 import { translateWithGoogle } from "@/lib/desktop-deepl";
 
 const targets = { DE: "German", EN: "English", FA: "Persian" } as const;
@@ -58,7 +59,7 @@ export function DeepLSelectionTranslator() {
         <label className="mt-3 grid gap-1 text-sm font-semibold">Target language<select className="h-10 rounded-lg border border-violet-300 bg-white px-3" value={target} onChange={(event) => setTarget(event.target.value as keyof typeof targets)}>{Object.entries(targets).map(([code, label]) => <option key={code} value={code}>{label}</option>)}</select></label>
         <button type="button" className="mt-3 min-h-11 w-full rounded-xl bg-violet-700 px-4 font-bold text-white disabled:opacity-60" disabled={busy} onClick={() => void translate()}>{busy ? "Translating…" : "Translate"}</button>
         {translation ? <div className="mt-3 rounded-xl border border-violet-300 p-3"><strong className="text-sm">Translation</strong><p className="mt-1 whitespace-pre-wrap leading-6">{translation}</p></div> : null}
-        {message ? <p className="mt-3 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm leading-6" role="alert">{message}</p> : null}
+        {message ? <Notice className="mt-3" role="alert" tone="warning">{message}</Notice> : null}
       </section> : null}
     </div>
   );

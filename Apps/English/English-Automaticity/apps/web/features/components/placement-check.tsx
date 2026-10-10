@@ -4,6 +4,7 @@ import * as React from "react";
 import { CheckCircle2, ClipboardCheck } from "lucide-react";
 import type { CefrLevel } from "@grammar/content";
 import { Button } from "@/components/ui/button";
+import { Disclosure } from "@/components/ui/disclosure";
 import { Select } from "@/components/ui/select";
 
 interface PlacementQuestion {
@@ -114,10 +115,11 @@ export function PlacementCheck({
   const complete = Object.keys(answers).length === QUESTIONS.length;
 
   return (
-    <details className="rounded-xl border bg-secondary p-4">
-      <summary className="cursor-pointer font-bold">
-        Open optional placement check
-      </summary>
+    <Disclosure
+      className="bg-secondary"
+      summary="Open optional placement check"
+      variant="boxed"
+    >
       <p className="mt-2 text-sm text-muted-foreground">
         This 12-question check suggests a starting level. It is optional and
         does not verify CEFR level; speaking and writing evidence still decides
@@ -179,6 +181,6 @@ export function PlacementCheck({
           recommendation, not a certificate.
         </p>
       ) : null}
-    </details>
+    </Disclosure>
   );
 }

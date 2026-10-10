@@ -23,6 +23,7 @@ import {
 	X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Disclosure } from "@/components/ui/disclosure";
 import { AppUpdateNotice } from "@/features/components/app-update-notice";
 import { ApiConnectionStatus } from "@/features/components/api-connection-status";
 import { InstallAppControl } from "@/features/components/install-app-control";
@@ -167,12 +168,9 @@ function ProgressScreen() {
 				</p>
 			</header>
 			<AutomaticityEvidenceSummary />
-			<details className="quiet-disclosure">
-				<summary>Additional practice &amp; earlier learning tools</summary>
-				<div>
-					<AutomaticityScreen />
-				</div>
-			</details>
+			<Disclosure summary="Additional practice & earlier learning tools">
+				<AutomaticityScreen />
+			</Disclosure>
 		</div>
 	);
 }
@@ -346,12 +344,9 @@ export function AppShell({ screen = "home" }: { screen?: ScreenId }) {
 				{/* ── Content ─────────────────────────────────────────────────── */}
 				<div className="app-content" data-screen={screen}>
 					{screen === "errors" && (
-						<details className="quiet-disclosure">
-							<summary>Saved responses &amp; learning evidence</summary>
-							<div>
-								<AutomaticityEvidenceSummary />
-							</div>
-						</details>
+						<Disclosure summary="Saved responses & learning evidence">
+							<AutomaticityEvidenceSummary />
+						</Disclosure>
 					)}
 
 					{screen === "home" && <DashboardV2Screen />}

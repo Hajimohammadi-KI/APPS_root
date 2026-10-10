@@ -3,6 +3,8 @@
 import { ExternalLink, Volume2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Disclosure } from "@/components/ui/disclosure";
+import { Notice } from "@/components/ui/notice";
 import type { Evaluation } from "@/lib/assessment";
 import { issueType } from "@/lib/assessment";
 import { speak } from "@/lib/speech";
@@ -126,7 +128,7 @@ export function EvaluationResult({ evaluation }: { evaluation: Evaluation }) {
         </Button>
       </div>
       {evaluation.correctionReview ? (
-        <div className="mt-3 rounded-xl border bg-amber-50/70 p-3 text-sm leading-6">
+        <Notice className="mt-3" tone="warning">
           <p className="font-semibold">Correction review:</p>
           <p>
             <strong>Learner sentence:</strong> {evaluation.correctionReview.learnerSentence}
@@ -140,15 +142,15 @@ export function EvaluationResult({ evaluation }: { evaluation: Evaluation }) {
           <p>
             <strong>Explanation:</strong> {evaluation.correctionReview.explanation}
           </p>
-        </div>
+        </Notice>
       ) : null}
       {evaluation.taskExample ? (
-        <div className="mt-3 rounded-xl border border-violet-400 bg-violet-50/80 p-3 text-sm leading-6">
+        <Notice className="mt-3" tone="info">
           <strong>Example that answers this task:</strong>{" "}
           {evaluation.taskExample}
-        </div>
+        </Notice>
       ) : null}
-      <div className="mt-3 space-y-3 rounded-xl border bg-slate-50/80 p-3 text-sm leading-6">
+      <Notice className="mt-3 space-y-3">
         <div>
           <strong>Language feedback</strong>
         </div>
@@ -176,11 +178,12 @@ export function EvaluationResult({ evaluation }: { evaluation: Evaluation }) {
             ))}
           </ul>
         </div>
-      </div>
-      <details className="mt-3 rounded-xl border bg-white/80 p-3 text-sm">
-        <summary className="cursor-pointer font-semibold">
-          More feedback for the next attempt
-        </summary>
+      </Notice>
+      <Disclosure
+        className="mt-3 bg-white/80 p-3"
+        summary="More feedback for the next attempt"
+        variant="boxed"
+      >
         <div className="mt-3 grid gap-2 leading-6">
           <p>
             <strong>Pronunciation:</strong>{" "}
@@ -199,7 +202,7 @@ export function EvaluationResult({ evaluation }: { evaluation: Evaluation }) {
             {evaluation.conversationFeedback.partB.next_step}
           </p>
         </div>
-      </details>
+      </Disclosure>
       {evaluation.targetUses < evaluation.required ? (
         <p className="mt-3 text-sm">
           <strong>Missing target structure:</strong> Use "

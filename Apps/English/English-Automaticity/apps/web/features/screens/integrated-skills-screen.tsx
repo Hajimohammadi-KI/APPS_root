@@ -30,6 +30,7 @@ import {
 } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Notice } from "@/components/ui/notice";
 import {
   Card,
   CardContent,
@@ -926,11 +927,11 @@ export function IntegratedSkillsScreen({
                 {step.responsePrompt}
               </p>
               {reviewLocked ? (
-                <p className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm font-bold leading-6 text-amber-950">
+                <Notice className="mt-4 font-bold" tone="warning">
                   {reviewDue
                     ? `Delayed recall opens ${formatDueTime(reviewDue)}.`
                     : "Complete the transfer stage first. Your delayed recall will open the next day."}
-                </p>
+                </Notice>
               ) : null}
               <Textarea
                 aria-label="Integrated skills evidence"

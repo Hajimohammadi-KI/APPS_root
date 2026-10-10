@@ -783,7 +783,7 @@ export default function Home() {
             aria-label="Integrated Skills navigation"
           >
             <button
-              onClick={() => returnToPriorContext("/?screen=integrated-skills")}
+              onClick={() => returnToPriorContext("/integrated-skills")}
             >
               ← Integrated Skills
             </button>
@@ -792,7 +792,7 @@ export default function Home() {
               {integratedContext.title}
             </strong>
             <button
-              onClick={() => returnToPriorContext("/?screen=integrated-skills")}
+              onClick={() => returnToPriorContext("/integrated-skills")}
             >
               Return to lesson
             </button>

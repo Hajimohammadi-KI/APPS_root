@@ -5,16 +5,16 @@
       { "href": "/practice", "label": "My practice", "icon": "▶" },
       { "href": "/grammar", "label": "Grammar", "icon": "▣" },
       { "href": "/studio", "label": "Conversation", "icon": "▢" },
-      { "href": "/?screen=progress", "label": "My progress", "icon": "◷" }
+      { "href": "/progress", "label": "My progress", "icon": "◷" }
     ],
     "more": [
       { "href": "/daily", "label": "Daily activities" },
       { "href": "/flashcards", "label": "Vocabulary & flashcards" },
       { "href": "/notebook", "label": "Notebook & PDF reader" },
-      { "href": "/?screen=integrated-skills", "label": "Integrated skills" },
-      { "href": "/?screen=resources", "label": "Learning resources" },
-      { "href": "/?screen=errors", "label": "Error workshop" },
-      { "href": "/?screen=library", "label": "Audio library" },
+      { "href": "/integrated-skills", "label": "Integrated skills" },
+      { "href": "/resources", "label": "Learning resources" },
+      { "href": "/errors", "label": "Error workshop" },
+      { "href": "/library", "label": "Audio library" },
       { "href": "/teacher", "label": "Teacher studio" }
     ],
     "settings": "/settings"

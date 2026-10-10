@@ -4,6 +4,7 @@ import { AutomaticityEvidenceSummary } from "./components/automaticity-evidence-
 import * as React from "react";
 import { LearningNavigation } from "@/components/learning-navigation";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import {
 	BookOpenText,
 	BrainCircuit,
@@ -27,6 +28,13 @@ import { ApiConnectionStatus } from "@/features/components/api-connection-status
 import { InstallAppControl } from "@/features/components/install-app-control";
 import { NeuroReader } from "@/features/components/neuro-reader";
 import { DashboardV2Screen } from "@/features/screens/dashboard-v2-screen";
+import {
+	canonicalScreenId,
+	type ScreenId,
+	type ScreenParams,
+	screenHref,
+	screenPaths,
+} from "@/features/navigation/screen-routes";
 import { useAppStore } from "@/features/store/app-store";
 import { UserGuideButton } from "@/features/user-guide";
 
@@ -55,21 +63,6 @@ const AudioScreen = dynamic(() =>
 		(module) => module.AudioScreen,
 	),
 );
-
-type ScreenId =
-	| "home"
-	| "studio"
-	| "daily"
-	| "progress"
-	| "grammar"
-	| "integrated-skills"
-	| "resources"
-	| "errors"
-	| "library"
-	| "notebook"
-	| "flashcards"
-	| "settings"
-	| "teacher";
 
 interface NavigationItem {
 	id: ScreenId;
@@ -161,33 +154,6 @@ const navigation: NavigationItem[] = [
 	},
 ];
 
-function isScreenId(value: string | null): value is ScreenId {
-	return navigation.some((item) => item.id === value);
-}
-
-const replacementRoutes: Partial<Record<ScreenId, string>> = {
-	daily: "/daily",
-	studio: "/studio",
-	grammar: "/grammar",
-	notebook: "/notebook",
-	flashcards: "/flashcards",
-	settings: "/settings",
-	teacher: "/teacher",
-};
-
-function replacementUrl(
-	target: ScreenId,
-	params: Iterable<readonly [string, string]>,
-) {
-	const route = replacementRoutes[target];
-	if (!route) return null;
-	const url = new URL(route, window.location.origin);
-	for (const [key, value] of params) {
-		if (key !== "screen") url.searchParams.set(key, value);
-	}
-	return `${url.pathname}${url.search}${url.hash}`;
-}
-
 // ── Progress screen ────────────────────────────────────────────────────────────
 function ProgressScreen() {
 	return (
@@ -212,47 +178,14 @@ function ProgressScreen() {
 }
 
 // ── AppShell ───────────────────────────────────────────────────────────────────
-export function AppShell() {
+export function AppShell({ screen = "home" }: { screen?: ScreenId }) {
 	const { state, mutate } = useAppStore();
-	const [screen, setScreen] = React.useState<ScreenId>("home");
+	const router = useRouter();
 	const [menuOpen, setMenuOpen] = React.useState(false);
 	const sidebarRef = React.useRef<HTMLElement>(null);
 	const current =
 		navigation.find((item) => item.id === screen) ?? homeNavigation;
 	const CurrentIcon = current.icon;
-
-	React.useEffect(() => {
-		const restoreScreen = () => {
-			const url = new URL(window.location.href);
-			const requestedTarget = url.searchParams.get("screen");
-			const target =
-				requestedTarget === "automaticity" ? "daily" : requestedTarget;
-			if (isScreenId(target) && replacementRoutes[target]) {
-				const targetUrl = replacementUrl(target, url.searchParams.entries());
-				window.location.replace(targetUrl ?? replacementRoutes[target]);
-				return;
-			}
-			if (isScreenId(target)) {
-				if (requestedTarget !== target) {
-					url.searchParams.set("screen", target);
-					window.history.replaceState({ screen: target }, "", url);
-				}
-				setScreen(target);
-			} else {
-				if (target) {
-					url.searchParams.delete("screen");
-					window.history.replaceState({ screen: "home" }, "", url);
-				}
-				setScreen("home");
-			}
-			setMenuOpen(false);
-		};
-		restoreScreen();
-		window.addEventListener("popstate", restoreScreen);
-		return () => {
-			window.removeEventListener("popstate", restoreScreen);
-		};
-	}, []);
 
 	React.useEffect(() => {
 		if (!menuOpen) return;
@@ -303,40 +236,16 @@ export function AppShell() {
 	);
 
 	const navigate = React.useCallback(
-		(target: string, params: Record<string, string | null> = {}) => {
-			const canonicalTarget = target === "automaticity" ? "daily" : target;
-			if (!isScreenId(canonicalTarget)) return;
-			const replacementRoute = replacementUrl(
-				canonicalTarget,
-				Object.entries(params).filter(
-					(entry): entry is [string, string] => entry[1] !== null,
-				),
-			);
-			if (replacementRoute) {
-				window.location.assign(replacementRoute);
-				return;
-			}
-			const url = new URL(window.location.href);
-			if (canonicalTarget === "home") url.searchParams.delete("screen");
-			else url.searchParams.set("screen", canonicalTarget);
-			Object.entries(params).forEach(([key, value]) => {
-				if (value === null) url.searchParams.delete(key);
-				else url.searchParams.set(key, value);
-			});
-			window.history.pushState({ screen: canonicalTarget }, "", url);
-			setScreen(canonicalTarget);
+		(target: string, params: ScreenParams = {}) => {
+			const canonicalTarget = canonicalScreenId(target);
+			if (!canonicalTarget) return;
 			setMenuOpen(false);
-			const reduceMotion = window.matchMedia(
-				"(prefers-reduced-motion: reduce)",
-			).matches;
-			window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+			router.push(screenHref(canonicalTarget, params));
 		},
-		[],
+		[router],
 	);
 
-	const currentPath =
-		replacementRoutes[screen] ??
-		(screen === "home" ? "/" : `/?screen=${screen}`);
+	const currentPath = screenPaths[screen];
 
 	return (
 		<div className="app-shell" data-screen={screen}>

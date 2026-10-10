@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ["/", en ? "Home" : "Start"], ["/practice", en ? "My practice" : "Meine Übungen"],
     [en ? "/grammar" : "/grammatik", en ? "Grammar" : "Grammatik"],
     ["/studio", en ? "Conversation" : "Gespräche"],
-    [en ? "/?screen=progress" : "/fortschritt", en ? "My progress" : "Mein Fortschritt"],
+    [en ? "/progress" : "/fortschritt", en ? "My progress" : "Mein Fortschritt"],
   ];
   const buildPrimaryNav = () => {
     const nav = document.createElement("nav");

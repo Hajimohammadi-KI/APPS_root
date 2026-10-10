@@ -39,7 +39,7 @@ export function buildTeacherReviewQueue(
         error.nextRepairAt <= now
           ? "Review the correction, then assign repair practice now."
           : "Keep the scheduled repair and check the next attempt.",
-      href: "/?screen=errors",
+      href: "/errors",
       priority: error.nextRepairAt <= now ? "now" : "planned",
     }));
 
@@ -59,7 +59,7 @@ export function buildTeacherReviewQueue(
         review.dueAt <= now
           ? "Run the due recall task before new material."
           : "Leave scheduled; compare the next delayed-recall result.",
-      href: "/?screen=progress",
+      href: "/progress",
       priority: review.dueAt <= now ? "now" : "planned",
     }));
 

@@ -111,8 +111,6 @@
   function updateLevelSupport(){const code=localStorage.getItem('english-explanation-language')||'fa',level=levelSelect.value,band=['A1','A2'].includes(level)?'basic':['B1','B2'].includes(level)?'mid':'high',copy=levelSupport[code]||levelSupport.en;document.querySelectorAll('.scaffold-copy').forEach(box=>{let note=box.querySelector('.l1-level-note');if(!note){note=document.createElement('p');note.className='l1-level-note';box.querySelector('.target-language').before(note)}note.textContent=copy[band]})}
   updateLevelSupport();levelSelect.addEventListener('change',updateLevelSupport);document.querySelectorAll('#language-choices .choice').forEach(button=>button.addEventListener('click',updateLevelSupport));
   window.createLanguageDrawer(document.getElementById('side'), document.getElementById('menu'));
-  // The static Daily shell hands Integrated Skills back to the canonical app-shell query route; a path route does not exist.
-  const integratedSkillsLink=document.querySelector('[data-route="/integrated-skills"]');if(integratedSkillsLink)integratedSkillsLink.dataset.route='/?screen=integrated-skills';
   document.querySelectorAll('[data-route]').forEach(button=>button.addEventListener('click',()=>{location.href=button.dataset.route}));
   // A visible navigation heading must respond: toggle only its own link group and expose the state to assistive technology.
   document.querySelectorAll('.nav-parent:not([data-route])').forEach(button=>{const section=button.closest('.nav-section');if(!section)return;button.setAttribute('aria-expanded',String(!section.classList.contains('is-collapsed')));button.addEventListener('click',()=>{const collapsed=section.classList.toggle('is-collapsed');button.setAttribute('aria-expanded',String(!collapsed))})});

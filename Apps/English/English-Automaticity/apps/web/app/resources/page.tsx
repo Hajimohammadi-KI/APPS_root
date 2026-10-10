@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { AppShell } from "@/features/app-shell";
 
 export default function ResourcesPage() {
-	redirect("/?screen=resources");
+	return <AppShell screen="resources" />;
 }

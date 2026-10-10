@@ -1,11 +1,10 @@
 {
   "publishedAt": "2026-10-10",
   "version": "27.4.4",
-  "webRelease": "2026.10.10.1",
+  "webRelease": "2026.10.10.2",
   "changes": [
-    "Worksheet design from the learner's reference sheets: white paper, navy titles, teal section tabs, cyan task boxes, yellow guidance boxes and dashed answer fields on every page",
-    "Practice shows the real learning phase (1 of 3 to 3 of 3) above each task; the seven steps and mastery criteria are unchanged",
-    "Explanation language (Persian, English or German) on Practice, Grammar Lab and Today; Persian until you choose otherwise, your choice and draft are kept",
-    "Learner data, saved responses and all links are unchanged"
+    "Every screen has its own address: /progress, /integrated-skills, /resources, /errors and /library replace the old ?screen= links; old bookmarks are redirected with their parameters kept",
+    "The reading-ruler toggle no longer covers the Tools & help control on those screens",
+    "Learner data, saved responses and all other links are unchanged"
   ]
 }

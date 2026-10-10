@@ -1,11 +1,9 @@
 {
   "publishedAt": "2026-10-10",
   "version": "20.9.4",
-  "webRelease": "2026.10.10.1",
+  "webRelease": "2026.10.10.3",
   "changes": [
-    "Arbeitsblatt-Design nach den Vorlagen: weißes Papier, dunkelblaue Titel, türkise Abschnittsreiter, hellblaue Aufgabenfelder, gelbe Hinweisfelder und gestrichelte Antwortfelder auf allen Seiten",
-    "Übung zeigt die echte Lernphase (1 bis 3 von 3) über jeder Aufgabe; die sieben Schritte und Beherrschungskriterien bleiben gleich",
-    "Erklärungssprache (Persisch, Englisch oder Deutsch) in Übung, Grammatik-Labor und Heute; Persisch bis zur eigenen Wahl, Auswahl und Entwurf bleiben erhalten",
-    "Seitenleiste am Desktop zuverlässig sichtbar; Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
+    "Seitentitel, Hinweisfelder, Missionskacheln und aufklappbare Abschnitte stammen jetzt aus einem gemeinsamen Komponentensatz und sehen auf allen Seiten gleich aus",
+    "Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
   ]
 }

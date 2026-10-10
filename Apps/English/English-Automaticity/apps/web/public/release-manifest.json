@@ -1,10 +1,9 @@
 {
   "publishedAt": "2026-10-10",
   "version": "27.4.4",
-  "webRelease": "2026.10.10.2",
+  "webRelease": "2026.10.10.3",
   "changes": [
-    "Every screen has its own address: /progress, /integrated-skills, /resources, /errors and /library replace the old ?screen= links; old bookmarks are redirected with their parameters kept",
-    "The reading-ruler toggle no longer covers the Tools & help control on those screens",
-    "Learner data, saved responses and all other links are unchanged"
+    "Screen titles, message boxes and collapsible sections now come from one component set, so they look and behave the same on every screen",
+    "Learner data, saved responses and all links are unchanged"
   ]
 }

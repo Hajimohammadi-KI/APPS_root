@@ -927,3 +927,45 @@ body.daily-workspace .control-accordion:has(#language-choices),
 .language-workspace .learning-control:has(#languageChoices) {
   display: none;
 }
+
+/* ── German settings cards: the card title is an h2 inside the card-title slot ── */
+.learning-card:has([data-slot="card-title"] > h2) {
+  position: relative;
+  padding-top: 50px !important;
+}
+.learning-card [data-slot="card-title"]:has(> h2) {
+  position: absolute;
+  top: -1px;
+  inset-inline-end: -1px;
+  z-index: 1;
+  max-width: calc(100% - 40px);
+  margin: 0;
+  padding: 9px 20px;
+  background: var(--ws-teal);
+  color: #fff;
+  border-start-start-radius: 18px;
+  border-start-end-radius: var(--ws-radius);
+  border-end-end-radius: 0;
+  border-end-start-radius: 18px;
+}
+.learning-card [data-slot="card-title"] > h2 {
+  margin: 0;
+  font-size: 1.0625rem !important;
+  font-weight: 800;
+  line-height: 1.4;
+  color: #fff;
+  white-space: nowrap;
+}
+.learning-card [data-slot="card-title"] > h2 svg {
+  color: inherit !important;
+}
+@media (max-width: 640px) {
+  .learning-card [data-slot="card-title"]:has(> h2) {
+    padding: 8px 14px;
+    max-width: calc(100% - 70px);
+  }
+  .learning-card [data-slot="card-title"] > h2 {
+    font-size: 0.95rem !important;
+    white-space: normal;
+  }
+}

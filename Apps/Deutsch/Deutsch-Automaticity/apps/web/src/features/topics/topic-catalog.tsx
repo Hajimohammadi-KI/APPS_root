@@ -9,6 +9,8 @@ import { catalogSummary, speakingTopics } from "@grammar/content";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { MissionRail, MissionTile } from "@/components/ui/mission-tiles";
+import { PageHeader } from "@/components/page-header";
 import { Input } from "@/components/ui/input";
 import {
   LearningAccordion,
@@ -82,16 +84,11 @@ export function TopicCatalog() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <p className="section-kicker">Transfer</p>
-        <h1 className="section-title">
-          {catalogSummary.topicCount} Themen für die freie Produktion
-        </h1>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          Der vollständige Gesprächskatalog aus v20.8: allgemeines,
-          akademisches, DSH- und digitales TestDaF-Training.
-        </p>
-      </div>
+      <PageHeader
+        description="Der vollständige Gesprächskatalog aus v20.8: allgemeines, akademisches, DSH- und digitales TestDaF-Training."
+        kicker="Transfer"
+        title={`${catalogSummary.topicCount} Themen für die freie Produktion`}
+      />
 
       <Card>
         <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -129,29 +126,17 @@ export function TopicCatalog() {
         </CardContent>
       </Card>
 
-      <section aria-label="Katalogmissionen" className="space-y-2">
-        <h2 className="text-sm font-semibold text-sky-900">Schnellmissionen</h2>
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
-          <article className="min-w-56 rounded-xl border bg-card p-3 text-sm shadow-sm">
-            <strong className="block">Mission 1</strong>
-            <span className="text-muted-foreground">
-              1 neues Thema aus dem aktiven Filter im Studio starten.
-            </span>
-          </article>
-          <article className="min-w-56 rounded-xl border bg-card p-3 text-sm shadow-sm">
-            <strong className="block">Mission 2</strong>
-            <span className="text-muted-foreground">
-              Auf ein Niveau und eine Kategorie eingrenzen.
-            </span>
-          </article>
-          <article className="min-w-56 rounded-xl border bg-card p-3 text-sm shadow-sm">
-            <strong className="block">Mission 3</strong>
-            <span className="text-muted-foreground">
-              Aktuelle Treffer: {rows.length}
-            </span>
-          </article>
-        </div>
-      </section>
+      <MissionRail label="Katalogmissionen">
+        <MissionTile title="Mission 1">
+          1 neues Thema aus dem aktiven Filter im Studio starten.
+        </MissionTile>
+        <MissionTile title="Mission 2">
+          Auf ein Niveau und eine Kategorie eingrenzen.
+        </MissionTile>
+        <MissionTile title="Mission 3">
+          Aktuelle Treffer: {rows.length}
+        </MissionTile>
+      </MissionRail>
 
       <p className="text-sm text-muted-foreground">
         {rows.length} von {speakingTopics.length} Themen

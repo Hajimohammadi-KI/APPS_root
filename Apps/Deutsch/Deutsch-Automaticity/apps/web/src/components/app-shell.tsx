@@ -3,6 +3,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { LearningNavigation } from "@/components/learning-navigation";
 import { ApiConnectionStatus } from "@/components/api-connection-status";
 import { Brand } from "@/components/brand";
+import { Disclosure } from "@/components/ui/disclosure";
 import { MobileNavigation } from "@/components/mobile-navigation";
 import { InstallAppButton } from "@/features/pwa/install-app-button";
 import { primaryNavigation, secondaryNavigation } from "@/lib/navigation";
@@ -73,12 +74,9 @@ export function AppShell({
           {["/studio", "/fehler", "/wiederholungen", "/lehrkraft"].includes(
             pathname,
           ) ? (
-            <details className="quiet-disclosure">
-              <summary>Antworten & Lernnachweise</summary>
-              <div>
-                <AutomaticityEvidenceSummary />
-              </div>
-            </details>
+            <Disclosure summary="Antworten & Lernnachweise">
+              <AutomaticityEvidenceSummary />
+            </Disclosure>
           ) : null}
         </main>
       </div>

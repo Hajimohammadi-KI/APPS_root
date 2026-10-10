@@ -14,6 +14,7 @@ import {
 import type { GrammarUnit } from "@grammar/content";
 
 import { Button } from "@/components/ui/button";
+import { Disclosure } from "@/components/ui/disclosure";
 import { LearningAccordion } from "@/components/learning-accordion";
 
 import {
@@ -294,10 +295,12 @@ export function GrammarLanguageCoach({
           )}
         </div>
 
-        <details className="rounded-xl border bg-background p-3">
-          <summary className="cursor-pointer font-medium">
-            {ui.strategy}
-          </summary>
+        <Disclosure
+          className="bg-background p-3"
+          summary={ui.strategy}
+          summaryClassName="font-medium"
+          variant="boxed"
+        >
           <div className="mt-3 text-start">
             <ol className="grid gap-2 sm:grid-cols-2">
               {coach.steps.map((step, index) => (
@@ -316,7 +319,7 @@ export function GrammarLanguageCoach({
               {coach.sourceNote}
             </p>
           </div>
-        </details>
+        </Disclosure>
 
         <p className="text-sm leading-6 text-muted-foreground">{ui.review}</p>
       </div>

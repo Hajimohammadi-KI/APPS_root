@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { KeyRound, Save, Unplug } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Disclosure } from "@/components/ui/disclosure";
 import { Input } from "@/components/ui/input";
 import {
   configureAIProvider,
@@ -64,14 +65,18 @@ export function AIProviderSettings({
   }
 
   return (
-    <details className="rounded-xl border p-4">
-      <summary className="flex cursor-pointer items-center gap-2 text-sm font-bold">
-        <KeyRound aria-hidden="true" className="size-4" />
-        Verbundene KI für „Mehr erklären“
-        <span className="ml-auto text-xs font-medium text-muted-foreground">
-          {status?.connected ? status.providerLabel : "Optional"}
-        </span>
-      </summary>
+    <Disclosure
+      summary={
+        <>
+          <KeyRound aria-hidden="true" className="size-4" />
+          Verbundene KI für „Mehr erklären“
+          <span className="ml-auto text-xs font-medium text-muted-foreground">
+            {status?.connected ? status.providerLabel : "Optional"}
+          </span>
+        </>
+      }
+      variant="boxed"
+    >
       <div className="mt-4 grid gap-4">
         <p className="text-sm leading-6 text-muted-foreground">
           Ein ChatGPT-Abo ist keine API-Verbindung. Verwende einen API-Schlüssel
@@ -195,6 +200,6 @@ export function AIProviderSettings({
           </p>
         ) : null}
       </div>
-    </details>
+    </Disclosure>
   );
 }

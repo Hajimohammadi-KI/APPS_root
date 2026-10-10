@@ -5,6 +5,7 @@ import { Check, Headphones, RotateCcw, Sparkles, Volume2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Disclosure } from "@/components/ui/disclosure";
 import {
   Card,
   CardContent,
@@ -690,10 +691,11 @@ export function CaseAutomaticityTrainer() {
                   <li>4. Bilde Artikel und Adjektivendung.</li>
                 </ol>
               </div>
-              <details className="rounded-2xl border bg-background p-4">
-                <summary className="cursor-pointer font-bold">
-                  Die vier Fälle kurz erklärt
-                </summary>
+              <Disclosure
+                className="rounded-2xl bg-background"
+                summary="Die vier Fälle kurz erklärt"
+                variant="boxed"
+              >
                 <div className="mt-3 grid gap-2 text-sm leading-6">
                   <p>
                     <bdi dir="ltr">Nominativ</bdi>: handelnde Person oder
@@ -709,7 +711,7 @@ export function CaseAutomaticityTrainer() {
                     <bdi dir="ltr">Genitiv</bdi>: Besitz oder Zugehörigkeit
                   </p>
                 </div>
-              </details>
+              </Disclosure>
               <p className="rounded-xl border border-dashed border-slate-300 p-3 text-xs leading-6 text-muted-foreground">
                 Alle Übungssätze wurden für diese App neu formuliert. Aus den
                 lokalen Quellen werden nur die Methoden kurze Übung, aktiver

@@ -6,6 +6,7 @@ import { CheckCircle2, ClipboardCheck } from "lucide-react";
 import type { CefrLevel } from "@grammar/domain";
 
 import { Button } from "@/components/ui/button";
+import { Disclosure } from "@/components/ui/disclosure";
 
 interface PlacementQuestion {
   readonly id: string;
@@ -114,10 +115,11 @@ export function PlacementCheck({
   const complete = Object.keys(answers).length === QUESTIONS.length;
 
   return (
-    <details className="rounded-xl border bg-muted/35 p-4">
-      <summary className="cursor-pointer font-semibold">
-        Freiwillige Einstufung starten
-      </summary>
+    <Disclosure
+      className="bg-muted/35"
+      summary="Freiwillige Einstufung starten"
+      variant="boxed"
+    >
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
         Diese zwölf Aufgaben empfehlen nur einen Einstieg. Der Test ist
         freiwillig und bestätigt kein GER-Niveau; dafür zählen später
@@ -183,6 +185,6 @@ export function PlacementCheck({
           Empfehlung, kein Zertifikat.
         </p>
       ) : null}
-    </details>
+    </Disclosure>
   );
 }

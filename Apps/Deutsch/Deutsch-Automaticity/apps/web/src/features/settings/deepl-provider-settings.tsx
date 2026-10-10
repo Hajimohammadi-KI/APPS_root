@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Languages, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Disclosure } from "@/components/ui/disclosure";
 import {
   readTranslationStatus,
   type TranslationStatus,
@@ -33,14 +34,18 @@ export function DeepLProviderSettings() {
   }, [refresh]);
 
   return (
-    <details className="rounded-xl border p-4">
-      <summary className="flex cursor-pointer items-center gap-2 text-sm font-bold">
-        <Languages aria-hidden="true" className="size-4" />
-        Google Übersetzung
-        <span className="ml-auto text-xs font-medium text-muted-foreground">
-          {status?.connected ? "Verbunden" : "Google-Freigabe erforderlich"}
-        </span>
-      </summary>
+    <Disclosure
+      summary={
+        <>
+          <Languages aria-hidden="true" className="size-4" />
+          Google Übersetzung
+          <span className="ml-auto text-xs font-medium text-muted-foreground">
+            {status?.connected ? "Verbunden" : "Google-Freigabe erforderlich"}
+          </span>
+        </>
+      }
+      variant="boxed"
+    >
       <div className="mt-4 grid gap-4">
         <p className="text-sm leading-6 text-muted-foreground">
           Die Übersetzung verwendet dieselbe sichere Google-Verbindung wie Drive
@@ -68,6 +73,6 @@ export function DeepLProviderSettings() {
           </Button>
         </div>
       </div>
-    </details>
+    </Disclosure>
   );
 }

@@ -29,6 +29,9 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { MissionRail, MissionTile } from "@/components/ui/mission-tiles";
+import { Notice } from "@/components/ui/notice";
+import { PageHeader } from "@/components/page-header";
 import {
   Card,
   CardContent,
@@ -260,14 +263,11 @@ export function ReviewCenter() {
       >
         Antworten aus eigenständigen Übungen prüfen und wiederholen
       </a>
-      <div>
-        <p className="section-kicker">Langzeitgedächtnis</p>
-        <h1 className="section-title">Wiederholungen</h1>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          Gespeicherte Korrekturen und abgeschlossene Grammatikthemen folgen dem
-          ursprünglichen festen Lernrhythmus.
-        </p>
-      </div>
+      <PageHeader
+        description="Gespeicherte Korrekturen und abgeschlossene Grammatikthemen folgen dem ursprünglichen festen Lernrhythmus."
+        kicker="Langzeitgedächtnis"
+        title="Wiederholungen"
+      />
 
       <Card>
         <CardHeader>
@@ -285,29 +285,17 @@ export function ReviewCenter() {
         </CardContent>
       </Card>
 
-      <section aria-label="Wiederholungsmissionen" className="space-y-2">
-        <h2 className="text-sm font-semibold text-sky-900">Schnellmissionen</h2>
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
-          <article className="min-w-56 rounded-xl border bg-card p-3 text-sm shadow-sm">
-            <strong className="block">Mission 1</strong>
-            <span className="text-muted-foreground">
-              Heute mindestens 1 fällige Wiederholung abschließen.
-            </span>
-          </article>
-          <article className="min-w-56 rounded-xl border bg-card p-3 text-sm shadow-sm">
-            <strong className="block">Mission 2</strong>
-            <span className="text-muted-foreground">
-              Priorität auf zeitkritische Abrufe setzen.
-            </span>
-          </article>
-          <article className="min-w-56 rounded-xl border bg-card p-3 text-sm shadow-sm">
-            <strong className="block">Mission 3</strong>
-            <span className="text-muted-foreground">
-              Mastered: {masteredReviews} von {totalReviews}
-            </span>
-          </article>
-        </div>
-      </section>
+      <MissionRail label="Wiederholungsmissionen">
+        <MissionTile title="Mission 1">
+          Heute mindestens 1 fällige Wiederholung abschließen.
+        </MissionTile>
+        <MissionTile title="Mission 2">
+          Priorität auf zeitkritische Abrufe setzen.
+        </MissionTile>
+        <MissionTile title="Mission 3">
+          Mastered: {masteredReviews} von {totalReviews}
+        </MissionTile>
+      </MissionRail>
 
       <Card>
         <CardHeader>
@@ -461,11 +449,7 @@ export function ReviewCenter() {
                     Lösung anhören
                   </Button>
                 </div>
-                {message && (
-                  <p role="status" className="rounded-xl border p-3 text-sm">
-                    {message}
-                  </p>
-                )}
+                {message && <Notice role="status">{message}</Notice>}
                 {report && (
                   <div className="rounded-xl bg-muted/50 p-3 text-sm">
                     <strong>

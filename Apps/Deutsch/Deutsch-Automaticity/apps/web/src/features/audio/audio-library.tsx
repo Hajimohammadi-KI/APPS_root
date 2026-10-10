@@ -5,6 +5,8 @@ import { Check, Headphones, RefreshCw, Trash2, Volume2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Notice } from "@/components/ui/notice";
+import { PageHeader } from "@/components/page-header";
 import {
   Card,
   CardContent,
@@ -100,27 +102,25 @@ export function AudioLibrary() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="section-kicker">Lokal aufgenommen</p>
-          <h1 className="section-title">Audio-Bibliothek</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Gesprächsaufnahmen und Transkripte aus IndexedDB.
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          disabled={loading}
-          onClick={() => void load()}
-        >
-          <RefreshCw
-            className={loading ? "animate-spin" : ""}
-            data-icon="inline-start"
-          />
-          Aktualisieren
-        </Button>
-      </div>
+      <PageHeader
+        actions={
+          <Button
+            type="button"
+            variant="outline"
+            disabled={loading}
+            onClick={() => void load()}
+          >
+            <RefreshCw
+              className={loading ? "animate-spin" : ""}
+              data-icon="inline-start"
+            />
+            Aktualisieren
+          </Button>
+        }
+        description="Gesprächsaufnahmen und Transkripte aus IndexedDB."
+        kicker="Lokal aufgenommen"
+        title="Audio-Bibliothek"
+      />
 
       <div className="grid gap-4">
         {rows.map(({ record, url }) => (
@@ -211,11 +211,7 @@ export function AudioLibrary() {
         </Card>
       )}
 
-      {message && (
-        <p role="status" className="rounded-xl border p-3 text-sm">
-          {message}
-        </p>
-      )}
+      {message && <Notice role="status">{message}</Notice>}
     </div>
   );
 }

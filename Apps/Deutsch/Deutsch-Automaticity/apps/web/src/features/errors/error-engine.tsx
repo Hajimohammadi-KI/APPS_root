@@ -19,6 +19,9 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { MissionRail, MissionTile } from "@/components/ui/mission-tiles";
+import { Notice } from "@/components/ui/notice";
+import { PageHeader } from "@/components/page-header";
 import {
   Card,
   CardContent,
@@ -115,14 +118,11 @@ export function ErrorEngine() {
       >
         Antworten aus eigenständigen Übungen prüfen und korrigieren
       </a>
-      <div>
-        <p className="section-kicker">Gezielt reparieren</p>
-        <h1 className="section-title">Persönlicher Fehlermotor</h1>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          Jede Studiokorrektur wird klassifiziert, zusammengeführt und als
-          Reparaturkette wieder eingeplant. Wiederkehrende Fehler stehen zuerst.
-        </p>
-      </div>
+      <PageHeader
+        description="Jede Studiokorrektur wird klassifiziert, zusammengeführt und als Reparaturkette wieder eingeplant. Wiederkehrende Fehler stehen zuerst."
+        kicker="Gezielt reparieren"
+        title="Persönlicher Fehlermotor"
+      />
 
       <div className="grid gap-3 sm:grid-cols-3">
         <Summary value={rows.length} label="Fehlerklassen" />
@@ -130,29 +130,17 @@ export function ErrorEngine() {
         <Summary value={fixed} label="Stabil repariert" />
       </div>
 
-      <section aria-label="Reparaturmissionen" className="space-y-2">
-        <h2 className="text-sm font-semibold text-sky-900">Schnellmissionen</h2>
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
-          <article className="min-w-56 rounded-xl border bg-card p-3 text-sm shadow-sm">
-            <strong className="block">Mission 1</strong>
-            <span className="text-muted-foreground">
-              Heute einen aktiven Fehler sauber reparieren.
-            </span>
-          </article>
-          <article className="min-w-56 rounded-xl border bg-card p-3 text-sm shadow-sm">
-            <strong className="block">Mission 2</strong>
-            <span className="text-muted-foreground">
-              1 wiederkehrenden Fehler (3x+) priorisiert bearbeiten.
-            </span>
-          </article>
-          <article className="min-w-56 rounded-xl border bg-card p-3 text-sm shadow-sm">
-            <strong className="block">Mission 3</strong>
-            <span className="text-muted-foreground">
-              Aktive Reparaturen: {active}
-            </span>
-          </article>
-        </div>
-      </section>
+      <MissionRail label="Reparaturmissionen">
+        <MissionTile title="Mission 1">
+          Heute einen aktiven Fehler sauber reparieren.
+        </MissionTile>
+        <MissionTile title="Mission 2">
+          1 wiederkehrenden Fehler (3x+) priorisiert bearbeiten.
+        </MissionTile>
+        <MissionTile title="Mission 3">
+          Aktive Reparaturen: {active}
+        </MissionTile>
+      </MissionRail>
 
       <Card>
         <CardHeader>
@@ -404,11 +392,7 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
             Neu versuchen
           </Button>
         </div>
-        {message && (
-          <p role="status" className="rounded-xl border p-3 text-sm">
-            {message}
-          </p>
-        )}
+        {message && <Notice role="status">{message}</Notice>}
       </CardContent>
     </Card>
   );

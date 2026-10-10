@@ -844,6 +844,15 @@ html .conversation-page .studio-step-picker > summary {
   .language-workspace #exercisePrompt {
     margin-top: 0;
   }
+  /* Phone: the prompt keeps the full width; the read-aloud button sits under it. */
+  .language-workspace .exercise-title {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .language-workspace .audio-btn {
+    align-self: flex-end;
+    margin-top: 0;
+  }
   body.daily-workspace .phase {
     padding: 58px 14px 16px 14px;
   }

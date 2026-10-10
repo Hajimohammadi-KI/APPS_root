@@ -865,3 +865,65 @@ html .conversation-page .studio-step-picker > summary {
     width: 100%;
   }
 }
+
+/* ── Page titles stay on one line (R81) ─────────────────────────────────── */
+.practice-header h1,
+.language-workspace #lessonTitle,
+body.daily-workspace .greeting,
+body.daily-workspace .hero-copy h1,
+.app-content .page-heading h1,
+.learning-page-intro h1,
+.learning-progress-page > header h1,
+.settings-page > header h1,
+.learning-home .lh-heading h1,
+html .conversation-page .studio-main > header h1,
+.german-app-main .section-title,
+.app-content .section-title {
+  max-width: none;
+  font-size: clamp(1.5rem, 2.1vw, 2.3rem) !important;
+  line-height: 1.25;
+}
+.task-panel .worksheet-lesson-title {
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  line-height: 1.3;
+}
+.learning-progress-page h2,
+.automaticity-overview h2,
+.learning-home .lh-hero-copy h2,
+body.daily-workspace .support-disclosure h2 {
+  font-size: clamp(1.2rem, 1.7vw, 1.7rem) !important;
+  line-height: 1.3;
+}
+@media (min-width: 1024px) {
+  .practice-header h1,
+  .language-workspace #lessonTitle,
+  body.daily-workspace .greeting,
+  body.daily-workspace .hero-copy h1,
+  .app-content .page-heading h1,
+  .learning-page-intro h1,
+  .learning-progress-page > header h1,
+  .settings-page > header h1,
+  .learning-home .lh-heading h1,
+  html .conversation-page .studio-main > header h1,
+  .german-app-main .section-title,
+  .app-content .section-title,
+  .task-panel .worksheet-lesson-title,
+  .learning-progress-page h2,
+  .automaticity-overview h2,
+  .learning-home .lh-hero-copy h2,
+  body.daily-workspace .support-disclosure h2 {
+    display: block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ── One explanation-language control per page (R81) ────────────────────── */
+/* The legacy selectors keep driving the page texts, but the shared guide is the
+   single visible control; the guide clicks the hidden legacy buttons to stay in sync. */
+body.daily-workspace .control-accordion:has(#language-choices),
+.language-workspace .learning-control:has(#languageChoices) {
+  display: none;
+}

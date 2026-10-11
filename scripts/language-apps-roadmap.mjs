@@ -2,7 +2,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const destinations = [
   "docs/language-apps-roadmap.html",
   "Apps/English/English-Automaticity/apps/web/public/roadmap.html",
@@ -18,25 +18,8 @@ export function renderRoadmap(data) {
   </style></head><body><main><header><span class="eyebrow">برنامه بهبود دو اپ زبان</span><h1>رودمپ نقد، اصلاح و انتشار</h1><p>${escape(data.summary)}</p><p class="muted">به‌روزرسانی: <bdi>${escape(data.updated)}</bdi> · نسخه این برنامه: <bdi>${escape(data.release)}</bdi></p><a href="/">بازگشت به اپ</a></header><section class="apps" aria-label="لینک‌های ثابت">${data.apps.map((app) => `<div class="app"><strong dir="ltr">${escape(app.name)}</strong><a dir="ltr" href="${escape(app.url)}">${escape(app.url)}</a><a href="${escape(new URL("assessment-benchmarks.html", app.url).href)}">آزمون ارزیاب‌های متن و صوت</a><a href="${escape(new URL("microphone-check.html", app.url).href)}">آزمون میکروفن و بازپخش</a><small>${escape(app.publication)}</small></div>`).join("")}</section><p>لینک‌های اصلی ثابت می‌مانند. «آزمایش‌شده» به معنی تأیید محلی است؛ «منتشرشده» فقط پس از تأیید نسخه روی لینک اصلی ثبت می‌شود.</p><div class="progress"><progress value="${complete}" max="${data.items.length}" aria-label="تعداد بخش‌های آزمایش‌شده یا منتشرشده"></progress><span>${complete} از ${data.items.length} بخش آزمایش یا منتشر شده</span></div><section class="grid" aria-label="مراحل اصلاح">${data.items.map((item) => `<article><div class="top"><span class="id">${escape(item.id)}</span><span class="status ${escape(item.status)}">${escape(labels[item.status] ?? item.status)}</span></div><h2>${escape(item.title)}</h2><p class="finding">${escape(item.finding)}</p><p>${escape(item.action)}</p><details><summary>شواهد و نتیجه بررسی</summary><p>${escape(item.evidence)}</p></details></article>`).join("")}</section><section class="history"><h2>سابقه تغییرات</h2><ul>${data.history.map((entry) => `<li>${escape(entry)}</li>`).join("")}</ul></section><footer>با انتشار هر مجموعه اصلاح، همین رودمپ هم به‌روزرسانی می‌شود. برای دیدن آخرین وضعیت، صفحه را تازه کنید. پاسخ‌ها و پیشرفت یادگیری هر دستگاه مستقل هستند مگر انتقال یا همگام‌سازی جداگانه انجام شود.</footer></main></body></html>`;
 }
 
-async function currentHtml() {
-  return renderRoadmap(JSON.parse(await readFile(resolve(root, "docs/language-apps-roadmap.json"), "utf8")));
-}
-
-if (process.argv.includes("--serve")) {
-  Bun.serve({ hostname: "127.0.0.1", port: 3318, async fetch(request) {
-    if (!["/", "/roadmap.html"].includes(new URL(request.url).pathname)) return new Response("Not found", { status: 404 });
-    return new Response(await currentHtml(), { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
-  }});
-  console.log("Roadmap: http://127.0.0.1:3318/");
-} else if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const html = await currentHtml();
-  for (const destination of destinations) {
-    const file = resolve(root, destination);
-    await mkdir(dirname(file), { recursive: true });
-    await writeFile(file, html);
-  }
-  const data = JSON.parse(await readFile(resolve(root, "docs/language-apps-roadmap.json"), "utf8"));
-  const markdown = [
+export function renderRoadmapMarkdown(data) {
+  return [
     "# رودمپ نقد و اصلاح اپ‌های زبان",
     `به‌روزرسانی: ${data.updated} · نسخه: ${data.release}`,
     data.summary,
@@ -50,6 +33,74 @@ if (process.argv.includes("--serve")) {
     "",
     "منبع وضعیت: language-apps-roadmap.json. صفحه قابل مشاهده: language-apps-roadmap.html.",
   ].join("\n\n");
-  await writeFile(resolve(root, "docs/LANGUAGE-APPS-IMPROVEMENT-ROADMAP.md"), markdown);
-  console.log(`Roadmap updated in ${destinations.length} locations.`);
+}
+
+async function readSource(root) {
+  return JSON.parse(await readFile(resolve(root, "docs/language-apps-roadmap.json"), "utf8"));
+}
+
+// A root parameter keeps checks testable without changing working directories.
+export async function synchronizeRoadmap({ root = repositoryRoot, check = false, app } = {}) {
+  if (app !== undefined && !["en", "de"].includes(app)) throw new Error(`Unknown app: ${app}. Use en or de.`);
+  if (app !== undefined && !check) throw new Error("--app requires --check; generation updates every roadmap output.");
+  const data = await readSource(root);
+  const html = renderRoadmap(data);
+  const outputs = app === undefined
+    ? [...destinations.map((destination) => [destination, html]), ["docs/LANGUAGE-APPS-IMPROVEMENT-ROADMAP.md", renderRoadmapMarkdown(data)]]
+    : [[destinations[app === "en" ? 1 : 2], html]];
+  if (check) {
+    const stale = [];
+    for (const [destination, content] of outputs) {
+      try {
+        const actual = await readFile(resolve(root, destination));
+        if (!actual.equals(Buffer.from(content, "utf8"))) stale.push(destination);
+      } catch (error) {
+        if (error.code !== "ENOENT") throw error;
+        stale.push(destination);
+      }
+    }
+    if (stale.length) throw new Error(`Generated roadmap files are stale or missing:\n${stale.map((path) => `- ${path}`).join("\n")}\nFinalize docs/language-apps-roadmap.json, then run bun scripts/language-apps-roadmap.mjs from the repository root before building.`);
+  } else {
+    for (const [destination, content] of outputs) {
+      const file = resolve(root, destination);
+      await mkdir(dirname(file), { recursive: true });
+      await writeFile(file, content);
+    }
+  }
+  return outputs.map(([destination]) => destination);
+}
+
+function parseOptions(args) {
+  const options = { check: false, serve: false };
+  for (const arg of args) {
+    if (arg === "--check") options.check = true;
+    else if (arg === "--serve") options.serve = true;
+    else if (arg.startsWith("--app=")) {
+      if (options.app !== undefined) throw new Error("--app may only be provided once.");
+      options.app = arg.slice("--app=".length);
+    } else throw new Error(`Unknown option: ${arg}. Use --check, --app=en|de, or --serve.`);
+  }
+  if (options.app !== undefined && !["en", "de"].includes(options.app)) throw new Error(`Unknown app: ${options.app}. Use en or de.`);
+  if (options.app !== undefined && !options.check) throw new Error("--app requires --check.");
+  if (options.serve && (options.check || options.app !== undefined)) throw new Error("--serve cannot be combined with --check or --app.");
+  return options;
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  try {
+    const options = parseOptions(process.argv.slice(2));
+    if (options.serve) {
+      Bun.serve({ hostname: "127.0.0.1", port: 3318, async fetch(request) {
+        if (!["/", "/roadmap.html"].includes(new URL(request.url).pathname)) return new Response("Not found", { status: 404 });
+        return new Response(renderRoadmap(await readSource(repositoryRoot)), { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
+      }});
+      console.log("Roadmap: http://127.0.0.1:3318/");
+    } else {
+      const paths = await synchronizeRoadmap(options);
+      console.log(options.check ? `Roadmap current in ${paths.length} files.` : `Roadmap updated in ${destinations.length} locations.`);
+    }
+  } catch (error) {
+    console.error(`Roadmap: ${error.message}`);
+    process.exitCode = 1;
+  }
 }

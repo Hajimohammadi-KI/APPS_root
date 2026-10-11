@@ -1,6 +1,6 @@
 # Deployments are uploaded from this repository root with the Vercel CLI; each
 # language project builds its own Apps/<Language>/<App>/apps/web root directory.
-# Only the two self-contained app folders are needed for those builds.
+# App builds also verify their roadmap against the root source and generator.
 .git/
 .git.backup-*/
 .codex-tmp/
@@ -10,9 +10,11 @@ archive/
 artifacts/
 backups/
 delete/
-docs/
+/docs/*
+!/docs/language-apps-roadmap.json
 research/
-scripts/
+/scripts/*
+!/scripts/language-apps-roadmap.mjs
 shared/
 tmp/
 Apps/Apps-For-Integeration/

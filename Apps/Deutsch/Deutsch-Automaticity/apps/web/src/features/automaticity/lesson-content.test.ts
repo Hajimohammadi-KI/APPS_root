@@ -8,7 +8,9 @@ import {
 
 describe("automatik lesson content", () => {
   test("lesson keys keep umlauts and collapse punctuation", () => {
-    expect(lessonKey("Nebensatz mit weil")).toBe("automatik:nebensatz-mit-weil");
+    expect(lessonKey("Nebensatz mit weil")).toBe(
+      "automatik:nebensatz-mit-weil",
+    );
     expect(lessonKey("Präteritum: sein & haben")).toBe(
       "automatik:präteritum-sein-haben",
     );

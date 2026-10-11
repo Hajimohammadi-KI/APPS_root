@@ -20,6 +20,8 @@
     "test": "bun test packages/content/src/content.test.ts apps/web/app/studio/source/conversation-data.test.ts apps/web/lib/assessment.test.ts apps/web/lib/automaticity-analysis.test.ts apps/web/lib/adaptive-daily-plan.test.ts apps/web/lib/learning-home.test.tsx apps/web/lib/pdf-reader-link.test.ts apps/web/lib/deepl-integration.test.ts apps/web/features/navigation/screen-routes.test.ts apps/web/proxy.test.ts apps/web/components/ui/primitives.test.tsx apps/web/app/studio/source/studio-helpers.test.ts apps/web/features/screens/automaticity/lesson-content.test.ts && bun run --cwd apps/api test",
     "test:e2e": "playwright test",
     "smoke": "node scripts/browser-smoke.mts",
+    "smoke:studio": "node scripts/studio-flow-check.mts",
+    "smoke:automaticity": "node scripts/automaticity-flow-check.mts",
     "test:installer": "bun test scripts/windows-installer.test.ts",
     "legacy:preview": "bun scripts/serve-legacy.ts",
     "lint": "bun run --cwd apps/web lint",

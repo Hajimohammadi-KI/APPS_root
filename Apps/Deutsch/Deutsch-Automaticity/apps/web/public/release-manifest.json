@@ -1,9 +1,9 @@
 {
   "publishedAt": "2026-10-11",
   "version": "20.9.4",
-  "webRelease": "2026.10.11.4",
+  "webRelease": "2026.10.11.5",
   "changes": [
-    "Stilbereinigung ohne sichtbare Änderung: rund 110 erzwungene Stilüberschreibungen entfernt, pixelgenau auf jeder Seite geprüft",
+    "Automatik-Mission aus kleineren Teilen neu zusammengesetzt (Lektionsinhalt, Aufnahme, Schrittkarten) mit denselben Schritten, Prüfungen und Nachweisen; ausgewählte Rahmen nutzen jetzt die Türkis-Palette",
     "Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
   ]
 }

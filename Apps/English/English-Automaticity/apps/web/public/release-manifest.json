@@ -1,9 +1,9 @@
 {
   "publishedAt": "2026-10-11",
   "version": "27.4.4",
-  "webRelease": "2026.10.11.4",
+  "webRelease": "2026.10.11.5",
   "changes": [
-    "Style cleanup with no visible change: about 110 forced style overrides removed, verified pixel-for-pixel on every screen",
+    "Automaticity Mission rebuilt from smaller parts (lesson content, recorder, step cards) with the same steps, checks and saved evidence; selected-state borders now use the teal palette",
     "Learner data, saved responses and all links are unchanged"
   ]
 }

@@ -60,7 +60,7 @@ for (const width of [390, 1280]) {
   const secondsText = await speaking.locator("span", { hasText: /^\d+s$/ }).innerText();
   check(Number.parseInt(secondsText) >= 1, `${width}px recording timer runs (${secondsText})`);
   await speaking.locator("button", { hasText: "Stop" }).click();
-  check((await mission.innerText()).includes("Recording stopped"), `${width}px stop updates the message`);
+  check(await mission.locator("text=Recording stopped").waitFor({ timeout: 10000 }).then(() => true).catch(() => false), `${width}px stop updates the message`);
   await speaking.locator("textarea").fill("I have worked here since last year and I have learned a lot.");
   await speaking.locator("button", { hasText: "Analyse and save speaking" }).click();
   await speaking.locator("div.grid-cols-3").first().waitFor({ timeout: 30000 });

@@ -340,7 +340,7 @@
 <script src="/device-access/writing.js"></script>
 <script src="/device-access/grammar-drafts.js"></script>
 <script defer src="/device-access/grammar-layout.js"></script>
-<script defer src="/device-access/learning-path.js"></script><link rel="stylesheet" href="/device-access/page-chrome.css"><script defer src="/device-access/page-chrome.js"></script><link rel="stylesheet" href="/device-access/calm-theme.css"><link rel="stylesheet" href="/device-access/explanation-language.css"><link rel="stylesheet" href="/device-access/worksheet.css"><script defer src="/learning-core/support-language.js"></script></head>
+<script defer src="/device-access/learning-path.js"></script><link rel="stylesheet" href="/device-access/page-chrome.css"><script defer src="/device-access/navigation-config.js"></script><script defer src="/device-access/page-chrome.js"></script><link rel="stylesheet" href="/device-access/calm-theme.css"><link rel="stylesheet" href="/device-access/explanation-language.css"><link rel="stylesheet" href="/device-access/worksheet.css"><script defer src="/learning-core/support-language.js"></script></head>
 <body>
   <!-- Inline SVG symbol library -->
   <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
@@ -374,29 +374,7 @@
       </div>
       <div class="sidebar-rule"></div>
 
-      <nav>
-        <section class="nav-group" aria-labelledby="daily-nav">
-          <h2 class="nav-title" id="daily-nav">Tägliches Training</h2>
-          <button class="nav-link" data-nav="Heute üben und sprechen"><svg class="icon"><use href="#i-home"/></svg>Heute üben und sprechen</button>
-          <button class="nav-link" data-nav="Heutiges Training"><svg class="icon"><use href="#i-clock"/></svg>Heutiges Training</button>
-          <button class="nav-link" data-nav="Konversationsstudio"><svg class="icon"><use href="#i-chat"/></svg>Konversationsstudio</button>
-        </section>
-        <section class="nav-group" aria-labelledby="paths-nav">
-          <h2 class="nav-title" id="paths-nav">Lernwege</h2>
-          <button class="nav-link" data-nav="Grammatik und Deutsch lernen"><svg class="icon"><use href="#i-settings"/></svg>Grammatik und Deutsch lernen <span class="chevron">⌃</span></button>
-          <button class="nav-link active" data-nav="Grammatik-Labor" aria-current="page"><svg class="icon"><use href="#i-book"/></svg>Grammatik-Labor</button>
-          <button class="nav-link" data-nav="Lernressourcen"><svg class="icon"><use href="#i-folder"/></svg>Lernressourcen</button>
-          <button class="nav-link" data-nav="Integrierte Fertigkeiten"><svg class="icon"><use href="#i-book"/></svg>Integrierte Fertigkeiten</button>
-        </section>
-        <section class="nav-group" aria-labelledby="evidence-nav">
-          <h2 class="nav-title" id="evidence-nav">Lernnachweise</h2>
-          <button class="nav-link" data-nav="Fehler und Aufnahmen"><svg class="icon"><use href="#i-clock"/></svg>Fehler und Aufnahmen <span class="chevron">⌄</span></button>
-        </section>
-        <section class="nav-group" aria-labelledby="settings-nav">
-          <h2 class="nav-title" id="settings-nav">App und Einstellungen</h2>
-          <button class="nav-link" data-nav="Speicher und persönliche Optionen"><svg class="icon"><use href="#i-settings"/></svg>Speicher und persönliche Optionen <span class="chevron">⌄</span></button>
-        </section>
-      </nav>
+      <nav></nav>
 
       <div class="mascot-scene" role="img" aria-label="Friendly purple study mascot beside books and a plant">
         <svg viewBox="0 0 292 255" xmlns="http://www.w3.org/2000/svg">
@@ -666,5 +644,5 @@
     })();
   </script>
 <script>// Navigation uses canonical page paths so visible Grammar menu actions never send learners to removed aliases.
-const navMap={'Heute üben und sprechen':'/','Heutiges Training':'/heute','Konversationsstudio':'/studio','Grammatik und Deutsch lernen':'/grammatik','Lernressourcen':'/ressourcen','Integrierte Fertigkeiten':'/fertigkeiten','Fehler und Aufnahmen':'/fehler','Speicher und persönliche Optionen':'/einstellungen'};document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{const u=navMap[b.dataset.nav];if(u)location.href=u}));</script><script defer src="/learning-core/overview.js"></script></body>
+</script><script defer src="/learning-core/overview.js"></script></body>
 </html>

@@ -1,0 +1,44 @@
+// Generated from shared/navigation-config.json by scripts/sync-language-home.ts. Do not edit.
+export const navigationConfig = {
+  "en": {
+    "main": [
+      { "href": "/", "label": "Home", "icon": "⌂" },
+      { "href": "/practice", "label": "My practice", "icon": "▶" },
+      { "href": "/grammar", "label": "Grammar", "icon": "▣" },
+      { "href": "/studio", "label": "Conversation", "icon": "▢" },
+      { "href": "/progress", "label": "My progress", "icon": "◷" }
+    ],
+    "more": [
+      { "href": "/daily", "label": "Daily activities" },
+      { "href": "/flashcards", "label": "Vocabulary & flashcards" },
+      { "href": "/notebook", "label": "Notebook & PDF reader" },
+      { "href": "/integrated-skills", "label": "Integrated skills" },
+      { "href": "/resources", "label": "Learning resources" },
+      { "href": "/errors", "label": "Error workshop" },
+      { "href": "/library", "label": "Audio library" },
+      { "href": "/teacher", "label": "Teacher studio" }
+    ],
+    "settings": "/settings"
+  },
+  "de": {
+    "main": [
+      { "href": "/", "label": "Start", "icon": "⌂" },
+      { "href": "/practice", "label": "Meine Übungen", "icon": "▶" },
+      { "href": "/grammatik", "label": "Grammatik", "icon": "▣" },
+      { "href": "/studio", "label": "Gespräche", "icon": "▢" },
+      { "href": "/fortschritt", "label": "Mein Fortschritt", "icon": "◷" }
+    ],
+    "more": [
+      { "href": "/heute", "label": "Tagesaktivitäten" },
+      { "href": "/ressourcen", "label": "Wörter & Materialien" },
+      { "href": "/fertigkeiten", "label": "Integrierte Fertigkeiten" },
+      { "href": "/wiederholungen", "label": "Wiederholungen" },
+      { "href": "/fehler", "label": "Fehlerwerkstatt" },
+      { "href": "/audio", "label": "Audio-Bibliothek" },
+      { "href": "/lehrkraft", "label": "Lehrkraft-Studio" },
+      { "href": "/support", "label": "Hilfe" },
+      { "href": "/privacy", "label": "Datenschutz" }
+    ],
+    "settings": "/einstellungen"
+  }
+} as const;

@@ -1,28 +1,50 @@
-/* Presentation only. Move existing controls so their handlers and stored state survive. */
+/* Presentation only. The navigation comes from navigation-config.js (generated
+   from shared/navigation-config.json); existing page controls are only moved so
+   their handlers and stored state survive. */
 document.addEventListener("DOMContentLoaded", () => {
   const en = document.documentElement.lang !== "de";
-  const routes = [
-    ["/", en ? "Home" : "Start"], ["/practice", en ? "My practice" : "Meine Übungen"],
-    [en ? "/grammar" : "/grammatik", en ? "Grammar" : "Grammatik"],
-    ["/studio", en ? "Conversation" : "Gespräche"],
-    [en ? "/progress" : "/fortschritt", en ? "My progress" : "Mein Fortschritt"],
-  ];
+  const config = (window.languageNavigation || {})[en ? "en" : "de"];
+  if (!config) return;
+  const current = location.pathname.replace(/\/$/, "") || "/";
+  const link = (item, className) => {
+    const a = document.createElement("a");
+    a.href = item.href;
+    a.className = className;
+    a.textContent = item.label;
+    if (current === item.href) {
+      a.setAttribute("aria-current", "page");
+      a.classList.add("active");
+    }
+    return a;
+  };
   const buildPrimaryNav = () => {
     const nav = document.createElement("nav");
     nav.className = "calm-primary-nav";
     nav.setAttribute("aria-label", en ? "Learning navigation" : "Lernnavigation");
-    for (const [href, label] of routes) {
-      const a = document.createElement("a"); a.href = href; a.textContent = label;
-      if (location.pathname === href) a.setAttribute("aria-current", "page");
-      nav.append(a);
-    }
+    for (const item of config.main) nav.append(link(item, ""));
     return nav;
   };
-  const wrapInMore = (container, children) => {
-    const more = document.createElement("details"); more.className = "calm-nav-more";
-    const summary = document.createElement("summary"); summary.textContent = en ? "All learning tools" : "Alle Lernwerkzeuge";
-    more.append(summary, ...children);
-    container.append(more);
+  // Daily pages keep the ".nav-section/.nav-item" classes, Grammar pages the
+  // ".nav-group/.nav-title/.nav-link" classes, so each page's own stylesheet
+  // still applies.
+  const buildMore = (groupClass, titleTag, titleClass, itemClass) => {
+    const more = document.createElement("details");
+    more.className = "calm-nav-more";
+    if (config.more.some((item) => item.href === current) || config.settings === current) more.open = true;
+    const summary = document.createElement("summary");
+    summary.textContent = en ? "All learning tools" : "Alle Lernwerkzeuge";
+    const group = document.createElement("section");
+    group.className = groupClass;
+    const title = document.createElement(titleTag);
+    title.className = titleClass;
+    title.textContent = en ? "Learning tools" : "Lernwerkzeuge";
+    group.append(title);
+    for (const item of config.more) group.append(link(item, itemClass));
+    group.append(link({ href: config.settings, label: en ? "Settings" : "Einstellungen" }, itemClass));
+    const roadmap = link({ href: "/roadmap.html", label: en ? "Roadmap & improvements" : "Roadmap & Verbesserungen" }, itemClass);
+    roadmap.hreflang = "fa";
+    group.append(roadmap);
+    more.append(summary, group);
     return more;
   };
 
@@ -30,12 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.querySelector(".sidebar");
   if (sidebar) {
     document.body.classList.add("language-workspace");
-    const oldNavigation = sidebar.querySelector("nav");
-    if (oldNavigation) {
-      oldNavigation.before(buildPrimaryNav());
-      const more = document.createElement("details"); more.className = "calm-nav-more";
-      const summary = document.createElement("summary"); summary.textContent = en ? "All learning tools" : "Alle Lernwerkzeuge";
-      oldNavigation.before(more); more.append(summary, oldNavigation);
+    const navigation = sidebar.querySelector("nav");
+    if (navigation) {
+      navigation.replaceChildren(buildPrimaryNav(), buildMore("nav-group", "h2", "nav-title", "nav-link"));
     }
     const actions = document.querySelector(".header-actions");
     if (actions) {
@@ -46,24 +65,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Today pages: a ".side" drawer made of ".nav-section" groups and a topbar of
-  // glyph buttons. Keep every button (handlers and drawer state live on them);
-  // only regroup them so the page reads as one calm navigation.
+  // Today pages: a ".side" drawer and a topbar of glyph buttons. Keep every
+  // topbar button (handlers and drawer state live on them); only regroup them.
   const side = document.querySelector("nav.side");
   if (!side) return;
   document.body.classList.add("language-workspace", "daily-workspace");
   const body = side.querySelector(".side-body");
-  if (body) {
-    const sections = [...body.querySelectorAll(".nav-section")];
-    // The current page already appears in the primary navigation; the old
-    // entry for it in the grouped list would be a duplicate.
-    for (const item of body.querySelectorAll(".nav-item[data-route]")) {
-      if (routes.some(([href]) => href === item.dataset.route)) item.remove();
-    }
-    body.prepend(buildPrimaryNav());
-    wrapInMore(body, sections.filter((section) => section.querySelector(".nav-item, .nav-parent[data-route]")));
-    for (const section of sections) section.classList.remove("is-collapsed");
-  }
+  if (body) body.replaceChildren(buildPrimaryNav(), buildMore("nav-section", "div", "nav-heading", "nav-item"));
   const topbar = document.querySelector(".topbar");
   if (topbar) {
     const keep = new Set([topbar.querySelector(".mobile-menu")]);

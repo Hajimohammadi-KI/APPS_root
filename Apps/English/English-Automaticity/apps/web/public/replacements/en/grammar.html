@@ -337,7 +337,7 @@
 <script src="/device-access/writing.js"></script>
 <script src="/device-access/grammar-drafts.js"></script>
 <script defer src="/device-access/grammar-layout.js"></script>
-<script defer src="/device-access/learning-path.js"></script><link rel="stylesheet" href="/device-access/page-chrome.css"><script defer src="/device-access/page-chrome.js"></script><link rel="stylesheet" href="/device-access/calm-theme.css"><link rel="stylesheet" href="/device-access/explanation-language.css"><link rel="stylesheet" href="/device-access/worksheet.css"><script defer src="/learning-core/support-language.js"></script></head>
+<script defer src="/device-access/learning-path.js"></script><link rel="stylesheet" href="/device-access/page-chrome.css"><script defer src="/device-access/navigation-config.js"></script><script defer src="/device-access/page-chrome.js"></script><link rel="stylesheet" href="/device-access/calm-theme.css"><link rel="stylesheet" href="/device-access/explanation-language.css"><link rel="stylesheet" href="/device-access/worksheet.css"><script defer src="/learning-core/support-language.js"></script></head>
 <body>
   <!-- Inline SVG symbol library -->
   <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
@@ -371,31 +371,7 @@
       </div>
       <div class="sidebar-rule"></div>
 
-      <nav>
-        <section class="nav-group" aria-labelledby="daily-nav">
-          <h2 class="nav-title" id="daily-nav">Daily Practice</h2>
-          <button class="nav-link" data-nav="Practice and speak today"><svg class="icon"><use href="#i-home"/></svg>Practice and speak today</button>
-          <button class="nav-link" data-nav="Today's Practice"><svg class="icon"><use href="#i-clock"/></svg>Today's Practice</button>
-          <button class="nav-link" data-nav="Conversation Studio"><svg class="icon"><use href="#i-chat"/></svg>Conversation Studio</button>
-        </section>
-        <section class="nav-group" aria-labelledby="paths-nav">
-          <h2 class="nav-title" id="paths-nav">Learning Paths</h2>
-          <button class="nav-link" data-nav="Grammar and English study"><svg class="icon"><use href="#i-settings"/></svg>Grammar and English study <span class="chevron">⌃</span></button>
-          <button class="nav-link active" data-nav="Grammar Lab" aria-current="page"><svg class="icon"><use href="#i-book"/></svg>Grammar Lab</button>
-          <button class="nav-link" data-nav="Learning Resources"><svg class="icon"><use href="#i-folder"/></svg>Learning Resources</button>
-          <button class="nav-link" data-nav="Integrated Skills"><svg class="icon"><use href="#i-book"/></svg>Integrated Skills</button>
-        </section>
-        <section class="nav-group" aria-labelledby="evidence-nav">
-          <h2 class="nav-title" id="evidence-nav">Learning Evidence</h2>
-          <button class="nav-link" data-nav="Errors and recordings"><svg class="icon"><use href="#i-clock"/></svg>Errors and recordings <span class="chevron">⌄</span></button>
-          <button class="nav-link" data-nav="Notebook & PDF Reader"><svg class="icon"><use href="#i-book"/></svg>Notebook &amp; PDF Reader</button>
-          <button class="nav-link" data-nav="Vocabulary & Flashcards"><svg class="icon"><use href="#i-folder"/></svg>Vocabulary &amp; Flashcards</button>
-        </section>
-        <section class="nav-group" aria-labelledby="settings-nav">
-          <h2 class="nav-title" id="settings-nav">App and Settings</h2>
-          <button class="nav-link" data-nav="Storage and personal options"><svg class="icon"><use href="#i-settings"/></svg>Storage and personal options <span class="chevron">⌄</span></button>
-        </section>
-      </nav>
+      <nav></nav>
 
       <div class="mascot-scene" role="img" aria-label="Friendly purple study mascot beside books and a plant">
         <svg viewBox="0 0 292 255" xmlns="http://www.w3.org/2000/svg">
@@ -687,24 +663,6 @@
         empty.textContent = 'No matching topics. Try another word.';
       });
 
-      // Connect every sidebar item to the active English application route.
-      const navRoutes = {
-        'Practice and speak today': '/',
-        "Today's Practice": '/daily',
-        'Conversation Studio': '/studio',
-        'Grammar and English study': '/grammar',
-        'Learning Resources': '/resources',
-        'Integrated Skills': '/integrated-skills',
-        'Errors and recordings': '/errors',
-        'Notebook & PDF Reader': '/notebook',
-        'Vocabulary & Flashcards': '/flashcards',
-        'Storage and personal options': '/settings'
-      };
-      $$('.nav-link').forEach(link => link.addEventListener('click', () => {
-        if (link.dataset.nav === 'Grammar Lab') return;
-        const route = navRoutes[link.dataset.nav];
-        if (route) window.location.href = route;
-      }));
 
       // Recall task behavior.
       const tasksForTopic = () => {

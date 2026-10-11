@@ -52,3 +52,10 @@ releases/CrossRepositoryCodeIntelligence-*-Version2-final.zip -filter -diff -mer
 # Benchmark hashes must survive a Windows checkout with core.autocrlf=true.
 research/assessment-benchmark/*.ts text eol=lf
 research/assessment-benchmark/runs/**/*.snapshot -text
+
+# Generated roadmaps are checked byte-for-byte before either language app builds.
+# Keep a Windows checkout identical to the generator and Linux deployment.
+docs/language-apps-roadmap.html text eol=lf
+docs/LANGUAGE-APPS-IMPROVEMENT-ROADMAP.md text eol=lf
+Apps/English/English-Automaticity/apps/web/public/roadmap.html text eol=lf
+Apps/Deutsch/Deutsch-Automaticity/apps/web/public/roadmap.html text eol=lf

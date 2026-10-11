@@ -32,7 +32,7 @@ body {
 }
 
 .german-app-main {
-  padding-top: 28px !important;
+  padding-top: 28px;
 }
 
 button,
@@ -83,84 +83,84 @@ summary:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid rgb(61 90 158 / 38%) !important;
+  outline: 3px solid rgb(61 90 158 / 38%);
   outline-offset: 2px;
 }
 
 .automaticity-overview {
-  border-color: #d8d3ca !important;
-  background: #ffffff !important;
-  color: #1f2937 !important;
+  border-color: #d8d3ca;
+  background: #ffffff;
+  color: #1f2937;
 }
 
 .automaticity-primary-action,
 .dashboard-hero-actions > :first-child,
 [class~="bg-primary"] {
-  background: #153b80 !important;
-  border-color: #153b80 !important;
-  color: #ffffff !important;
+  background: #153b80;
+  border-color: #153b80;
+  color: #ffffff;
 }
 
 .automaticity-secondary-action {
-  border: 1px solid #c9c2b7 !important;
-  background: #efe7da !important;
-  color: #2f477e !important;
+  border: 1px solid #c9c2b7;
+  background: #efe7da;
+  color: #2f477e;
 }
 
 .automaticity-overview h2,
 .automaticity-overview h3,
 .automaticity-overview summary {
-  color: #1f2937 !important;
+  color: #1f2937;
 }
 
 .dashboard-hero-actions > :first-child {
-  background-image: none !important;
+  background-image: none;
 }
 
 .dashboard-hero-actions > :first-child {
-  background-color: #153b80 !important;
+  background-color: #153b80;
 }
 
 .brand-icon {
-  background: linear-gradient(145deg, #153b80, #2f477e) !important;
+  background: linear-gradient(145deg, #153b80, #2f477e);
 }
 
 .brand-logo,
 .german-install-button {
-  background: linear-gradient(145deg, #153b80, #2f477e) !important;
-  color: #ffffff !important;
+  background: linear-gradient(145deg, #153b80, #2f477e);
+  color: #ffffff;
 }
 
 .persian-word-help-card {
-  width: min(28rem, calc(100vw - 2rem)) !important;
-  max-height: min(40rem, calc(100vh - 2rem)) !important;
-  overflow: auto !important;
-  border: 2px solid #153b80 !important;
-  background: #ffffff !important;
-  color: #1f2937 !important;
+  width: min(28rem, calc(100vw - 2rem));
+  max-height: min(40rem, calc(100vh - 2rem));
+  overflow: auto;
+  border: 2px solid #153b80;
+  background: #ffffff;
+  color: #1f2937;
   box-shadow:
     0 18px 50px rgb(31 41 55 / 20%),
-    0 0 0 3px rgb(61 90 158 / 10%) !important;
-  padding: 1rem !important;
-  font-family: "Segoe UI Variable", "Segoe UI", Tahoma, sans-serif !important;
-  line-height: 1.6 !important;
-  text-align: left !important;
+    0 0 0 3px rgb(61 90 158 / 10%);
+  padding: 1rem;
+  font-family: "Segoe UI Variable", "Segoe UI", Tahoma, sans-serif;
+  line-height: 1.6;
+  text-align: left;
 }
 
 .persian-word-help-term {
-  margin-bottom: 0.7rem !important;
-  background: #efe7da !important;
-  color: #2f477e !important;
+  margin-bottom: 0.7rem;
+  background: #efe7da;
+  color: #2f477e;
 }
 
 .persian-word-help-section + .persian-word-help-section,
 .persian-word-help-example {
-  border-top-color: rgb(61 90 158 / 20%) !important;
+  border-top-color: rgb(61 90 158 / 20%);
 }
 
 .persian-word-help-section strong,
 .persian-word-help-example strong {
-  color: #153b80 !important;
+  color: #153b80;
 }
 
 .persian-word-help-card::after {
@@ -176,8 +176,8 @@ textarea:focus-visible {
 
 [lang="fa"],
 [lang^="fa-"] {
-  direction: rtl !important;
-  text-align: start !important;
+  direction: rtl;
+  text-align: start;
   unicode-bidi: isolate;
 }
 
@@ -185,7 +185,7 @@ textarea:focus-visible {
 [lang^="fa-"] .persian-word-help-card,
 .persian-word-help-card[lang="fa"],
 .persian-word-help-card[lang^="fa-"] {
-  direction: rtl !important;
-  text-align: right !important;
-  font-family: Tahoma, "Segoe UI", sans-serif !important;
+  direction: rtl;
+  text-align: right;
+  font-family: Tahoma, "Segoe UI", sans-serif;
 }

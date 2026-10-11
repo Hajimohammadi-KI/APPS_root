@@ -201,9 +201,9 @@ h4 {
 .automaticity-primary-action,
 .dashboard-hero-actions > :first-child,
 .german-install-button {
-  background: var(--worksheet-teal) !important;
-  border-color: var(--worksheet-teal) !important;
-  color: #fff !important;
+  background: var(--worksheet-teal);
+  border-color: var(--worksheet-teal);
+  color: #fff;
 }
 
 /* Home: a real next action, cyan activity cells and a yellow method panel. */
@@ -345,7 +345,7 @@ select:focus-visible,
 textarea:focus-visible,
 .learning-navigation :is(a, summary):focus-visible,
 .app-tools > summary:focus-visible {
-  outline: 3px solid var(--worksheet-teal) !important;
+  outline: 3px solid var(--worksheet-teal);
   outline-offset: 3px;
 }
 .settings-choice,
@@ -382,44 +382,44 @@ textarea:focus-visible,
   color: var(--worksheet-teal);
 }
 .settings-intention-eyebrow {
-  color: var(--worksheet-teal) !important;
+  color: var(--worksheet-teal);
 }
 .automaticity-overview {
-  background: #fff !important;
-  border-color: var(--worksheet-line) !important;
-  color: var(--worksheet-ink) !important;
+  background: #fff;
+  border-color: var(--worksheet-line);
+  color: var(--worksheet-ink);
   border-radius: 22px;
   box-shadow: var(--worksheet-shadow);
 }
 .automaticity-overview h2,
 .automaticity-overview h3,
 .automaticity-overview summary {
-  color: var(--worksheet-ink) !important;
+  color: var(--worksheet-ink);
 }
 .automaticity-secondary-action {
-  border-color: #98c9c8 !important;
-  background: var(--worksheet-cyan) !important;
-  color: var(--worksheet-ink) !important;
+  border-color: #98c9c8;
+  background: var(--worksheet-cyan);
+  color: var(--worksheet-ink);
 }
 .neuro-ruler-toggle,
 .standalone-neuro-ruler-toggle {
-  border-color: var(--worksheet-line) !important;
-  background: #fff !important;
-  color: var(--worksheet-ink) !important;
-  box-shadow: none !important;
+  border-color: var(--worksheet-line);
+  background: #fff;
+  color: var(--worksheet-ink);
+  box-shadow: none;
 }
 .persian-word-help-card {
-  border-color: var(--worksheet-teal) !important;
-  color: var(--worksheet-ink) !important;
-  box-shadow: var(--worksheet-shadow) !important;
+  border-color: var(--worksheet-teal);
+  color: var(--worksheet-ink);
+  box-shadow: var(--worksheet-shadow);
 }
 .persian-word-help-term {
-  background: var(--worksheet-yellow) !important;
-  color: var(--worksheet-ink) !important;
+  background: var(--worksheet-yellow);
+  color: var(--worksheet-ink);
 }
 .persian-word-help-section strong,
 .persian-word-help-example strong {
-  color: var(--worksheet-teal) !important;
+  color: var(--worksheet-teal);
 }
 @media (max-width: 640px) {
   .learning-card,
@@ -440,8 +440,8 @@ textarea:focus-visible,
   .learning-home *,
   .learning-navigation *,
   .conversation-page * {
-    animation: none !important;
-    transition: none !important;
+    animation: none;
+    transition: none;
   }
 }
 @media (forced-colors: active) {
@@ -467,7 +467,7 @@ textarea:focus-visible,
   }
   /* The utility "hidden" class must not win over the desktop rail above the drawer breakpoint. */
   .german-app-sidebar {
-    display: flex !important;
+    display: flex;
     flex-direction: column;
   }
 }

@@ -699,7 +699,7 @@ export function AutomaticityLab({
               onClick={() => setActiveStep(index)}
               type="button"
             >
-              <Card className={step.done ? "border-worksheet-line0" : ""}>
+              <Card className={step.done ? "border-worksheet-teal" : ""}>
                 <CardContent className="flex gap-3">
                   <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal">
                     {step.done ? <Check /> : <step.icon />}

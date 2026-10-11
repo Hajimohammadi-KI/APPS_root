@@ -105,10 +105,10 @@ const skillMeta: Record<
 };
 
 const levelTone: Record<CefrLevel, string> = {
-  A1: "border-worksheet-line0 bg-worksheet-teal! border-worksheet-teal! text-white!",
-  A2: "border-worksheet-line0 bg-worksheet-teal! border-worksheet-teal! text-white!",
-  B1: "border-worksheet-line0 bg-worksheet-teal! border-worksheet-teal! text-white!",
-  B2: "border-worksheet-line0 bg-worksheet-teal! border-worksheet-teal! text-white!",
+  A1: "border-worksheet-teal bg-worksheet-teal! border-worksheet-teal! text-white!",
+  A2: "border-worksheet-teal bg-worksheet-teal! border-worksheet-teal! text-white!",
+  B1: "border-worksheet-teal bg-worksheet-teal! border-worksheet-teal! text-white!",
+  B2: "border-worksheet-teal bg-worksheet-teal! border-worksheet-teal! text-white!",
   C1: "border-slate-600 bg-slate-800 text-white",
   C2: "border-worksheet-teal bg-worksheet-ink! text-white!",
 };

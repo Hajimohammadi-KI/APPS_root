@@ -158,7 +158,7 @@ export function QSkillsResources({ cefr }: { cefr: CefrLevel }) {
                     {unitOptions.map((candidate) => {
                       const checked = selectedUnits.includes(unitKey(candidate.level, candidate.unit));
                       return (
-                        <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-bold ${checked ? "border-worksheet-line0 bg-worksheet-cyan" : "border-slate-200"}`} key={`${candidate.level}-${candidate.unit}`}>
+                        <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-bold ${checked ? "border-worksheet-teal bg-worksheet-cyan" : "border-slate-200"}`} key={`${candidate.level}-${candidate.unit}`}>
                           <input checked={checked} onChange={() => toggleUnit(candidate.level, candidate.unit)} type="checkbox" />
                           {candidate.label}
                         </label>
@@ -172,7 +172,7 @@ export function QSkillsResources({ cefr }: { cefr: CefrLevel }) {
                     {assetKinds.map((kind) => {
                       const checked = selectedKinds.includes(kind);
                       return (
-                        <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-bold capitalize ${checked ? "border-worksheet-line0 bg-worksheet-cyan" : "border-slate-200"}`} key={kind}>
+                        <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-bold capitalize ${checked ? "border-worksheet-teal bg-worksheet-cyan" : "border-slate-200"}`} key={kind}>
                           <input checked={checked} onChange={() => toggleKind(kind)} type="checkbox" />
                           {kind}
                         </label>

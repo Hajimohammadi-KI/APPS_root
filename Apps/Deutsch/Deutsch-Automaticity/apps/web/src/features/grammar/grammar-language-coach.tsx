@@ -209,7 +209,7 @@ export function GrammarLanguageCoach({
             return (
               <li
                 aria-current={active ? "step" : undefined}
-                className={`rounded-xl border p-3 text-sm leading-5 ${active ? "border-worksheet-line0 bg-worksheet-cyan! text-worksheet-teal! ring-2 ring-worksheet-line" : completed ? "border-worksheet-line bg-worksheet-cyan! text-worksheet-teal" : "bg-background text-muted-foreground"}`}
+                className={`rounded-xl border p-3 text-sm leading-5 ${active ? "border-worksheet-teal bg-worksheet-cyan! text-worksheet-teal! ring-2 ring-worksheet-line" : completed ? "border-worksheet-line bg-worksheet-cyan! text-worksheet-teal" : "bg-background text-muted-foreground"}`}
                 key={label}
               >
                 <span className="mb-2 flex items-center justify-between gap-2">

@@ -68,7 +68,7 @@ function ExercisePanel({
                 "min-h-12 rounded-xl border px-4 py-3 text-left text-sm font-medium transition-colors",
                 "focus-visible:ring-3 focus-visible:ring-worksheet-line focus-visible:outline-none",
                 answer === option
-                  ? "border-worksheet-line0 bg-worksheet-cyan! text-worksheet-teal!"
+                  ? "border-worksheet-teal bg-worksheet-cyan! text-worksheet-teal!"
                   : "border-slate-200 bg-white text-slate-800 hover:border-worksheet-line hover:bg-worksheet-cyan/50",
               )}
               key={option}

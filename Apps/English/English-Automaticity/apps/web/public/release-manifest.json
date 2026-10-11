@@ -1,9 +1,9 @@
 {
   "publishedAt": "2026-10-11",
   "version": "27.4.4",
-  "webRelease": "2026.10.11.3",
+  "webRelease": "2026.10.11.4",
   "changes": [
-    "Worksheet colours are now named once and used directly by every screen; the last violet-tinted panels (Integrated Skills navigator, lesson cards) follow the teal and cyan palette",
+    "Style cleanup with no visible change: about 110 forced style overrides removed, verified pixel-for-pixel on every screen",
     "Learner data, saved responses and all links are unchanged"
   ]
 }

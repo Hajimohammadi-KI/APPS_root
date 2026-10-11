@@ -769,7 +769,7 @@ export function AutomaticityScreen({
                 }
                 type="button"
               >
-                <Card className={done ? "border-worksheet-line0" : ""}>
+                <Card className={done ? "border-worksheet-teal" : ""}>
                   <CardContent className="flex gap-3 pt-5">
                     <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal">
                       {done ? <Check /> : <StepIcon />}

@@ -17,7 +17,7 @@ describe("studio helpers", () => {
   test("formats seconds as m:ss and counts words across scripts", () => {
     expect(formatTime(0)).toBe("0:00");
     expect(formatTime(65)).toBe("1:05");
-    expect(countWords("  I don’t know – maybe 2 things ")).toBe(5);
+    expect(countWords("  I don’t know – maybe 2 things ")).toBe(6);
     expect(unique(["A1", "A2", "A1"])).toEqual(["A1", "A2"]);
   });
 

@@ -98,10 +98,10 @@ function Axis({ label, value }: Readonly<{ label: string; value: number }>) {
         <span>{label}</span>
         <span className="tabular-nums">{value}%</span>
       </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-violet-100">
+      <div className="h-2.5 overflow-hidden rounded-full bg-worksheet-cyan">
         <div
           aria-hidden="true"
-          className="h-full rounded-full bg-violet-700 transition-[width]"
+          className="h-full rounded-full bg-worksheet-teal transition-[width]"
           style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
         />
       </div>
@@ -111,7 +111,7 @@ function Axis({ label, value }: Readonly<{ label: string; value: number }>) {
 
 function Feedback({ analysis }: Readonly<{ analysis: AutomatikAnalysis }>) {
   return (
-    <div className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50 p-4">
+    <div className="space-y-3 rounded-2xl border border-worksheet-line bg-worksheet-cyan p-4">
       <div className="grid grid-cols-3 gap-2 text-center text-sm">
         <div>
           <strong className="block text-lg">{analysis.sentenceCount}</strong>
@@ -140,7 +140,7 @@ function Feedback({ analysis }: Readonly<{ analysis: AutomatikAnalysis }>) {
           ))}
         </ul>
       ) : (
-        <p className="flex items-center gap-2 text-sm font-bold text-violet-900">
+        <p className="flex items-center gap-2 text-sm font-bold text-worksheet-teal">
           <Check className="size-4" /> Die Offline-Musterprüfung findet keinen
           Zielfehler.
         </p>
@@ -605,9 +605,9 @@ export function AutomaticityLab({
   return (
     <div className="space-y-5">
       {!focusedStep && focusedStep !== 0 ? (
-        <section className="flex flex-col gap-4 overflow-hidden rounded-3xl border border-violet-200 bg-violet-50 p-5 shadow-sm sm:p-7 lg:flex-row lg:items-center lg:justify-between">
+        <section className="flex flex-col gap-4 overflow-hidden rounded-3xl border border-worksheet-line bg-worksheet-cyan p-5 shadow-sm sm:p-7 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <Badge className="mb-3 bg-violet-700 text-white">
+            <Badge className="mb-3 bg-worksheet-teal text-white">
               Heute · {missionMinutes} Minuten
             </Badge>
             {embedded ? (
@@ -626,7 +626,7 @@ export function AutomaticityLab({
             </p>
           </div>
           <Button
-            className="bg-violet-700 text-white hover:bg-violet-800"
+            className="bg-worksheet-teal text-white hover:bg-worksheet-teal"
             size="lg"
             onClick={() =>
               document
@@ -640,7 +640,7 @@ export function AutomaticityLab({
       ) : null}
 
       {focusedStep === undefined ? (
-        <Card className="border-violet-200 bg-violet-50/70" id="mission">
+        <Card className="border-worksheet-line bg-worksheet-cyan/70" id="mission">
           <CardContent className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -651,15 +651,15 @@ export function AutomaticityLab({
               </div>
               <Badge>{progress}% erledigt</Badge>
             </div>
-            <div className="h-3 overflow-hidden rounded-full bg-white ring-1 ring-violet-200">
+            <div className="h-3 overflow-hidden rounded-full bg-white ring-1 ring-worksheet-line">
               <div
-                className="h-full rounded-full bg-violet-700 transition-[width]"
+                className="h-full rounded-full bg-worksheet-teal transition-[width]"
                 style={{ width: `${progress}%` }}
               />
             </div>
             <p
               aria-live="polite"
-              className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-violet-950"
+              className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-worksheet-teal"
             >
               {message}
             </p>
@@ -696,9 +696,9 @@ export function AutomaticityLab({
               onClick={() => setActiveStep(index)}
               type="button"
             >
-              <Card className={step.done ? "border-violet-500" : ""}>
+              <Card className={step.done ? "border-worksheet-line0" : ""}>
                 <CardContent className="flex gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-100 text-violet-800">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan text-worksheet-teal">
                     {step.done ? <Check /> : <step.icon />}
                   </span>
                   <div>
@@ -715,7 +715,7 @@ export function AutomaticityLab({
       ) : null}
 
       {focusedStep === undefined ? (
-        <Card className="border-violet-200">
+        <Card className="border-worksheet-line">
           <CardHeader>
             <CardTitle>Qualitätsgrenze der Mission</CardTitle>
             <CardDescription>
@@ -724,19 +724,19 @@ export function AutomaticityLab({
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl bg-violet-50 p-4 text-sm">
+            <div className="rounded-2xl bg-worksheet-cyan p-4 text-sm">
               <strong>Genau</strong>
               <p className="mt-1 text-muted-foreground">
                 Zielstruktur korrekt in eigenen Sätzen.
               </p>
             </div>
-            <div className="rounded-2xl bg-violet-50 p-4 text-sm">
+            <div className="rounded-2xl bg-worksheet-cyan p-4 text-sm">
               <strong>Spontan</strong>
               <p className="mt-1 text-muted-foreground">
                 Mindestens 60 Sekunden ohne Ablesen sprechen.
               </p>
             </div>
-            <div className="rounded-2xl bg-violet-50 p-4 text-sm">
+            <div className="rounded-2xl bg-worksheet-cyan p-4 text-sm">
               <strong>Behalten</strong>
               <p className="mt-1 text-muted-foreground">
                 Die Struktur bei der nächsten Wiederholung erneut abrufen.
@@ -754,7 +754,7 @@ export function AutomaticityLab({
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="grid gap-3 md:grid-cols-2">
-              <div className="rounded-2xl bg-violet-50 p-4">
+              <div className="rounded-2xl bg-worksheet-cyan p-4">
                 <strong>Regel und Form</strong>
                 <p className="mt-2">{grammar.examples[0]}</p>
               </div>
@@ -781,7 +781,7 @@ export function AutomaticityLab({
                   <span
                     className={
                       checkedAnswers[index]
-                        ? "text-sm font-bold text-violet-800"
+                        ? "text-sm font-bold text-worksheet-teal"
                         : "text-sm font-bold text-red-800"
                     }
                   >
@@ -831,10 +831,10 @@ export function AutomaticityLab({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="rounded-2xl bg-violet-950 p-5 text-violet-50">
+            <div className="rounded-2xl bg-worksheet-ink p-5 text-white">
               <p className="leading-7">{modelText}</p>
               <Button
-                className="mt-4 bg-white text-violet-950 hover:bg-violet-100"
+                className="mt-4 bg-white text-worksheet-teal hover:bg-worksheet-cyan"
                 onClick={() => speak(modelText)}
               >
                 <Volume2 /> Modell abspielen
@@ -843,7 +843,7 @@ export function AutomaticityLab({
             <div className="grid gap-2 md:grid-cols-5">
               {shadowingStages.map((stage, index) => (
                 <button
-                  className={`min-h-24 rounded-2xl border p-3 text-left text-sm font-bold ${shadowing[index] ? "border-violet-700 bg-violet-100 text-violet-950" : "bg-background"}`}
+                  className={`min-h-24 rounded-2xl border p-3 text-left text-sm font-bold ${shadowing[index] ? "border-worksheet-teal bg-worksheet-cyan text-worksheet-teal" : "bg-background"}`}
                   key={stage}
                   onClick={() =>
                     setDailyAnswer(
@@ -960,14 +960,14 @@ export function AutomaticityLab({
             </CardHeader>
             <CardContent>
               <ol className="space-y-3 text-sm">
-                <li className="rounded-xl bg-violet-50 p-3">
+                <li className="rounded-xl bg-worksheet-cyan p-3">
                   <b>1. Reparieren:</b> fünf ähnliche Sätze korrigieren.
                 </li>
-                <li className="rounded-xl bg-violet-50 p-3">
+                <li className="rounded-xl bg-worksheet-cyan p-3">
                   <b>2. Übertragen:</b> fünf neue eigene Sätze mit „{TOPIC}“
                   bilden.
                 </li>
-                <li className="rounded-xl bg-violet-50 p-3">
+                <li className="rounded-xl bg-worksheet-cyan p-3">
                   <b>3. Automatisieren:</b> einmal shadowen und frei
                   nacherzählen.
                 </li>

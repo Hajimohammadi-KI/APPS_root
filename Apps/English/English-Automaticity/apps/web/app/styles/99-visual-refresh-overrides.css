@@ -520,18 +520,3 @@ body {
   }
 }
 
-/* Existing semantic success utilities now use indigo, keeping the product
-   palette free of green while retaining a clear positive state. */
-:where([class*="bg-emerald-"]) {
-  background-color: color-mix(in srgb, var(--primary) 10%, white) !important;
-}
-:where([class*="text-emerald-"]) {
-  color: var(--primary) !important;
-}
-:where([class*="border-emerald-"]) {
-  border-color: color-mix(in srgb, var(--primary) 32%, var(--border)) !important;
-}
-:where([class*="from-emerald-"], [class*="to-emerald-"]) {
-  --tw-gradient-from: var(--primary) !important;
-  --tw-gradient-to: color-mix(in srgb, var(--primary) 70%, white) !important;
-}

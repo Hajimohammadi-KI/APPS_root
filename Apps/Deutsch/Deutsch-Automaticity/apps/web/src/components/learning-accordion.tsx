@@ -18,15 +18,15 @@ const toneStyles: Record<
 > = {
   blue: {
     shell:
-      "border-sky-200 bg-gradient-to-r from-sky-50/90 via-background to-background",
-    icon: "bg-sky-100 text-sky-700 ring-sky-200",
-    eyebrow: "text-sky-700",
+      "border-worksheet-line via-background to-background",
+    icon: "bg-worksheet-cyan text-worksheet-teal ring-worksheet-line",
+    eyebrow: "text-worksheet-teal",
   },
   violet: {
     shell:
-      "border-violet-200 bg-gradient-to-r from-violet-50/90 via-background to-background",
-    icon: "bg-violet-100 text-violet-700 ring-violet-200",
-    eyebrow: "text-violet-700",
+      "border-worksheet-line via-background to-background",
+    icon: "bg-worksheet-cyan text-worksheet-teal ring-worksheet-line",
+    eyebrow: "text-worksheet-teal",
   },
   emerald: {
     shell:

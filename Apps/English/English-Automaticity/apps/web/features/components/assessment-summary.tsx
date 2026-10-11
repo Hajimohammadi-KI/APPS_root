@@ -39,7 +39,7 @@ export function AssessmentSummary({ result }: { result: EvaluationResult }) {
         !result.online
           ? "border-amber-200 border-l-amber-600 bg-amber-50/60"
           : accepted
-            ? "border-emerald-300 border-l-emerald-600 bg-emerald-50/60"
+            ? "border-worksheet-success-line border-l-worksheet-success-line bg-worksheet-success/60"
             : "border-red-200 border-l-red-700 bg-red-50/60",
       )}
       data-assessment={status}

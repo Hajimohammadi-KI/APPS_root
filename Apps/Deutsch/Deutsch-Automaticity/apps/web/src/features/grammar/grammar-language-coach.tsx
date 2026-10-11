@@ -178,7 +178,7 @@ export function GrammarLanguageCoach({
       <div className="grid gap-4" dir={isPersian ? "rtl" : "ltr"}>
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="max-w-2xl text-start">
-            <p className="text-sm font-semibold text-violet-900">
+            <p className="text-sm font-semibold text-worksheet-teal">
               {coach.title}
             </p>
             <p className="mt-1 leading-7">{coach.goal}</p>
@@ -209,11 +209,11 @@ export function GrammarLanguageCoach({
             return (
               <li
                 aria-current={active ? "step" : undefined}
-                className={`rounded-xl border p-3 text-sm leading-5 ${active ? "border-violet-500 bg-violet-100 text-violet-950 ring-2 ring-violet-200" : completed ? "border-violet-200 bg-violet-50 text-violet-950" : "bg-background text-muted-foreground"}`}
+                className={`rounded-xl border p-3 text-sm leading-5 ${active ? "border-worksheet-line0 bg-worksheet-cyan text-worksheet-teal ring-2 ring-worksheet-line" : completed ? "border-worksheet-line bg-worksheet-cyan text-worksheet-teal" : "bg-background text-muted-foreground"}`}
                 key={label}
               >
                 <span className="mb-2 flex items-center justify-between gap-2">
-                  <span className="grid size-7 place-items-center rounded-full bg-white font-semibold text-violet-950 shadow-sm">
+                  <span className="grid size-7 place-items-center rounded-full bg-white font-semibold text-worksheet-teal shadow-sm">
                     {completed ? <Check className="size-4" /> : index + 1}
                   </span>
                   <StepIcon aria-hidden="true" className="size-4" />
@@ -224,7 +224,7 @@ export function GrammarLanguageCoach({
           })}
         </ol>
 
-        <div className="rounded-xl border border-violet-300 bg-violet-50/70 p-4 text-violet-950">
+        <div className="rounded-xl border border-worksheet-line bg-worksheet-cyan/70 p-4 text-worksheet-teal">
           {studyVisible ? (
             <>
               <p className="text-xs font-semibold tracking-[0.14em] uppercase">
@@ -277,7 +277,7 @@ export function GrammarLanguageCoach({
           ) : (
             <>
               <p className="font-semibold leading-7">{coach.comparePrompt}</p>
-              <p className="mt-2 flex items-start gap-2 text-sm leading-6 text-violet-900">
+              <p className="mt-2 flex items-start gap-2 text-sm leading-6 text-worksheet-teal">
                 <Eye className="mt-1 size-4 shrink-0" />
                 {ui.repairHelp}
               </p>

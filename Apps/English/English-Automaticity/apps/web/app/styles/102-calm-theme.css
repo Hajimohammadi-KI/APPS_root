@@ -83,19 +83,10 @@ h1, h2, h3, h4 { font-family: var(--calm-font) !important; font-weight: 750; let
 .learning-card > div:first-child > h3 svg, [data-slot="card-title"] svg { color: inherit !important; }
 
 /* Resolve the earlier utility palette without recoloring destructive controls. */
-[class~="bg-primary"], [class~="bg-blue-700"], [class~="bg-sky-700"], [class~="bg-violet-700"], [class~="bg-purple-700"], [class~="bg-purple-800"], .automaticity-primary-action, .dashboard-hero-actions > :first-child, .german-install-button { background: var(--worksheet-teal) !important; border-color: var(--worksheet-teal) !important; color: #fff !important; }
-[class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-sky-50"], [class~="bg-sky-100"], [class~="bg-violet-50"], [class~="bg-violet-100"], [class~="bg-purple-50"], [class~="bg-purple-100"] { background-color: var(--worksheet-cyan) !important; }
-[class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"], [class~="text-blue-950"], [class~="text-sky-700"], [class~="text-sky-800"], [class~="text-sky-900"], [class~="text-sky-950"], [class~="text-violet-700"], [class~="text-violet-800"], [class~="text-violet-900"], [class~="text-violet-950"], [class~="text-purple-700"], [class~="text-purple-800"], [class~="text-purple-900"], [class~="text-purple-950"] { color: var(--worksheet-teal) !important; }
-[class~="border-blue-200"], [class~="border-blue-300"], [class~="border-sky-200"], [class~="border-sky-300"], [class~="border-violet-200"], [class~="border-violet-300"], [class~="border-violet-400"], [class~="border-purple-200"], [class~="border-purple-300"] { border-color: var(--worksheet-line) !important; }
-[class*="bg-gradient"][class*="from-violet"], [class*="bg-gradient"][class*="from-purple"], [class*="bg-gradient"][class*="from-blue"] { background-image: none !important; }
-/* Restore success semantics hidden by the old universal indigo mapping. */
-[class~="bg-emerald-50"], [class~="bg-green-50"] { background-color: #ecfdf5 !important; }
-[class~="bg-emerald-100"], [class~="bg-green-100"] { background-color: #d1fae5 !important; }
-[class~="text-emerald-700"], [class~="text-emerald-800"], [class~="text-green-700"], [class~="text-green-800"] { color: #065f46 !important; }
-[class~="text-emerald-900"], [class~="text-emerald-950"], [class~="text-green-900"], [class~="text-green-950"] { color: #064e3b !important; }
-[class~="bg-emerald-950"], [class~="bg-green-950"] { background-color: #064e3b !important; }
-[class~="border-emerald-200"], [class~="border-emerald-300"], [class~="border-green-200"], [class~="border-green-300"] { border-color: #a7d9c1 !important; }
-[class~="bg-violet-950"], [class~="bg-purple-950"] { background-color: var(--worksheet-ink) !important; }
+[class~="bg-primary"],
+.automaticity-primary-action,
+.dashboard-hero-actions > :first-child,
+.german-install-button { background: var(--worksheet-teal) !important; border-color: var(--worksheet-teal) !important; color: #fff !important; }
 
 /* Home: a real next action, cyan activity cells and a yellow method panel. */
 .learning-home { --lh-ink: var(--worksheet-ink); --lh-muted: var(--worksheet-muted); --lh-primary: var(--worksheet-teal); --lh-primary-hover: var(--worksheet-teal-hover); --lh-line: var(--worksheet-line); --lh-paper: #fff; --lh-soft: var(--worksheet-cyan); }

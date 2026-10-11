@@ -58,10 +58,10 @@ export function IntegratedSkillsCatalog() {
           learners can choose several levels and skills without scrolling past
           unrelated content. Apply keeps tentative checkbox changes reversible. */}
       <details
-        className="group overflow-hidden rounded-3xl border border-violet-300 bg-card shadow-sm"
+        className="group overflow-hidden rounded-3xl border border-worksheet-line bg-card shadow-sm"
         ref={pickerRef}
       >
-        <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 bg-violet-50/80 p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:p-6">
+        <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 bg-worksheet-cyan/80 p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:p-6">
           <span className="min-w-0">
             <strong className="block text-lg">Lernpfad auswählen</strong>
             <span className="mt-1 block text-sm text-muted-foreground">
@@ -101,16 +101,16 @@ export function IntegratedSkillsCatalog() {
               {matchingLevels.map((level) => (
                 <label
                   className={`flex min-w-0 cursor-pointer items-start gap-3 rounded-2xl border p-3 text-sm ${
-                    pendingLevels.includes(level.stufe)
-                      ? "border-violet-400 bg-violet-50"
-                      : "bg-background"
-                  }`}
+ pendingLevels.includes(level.stufe)
+ ? "border-worksheet-line bg-worksheet-cyan"
+ : "bg-background"
+ }`}
                   key={level.stufe}
                 >
                   <input
                     aria-label={`Niveau ${level.stufe} anzeigen`}
                     checked={pendingLevels.includes(level.stufe)}
-                    className="mt-1 size-4 shrink-0 accent-violet-700"
+                    className="mt-1 size-4 shrink-0 accent-worksheet-teal"
                     onChange={() =>
                       setPendingLevels((current) =>
                         toggleValue(current, level.stufe),
@@ -142,16 +142,16 @@ export function IntegratedSkillsCatalog() {
               {FERTIGKEITEN.map((skill) => (
                 <label
                   className={`flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border px-3 py-2 text-sm font-bold ${
-                    pendingSkills.includes(skill)
-                      ? "border-violet-400 bg-violet-50"
-                      : "bg-background"
-                  }`}
+ pendingSkills.includes(skill)
+ ? "border-worksheet-line bg-worksheet-cyan"
+ : "bg-background"
+ }`}
                   key={skill}
                 >
                   <input
                     aria-label={`${skill} anzeigen`}
                     checked={pendingSkills.includes(skill)}
-                    className="size-4 shrink-0 accent-violet-700"
+                    className="size-4 shrink-0 accent-worksheet-teal"
                     onChange={() =>
                       setPendingSkills((current) => toggleValue(current, skill))
                     }

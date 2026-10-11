@@ -242,19 +242,6 @@ body {
   background: linear-gradient(135deg, #9b73cd, #7651a3);
 }
 
-.daily-mission-hero [class*="text-sky-50"] {
-  color: rgb(255 255 255 / 80%);
-}
-
-.daily-mission-hero [class*="bg-sky-400"] {
-  background: rgb(255 255 255 / 12%);
-  color: #fff;
-}
-
-.daily-mission-hero [class*="bg-sky-50"] {
-  background: #f8f1fd;
-}
-
 .method-ribbon {
   display: flex;
   flex-wrap: wrap;
@@ -536,22 +523,4 @@ body {
   ):hover {
     transform: translateY(-1px);
   }
-}
-
-:where([class*="bg-emerald-"]) {
-  background-color: color-mix(in srgb, var(--primary) 10%, white) !important;
-}
-:where([class*="text-emerald-"]) {
-  color: var(--primary) !important;
-}
-:where([class*="border-emerald-"]) {
-  border-color: color-mix(
-    in srgb,
-    var(--primary) 32%,
-    var(--border)
-  ) !important;
-}
-:where([class*="from-emerald-"], [class*="to-emerald-"]) {
-  --tw-gradient-from: var(--primary) !important;
-  --tw-gradient-to: color-mix(in srgb, var(--primary) 70%, white) !important;
 }

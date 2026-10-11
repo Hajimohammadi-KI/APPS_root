@@ -257,7 +257,7 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
   return (
     <Card
       className={
-        error.repairStatus === "fixed" ? "border-sky-300 bg-sky-50/25" : ""
+        error.repairStatus === "fixed" ? "border-worksheet-line bg-worksheet-cyan/25" : ""
       }
     >
       <CardHeader>
@@ -296,7 +296,7 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
             </CardDescription>
           </div>
           {error.repairStatus === "fixed" && (
-            <CheckCircle2 className="size-6 text-sky-700" />
+            <CheckCircle2 className="size-6 text-worksheet-teal" />
           )}
         </div>
       </CardHeader>
@@ -309,8 +309,8 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
             {error.original}
           </div>
           {showCorrection && (
-            <div className="rounded-xl border bg-sky-50/60 p-3 text-sm">
-              <span className="mb-1 block text-xs font-semibold text-sky-800">
+            <div className="rounded-xl border bg-worksheet-cyan/60 p-3 text-sm">
+              <span className="mb-1 block text-xs font-semibold text-worksheet-teal">
                 Korrigiert
               </span>
               <HighlightedCorrection
@@ -321,7 +321,7 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
           )}
         </div>
         {showCorrection && (
-          <p className="rounded-xl border bg-blue-50/60 p-3 text-sm leading-6 text-blue-950">
+          <p className="rounded-xl border bg-worksheet-cyan/60 p-3 text-sm leading-6 text-worksheet-teal">
             <strong>Diagnose:</strong> {error.explanation}
           </p>
         )}
@@ -339,7 +339,7 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
               key={step}
               className="flex items-center gap-2 rounded-lg border p-2"
             >
-              <span className="grid size-6 shrink-0 place-items-center rounded-full bg-sky-100 text-xs font-semibold text-sky-900">
+              <span className="grid size-6 shrink-0 place-items-center rounded-full bg-worksheet-cyan text-xs font-semibold text-worksheet-teal">
                 {index + 1}
               </span>
               {step}

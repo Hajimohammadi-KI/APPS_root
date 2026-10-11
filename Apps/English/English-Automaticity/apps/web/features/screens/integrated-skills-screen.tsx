@@ -82,19 +82,19 @@ const skillMeta: Record<
     label: "Listening",
     description: "Understand, notice, recall, and explain",
     icon: Headphones,
-    className: "border-sky-300 bg-sky-50 text-sky-950",
+    className: "border-worksheet-line bg-worksheet-cyan text-worksheet-teal",
   },
   speaking: {
     label: "Speaking",
     description: "Repeat, reformulate, and speak without a script",
     icon: Mic2,
-    className: "border-violet-300 bg-violet-50 text-violet-950",
+    className: "border-worksheet-line bg-worksheet-cyan text-worksheet-teal",
   },
   reading: {
     label: "Reading",
     description: "Find meaning, evidence, and structure",
     icon: BookOpen,
-    className: "border-blue-300 bg-blue-50 text-blue-950",
+    className: "border-worksheet-line bg-worksheet-cyan text-worksheet-teal",
   },
   writing: {
     label: "Writing",
@@ -105,12 +105,12 @@ const skillMeta: Record<
 };
 
 const levelTone: Record<CefrLevel, string> = {
-  A1: "border-violet-500 bg-violet-700 text-white",
-  A2: "border-blue-500 bg-blue-700 text-white",
-  B1: "border-indigo-500 bg-indigo-700 text-white",
-  B2: "border-purple-500 bg-purple-800 text-white",
+  A1: "border-worksheet-line0 bg-worksheet-teal text-white",
+  A2: "border-worksheet-line0 bg-worksheet-teal text-white",
+  B1: "border-worksheet-line0 bg-worksheet-teal text-white",
+  B2: "border-worksheet-line0 bg-worksheet-teal text-white",
   C1: "border-slate-600 bg-slate-800 text-white",
-  C2: "border-violet-700 bg-violet-950 text-white",
+  C2: "border-worksheet-teal bg-worksheet-ink text-white",
 };
 
 const REVIEW_DELAY_MS = 86_400_000;
@@ -487,33 +487,33 @@ export function IntegratedSkillsScreen({
         title="Integrated Skills Path"
       />
 
-      <details className="integrated-navigator overflow-hidden rounded-2xl border border-violet-300 bg-white shadow-sm">
-        <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 bg-violet-50/80 px-5 py-4 marker:content-none">
+      <details className="integrated-navigator overflow-hidden rounded-2xl border border-worksheet-line bg-white shadow-sm">
+        <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 bg-worksheet-cyan/80 px-5 py-4 marker:content-none">
           <span>
-            <span className="block text-sm font-black text-violet-900">
+            <span className="block text-sm font-black text-worksheet-teal">
               Lesson navigator
             </span>
-            <span className="mt-1 block text-sm text-violet-950/75">
+            <span className="mt-1 block text-sm text-worksheet-teal/75">
               {level.cefr} · Unit {unit.number} · {skillMeta[skill].label} ·{" "}
               {visibleSkills.length}/4 skills shown
             </span>
           </span>
-          <span aria-hidden className="text-lg font-black text-violet-800">
+          <span aria-hidden className="text-lg font-black text-worksheet-teal">
             ▾
           </span>
         </summary>
-        <div className="space-y-4 border-t border-violet-200 p-4 sm:p-5">
+        <div className="space-y-4 border-t border-worksheet-line p-4 sm:p-5">
           {/* Multi-select is intentionally only a display filter. The active
               evidence path remains one skill at a time, so evidence cannot be
               accidentally mixed across listening, speaking, reading, and writing. */}
           <section
             aria-labelledby="skill-filter-label"
-            className="rounded-2xl border border-violet-200 bg-white p-4"
+            className="rounded-2xl border border-worksheet-line bg-white p-4"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2
-                  className="text-base font-black text-violet-950"
+                  className="text-base font-black text-worksheet-teal"
                   id="skill-filter-label"
                 >
                   Show skills in this navigator
@@ -533,16 +533,16 @@ export function IntegratedSkillsScreen({
                 return (
                   <label
                     className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border px-3 py-2 text-sm font-bold transition-colors ${
-                      checked
-                        ? "border-violet-400 bg-violet-50 text-violet-950"
-                        : "border-slate-200 bg-white text-slate-700"
-                    }`}
+ checked
+ ? "border-worksheet-line bg-worksheet-cyan text-worksheet-teal"
+ : "border-slate-200 bg-white text-slate-700"
+ }`}
                     key={candidate}
                   >
                     <input
                       aria-label={`Show ${meta.label} in the lesson navigator`}
                       checked={checked}
-                      className="size-4 accent-violet-700"
+                      className="size-4 accent-worksheet-teal"
                       onChange={() => toggleVisibleSkill(candidate)}
                       type="checkbox"
                     />
@@ -553,16 +553,16 @@ export function IntegratedSkillsScreen({
               })}
             </div>
           </section>
-          <Card className="border-violet-300 bg-violet-50/80">
+          <Card className="border-worksheet-line bg-worksheet-cyan/80">
             <CardContent className="grid gap-4 pt-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
-                <Badge className="bg-violet-800 text-white">
+                <Badge className="bg-worksheet-teal text-white">
                   Today · one calm mission
                 </Badge>
-                <h2 className="mt-3 text-2xl font-black text-violet-950">
+                <h2 className="mt-3 text-2xl font-black text-worksheet-teal">
                   Make English usable without overload
                 </h2>
-                <p className="mt-2 max-w-3xl text-base leading-7 text-violet-950/80">
+                <p className="mt-2 max-w-3xl text-base leading-7 text-worksheet-teal/80">
                   Work on one visible action. Listen to every instruction,
                   dictate instead of typing, save at any point, and return
                   without losing your place.
@@ -640,7 +640,7 @@ export function IntegratedSkillsScreen({
                     >
                       <Brain
                         aria-hidden
-                        className="mt-1 size-4 shrink-0 text-violet-800"
+                        className="mt-1 size-4 shrink-0 text-worksheet-teal"
                       />
                       {lesson}
                     </li>
@@ -649,7 +649,7 @@ export function IntegratedSkillsScreen({
               </CardContent>
             </Card>
 
-            <Card className="border-violet-200">
+            <Card className="border-worksheet-line">
               <CardHeader>
                 <CardTitle>Level quality gate</CardTitle>
                 <CardDescription>
@@ -670,7 +670,7 @@ export function IntegratedSkillsScreen({
                     <li className="flex gap-2" key={criterion}>
                       <Check
                         aria-hidden
-                        className="mt-1 size-4 shrink-0 text-violet-800"
+                        className="mt-1 size-4 shrink-0 text-worksheet-teal"
                       />
                       {criterion}
                     </li>
@@ -719,10 +719,10 @@ export function IntegratedSkillsScreen({
                     <button
                       aria-pressed={candidate === skill}
                       className={`min-h-28 rounded-2xl border-2 p-4 text-left transition-[border-color,background-color,transform] active:scale-[.98] ${
-                        candidate === skill
-                          ? meta.className
-                          : "border-slate-200 bg-white text-slate-900"
-                      }`}
+ candidate === skill
+ ? meta.className
+ : "border-slate-200 bg-white text-slate-900"
+ }`}
                       key={candidate}
                       onClick={() => chooseSkill(candidate)}
                       type="button"
@@ -744,23 +744,23 @@ export function IntegratedSkillsScreen({
       </details>
 
       <Card
-        className="overflow-hidden border-2 border-violet-300"
+        className="overflow-hidden border-2 border-worksheet-line"
         id="active-mission"
       >
-        <CardHeader className="bg-violet-950 text-white">
+        <CardHeader className="bg-worksheet-ink text-white">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <p className="text-sm font-bold text-violet-200">
+              <p className="text-sm font-bold text-white">
                 {level.cefr} · Unit {unit.number} · {skillMeta[skill].label}
               </p>
               <CardTitle className="mt-2 text-2xl text-white">
                 {unit.title}
               </CardTitle>
-              <CardDescription className="mt-2 max-w-3xl text-base leading-7 text-violet-100">
+              <CardDescription className="mt-2 max-w-3xl text-base leading-7 text-white">
                 {lessonGoal(unit, skill)}
               </CardDescription>
             </div>
-            <Badge className="bg-white text-violet-950">
+            <Badge className="bg-white text-worksheet-teal">
               {pathProgress}% path
             </Badge>
           </div>
@@ -771,16 +771,16 @@ export function IntegratedSkillsScreen({
           />
         </CardHeader>
         <CardContent className="space-y-5 pt-6">
-          <details className="rounded-xl border border-violet-200 bg-white">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-black text-violet-950 marker:content-none">
+          <details className="rounded-xl border border-worksheet-line bg-white">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-black text-worksheet-teal marker:content-none">
               <span>
                 Lesson steps · {activeStep + 1}/7: {step.title}
               </span>
-              <span aria-hidden className="text-lg text-violet-800">
+              <span aria-hidden className="text-lg text-worksheet-teal">
                 ▾
               </span>
             </summary>
-            <div className="grid gap-2 border-t border-violet-100 p-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-2 border-t border-worksheet-line p-3 sm:grid-cols-2 xl:grid-cols-3">
               {steps.map((candidate, index) => (
                 <Button
                   aria-current={index === activeStep ? "step" : undefined}
@@ -805,20 +805,20 @@ export function IntegratedSkillsScreen({
 
           <section
             aria-labelledby="current-step-title"
-            className="rounded-2xl bg-violet-50 p-5 sm:p-6"
+            className="rounded-2xl bg-worksheet-cyan p-5 sm:p-6"
           >
             <div className="flex gap-3">
-              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-violet-800 text-white">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-worksheet-teal text-white">
                 <SkillIcon aria-hidden className="size-5" />
               </span>
               <div>
                 <h2
-                  className="text-xl font-black text-violet-950"
+                  className="text-xl font-black text-worksheet-teal"
                   id="current-step-title"
                 >
                   {step.title}
                 </h2>
-                <p className="mt-2 max-w-3xl text-base leading-7 text-violet-950/85">
+                <p className="mt-2 max-w-3xl text-base leading-7 text-worksheet-teal/85">
                   {step.instruction}
                 </p>
               </div>
@@ -839,7 +839,7 @@ export function IntegratedSkillsScreen({
                 <div>
                   <h3 className="text-base font-black">Lesson material</h3>
                   {skill === "listening" ? (
-                    <p className="mt-1 text-xs font-bold text-violet-700">
+                    <p className="mt-1 text-xs font-bold text-worksheet-teal">
                       Original listening script written for this lesson
                     </p>
                   ) : null}
@@ -921,7 +921,7 @@ export function IntegratedSkillsScreen({
               )}
             </section>
 
-            <section className="rounded-2xl border border-violet-300 bg-white p-5">
+            <section className="rounded-2xl border border-worksheet-line bg-white p-5">
               <h3 className="text-base font-black">Your evidence</h3>
               <p className="mt-2 text-base leading-7 text-slate-700">
                 {step.responsePrompt}
@@ -1004,21 +1004,21 @@ export function IntegratedSkillsScreen({
         </CardContent>
       </Card>
 
-      <details className="overflow-hidden rounded-2xl border border-sky-200 bg-sky-50/70 shadow-sm">
+      <details className="overflow-hidden rounded-2xl border border-worksheet-line bg-worksheet-cyan/70 shadow-sm">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 marker:content-none">
           <span>
-            <span className="block text-base font-black text-sky-950">
+            <span className="block text-base font-black text-worksheet-teal">
               QSkills companion material
             </span>
-            <span className="mt-1 block text-sm text-sky-950/75">
+            <span className="mt-1 block text-sm text-worksheet-teal/75">
               Optional local audio, video, and book files
             </span>
           </span>
-          <span aria-hidden className="text-lg font-black text-sky-900">
+          <span aria-hidden className="text-lg font-black text-worksheet-teal">
             ▾
           </span>
         </summary>
-        <div className="border-t border-sky-200 p-4 sm:p-5">
+        <div className="border-t border-worksheet-line p-4 sm:p-5">
           <QSkillsResources cefr={level.cefr} />
         </div>
       </details>
@@ -1063,7 +1063,7 @@ export function IntegratedSkillsScreen({
               const checked = pendingUnitIds.includes(candidate.id);
               return (
                 <div
-                  className={`flex min-w-0 items-center gap-2 rounded-xl border p-3 ${checked ? "border-violet-400 bg-violet-50" : "border-slate-200 bg-white"}`}
+                  className={`flex min-w-0 items-center gap-2 rounded-xl border p-3 ${checked ? "border-worksheet-line bg-worksheet-cyan" : "border-slate-200 bg-white"}`}
                   key={candidate.id}
                 >
                   <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-sm font-bold">
@@ -1129,17 +1129,17 @@ export function IntegratedSkillsScreen({
         </div>
       </details>
 
-      <Card className="border-blue-200 bg-blue-50/70">
+      <Card className="border-worksheet-line bg-worksheet-cyan/70">
         <CardContent className="flex gap-3 pt-5">
           <Sparkles
             aria-hidden
-            className="mt-1 size-5 shrink-0 text-blue-900"
+            className="mt-1 size-5 shrink-0 text-worksheet-teal"
           />
           <div>
-            <h2 className="font-black text-blue-950">
+            <h2 className="font-black text-worksheet-teal">
               Calm-learning protections are active
             </h2>
-            <p className="mt-1 text-base leading-7 text-blue-950/80">
+            <p className="mt-1 text-base leading-7 text-worksheet-teal/80">
               Large text, strong contrast, spoken instructions, dictation,
               untimed work, local saving, reduced writing pressure, and a
               one-step rescue mission are built into this path. Rest days do not

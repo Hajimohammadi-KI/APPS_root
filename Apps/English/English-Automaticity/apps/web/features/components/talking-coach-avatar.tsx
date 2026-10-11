@@ -28,7 +28,7 @@ export function TalkingCoachAvatar({
       <p className="mt-2 text-center text-base font-black">Ava</p>
       <p
         aria-live="polite"
-        className="mt-1 text-center text-xs font-bold text-violet-800"
+        className="mt-1 text-center text-xs font-bold text-worksheet-teal"
       >
         {status}
       </p>

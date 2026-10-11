@@ -78,10 +78,10 @@ export function ProgressInsights({
 
       <AutomaticityEvidenceSummary />
       <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-        <Card className="overflow-hidden border-violet-200/80 bg-gradient-to-br from-white via-violet-50/45 to-blue-50/70 shadow-[0_18px_50px_-30px_rgba(76,29,149,0.5)]">
+        <Card className="overflow-hidden border-worksheet-line/80 from-white shadow-[0_18px_50px_-30px_rgba(76,29,149,0.5)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Target className="size-5 text-violet-700" />
+              <Target className="size-5 text-worksheet-teal" />
               Legacy practice profile
             </CardTitle>
             <CardDescription>
@@ -148,10 +148,10 @@ export function ProgressInsights({
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden border-blue-200/80 bg-gradient-to-br from-white to-sky-50/75 shadow-[0_18px_50px_-30px_rgba(30,64,175,0.45)]">
+        <Card className="overflow-hidden border-worksheet-line/80 from-white shadow-[0_18px_50px_-30px_rgba(30,64,175,0.45)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Activity className="size-5 text-blue-700" />
+              <Activity className="size-5 text-worksheet-teal" />
               Activity in the last 7 days
             </CardTitle>
             <CardDescription>
@@ -220,7 +220,7 @@ export function ProgressInsights({
               </ResponsiveContainer>
             </div>
             {!hasActivity ? (
-              <p className="mt-2 rounded-xl border border-blue-200 bg-white/85 p-3 text-sm text-slate-700">
+              <p className="mt-2 rounded-xl border border-worksheet-line bg-white/85 p-3 text-sm text-slate-700">
                 No activity has been saved yet. Your real learning curve will
                 appear after the first exercise.
               </p>

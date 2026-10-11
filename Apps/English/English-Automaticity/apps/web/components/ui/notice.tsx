@@ -6,8 +6,8 @@ const noticeVariants = cva("rounded-xl border p-3 text-sm leading-6", {
   variants: {
     tone: {
       neutral: "bg-slate-50",
-      info: "border-violet-200 bg-violet-50",
-      success: "border-emerald-200 bg-emerald-50",
+      info: "border-worksheet-line bg-worksheet-cyan",
+      success: "border-worksheet-success-line bg-worksheet-success",
       warning: "border-amber-300 bg-amber-50 text-amber-950",
       danger: "border-red-200 bg-red-50",
     },

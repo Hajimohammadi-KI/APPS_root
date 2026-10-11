@@ -169,7 +169,7 @@ export function ErrorsScreen() {
                     <p className="mt-1 text-sm">{selected.originalText}</p>
                   </Notice>
                   <Notice tone="success">
-                    <p className="text-xs font-bold uppercase text-emerald-700">
+                    <p className="text-xs font-bold uppercase text-worksheet-success-ink">
                       Corrected
                     </p>
                     <p className="mt-1 text-sm">{selected.correctedText}</p>

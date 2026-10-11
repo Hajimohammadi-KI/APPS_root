@@ -119,7 +119,7 @@ export function ImplementationIntentionsCard() {
         <p className="settings-intention-eyebrow">{copy.eyebrow}</p>
         <CardTitle>
           <h2 className="flex items-center gap-2">
-            <CalendarClock aria-hidden className="size-5 text-violet-700" />
+            <CalendarClock aria-hidden className="size-5 text-worksheet-teal" />
             {copy.title}
           </h2>
         </CardTitle>

@@ -33,19 +33,19 @@ const courseStats = [
     value: "24",
     label: "Idiomatik-Tage",
     icon: Quote,
-    className: "bg-violet-100 text-violet-800",
+    className: "bg-worksheet-cyan text-worksheet-teal",
   },
   {
     value: "127 + 4",
     label: "PDFs + Originalarchive",
     icon: BookMarked,
-    className: "bg-sky-100 text-sky-800",
+    className: "bg-worksheet-cyan text-worksheet-teal",
   },
   {
     value: "7",
     label: "Hörmodelle",
     icon: Headphones,
-    className: "bg-emerald-100 text-emerald-800",
+    className: "bg-worksheet-success-strong text-worksheet-success-ink",
   },
   {
     value: "2",
@@ -58,15 +58,15 @@ const courseStats = [
 export function DeutschMitMarijaLibrary() {
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-2xl border border-sky-200 bg-linear-to-br from-white via-sky-50 to-violet-50 p-6 sm:p-8">
+      <section className="relative overflow-hidden rounded-2xl border border-worksheet-line bg-linear-to-br from-white p-6 sm:p-8">
         <div
           aria-hidden="true"
-          className="absolute -top-12 -right-12 size-44 rounded-full bg-sky-200/40"
+          className="absolute -top-12 -right-12 size-44 rounded-full bg-worksheet-cyan/40"
         />
         <div className="relative flex flex-wrap items-start justify-between gap-5">
           <div className="max-w-3xl">
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              <Badge className="bg-sky-700">Geteilte Kursmaterialien</Badge>
+              <Badge className="bg-worksheet-teal">Geteilte Kursmaterialien</Badge>
               <Badge variant="outline">B2–C2</Badge>
               <Badge variant="outline">Quelle: Geteilte Kursmaterialien</Badge>
             </div>
@@ -148,7 +148,7 @@ export function DeutschMitMarijaLibrary() {
             Alle Bereiche sind zunächst geschlossen. So bleibt die Seite ruhig
             und du siehst nur die Dateien der aktuell gewählten Aufgabe.
           </p>
-          <p className="mt-3 max-w-3xl rounded-lg border border-violet-200 bg-violet-50 px-3 py-2 text-sm leading-6 text-violet-950">
+          <p className="mt-3 max-w-3xl rounded-lg border border-worksheet-line bg-worksheet-cyan px-3 py-2 text-sm leading-6 text-worksheet-teal">
             <strong>Neu: Üben und prüfen.</strong> Jede einzelne Lernquelle hat
             jetzt eine eigene Übungsseite mit drei neu formulierten Aufgaben,
             sofortiger Korrektur und einer verständlichen Begründung. Der
@@ -169,9 +169,9 @@ export function DeutschMitMarijaLibrary() {
           description="Vier Handouts, ein Erklärvideo und sieben Hörmodelle für Konversationen und Vorträge."
           items={discussionMaterials}
         />
-        <div className="space-y-3 rounded-2xl border border-sky-200 bg-sky-50/40 p-3 sm:p-4">
+        <div className="space-y-3 rounded-2xl border border-worksheet-line bg-worksheet-cyan/40 p-3 sm:p-4">
           <div className="flex items-start gap-3 px-1 py-2">
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-sky-100 text-sky-800">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan text-worksheet-teal">
               <BookMarked className="size-5" />
             </span>
             <div>
@@ -202,10 +202,10 @@ export function DeutschMitMarijaLibrary() {
         />
       </section>
 
-      <Card className="border-emerald-300/60 bg-emerald-50/60">
+      <Card className="border-worksheet-success-line/60 bg-worksheet-success/60">
         <CardContent className="flex items-start gap-3">
-          <ShieldCheck className="mt-0.5 size-5 shrink-0 text-emerald-700" />
-          <p className="text-sm leading-6 text-emerald-950">
+          <ShieldCheck className="mt-0.5 size-5 shrink-0 text-worksheet-success-ink" />
+          <p className="text-sm leading-6 text-worksheet-success-ink-strong">
             Die Kursdateien werden nicht in die App kopiert. Jeder Eintrag
             bietet eine urheberrechtlich getrennte, neu formulierte
             Transferübung. Der PDF-Knopf öffnet die freigegebene Originaldatei;

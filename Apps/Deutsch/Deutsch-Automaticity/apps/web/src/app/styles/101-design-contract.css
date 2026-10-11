@@ -94,13 +94,10 @@ textarea:focus-visible {
 }
 
 .automaticity-primary-action,
+
 .dashboard-hero-actions > :first-child,
-[class~="bg-primary"],
-[class~="bg-blue-700"],
-[class~="bg-sky-700"],
-[class~="bg-violet-700"],
-[class~="bg-purple-700"],
-[class~="bg-purple-800"] {
+
+[class~="bg-primary"] {
   background: #153b80 !important;
   border-color: #153b80 !important;
   color: #ffffff !important;
@@ -118,77 +115,7 @@ textarea:focus-visible {
   color: #1f2937 !important;
 }
 
-[class~="bg-emerald-50"],
-[class~="bg-emerald-100"],
-[class~="bg-green-50"],
-[class~="bg-green-100"],
-[class~="bg-sky-50"],
-[class~="bg-sky-100"],
-[class~="bg-blue-50"],
-[class~="bg-blue-100"],
-[class~="bg-violet-50"],
-[class~="bg-violet-100"],
-[class~="bg-purple-50"],
-[class~="bg-purple-100"] {
-  background-color: #efe7da !important;
-}
-
-[class~="bg-emerald-950"],
-[class~="bg-green-950"],
-[class~="bg-violet-950"],
-[class~="bg-purple-950"] {
-  background-color: #2f477e !important;
-  color: #ffffff !important;
-}
-
-[class~="text-emerald-700"],
-[class~="text-emerald-800"],
-[class~="text-emerald-900"],
-[class~="text-emerald-950"],
-[class~="text-green-700"],
-[class~="text-green-800"],
-[class~="text-green-900"],
-[class~="text-green-950"],
-[class~="text-sky-700"],
-[class~="text-sky-800"],
-[class~="text-sky-900"],
-[class~="text-sky-950"],
-[class~="text-blue-700"],
-[class~="text-blue-800"],
-[class~="text-blue-900"],
-[class~="text-blue-950"],
-[class~="text-violet-700"],
-[class~="text-violet-800"],
-[class~="text-violet-900"],
-[class~="text-violet-950"],
-[class~="text-purple-700"],
-[class~="text-purple-800"],
-[class~="text-purple-900"],
-[class~="text-purple-950"] {
-  color: #153b80 !important;
-}
-
-[class~="border-emerald-200"],
-[class~="border-emerald-300"],
-[class~="border-green-200"],
-[class~="border-green-300"],
-[class~="border-sky-200"],
-[class~="border-sky-300"],
-[class~="border-blue-200"],
-[class~="border-blue-300"],
-[class~="border-violet-200"],
-[class~="border-violet-300"],
-[class~="border-violet-400"],
-[class~="border-purple-200"],
-[class~="border-purple-300"] {
-  border-color: rgb(61 90 158 / 30%) !important;
-}
-
-.dashboard-hero-actions > :first-child,
-[class*="bg-violet-700"],
-[class*="bg-purple-800"],
-[class*="bg-blue-700"],
-[class*="bg-sky-700"] {
+.dashboard-hero-actions > :first-child {
   background-image: none !important;
 }
 
@@ -204,12 +131,6 @@ textarea:focus-visible {
 .german-install-button {
   background: linear-gradient(145deg, #153b80, #2f477e) !important;
   color: #ffffff !important;
-}
-
-[class*="bg-gradient"][class*="from-violet"],
-[class*="bg-gradient"][class*="from-purple"],
-[class*="bg-gradient"][class*="from-blue"] {
-  background-image: linear-gradient(145deg, #153b80, #2f477e) !important;
 }
 
 .persian-word-help-card {

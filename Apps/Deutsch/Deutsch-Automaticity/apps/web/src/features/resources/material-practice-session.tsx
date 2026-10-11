@@ -51,7 +51,7 @@ function ExercisePanel({
   return (
     <div className="space-y-4">
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
-        <p className="text-xs font-bold tracking-[0.12em] text-violet-700 uppercase">
+        <p className="text-xs font-bold tracking-[0.12em] text-worksheet-teal uppercase">
           {exercise.instruction}
         </p>
         <p className="mt-2 text-base font-semibold leading-7 text-slate-950">
@@ -66,10 +66,10 @@ function ExercisePanel({
               aria-pressed={answer === option}
               className={cn(
                 "min-h-12 rounded-xl border px-4 py-3 text-left text-sm font-medium transition-colors",
-                "focus-visible:ring-3 focus-visible:ring-violet-300 focus-visible:outline-none",
+                "focus-visible:ring-3 focus-visible:ring-worksheet-line focus-visible:outline-none",
                 answer === option
-                  ? "border-violet-500 bg-violet-50 text-violet-950"
-                  : "border-slate-200 bg-white text-slate-800 hover:border-violet-300 hover:bg-violet-50/50",
+                  ? "border-worksheet-line0 bg-worksheet-cyan text-worksheet-teal"
+                  : "border-slate-200 bg-white text-slate-800 hover:border-worksheet-line hover:bg-worksheet-cyan/50",
               )}
               key={option}
               onClick={() => onAnswer(option)}
@@ -114,7 +114,7 @@ function ExercisePanel({
           className={cn(
             "rounded-xl border p-4",
             result.correct
-              ? "border-emerald-300 bg-emerald-50 text-emerald-950"
+              ? "border-worksheet-success-line bg-worksheet-success text-worksheet-success-ink-strong"
               : "border-rose-300 bg-rose-50 text-rose-950",
           )}
         >
@@ -257,10 +257,10 @@ export function MaterialPracticeSession({
 
   return (
     <div className="mx-auto max-w-5xl space-y-5 pb-12">
-      <section className="relative overflow-hidden rounded-3xl border border-violet-200 bg-linear-to-br from-white via-violet-50 to-sky-50 p-5 shadow-sm sm:p-8">
+      <section className="relative overflow-hidden rounded-3xl border border-worksheet-line bg-linear-to-br from-white p-5 shadow-sm sm:p-8">
         <div
           aria-hidden="true"
-          className="absolute -top-16 -right-12 size-52 rounded-full bg-violet-200/45 blur-sm"
+          className="absolute -top-16 -right-12 size-52 rounded-full bg-worksheet-cyan/45 blur-sm"
         />
         <div className="relative">
           <div className="flex flex-wrap gap-2">
@@ -268,7 +268,7 @@ export function MaterialPracticeSession({
             <Badge variant="secondary">{plan.material.format}</Badge>
             <Badge variant="outline">Aktives Üben</Badge>
           </div>
-          <p className="mt-5 text-xs font-black tracking-[0.15em] text-violet-700 uppercase">
+          <p className="mt-5 text-xs font-black tracking-[0.15em] text-worksheet-teal uppercase">
             Quellenbasierte Transferübung
           </p>
           <h1 className="mt-2 max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
@@ -342,7 +342,7 @@ export function MaterialPracticeSession({
         title={`Regel: ${plan.focus}`}
         tone="violet"
       >
-        <div className="rounded-xl border border-violet-200 bg-violet-50/60 p-4">
+        <div className="rounded-xl border border-worksheet-line bg-worksheet-cyan/60 p-4">
           <p className="text-base font-medium leading-7 text-slate-900">
             {plan.rule}
           </p>
@@ -391,7 +391,7 @@ export function MaterialPracticeSession({
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-black tracking-[0.13em] text-violet-700 uppercase">
+            <p className="text-xs font-black tracking-[0.13em] text-worksheet-teal uppercase">
               Ergebnis und nächster Abruf
             </p>
             <h2 className="mt-1 text-xl font-semibold text-slate-950">
@@ -421,7 +421,7 @@ export function MaterialPracticeSession({
         </div>
         {saved ? (
           <div
-            className="mt-4 rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-sm font-medium text-emerald-950"
+            className="mt-4 rounded-xl border border-worksheet-success-line bg-worksheet-success p-3 text-sm font-medium text-worksheet-success-ink-strong"
             role="status"
           >
             Ergebnis, Aktivität und notwendige Wiederholungen wurden

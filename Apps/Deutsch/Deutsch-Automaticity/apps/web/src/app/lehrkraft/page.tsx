@@ -208,7 +208,7 @@ export default function LehrkraftPage() {
     <main className="teacher-page">
       <a
         href="/practice?review=1"
-        className="inline-block rounded-xl bg-blue-700 px-4 py-3 text-white"
+        className="inline-block rounded-xl bg-worksheet-teal px-4 py-3 text-white"
       >
         Originalantworten und Aufnahmen aus Übungen prüfen
       </a>

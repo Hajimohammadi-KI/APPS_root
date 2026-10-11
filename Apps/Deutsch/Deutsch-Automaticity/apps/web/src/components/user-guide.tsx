@@ -68,7 +68,7 @@ export function UserGuideButton() {
         className="w-[min(92vw,28rem)] overflow-y-auto sm:max-w-md"
       >
         <SheetHeader className="border-b px-5 py-5">
-          <span className="mb-3 grid size-11 place-items-center rounded-2xl bg-sky-100 text-blue-700">
+          <span className="mb-3 grid size-11 place-items-center rounded-2xl bg-worksheet-cyan text-worksheet-teal">
             <CircleHelp className="size-5" aria-hidden="true" />
           </span>
           <SheetTitle className="text-xl font-bold">
@@ -80,25 +80,25 @@ export function UserGuideButton() {
           </SheetDescription>
         </SheetHeader>
         <GuideSteps className="p-5" />
-        <div className="mx-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950">
+        <div className="mx-5 rounded-2xl border border-worksheet-success-line bg-worksheet-success p-4 text-sm text-worksheet-success-ink-strong">
           <p className="flex items-center gap-2 font-bold">
             <ShieldCheck className="size-4" aria-hidden="true" />
             Du kannst nichts kaputtmachen
           </p>
-          <p className="mt-1 leading-6 text-emerald-900/75">
+          <p className="mt-1 leading-6 text-worksheet-success-ink-strong/75">
             Eingaben bleiben lokal gespeichert. In den Einstellungen kannst du
             jederzeit eine Sicherung exportieren.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Link
-              className="inline-flex h-8 items-center rounded-md border border-emerald-300 bg-white px-3 text-xs font-medium text-emerald-900 hover:bg-emerald-100"
+              className="inline-flex h-8 items-center rounded-md border border-worksheet-success-line bg-white px-3 text-xs font-medium text-worksheet-success-ink-strong hover:bg-worksheet-success-strong"
               href="/support"
               onClick={() => setOpen(false)}
             >
               Support öffnen
             </Link>
             <Link
-              className="inline-flex h-8 items-center rounded-md border border-emerald-300 bg-white px-3 text-xs font-medium text-emerald-900 hover:bg-emerald-100"
+              className="inline-flex h-8 items-center rounded-md border border-worksheet-success-line bg-white px-3 text-xs font-medium text-worksheet-success-ink-strong hover:bg-worksheet-success-strong"
               href="/privacy"
               onClick={() => setOpen(false)}
             >

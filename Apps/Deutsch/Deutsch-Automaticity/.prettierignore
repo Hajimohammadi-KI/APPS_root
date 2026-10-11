@@ -18,3 +18,5 @@ distribution/windows-release
 *.exe.sha256
 *.zip
 *.apk
+# Generated from shared/navigation-config.json by scripts/sync-language-home.ts.
+apps/web/src/components/navigation-config.ts

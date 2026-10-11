@@ -1,9 +1,9 @@
 {
   "publishedAt": "2026-10-11",
   "version": "27.4.4",
-  "webRelease": "2026.10.11.2",
+  "webRelease": "2026.10.11.3",
   "changes": [
-    "Conversation Studio rebuilt from smaller parts (recording, steps, evidence, topic options) with the same screens, steps and saved data",
+    "Worksheet colours are now named once and used directly by every screen; the last violet-tinted panels (Integrated Skills navigator, lesson cards) follow the teal and cyan palette",
     "Learner data, saved responses and all links are unchanged"
   ]
 }

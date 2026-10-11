@@ -1,9 +1,9 @@
 {
   "publishedAt": "2026-10-11",
   "version": "20.9.4",
-  "webRelease": "2026.10.11.2",
+  "webRelease": "2026.10.11.3",
   "changes": [
-    "Konversationsstudio aus kleineren Teilen neu zusammengesetzt (Aufnahme, Schritte, Nachweise, Themenwahl) mit denselben Ansichten, Schritten und gespeicherten Daten",
+    "Arbeitsblatt-Farben sind einmal benannt und werden direkt von jeder Seite verwendet; die letzten violett getönten Felder (Lernpfad auswählen, Sicherungskarten, Motivationsreihe) folgen der Türkis-Cyan-Palette",
     "Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
   ]
 }

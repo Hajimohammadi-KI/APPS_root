@@ -1,9 +1,9 @@
 {
   "publishedAt": "2026-10-11",
   "version": "20.9.4",
-  "webRelease": "2026.10.11.1",
+  "webRelease": "2026.10.11.2",
   "changes": [
-    "Die Seitenleisten von Heute und Grammatik-Labor entstehen aus derselben Routenliste wie der Rest der App; der alte Link /integrierte-fertigkeiten leitet auf /fertigkeiten weiter",
-    "Ungenutzte Einstellungskomponenten entfernt; Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
+    "Konversationsstudio aus kleineren Teilen neu zusammengesetzt (Aufnahme, Schritte, Nachweise, Themenwahl) mit denselben Ansichten, Schritten und gespeicherten Daten",
+    "Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
   ]
 }

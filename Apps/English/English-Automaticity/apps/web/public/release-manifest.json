@@ -1,9 +1,9 @@
 {
   "publishedAt": "2026-10-11",
   "version": "27.4.4",
-  "webRelease": "2026.10.11.1",
+  "webRelease": "2026.10.11.2",
   "changes": [
-    "The Daily and Grammar Lab sidebars are built from the same route list as the rest of the app, so every link lands on a real page",
-    "Removed unused settings components; learner data, saved responses and all links are unchanged"
+    "Conversation Studio rebuilt from smaller parts (recording, steps, evidence, topic options) with the same screens, steps and saved data",
+    "Learner data, saved responses and all links are unchanged"
   ]
 }

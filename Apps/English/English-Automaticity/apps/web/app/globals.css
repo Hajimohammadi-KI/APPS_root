@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+@theme {
+  /* Worksheet palette (R74): the one source for colour utilities such as bg-worksheet-cyan. */
+  --color-worksheet-paper: #ffffff;
+  --color-worksheet-ink: #08364a;
+  --color-worksheet-teal: #007f83;
+  --color-worksheet-teal-hover: #00676b;
+  --color-worksheet-cyan: #eaf6f7;
+  --color-worksheet-yellow: #fff5d7;
+  --color-worksheet-line: #dce9e8;
+  --color-worksheet-muted: #526a73;
+  --color-worksheet-success: #ecfdf5;
+  --color-worksheet-success-strong: #d1fae5;
+  --color-worksheet-success-ink: #065f46;
+  --color-worksheet-success-ink-strong: #064e3b;
+  --color-worksheet-success-line: #a7d9c1;
+}
+
 /*
  * Visual entry point only.
  * Edit page-specific styles in ./styles/pages and shared visual rules in ./styles.

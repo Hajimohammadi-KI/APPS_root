@@ -17,14 +17,12 @@ const toneStyles: Record<
   { shell: string; icon: string; eyebrow: string }
 > = {
   blue: {
-    shell:
-      "border-worksheet-line via-background to-background",
+    shell: "border-worksheet-line via-background to-background",
     icon: "bg-worksheet-cyan text-worksheet-teal ring-worksheet-line",
     eyebrow: "text-worksheet-teal",
   },
   violet: {
-    shell:
-      "border-worksheet-line via-background to-background",
+    shell: "border-worksheet-line via-background to-background",
     icon: "bg-worksheet-cyan text-worksheet-teal ring-worksheet-line",
     eyebrow: "text-worksheet-teal",
   },

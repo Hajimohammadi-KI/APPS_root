@@ -257,7 +257,9 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
   return (
     <Card
       className={
-        error.repairStatus === "fixed" ? "border-worksheet-line bg-worksheet-cyan/25" : ""
+        error.repairStatus === "fixed"
+          ? "border-worksheet-line bg-worksheet-cyan/25"
+          : ""
       }
     >
       <CardHeader>

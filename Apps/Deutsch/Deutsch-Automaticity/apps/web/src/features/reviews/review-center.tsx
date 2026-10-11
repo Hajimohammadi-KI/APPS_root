@@ -336,10 +336,10 @@ export function ReviewCenter() {
                 key={review.id}
                 type="button"
                 className={`rounded-xl border p-3 text-left ${
- selected?.id === review.id
- ? "border-primary bg-worksheet-cyan"
- : "hover:bg-muted/50"
- }`}
+                  selected?.id === review.id
+                    ? "border-primary bg-worksheet-cyan"
+                    : "hover:bg-muted/50"
+                }`}
                 onClick={() => {
                   setSelectedId(review.id);
                   setAnswer("");
@@ -400,10 +400,10 @@ export function ReviewCenter() {
                   <p
                     role="timer"
                     className={`rounded-xl border p-3 text-sm font-semibold ${
- secondsLeft > 0
- ? "border-worksheet-line bg-worksheet-cyan text-worksheet-teal"
- : "border-amber-300 bg-amber-50 text-amber-950"
- }`}
+                      secondsLeft > 0
+                        ? "border-worksheet-line bg-worksheet-cyan text-worksheet-teal"
+                        : "border-amber-300 bg-amber-50 text-amber-950"
+                    }`}
                   >
                     {secondsLeft > 0
                       ? `${secondsLeft} Sekunden für schnellen Abruf`

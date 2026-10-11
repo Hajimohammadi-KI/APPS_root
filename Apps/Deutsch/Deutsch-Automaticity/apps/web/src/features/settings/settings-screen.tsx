@@ -588,7 +588,10 @@ export function SettingsScreen() {
               type="file"
             />
             {exportStatus ? (
-              <p aria-live="polite" className="text-sm text-worksheet-success-ink">
+              <p
+                aria-live="polite"
+                className="text-sm text-worksheet-success-ink"
+              >
                 {exportStatus}
               </p>
             ) : null}

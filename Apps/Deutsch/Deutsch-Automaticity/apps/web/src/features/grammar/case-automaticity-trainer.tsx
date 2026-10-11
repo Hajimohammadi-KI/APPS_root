@@ -683,7 +683,9 @@ export function CaseAutomaticityTrainer() {
 
             <aside className="space-y-3">
               <div className="rounded-2xl border border-worksheet-line bg-worksheet-cyan p-4">
-                <strong className="text-worksheet-teal">Entscheidungsweg</strong>
+                <strong className="text-worksheet-teal">
+                  Entscheidungsweg
+                </strong>
                 <ol className="mt-3 grid gap-2 text-sm leading-6 text-worksheet-teal">
                   <li>1. Finde das Verb oder die Präposition.</li>
                   <li>2. Frage: Wer? Wen? Wem? Wessen?</li>

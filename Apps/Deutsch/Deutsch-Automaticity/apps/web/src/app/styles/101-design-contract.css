@@ -94,9 +94,7 @@ textarea:focus-visible {
 }
 
 .automaticity-primary-action,
-
 .dashboard-hero-actions > :first-child,
-
 [class~="bg-primary"] {
   background: #153b80 !important;
   border-color: #153b80 !important;

@@ -101,10 +101,10 @@ export function IntegratedSkillsCatalog() {
               {matchingLevels.map((level) => (
                 <label
                   className={`flex min-w-0 cursor-pointer items-start gap-3 rounded-2xl border p-3 text-sm ${
- pendingLevels.includes(level.stufe)
- ? "border-worksheet-line bg-worksheet-cyan"
- : "bg-background"
- }`}
+                    pendingLevels.includes(level.stufe)
+                      ? "border-worksheet-line bg-worksheet-cyan"
+                      : "bg-background"
+                  }`}
                   key={level.stufe}
                 >
                   <input
@@ -142,10 +142,10 @@ export function IntegratedSkillsCatalog() {
               {FERTIGKEITEN.map((skill) => (
                 <label
                   className={`flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border px-3 py-2 text-sm font-bold ${
- pendingSkills.includes(skill)
- ? "border-worksheet-line bg-worksheet-cyan"
- : "bg-background"
- }`}
+                    pendingSkills.includes(skill)
+                      ? "border-worksheet-line bg-worksheet-cyan"
+                      : "bg-background"
+                  }`}
                   key={skill}
                 >
                   <input

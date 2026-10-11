@@ -66,7 +66,9 @@ export function DeutschMitMarijaLibrary() {
         <div className="relative flex flex-wrap items-start justify-between gap-5">
           <div className="max-w-3xl">
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              <Badge className="bg-worksheet-teal">Geteilte Kursmaterialien</Badge>
+              <Badge className="bg-worksheet-teal">
+                Geteilte Kursmaterialien
+              </Badge>
               <Badge variant="outline">B2–C2</Badge>
               <Badge variant="outline">Quelle: Geteilte Kursmaterialien</Badge>
             </div>

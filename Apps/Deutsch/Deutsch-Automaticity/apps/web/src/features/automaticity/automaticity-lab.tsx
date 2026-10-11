@@ -640,7 +640,10 @@ export function AutomaticityLab({
       ) : null}
 
       {focusedStep === undefined ? (
-        <Card className="border-worksheet-line bg-worksheet-cyan/70" id="mission">
+        <Card
+          className="border-worksheet-line bg-worksheet-cyan/70"
+          id="mission"
+        >
           <CardContent className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>

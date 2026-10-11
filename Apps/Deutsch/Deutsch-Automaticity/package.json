@@ -29,6 +29,7 @@
     "test": "bun run --filter '*' --if-present test",
     "test:integration": "bun run --filter '*' --if-present test:integration",
     "test:e2e": "bun run --cwd apps/web test:e2e",
+    "smoke": "node scripts/browser-smoke.mts",
     "test:installer": "bun test scripts/windows-installer.test.ts",
     "parity:check": "bun scripts/check-english-german-parity.ts",
     "parity:check:strict": "bun scripts/check-english-german-parity.ts --strict",

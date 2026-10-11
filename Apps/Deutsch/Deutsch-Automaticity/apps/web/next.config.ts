@@ -31,7 +31,11 @@ const nextConfig: NextConfig = {
       { source: "/grammar", destination: "/grammatik", permanent: true },
       { source: "/daily", destination: "/heute", permanent: true },
       { source: "/settings", destination: "/einstellungen", permanent: true },
-      { source: "/integrierte-fertigkeiten", destination: "/fertigkeiten", permanent: true },
+      {
+        source: "/integrierte-fertigkeiten",
+        destination: "/fertigkeiten",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

@@ -80,7 +80,7 @@ export function DeepLSelectionTranslator() {
       {!open && position ? (
         <button
           type="button"
-          className="fixed z-[90] inline-flex min-h-10 items-center gap-2 rounded-xl border border-worksheet-line! bg-white px-3 text-sm font-bold text-worksheet-teal! shadow-xl"
+          className="fixed z-[90] inline-flex min-h-10 items-center gap-2 rounded-xl border border-worksheet-line! bg-white px-3 text-sm font-bold text-worksheet-teal shadow-xl"
           style={position}
           onClick={() => setOpen(true)}
         >
@@ -94,7 +94,7 @@ export function DeepLSelectionTranslator() {
           className="fixed right-5 bottom-5 z-[95] w-[min(390px,calc(100vw-2rem))] rounded-2xl border-2 border-worksheet-teal bg-white p-4 text-slate-950 shadow-2xl"
         >
           <div className="flex items-center gap-2">
-            <Languages className="size-5 text-worksheet-teal!" />
+            <Languages className="size-5 text-worksheet-teal" />
             <strong>Mit Google übersetzen</strong>
             <button
               type="button"

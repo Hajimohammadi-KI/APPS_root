@@ -366,7 +366,7 @@ export function ReviewCenter() {
             ))}
             {due.length === 0 && (
               <div className="py-8 text-center">
-                <span className="mx-auto grid size-12 place-items-center rounded-full bg-worksheet-cyan! text-worksheet-teal!">
+                <span className="mx-auto grid size-12 place-items-center rounded-full bg-worksheet-cyan! text-worksheet-teal">
                   <Repeat2 className="size-5" />
                 </span>
                 <p className="mt-3 text-sm font-semibold">

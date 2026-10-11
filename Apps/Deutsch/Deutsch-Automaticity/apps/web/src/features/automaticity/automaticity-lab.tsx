@@ -140,7 +140,7 @@ function Feedback({ analysis }: Readonly<{ analysis: AutomatikAnalysis }>) {
           ))}
         </ul>
       ) : (
-        <p className="flex items-center gap-2 text-sm font-bold text-worksheet-teal!">
+        <p className="flex items-center gap-2 text-sm font-bold text-worksheet-teal">
           <Check className="size-4" /> Die Offline-Musterprüfung findet keinen
           Zielfehler.
         </p>
@@ -662,7 +662,7 @@ export function AutomaticityLab({
             </div>
             <p
               aria-live="polite"
-              className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-worksheet-teal!"
+              className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-worksheet-teal"
             >
               {message}
             </p>
@@ -701,7 +701,7 @@ export function AutomaticityLab({
             >
               <Card className={step.done ? "border-worksheet-line0" : ""}>
                 <CardContent className="flex gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal!">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal">
                     {step.done ? <Check /> : <step.icon />}
                   </span>
                   <div>
@@ -784,7 +784,7 @@ export function AutomaticityLab({
                   <span
                     className={
                       checkedAnswers[index]
-                        ? "text-sm font-bold text-worksheet-teal!"
+                        ? "text-sm font-bold text-worksheet-teal"
                         : "text-sm font-bold text-red-800"
                     }
                   >
@@ -837,7 +837,7 @@ export function AutomaticityLab({
             <div className="rounded-2xl bg-worksheet-ink! text-white! p-5">
               <p className="leading-7">{modelText}</p>
               <Button
-                className="mt-4 bg-white text-worksheet-teal! hover:bg-worksheet-cyan"
+                className="mt-4 bg-white text-worksheet-teal hover:bg-worksheet-cyan"
                 onClick={() => speak(modelText)}
               >
                 <Volume2 /> Modell abspielen

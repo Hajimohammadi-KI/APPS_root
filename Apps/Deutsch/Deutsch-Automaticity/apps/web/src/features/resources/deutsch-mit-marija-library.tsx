@@ -33,19 +33,19 @@ const courseStats = [
     value: "24",
     label: "Idiomatik-Tage",
     icon: Quote,
-    className: "bg-worksheet-cyan! text-worksheet-teal!",
+    className: "bg-worksheet-cyan! text-worksheet-teal",
   },
   {
     value: "127 + 4",
     label: "PDFs + Originalarchive",
     icon: BookMarked,
-    className: "bg-worksheet-cyan! text-worksheet-teal!",
+    className: "bg-worksheet-cyan! text-worksheet-teal",
   },
   {
     value: "7",
     label: "Hörmodelle",
     icon: Headphones,
-    className: "bg-worksheet-success-strong! text-worksheet-success-ink!",
+    className: "bg-worksheet-success-strong! text-worksheet-success-ink",
   },
   {
     value: "2",
@@ -150,7 +150,7 @@ export function DeutschMitMarijaLibrary() {
             Alle Bereiche sind zunächst geschlossen. So bleibt die Seite ruhig
             und du siehst nur die Dateien der aktuell gewählten Aufgabe.
           </p>
-          <p className="mt-3 max-w-3xl rounded-lg border border-worksheet-line! bg-worksheet-cyan! px-3 py-2 text-sm leading-6 text-worksheet-teal!">
+          <p className="mt-3 max-w-3xl rounded-lg border border-worksheet-line! bg-worksheet-cyan! px-3 py-2 text-sm leading-6 text-worksheet-teal">
             <strong>Neu: Üben und prüfen.</strong> Jede einzelne Lernquelle hat
             jetzt eine eigene Übungsseite mit drei neu formulierten Aufgaben,
             sofortiger Korrektur und einer verständlichen Begründung. Der
@@ -173,7 +173,7 @@ export function DeutschMitMarijaLibrary() {
         />
         <div className="space-y-3 rounded-2xl border border-worksheet-line! bg-worksheet-cyan/40 p-3 sm:p-4">
           <div className="flex items-start gap-3 px-1 py-2">
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal!">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal">
               <BookMarked className="size-5" />
             </span>
             <div>
@@ -206,8 +206,8 @@ export function DeutschMitMarijaLibrary() {
 
       <Card className="border-worksheet-success-line/60 bg-worksheet-success/60">
         <CardContent className="flex items-start gap-3">
-          <ShieldCheck className="mt-0.5 size-5 shrink-0 text-worksheet-success-ink!" />
-          <p className="text-sm leading-6 text-worksheet-success-ink-strong!">
+          <ShieldCheck className="mt-0.5 size-5 shrink-0 text-worksheet-success-ink" />
+          <p className="text-sm leading-6 text-worksheet-success-ink-strong">
             Die Kursdateien werden nicht in die App kopiert. Jeder Eintrag
             bietet eine urheberrechtlich getrennte, neu formulierte
             Transferübung. Der PDF-Knopf öffnet die freigegebene Originaldatei;

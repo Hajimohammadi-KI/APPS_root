@@ -265,7 +265,7 @@ export function SettingsScreen() {
   return (
     <div className="settings-page space-y-5">
       <header className="rounded-3xl border border-worksheet-line! from-white p-5 shadow-sm sm:p-7">
-        <Badge className="bg-worksheet-cyan! text-worksheet-teal!">
+        <Badge className="bg-worksheet-cyan! text-worksheet-teal">
           Lokal und automatisch gespeichert
         </Badge>
         <h1 className="mt-3 text-3xl font-black tracking-tight">
@@ -282,7 +282,7 @@ export function SettingsScreen() {
           <CardHeader>
             <CardTitle>
               <h2 className="flex items-center gap-2">
-                <Eye className="size-5 text-worksheet-teal!" />
+                <Eye className="size-5 text-worksheet-teal" />
                 Lesen &amp; Fokus
               </h2>
             </CardTitle>
@@ -344,7 +344,7 @@ export function SettingsScreen() {
           <CardHeader>
             <CardTitle>
               <h2 className="flex items-center gap-2">
-                <Gauge className="size-5 text-worksheet-teal!" />
+                <Gauge className="size-5 text-worksheet-teal" />
                 Tägliche Praxis
               </h2>
             </CardTitle>
@@ -413,7 +413,7 @@ export function SettingsScreen() {
         <CardHeader>
           <CardTitle>
             <h2 className="flex items-center gap-2">
-              <ShieldCheck className="size-5 text-worksheet-success-ink!" />
+              <ShieldCheck className="size-5 text-worksheet-success-ink" />
               Optionale Wirksamkeitsmessung
             </h2>
           </CardTitle>
@@ -492,7 +492,7 @@ export function SettingsScreen() {
         <CardHeader>
           <CardTitle>
             <h2 className="flex items-center gap-2">
-              <MonitorDown className="size-5 text-worksheet-teal!" />
+              <MonitorDown className="size-5 text-worksheet-teal" />
               Auf deinem Gerät installieren
             </h2>
           </CardTitle>
@@ -527,7 +527,7 @@ export function SettingsScreen() {
         <CardHeader>
           <CardTitle>
             <h2 className="flex items-center gap-2">
-              <ShieldCheck className="size-5 text-worksheet-success-ink!" />
+              <ShieldCheck className="size-5 text-worksheet-success-ink" />
               Datenschutz &amp; Sicherung
             </h2>
           </CardTitle>
@@ -590,7 +590,7 @@ export function SettingsScreen() {
             {exportStatus ? (
               <p
                 aria-live="polite"
-                className="text-sm text-worksheet-success-ink!"
+                className="text-sm text-worksheet-success-ink"
               >
                 {exportStatus}
               </p>
@@ -598,7 +598,7 @@ export function SettingsScreen() {
             {importStatus ? (
               <p
                 aria-live="polite"
-                className="text-sm font-semibold text-worksheet-teal!"
+                className="text-sm font-semibold text-worksheet-teal"
                 role="status"
               >
                 {importStatus}

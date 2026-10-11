@@ -187,7 +187,7 @@ export function GuardedNudge() {
 				{copy.promptTitle}. {copy.promptBody}
 			</p>
 			<div className="flex items-start gap-3">
-				<span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal!">
+				<span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal">
 					<BellRing aria-hidden className="size-5" />
 				</span>
 				<div className="min-w-0 flex-1">

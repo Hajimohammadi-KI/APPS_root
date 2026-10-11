@@ -148,7 +148,7 @@ export function AudioLibrary() {
                   {record.transcript}
                 </div>
                 <div className="rounded-xl border bg-worksheet-cyan/60 p-3 text-sm leading-6">
-                  <span className="mb-1 block text-xs font-semibold text-worksheet-teal!">
+                  <span className="mb-1 block text-xs font-semibold text-worksheet-teal">
                     Korrigierte Fassung
                   </span>
                   {record.correctedTranscript ?? record.transcript}

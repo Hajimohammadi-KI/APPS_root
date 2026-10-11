@@ -312,7 +312,7 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
           </div>
           {showCorrection && (
             <div className="rounded-xl border bg-worksheet-cyan/60 p-3 text-sm">
-              <span className="mb-1 block text-xs font-semibold text-worksheet-teal">
+              <span className="mb-1 block text-xs font-semibold text-worksheet-teal!">
                 Korrigiert
               </span>
               <HighlightedCorrection
@@ -323,7 +323,7 @@ function ErrorRepairCard({ error }: Readonly<{ error: ErrorRecord }>) {
           )}
         </div>
         {showCorrection && (
-          <p className="rounded-xl border bg-worksheet-cyan/60 p-3 text-sm leading-6 text-worksheet-teal">
+          <p className="rounded-xl border bg-worksheet-cyan/60 p-3 text-sm leading-6 text-worksheet-teal!">
             <strong>Diagnose:</strong> {error.explanation}
           </p>
         )}

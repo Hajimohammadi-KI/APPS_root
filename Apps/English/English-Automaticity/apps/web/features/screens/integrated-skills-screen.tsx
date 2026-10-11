@@ -82,19 +82,19 @@ const skillMeta: Record<
     label: "Listening",
     description: "Understand, notice, recall, and explain",
     icon: Headphones,
-    className: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal",
+    className: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal!",
   },
   speaking: {
     label: "Speaking",
     description: "Repeat, reformulate, and speak without a script",
     icon: Mic2,
-    className: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal",
+    className: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal!",
   },
   reading: {
     label: "Reading",
     description: "Find meaning, evidence, and structure",
     icon: BookOpen,
-    className: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal",
+    className: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal!",
   },
   writing: {
     label: "Writing",
@@ -490,7 +490,7 @@ export function IntegratedSkillsScreen({
       <details className="integrated-navigator overflow-hidden rounded-2xl border border-worksheet-line! bg-white shadow-sm">
         <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 bg-worksheet-cyan/80 px-5 py-4 marker:content-none">
           <span>
-            <span className="block text-sm font-black text-worksheet-teal">
+            <span className="block text-sm font-black text-worksheet-teal!">
               Lesson navigator
             </span>
             <span className="mt-1 block text-sm text-worksheet-teal/75">
@@ -498,7 +498,7 @@ export function IntegratedSkillsScreen({
               {visibleSkills.length}/4 skills shown
             </span>
           </span>
-          <span aria-hidden className="text-lg font-black text-worksheet-teal">
+          <span aria-hidden className="text-lg font-black text-worksheet-teal!">
             ▾
           </span>
         </summary>
@@ -513,7 +513,7 @@ export function IntegratedSkillsScreen({
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2
-                  className="text-base font-black text-worksheet-teal"
+                  className="text-base font-black text-worksheet-teal!"
                   id="skill-filter-label"
                 >
                   Show skills in this navigator
@@ -559,7 +559,7 @@ export function IntegratedSkillsScreen({
                 <Badge className="bg-worksheet-teal! border-worksheet-teal! text-white!">
                   Today · one calm mission
                 </Badge>
-                <h2 className="mt-3 text-2xl font-black text-worksheet-teal">
+                <h2 className="mt-3 text-2xl font-black text-worksheet-teal!">
                   Make English usable without overload
                 </h2>
                 <p className="mt-2 max-w-3xl text-base leading-7 text-worksheet-teal/80">
@@ -760,7 +760,7 @@ export function IntegratedSkillsScreen({
                 {lessonGoal(unit, skill)}
               </CardDescription>
             </div>
-            <Badge className="bg-white text-worksheet-teal">
+            <Badge className="bg-white text-worksheet-teal!">
               {pathProgress}% path
             </Badge>
           </div>
@@ -772,11 +772,11 @@ export function IntegratedSkillsScreen({
         </CardHeader>
         <CardContent className="space-y-5 pt-6">
           <details className="rounded-xl border border-worksheet-line! bg-white">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-black text-worksheet-teal marker:content-none">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-black text-worksheet-teal! marker:content-none">
               <span>
                 Lesson steps · {activeStep + 1}/7: {step.title}
               </span>
-              <span aria-hidden className="text-lg text-worksheet-teal">
+              <span aria-hidden className="text-lg text-worksheet-teal!">
                 ▾
               </span>
             </summary>
@@ -813,7 +813,7 @@ export function IntegratedSkillsScreen({
               </span>
               <div>
                 <h2
-                  className="text-xl font-black text-worksheet-teal"
+                  className="text-xl font-black text-worksheet-teal!"
                   id="current-step-title"
                 >
                   {step.title}
@@ -839,7 +839,7 @@ export function IntegratedSkillsScreen({
                 <div>
                   <h3 className="text-base font-black">Lesson material</h3>
                   {skill === "listening" ? (
-                    <p className="mt-1 text-xs font-bold text-worksheet-teal">
+                    <p className="mt-1 text-xs font-bold text-worksheet-teal!">
                       Original listening script written for this lesson
                     </p>
                   ) : null}
@@ -1007,14 +1007,14 @@ export function IntegratedSkillsScreen({
       <details className="overflow-hidden rounded-2xl border border-worksheet-line! bg-worksheet-cyan/70 shadow-sm">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 marker:content-none">
           <span>
-            <span className="block text-base font-black text-worksheet-teal">
+            <span className="block text-base font-black text-worksheet-teal!">
               QSkills companion material
             </span>
             <span className="mt-1 block text-sm text-worksheet-teal/75">
               Optional local audio, video, and book files
             </span>
           </span>
-          <span aria-hidden className="text-lg font-black text-worksheet-teal">
+          <span aria-hidden className="text-lg font-black text-worksheet-teal!">
             ▾
           </span>
         </summary>
@@ -1136,7 +1136,7 @@ export function IntegratedSkillsScreen({
             className="mt-1 size-5 shrink-0 text-worksheet-teal"
           />
           <div>
-            <h2 className="font-black text-worksheet-teal">
+            <h2 className="font-black text-worksheet-teal!">
               Calm-learning protections are active
             </h2>
             <p className="mt-1 text-base leading-7 text-worksheet-teal/80">

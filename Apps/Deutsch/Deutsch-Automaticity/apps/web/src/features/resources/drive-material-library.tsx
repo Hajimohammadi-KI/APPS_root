@@ -95,7 +95,7 @@ export function DriveMaterialLibrary() {
             eingeordnet, damit keine doppelten oder komprimierten Kopien den
             Lernweg überladen.
           </p>
-          <p className="mt-3 max-w-3xl rounded-lg border border-worksheet-line! bg-worksheet-cyan! px-3 py-2 text-sm leading-6 text-worksheet-teal">
+          <p className="mt-3 max-w-3xl rounded-lg border border-worksheet-line! bg-worksheet-cyan! px-3 py-2 text-sm leading-6 text-worksheet-teal!">
             <strong>PDF öffnen:</strong> Ein normaler Klick öffnet genau die
             gewählte Datei hier im PDF Reader. Mit Rechtsklick kannst du
             stattdessen einen neuen Tab oder ein neues Fenster wählen.
@@ -199,7 +199,7 @@ export function MaterialDetails({
             <span className="mt-1 block text-sm leading-6 text-muted-foreground">
               {description}
             </span>
-            <span className="mt-2 block text-xs font-semibold text-worksheet-teal">
+            <span className="mt-2 block text-xs font-semibold text-worksheet-teal!">
               {items.length} Einträge anzeigen
             </span>
           </span>

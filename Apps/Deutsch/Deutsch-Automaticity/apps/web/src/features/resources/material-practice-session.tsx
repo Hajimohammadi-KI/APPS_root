@@ -51,7 +51,7 @@ function ExercisePanel({
   return (
     <div className="space-y-4">
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
-        <p className="text-xs font-bold tracking-[0.12em] text-worksheet-teal uppercase">
+        <p className="text-xs font-bold tracking-[0.12em] text-worksheet-teal! uppercase">
           {exercise.instruction}
         </p>
         <p className="mt-2 text-base font-semibold leading-7 text-slate-950">
@@ -68,7 +68,7 @@ function ExercisePanel({
                 "min-h-12 rounded-xl border px-4 py-3 text-left text-sm font-medium transition-colors",
                 "focus-visible:ring-3 focus-visible:ring-worksheet-line focus-visible:outline-none",
                 answer === option
-                  ? "border-worksheet-line0 bg-worksheet-cyan! text-worksheet-teal"
+                  ? "border-worksheet-line0 bg-worksheet-cyan! text-worksheet-teal!"
                   : "border-slate-200 bg-white text-slate-800 hover:border-worksheet-line hover:bg-worksheet-cyan/50",
               )}
               key={option}
@@ -114,7 +114,7 @@ function ExercisePanel({
           className={cn(
             "rounded-xl border p-4",
             result.correct
-              ? "border-worksheet-success-line! bg-worksheet-success! text-worksheet-success-ink-strong"
+              ? "border-worksheet-success-line! bg-worksheet-success! text-worksheet-success-ink-strong!"
               : "border-rose-300 bg-rose-50 text-rose-950",
           )}
         >
@@ -268,7 +268,7 @@ export function MaterialPracticeSession({
             <Badge variant="secondary">{plan.material.format}</Badge>
             <Badge variant="outline">Aktives Üben</Badge>
           </div>
-          <p className="mt-5 text-xs font-black tracking-[0.15em] text-worksheet-teal uppercase">
+          <p className="mt-5 text-xs font-black tracking-[0.15em] text-worksheet-teal! uppercase">
             Quellenbasierte Transferübung
           </p>
           <h1 className="mt-2 max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
@@ -391,7 +391,7 @@ export function MaterialPracticeSession({
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-black tracking-[0.13em] text-worksheet-teal uppercase">
+            <p className="text-xs font-black tracking-[0.13em] text-worksheet-teal! uppercase">
               Ergebnis und nächster Abruf
             </p>
             <h2 className="mt-1 text-xl font-semibold text-slate-950">
@@ -421,7 +421,7 @@ export function MaterialPracticeSession({
         </div>
         {saved ? (
           <div
-            className="mt-4 rounded-xl border border-worksheet-success-line! bg-worksheet-success! p-3 text-sm font-medium text-worksheet-success-ink-strong"
+            className="mt-4 rounded-xl border border-worksheet-success-line! bg-worksheet-success! p-3 text-sm font-medium text-worksheet-success-ink-strong!"
             role="status"
           >
             Ergebnis, Aktivität und notwendige Wiederholungen wurden

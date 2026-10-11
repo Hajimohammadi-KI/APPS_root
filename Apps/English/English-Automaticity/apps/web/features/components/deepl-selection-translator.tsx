@@ -52,7 +52,7 @@ export function DeepLSelectionTranslator() {
   if (!position && !open) return null;
   return (
     <div data-deepl-tool>
-      {!open && position ? <button type="button" className="fixed z-[90] inline-flex min-h-10 items-center gap-2 rounded-xl border border-worksheet-line! bg-white px-3 text-sm font-bold text-worksheet-teal shadow-xl" style={position} onClick={() => setOpen(true)}><Languages className="size-4" />Translate</button> : null}
+      {!open && position ? <button type="button" className="fixed z-[90] inline-flex min-h-10 items-center gap-2 rounded-xl border border-worksheet-line! bg-white px-3 text-sm font-bold text-worksheet-teal! shadow-xl" style={position} onClick={() => setOpen(true)}><Languages className="size-4" />Translate</button> : null}
       {open ? <section aria-label="Google translation" className="fixed bottom-5 right-5 z-[95] w-[min(390px,calc(100vw-2rem))] rounded-2xl border-2 border-worksheet-teal bg-white p-4 text-slate-950 shadow-2xl">
         <div className="flex items-center gap-2"><Languages className="size-5 text-worksheet-teal" /><strong>Translate with Google</strong><button type="button" className="ml-auto rounded-lg p-2 hover:bg-worksheet-cyan" aria-label="Close translation" onClick={() => { setOpen(false); setPosition(null); }}><X className="size-4" /></button></div>
         <p className="mt-3 max-h-24 overflow-auto rounded-xl bg-worksheet-cyan! p-3 text-sm leading-6">{selection}</p>

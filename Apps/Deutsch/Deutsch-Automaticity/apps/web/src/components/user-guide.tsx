@@ -80,7 +80,7 @@ export function UserGuideButton() {
           </SheetDescription>
         </SheetHeader>
         <GuideSteps className="p-5" />
-        <div className="mx-5 rounded-2xl border border-worksheet-success-line! bg-worksheet-success! p-4 text-sm text-worksheet-success-ink-strong">
+        <div className="mx-5 rounded-2xl border border-worksheet-success-line! bg-worksheet-success! p-4 text-sm text-worksheet-success-ink-strong!">
           <p className="flex items-center gap-2 font-bold">
             <ShieldCheck className="size-4" aria-hidden="true" />
             Du kannst nichts kaputtmachen
@@ -91,14 +91,14 @@ export function UserGuideButton() {
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Link
-              className="inline-flex h-8 items-center rounded-md border border-worksheet-success-line! bg-white px-3 text-xs font-medium text-worksheet-success-ink-strong hover:bg-worksheet-success-strong"
+              className="inline-flex h-8 items-center rounded-md border border-worksheet-success-line! bg-white px-3 text-xs font-medium text-worksheet-success-ink-strong! hover:bg-worksheet-success-strong"
               href="/support"
               onClick={() => setOpen(false)}
             >
               Support öffnen
             </Link>
             <Link
-              className="inline-flex h-8 items-center rounded-md border border-worksheet-success-line! bg-white px-3 text-xs font-medium text-worksheet-success-ink-strong hover:bg-worksheet-success-strong"
+              className="inline-flex h-8 items-center rounded-md border border-worksheet-success-line! bg-white px-3 text-xs font-medium text-worksheet-success-ink-strong! hover:bg-worksheet-success-strong"
               href="/privacy"
               onClick={() => setOpen(false)}
             >

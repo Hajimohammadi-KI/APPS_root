@@ -116,7 +116,7 @@ export function AppUpdateNotice() {
 						<Sparkles aria-hidden className="size-5" />
 					</span>
 					<div>
-						<p className="text-xs font-black uppercase tracking-wider text-worksheet-teal">
+						<p className="text-xs font-black uppercase tracking-wider text-worksheet-teal!">
 							Version {release.version} is ready
 						</p>
 						<CardTitle className="mt-1 text-xl" id="app-update-title">

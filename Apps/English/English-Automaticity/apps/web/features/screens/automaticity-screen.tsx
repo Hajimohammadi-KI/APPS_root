@@ -195,7 +195,7 @@ function Feedback({ analysis }: { analysis: LessonOutputAssessment }) {
           ))}
         </ul>
       ) : (
-        <p className="flex items-center gap-2 text-sm font-bold text-worksheet-teal">
+        <p className="flex items-center gap-2 text-sm font-bold text-worksheet-teal!">
           <Check className="size-4" />{" "}
           {analysis.verified
             ? "The language check found no listed issue."
@@ -726,7 +726,7 @@ export function AutomaticityScreen({
             </div>
             <p
               aria-live="polite"
-              className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-worksheet-teal"
+              className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-worksheet-teal!"
             >
               {message}
             </p>
@@ -889,7 +889,7 @@ export function AutomaticityScreen({
                   <span
                     className={
                       checkedAnswers[index]
-                        ? "text-sm font-bold text-worksheet-teal"
+                        ? "text-sm font-bold text-worksheet-teal!"
                         : "text-sm font-bold text-red-800"
                     }
                   >
@@ -946,7 +946,7 @@ export function AutomaticityScreen({
             <div className="rounded-2xl bg-worksheet-ink! text-white! p-5">
               <p className="leading-7">{modelText}</p>
               <Button
-                className="mt-4 bg-white text-worksheet-teal hover:bg-worksheet-cyan"
+                className="mt-4 bg-white text-worksheet-teal! hover:bg-worksheet-cyan"
                 onClick={() => speak(modelText)}
               >
                 <Volume2 className="size-4" /> Play model

@@ -580,7 +580,7 @@ export function CaseAutomaticityTrainer() {
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(17rem,0.75fr)]">
             <section className="rounded-2xl border bg-background p-4 sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-xs font-extrabold tracking-[0.12em] text-worksheet-teal uppercase">
+                <p className="text-xs font-extrabold tracking-[0.12em] text-worksheet-teal! uppercase">
                   Schritt {stageNumber} von 4 · {stageLabel(stage)}
                 </p>
                 <Badge variant="outline">
@@ -683,10 +683,10 @@ export function CaseAutomaticityTrainer() {
 
             <aside className="space-y-3">
               <div className="rounded-2xl border border-worksheet-line! bg-worksheet-cyan! p-4">
-                <strong className="text-worksheet-teal">
+                <strong className="text-worksheet-teal!">
                   Entscheidungsweg
                 </strong>
-                <ol className="mt-3 grid gap-2 text-sm leading-6 text-worksheet-teal">
+                <ol className="mt-3 grid gap-2 text-sm leading-6 text-worksheet-teal!">
                   <li>1. Finde das Verb oder die Präposition.</li>
                   <li>2. Frage: Wer? Wen? Wem? Wessen?</li>
                   <li>3. Bestimme Genus und Numerus des Nomens.</li>

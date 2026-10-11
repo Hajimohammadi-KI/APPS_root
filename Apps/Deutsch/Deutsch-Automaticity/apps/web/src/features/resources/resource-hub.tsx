@@ -114,7 +114,7 @@ export function ResourceHub() {
       <Card className="border-worksheet-teal/10 bg-worksheet-cyan/60">
         <CardContent className="flex items-start gap-3">
           <Globe2 className="mt-0.5 size-5 shrink-0 text-worksheet-teal" />
-          <p className="text-sm leading-6 text-worksheet-teal">
+          <p className="text-sm leading-6 text-worksheet-teal!">
             Starte mit einem einzelnen Niveau. Wähle danach ein Thema aus der
             Themenliste oder öffne eine der darunterliegenden Lektionen.
           </p>

@@ -8,7 +8,7 @@ export function MissionRail({
 }: Readonly<{ children: ReactNode; heading?: string; label: string }>) {
   return (
     <section aria-label={label} className="space-y-2">
-      <h2 className="text-sm font-semibold text-worksheet-teal">{heading}</h2>
+      <h2 className="text-sm font-semibold text-worksheet-teal!">{heading}</h2>
       <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
         {children}
       </div>

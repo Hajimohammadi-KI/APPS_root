@@ -265,7 +265,7 @@ export function SettingsScreen() {
   return (
     <div className="settings-page space-y-5">
       <header className="rounded-3xl border border-worksheet-line! p-5 shadow-sm sm:p-7">
-        <Badge className="bg-worksheet-cyan! text-worksheet-teal">
+        <Badge className="bg-worksheet-cyan! text-worksheet-teal!">
           Lokal und automatisch gespeichert
         </Badge>
         <h1 className="mt-3 text-3xl font-black tracking-tight">
@@ -590,7 +590,7 @@ export function SettingsScreen() {
             {exportStatus ? (
               <p
                 aria-live="polite"
-                className="text-sm text-worksheet-success-ink"
+                className="text-sm text-worksheet-success-ink!"
               >
                 {exportStatus}
               </p>
@@ -598,7 +598,7 @@ export function SettingsScreen() {
             {importStatus ? (
               <p
                 aria-live="polite"
-                className="text-sm font-semibold text-worksheet-teal"
+                className="text-sm font-semibold text-worksheet-teal!"
                 role="status"
               >
                 {importStatus}

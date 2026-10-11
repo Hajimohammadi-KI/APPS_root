@@ -132,7 +132,7 @@ export function QSkillsResources({ cefr }: { cefr: CefrLevel }) {
         {!loading && catalog?.available ? (
           <>
             <details className="qskills-multiselect rounded-xl border border-worksheet-line! bg-white">
-              <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 font-bold text-worksheet-teal marker:content-none">
+              <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 font-bold text-worksheet-teal! marker:content-none">
                 <span>
                   Choose companion sources
                   <span className="ml-2 rounded-full bg-worksheet-cyan! px-2 py-1 text-xs">{selectedUnits.length} units · {selectedKinds.length} file types</span>
@@ -186,7 +186,7 @@ export function QSkillsResources({ cefr }: { cefr: CefrLevel }) {
               {visibleAssets.map((asset) => {
                 const Icon = icons[asset.kind];
                 return (
-                  <a className="inline-flex max-w-full items-center gap-2 rounded-xl border border-worksheet-line! bg-white px-3 py-2 text-sm font-bold text-worksheet-teal hover:bg-worksheet-cyan" href={resourceUrl(asset)} key={asset.path} rel="noreferrer" target="_blank">
+                  <a className="inline-flex max-w-full items-center gap-2 rounded-xl border border-worksheet-line! bg-white px-3 py-2 text-sm font-bold text-worksheet-teal! hover:bg-worksheet-cyan" href={resourceUrl(asset)} key={asset.path} rel="noreferrer" target="_blank">
                     <Icon aria-hidden className="size-4 shrink-0" />
                     <span className="truncate">{asset.context} · {asset.label}</span>
                   </a>

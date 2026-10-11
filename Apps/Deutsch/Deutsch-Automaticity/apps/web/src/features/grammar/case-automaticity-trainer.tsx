@@ -509,7 +509,7 @@ export function CaseAutomaticityTrainer() {
   }
 
   return (
-    <Card className="overflow-hidden border-worksheet-line! via-background to-amber-50/50">
+    <Card className="overflow-hidden border-worksheet-line! to-amber-50/50">
       <CardHeader className="border-b border-worksheet-line/80">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>

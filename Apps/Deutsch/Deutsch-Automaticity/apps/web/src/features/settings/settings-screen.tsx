@@ -264,7 +264,7 @@ export function SettingsScreen() {
 
   return (
     <div className="settings-page space-y-5">
-      <header className="rounded-3xl border border-worksheet-line! from-white p-5 shadow-sm sm:p-7">
+      <header className="rounded-3xl border border-worksheet-line! p-5 shadow-sm sm:p-7">
         <Badge className="bg-worksheet-cyan! text-worksheet-teal">
           Lokal und automatisch gespeichert
         </Badge>

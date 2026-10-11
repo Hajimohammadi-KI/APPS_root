@@ -5,7 +5,7 @@ export const metadata = { title: "Integrierte Fertigkeiten A1–C2" };
 export default function FertigkeitenPage() {
   return (
     <div className="space-y-6">
-      <header className="rounded-3xl border via-white p-6 shadow-sm sm:p-8">
+      <header className="rounded-3xl border p-6 shadow-sm sm:p-8">
         <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">
           Vollständiger CEFR-Lernpfad
         </p>

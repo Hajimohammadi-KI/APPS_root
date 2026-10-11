@@ -197,7 +197,7 @@ export function ProgressEvidence() {
 
   return (
     <div className="learning-progress-page mx-auto max-w-5xl space-y-5">
-      <header className="rounded-3xl border border-worksheet-line! from-white p-5 shadow-sm sm:p-7">
+      <header className="rounded-3xl border border-worksheet-line! p-5 shadow-sm sm:p-7">
         <p className="section-kicker">Details, nur bei Bedarf</p>
         <h1 className="mt-1 text-2xl font-black tracking-tight sm:text-3xl">
           Fortschritt & Nachweise

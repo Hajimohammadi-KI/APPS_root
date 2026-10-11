@@ -257,7 +257,7 @@ export function MaterialPracticeSession({
 
   return (
     <div className="mx-auto max-w-5xl space-y-5 pb-12">
-      <section className="relative overflow-hidden rounded-3xl border border-worksheet-line! bg-linear-to-br from-white p-5 shadow-sm sm:p-8">
+      <section className="relative overflow-hidden rounded-3xl border border-worksheet-line! bg-linear-to-br p-5 shadow-sm sm:p-8">
         <div
           aria-hidden="true"
           className="absolute -top-16 -right-12 size-52 rounded-full bg-worksheet-cyan/45 blur-sm"

@@ -58,7 +58,7 @@ const courseStats = [
 export function DeutschMitMarijaLibrary() {
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-2xl border border-worksheet-line! bg-linear-to-br from-white p-6 sm:p-8">
+      <section className="relative overflow-hidden rounded-2xl border border-worksheet-line! bg-linear-to-br p-6 sm:p-8">
         <div
           aria-hidden="true"
           className="absolute -top-12 -right-12 size-44 rounded-full bg-worksheet-cyan/40"

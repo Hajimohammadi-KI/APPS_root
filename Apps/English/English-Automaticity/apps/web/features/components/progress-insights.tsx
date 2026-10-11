@@ -78,7 +78,7 @@ export function ProgressInsights({
 
       <AutomaticityEvidenceSummary />
       <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-        <Card className="overflow-hidden border-worksheet-line/80 from-white shadow-[0_18px_50px_-30px_rgba(76,29,149,0.5)]">
+        <Card className="overflow-hidden border-worksheet-line/80 shadow-[0_18px_50px_-30px_rgba(76,29,149,0.5)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="size-5 text-worksheet-teal" />
@@ -148,7 +148,7 @@ export function ProgressInsights({
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden border-worksheet-line/80 from-white shadow-[0_18px_50px_-30px_rgba(30,64,175,0.45)]">
+        <Card className="overflow-hidden border-worksheet-line/80 shadow-[0_18px_50px_-30px_rgba(30,64,175,0.45)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Activity className="size-5 text-worksheet-teal" />

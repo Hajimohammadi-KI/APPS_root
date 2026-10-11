@@ -3,7 +3,7 @@
    their handlers and stored state survive. */
 document.addEventListener("DOMContentLoaded", () => {
   const en = document.documentElement.lang !== "de";
-  const config = (window.languageNavigation || {})[en ? "en" : "de"];
+  const config = window.languageNavigation?.[en ? "en" : "de"];
   if (!config) return;
   const current = location.pathname.replace(/\/$/, "") || "/";
   const link = (item, className) => {

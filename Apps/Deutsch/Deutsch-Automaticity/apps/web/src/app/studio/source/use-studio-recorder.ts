@@ -52,9 +52,7 @@ export function useStudioRecorder({
   const [interimTranscript, setInterimTranscript] = useState("");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [hasAudioBlob, setHasAudioBlob] = useState(false);
-  const [evaluation, setEvaluation] = useState<EvaluationResponse | null>(
-    null,
-  );
+  const [evaluation, setEvaluation] = useState<EvaluationResponse | null>(null);
   const [baseline, setBaseline] = useState<EvaluationResponse | null>(null);
   const [evaluating, setEvaluating] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);

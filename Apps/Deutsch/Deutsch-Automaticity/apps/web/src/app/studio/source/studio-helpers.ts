@@ -45,8 +45,7 @@ interface SpeechRecognitionConstructor {
 }
 
 export function recognitionConstructor():
-  | SpeechRecognitionConstructor
-  | undefined {
+  SpeechRecognitionConstructor | undefined {
   const browserWindow = window as typeof window & {
     SpeechRecognition?: SpeechRecognitionConstructor;
     webkitSpeechRecognition?: SpeechRecognitionConstructor;

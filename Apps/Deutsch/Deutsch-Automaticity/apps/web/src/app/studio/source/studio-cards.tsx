@@ -171,10 +171,7 @@ export function RecordCard({
           aria-hidden="true"
         >
           {Array.from({ length: 58 }, (_, index) => (
-            <i
-              key={index}
-              style={{ height: `${8 + ((index * 17) % 30)}px` }}
-            />
+            <i key={index} style={{ height: `${8 + ((index * 17) % 30)}px` }} />
           ))}
         </div>
         {message && (
@@ -263,7 +260,9 @@ export function DailyCompleteDialog({
         <h2 id="daily-complete-title">
           Die heutige Sprechübung ist abgeschlossen.
         </h2>
-        <p>Aufnahme, Transkript, Korrekturen und Ergebnis wurden gespeichert.</p>
+        <p>
+          Aufnahme, Transkript, Korrekturen und Ergebnis wurden gespeichert.
+        </p>
         <button className="primary" onClick={onReturn}>
           OK · Zum heutigen Training
         </button>

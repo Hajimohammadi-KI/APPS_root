@@ -5,10 +5,12 @@
 import { chromium } from "@playwright/test";
 
 const base = (process.argv[2] ?? "http://127.0.0.1:3202").replace(/\/$/, "");
-const routes: Array<{ path: string; title: RegExp; staticPage?: boolean }> = [
+const routes: Array<{ path: string; title: RegExp; staticPage?: boolean;
+  titleSelector?: string;
+}> = [
   { path: "/", title: /./ },
   { path: "/daily", title: /./, staticPage: true },
-  { path: "/grammar", title: /Grammar/, staticPage: true },
+  { path: "/grammar", title: /Grammar Lab/, titleSelector: ".topbar h2", staticPage: true },
   { path: "/practice", title: /./, staticPage: true },
   { path: "/studio", title: /./ },
   { path: "/progress", title: /Progress/ },
@@ -35,7 +37,7 @@ for (const width of [390, 1280]) {
     page.on("pageerror", (error) => errors.push(`${width}px ${route.path}: ${error.message}`));
     const response = await page.goto(base + route.path, { waitUntil: "networkidle" });
     check(response?.status() === 200, `${width}px ${route.path} responds 200 (${response?.status()})`);
-    const heading = page.locator("h1").first();
+    const heading = page.locator(route.titleSelector ?? "h1").first();
     await heading.waitFor({ timeout: 20000 }).catch(() => {});
     const text = (await heading.count()) ? (await heading.innerText()).trim() : "";
     check(route.title.test(text), `${width}px ${route.path} has a title ("${text.slice(0, 40)}")`);

@@ -1,9 +1,9 @@
 {
-  "publishedAt": "2026-10-10",
+  "publishedAt": "2026-10-11",
   "version": "27.4.4",
-  "webRelease": "2026.10.10.3",
+  "webRelease": "2026.10.11.1",
   "changes": [
-    "Screen titles, message boxes and collapsible sections now come from one component set, so they look and behave the same on every screen",
-    "Learner data, saved responses and all links are unchanged"
+    "The Daily and Grammar Lab sidebars are built from the same route list as the rest of the app, so every link lands on a real page",
+    "Removed unused settings components; learner data, saved responses and all links are unchanged"
   ]
 }

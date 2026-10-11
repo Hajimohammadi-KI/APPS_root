@@ -5,10 +5,20 @@
 import { chromium } from "@playwright/test";
 
 const base = (process.argv[2] ?? "http://127.0.0.1:3210").replace(/\/$/, "");
-const routes: Array<{ path: string; title: RegExp; staticPage?: boolean }> = [
+const routes: Array<{
+  path: string;
+  title: RegExp;
+  staticPage?: boolean;
+  titleSelector?: string;
+}> = [
   { path: "/", title: /./ },
   { path: "/heute", title: /./, staticPage: true },
-  { path: "/grammatik", title: /Grammatik/, staticPage: true },
+  {
+    path: "/grammatik",
+    title: /Grammatik-Labor/,
+    titleSelector: ".topbar h2",
+    staticPage: true,
+  },
   { path: "/practice", title: /./, staticPage: true },
   { path: "/studio", title: /./ },
   { path: "/fortschritt", title: /./ },
@@ -17,7 +27,7 @@ const routes: Array<{ path: string; title: RegExp; staticPage?: boolean }> = [
   { path: "/wiederholungen", title: /Wiederholungen/ },
   { path: "/fehler", title: /Fehlermotor/ },
   { path: "/audio", title: /Audio-Bibliothek/ },
-  { path: "/themen", title: /Themen/ },
+  { path: "/themen", title: /Gesprächsstudio|Themen/ },
   { path: "/einstellungen", title: /Einstellungen/ },
   { path: "/lehrkraft", title: /./ },
   { path: "/privacy", title: /Datenschutz/ },
@@ -45,7 +55,7 @@ for (const width of [390, 1280]) {
       response?.status() === 200,
       `${width}px ${route.path} responds 200 (${response?.status()})`,
     );
-    const heading = page.locator("h1").first();
+    const heading = page.locator(route.titleSelector ?? "h1").first();
     await heading.waitFor({ timeout: 20000 }).catch(() => {});
     const text = (await heading.count())
       ? (await heading.innerText()).trim()

@@ -1,9 +1,9 @@
 {
-  "publishedAt": "2026-10-10",
+  "publishedAt": "2026-10-11",
   "version": "20.9.4",
-  "webRelease": "2026.10.10.3",
+  "webRelease": "2026.10.11.1",
   "changes": [
-    "Seitentitel, Hinweisfelder, Missionskacheln und aufklappbare Abschnitte stammen jetzt aus einem gemeinsamen Komponentensatz und sehen auf allen Seiten gleich aus",
-    "Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
+    "Die Seitenleisten von Heute und Grammatik-Labor entstehen aus derselben Routenliste wie der Rest der App; der alte Link /integrierte-fertigkeiten leitet auf /fertigkeiten weiter",
+    "Ungenutzte Einstellungskomponenten entfernt; Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
   ]
 }

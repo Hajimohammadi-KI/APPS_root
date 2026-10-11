@@ -259,7 +259,7 @@ export function ReviewCenter() {
     <div className="space-y-6">
       <a
         href="/practice?review=1"
-        className="inline-block rounded-xl bg-worksheet-teal px-4 py-3 text-white"
+        className="inline-block rounded-xl bg-worksheet-teal! border-worksheet-teal! text-white! px-4 py-3"
       >
         Antworten aus eigenständigen Übungen prüfen und wiederholen
       </a>
@@ -366,7 +366,7 @@ export function ReviewCenter() {
             ))}
             {due.length === 0 && (
               <div className="py-8 text-center">
-                <span className="mx-auto grid size-12 place-items-center rounded-full bg-worksheet-cyan text-worksheet-teal">
+                <span className="mx-auto grid size-12 place-items-center rounded-full bg-worksheet-cyan! text-worksheet-teal!">
                   <Repeat2 className="size-5" />
                 </span>
                 <p className="mt-3 text-sm font-semibold">
@@ -401,7 +401,7 @@ export function ReviewCenter() {
                     role="timer"
                     className={`rounded-xl border p-3 text-sm font-semibold ${
                       secondsLeft > 0
-                        ? "border-worksheet-line bg-worksheet-cyan text-worksheet-teal"
+                        ? "border-worksheet-line bg-worksheet-cyan! text-worksheet-teal"
                         : "border-amber-300 bg-amber-50 text-amber-950"
                     }`}
                   >

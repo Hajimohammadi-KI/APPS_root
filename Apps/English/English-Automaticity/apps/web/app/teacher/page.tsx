@@ -188,7 +188,7 @@ export default function TeacherPage() {
   return (
     <main className="teacher-page">
       <AutomaticityEvidenceSummary />
-      <a href="/practice?review=1" className="inline-block rounded-xl bg-worksheet-teal px-4 py-3 text-white">Review original practice responses and recordings</a>
+      <a href="/practice?review=1" className="inline-block rounded-xl bg-worksheet-teal! border-worksheet-teal! text-white! px-4 py-3">Review original practice responses and recordings</a>
       <header className="teacher-hero">
         <a href="/" className="teacher-back">
           <ArrowLeft aria-hidden /> Back to app

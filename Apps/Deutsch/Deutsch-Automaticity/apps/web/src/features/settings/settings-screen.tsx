@@ -84,7 +84,7 @@ export function SettingsScreen() {
     return (
       <div
         aria-busy="true"
-        className="rounded-3xl border border-worksheet-line bg-white p-5 shadow-sm sm:p-7"
+        className="rounded-3xl border border-worksheet-line! bg-white p-5 shadow-sm sm:p-7"
       >
         <h1 className="text-3xl font-black tracking-tight">Einstellungen</h1>
         <p className="mt-2 text-muted-foreground">
@@ -264,8 +264,8 @@ export function SettingsScreen() {
 
   return (
     <div className="settings-page space-y-5">
-      <header className="rounded-3xl border border-worksheet-line from-white p-5 shadow-sm sm:p-7">
-        <Badge className="bg-worksheet-cyan text-worksheet-teal">
+      <header className="rounded-3xl border border-worksheet-line! from-white p-5 shadow-sm sm:p-7">
+        <Badge className="bg-worksheet-cyan! text-worksheet-teal!">
           Lokal und automatisch gespeichert
         </Badge>
         <h1 className="mt-3 text-3xl font-black tracking-tight">
@@ -282,7 +282,7 @@ export function SettingsScreen() {
           <CardHeader>
             <CardTitle>
               <h2 className="flex items-center gap-2">
-                <Eye className="size-5 text-worksheet-teal" />
+                <Eye className="size-5 text-worksheet-teal!" />
                 Lesen &amp; Fokus
               </h2>
             </CardTitle>
@@ -344,7 +344,7 @@ export function SettingsScreen() {
           <CardHeader>
             <CardTitle>
               <h2 className="flex items-center gap-2">
-                <Gauge className="size-5 text-worksheet-teal" />
+                <Gauge className="size-5 text-worksheet-teal!" />
                 Tägliche Praxis
               </h2>
             </CardTitle>
@@ -413,7 +413,7 @@ export function SettingsScreen() {
         <CardHeader>
           <CardTitle>
             <h2 className="flex items-center gap-2">
-              <ShieldCheck className="size-5 text-worksheet-success-ink" />
+              <ShieldCheck className="size-5 text-worksheet-success-ink!" />
               Optionale Wirksamkeitsmessung
             </h2>
           </CardTitle>
@@ -492,7 +492,7 @@ export function SettingsScreen() {
         <CardHeader>
           <CardTitle>
             <h2 className="flex items-center gap-2">
-              <MonitorDown className="size-5 text-worksheet-teal" />
+              <MonitorDown className="size-5 text-worksheet-teal!" />
               Auf deinem Gerät installieren
             </h2>
           </CardTitle>
@@ -527,7 +527,7 @@ export function SettingsScreen() {
         <CardHeader>
           <CardTitle>
             <h2 className="flex items-center gap-2">
-              <ShieldCheck className="size-5 text-worksheet-success-ink" />
+              <ShieldCheck className="size-5 text-worksheet-success-ink!" />
               Datenschutz &amp; Sicherung
             </h2>
           </CardTitle>
@@ -545,21 +545,21 @@ export function SettingsScreen() {
             }
           />
           <div className="grid gap-3 md:grid-cols-3">
-            <article className="grid min-w-0 gap-1 rounded-2xl border border-worksheet-line bg-worksheet-cyan/60 p-3">
+            <article className="grid min-w-0 gap-1 rounded-2xl border border-worksheet-line! bg-worksheet-cyan/60 p-3">
               <strong>1. Kopie exportieren</strong>
               <span className="text-sm leading-relaxed text-muted-foreground">
                 Lädt Fortschritt, Antworten und Nachweise gemeinsam als
                 JSON-Sicherungsdatei herunter.
               </span>
             </article>
-            <article className="grid min-w-0 gap-1 rounded-2xl border border-worksheet-line bg-worksheet-cyan/60 p-3">
+            <article className="grid min-w-0 gap-1 rounded-2xl border border-worksheet-line! bg-worksheet-cyan/60 p-3">
               <strong>2. Lokal aufbewahren</strong>
               <span className="text-sm leading-relaxed text-muted-foreground">
                 Die Datei bleibt am gewählten Ort auf deinem Gerät. Diese App
                 lädt sie nicht in einen Cloud-Dienst hoch.
               </span>
             </article>
-            <article className="grid min-w-0 gap-1 rounded-2xl border border-worksheet-line bg-worksheet-cyan/60 p-3">
+            <article className="grid min-w-0 gap-1 rounded-2xl border border-worksheet-line! bg-worksheet-cyan/60 p-3">
               <strong>3. Zum Wiederherstellen importieren</strong>
               <span className="text-sm leading-relaxed text-muted-foreground">
                 Wähle die Datei später aus. Vor dem Ersetzen des lokalen
@@ -590,7 +590,7 @@ export function SettingsScreen() {
             {exportStatus ? (
               <p
                 aria-live="polite"
-                className="text-sm text-worksheet-success-ink"
+                className="text-sm text-worksheet-success-ink!"
               >
                 {exportStatus}
               </p>
@@ -598,7 +598,7 @@ export function SettingsScreen() {
             {importStatus ? (
               <p
                 aria-live="polite"
-                className="text-sm font-semibold text-worksheet-teal"
+                className="text-sm font-semibold text-worksheet-teal!"
                 role="status"
               >
                 {importStatus}

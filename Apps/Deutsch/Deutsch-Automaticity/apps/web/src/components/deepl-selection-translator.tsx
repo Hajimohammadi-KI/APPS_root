@@ -80,7 +80,7 @@ export function DeepLSelectionTranslator() {
       {!open && position ? (
         <button
           type="button"
-          className="fixed z-[90] inline-flex min-h-10 items-center gap-2 rounded-xl border border-worksheet-line bg-white px-3 text-sm font-bold text-worksheet-teal shadow-xl"
+          className="fixed z-[90] inline-flex min-h-10 items-center gap-2 rounded-xl border border-worksheet-line! bg-white px-3 text-sm font-bold text-worksheet-teal! shadow-xl"
           style={position}
           onClick={() => setOpen(true)}
         >
@@ -94,7 +94,7 @@ export function DeepLSelectionTranslator() {
           className="fixed right-5 bottom-5 z-[95] w-[min(390px,calc(100vw-2rem))] rounded-2xl border-2 border-worksheet-teal bg-white p-4 text-slate-950 shadow-2xl"
         >
           <div className="flex items-center gap-2">
-            <Languages className="size-5 text-worksheet-teal" />
+            <Languages className="size-5 text-worksheet-teal!" />
             <strong>Mit Google übersetzen</strong>
             <button
               type="button"
@@ -108,13 +108,13 @@ export function DeepLSelectionTranslator() {
               <X className="size-4" />
             </button>
           </div>
-          <p className="mt-3 max-h-24 overflow-auto rounded-xl bg-worksheet-cyan p-3 text-sm leading-6">
+          <p className="mt-3 max-h-24 overflow-auto rounded-xl bg-worksheet-cyan! p-3 text-sm leading-6">
             {selection}
           </p>
           <label className="mt-3 grid gap-1 text-sm font-semibold">
             Zielsprache
             <select
-              className="h-10 rounded-lg border border-worksheet-line bg-white px-3"
+              className="h-10 rounded-lg border border-worksheet-line! bg-white px-3"
               value={target}
               onChange={(event) =>
                 setTarget(event.target.value as keyof typeof targets)
@@ -129,14 +129,14 @@ export function DeepLSelectionTranslator() {
           </label>
           <button
             type="button"
-            className="mt-3 min-h-11 w-full rounded-xl bg-worksheet-teal px-4 font-bold text-white disabled:opacity-60"
+            className="mt-3 min-h-11 w-full rounded-xl bg-worksheet-teal! border-worksheet-teal! text-white! px-4 font-bold disabled:opacity-60"
             disabled={busy}
             onClick={() => void translate()}
           >
             {busy ? "Wird übersetzt …" : "Übersetzen"}
           </button>
           {translation ? (
-            <div className="mt-3 rounded-xl border border-worksheet-line p-3">
+            <div className="mt-3 rounded-xl border border-worksheet-line! p-3">
               <strong className="text-sm">Übersetzung</strong>
               <p className="mt-1 whitespace-pre-wrap leading-6">
                 {translation}

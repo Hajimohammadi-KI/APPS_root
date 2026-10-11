@@ -58,7 +58,7 @@ export function IntegratedSkillsCatalog() {
           learners can choose several levels and skills without scrolling past
           unrelated content. Apply keeps tentative checkbox changes reversible. */}
       <details
-        className="group overflow-hidden rounded-3xl border border-worksheet-line bg-card shadow-sm"
+        className="group overflow-hidden rounded-3xl border border-worksheet-line! bg-card shadow-sm"
         ref={pickerRef}
       >
         <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 bg-worksheet-cyan/80 p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:p-6">

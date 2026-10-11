@@ -106,12 +106,12 @@ export function QSkillsResources({ cefr }: { cefr: CefrLevel }) {
   }
 
   return (
-    <Card className="border-worksheet-line bg-worksheet-cyan/70">
+    <Card className="border-worksheet-line! bg-worksheet-cyan/70">
       <CardHeader>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <BookOpen aria-hidden className="size-5 text-worksheet-teal" /> QSkills companion material
+              <BookOpen aria-hidden className="size-5 text-worksheet-teal!" /> QSkills companion material
             </CardTitle>
             <CardDescription className="mt-2 max-w-3xl">
               Your licensed local QSkills files stay on this computer. Use them for input, then save your own evidence in the mission above.
@@ -131,21 +131,21 @@ export function QSkillsResources({ cefr }: { cefr: CefrLevel }) {
         ) : null}
         {!loading && catalog?.available ? (
           <>
-            <details className="qskills-multiselect rounded-xl border border-worksheet-line bg-white">
-              <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 font-bold text-worksheet-teal marker:content-none">
+            <details className="qskills-multiselect rounded-xl border border-worksheet-line! bg-white">
+              <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 font-bold text-worksheet-teal! marker:content-none">
                 <span>
                   Choose companion sources
-                  <span className="ml-2 rounded-full bg-worksheet-cyan px-2 py-1 text-xs">{selectedUnits.length} units · {selectedKinds.length} file types</span>
+                  <span className="ml-2 rounded-full bg-worksheet-cyan! px-2 py-1 text-xs">{selectedUnits.length} units · {selectedKinds.length} file types</span>
                 </span>
                 <span aria-hidden>▾</span>
               </summary>
-              <div className="space-y-4 border-t border-worksheet-line p-4">
+              <div className="space-y-4 border-t border-worksheet-line! p-4">
                 {/* Source files stay in D:\\Sources. This multi-select only filters
                     the local catalog; it never copies licensed QSkills content. */}
                 <label className="block text-sm font-bold text-slate-800">
                   Search level or unit
                   <input
-                    className="mt-1 min-h-11 w-full rounded-lg border border-worksheet-line px-3 text-base"
+                    className="mt-1 min-h-11 w-full rounded-lg border border-worksheet-line! px-3 text-base"
                     onChange={(event) => setUnitQuery(event.target.value)}
                     placeholder="For example: Level 1 or Unit 4"
                     type="search"
@@ -186,7 +186,7 @@ export function QSkillsResources({ cefr }: { cefr: CefrLevel }) {
               {visibleAssets.map((asset) => {
                 const Icon = icons[asset.kind];
                 return (
-                  <a className="inline-flex max-w-full items-center gap-2 rounded-xl border border-worksheet-line bg-white px-3 py-2 text-sm font-bold text-worksheet-teal hover:bg-worksheet-cyan" href={resourceUrl(asset)} key={asset.path} rel="noreferrer" target="_blank">
+                  <a className="inline-flex max-w-full items-center gap-2 rounded-xl border border-worksheet-line! bg-white px-3 py-2 text-sm font-bold text-worksheet-teal! hover:bg-worksheet-cyan" href={resourceUrl(asset)} key={asset.path} rel="noreferrer" target="_blank">
                     <Icon aria-hidden className="size-4 shrink-0" />
                     <span className="truncate">{asset.context} · {asset.label}</span>
                   </a>

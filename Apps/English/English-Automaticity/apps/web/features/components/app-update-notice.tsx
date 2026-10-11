@@ -112,11 +112,11 @@ export function AppUpdateNotice() {
 		>
 			<CardHeader className="pb-3">
 				<div className="flex items-start gap-3">
-					<span className="grid size-11 shrink-0 place-items-center rounded-xl bg-worksheet-cyan text-worksheet-teal">
+					<span className="grid size-11 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal!">
 						<Sparkles aria-hidden className="size-5" />
 					</span>
 					<div>
-						<p className="text-xs font-black uppercase tracking-wider text-worksheet-teal">
+						<p className="text-xs font-black uppercase tracking-wider text-worksheet-teal!">
 							Version {release.version} is ready
 						</p>
 						<CardTitle className="mt-1 text-xl" id="app-update-title">

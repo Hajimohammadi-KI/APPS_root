@@ -83,7 +83,7 @@ export function ProgressInsights({
         <Card className="overflow-hidden border-worksheet-line/80 from-white shadow-[0_18px_50px_-30px_rgba(76,29,149,0.5)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Target className="size-5 text-worksheet-teal" />
+              <Target className="size-5 text-worksheet-teal!" />
               Bisheriges Übungsprofil
             </CardTitle>
             <CardDescription>
@@ -154,7 +154,7 @@ export function ProgressInsights({
         <Card className="overflow-hidden border-worksheet-line/80 from-white shadow-[0_18px_50px_-30px_rgba(30,64,175,0.45)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Activity className="size-5 text-worksheet-teal" />
+              <Activity className="size-5 text-worksheet-teal!" />
               Aktivität der letzten 7 Tage
             </CardTitle>
             <CardDescription>
@@ -231,7 +231,7 @@ export function ProgressInsights({
               </ResponsiveContainer>
             </div>
             {!hasActivity ? (
-              <p className="mt-2 rounded-xl border border-worksheet-line bg-white/85 p-3 text-sm text-slate-700">
+              <p className="mt-2 rounded-xl border border-worksheet-line! bg-white/85 p-3 text-sm text-slate-700">
                 Noch keine Aktivität gespeichert. Nach der ersten Übung beginnt
                 die Kurve mit deinen echten Daten.
               </p>

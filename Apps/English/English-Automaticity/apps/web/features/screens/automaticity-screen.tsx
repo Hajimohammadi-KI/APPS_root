@@ -150,10 +150,10 @@ function Axis({ label, value }: { label: string; value: number }) {
         <span>{label}</span>
         <span className="tabular-nums">{value}%</span>
       </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-worksheet-cyan">
+      <div className="h-2.5 overflow-hidden rounded-full bg-worksheet-cyan!">
         <div
           aria-hidden
-          className="h-full rounded-full bg-worksheet-teal transition-[width]"
+          className="h-full rounded-full bg-worksheet-teal! border-worksheet-teal! text-white! transition-[width]"
           style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
         />
       </div>
@@ -163,7 +163,7 @@ function Axis({ label, value }: { label: string; value: number }) {
 
 function Feedback({ analysis }: { analysis: LessonOutputAssessment }) {
   return (
-    <div className="space-y-3 rounded-2xl border border-worksheet-line bg-worksheet-cyan p-4">
+    <div className="space-y-3 rounded-2xl border border-worksheet-line! bg-worksheet-cyan! p-4">
       <div className="grid grid-cols-3 gap-2 text-center text-sm">
         <div>
           <strong className="block text-lg">{analysis.sentenceCount}</strong>
@@ -195,7 +195,7 @@ function Feedback({ analysis }: { analysis: LessonOutputAssessment }) {
           ))}
         </ul>
       ) : (
-        <p className="flex items-center gap-2 text-sm font-bold text-worksheet-teal">
+        <p className="flex items-center gap-2 text-sm font-bold text-worksheet-teal!">
           <Check className="size-4" />{" "}
           {analysis.verified
             ? "The language check found no listed issue."
@@ -691,7 +691,7 @@ export function AutomaticityScreen({
           title="Automaticity Mission"
         />
       ) : focusedStep === undefined ? (
-        <Card className="border-worksheet-line bg-worksheet-cyan/70">
+        <Card className="border-worksheet-line! bg-worksheet-cyan/70">
           <CardHeader>
             <CardTitle>
               Steps {stepOffset + 1}–{stepOffset + 3} · Build usable evidence
@@ -705,7 +705,7 @@ export function AutomaticityScreen({
       ) : null}
 
       {!embedded ? (
-        <Card className="border-worksheet-line bg-worksheet-cyan/70" id="mission">
+        <Card className="border-worksheet-line! bg-worksheet-cyan/70" id="mission">
           <CardContent className="space-y-4 pt-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -720,13 +720,13 @@ export function AutomaticityScreen({
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-white ring-1 ring-worksheet-line">
               <div
-                className="h-full bg-worksheet-teal transition-[width]"
+                className="h-full bg-worksheet-teal! border-worksheet-teal! text-white! transition-[width]"
                 style={{ width: `${progress}%` }}
               />
             </div>
             <p
               aria-live="polite"
-              className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-worksheet-teal"
+              className="rounded-xl bg-white px-4 py-3 text-sm font-bold text-worksheet-teal!"
             >
               {message}
             </p>
@@ -771,7 +771,7 @@ export function AutomaticityScreen({
               >
                 <Card className={done ? "border-worksheet-line0" : ""}>
                   <CardContent className="flex gap-3 pt-5">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan text-worksheet-teal">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-worksheet-cyan! text-worksheet-teal!">
                       {done ? <Check /> : <StepIcon />}
                     </span>
                     <div>
@@ -789,7 +789,7 @@ export function AutomaticityScreen({
       ) : null}
 
       {!embedded ? (
-        <Card className="border-worksheet-line">
+        <Card className="border-worksheet-line!">
           <CardHeader>
             <CardTitle>Mission quality gate</CardTitle>
             <CardDescription>
@@ -798,19 +798,19 @@ export function AutomaticityScreen({
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl bg-worksheet-cyan p-4 text-sm">
+            <div className="rounded-2xl bg-worksheet-cyan! p-4 text-sm">
               <strong>Accurate</strong>
               <p className="mt-1 text-muted-foreground">
                 Use the target form correctly in your own sentences.
               </p>
             </div>
-            <div className="rounded-2xl bg-worksheet-cyan p-4 text-sm">
+            <div className="rounded-2xl bg-worksheet-cyan! p-4 text-sm">
               <strong>Spontaneous</strong>
               <p className="mt-1 text-muted-foreground">
                 Speak for at least 60 seconds without reading.
               </p>
             </div>
-            <div className="rounded-2xl bg-worksheet-cyan p-4 text-sm">
+            <div className="rounded-2xl bg-worksheet-cyan! p-4 text-sm">
               <strong>Retained</strong>
               <p className="mt-1 text-muted-foreground">
                 Recall the same form again in a later review.
@@ -821,7 +821,7 @@ export function AutomaticityScreen({
       ) : null}
 
       {!embedded && dueReview ? (
-        <Card className="border-worksheet-success-line" id="delayed-transfer">
+        <Card className="border-worksheet-success-line!" id="delayed-transfer">
           <CardHeader>
             <CardTitle>Delayed recall and novel transfer</CardTitle>
             <CardDescription>
@@ -859,7 +859,7 @@ export function AutomaticityScreen({
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="grid gap-3 md:grid-cols-2">
-              <div className="rounded-2xl bg-worksheet-cyan p-4">
+              <div className="rounded-2xl bg-worksheet-cyan! p-4">
                 <strong>Rule and form</strong>
                 <p className="mt-2">{grammar.rule}</p>
               </div>
@@ -889,7 +889,7 @@ export function AutomaticityScreen({
                   <span
                     className={
                       checkedAnswers[index]
-                        ? "text-sm font-bold text-worksheet-teal"
+                        ? "text-sm font-bold text-worksheet-teal!"
                         : "text-sm font-bold text-red-800"
                     }
                   >
@@ -943,10 +943,10 @@ export function AutomaticityScreen({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="rounded-2xl bg-worksheet-ink p-5 text-white">
+            <div className="rounded-2xl bg-worksheet-ink! text-white! p-5">
               <p className="leading-7">{modelText}</p>
               <Button
-                className="mt-4 bg-white text-worksheet-teal hover:bg-worksheet-cyan"
+                className="mt-4 bg-white text-worksheet-teal! hover:bg-worksheet-cyan"
                 onClick={() => speak(modelText)}
               >
                 <Volume2 className="size-4" /> Play model
@@ -955,7 +955,7 @@ export function AutomaticityScreen({
             <div className="grid gap-2 md:grid-cols-5">
               {shadowingStages.map((stage, index) => (
                 <button
-                  className={`min-h-24 rounded-2xl border p-3 text-left text-sm font-bold ${shadowing[index] ? "border-worksheet-teal bg-worksheet-cyan text-worksheet-teal" : "bg-background"}`}
+                  className={`min-h-24 rounded-2xl border p-3 text-left text-sm font-bold ${shadowing[index] ? "border-worksheet-teal bg-worksheet-cyan! text-worksheet-teal" : "bg-background"}`}
                   key={stage}
                   onClick={() =>
                     writePlan(
@@ -1058,13 +1058,13 @@ export function AutomaticityScreen({
             </CardHeader>
             <CardContent>
               <ol className="space-y-3 text-sm">
-                <li className="rounded-xl bg-worksheet-cyan p-3">
+                <li className="rounded-xl bg-worksheet-cyan! p-3">
                   <b>1. Repair:</b> correct five similar sentences.
                 </li>
-                <li className="rounded-xl bg-worksheet-cyan p-3">
+                <li className="rounded-xl bg-worksheet-cyan! p-3">
                   <b>2. Transfer:</b> create five new examples from your life.
                 </li>
-                <li className="rounded-xl bg-worksheet-cyan p-3">
+                <li className="rounded-xl bg-worksheet-cyan! p-3">
                   <b>3. Automate:</b> repeat one shadowing passage and retell
                   it.
                 </li>

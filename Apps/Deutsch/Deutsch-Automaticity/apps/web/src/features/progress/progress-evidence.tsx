@@ -30,9 +30,9 @@ const PROGRESS_PAGE_LOADED_AT = Date.now();
 
 const metricToneClasses = {
   amber: "bg-amber-100 text-amber-800",
-  blue: "bg-worksheet-cyan text-worksheet-teal",
-  sky: "bg-worksheet-cyan text-worksheet-teal",
-  violet: "bg-worksheet-cyan text-worksheet-teal",
+  blue: "bg-worksheet-cyan! text-worksheet-teal!",
+  sky: "bg-worksheet-cyan! text-worksheet-teal!",
+  violet: "bg-worksheet-cyan! text-worksheet-teal!",
 } as const;
 
 export function ProgressEvidence() {
@@ -197,7 +197,7 @@ export function ProgressEvidence() {
 
   return (
     <div className="learning-progress-page mx-auto max-w-5xl space-y-5">
-      <header className="rounded-3xl border border-worksheet-line from-white p-5 shadow-sm sm:p-7">
+      <header className="rounded-3xl border border-worksheet-line! from-white p-5 shadow-sm sm:p-7">
         <p className="section-kicker">Details, nur bei Bedarf</p>
         <h1 className="mt-1 text-2xl font-black tracking-tight sm:text-3xl">
           Fortschritt & Nachweise
@@ -208,11 +208,11 @@ export function ProgressEvidence() {
         </p>
         {/* Diese Legende verhindert, dass App-Scores als Lehrkrafturteil gelesen werden. */}
         <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2" role="note">
-          <p className="rounded-xl border border-worksheet-line bg-worksheet-cyan p-3">
+          <p className="rounded-xl border border-worksheet-line! bg-worksheet-cyan! p-3">
             <strong>Automatische Übungssignale:</strong> Aktivität,
             App-Prüfungen und berechnete Stabilität.
           </p>
-          <p className="rounded-xl border border-worksheet-line bg-worksheet-cyan p-3">
+          <p className="rounded-xl border border-worksheet-line! bg-worksheet-cyan! p-3">
             <strong>Durch Lehrkraft bestätigte Beherrschung:</strong> auf diesem
             Gerät nicht erfasst.
           </p>
@@ -439,9 +439,9 @@ function EvidenceRow({
 }: Readonly<{ label: string; value: number }>) {
   return (
     <div className="flex items-center gap-3 rounded-xl border bg-background p-3">
-      <Mic2 className="size-5 text-worksheet-teal" aria-hidden="true" />
+      <Mic2 className="size-5 text-worksheet-teal!" aria-hidden="true" />
       <span className="min-w-0 flex-1 text-sm font-medium">{label}</span>
-      <strong className="text-lg text-worksheet-teal">{value}</strong>
+      <strong className="text-lg text-worksheet-teal!">{value}</strong>
     </div>
   );
 }
@@ -452,7 +452,10 @@ function GoalRow({
 }: Readonly<{ frequency: string; label: string }>) {
   return (
     <li className="flex items-center gap-3 rounded-xl border bg-background p-3 text-sm">
-      <CheckCircle2 className="size-4 text-worksheet-teal" aria-hidden="true" />
+      <CheckCircle2
+        className="size-4 text-worksheet-teal!"
+        aria-hidden="true"
+      />
       <span className="min-w-0 flex-1">{label}</span>
       <Badge variant="secondary">{frequency}</Badge>
     </li>

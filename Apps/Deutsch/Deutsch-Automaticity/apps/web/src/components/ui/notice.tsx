@@ -7,9 +7,9 @@ const noticeVariants = cva("rounded-xl border p-3 text-sm leading-6", {
   variants: {
     tone: {
       neutral: "bg-card",
-      info: "border-worksheet-line bg-worksheet-cyan text-worksheet-teal",
+      info: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal!",
       success:
-        "border-worksheet-success-line bg-worksheet-success text-worksheet-success-ink-strong",
+        "border-worksheet-success-line! bg-worksheet-success! text-worksheet-success-ink-strong!",
       warning: "border-amber-300 bg-amber-50 text-amber-950",
       danger: "border-red-200 bg-red-50 text-red-950",
     },

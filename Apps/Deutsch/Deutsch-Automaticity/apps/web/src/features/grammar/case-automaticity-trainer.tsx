@@ -509,7 +509,7 @@ export function CaseAutomaticityTrainer() {
   }
 
   return (
-    <Card className="overflow-hidden border-worksheet-line via-background to-amber-50/50">
+    <Card className="overflow-hidden border-worksheet-line! via-background to-amber-50/50">
       <CardHeader className="border-b border-worksheet-line/80">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -551,10 +551,10 @@ export function CaseAutomaticityTrainer() {
         />
 
         {sessionComplete ? (
-          <div className="grid min-h-64 place-items-center rounded-2xl border border-worksheet-line bg-background/90 p-6 text-center">
+          <div className="grid min-h-64 place-items-center rounded-2xl border border-worksheet-line! bg-background/90 p-6 text-center">
             <div className="max-w-lg">
               <Sparkles
-                className="mx-auto size-8 text-worksheet-teal"
+                className="mx-auto size-8 text-worksheet-teal!"
                 aria-hidden="true"
               />
               <h3 className="mt-3 text-xl font-black">
@@ -580,7 +580,7 @@ export function CaseAutomaticityTrainer() {
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(17rem,0.75fr)]">
             <section className="rounded-2xl border bg-background p-4 sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-xs font-extrabold tracking-[0.12em] text-worksheet-teal uppercase">
+                <p className="text-xs font-extrabold tracking-[0.12em] text-worksheet-teal! uppercase">
                   Schritt {stageNumber} von 4 · {stageLabel(stage)}
                 </p>
                 <Badge variant="outline">
@@ -682,11 +682,11 @@ export function CaseAutomaticityTrainer() {
             </section>
 
             <aside className="space-y-3">
-              <div className="rounded-2xl border border-worksheet-line bg-worksheet-cyan p-4">
-                <strong className="text-worksheet-teal">
+              <div className="rounded-2xl border border-worksheet-line! bg-worksheet-cyan! p-4">
+                <strong className="text-worksheet-teal!">
                   Entscheidungsweg
                 </strong>
-                <ol className="mt-3 grid gap-2 text-sm leading-6 text-worksheet-teal">
+                <ol className="mt-3 grid gap-2 text-sm leading-6 text-worksheet-teal!">
                   <li>1. Finde das Verb oder die Präposition.</li>
                   <li>2. Frage: Wer? Wen? Wem? Wessen?</li>
                   <li>3. Bestimme Genus und Numerus des Nomens.</li>

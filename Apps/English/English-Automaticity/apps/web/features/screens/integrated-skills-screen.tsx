@@ -82,19 +82,19 @@ const skillMeta: Record<
     label: "Listening",
     description: "Understand, notice, recall, and explain",
     icon: Headphones,
-    className: "border-worksheet-line bg-worksheet-cyan text-worksheet-teal",
+    className: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal!",
   },
   speaking: {
     label: "Speaking",
     description: "Repeat, reformulate, and speak without a script",
     icon: Mic2,
-    className: "border-worksheet-line bg-worksheet-cyan text-worksheet-teal",
+    className: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal!",
   },
   reading: {
     label: "Reading",
     description: "Find meaning, evidence, and structure",
     icon: BookOpen,
-    className: "border-worksheet-line bg-worksheet-cyan text-worksheet-teal",
+    className: "border-worksheet-line! bg-worksheet-cyan! text-worksheet-teal!",
   },
   writing: {
     label: "Writing",
@@ -105,12 +105,12 @@ const skillMeta: Record<
 };
 
 const levelTone: Record<CefrLevel, string> = {
-  A1: "border-worksheet-line0 bg-worksheet-teal text-white",
-  A2: "border-worksheet-line0 bg-worksheet-teal text-white",
-  B1: "border-worksheet-line0 bg-worksheet-teal text-white",
-  B2: "border-worksheet-line0 bg-worksheet-teal text-white",
+  A1: "border-worksheet-line0 bg-worksheet-teal! border-worksheet-teal! text-white!",
+  A2: "border-worksheet-line0 bg-worksheet-teal! border-worksheet-teal! text-white!",
+  B1: "border-worksheet-line0 bg-worksheet-teal! border-worksheet-teal! text-white!",
+  B2: "border-worksheet-line0 bg-worksheet-teal! border-worksheet-teal! text-white!",
   C1: "border-slate-600 bg-slate-800 text-white",
-  C2: "border-worksheet-teal bg-worksheet-ink text-white",
+  C2: "border-worksheet-teal bg-worksheet-ink! text-white!",
 };
 
 const REVIEW_DELAY_MS = 86_400_000;
@@ -487,10 +487,10 @@ export function IntegratedSkillsScreen({
         title="Integrated Skills Path"
       />
 
-      <details className="integrated-navigator overflow-hidden rounded-2xl border border-worksheet-line bg-white shadow-sm">
+      <details className="integrated-navigator overflow-hidden rounded-2xl border border-worksheet-line! bg-white shadow-sm">
         <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 bg-worksheet-cyan/80 px-5 py-4 marker:content-none">
           <span>
-            <span className="block text-sm font-black text-worksheet-teal">
+            <span className="block text-sm font-black text-worksheet-teal!">
               Lesson navigator
             </span>
             <span className="mt-1 block text-sm text-worksheet-teal/75">
@@ -498,22 +498,22 @@ export function IntegratedSkillsScreen({
               {visibleSkills.length}/4 skills shown
             </span>
           </span>
-          <span aria-hidden className="text-lg font-black text-worksheet-teal">
+          <span aria-hidden className="text-lg font-black text-worksheet-teal!">
             ▾
           </span>
         </summary>
-        <div className="space-y-4 border-t border-worksheet-line p-4 sm:p-5">
+        <div className="space-y-4 border-t border-worksheet-line! p-4 sm:p-5">
           {/* Multi-select is intentionally only a display filter. The active
               evidence path remains one skill at a time, so evidence cannot be
               accidentally mixed across listening, speaking, reading, and writing. */}
           <section
             aria-labelledby="skill-filter-label"
-            className="rounded-2xl border border-worksheet-line bg-white p-4"
+            className="rounded-2xl border border-worksheet-line! bg-white p-4"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2
-                  className="text-base font-black text-worksheet-teal"
+                  className="text-base font-black text-worksheet-teal!"
                   id="skill-filter-label"
                 >
                   Show skills in this navigator
@@ -534,7 +534,7 @@ export function IntegratedSkillsScreen({
                   <label
                     className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border px-3 py-2 text-sm font-bold transition-colors ${
  checked
- ? "border-worksheet-line bg-worksheet-cyan text-worksheet-teal"
+ ? "border-worksheet-line bg-worksheet-cyan! text-worksheet-teal"
  : "border-slate-200 bg-white text-slate-700"
  }`}
                     key={candidate}
@@ -553,13 +553,13 @@ export function IntegratedSkillsScreen({
               })}
             </div>
           </section>
-          <Card className="border-worksheet-line bg-worksheet-cyan/80">
+          <Card className="border-worksheet-line! bg-worksheet-cyan/80">
             <CardContent className="grid gap-4 pt-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
-                <Badge className="bg-worksheet-teal text-white">
+                <Badge className="bg-worksheet-teal! border-worksheet-teal! text-white!">
                   Today · one calm mission
                 </Badge>
-                <h2 className="mt-3 text-2xl font-black text-worksheet-teal">
+                <h2 className="mt-3 text-2xl font-black text-worksheet-teal!">
                   Make English usable without overload
                 </h2>
                 <p className="mt-2 max-w-3xl text-base leading-7 text-worksheet-teal/80">
@@ -640,7 +640,7 @@ export function IntegratedSkillsScreen({
                     >
                       <Brain
                         aria-hidden
-                        className="mt-1 size-4 shrink-0 text-worksheet-teal"
+                        className="mt-1 size-4 shrink-0 text-worksheet-teal!"
                       />
                       {lesson}
                     </li>
@@ -649,7 +649,7 @@ export function IntegratedSkillsScreen({
               </CardContent>
             </Card>
 
-            <Card className="border-worksheet-line">
+            <Card className="border-worksheet-line!">
               <CardHeader>
                 <CardTitle>Level quality gate</CardTitle>
                 <CardDescription>
@@ -670,7 +670,7 @@ export function IntegratedSkillsScreen({
                     <li className="flex gap-2" key={criterion}>
                       <Check
                         aria-hidden
-                        className="mt-1 size-4 shrink-0 text-worksheet-teal"
+                        className="mt-1 size-4 shrink-0 text-worksheet-teal!"
                       />
                       {criterion}
                     </li>
@@ -744,10 +744,10 @@ export function IntegratedSkillsScreen({
       </details>
 
       <Card
-        className="overflow-hidden border-2 border-worksheet-line"
+        className="overflow-hidden border-2 border-worksheet-line!"
         id="active-mission"
       >
-        <CardHeader className="bg-worksheet-ink text-white">
+        <CardHeader className="bg-worksheet-ink! text-white!">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-sm font-bold text-white">
@@ -760,7 +760,7 @@ export function IntegratedSkillsScreen({
                 {lessonGoal(unit, skill)}
               </CardDescription>
             </div>
-            <Badge className="bg-white text-worksheet-teal">
+            <Badge className="bg-white text-worksheet-teal!">
               {pathProgress}% path
             </Badge>
           </div>
@@ -771,16 +771,16 @@ export function IntegratedSkillsScreen({
           />
         </CardHeader>
         <CardContent className="space-y-5 pt-6">
-          <details className="rounded-xl border border-worksheet-line bg-white">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-black text-worksheet-teal marker:content-none">
+          <details className="rounded-xl border border-worksheet-line! bg-white">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-black text-worksheet-teal! marker:content-none">
               <span>
                 Lesson steps · {activeStep + 1}/7: {step.title}
               </span>
-              <span aria-hidden className="text-lg text-worksheet-teal">
+              <span aria-hidden className="text-lg text-worksheet-teal!">
                 ▾
               </span>
             </summary>
-            <div className="grid gap-2 border-t border-worksheet-line p-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-2 border-t border-worksheet-line! p-3 sm:grid-cols-2 xl:grid-cols-3">
               {steps.map((candidate, index) => (
                 <Button
                   aria-current={index === activeStep ? "step" : undefined}
@@ -805,15 +805,15 @@ export function IntegratedSkillsScreen({
 
           <section
             aria-labelledby="current-step-title"
-            className="rounded-2xl bg-worksheet-cyan p-5 sm:p-6"
+            className="rounded-2xl bg-worksheet-cyan! p-5 sm:p-6"
           >
             <div className="flex gap-3">
-              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-worksheet-teal text-white">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-worksheet-teal! border-worksheet-teal! text-white!">
                 <SkillIcon aria-hidden className="size-5" />
               </span>
               <div>
                 <h2
-                  className="text-xl font-black text-worksheet-teal"
+                  className="text-xl font-black text-worksheet-teal!"
                   id="current-step-title"
                 >
                   {step.title}
@@ -839,7 +839,7 @@ export function IntegratedSkillsScreen({
                 <div>
                   <h3 className="text-base font-black">Lesson material</h3>
                   {skill === "listening" ? (
-                    <p className="mt-1 text-xs font-bold text-worksheet-teal">
+                    <p className="mt-1 text-xs font-bold text-worksheet-teal!">
                       Original listening script written for this lesson
                     </p>
                   ) : null}
@@ -921,7 +921,7 @@ export function IntegratedSkillsScreen({
               )}
             </section>
 
-            <section className="rounded-2xl border border-worksheet-line bg-white p-5">
+            <section className="rounded-2xl border border-worksheet-line! bg-white p-5">
               <h3 className="text-base font-black">Your evidence</h3>
               <p className="mt-2 text-base leading-7 text-slate-700">
                 {step.responsePrompt}
@@ -1004,21 +1004,21 @@ export function IntegratedSkillsScreen({
         </CardContent>
       </Card>
 
-      <details className="overflow-hidden rounded-2xl border border-worksheet-line bg-worksheet-cyan/70 shadow-sm">
+      <details className="overflow-hidden rounded-2xl border border-worksheet-line! bg-worksheet-cyan/70 shadow-sm">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 marker:content-none">
           <span>
-            <span className="block text-base font-black text-worksheet-teal">
+            <span className="block text-base font-black text-worksheet-teal!">
               QSkills companion material
             </span>
             <span className="mt-1 block text-sm text-worksheet-teal/75">
               Optional local audio, video, and book files
             </span>
           </span>
-          <span aria-hidden className="text-lg font-black text-worksheet-teal">
+          <span aria-hidden className="text-lg font-black text-worksheet-teal!">
             ▾
           </span>
         </summary>
-        <div className="border-t border-worksheet-line p-4 sm:p-5">
+        <div className="border-t border-worksheet-line! p-4 sm:p-5">
           <QSkillsResources cefr={level.cefr} />
         </div>
       </details>
@@ -1129,14 +1129,14 @@ export function IntegratedSkillsScreen({
         </div>
       </details>
 
-      <Card className="border-worksheet-line bg-worksheet-cyan/70">
+      <Card className="border-worksheet-line! bg-worksheet-cyan/70">
         <CardContent className="flex gap-3 pt-5">
           <Sparkles
             aria-hidden
-            className="mt-1 size-5 shrink-0 text-worksheet-teal"
+            className="mt-1 size-5 shrink-0 text-worksheet-teal!"
           />
           <div>
-            <h2 className="font-black text-worksheet-teal">
+            <h2 className="font-black text-worksheet-teal!">
               Calm-learning protections are active
             </h2>
             <p className="mt-1 text-base leading-7 text-worksheet-teal/80">

@@ -323,7 +323,7 @@ export function ProgressEvidence() {
                     className="flex items-center gap-2 rounded-xl border bg-background p-3 text-sm"
                   >
                     <CheckCircle2
-                      className={`size-4 ${requirement.done ? "text-emerald-600" : "text-muted-foreground"}`}
+                      className={`size-4 ${requirement.done ? "text-worksheet-success-ink" : "text-muted-foreground"}`}
                     />
                     <span className="min-w-0 flex-1">{requirement.label}</span>
                     <Badge variant={requirement.done ? "secondary" : "outline"}>

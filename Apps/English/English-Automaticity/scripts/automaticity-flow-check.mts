@@ -24,10 +24,10 @@ for (const width of [390, 1280]) {
   const mission = page.locator("#mission");
   await mission.waitFor({ timeout: 20000 });
   check(/\d+% complete/.test(await mission.innerText()), `${width}px mission card shows completion`);
-  check((await page.locator('button[aria-pressed]').count()) === 3, `${width}px three step cards`);
+  check((await page.locator('button.text-left[aria-pressed]').count()) === 3, `${width}px three step cards`);
 
   // Step 1: wrong answers reveal the models, then the models pass.
-  await page.locator('button[aria-pressed]').nth(0).click();
+  await page.locator('button.text-left[aria-pressed]').nth(0).click();
   const practice = page.locator("#daily-activity-1");
   const inputs = practice.locator("input");
   check((await inputs.count()) === 3, `${width}px step 1 has three inputs`);
@@ -42,15 +42,15 @@ for (const width of [390, 1280]) {
   check(/Recognition practice\s*100%/.test(await page.locator("text=Transparent mastery").locator("xpath=ancestor::*[contains(@class,'learning-card')]").innerText()), `${width}px mastery axis reflects practice`);
 
   // Step 2: writing analysis produces feedback (verified or honestly unassessed).
-  await page.locator('button[aria-pressed]').nth(1).click();
+  await page.locator('button.text-left[aria-pressed]').nth(1).click();
   const writing = page.locator("#daily-activity-2");
   await writing.locator("textarea").fill("I have lived in this city for three years. I have made many friends here. I have never visited the old harbour. My sister has just moved to Berlin.");
   await writing.locator("button", { hasText: "Analyse and save writing" }).click();
-  await writing.locator("text=sentences").waitFor({ timeout: 30000 });
-  check((await writing.innerText()).includes("sentences"), `${width}px writing feedback appears`);
+  await writing.locator("div.grid-cols-3").first().waitFor({ timeout: 30000 });
+  check((await writing.locator("div.grid-cols-3").count()) === 1, `${width}px writing feedback appears`);
 
   // Step 3: shadowing stage toggles and a fake-microphone recording.
-  await page.locator('button[aria-pressed]').nth(2).click();
+  await page.locator('button.text-left[aria-pressed]').nth(2).click();
   const speaking = page.locator("#daily-activity-3");
   const stage = speaking.locator("button", { hasText: "Stage 1" });
   await stage.click();
@@ -63,8 +63,8 @@ for (const width of [390, 1280]) {
   check((await mission.innerText()).includes("Recording stopped"), `${width}px stop updates the message`);
   await speaking.locator("textarea").fill("I have worked here since last year and I have learned a lot.");
   await speaking.locator("button", { hasText: "Analyse and save speaking" }).click();
-  await speaking.locator("text=sentences").waitFor({ timeout: 30000 });
-  check((await speaking.innerText()).includes("sentences"), `${width}px speaking feedback appears`);
+  await speaking.locator("div.grid-cols-3").first().waitFor({ timeout: 30000 });
+  check((await speaking.locator("div.grid-cols-3").count()) === 1, `${width}px speaking feedback appears`);
   check((await mission.innerText()).includes("Speaking practice saved"), `${width}px speaking saved message`);
 
   await page.locator("button", { hasText: "Start another review" }).click();

@@ -34,6 +34,13 @@ import {
   type MeasurementConsent,
 } from "@automaticity/learning-core";
 import type { LearnerSettings } from "@grammar/domain";
+import {
+  backupReminder,
+  persistentStorageStatus,
+  recordBackup,
+  requestPersistentStorage,
+  type PersistenceStatus,
+} from "@/lib/storage-persistence";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,7 +52,10 @@ import {
 } from "@/components/ui/card";
 import { InstallAppButton } from "@/features/pwa/install-app-button";
 import { ImplementationIntentionsCard } from "@/features/settings/implementation-intentions-card";
-import { useLearnerState } from "@/features/learner-state/learner-state-provider";
+import {
+  STORAGE_RECOVERY_NAMESPACE,
+  useLearnerState,
+} from "@/features/learner-state/learner-state-provider";
 
 const TEXT_SIZES: readonly {
   value: LearnerSettings["textScale"];
@@ -71,6 +81,12 @@ export function SettingsScreen() {
   const [measurementBaseline, setMeasurementBaseline] =
     useState<MeasurementBaseline | null>(null);
   const [measurementStatus, setMeasurementStatus] = useState("");
+  const [persistence, setPersistence] = useState<PersistenceStatus | null>(
+    null,
+  );
+  const [reminder, setReminder] = useState<ReturnType<
+    typeof backupReminder
+  > | null>(null);
   const { settings } = state;
 
   useEffect(() => {
@@ -78,7 +94,19 @@ export function SettingsScreen() {
     enforceMeasurementRetention(window.localStorage, new Date().toISOString());
     setMeasurementConsent(readMeasurementConsent(window.localStorage));
     setMeasurementBaseline(readMeasurementBaseline(window.localStorage));
+    setReminder(
+      backupReminder(
+        window.localStorage,
+        STORAGE_RECOVERY_NAMESPACE,
+        new Date(),
+      ),
+    );
+    void persistentStorageStatus().then(setPersistence);
   }, [hydrated]);
+
+  async function keepStorage() {
+    setPersistence(await requestPersistentStorage());
+  }
 
   if (!hydrated) {
     return (
@@ -210,6 +238,15 @@ export function SettingsScreen() {
       setTimeout(() => URL.revokeObjectURL(url), 1000);
       setExportStatus(
         "Vollständige Sicherung mit Entwürfen, Nachweisen und Aufnahmen heruntergeladen.",
+      );
+      const now = new Date();
+      recordBackup(
+        window.localStorage,
+        STORAGE_RECOVERY_NAMESPACE,
+        now.toISOString(),
+      );
+      setReminder(
+        backupReminder(window.localStorage, STORAGE_RECOVERY_NAMESPACE, now),
       );
     } catch (error) {
       setExportStatus(
@@ -587,6 +624,33 @@ export function SettingsScreen() {
               ref={importInputRef}
               type="file"
             />
+            <p className="text-sm text-muted-foreground" role="status">
+              {reminder?.lastBackupAt
+                ? `Letzte Sicherung: ${new Date(reminder.lastBackupAt).toLocaleDateString("de-DE")}.`
+                : "Aus diesem Browser wurde noch keine Sicherung exportiert."}
+              {reminder?.overdue
+                ? " Exportiere eine frische Sicherung; der Fortschritt liegt nur auf diesem Gerät."
+                : ""}
+            </p>
+            <p className="text-sm text-muted-foreground" role="status">
+              {persistence === null
+                ? "Prüfe, ob dieser Browser den Fortschritt vor automatischer Bereinigung schützt …"
+                : !persistence.supported
+                  ? "Dieser Browser kann lokalen Fortschritt nicht garantiert behalten; exportiere regelmäßig Sicherungen."
+                  : persistence.persisted
+                    ? "Speicher ist dauerhaft markiert: Der Browser löscht den Fortschritt nicht, um Platz zu schaffen."
+                    : "Speicher ist noch nicht dauerhaft; bei Platzmangel kann der Browser den Fortschritt löschen."}
+              {persistence?.supported && !persistence.persisted ? (
+                <Button
+                  className="ml-2"
+                  onClick={() => void keepStorage()}
+                  size="sm"
+                  variant="outline"
+                >
+                  Fortschritt auf diesem Gerät behalten
+                </Button>
+              ) : null}
+            </p>
             {exportStatus ? (
               <p
                 aria-live="polite"

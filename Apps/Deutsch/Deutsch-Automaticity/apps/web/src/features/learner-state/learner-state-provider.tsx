@@ -50,6 +50,20 @@ import {
   readLearnerProfile,
   type EvidenceSummary,
 } from "@/lib/learner-profile";
+import {
+  readStoredState,
+  recoveryNamespace,
+  requestPersistentStorage,
+  writeStoredState,
+} from "@/lib/storage-persistence";
+
+// The stored learner state carries no version field today. A future state
+// that declares a higher version is snapshotted before normalization.
+const LEARNER_STATE_VERSION = 1;
+export const STORAGE_RECOVERY_NAMESPACE = recoveryNamespace(
+  "de",
+  LEGACY_STORAGE_KEY,
+);
 
 interface CreateErrorInput {
   readonly topic: string;
@@ -167,20 +181,34 @@ export function LearnerStateProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [persistenceProblem, setPersistenceProblem] = useState(false);
+  const [recoveryNotice, setRecoveryNotice] = useState("");
   const [state, setState] = useState<LearnerState>(createInitialLearnerState);
   const [hydrated, setHydrated] = useState(false);
   const [profileReady, setProfileReady] = useState(false);
 
   useEffect(() => {
     let nextState: LearnerState;
-    try {
-      const stored = localStorage.getItem(LEGACY_STORAGE_KEY);
-      nextState = normalizeLearnerState(stored ? JSON.parse(stored) : null);
-    } catch {
+    let notice = "";
+    const stored = readStoredState(
+      localStorage,
+      LEGACY_STORAGE_KEY,
+      LEARNER_STATE_VERSION,
+      STORAGE_RECOVERY_NAMESPACE,
+    );
+    if (stored.kind === "ok") {
+      nextState = normalizeLearnerState(stored.value);
+      if (stored.newerSnapshotKey)
+        notice =
+          "Dieser Fortschritt stammt aus einer neueren App-Version. Eine unveränderte Kopie bleibt in diesem Browser; aktualisiere die App, um alle Funktionen zu nutzen.";
+    } else {
       nextState = createInitialLearnerState();
+      if (stored.kind === "corrupt")
+        notice =
+          "Der gespeicherte Fortschritt war nicht lesbar, daher startet die App mit Standardwerten. Die unlesbare Kopie bleibt in diesem Browser und ist in einem Export aus den Einstellungen enthalten.";
     }
     const timer = window.setTimeout(() => {
       setState(nextState);
+      setRecoveryNotice(notice);
       setHydrated(true);
     }, 0);
     return () => window.clearTimeout(timer);
@@ -188,10 +216,9 @@ export function LearnerStateProvider({
 
   useLayoutEffect(() => {
     if (hydrated) {
-      try {
-        const previous = localStorage.getItem(LEGACY_STORAGE_KEY);
-        if (previous !== null) JSON.parse(previous);
-        localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify(state));
+      // An unreadable previous value was already quarantined during
+      // hydration, so saving never depends on parsing what is stored.
+      if (writeStoredState(localStorage, LEGACY_STORAGE_KEY, state)) {
         void syncLegacyPracticeInBrowser("de").catch((error) =>
           window.dispatchEvent(
             new CustomEvent("automaticity-sync-error", {
@@ -200,11 +227,28 @@ export function LearnerStateProvider({
           ),
         );
         setPersistenceProblem(false);
-      } catch {
+      } else {
         setPersistenceProblem(true);
       }
     }
   }, [hydrated, state]);
+
+  useEffect(() => {
+    // Browsers grant persistent storage more readily after a user gesture,
+    // so the request waits for the first interaction instead of page load.
+    if (!hydrated) return;
+    const request = () => {
+      void requestPersistentStorage();
+      window.removeEventListener("pointerdown", request);
+      window.removeEventListener("keydown", request);
+    };
+    window.addEventListener("pointerdown", request, { once: true });
+    window.addEventListener("keydown", request, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", request);
+      window.removeEventListener("keydown", request);
+    };
+  }, [hydrated]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -937,6 +981,14 @@ export function LearnerStateProvider({
           Änderungen konnten nicht gespeichert werden. Lass diesen Tab offen und
           exportiere deine Daten in den Einstellungen, bevor du es erneut
           versuchst.
+        </p>
+      ) : null}
+      {recoveryNotice ? (
+        <p
+          role="status"
+          className="border border-amber-700 bg-white p-4 text-amber-900"
+        >
+          {recoveryNotice}
         </p>
       ) : null}
       {children}

@@ -40,7 +40,14 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { useAppStore, type Settings } from "@/features/store/app-store";
+import { STORAGE_RECOVERY_NAMESPACE, useAppStore, type Settings } from "@/features/store/app-store";
+import {
+	backupReminder,
+	persistentStorageStatus,
+	recordBackup,
+	requestPersistentStorage,
+	type PersistenceStatus,
+} from "@/lib/storage-persistence";
 import {
 	BACKUP_FILE_NAME,
 	chooseBackupDirectory,
@@ -79,6 +86,8 @@ export function SettingsScreen() {
 	const [measurementBaseline, setMeasurementBaseline] =
 		React.useState<MeasurementBaseline | null>(null);
 	const [measurementStatus, setMeasurementStatus] = React.useState("");
+	const [persistence, setPersistence] = React.useState<PersistenceStatus | null>(null);
+	const [reminder, setReminder] = React.useState<ReturnType<typeof backupReminder> | null>(null);
 
 	React.useEffect(() => {
 		// This browser-only capability must be detected after hydration.
@@ -86,7 +95,19 @@ export function SettingsScreen() {
 		enforceMeasurementRetention(window.localStorage, new Date().toISOString());
 		setMeasurementConsent(readMeasurementConsent(window.localStorage));
 		setMeasurementBaseline(readMeasurementBaseline(window.localStorage));
+		setReminder(backupReminder(window.localStorage, STORAGE_RECOVERY_NAMESPACE, new Date()));
+		void persistentStorageStatus().then(setPersistence);
 	}, []);
+
+	function noteBackup() {
+		const now = new Date();
+		recordBackup(window.localStorage, STORAGE_RECOVERY_NAMESPACE, now.toISOString());
+		setReminder(backupReminder(window.localStorage, STORAGE_RECOVERY_NAMESPACE, now));
+	}
+
+	async function keepStorage() {
+		setPersistence(await requestPersistentStorage());
+	}
 
 	function updateMeasurementConsent(checked: boolean) {
 		const now = new Date().toISOString();
@@ -193,9 +214,11 @@ export function SettingsScreen() {
       const directory = supportsBackupDirectoryPicker() ? await getBackupDirectory() : null;
       if (directory) { await writeBackupToDirectory(directory, contents); setExportStatus(`Complete backup saved to "${directory.name}".`); }
       else { downloadBackup(contents); setExportStatus(`Complete backup downloaded as "${BACKUP_FILE_NAME}".`); }
+      noteBackup();
     } catch (error) {
       if (contents !== null && error instanceof DOMException && ["AbortError", "SecurityError"].includes(error.name)) {
         downloadBackup(contents); setExportStatus("Folder access was unavailable. The complete backup was downloaded instead.");
+        noteBackup();
       } else setExportStatus(error instanceof Error ? error.message : "Backup export failed.");
     } finally { setExporting(false); }
   }
@@ -581,6 +604,26 @@ export function SettingsScreen() {
 							type="file"
 						/>
 					</div>
+					<p className="settings-export-status" role="status">
+						{reminder?.lastBackupAt
+							? `Last backup: ${new Date(reminder.lastBackupAt).toLocaleDateString()}.`
+							: "No backup has been exported from this browser yet."}
+						{reminder?.overdue ? " Export a fresh backup; progress lives only on this device." : ""}
+					</p>
+					<p className="settings-export-status" role="status">
+						{persistence === null
+							? "Checking whether this browser keeps progress safe from automatic cleanup..."
+							: !persistence.supported
+								? "This browser cannot promise to keep local progress; export backups regularly."
+								: persistence.persisted
+									? "Storage is marked persistent: the browser will not clear progress to free space."
+									: "Storage is not yet persistent, so the browser may clear progress when space runs low."}
+						{persistence?.supported && !persistence.persisted ? (
+							<Button className="ml-2" onClick={() => void keepStorage()} size="sm" variant="outline">
+								Keep progress on this device
+							</Button>
+						) : null}
+					</p>
 					{exportStatus ? (
 						<p
 							aria-live="polite"

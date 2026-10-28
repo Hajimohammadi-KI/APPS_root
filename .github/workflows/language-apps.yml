@@ -35,7 +35,7 @@ env:
 
 jobs:
   roadmap:
-    name: Roadmap is generated from its JSON source
+    name: Roadmap and shared learning-core copies
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -44,6 +44,8 @@ jobs:
         with:
           bun-version: ${{ env.BUN_VERSION }}
       - run: bun scripts/language-apps-roadmap.mjs --check
+      # Both apps carry a copy of shared/learning-core (R93).
+      - run: bun shared/learning-core/sync-workspaces.mjs --check
 
   english:
     name: English Automaticity

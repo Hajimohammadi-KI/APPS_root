@@ -10,7 +10,7 @@ test("English app proxies translation through the central DeepL provider", async
     return Response.json({ translation: "Guten Tag", provider: "deepl" });
   }) as typeof fetch;
   try {
-    expect(await (await GET(new Request("http://127.0.0.1:3201/api/deepl"))).json()).toMatchObject({ connected: true, provider: "deepl" });
+    expect(await (await GET()).json()).toMatchObject({ connected: true, provider: "deepl" });
     const response = await POST(new Request("http://127.0.0.1:3201/api/deepl", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: "Good morning", target: "DE" }) }));
     expect(await response.json()).toMatchObject({ translation: "Guten Tag", provider: "deepl" });
     expect(calls.some((url) => url.endsWith("/api/translate"))).toBe(true);

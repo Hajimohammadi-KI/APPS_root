@@ -1,18 +1,10 @@
+import { centralHeaders, centralStudyAppUrl } from "@/lib/central-study";
+
 const noStore = { "Cache-Control": "no-store" };
-const centralStudyApp = process.env.CENTRAL_STUDY_APP_URL?.trim() || "http://127.0.0.1:4312";
 
-function centralHeaders(request: Request, json = false) {
-  const headers = new Headers(json ? { "Content-Type": "application/json" } : undefined);
-  for (const name of ["oai-authenticated-user-id", "oai-authenticated-user-email"]) {
-    const value = request.headers.get(name);
-    if (value) headers.set(name, value);
-  }
-  return headers;
-}
-
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const response = await fetch(`${centralStudyApp}/api/status`, { headers: centralHeaders(request), cache: "no-store", signal: AbortSignal.timeout(3_000) });
+    const response = await fetch(`${centralStudyAppUrl()}/api/status`, { headers: centralHeaders(), cache: "no-store", signal: AbortSignal.timeout(3_000) });
     const data = await response.json().catch(() => ({})) as { translation?: boolean; deepl?: boolean };
     const connected = response.ok && (data.translation === true || data.deepl === true);
     return Response.json({ available: connected, connected, provider: "deepl", storage: connected ? "Central Study Tracker" : null }, { headers: noStore });
@@ -24,8 +16,8 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json() as { text?: string; target?: string; source?: string; context?: string };
-    const response = await fetch(`${centralStudyApp}/api/translate`, {
-      method: "POST", headers: centralHeaders(request, true), body: JSON.stringify(body), cache: "no-store", signal: AbortSignal.timeout(32_000),
+    const response = await fetch(`${centralStudyAppUrl()}/api/translate`, {
+      method: "POST", headers: centralHeaders(true), body: JSON.stringify(body), cache: "no-store", signal: AbortSignal.timeout(32_000),
     });
     const data = await response.json().catch(() => ({})) as { translation?: string; detectedLanguage?: string; message?: string };
     if (!response.ok) return Response.json({ message: data.message || "DeepL could not translate this text." }, { status: response.status, headers: noStore });

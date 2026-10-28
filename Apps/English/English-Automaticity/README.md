@@ -164,6 +164,17 @@ LanguageTool is routed through the NestJS backend. If it is unavailable, the
 app can still show a small set of offline corrections, but a blocking learning
 gate cannot pass until the full online assessment succeeds.
 
+## Central Study Tracker (AI explanations, DeepL)
+
+The `/api/ai` and `/api/deepl` routes proxy to the central Study Tracker.
+Configure it on the server only; browser-sent identity headers are ignored.
+
+| Variable | Purpose |
+|---|---|
+| `CENTRAL_STUDY_APP_URL` | Base URL of the tracker (default `http://127.0.0.1:4312`) |
+| `CENTRAL_STUDY_USER_ID` | Identity forwarded to the tracker when it is not in local mode |
+| `CENTRAL_STUDY_USER_EMAIL` | Optional e-mail identity forwarded alongside the id |
+
 ## Version 16 complete content
 
 - 72 conversation topics

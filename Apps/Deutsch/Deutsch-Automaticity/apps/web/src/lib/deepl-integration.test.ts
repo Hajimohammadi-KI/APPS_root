@@ -14,9 +14,10 @@ test("Die Deutsch-App nutzt den zentralen DeepL-Übersetzungsdienst", async () =
     });
   }) as typeof fetch;
   try {
-    expect(
-      await (await GET(new Request("http://127.0.0.1:3199/api/deepl"))).json(),
-    ).toMatchObject({ connected: true, provider: "deepl" });
+    expect(await (await GET()).json()).toMatchObject({
+      connected: true,
+      provider: "deepl",
+    });
     const response = await POST(
       new Request("http://127.0.0.1:3199/api/deepl", {
         method: "POST",

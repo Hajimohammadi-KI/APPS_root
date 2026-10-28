@@ -44,6 +44,17 @@ The original static PWA remains available under `legacy/v20.8-static/` and at
 - A modern browser
 - Supabase is optional until account synchronization is enabled
 
+### Central Study Tracker (AI explanations, DeepL)
+
+The `/api/ai` and `/api/deepl` routes proxy to the central Study Tracker.
+Configure it on the server only; browser-sent identity headers are ignored.
+
+| Variable                   | Purpose                                                        |
+| -------------------------- | -------------------------------------------------------------- |
+| `CENTRAL_STUDY_APP_URL`    | Base URL of the tracker (default `http://127.0.0.1:4312`)      |
+| `CENTRAL_STUDY_USER_ID`    | Identity forwarded to the tracker when it is not in local mode |
+| `CENTRAL_STUDY_USER_EMAIL` | Optional e-mail identity forwarded alongside the id            |
+
 ## Self-contained project folder
 
 This folder is the whole application. Copy it anywhere (or hand it to someone)

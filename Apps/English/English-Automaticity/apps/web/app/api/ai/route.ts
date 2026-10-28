@@ -1,25 +1,11 @@
+import { centralHeaders, centralStudyAppUrl } from "@/lib/central-study";
+
 const noStore = { "Cache-Control": "no-store" };
-const centralStudyApp =
-  process.env.CENTRAL_STUDY_APP_URL?.trim() || "http://127.0.0.1:4312";
 
-function centralHeaders(request: Request, json = false) {
-  const headers = new Headers(
-    json ? { "Content-Type": "application/json" } : undefined,
-  );
-  for (const name of [
-    "oai-authenticated-user-id",
-    "oai-authenticated-user-email",
-  ]) {
-    const value = request.headers.get(name);
-    if (value) headers.set(name, value);
-  }
-  return headers;
-}
-
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const response = await fetch(`${centralStudyApp}/api/status`, {
-      headers: centralHeaders(request),
+    const response = await fetch(`${centralStudyAppUrl()}/api/status`, {
+      headers: centralHeaders(),
       cache: "no-store",
       signal: AbortSignal.timeout(2_500),
     });
@@ -81,9 +67,9 @@ export async function POST(request: Request) {
     ]
       .filter(Boolean)
       .join("\n");
-    const response = await fetch(`${centralStudyApp}/api/ai`, {
+    const response = await fetch(`${centralStudyAppUrl()}/api/ai`, {
       method: "POST",
-      headers: centralHeaders(request, true),
+      headers: centralHeaders(true),
       body: JSON.stringify({ selectedText: content, question }),
       cache: "no-store",
       signal: AbortSignal.timeout(38_000),

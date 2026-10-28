@@ -5,25 +5,16 @@ import {
   type NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { AppModule } from "./app.module";
+import { allowedOrigins } from "./cors";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
-  const origins = (
-    process.env.CORS_ORIGINS ??
-    "http://127.0.0.1:3202,http://localhost:3202,http://127.0.0.1:3201,http://localhost:3201,http://127.0.0.1:3000,http://localhost:3000"
-  )
-    .split(",")
-    .map((origin) => origin.trim())
-    .filter(Boolean);
 
   app.enableCors({
-    origin: [
-      ...origins,
-      /^https:\/\/[a-z0-9-]+\.vercel\.app$/i,
-    ],
+    origin: allowedOrigins(),
     methods: ["GET", "POST", "OPTIONS"],
   });
   app.setGlobalPrefix("api");

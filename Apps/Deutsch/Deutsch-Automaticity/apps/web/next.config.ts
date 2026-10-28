@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import path from "node:path";
+import { securityHeaders } from "./security-headers";
 
 const nextConfig: NextConfig = {
   // Vercel builds apps/web directly; desktop builds keep standalone output.
@@ -60,6 +61,7 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      { source: "/(.*)", headers: securityHeaders() },
       {
         source: "/sw.js",
         headers: [

@@ -1,4 +1,5 @@
 import path from "node:path";
+import { securityHeaders } from "./security-headers.mjs";
 
 // Vercel builds apps/web directly; desktop builds keep standalone output.
 // Locally the tracing root is this project's own folder (two levels above
@@ -37,10 +38,13 @@ const nextConfig = {
     };
   },
   async headers() {
-    return [{ source: "/sw.js", headers: [
-      { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
-      { key: "Service-Worker-Allowed", value: "/" },
-    ] }];
+    return [
+      { source: "/(.*)", headers: securityHeaders() },
+      { source: "/sw.js", headers: [
+        { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+        { key: "Service-Worker-Allowed", value: "/" },
+      ] },
+    ];
   },
 };
 

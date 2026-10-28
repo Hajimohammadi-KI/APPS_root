@@ -14,7 +14,7 @@ const closed: PracticeTask = {
   normalisation: { nfc: true, whitespace: true, terminalFullStop: true, preserveCase: true },
   sourceId: "fixture",
 };
-const open: PracticeTask = { ...closed, id: "optional", answerPolicy: "open", acceptedAnswers: undefined };
+const open: PracticeTask = { ...closed, id: "optional", answerPolicy: "open", acceptedAnswers: [] };
 const speech: PracticeTask = { ...open, id: "speech", modality: "speaking", stage: "produce" };
 const unit: ConstructionUnit = {
   id: closed.constructionId, language: "en", title: "Fixture", level: "A1", familyIds: ["G01"],
@@ -39,7 +39,7 @@ describe("temporary checked main path", () => {
   test("construction assessment, empty accepted answers and speaking remain optional", () => {
     const candidates: PracticeTask[] = [open, speech,
       { ...closed, id: "empty", acceptedAnswers: [] },
-      { ...closed, id: "parser", constructionAssessment: { constructionId: "en.c.001" } as PracticeTask["constructionAssessment"] },
+      { ...closed, id: "parser", constructionAssessment: { rule: "en.present-simple", version: "1", scenario: 0, route: "human_review" } as PracticeTask["constructionAssessment"] },
     ];
     const onlyOptional = { ...unit, tasks: candidates };
     const state = reduceAutomaticityEvents([], "en", at);
@@ -80,6 +80,7 @@ describe("temporary checked main path", () => {
       evaluator: { id: "fixture", version: "1", kind: "rule", scopeApproved: false, reviewId: null },
       uncertainty: true, confidence: null, feedback: "Repair", correction: null, spans: [], supersedes: null,
     };
+    state.attempts[0]!.checked = true;
     expect(selectDailyTask(value, state, at, "checked").previousAttemptId).toBe(original.id);
     expect(selectDailyTask({ ...unit, tasks: [speech] }, reduceAutomaticityEvents([], "en", at), at, "all").task?.id).toBe(speech.id);
   });

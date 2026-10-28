@@ -1,0 +1,81 @@
+# Continuous checks for the two language apps (roadmap R92).
+# Each app is an independent Bun workspace with its own lockfile, so each job
+# installs and verifies one app from its own folder.
+name: Language apps
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Apps/English/English-Automaticity/**"
+      - "Apps/Deutsch/Deutsch-Automaticity/**"
+      - "shared/**"
+      - "docs/language-apps-roadmap.json"
+      - "scripts/language-apps-roadmap.mjs"
+      - ".github/workflows/language-apps.yml"
+  pull_request:
+    paths:
+      - "Apps/English/English-Automaticity/**"
+      - "Apps/Deutsch/Deutsch-Automaticity/**"
+      - "shared/**"
+      - "docs/language-apps-roadmap.json"
+      - "scripts/language-apps-roadmap.mjs"
+      - ".github/workflows/language-apps.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: language-apps-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  BUN_VERSION: "1.3.14"
+
+jobs:
+  roadmap:
+    name: Roadmap is generated from its JSON source
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun scripts/language-apps-roadmap.mjs --check
+
+  english:
+    name: English Automaticity
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: Apps/English/English-Automaticity
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      # content, automaticity, typecheck, every web/package/api test,
+      # installer test and lint
+      - run: bun run check
+      - run: bun run --cwd apps/web build
+
+  german:
+    name: DeutschFlow
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: Apps/Deutsch/Deutsch-Automaticity
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      # format, lint, typecheck, every workspace test, installer test,
+      # Supabase schema test and build
+      - run: bun run verify

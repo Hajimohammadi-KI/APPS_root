@@ -85,17 +85,17 @@
       "id": "R93",
       "title": "یک منبع واقعی برای learning-core به‌جای سه نسخهٔ کپی",
       "status": "todo",
-      "finding": "learning-core در shared و در هر دو اپ کپی شده و با اسکریپت فهرست‌محور همگام می‌شود. واگرایی همین حالا وجود دارد: selection-scope.test.ts در shared هست و در هیچ‌کدام از دو اپ نیست. اسکریپت parity فقط نام فایل‌ها را مقایسه می‌کند و check-duplicated-files این بسته را پوشش نمی‌دهد.",
-      "action": "همگام‌سازی به مقایسهٔ محتوایی (هش هر فایل) ارتقا می‌یابد و در CI اجباری می‌شود؛ فایل‌های جاافتاده اضافه می‌شوند. در گام بعد ارزیابی می‌شود که هر اپ learning-core را به‌صورت بستهٔ workspace از مسیر shared مصرف کند تا کپی حذف شود، بدون شکستن استقلال پوشهٔ هر اپ (R68).",
+      "finding": "learning-core در shared و در هر دو اپ کپی شده و با اسکریپت فهرست‌محور همگام می‌شود. واگرایی همین حالا وجود دارد: selection-scope.test.ts در shared هست و در هیچ‌کدام از دو اپ نیست. اسکریپت parity فقط نام فایل‌ها را مقایسه می‌کند و check-duplicated-files این بسته را پوشش نمی‌دهد. بررسی ۲۸ اکتبر: parity:check:strict با ۲۴ «کمبود» شکست می‌خورد که همه نام‌های مخصوص زبان (مثل settings در برابر einstellungen) یا فایل‌های فقط انگلیسی‌اند، پس فعلاً نمی‌تواند شرط CI باشد.",
+      "action": "همگام‌سازی به مقایسهٔ محتوایی (هش هر فایل) ارتقا می‌یابد و در CI اجباری می‌شود؛ فایل‌های جاافتاده اضافه می‌شوند. در گام بعد ارزیابی می‌شود که هر اپ learning-core را به‌صورت بستهٔ workspace از مسیر shared مصرف کند تا کپی حذف شود، بدون شکستن استقلال پوشهٔ هر اپ (R68). اسکریپت parity یک فهرست مجاز نگاشت نام انگلیسی به آلمانی و فایل‌های مخصوص یک زبان می‌گیرد تا حالت strict فقط کمبود واقعی را گزارش کند و به CI اضافه شود.",
       "evidence": "هنوز شروع نشده. معیار پذیرش: diff -rq بین سه نسخه خالی؛ parity:check:strict و بررسی هش در CI سبز؛ selection-scope.test.ts در هر دو اپ اجرا شود."
     },
     {
       "id": "R92",
       "title": "یکپارچه‌سازی پیوسته و پوشش کامل آزمون‌ها از ریشه",
-      "status": "todo",
+      "status": "tested",
       "finding": "هیچ CI در ریشهٔ ریپو یا اپ‌ها وجود ندارد؛ check و verify دستی اجرا می‌شوند. در اپ انگلیسی bun run test هیچ‌یک از ۳۲ فایل آزمون learning-core را اجرا نمی‌کند و ماژول‌های measurement، fsrs-shadow، booster و reference-answer از ریشه آزموده نمی‌شوند.",
       "action": "یک workflow در GitHub Actions با Bun ساخته می‌شود که برای هر اپ content:check، typecheck، lint، test، test:installer، automaticity:check و برای ریپو parity:check:strict و بررسی تازگی رودمپ را اجرا می‌کند. اسکریپت test انگلیسی به‌جای فهرست دستی، همهٔ بسته‌ها را با filter اجرا می‌کند و آزمون‌های جاافتاده (qskills-catalog، teacher-content) افزوده می‌شوند.",
-      "evidence": "هنوز شروع نشده. معیار پذیرش: workflow روی هر push سبز؛ شمار فایل‌های آزمون اجراشده از ریشه برابر شمار فایل‌های *.test.* موجود؛ شکست عمدی یک آزمون learning-core باعث قرمزشدن CI شود."
+      "evidence": "تأیید محلی ۲۸ اکتبر ۲۰۲۶: workflow در .github/workflows/language-apps.yml با سه کار ساخته شد: تازگی رودمپ، check و build کامل انگلیسی، و verify کامل آلمانی (قالب، lint، typecheck، همهٔ آزمون‌ها، installer، Supabase و build). اسکریپت test انگلیسی حالا همهٔ پوشه‌های apps/web و packages را کشف می‌کند: ۵۱ فایل و ۸۳۶ آزمون به‌جای فهرست دستی ۱۴ فایل؛ ۸ مجموعهٔ قبلاً اجرانشده (qskills-catalog، teacher-content، adherence، booster، content-quality، fsrs-shadow، measurement، reference-answer) همه سبزند. آزمون یکپارچگی API آلمانی در اجرای موازی از سقف ۵ ثانیه عبور می‌کرد و سقف آن ۳۰ ثانیه شد. check انگلیسی و verify آلمانی محلی سبز و نصب frozen هر دو بدون تغییر است. parity:check:strict عمداً در CI نیست چون ۲۴ فایل با نام مخصوص زبان را کمبود می‌شمارد (به R93 منتقل شد). workflow هنوز روی GitHub اجرا نشده چون تغییرات push نشده‌اند."
     },
     {
       "id": "R91",

@@ -80,5 +80,7 @@ describe('HTTP API', () => {
     );
     expect(evaluation.online).toBe(false);
     expect(evaluation.ok).toBe(false);
-  });
+    // Booting the full Nest application takes about one second alone but
+    // more than the 5 s default when every workspace tests in parallel.
+  }, 30_000);
 });

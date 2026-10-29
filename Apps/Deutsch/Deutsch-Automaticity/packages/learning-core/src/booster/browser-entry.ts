@@ -16,6 +16,7 @@ import type {
 
 const AUDIO_DATABASE = "automaticity-booster-audio-v1";
 const AUDIO_STORE = "recordings";
+const LEARNER_PROFILE_KEY = "study-suite:learner-profile:v1";
 
 export interface BrowserBoosterContext {
   readonly targetStructureId: string;
@@ -66,6 +67,29 @@ export function countValidatedStructureUses(
       });
       return total + (matched ? 1 : 0);
     }, 0);
+}
+
+/** The learner profile's storeAudio flag is the single, opt-in audio storage consent. */
+export function readAudioStorageConsent(
+  storage: Pick<Storage, "getItem">,
+): boolean {
+  try {
+    const profile: unknown = JSON.parse(
+      storage.getItem(LEARNER_PROFILE_KEY) ?? "null",
+    );
+    const privacy =
+      typeof profile === "object" && profile !== null && "privacy" in profile
+        ? profile.privacy
+        : null;
+    return (
+      typeof privacy === "object" &&
+      privacy !== null &&
+      "storeAudio" in privacy &&
+      privacy.storeAudio === true
+    );
+  } catch {
+    return false;
+  }
 }
 
 function saveAudio(attemptId: string, audio: Blob): Promise<boolean> {
@@ -464,7 +488,11 @@ export function mountForcedOutputBooster(
     } catch {
       saved = false;
     }
-    if (result.speakingEvidence && audioBlob) {
+    if (
+      result.speakingEvidence &&
+      audioBlob &&
+      readAudioStorageConsent(localStorage)
+    ) {
       saved = (await saveAudio(attemptId, audioBlob)) && saved;
     }
     renderMetrics(resultBox, result, copy);

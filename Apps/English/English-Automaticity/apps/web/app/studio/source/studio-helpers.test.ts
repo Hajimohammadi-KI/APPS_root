@@ -8,6 +8,7 @@ import {
   isEvaluationResponse,
   readStudioEntry,
   safeSameOriginPath,
+  studioAudioToStore,
   unique,
 } from "./studio-helpers";
 
@@ -68,5 +69,15 @@ describe("studio helpers", () => {
   test("unknown units and plain visits open the studio normally", () => {
     expect(readStudioEntry("?source=integrated-skills&unit=nope", origin)).toBeNull();
     expect(readStudioEntry("", origin)).toBeNull();
+  });
+
+  test("the recording is kept only with explicit audio consent", () => {
+    const audio = new Blob(["voice"], { type: "audio/webm" });
+    expect(studioAudioToStore(audio, false, "a1")).toEqual({ audio: null });
+    expect(studioAudioToStore(new Blob([]), true, "a1")).toEqual({ audio: null });
+    expect(studioAudioToStore(audio, true, "a1")).toEqual({
+      audio,
+      audioReferenceId: "a1",
+    });
   });
 });

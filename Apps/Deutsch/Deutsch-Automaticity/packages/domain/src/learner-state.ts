@@ -323,7 +323,7 @@ export interface LearnerState {
 const DEFAULT_SETTINGS: LearnerSettings = {
   dailyStudyMinutes: 15,
   minWords: 12,
-  saveAudio: true,
+  saveAudio: false,
   grammarEngine: "languagetool",
   readingProfile: "dyslexia",
   textScale: 112,

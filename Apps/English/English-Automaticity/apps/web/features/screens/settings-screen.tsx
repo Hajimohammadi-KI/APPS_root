@@ -504,6 +504,27 @@ export function SettingsScreen() {
 							</span>
 						</label>
 					</div>
+					<div className="settings-row">
+						<span>Recordings</span>
+						<label className="settings-toggle">
+							<input
+								checked={settings.saveAudio}
+								onChange={(event) =>
+									mutate((draft) => {
+										draft.settings.saveAudio = event.target.checked;
+									})
+								}
+								type="checkbox"
+							/>
+							<span>
+								<strong>Save my recordings</strong>
+								<small>
+									Off by default. When on, your voice recordings stay only in
+									this browser; transcripts and feedback are saved either way.
+								</small>
+							</span>
+						</label>
+					</div>
 				</CardContent>
 			</Card>
 

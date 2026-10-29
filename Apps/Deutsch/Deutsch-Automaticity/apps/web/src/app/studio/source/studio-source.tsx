@@ -153,6 +153,7 @@ export default function Home() {
     sessionMinutes: normalizeDailySessionMinutes(
       state.settings.dailyStudyMinutes,
     ),
+    storeAudio: state.settings.saveAudio,
     onRecordingStarted: () => setActive(1),
     onRecorded: () => setActive(2),
     onEvaluated: () => setActive(3),

@@ -223,7 +223,7 @@ export const DEFAULT_STATE: AppState = {
 		minWords: 12,
 		dailyStudyMinutes: 15,
 		honovrLanguage: "en",
-		saveAudio: true,
+		saveAudio: false,
 		onlineFeedback: false,
 		readingProfile: "dyslexia",
 		textScale: 112,

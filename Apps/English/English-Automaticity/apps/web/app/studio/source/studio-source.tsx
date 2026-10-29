@@ -2,6 +2,7 @@
 import { LearningNavigation } from "@/components/learning-navigation";
 import { Disclosure } from "@/components/ui/disclosure";
 import { AutomaticityEvidenceSummary } from "@/features/components/automaticity-evidence-summary";
+import { useAppStore } from "@/features/store/app-store";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -62,6 +63,7 @@ const modeCards: readonly ModeCard[] = [
 const dailySessionKey = "english-automaticity:daily-session:v1";
 
 export default function Home() {
+  const { state } = useAppStore();
   const text = copy[language];
   const allLabel: string = text.all;
   const [level, setLevel] = useState<string>(allLabel);
@@ -154,6 +156,7 @@ export default function Home() {
     language,
     selected,
     maxSeconds,
+    storeAudio: state.settings.saveAudio,
     onRecordingStarted: () => setActive(1),
     onRecorded: () => setActive(2),
     onEvaluated: () => setActive(3),

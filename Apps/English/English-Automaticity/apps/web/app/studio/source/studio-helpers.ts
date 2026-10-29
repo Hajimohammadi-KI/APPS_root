@@ -86,6 +86,17 @@ export function countWords(value: string) {
   return value.trim().match(/[\p{L}\p{N}'’-]+/gu)?.length ?? 0;
 }
 
+/** The recording is persisted only when the learner opted in to storing audio. */
+export function studioAudioToStore(
+  audio: Blob,
+  storeAudio: boolean,
+  attemptId: string,
+): { readonly audio: Blob | null; readonly audioReferenceId?: string } {
+  return storeAudio && audio.size > 0
+    ? { audio, audioReferenceId: attemptId }
+    : { audio: null };
+}
+
 export function safeSameOriginPath(
   value: string | null,
   fallback: string,

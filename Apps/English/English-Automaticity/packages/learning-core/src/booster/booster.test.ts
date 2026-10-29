@@ -19,6 +19,7 @@ import {
 import {
   countCompleteProductions,
   countValidatedStructureUses,
+  readAudioStorageConsent,
 } from "./browser-entry";
 
 class MemoryStorage implements BoosterKeyValueStorage {
@@ -210,6 +211,29 @@ describe("forced-output booster contract", () => {
         "I have finished the project. I have seen the result.",
       ),
     ).toBe(2);
+  });
+
+  test("recordings are stored only with the learner profile's explicit consent", () => {
+    const storage = new MemoryStorage();
+    const profileKey = "study-suite:learner-profile:v1";
+    expect(readAudioStorageConsent(storage)).toBe(false);
+    storage.setItem(profileKey, "{not json");
+    expect(readAudioStorageConsent(storage)).toBe(false);
+    storage.setItem(
+      profileKey,
+      JSON.stringify({ privacy: { storeAudio: "yes" } }),
+    );
+    expect(readAudioStorageConsent(storage)).toBe(false);
+    storage.setItem(
+      profileKey,
+      JSON.stringify({ privacy: { storeAudio: false } }),
+    );
+    expect(readAudioStorageConsent(storage)).toBe(false);
+    storage.setItem(
+      profileKey,
+      JSON.stringify({ privacy: { storeAudio: true } }),
+    );
+    expect(readAudioStorageConsent(storage)).toBe(true);
   });
 
   test("the browser runtime remains below a 9 KiB gzip budget", () => {

@@ -1,9 +1,8 @@
 {
   "publishedAt": "2026-10-29",
   "version": "20.9.4",
-  "webRelease": "2026.10.29.1",
+  "webRelease": "2026.10.29.2",
   "changes": [
-    "W01/W02: Ungeprüfte freie Antworten erhalten keine bestätigte Bewertung, auch beim Ausfall des Grammatikskripts.",
-    "W04: Gespeicherte Nachweise übernehmen den tatsächlichen Prüfstatus und Anbieter."
+    "W05: Aufnahmen werden nur gespeichert, wenn „Eigene Aufnahmen lokal speichern“ eingeschaltet ist (standardmäßig aus); Transkript und Rückmeldung werden immer gespeichert."
   ]
 }

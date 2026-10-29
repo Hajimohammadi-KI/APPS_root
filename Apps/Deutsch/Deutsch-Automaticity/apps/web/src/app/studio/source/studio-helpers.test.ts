@@ -7,6 +7,7 @@ import {
   isEvaluationResponse,
   readStudioEntry,
   safeSameOriginPath,
+  studioAudioToStore,
   unique,
 } from "./studio-helpers";
 
@@ -61,5 +62,17 @@ describe("studio helpers", () => {
       2,
     );
     expect(readStudioEntry("", origin)).toBeNull();
+  });
+
+  test("the recording is kept only with explicit audio consent", () => {
+    const audio = new Blob(["Stimme"], { type: "audio/webm" });
+    expect(studioAudioToStore(audio, false, "a1")).toEqual({ audio: null });
+    expect(studioAudioToStore(new Blob([]), true, "a1")).toEqual({
+      audio: null,
+    });
+    expect(studioAudioToStore(audio, true, "a1")).toEqual({
+      audio,
+      audioReferenceId: "a1",
+    });
   });
 });

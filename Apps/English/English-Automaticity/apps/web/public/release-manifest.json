@@ -1,9 +1,8 @@
 {
   "publishedAt": "2026-10-29",
   "version": "27.4.4",
-  "webRelease": "2026.10.29.1",
+  "webRelease": "2026.10.29.2",
   "changes": [
-    "W03: Offline grammar diagnostics block acceptance even without a replacement.",
-    "Previous locally tested learning and data integrity fixes are included."
+    "W05: Voice recordings are stored only after you turn on “Save my recordings” in Settings (off by default); transcripts and feedback are saved either way."
   ]
 }

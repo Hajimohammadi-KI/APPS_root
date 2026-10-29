@@ -14,7 +14,11 @@ describe("legacy learner state", () => {
     });
 
     expect(state.settings.minWords).toBe(22);
-    expect(state.settings.saveAudio).toBe(true);
+    expect(state.settings.saveAudio).toBe(false);
+    expect(
+      normalizeLearnerState({ settings: { saveAudio: true } }).settings
+        .saveAudio,
+    ).toBe(true);
     expect(state.settings.dailyStudyMinutes).toBe(15);
     expect(state.activity["2026-07-27"]).toBe(3);
     expect(state.dailyPlans).toEqual({});

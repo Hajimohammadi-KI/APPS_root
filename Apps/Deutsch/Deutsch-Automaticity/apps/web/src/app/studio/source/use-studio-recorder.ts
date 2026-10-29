@@ -19,6 +19,7 @@ import {
   recognitionConstructor,
   type RecordingState,
   type SpeechRecognitionLike,
+  studioAudioToStore,
 } from "./studio-helpers";
 
 interface RecorderOptions {
@@ -27,6 +28,7 @@ interface RecorderOptions {
   readonly maxSeconds: number;
   readonly minWords: number;
   readonly sessionMinutes: DailySessionMinutes;
+  readonly storeAudio: boolean;
   readonly onRecordingStarted: () => void;
   readonly onRecorded: () => void;
   readonly onEvaluated: () => void;
@@ -40,6 +42,7 @@ export function useStudioRecorder({
   maxSeconds,
   minWords,
   sessionMinutes,
+  storeAudio,
   onRecordingStarted,
   onRecorded,
   onEvaluated,
@@ -337,6 +340,7 @@ export function useStudioRecorder({
     }
     const id = attemptIdRef.current ?? crypto.randomUUID();
     const occurredAt = new Date().toISOString();
+    const stored = studioAudioToStore(audioBlobRef.current, storeAudio, id);
     try {
       await saveConversationSession({
         id,
@@ -351,7 +355,7 @@ export function useStudioRecorder({
         provider: evaluation.provider,
         checkedAt: evaluation.checkedAt,
         issues: evaluation.issues,
-        audio: audioBlobRef.current,
+        audio: stored.audio,
       });
       const bundle = buildAttemptVerticalSlice({
         attemptId: id,
@@ -373,13 +377,15 @@ export function useStudioRecorder({
         assessedBy: "online",
         sessionMinutes,
         audioCaptured: audioBlobRef.current.size > 0,
-        audioReferenceId: id,
+        ...(stored.audioReferenceId
+          ? { audioReferenceId: stored.audioReferenceId }
+          : {}),
         sourceId: selected.sourceId,
       });
       appendLearningEvidenceBundleToStorage(window.localStorage, bundle);
       savedEvidenceIdRef.current = bundle.evidence.id;
       setSavedId(id);
-      setMessage(text.saved);
+      setMessage(stored.audio ? text.saved : text.savedWithoutAudio);
       onSaved(evaluation);
     } catch {
       setMessage(

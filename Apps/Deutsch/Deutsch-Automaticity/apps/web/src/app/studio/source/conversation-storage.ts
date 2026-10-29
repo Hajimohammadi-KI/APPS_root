@@ -22,7 +22,8 @@ export interface StoredConversationSession {
   readonly provider: "LanguageTool";
   readonly checkedAt: string;
   readonly issues: readonly StoredEvaluationIssue[];
-  readonly audio: Blob;
+  /** Null when the learner has not opted in to storing recordings. */
+  readonly audio: Blob | null;
 }
 
 const DATABASE_NAME = "conversation-studio";

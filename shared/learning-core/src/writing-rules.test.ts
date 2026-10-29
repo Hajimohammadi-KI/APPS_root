@@ -57,3 +57,10 @@ test("W20 German noun capitalization requires a known noun and determiner contex
   for (const text of ["Wir lernen morgen.", "Ich liebe dich.", "Wir essen zusammen.", "Das ist gut.", "Das neue ist anders."])
     expect(writingIssues(text, "de")).toEqual([]);
 });
+test("W21 lexical gender and weak noun inflection respect case context", () => {
+  for (const text of ["Ich spreche mit einer Frau.", "Das ist der Frau wichtig.", "Das ist ein Haus.", "Ich sehe den Studenten."])
+    expect(writingIssues(text, "de")).toEqual([]);
+  expect(writingIssues("Ich spreche mit einem Frau.", "de")[0]?.replacement).toBe("einer");
+  expect(writingIssues("Das ist ein Frau.", "de")[0]?.replacement).toBe("eine");
+  expect(writingIssues("Ich helfe dem Student.", "de")[0]?.replacement).toBe("Studenten");
+});

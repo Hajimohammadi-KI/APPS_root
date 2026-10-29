@@ -526,30 +526,9 @@ export function getTaskIssues(
     .map((sentence) => sentence.trim())
     .filter(Boolean);
 
-  if (
-    /perfekt/.test(grammar.title.toLocaleLowerCase("de")) &&
-    /\b(gefahren|gegangen|gekommen|geflogen|gelaufen|gereist|aufgestanden|eingeschlafen|geworden|geblieben)\b/i.test(
-      text,
-    ) &&
-    /\b(habe|hast|hat|haben|habt)\b/i.test(text)
-  ) {
-    issues.push(
-      createIssue({
-        type: "Zielgrammatik",
-        message:
-          "Bei einer Orts- oder Zustandsänderung wird das Perfekt dieser Verben mit „sein“ gebildet.",
-        suggestion: text
-          .replace(/\bich habe\b/i, "Ich bin")
-          .replace(/\bdu hast\b/i, "Du bist")
-          .replace(/\ber hat\b/i, "Er ist")
-          .replace(/\bsie hat\b/i, "Sie ist")
-          .replace(/\bwir haben\b/i, "Wir sind")
-          .replace(/\bihr habt\b/i, "Ihr seid")
-          .replace(/\bsie haben\b/i, "Sie sind"),
-        errorClass: "auxiliary",
-      }),
-    );
-  }
+  for (const issue of writingIssues(text, "de").filter(issue => issue.ruleId === "DE_PERFEKT_AUXILIARY")) {
+ issues.push(createIssue({ type: "Zielgrammatik", message: issue.message, suggestion: text.slice(0, issue.start) + issue.replacement + text.slice(issue.end), errorClass: "auxiliary" }));
+}
 
   if (
     kind === "sentences" &&
@@ -811,7 +790,7 @@ export function evaluateAnswer(
         ]
       : [];
   const taskIssues = getTaskIssues(text, grammar, kind, taskPrompt);
-  const localIssues = writingIssues(text, "de").map(issue => createIssue({
+  const localIssues = writingIssues(text, "de").filter(issue => issue.ruleId !== "DE_PERFEKT_AUXILIARY").map(issue => createIssue({
     type: "Lokale Grammatik", message: issue.message, userText: issue.original,
     correctedText: issue.replacement, explanation: issue.ruleId,
     suggestion: text.slice(0, issue.start) + issue.replacement + text.slice(issue.end),

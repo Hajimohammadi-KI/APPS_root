@@ -49,6 +49,6 @@ test("W19 Perfekt auxiliary is tied to its own clause and valency", () => {
   for (const text of ["Ich habe gelernt. Er ist gegangen.", "Er hat das Auto gefahren.", "Sie hat das Flugzeug geflogen.", "Er ist nach Berlin gefahren."])
     expect(writingIssues(text, "de")).toEqual([]);
   const issue = writingIssues("Ich habe gelernt. Er hat nach Berlin gefahren.", "de")[0];
-  expect(issue).toMatchObject({ ruleId: "DE_PERFEKT_AUXILIARY", original: "hat", replacement: "ist", start: 20 });
+  expect(issue).toMatchObject({ ruleId: "DE_PERFEKT_AUXILIARY", original: "hat", replacement: "ist", start: 21 });
   expect(writingIssues("Ich habe gegangen.", "de")[0]?.replacement).toBe("bin");
 });

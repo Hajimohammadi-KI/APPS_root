@@ -1,6 +1,7 @@
 export interface TextPolicy {
   readonly allowOptionalFinalPeriod?: boolean;
 }
+export { detectTextLanguage } from "./language";
 
 /** Canonical comparison only. Case, accents, apostrophes and punctuation are meaningful. */
 export function normalizeText(value: string, policy: TextPolicy = {}): string {

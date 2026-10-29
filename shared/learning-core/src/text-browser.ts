@@ -1,1 +1,1 @@
-export { normalizeText, tokenizeText } from "./text";
+export { normalizeText, tokenizeText, detectTextLanguage } from "./text";

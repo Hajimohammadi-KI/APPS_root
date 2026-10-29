@@ -54,26 +54,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
   // Search remains case-insensitive; assessed German answers do not.
   const normalizeAnswer = (value) => window.AutomaticityText.normalizeText(String(value ?? ""), { allowOptionalFinalPeriod: true });
 
-  const detectAnswerLanguage = (text) => {
-    const value = String(text ?? "").normalize("NFC").trim();
-    if (!value || /[\x00-\x08\x0b\x0c\x0e-\x1f]/u.test(value)) return "other";
-    if (/[\u0600-\u06ff]/u.test(value)) {
-      return /[A-Za-zÄÖÜäöüß]/u.test(value) ? "other" : "fa";
-    }
-    const words = value.toLocaleLowerCase("de-DE").match(/\p{L}+/gu) ?? [];
-    if (!words.length || words.some((word) => /[^\p{Script=Latin}]/u.test(word))) return "other";
-    // Sparse lexical clues, not language proof. Keep unknown/mixed input unassessed.
-    const german = new Set("ich du wir ihr sie mich dich sich euch ihnen mein meine meinen meiner meinem dein deine sein seine unser unsere nicht kein keine keinen ist sind bist habe hast haben habt wird werden wurde wurden würde wäre hätte könnte könnten muss müssen soll sollen kann können weil dass obwohl damit deshalb daher gibt bitte danke nein für über ohne zwischen zum zur beim gefahren gegangen".split(" "));
-    const shared = new Set("der die das den dem des ein eine einen einem einer und mit nach aus im es er war hat bin".split(" "));
-    const english = new Set("the and is are were this that these those you your my we they he she have has had hello friend please with from not our their write answer sentence".split(" "));
-    const germanHits = words.filter((word) => german.has(word)).length;
-    const sharedHits = new Set(words.filter((word) => shared.has(word))).size;
-    const englishHits = words.filter((word) => english.has(word)).length;
-    if (englishHits && (germanHits || sharedHits >= 2)) return "other";
-    if (englishHits) return "en";
-    if (germanHits || sharedHits >= 2) return "de";
-    return "other";
-  };
+  const detectAnswerLanguage = (text) => window.AutomaticityText.detectTextLanguage(String(text ?? ""));
 
   const readJson = (key, fallback) => {
     try {

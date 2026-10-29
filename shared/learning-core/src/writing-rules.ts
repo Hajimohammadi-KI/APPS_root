@@ -22,6 +22,20 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
   };
   if (language === "en") {
     for (let i = 0; i < tokens.length - 1; i++) {
+      if (i > 0 && !/[.!?]/u.test(tokens[i-1]!.text)) continue;
+      const subject = lower[i]!, verb = lower[i+1]!;
+      if (["he", "she", "it"].includes(subject) && verb === "have")
+        add(i+1, "has", "EN_SUBJECT_AGREEMENT", "Use has with a singular third-person subject in a direct statement.");
+      if (["i", "you", "we", "they"].includes(subject) && verb === "has")
+        add(i+1, "have", "EN_SUBJECT_AGREEMENT", "Use have with this subject in a direct statement.");
+      // A finite, unambiguous head lexicon; no guessing unknown noun number.
+      const nounIndex = ["the", "these", "those"].includes(lower[i+3] ?? "") ? i+4 : i+3;
+      if (subject === "the" && ["list", "box", "group", "lists", "boxes", "groups"].includes(verb) && lower[i+2] === "of" && ["items", "books", "students"].includes(lower[nounIndex] ?? "")) {
+        const finite = lower[nounIndex+1], plural = ["lists", "boxes", "groups"].includes(verb);
+        if (finite === (plural ? "is" : "are")) add(nounIndex+1, plural ? "are" : "is", "EN_SUBJECT_AGREEMENT", "The verb agrees with the head noun, before the of-phrase.");
+      }
+    }
+    for (let i = 0; i < tokens.length - 1; i++) {
       const article = lower[i]!, next = lower[i+1]!;
       if ((article === "a" && vowelSound.has(next)) || (article === "an" && consonantSound.has(next))) {
         let replacement = article === "a" ? "an" : "a";

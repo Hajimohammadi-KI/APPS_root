@@ -1,3 +1,4 @@
+import { writingIssues } from "@automaticity/learning-core/writing-rules";
 import { matchesReferenceAnswer, normalizeReferenceAnswer } from "@automaticity/learning-core/reference-answer";
 
 export type AutomaticityIssueCode =
@@ -99,25 +100,9 @@ export function analyzePresentPerfect(text: string): AutomaticityAnalysis {
 	const targetUses = countPresentPerfectUses(cleanText);
 	const issues: AutomaticityIssue[] = [];
 
-	const wrongHas = cleanText.match(/\b(?:I|you|we|they)\s+has\b/i);
-	if (wrongHas) {
-		issues.push({
-			code: "auxiliary_agreement",
-			message: "Use have with I, you, we, and they.",
-			original: wrongHas[0],
-			corrected: wrongHas[0].replace(/has/i, "have"),
-		});
-	}
-
-	const wrongHave = cleanText.match(/\b(?:he|she|it)\s+have\b/i);
-	if (wrongHave) {
-		issues.push({
-			code: "auxiliary_agreement",
-			message: "Use has with he, she, and it.",
-			original: wrongHave[0],
-			corrected: wrongHave[0].replace(/have/i, "has"),
-		});
-	}
+	for (const issue of writingIssues(cleanText, "en").filter(issue => issue.ruleId === "EN_SUBJECT_AGREEMENT")) {
+ issues.push({ code: "auxiliary_agreement", message: issue.message, original: issue.original, corrected: issue.replacement });
+}
 
 	if (cleanText && targetUses === 0) {
 		issues.push({

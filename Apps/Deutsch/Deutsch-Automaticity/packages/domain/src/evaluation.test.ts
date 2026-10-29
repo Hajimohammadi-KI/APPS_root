@@ -15,6 +15,10 @@ const perfekt = {
 } as const;
 
 describe("answer language and orthography boundaries", () => {
+  it("W09 punctuation and Persian digits do not turn German letters into another script", () => {
+    expect(detectAnswerLanguage("Ich lerne heute؛ wir üben ۲ Sätze؟")).toBe("de");
+    expect(detectAnswerLanguage("Ich lerne فارسی")).toBe("other");
+  });
   it.each([
     "Hello my friend",
     "Bonjour tout le monde",

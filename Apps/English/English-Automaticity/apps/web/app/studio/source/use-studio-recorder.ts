@@ -1,3 +1,4 @@
+import { RecognitionCollector, type RecognitionEvidence } from "@automaticity/learning-core/speech";
 import { useEffect, useRef, useState } from "react";
 import {
   appendEvidenceInvalidationToStorage,
@@ -72,6 +73,8 @@ export function useStudioRecorder({
   const [attempts, setAttempts] = useState(0);
   const [voiceRecoveryAvailable, setVoiceRecoveryAvailable] = useState(false);
   const [consentNeeded, setConsentNeeded] = useState(false);
+  const [recognitionEvidence, setRecognitionEvidence] = useState<RecognitionEvidence | null>(null);
+  const transcriptEditedRef = useRef(false);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -127,6 +130,8 @@ export function useStudioRecorder({
   );
 
   function resetSession(clearBaseline = true) {
+    transcriptEditedRef.current = false;
+    setRecognitionEvidence(null);
     setTranscript("");
     setInterimTranscript("");
     setEvaluation(null);
@@ -143,6 +148,8 @@ export function useStudioRecorder({
   }
 
   function editTranscript(value: string) {
+    transcriptEditedRef.current = true;
+    setRecognitionEvidence(null);
     setTranscript(value);
     setInterimTranscript("");
     setEvaluation(null);
@@ -156,21 +163,14 @@ export function useStudioRecorder({
     recognition.lang = speechLocale[language];
     recognition.continuous = true;
     recognition.interimResults = true;
-    let finalText = initialText.trim();
+    recognition.maxAlternatives = 3;
+    const collector = new RecognitionCollector(initialText);
     recognition.onresult = (event) => {
-      let interim = "";
-      for (
-        let index = event.resultIndex;
-        index < event.results.length;
-        index += 1
-      ) {
-        const result = event.results[index];
-        const words = result?.[0]?.transcript ?? "";
-        if (result?.isFinal) finalText += `${finalText ? " " : ""}${words}`;
-        else interim += `${interim ? " " : ""}${words}`;
-      }
-      setTranscript(finalText.trim());
-      setInterimTranscript(interim.trim());
+      if (transcriptEditedRef.current) return;
+      const evidence = collector.update(event);
+      setRecognitionEvidence(evidence);
+      setTranscript(evidence.finalText);
+      setInterimTranscript(evidence.interimText);
     };
     recognition.onerror = (event) => {
       if (event.error !== "aborted" && event.error !== "no-speech") {
@@ -250,6 +250,8 @@ export function useStudioRecorder({
       setSeconds(0);
       setAudioUrl(null);
 
+      transcriptEditedRef.current = false;
+      setRecognitionEvidence(null);
       if (!startSpeechRecognition("")) {
         setMessage(
           language === "de"
@@ -449,6 +451,7 @@ export function useStudioRecorder({
     attempts,
     voiceRecoveryAvailable,
     consentNeeded,
+    recognitionEvidence,
     wordCount,
     wordsPerMinute,
     transcriptRef,

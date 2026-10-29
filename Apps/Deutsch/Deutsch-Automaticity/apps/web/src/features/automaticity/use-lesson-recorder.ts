@@ -1,21 +1,5 @@
+import { RecognitionCollector, type SpeechRecognitionLike } from "@automaticity/learning-core/speech";
 import { useEffect, useRef, useState } from "react";
-
-interface SpeechRecognitionEventLike {
-  readonly resultIndex: number;
-  readonly results: ArrayLike<{
-    readonly isFinal: boolean;
-    readonly 0: { readonly transcript: string };
-  }>;
-}
-
-interface SpeechRecognitionLike {
-  lang: string;
-  continuous: boolean;
-  interimResults: boolean;
-  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
-  start(): void;
-  stop(): void;
-}
 
 type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
 
@@ -116,21 +100,11 @@ export function useLessonRecorder({
         recognition.lang = "de-DE";
         recognition.continuous = true;
         recognition.interimResults = true;
-        let finalText = "";
-        recognition.onresult = (event) => {
-          let interim = "";
-          for (
-            let index = event.resultIndex;
-            index < event.results.length;
-            index += 1
-          ) {
-            const result = event.results[index];
-            if (!result) continue;
-            if (result.isFinal)
-              finalText += `${finalText ? " " : ""}${result[0].transcript}`;
-            else interim += `${interim ? " " : ""}${result[0].transcript}`;
-          }
-          setTranscript(`${finalText} ${interim}`.trim());
+        recognition.maxAlternatives = 3;
+        const collector = new RecognitionCollector("");
+        recognition.onresult = event => {
+          const result = collector.update(event);
+          setTranscript([result.finalText, result.interimText].filter(Boolean).join(" "));
         };
         recognition.start();
         recognitionRef.current = recognition;

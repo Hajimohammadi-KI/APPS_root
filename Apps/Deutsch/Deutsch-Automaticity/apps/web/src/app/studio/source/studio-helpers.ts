@@ -1,3 +1,5 @@
+import type { SpeechRecognitionLike } from "@automaticity/learning-core/speech";
+export type { SpeechRecognitionLike } from "@automaticity/learning-core/speech";
 import { conversationTopics } from "./conversation-data";
 import type { StoredEvaluationIssue } from "./conversation-storage";
 
@@ -10,34 +12,6 @@ export interface EvaluationResponse {
   readonly provider: "LanguageTool";
   readonly checkedAt: string;
   readonly issues: readonly StoredEvaluationIssue[];
-}
-
-interface RecognitionAlternativeLike {
-  readonly transcript: string;
-}
-
-interface RecognitionResultLike {
-  readonly isFinal: boolean;
-  readonly 0: RecognitionAlternativeLike;
-}
-
-export interface RecognitionEventLike {
-  readonly resultIndex: number;
-  readonly results: ArrayLike<RecognitionResultLike>;
-}
-
-export interface RecognitionErrorLike {
-  readonly error: string;
-}
-
-export interface SpeechRecognitionLike {
-  lang: string;
-  continuous: boolean;
-  interimResults: boolean;
-  onresult: ((event: RecognitionEventLike) => void) | null;
-  onerror: ((event: RecognitionErrorLike) => void) | null;
-  start(): void;
-  stop(): void;
 }
 
 interface SpeechRecognitionConstructor {

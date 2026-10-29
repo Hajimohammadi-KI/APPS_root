@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./speech": "./src/speech.ts",
     "./writing-rules": "./src/writing-rules.ts",
     ".": "./src/index.ts",
     "./reference-answer": "./src/reference-answer.ts",

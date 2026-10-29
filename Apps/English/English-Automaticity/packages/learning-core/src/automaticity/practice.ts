@@ -2305,9 +2305,11 @@ export async function mountPractice(
                 const response = await fetch("/api/conversation/evaluate", {
                   method: "POST",
                   headers: { "content-type": "application/json" },
+                  // Sent only from this explicit "send for proofreading" action.
                   body: JSON.stringify({
                     text: saved.attempt.response.text,
                     language,
+                    consent: true,
                   }),
                   signal: AbortSignal.timeout(15000),
                   cache: "no-store",

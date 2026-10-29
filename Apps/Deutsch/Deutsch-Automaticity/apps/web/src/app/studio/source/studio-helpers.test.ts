@@ -4,6 +4,7 @@ import { conversationTopics } from "./conversation-data";
 import {
   countWords,
   formatTime,
+  issueSegments,
   isEvaluationResponse,
   readStudioEntry,
   safeSameOriginPath,
@@ -74,5 +75,29 @@ describe("studio helpers", () => {
       audio,
       audioReferenceId: "a1",
     });
+  });
+  test("flagged words are located exactly, without overlapping highlights", () => {
+    const issue = (offset: number, length: number) => ({
+      message: "m",
+      offset,
+      length,
+      replacements: [],
+      ruleId: "R",
+      category: "Grammar",
+    });
+    const text = "I is very happy.";
+    expect(
+      issueSegments(text, [issue(2, 2), issue(2, 7), issue(10, 5)]),
+    ).toEqual([
+      { text: "I ", issue: null },
+      { text: "is", issue: 0 },
+      { text: " very ", issue: null },
+      { text: "happy", issue: 2 },
+      { text: ".", issue: null },
+    ]);
+    expect(issueSegments(text, [issue(0, 0), issue(40, 2)])).toEqual([
+      { text, issue: null },
+    ]);
+    expect(issueSegments("", [])).toEqual([]);
   });
 });

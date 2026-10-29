@@ -175,6 +175,8 @@ export function RecordCard({
   onPauseOrResume,
   onStop,
   onEvaluate,
+  consentNeeded,
+  onAllowOnline,
   onTranscriptChange,
 }: Readonly<{
   text: StudioCopy;
@@ -195,6 +197,8 @@ export function RecordCard({
   onPauseOrResume: () => void;
   onStop: () => void;
   onEvaluate: () => void;
+  consentNeeded: boolean;
+  onAllowOnline: () => void;
   onTranscriptChange: (value: string) => void;
 }>) {
   return (
@@ -271,6 +275,11 @@ export function RecordCard({
             ✣ {evaluating ? text.evaluating : text.evaluate}
           </button>
         </div>
+        {consentNeeded && (
+          <button className="primary online-consent" onClick={onAllowOnline} type="button">
+            {text.allowOnline}
+          </button>
+        )}
       </div>
       <div className="levels" aria-hidden="true">
         ▂▄▆█

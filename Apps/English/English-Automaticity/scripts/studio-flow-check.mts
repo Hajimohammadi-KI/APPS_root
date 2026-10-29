@@ -47,7 +47,16 @@ for (const width of [390, 1280]) {
   check((await page.locator(".replay-panel audio").count()) === 1, `${width}px replay panel plays the recording`);
 
   await page.locator(".transcript textarea").fill("I usually visit my family at the weekend and we cook together.");
+  let sentBeforeConsent = 0;
+  const countSends = (request: { url(): string }) => {
+    if (request.url().includes("/api/conversation/evaluate")) sentBeforeConsent += 1;
+  };
+  page.on("request", countSends);
   await page.locator(".record-controls button.primary").click();
+  await page.locator(".online-consent").waitFor({ timeout: 10000 });
+  check(sentBeforeConsent === 0, `${width}px without online consent nothing is sent to LanguageTool`);
+  page.off("request", countSends);
+  await page.locator(".online-consent").click();
   await Promise.race([
     page.locator(".review-panel").waitFor({ timeout: 30000 }),
     page.locator(".mic-error", { hasText: "LanguageTool is unavailable" }).waitFor({ timeout: 30000 }),

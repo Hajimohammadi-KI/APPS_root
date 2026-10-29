@@ -85,7 +85,20 @@ for (const width of [390, 1280]) {
     .fill(
       "Am Wochenende besuche ich normalerweise meine Familie und wir kochen zusammen ein großes Essen.",
     );
+  let sentBeforeConsent = 0;
+  const countSends = (request: { url(): string }) => {
+    if (request.url().includes("/api/conversation/evaluate"))
+      sentBeforeConsent += 1;
+  };
+  page.on("request", countSends);
   await page.locator(".record-controls button.primary").click();
+  await page.locator(".online-consent").waitFor({ timeout: 10000 });
+  check(
+    sentBeforeConsent === 0,
+    `${width}px without online consent nothing is sent to LanguageTool`,
+  );
+  page.off("request", countSends);
+  await page.locator(".online-consent").click();
   await Promise.race([
     page.locator(".review-panel").waitFor({ timeout: 30000 }),
     page

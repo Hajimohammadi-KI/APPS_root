@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-10-29",
   "version": "27.4.4",
-  "webRelease": "2026.10.29.2",
+  "webRelease": "2026.10.29.3",
   "changes": [
-    "W05: Voice recordings are stored only after you turn on “Save my recordings” in Settings (off by default); transcripts and feedback are saved either way."
+    "W06: The Speaking Studio sends your transcript to LanguageTool only after you allow online checks; flagged words are highlighted; choose American or British spelling in Settings."
   ]
 }

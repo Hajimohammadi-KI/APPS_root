@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-10-29",
   "version": "20.9.4",
-  "webRelease": "2026.10.29.2",
+  "webRelease": "2026.10.29.3",
   "changes": [
-    "W05: Aufnahmen werden nur gespeichert, wenn „Eigene Aufnahmen lokal speichern“ eingeschaltet ist (standardmäßig aus); Transkript und Rückmeldung werden immer gespeichert."
+    "W06: Das Gesprächsstudio sendet dein Transkript erst nach deiner Zustimmung an LanguageTool; markierte Stellen werden im Text hervorgehoben."
   ]
 }

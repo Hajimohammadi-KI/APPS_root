@@ -191,8 +191,18 @@ test("B1 Gesprächsstudio persists audio evidence, reports provider failure, and
   page,
 }) => {
   await installSyntheticAudioCapture(page);
+  // The learner opted in to keeping recordings; online checks stay off.
+  await page.addInitScript(() => {
+    if (!localStorage.getItem("study-suite:learner-profile:v1"))
+      localStorage.setItem(
+        "study-suite:learner-profile:v1",
+        JSON.stringify({ privacy: { storeAudio: true, allowOnlineAI: false } }),
+      );
+  });
   let providerAvailable = false;
+  const sent: unknown[] = [];
   await page.route("**/api/conversation/evaluate", async (route) => {
+    sent.push(route.request().postDataJSON());
     if (!providerAvailable) {
       await route.fulfill({
         status: 502,
@@ -220,9 +230,17 @@ test("B1 Gesprächsstudio persists audio evidence, reports provider failure, and
   await page.getByRole("button", { name: /Stop/ }).click();
   await page.getByLabel("Dein Transkript").fill(TRANSCRIPT);
   await page.getByRole("button", { name: /Antwort auswerten/ }).click();
+  await expect(page.getByText(/daher wurde nichts gesendet/)).toBeVisible();
+  expect(sent).toEqual([]);
+  await page
+    .getByRole("button", { name: "Online-Prüfung erlauben und auswerten" })
+    .click();
   await expect(
     page.getByText(/LanguageTool ist nicht erreichbar/),
   ).toBeVisible();
+  expect(sent).toEqual([
+    { text: TRANSCRIPT, language: "de", variant: "de-DE", consent: true },
+  ]);
   expect(
     await page.evaluate(() =>
       localStorage.getItem("automaticity:learning-evidence:v1"),

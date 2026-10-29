@@ -81,6 +81,43 @@ export function countWords(value: string) {
   return value.trim().match(/[\p{L}\p{N}'’-]+/gu)?.length ?? 0;
 }
 
+export interface IssueSegment {
+  readonly text: string;
+  /** Index into the issue list, or null for unflagged text. */
+  readonly issue: number | null;
+}
+
+/** Splits the checked text so each flagged span can be highlighted where it occurs. */
+export function issueSegments(
+  original: string,
+  issues: readonly StoredEvaluationIssue[],
+): IssueSegment[] {
+  const spans = issues
+    .map((issue, index) => ({ ...issue, index }))
+    .filter(
+      (issue) =>
+        issue.length > 0 &&
+        issue.offset >= 0 &&
+        issue.offset + issue.length <= original.length,
+    )
+    .sort((a, b) => a.offset - b.offset || a.index - b.index);
+  const segments: IssueSegment[] = [];
+  let cursor = 0;
+  for (const span of spans) {
+    if (span.offset < cursor) continue;
+    if (span.offset > cursor)
+      segments.push({ text: original.slice(cursor, span.offset), issue: null });
+    segments.push({
+      text: original.slice(span.offset, span.offset + span.length),
+      issue: span.index,
+    });
+    cursor = span.offset + span.length;
+  }
+  if (cursor < original.length)
+    segments.push({ text: original.slice(cursor), issue: null });
+  return segments;
+}
+
 /** The recording is persisted only when the learner opted in to storing audio. */
 export function studioAudioToStore(
   audio: Blob,

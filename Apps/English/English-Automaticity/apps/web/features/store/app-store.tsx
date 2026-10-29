@@ -54,6 +54,7 @@ export interface Settings {
 	honovrLanguage: "en";
 	saveAudio: boolean;
 	onlineFeedback: boolean;
+	englishVariant: "en-US" | "en-GB";
 	readingProfile: "standard" | "dyslexia";
 	textScale: 100 | 112 | 125;
 	readingRuler: boolean;
@@ -225,6 +226,7 @@ export const DEFAULT_STATE: AppState = {
 		honovrLanguage: "en",
 		saveAudio: false,
 		onlineFeedback: false,
+		englishVariant: "en-US",
 		readingProfile: "dyslexia",
 		textScale: 112,
 		readingRuler: false,
@@ -363,6 +365,8 @@ export function normalizeAppState(value: unknown): AppState {
 				typeof settings.onlineFeedback === "boolean"
 					? settings.onlineFeedback
 					: fallback.settings.onlineFeedback,
+			englishVariant:
+				settings.englishVariant === "en-GB" ? "en-GB" : "en-US",
 			readingProfile:
 				settings.readingProfile === "standard" ||
 				settings.readingProfile === "dyslexia"
@@ -747,6 +751,16 @@ export function adaptiveReviewInterval(
 	);
 }
 
+/** The settings toggles are the learner's consent; the profile shares them across apps. */
+export function profilePrivacy(state: AppState) {
+	return {
+		shareAcrossApps: state.learner.shareAcrossApps,
+		allowOnlineAI: state.settings.onlineFeedback,
+		storeAudio: state.settings.saveAudio,
+		includeEvidenceInExport: state.learner.includeEvidenceInExport,
+	};
+}
+
 export function buildEnglishEvidence(state: AppState): EvidenceSummary {
 	const counts = new Map<string, number>();
 	for (const attempt of state.attempts) {
@@ -911,12 +925,7 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 			const update = {
 				displayName: state.learner.displayName,
 				avatarDataUrl: state.learner.avatarDataUrl,
-				privacy: {
-					shareAcrossApps: state.learner.shareAcrossApps,
-					allowOnlineAI: state.learner.allowOnlineAI,
-					storeAudio: state.settings.saveAudio,
-					includeEvidenceInExport: state.learner.includeEvidenceInExport,
-				},
+				privacy: profilePrivacy(state),
 				...(state.learner.shareAcrossApps
 					? {
 							language: "english" as const,

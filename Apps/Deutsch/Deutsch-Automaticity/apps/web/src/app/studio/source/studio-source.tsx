@@ -63,7 +63,7 @@ const modeCards: readonly ModeCard[] = [
 const dailySessionKey = "deutsch-automaticity:daily-session:v1";
 
 export default function Home() {
-  const { state } = useLearnerState();
+  const { state, updateLearnerProfile } = useLearnerState();
   const text = copy[language];
   const allLabel: string = text.all;
   const [level, setLevel] = useState<string>(allLabel);
@@ -154,6 +154,7 @@ export default function Home() {
       state.settings.dailyStudyMinutes,
     ),
     storeAudio: state.settings.saveAudio,
+    onlineConsent: state.learner.allowOnlineAI,
     onRecordingStarted: () => setActive(1),
     onRecorded: () => setActive(2),
     onEvaluated: () => setActive(3),
@@ -292,6 +293,11 @@ export default function Home() {
               onPauseOrResume={recorder.pauseOrResume}
               onStop={recorder.finishRecording}
               onEvaluate={() => void recorder.evaluateTranscript()}
+              consentNeeded={recorder.consentNeeded}
+              onAllowOnline={() => {
+                updateLearnerProfile({ allowOnlineAI: true });
+                void recorder.evaluateTranscript({ consented: true });
+              }}
               onTranscriptChange={recorder.editTranscript}
             />
 

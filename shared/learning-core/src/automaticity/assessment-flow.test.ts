@@ -11,7 +11,10 @@ import {
   parseGrammarFeedback,
   grammarFeedbackAssessment,
 } from "./grammar-feedback";
-import { handleGrammarFeedback } from "./grammar-feedback-route";
+import {
+  createGrammarRateLimiter,
+  handleGrammarFeedback,
+} from "./grammar-feedback-route";
 import { responseExposure } from "./response-exposure";
 
 const hash = "a".repeat(64),
@@ -336,9 +339,11 @@ const request = (body: unknown) =>
 test("route validates input and rejects unsuccessful or malformed providers", async () => {
   const mock = (async () => Response.json({ matches: [] })) as typeof fetch;
   for (const body of [
-    { text: "", language: "en" },
-    { text: "hello", language: "fa" },
-    { text: "x".repeat(8001), language: "en" },
+    { text: "", language: "en", consent: true },
+    { text: "hello", language: "fa", consent: true },
+    { text: "x".repeat(8001), language: "en", consent: true },
+    { text: "hello", language: "en", consent: true, variant: "en-ZZ" },
+    { text: "hello", language: "de", consent: true, variant: "en-GB" },
   ])
     expect(
       (await handleGrammarFeedback(request(body), "http://fixture", mock))
@@ -350,7 +355,7 @@ test("route validates input and rejects unsuccessful or malformed providers", as
     new Response("not json"),
   ]) {
     const response = await handleGrammarFeedback(
-      request({ text: "I is ready.", language: "en" }),
+      request({ text: "I is ready.", language: "en", consent: true }),
       "http://fixture",
       (async () => mockResponse) as typeof fetch,
     );
@@ -361,7 +366,7 @@ test("route validates input and rejects unsuccessful or malformed providers", as
 test("route handles an interactive request without fabricating a grade", async () => {
   let submitted = "";
   const response = await handleGrammarFeedback(
-    request({ text: "  I is ready.  ", language: "en" }),
+    request({ text: "  I is ready.  ", language: "en", consent: true }),
     "http://fixture",
     (async (_url, init) => {
       submitted = String(init?.body);
@@ -370,8 +375,95 @@ test("route handles an interactive request without fabricating a grade", async (
   );
   expect(response.status).toBe(200);
   expect(new URLSearchParams(submitted).get("text")).toBe("  I is ready.  ");
+  expect(new URLSearchParams(submitted).get("language")).toBe("en-US");
   expect(await response.json()).toMatchObject({
     original: "  I is ready.  ",
     corrected: "  I am ready.  ",
   });
+});
+test("route sends nothing to the provider without explicit consent", async () => {
+  let calls = 0;
+  const fetcher = (async () => {
+    calls += 1;
+    return Response.json({ matches: [] });
+  }) as typeof fetch;
+  for (const consent of [undefined, false, "true", 1]) {
+    const response = await handleGrammarFeedback(
+      request({ text: "I is ready.", language: "en", consent }),
+      "http://fixture",
+      fetcher,
+    );
+    expect(response.status).toBe(403);
+  }
+  expect(calls).toBe(0);
+});
+test("route checks the learner's variant and ignores regional-only differences", async () => {
+  let submitted = "";
+  const text = "We cook at the weekend. I is ready.";
+  const response = await handleGrammarFeedback(
+    request({ text, language: "en", consent: true, variant: "en-GB" }),
+    "http://fixture",
+    (async (_url, init) => {
+      submitted = String(init?.body);
+      return Response.json({
+        matches: [
+          {
+            message: "British English expression.",
+            offset: 8,
+            length: 14,
+            replacements: [{ value: "on the weekend" }],
+            rule: {
+              id: "AT_THE_WEEKEND",
+              issueType: "locale-violation",
+              category: { id: "BRITISH_ENGLISH", name: "British English" },
+            },
+          },
+          { ...match, offset: 26 },
+        ],
+      });
+    }) as typeof fetch,
+    createGrammarRateLimiter(),
+  );
+  expect(new URLSearchParams(submitted).get("language")).toBe("en-GB");
+  const body = await response.json();
+  expect(body.issues).toHaveLength(1);
+  expect(body.issues[0].ruleId).toBe("AGREEMENT");
+  expect(body.corrected).toBe("We cook at the weekend. I am ready.");
+  expect(parseGrammarFeedback(body, text)).toMatchObject({
+    corrected: body.corrected,
+  });
+});
+test("route limits provider requests per client and says when to retry", async () => {
+  let now = 0;
+  let calls = 0;
+  const limiter = createGrammarRateLimiter({
+    limit: 2,
+    windowMs: 60_000,
+    now: () => now,
+  });
+  const fetcher = (async () => {
+    calls += 1;
+    return Response.json({ matches: [] });
+  }) as typeof fetch;
+  const from = (ip: string) =>
+    new Request("http://localhost/api/conversation/evaluate", {
+      method: "POST",
+      headers: { "x-forwarded-for": `${ip}, 10.0.0.1` },
+      body: JSON.stringify({
+        text: "I am ready.",
+        language: "en",
+        consent: true,
+      }),
+    });
+  const send = (ip: string) =>
+    handleGrammarFeedback(from(ip), "http://fixture", fetcher, limiter);
+  expect((await send("1.1.1.1")).status).toBe(200);
+  expect((await send("1.1.1.1")).status).toBe(200);
+  const limited = await send("1.1.1.1");
+  expect(limited.status).toBe(429);
+  expect(Number(limited.headers.get("retry-after"))).toBeGreaterThan(0);
+  expect((await send("2.2.2.2")).status).toBe(200);
+  expect(calls).toBe(3);
+  now = 60_001;
+  expect((await send("1.1.1.1")).status).toBe(200);
 });

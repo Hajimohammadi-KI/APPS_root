@@ -63,7 +63,7 @@ const modeCards: readonly ModeCard[] = [
 const dailySessionKey = "english-automaticity:daily-session:v1";
 
 export default function Home() {
-  const { state } = useAppStore();
+  const { state, mutate } = useAppStore();
   const text = copy[language];
   const allLabel: string = text.all;
   const [level, setLevel] = useState<string>(allLabel);
@@ -157,6 +157,8 @@ export default function Home() {
     selected,
     maxSeconds,
     storeAudio: state.settings.saveAudio,
+    onlineConsent: state.settings.onlineFeedback,
+    variant: state.settings.englishVariant,
     onRecordingStarted: () => setActive(1),
     onRecorded: () => setActive(2),
     onEvaluated: () => setActive(3),
@@ -319,6 +321,13 @@ export default function Home() {
               onPauseOrResume={recorder.pauseOrResume}
               onStop={recorder.finishRecording}
               onEvaluate={() => void recorder.evaluateTranscript()}
+              consentNeeded={recorder.consentNeeded}
+              onAllowOnline={() => {
+                mutate((draft) => {
+                  draft.settings.onlineFeedback = true;
+                });
+                void recorder.evaluateTranscript({ consented: true });
+              }}
               onTranscriptChange={recorder.editTranscript}
             />
 

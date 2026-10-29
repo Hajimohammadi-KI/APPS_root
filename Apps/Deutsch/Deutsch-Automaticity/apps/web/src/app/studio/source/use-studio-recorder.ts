@@ -29,10 +29,20 @@ interface RecorderOptions {
   readonly minWords: number;
   readonly sessionMinutes: DailySessionMinutes;
   readonly storeAudio: boolean;
+  readonly onlineConsent: boolean;
   readonly onRecordingStarted: () => void;
   readonly onRecorded: () => void;
   readonly onEvaluated: () => void;
   readonly onSaved: (evaluation: EvaluationResponse) => void;
+}
+
+function providerError(payload: unknown): string | null {
+  return typeof payload === "object" &&
+    payload !== null &&
+    "error" in payload &&
+    typeof payload.error === "string"
+    ? payload.error
+    : null;
 }
 
 /** Microphone, live transcript, LanguageTool evaluation and local saving for one studio session. */
@@ -43,6 +53,7 @@ export function useStudioRecorder({
   minWords,
   sessionMinutes,
   storeAudio,
+  onlineConsent,
   onRecordingStarted,
   onRecorded,
   onEvaluated,
@@ -62,6 +73,7 @@ export function useStudioRecorder({
   const [message, setMessage] = useState<string | null>(null);
   const [attempts, setAttempts] = useState(0);
   const [voiceRecoveryAvailable, setVoiceRecoveryAvailable] = useState(false);
+  const [consentNeeded, setConsentNeeded] = useState(false);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -288,7 +300,8 @@ export function useStudioRecorder({
     setRecordingState("idle");
   }
 
-  async function evaluateTranscript() {
+  /** `consented` is true only when called from the in-place "allow online checks" action. */
+  async function evaluateTranscript({ consented = false } = {}) {
     const reviewedTranscript = `${transcript} ${interimTranscript}`.trim();
     if (!reviewedTranscript) {
       setMessage("Prüfe oder ergänze zuerst dein Transkript.");
@@ -303,15 +316,31 @@ export function useStudioRecorder({
     }
     setTranscript(reviewedTranscript);
     setInterimTranscript("");
+    if (!onlineConsent && !consented) {
+      setConsentNeeded(true);
+      setMessage(text.consentNotice);
+      return;
+    }
+    setConsentNeeded(false);
     setEvaluating(true);
     setMessage(null);
     try {
       const response = await fetch("/api/conversation/evaluate", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ text: reviewedTranscript, language }),
+        body: JSON.stringify({
+          text: reviewedTranscript,
+          language,
+          variant: "de-DE",
+          consent: true,
+        }),
       });
       const payload: unknown = await response.json();
+      if (response.status === 429 && providerError(payload)) {
+        setEvaluation(null);
+        setMessage(providerError(payload));
+        return;
+      }
       if (!response.ok || !isEvaluationResponse(payload))
         throw new Error("Provider response was unavailable or invalid.");
       setEvaluation(payload);
@@ -408,6 +437,7 @@ export function useStudioRecorder({
     message,
     attempts,
     voiceRecoveryAvailable,
+    consentNeeded,
     wordCount,
     wordsPerMinute,
     transcriptRef,

@@ -500,10 +500,43 @@ export function SettingsScreen() {
 							/>
 							<span>
 								<strong>Allow optional online grammar checks</strong>
-								<small>Off by default; local practice still works.</small>
+								<small>
+									Off by default; local practice still works. When on, your
+									typed or transcribed text (never the recording) is sent to
+									LanguageTool (languagetool.org) for checking.
+								</small>
 							</span>
 						</label>
 					</div>
+					<fieldset className="settings-row">
+						<legend>English spelling</legend>
+						<div className="settings-choice-group">
+							{(["en-US", "en-GB"] as const).map((variant) => (
+								<label className="settings-choice" key={variant}>
+									<input
+										checked={settings.englishVariant === variant}
+										name="english-variant"
+										onChange={() =>
+											mutate((draft) => {
+												draft.settings.englishVariant = variant;
+											})
+										}
+										type="radio"
+									/>
+									<span>
+										<strong>
+											{variant === "en-US" ? "American English" : "British English"}
+										</strong>
+										<small>
+											{variant === "en-US"
+												? "color, center, on the weekend"
+												: "colour, centre, at the weekend"}
+										</small>
+									</span>
+								</label>
+							))}
+						</div>
+					</fieldset>
 					<div className="settings-row">
 						<span>Recordings</span>
 						<label className="settings-toggle">

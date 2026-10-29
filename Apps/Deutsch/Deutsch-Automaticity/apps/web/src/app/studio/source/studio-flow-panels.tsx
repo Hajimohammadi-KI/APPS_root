@@ -1,4 +1,8 @@
-import { type EvaluationResponse, formatTime } from "./studio-helpers";
+import {
+  type EvaluationResponse,
+  formatTime,
+  issueSegments,
+} from "./studio-helpers";
 
 export function ListenPanel({
   stepLabel,
@@ -157,7 +161,21 @@ export function CorrectPanel({
           <div className="correction-grid">
             <article>
               <small>DEINE VERSION</small>
-              <p>{evaluation.original}</p>
+              <p>
+                {issueSegments(evaluation.original, evaluation.issues).map(
+                  (segment, index) =>
+                    segment.issue === null ? (
+                      segment.text
+                    ) : (
+                      <mark
+                        key={index}
+                        title={evaluation.issues[segment.issue]?.message}
+                      >
+                        {segment.text}
+                      </mark>
+                    ),
+                )}
+              </p>
             </article>
             <article>
               <small>KORRIGIERTE VERSION</small>
@@ -168,7 +186,10 @@ export function CorrectPanel({
             <ul className="issue-list">
               {evaluation.issues.map((issue, index) => (
                 <li key={`${issue.ruleId}-${issue.offset}-${index}`}>
-                  <b>{issue.category}</b> — {issue.message}
+                  <b>{issue.category}</b>
+                  {issue.length > 0 &&
+                    ` „${evaluation.original.slice(issue.offset, issue.offset + issue.length)}“`}{" "}
+                  — {issue.message}
                   {issue.replacements[0] ? ` → ${issue.replacements[0]}` : ""}
                 </li>
               ))}

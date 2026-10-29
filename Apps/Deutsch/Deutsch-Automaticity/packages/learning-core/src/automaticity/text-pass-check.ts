@@ -1,3 +1,4 @@
+import { normalizeText } from "../text";
 import { isRecord, type Language } from "./contracts";
 
 /** This narrow verifier can only veto a pass. It cannot issue a correction or credit. */
@@ -60,6 +61,6 @@ export function confirmsUnchangedText(
   )
     return false;
   const normalized = (text: string) =>
-    text.normalize("NFC").trim().replace(/\s+/g, " ");
+    normalizeText(text);
   return normalized(value.correction) === normalized(original);
 }

@@ -1,10 +1,11 @@
+import { normalizeText } from "./text";
 export interface ReferenceAnswerPolicy {
   readonly allowOptionalFinalPeriod?: boolean;
 }
 
 /** Case and punctuation can be the skill being tested; never fold them away. */
 export function normalizeReferenceAnswer(value: string): string {
-  return value.normalize("NFC").trim().replace(/\s+/gu, " ");
+  return normalizeText(value);
 }
 
 export function matchesReferenceAnswer(
@@ -13,10 +14,7 @@ export function matchesReferenceAnswer(
   policy: ReferenceAnswerPolicy = {},
 ): boolean {
   const normalize = (text: string) => {
-    const normalized = normalizeReferenceAnswer(text);
-    return policy.allowOptionalFinalPeriod
-      ? normalized.replace(/(?<![.!?])\.$/u, "")
-      : normalized;
+    return normalizeText(text, policy);
   };
   const actual = normalize(value);
   return actual.length > 0 && actual === normalize(expected);

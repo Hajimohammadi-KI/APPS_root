@@ -486,7 +486,8 @@
     <div style="padding:28px"><p class="eyebrow">TODAY'S PRACTICE</p><h2 id="dailyCompleteTitle" style="margin:6px 0 10px">Today's grammar practice is complete</h2><p id="dailyCompleteCopy" style="color:#625a70;line-height:1.55">Your result has been saved in today's route.</p><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:22px"><button class="primary-btn" id="dailyReturnBtn">OK · Return to Today's Practice</button><button class="ghost-btn" id="dailyRepeatBtn">Repeat this exercise</button><button class="ghost-btn" id="dailyMistakesBtn">Review my mistakes</button></div></div>
   </dialog>
 
-  <script src="/replacements/en/grammar-curriculum.js"></script>
+  <script src="/learning-core/text.js"></script>
+<script src="/replacements/en/grammar-curriculum.js"></script>
   <script>
     (() => {
       const $ = (selector, root = document) => root.querySelector(selector);
@@ -697,7 +698,7 @@
         $('#dailyCompleteTitle').textContent=`Today's ${dailyContext.activity===5?'writing':'grammar'} practice is complete`;
         $('#dailyCompleteDialog').showModal();
       };
-      const normalize = text => text.normalize('NFC').trim().replace(/(?<!\.)\.$/, '').replace(/\s+/g, ' ');
+      const normalize = text => window.AutomaticityText.normalizeText(text, { allowOptionalFinalPeriod: true });
       const currentTask = () => tasksForTopic()[taskIndex];
       const isRecitationTask = (task) => Boolean(grammarUnit().recallTest) && task.answer === grammarUnit().recallTest;
       const currentExerciseKey = () => topicKey(progress.activeLevel, progress.activeTopic, taskIndex);

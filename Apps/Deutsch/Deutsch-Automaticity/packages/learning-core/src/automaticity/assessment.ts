@@ -1,3 +1,4 @@
+import { normalizeText } from "../text";
 import {
   parseAutomaticityEvent,
   type AssessmentEvent,
@@ -11,10 +12,7 @@ import {
   parseConstruction,
 } from "./construction-rules";
 export function normaliseAnswer(text: string, task: PracticeTask): string {
-  let value = text.normalize("NFC").trim().replace(/\s+/gu, " ");
-  if (task.normalisation.terminalFullStop)
-    value = value.replace(/(?<![.!?])\.$/u, "");
-  return value;
+  return normalizeText(text, { allowOptionalFinalPeriod: task.normalisation.terminalFullStop });
 }
 /** Practice feedback is independent of approved mastery/evaluator scope. */
 export function assessControlledTask(

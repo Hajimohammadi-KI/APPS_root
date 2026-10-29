@@ -1,4 +1,5 @@
 export * from "./contracts";
+export * from "../text";
 export * from "./evidence";
 export * from "./storage";
 export * from "./backup";

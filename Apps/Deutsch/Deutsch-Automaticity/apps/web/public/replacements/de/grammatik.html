@@ -494,7 +494,8 @@
     <div style="display:grid;gap:10px"><button class="primary-btn" id="dailyReturnBtn">OK · Zum heutigen Training</button><button class="ghost-btn" id="dailyRepeatBtn">Noch einmal üben</button><button class="ghost-btn" id="dailyMistakesBtn">Meine Fehler ansehen</button></div>
   </dialog>
 
-  <script src="/replacements/de/grammar-catalog.js?v=20260902-valency-1"></script>
+  <script src="/learning-core/text.js"></script>
+<script src="/replacements/de/grammar-catalog.js?v=20260902-valency-1"></script>
   <script src="/replacements/de/grammar-runtime.js?v=2026.10.09.4"></script>
   <script>
     if (!window.GERMAN_GRAMMAR_RUNTIME) (() => {
@@ -574,7 +575,7 @@
       let lastMistake='';
       const answer = $('#answerInput');
       const feedback = $('#feedback');
-      const normalize = text => text.normalize('NFC').trim().replace(/\.$/, '').replace(/\s+/g, ' ');
+      const normalize = text => window.AutomaticityText.normalizeText(text, { allowOptionalFinalPeriod: true });
       const detailedFallbackFeedback = (value, task) => {
         const text = value.trim();
         if (/\bich sehe der mann\b/i.test(text)) {

@@ -52,12 +52,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       .replace(/\s+/g, " ");
 
   // Search remains case-insensitive; assessed German answers do not.
-  const normalizeAnswer = (value) =>
-    String(value ?? "")
-      .normalize("NFC")
-      .trim()
-      .replace(/(?<![.!?])\.$/u, "")
-      .replace(/\s+/gu, " ");
+  const normalizeAnswer = (value) => window.AutomaticityText.normalizeText(String(value ?? ""), { allowOptionalFinalPeriod: true });
 
   const detectAnswerLanguage = (text) => {
     const value = String(text ?? "").normalize("NFC").trim();

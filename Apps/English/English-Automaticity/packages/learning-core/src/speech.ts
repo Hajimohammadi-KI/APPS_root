@@ -152,21 +152,16 @@ export function calibrateWarningThreshold(
 }
 /** No live calibration is approved yet; the installed apps intentionally pass null. */
 export function pronunciationWarning(
-  evidence: {
+  _evidence: {
     readonly source: "recognition" | "acoustic";
     readonly errorProbability: number;
   },
-  calibration: WarningCalibration | null,
+  _calibration: WarningCalibration | null,
 ): "review_audio" | null {
-  return evidence.source === "acoustic" &&
-    calibration &&
-    calibration.falseAlerts === 0 &&
-    calibration.samples >= 40 &&
-    Number.isFinite(evidence.errorProbability) &&
-    evidence.errorProbability >= calibration.threshold &&
-    evidence.errorProbability <= 1
-    ? "review_audio"
-    : null;
+  // A caller-supplied summary is not a qualified model artifact. This gate
+  // remains closed until an independently reviewed, model-bound calibration
+  // has been published for the target language and speaker population.
+  return null;
 }
 const contrasts = {
   en: [

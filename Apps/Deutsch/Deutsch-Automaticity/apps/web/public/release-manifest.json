@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-10-29",
   "version": "20.9.4",
-  "webRelease": "2026.10.29.5",
+  "webRelease": "2026.10.29.6",
   "changes": [
-    "Gemeinsame Textverarbeitung und präzise lokale Schreibrückmeldung; Lautlesevergleich, freiwillige Lautkontraste und beschreibende Wellenformmessung. Transkriptprüfungen bestätigen keine Sprechbeherrschung. Akustische Aussprachewarnungen bleiben bis zur echten Kalibrierung aus."
+    "Pronunciation warnings remain disabled without validated acoustic evidence; offline research checks speaker-separated calibration and false-alert uncertainty."
   ]
 }

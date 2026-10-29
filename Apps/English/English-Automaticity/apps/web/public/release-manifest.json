@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-10-29",
   "version": "27.4.4",
-  "webRelease": "2026.10.29.5",
+  "webRelease": "2026.10.29.6",
   "changes": [
-    "Shared text handling and precise offline writing feedback; read-aloud comparison, optional sound contrasts and descriptive waveform measurements. Transcript checks no longer verify speaking mastery. Acoustic pronunciation warnings remain disabled pending real calibration."
+    "Pronunciation warnings remain disabled without validated acoustic evidence; offline research checks speaker-separated calibration and false-alert uncertainty."
   ]
 }

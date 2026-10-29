@@ -86,6 +86,14 @@ test("W26 asymmetric calibration abstains without reviewed acoustic evidence", (
     pronunciationWarning({ source: "acoustic", errorProbability: 0.99 }, null),
   ).toBeNull();
 });
+test("W26 a fabricated summary cannot activate a production pronunciation warning", () => {
+  expect(
+    pronunciationWarning(
+      { source: "acoustic", errorProbability: 0.99 },
+      { threshold: 0.1, falseAlerts: 0, misses: 0, samples: 40 },
+    ),
+  ).toBeNull();
+});
 test("W25 phonetic contrast exercises are optional practice, never an audio diagnosis", () => {
   expect(phoneticPractice("thin", "en")[0]).toMatchObject({
     words: ["thin", "tin"],

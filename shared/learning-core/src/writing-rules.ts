@@ -1,5 +1,6 @@
 import { tokenizeText } from "./text";
 import { ENGLISH_FINITE_TO_BASE } from "./english-lexicon";
+import { GERMAN_NOUN_CORPUS } from "./german-nouns";
 export { countPerfectUses } from "./english-lexicon";
 
 export interface WritingIssue {
@@ -69,6 +70,11 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
     }
   }
   if (language === "de") {
+    for (let i = 1; i < tokens.length; i++) {
+      const noun = GERMAN_NOUN_CORPUS[lower[i]!];
+      if (noun && noun.upper >= 3 && noun.lower === 0 && tokens[i]!.text === lower[i] && ["der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem", "einer", "eines", "mein", "meine", "dein", "deine"].includes(lower[i-1]!))
+        add(i, noun.noun, "DE_NOUN_CAPITAL", "Dieses durch den Artikel bestimmte Nomen wird großgeschrieben.");
+    }
     const sein: Readonly<Record<string, string>> = { habe: "bin", hast: "bist", hat: "ist", haben: "sind", habt: "seid" };
     for (let i = 0; i < tokens.length; i++) {
       if (!sein[lower[i]!]) continue;

@@ -70,6 +70,15 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
     }
   }
   if (language === "de") {
+    for (let i = 1; i < tokens.length - 3; i++) {
+      if (tokens[i]!.text !== "," || !["der", "die", "das"].includes(lower[i+1]!) || lower[i+2] !== "hier") continue;
+      const noun = GERMAN_NOUNS[tokens[i-1]!.normalized];
+      const plural = Object.values(GERMAN_NOUNS).some(n => n.plural === tokens[i-1]!.normalized);
+      const verb = lower[i+3]!;
+      if ((!noun || !["wohnt", "arbeitet"].includes(verb)) && (!plural || !["wohnen", "arbeiten"].includes(verb))) continue;
+      const expected = plural ? "die" : noun!.gender === "m" ? "der" : noun!.gender === "f" ? "die" : "das";
+      if (lower[i+1] !== expected) add(i+1, expected, "DE_RELATIVE_AGREEMENT", "Das als Subjekt verwendete Relativpronomen stimmt mit dem Bezugsnomen in Genus und Numerus überein.");
+    }
     for (let i = 1; i < tokens.length; i++) {
       const noun = GERMAN_NOUNS[tokens[i]!.normalized];
       if (!noun) continue;

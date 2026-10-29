@@ -32,3 +32,10 @@ export function tokenizeText(source: string): TextToken[] {
     }),
   );
 }
+
+/** Speaking anchors ignore punctuation, but never match inside another word. */
+export function containsTokenPhrase(source: string, phrase: string): boolean {
+  const words = (value: string) => tokenizeText(value.replace(/[’‘]/gu, "'")).filter(t => t.kind === "word").map(t => t.normalized.toLocaleLowerCase());
+  const haystack = words(source), needle = words(phrase);
+  return needle.length > 0 && haystack.some((_, start) => needle.every((word, offset) => haystack[start + offset] === word));
+}

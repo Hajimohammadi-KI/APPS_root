@@ -1,3 +1,4 @@
+import { containsTokenPhrase } from "@automaticity/learning-core/text";
 import { conversationTopics as curriculumTopics } from "@grammar/content";
 import type { SpokenChunk } from "@grammar/content";
 
@@ -47,26 +48,8 @@ export const conversationTopics: readonly ConversationTopic[] = curriculumTopics
   };
 });
 
-function canonicalSpokenText(value: string): string {
-  return value
-    .normalize("NFKC")
-    .replace(/[’‘]/gu, "'")
-    .toLocaleLowerCase("en")
-    .replace(/[^\p{L}\p{N}']+/gu, " ")
-    .trim()
-    .replace(/\s+/gu, " ");
-}
-
-export function spokenChunksUsed(
-  transcript: string,
-  chunks: readonly SpokenChunk[],
-): readonly SpokenChunk[] {
-  const canonicalTranscript = canonicalSpokenText(transcript);
-  if (!canonicalTranscript) return [];
-  return chunks.filter((chunk) => {
-    const anchor = canonicalSpokenText(chunk.text);
-    return anchor.length > 0 && canonicalTranscript.includes(anchor);
-  });
+export function spokenChunksUsed(transcript: string, chunks: readonly SpokenChunk[]): readonly SpokenChunk[] {
+ return chunks.filter(chunk => containsTokenPhrase(transcript, chunk.text));
 }
 
 export const speechLocale: Readonly<Record<StudioLanguage, string>> = {

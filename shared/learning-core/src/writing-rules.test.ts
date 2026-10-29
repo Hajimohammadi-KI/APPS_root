@@ -109,6 +109,7 @@ test("W18 German field order handles V2 and finite-final with replacement infini
   expect(
     writingIssues("Ich bleibe, weil ich bin müde.", "de")[0]?.replacement,
   ).toBe("weil ich müde bin");
+  expect(writingIssues("Ich warte, weil er ist in Berlin.", "de")[0]?.replacement).toBe("weil er in Berlin ist");
 });
 test("W19 Perfekt auxiliary is tied to its own clause and valency", () => {
   for (const text of [

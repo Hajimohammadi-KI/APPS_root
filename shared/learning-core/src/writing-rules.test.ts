@@ -33,3 +33,9 @@ test("W16 reviewed proper names preserve unknown and ambiguous names", () => {
     expect(writingIssues(text, "en")).toEqual([]);
   expect(writingIssues("Wir essen heute.", "de")).toEqual([]);
 });
+test("W17 fixed-case prepositions use unambiguous pronouns", () => {
+  for (const text of ["Er spricht mit mir.", "Das ist für mich.", "Ich warte auf dich.", "Er spricht mit sie."])
+    expect(writingIssues(text, "de")).toEqual([]);
+  expect(writingIssues("Er spricht mit mich.", "de")[0]?.replacement).toBe("mir");
+  expect(writingIssues("Das ist für mir.", "de")[0]?.replacement).toBe("mich");
+});

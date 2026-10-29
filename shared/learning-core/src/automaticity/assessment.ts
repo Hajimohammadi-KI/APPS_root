@@ -1,4 +1,5 @@
 import { normalizeText } from "../text";
+import { discourseFeedback } from "../discourse";
 import { alignAnswers, describeAnswerEdits } from "./answer-alignment";
 import {
   parseAutomaticityEvent,
@@ -145,7 +146,10 @@ export function assessControlledTask(
     );
     return parseAutomaticityEvent(base, attempt.language) as AssessmentEvent;
   }
-  if (task.answerPolicy !== "closed") return base;
+  if (task.answerPolicy !== "closed") {
+    base.feedback += " " + discourseFeedback(attempt.response.text, attempt.language, "").description;
+    return base;
+  }
   const value = normaliseAnswer(attempt.response.text, task);
   const accepted = task.acceptedAnswers.some(
     (answer) => {

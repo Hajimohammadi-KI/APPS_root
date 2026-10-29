@@ -64,3 +64,8 @@ test("W21 lexical gender and weak noun inflection respect case context", () => {
   expect(writingIssues("Das ist ein Frau.", "de")[0]?.replacement).toBe("eine");
   expect(writingIssues("Ich helfe dem Student.", "de")[0]?.replacement).toBe("Studenten");
 });
+test("W22 relative agreement keeps case determined by the relative clause", () => {
+  expect(writingIssues("Die Frau, der hier wohnt, ist nett.", "de")[0]?.replacement).toBe("die");
+  for (const text of ["Die Frau, der ich helfe, ist nett.", "Die Frau, die hier wohnt, ist nett.", "Die Männer, die hier wohnen, sind nett.", "Das Mädchen, dem ich helfe, ist nett."])
+    expect(writingIssues(text, "de")).toEqual([]);
+});

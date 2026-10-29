@@ -1,6 +1,26 @@
 import { normalizeText, tokenizeText } from "./text";
 import { alignAnswers } from "./automaticity/answer-alignment";
 export { describeAnswerEdits } from "./automaticity/answer-alignment";
+const contrasts = {
+  en: [
+    { words: ["thin", "tin"], phonemes: ["θɪn", "tɪn"] },
+    { words: ["think", "sink"], phonemes: ["θɪŋk", "sɪŋk"] },
+    { words: ["wet", "vet"], phonemes: ["wɛt", "vɛt"] },
+    { words: ["west", "vest"], phonemes: ["wɛst", "vɛst"] },
+    { words: ["ship", "sheep"], phonemes: ["ʃɪp", "ʃiːp"] },
+  ],
+  de: [
+    { words: ["schön", "schon"], phonemes: ["ʃøːn", "ʃoːn"] },
+    { words: ["fühlen", "fielen"], phonemes: ["ˈfyːlən", "ˈfiːlən"] },
+    { words: ["drücken", "drucken"], phonemes: ["ˈdʁʏkən", "ˈdʁʊkən"] },
+    { words: ["ich", "ach"], phonemes: ["ɪç", "ax"] },
+  ],
+} as const;
+/** A small reviewed pronunciation lexicon; no G2P guess for unknown words. */
+export function phoneticPractice(text: string, language: "en" | "de") {
+  const words = new Set(tokenizeText(text).filter(t => t.kind === "word").map(t => t.normalized.toLocaleLowerCase(language)));
+  return contrasts[language].filter(pair => pair.words.some(word => words.has(word))).map(pair => ({ ...pair, diagnosis: null }));
+}
 
 export function compareSpeechTarget(transcript: string, target: string) {
   const words = (s: string) => tokenizeText(s.slice(0, 10000)).filter(t => t.kind === "word").map(t => t.normalized.toLocaleLowerCase()).join(" ");

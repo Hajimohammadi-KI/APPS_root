@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import { compareSpeechTarget, describeAnswerEdits, type RecognitionEvidence } from "@automaticity/learning-core/speech";
+import { compareSpeechTarget, describeAnswerEdits, phoneticPractice, type RecognitionEvidence } from "@automaticity/learning-core/speech";
 export function SpeechPracticePanel({ transcript, evidence, language, onSpeak }: { readonly transcript: string; readonly evidence: RecognitionEvidence | null; readonly language: "en" | "de"; readonly onSpeak: (text: string) => void }) {
  const [target, setTarget] = useState("");
  const en = language === "en";
  const comparison = target.trim() && transcript.trim() ? compareSpeechTarget(transcript, target) : null;
+ const contrasts = phoneticPractice(target || transcript, language);
  return <section className="record-card" aria-label={en ? "Read aloud practice" : "Laut lesen"}>
   <div className="record-main">
    <h3>{en ? "Read aloud practice" : "Laut lesen"}</h3>
@@ -14,6 +15,7 @@ export function SpeechPracticePanel({ transcript, evidence, language, onSpeak }:
    <label>{en ? "Target sentence (optional)" : "Zielsatz (optional)"}<input value={target} maxLength={500} onChange={e => setTarget(e.target.value)} /></label>
    <button type="button" disabled={!target.trim()} onClick={() => onSpeak(target)}>{en ? "Hear target" : "Zielsatz hören"}</button>
    {comparison && <p>{comparison.edits.length ? describeAnswerEdits(comparison.edits, language) : (en ? "The recognized words match the target. Pronunciation still needs listening." : "Die erkannten Wörter entsprechen dem Ziel. Die Aussprache muss weiter angehört werden.")}</p>}
+   {contrasts.length > 0 && <div><p>{en ? "Optional sound contrasts — no pronunciation error has been diagnosed." : "Freiwillige Lautkontraste — es wurde kein Aussprachefehler festgestellt."}</p><ul>{contrasts.map(pair => <li key={pair.words[0]}>{pair.words.join(" / ")} ({pair.phonemes.join(" / ")}) <button type="button" onClick={() => onSpeak(pair.words.join(", "))}>{en ? "Listen" : "Anhören"}</button></li>)}</ul></div>}
   </div>
  </section>;
 }

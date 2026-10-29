@@ -1,6 +1,27 @@
 import { normalizeText, tokenizeText } from "./text";
 import { alignAnswers } from "./automaticity/answer-alignment";
 export { describeAnswerEdits } from "./automaticity/answer-alignment";
+/** Legacy numeric accuracy is a placeholder on unverified evidence, never a grade. */
+export function spokenPracticeEvidence() {
+  return { targetHit: false, accuracyScore: 0, fluencyScore: null, attemptVerified: false } as const;
+}
+export function splitSpokenSentences(source: string): { text: string; start: number; end: number }[] {
+  const result: { text: string; start: number; end: number }[] = [];
+  const abbreviation = /\b(?:Dr|Mr|Mrs|Ms|Prof|bzw|usw|ca|z\.B)\.$/iu;
+  let start = 0;
+  const add = (end: number) => {
+    while (start < end && /\s/u.test(source[start]!)) start++;
+    if (start < end) result.push({ text: source.slice(start, end), start, end });
+    start = end;
+  };
+  for (const match of source.matchAll(/[.!?]+(?=\s|$)/gu)) {
+    const end = match.index + match[0].length;
+    if (abbreviation.test(source.slice(start, end))) continue;
+    add(end);
+  }
+  add(source.trimEnd().length);
+  return result;
+}
 export interface WaveformDescription {
   readonly durationSeconds: number;
   readonly activeSeconds: number;

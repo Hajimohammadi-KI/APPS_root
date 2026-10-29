@@ -1,4 +1,4 @@
-import { RecognitionCollector, describeRecording, type WaveformDescription, type RecognitionEvidence } from "@automaticity/learning-core/speech";
+import { RecognitionCollector, spokenPracticeEvidence, describeRecording, type WaveformDescription, type RecognitionEvidence } from "@automaticity/learning-core/speech";
 import { useEffect, useRef, useState } from "react";
 import {
   appendEvidenceInvalidationToStorage,
@@ -403,11 +403,8 @@ export function useStudioRecorder({
         mode: "speaking",
         inputText: evaluation.original,
         correctedText: evaluation.corrected,
-        targetHit: evaluation.issues.length === 0,
-        accuracyScore: Math.max(0, 100 - evaluation.issues.length * 10),
-        fluencyScore: Math.min(100, wordsPerMinute),
+        ...spokenPracticeEvidence(),
         latencyMs: seconds * 1_000,
-        attemptVerified: true,
         assessedBy: "online",
         sessionMinutes,
         audioCaptured: audioBlobRef.current.size > 0,

@@ -513,7 +513,7 @@ export function buildAttemptVerticalSlice(
       targetHit: input.targetHit,
       accuracyScore: clampScore(input.accuracyScore),
       fluencyScore:
-        input.mode === "speaking" ? clampScore(input.fluencyScore ?? 0) : null,
+        input.mode === "speaking" && input.fluencyScore != null ? clampScore(input.fluencyScore) : null,
     },
     gates: {
       realProduction,

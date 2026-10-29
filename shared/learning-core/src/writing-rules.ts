@@ -12,6 +12,7 @@ export interface WritingIssue {
 }
 const vowelSound = new Set("hour hours hourly honest honestly honour honourable honor honorable heir heiress apple orange egg elephant idea interesting unusual umbrella uncle urgent early old open excellent expensive effective important independent American English".toLowerCase().split(" "));
 const consonantSound = new Set("university universities universal uniform union unique unit united useful user European euro one one-way once book car dog house student teacher friend new good big small young year yellow".toLowerCase().split(" "));
+const properNames = ["Berlin", "London", "Tehran", "Germany", "England", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "January", "February", "March", "April", "June", "July", "August", "September", "October", "November", "December", "English", "German"];
 
 /** High precision, finite lexical scope. Absence of issues never establishes correctness. */
 export function writingIssues(source: string, language: "en" | "de"): WritingIssue[] {
@@ -23,6 +24,12 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
     issues.push({ ruleId, start: token.start, end: token.end, original: token.text, replacement, message });
   };
   if (language === "en") {
+    for (let i = 0; i < tokens.length; i++) {
+      const expected = properNames.find(name => name.toLowerCase() === lower[i]);
+      // March/April/June/August can be names or ordinary words in special contexts.
+      if (expected && !["March", "April", "June", "August"].includes(expected) && tokens[i]!.text === expected.toLowerCase())
+        add(i, expected, "EN_PROPER_NAME", "Capitalize this place, language, day or unambiguous month name.");
+    }
     for (let i = 0; i < tokens.length - 1; i++) {
       if (["advice", "information", "furniture", "equipment", "homework", "luggage", "research"].includes(lower[i+1]!) && ["a", "an", "many", "few"].includes(lower[i]!))
         add(i, "some", "EN_UNCOUNTABLE", "This noun is uncountable in this use; use some or a suitable unit phrase.");

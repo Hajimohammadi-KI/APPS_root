@@ -4,7 +4,9 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
   "use strict";
 
   const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const $$ = (selector, root = document) => [
+    ...root.querySelectorAll(selector),
+  ];
   const levels = ["A1", "A2", "B1", "B2", "C1", "C2"];
   const units = Array.isArray(window.GERMAN_GRAMMAR_UNITS)
     ? window.GERMAN_GRAMMAR_UNITS
@@ -52,9 +54,13 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       .replace(/\s+/g, " ");
 
   // Search remains case-insensitive; assessed German answers do not.
-  const normalizeAnswer = (value) => window.AutomaticityText.normalizeText(String(value ?? ""), { allowOptionalFinalPeriod: true });
+  const normalizeAnswer = (value) =>
+    window.AutomaticityText.normalizeText(String(value ?? ""), {
+      allowOptionalFinalPeriod: true,
+    });
 
-  const detectAnswerLanguage = (text) => window.AutomaticityText.detectTextLanguage(String(text ?? ""));
+  const detectAnswerLanguage = (text) =>
+    window.AutomaticityText.detectTextLanguage(String(text ?? ""));
 
   const readJson = (key, fallback) => {
     try {
@@ -105,7 +111,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         "Die deutschen Beispiele bleiben bis nach deinem eigenen Versuch verborgen.",
       wrongLanguage: "Die Antwort muss auf Deutsch geschrieben werden.",
       feedbackTitle: "Überprüfung deiner Antwort",
-      nearlyCorrect: "Fast richtig. Nur wenige Stellen brauchen eine Korrektur.",
+      nearlyCorrect:
+        "Fast richtig. Nur wenige Stellen brauchen eine Korrektur.",
     },
     English: {
       closedEyebrow: "Closed task · objectively checkable",
@@ -170,8 +177,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       intentEmpty: "ابتدا معنیِ موردنظرت را به فارسی بنویس.",
       intentPersian:
         "مرحلهٔ اول باید دارای متن فارسی باشد تا معنیِ موردنظرت مشخص شود.",
-      incomplete: (minimum) =>
-        `حداقل ${minimum} جملهٔ کامل به آلمانی بنویس.`,
+      incomplete: (minimum) => `حداقل ${minimum} جملهٔ کامل به آلمانی بنویس.`,
       aiNoIssues:
         "راهنمایی هوش مصنوعی: خطایی گزارش نشد. این یک بازخورد است، نه نمرهٔ تأییدشده — تمرین به‌عنوان خودارزیابی ثبت می‌شود.",
       aiRevision:
@@ -184,11 +190,11 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         "هوش مصنوعی آنلاین مجاز یا متصل نیست؛ بنابراین اپ وانمود نمی‌کند که تصحیح کامل انجام شده است.",
       corrected: "صورت اصلاح‌شدهٔ آلمانی",
       acceptedAlternative: "این صورت آلمانی نیز درست است.",
-      exampleLocked:
-        "مثال‌های آلمانی تا پس از تلاش خودت پنهان می‌مانند.",
+      exampleLocked: "مثال‌های آلمانی تا پس از تلاش خودت پنهان می‌مانند.",
       wrongLanguage: "پاسخ باید به آلمانی نوشته شود.",
       feedbackTitle: "بررسی پاسخ شما",
-      nearlyCorrect: "جملهٔ شما تقریباً درست است. فقط چند بخش نیاز به اصلاح دارد.",
+      nearlyCorrect:
+        "جملهٔ شما تقریباً درست است. فقط چند بخش نیاز به اصلاح دارد.",
     },
   };
 
@@ -289,11 +295,31 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
   };
 
   const activeCopy = () => uiCopy[explanationLanguage] || uiCopy.Deutsch;
-  const instructionLanguage = () => ({ Deutsch: "de", English: "en", فارسی: "fa" })[explanationLanguage] || "de";
+  const instructionLanguage = () =>
+    ({ Deutsch: "de", English: "en", فارسی: "fa" })[explanationLanguage] ||
+    "de";
   const navigationCopy = {
-    de: { previous: "← Zurück", next: "Nächste Aufgabe →", hint: "Hinweis", audio: "Aufgabe vorlesen", guide: "Anleitung zur Aufgabe" },
-    en: { previous: "← Previous", next: "Next task →", hint: "Hint", audio: "Read prompt aloud", guide: "How to do this task" },
-    fa: { previous: "تمرین قبلی", next: "تمرین بعدی", hint: "راهنمایی", audio: "خواندن صورت سؤال", guide: "روش انجام تمرین" },
+    de: {
+      previous: "← Zurück",
+      next: "Nächste Aufgabe →",
+      hint: "Hinweis",
+      audio: "Aufgabe vorlesen",
+      guide: "Anleitung zur Aufgabe",
+    },
+    en: {
+      previous: "← Previous",
+      next: "Next task →",
+      hint: "Hint",
+      audio: "Read prompt aloud",
+      guide: "How to do this task",
+    },
+    fa: {
+      previous: "تمرین قبلی",
+      next: "تمرین بعدی",
+      hint: "راهنمایی",
+      audio: "خواندن صورت سؤال",
+      guide: "روش انجام تمرین",
+    },
   };
   const localizedIssueLabel = (type) =>
     (issueLabels[explanationLanguage] || issueLabels.Deutsch)[type] || type;
@@ -315,7 +341,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       .join("")}</ul>`;
   const localizedMessage = (messages) =>
     messages?.[explanationLanguage] || messages?.Deutsch || "";
-  const containsPersian = (value) => /[\u0600-\u06ff]/u.test(String(value ?? ""));
+  const containsPersian = (value) =>
+    /[\u0600-\u06ff]/u.test(String(value ?? ""));
   const exerciseMetadata = (exercise) =>
     exercise?.[2] && typeof exercise[2] === "object" ? exercise[2] : null;
   const isOpenProduction = (exercise) =>
@@ -332,7 +359,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
   const countWords = (value) =>
     String(value ?? "").match(/[\p{Letter}\p{Number}'’-]+/gu)?.length || 0;
   const localizedDimensions = (metadata) => {
-    const labels = dimensionLabels[explanationLanguage] || dimensionLabels.Deutsch;
+    const labels =
+      dimensionLabels[explanationLanguage] || dimensionLabels.Deutsch;
     return (metadata?.feedbackDimensions || [])
       .map((dimension) => labels[dimension] || dimension)
       .join(", ");
@@ -360,7 +388,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
             signature,
             level: unit.level,
             topic: unit.title,
-            contentType: metadata?.contentType || unit.contentType || "sentence",
+            contentType:
+              metadata?.contentType || unit.contentType || "sentence",
             category,
             corrected,
             occurrences: 1,
@@ -372,48 +401,69 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
 
   const answerLanguageFeedback = (answer, candidates = []) => {
     // Known closed forms can disambiguate short answers; models for open tasks cannot.
-    const knownForm = candidates.some((candidate) =>
-      normalizeAnswer(candidate).toLocaleLowerCase("de-DE") === normalizeAnswer(answer).toLocaleLowerCase("de-DE"),
+    const knownForm = candidates.some(
+      (candidate) =>
+        normalizeAnswer(candidate).toLocaleLowerCase("de-DE") ===
+        normalizeAnswer(answer).toLocaleLowerCase("de-DE"),
     );
     const language = knownForm ? "de" : detectAnswerLanguage(answer);
     if (language === "de") return null;
     const uncertain = language === "other";
     return {
       status: uncertain ? "language_uncertain" : "wrong_language",
-      points: [{
-        type: uncertain ? "check" : "wrong_language",
-        message: uncertain
-          ? localizedMessage({
-              Deutsch: "Die Sprache lässt sich hier nicht sicher erkennen. Die Antwort wurde noch nicht bewertet. Bitte ergänze etwas Kontext oder lass sie prüfen.",
-              English: "The language is unclear, so this answer is not assessed. Add some context or have it reviewed.",
-              فارسی: "زبان پاسخ روشن نیست و هنوز ارزیابی نشده است. کمی زمینه اضافه کن یا پاسخ را برای بررسی ارائه بده.",
-            })
-          : activeCopy().wrongLanguage,
-      }],
+      points: [
+        {
+          type: uncertain ? "check" : "wrong_language",
+          message: uncertain
+            ? localizedMessage({
+                Deutsch:
+                  "Die Sprache lässt sich hier nicht sicher erkennen. Die Antwort wurde noch nicht bewertet. Bitte ergänze etwas Kontext oder lass sie prüfen.",
+                English:
+                  "The language is unclear, so this answer is not assessed. Add some context or have it reviewed.",
+                فارسی:
+                  "زبان پاسخ روشن نیست و هنوز ارزیابی نشده است. کمی زمینه اضافه کن یا پاسخ را برای بررسی ارائه بده.",
+              })
+            : activeCopy().wrongLanguage,
+        },
+      ],
     };
   };
 
   const localClosedFeedback = (answer, expected) => {
     const hasLocationCaseError = /\bin meine (straße|strasse)\b/iu.test(answer);
     const hasSupermarket = /\b(supermarkt|spermarket)\b/iu.test(answer);
-    if (hasLocationCaseError && /\b(gibt es|es gibt)\b/iu.test(answer) && hasSupermarket) {
+    if (
+      hasLocationCaseError &&
+      /\b(gibt es|es gibt)\b/iu.test(answer) &&
+      hasSupermarket
+    ) {
       const points = [
         {
           type: "case",
           message: localizedMessage({
-            Deutsch: "In meine Straße ❌ → In meiner Straße ✅. Bei einem festen Ort steht „in“ mit dem Dativ.",
-            English: "In meine Straße ❌ → In meiner Straße ✅. A fixed location uses „in“ with the dative.",
-            فارسی: "In meine Straße ❌ → In meiner Straße ✅. مکان ثابت: in + Dativ.",
+            Deutsch:
+              "In meine Straße ❌ → In meiner Straße ✅. Bei einem festen Ort steht „in“ mit dem Dativ.",
+            English:
+              "In meine Straße ❌ → In meiner Straße ✅. A fixed location uses „in“ with the dative.",
+            فارسی:
+              "In meine Straße ❌ → In meiner Straße ✅. مکان ثابت: in + Dativ.",
           }),
         },
       ];
-      if (/\b(gibt es|es gibt) (ein|eine) (supermarkt|spermarket)\b/iu.test(answer)) {
+      if (
+        /\b(gibt es|es gibt) (ein|eine) (supermarkt|spermarket)\b/iu.test(
+          answer,
+        )
+      ) {
         points.push({
           type: "case",
           message: localizedMessage({
-            Deutsch: "„eine Supermarkt“ ❌ → „einen Supermarkt“ ✅. Supermarkt ist maskulin und steht nach „es gibt“ im Akkusativ.",
-            English: "“eine Supermarkt” ❌ → “einen Supermarkt” ✅. Supermarkt is masculine and takes the accusative after “es gibt”.",
-            فارسی: "«eine Supermarkt» ❌ → «einen Supermarkt» ✅. Supermarkt مذکر است و پس از «es gibt» در Akkusativ می‌آید.",
+            Deutsch:
+              "„eine Supermarkt“ ❌ → „einen Supermarkt“ ✅. Supermarkt ist maskulin und steht nach „es gibt“ im Akkusativ.",
+            English:
+              "“eine Supermarkt” ❌ → “einen Supermarkt” ✅. Supermarkt is masculine and takes the accusative after “es gibt”.",
+            فارسی:
+              "«eine Supermarkt» ❌ → «einen Supermarkt» ✅. Supermarkt مذکر است و پس از «es gibt» در Akkusativ می‌آید.",
           }),
         });
       }
@@ -434,17 +484,25 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       };
     }
     if (/\bich sehe der mann\b/iu.test(answer)) {
-      const highlighted = '<span class="feedback-error-token">der Mann</span> → <span class="feedback-correct-token">den Mann</span>';
+      const highlighted =
+        '<span class="feedback-error-token">der Mann</span> → <span class="feedback-correct-token">den Mann</span>';
       return {
         status: "nearly_correct",
-        points: [{
-          type: "case",
-          html: `${highlighted}. ${escapeHtml(localizedMessage({
-            Deutsch: "„Mann“ ist das direkte Objekt von „sehen“ und steht deshalb im Akkusativ.",
-            English: "“Mann” is the direct object of “sehen”, so it takes the accusative.",
-            فارسی: "«Mann» مفعول مستقیمِ «sehen» است و باید در حالت Akkusativ بیاید.",
-          }))}`,
-        }],
+        points: [
+          {
+            type: "case",
+            html: `${highlighted}. ${escapeHtml(
+              localizedMessage({
+                Deutsch:
+                  "„Mann“ ist das direkte Objekt von „sehen“ und steht deshalb im Akkusativ.",
+                English:
+                  "“Mann” is the direct object of “sehen”, so it takes the accusative.",
+                فارسی:
+                  "«Mann» مفعول مستقیمِ «sehen» است و باید در حالت Akkusativ بیاید.",
+              }),
+            )}`,
+          },
+        ],
         corrected: "Ich sehe den Mann.",
       };
     }
@@ -456,9 +514,12 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
             type: "case",
             html: '<span class="feedback-error-token">der Mann</span> → <span class="feedback-correct-token">dem Mann</span>; <span class="feedback-error-token">dem Buch</span> → <span class="feedback-correct-token">das Buch</span>.',
             message: localizedMessage({
-              Deutsch: "Bei „geben“ ist der Empfänger Dativ und die gegebene Sache Akkusativ.",
-              English: "With “geben”, the recipient is dative and the thing given is accusative.",
-              فارسی: "در فعل «geben»، گیرنده در حالت Dativ و چیزی که داده می‌شود در حالت Akkusativ است.",
+              Deutsch:
+                "Bei „geben“ ist der Empfänger Dativ und die gegebene Sache Akkusativ.",
+              English:
+                "With “geben”, the recipient is dative and the thing given is accusative.",
+              فارسی:
+                "در فعل «geben»، گیرنده در حالت Dativ و چیزی که داده می‌شود در حالت Akkusativ است.",
             }),
           },
           {
@@ -503,8 +564,10 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         {
           type: "meaning",
           message: localizedMessage({
-            Deutsch: "Die deutsche Antwort passt noch nicht vollständig zur verlangten Bedeutung.",
-            English: "The German answer does not yet fully match the required meaning.",
+            Deutsch:
+              "Die deutsche Antwort passt noch nicht vollständig zur verlangten Bedeutung.",
+            English:
+              "The German answer does not yet fully match the required meaning.",
             فارسی: "پاسخ آلمانی هنوز کاملاً با معنای خواسته‌شده مطابقت ندارد.",
           }),
         },
@@ -686,12 +749,9 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       points.push({
         type: "case",
         message: localizedMessage({
-          Deutsch:
-            `„${supermarketArticle}“ → „einen“: Supermarkt ist maskulin und steht nach „es gibt“ im Akkusativ.`,
-          English:
-            `“${supermarketArticle}” → “einen”: Supermarkt is masculine and takes the accusative after “es gibt”.`,
-          فارسی:
-            `«${supermarketArticle}» → «einen»؛ Supermarkt مذکر است و پس از «es gibt» در حالت Akkusativ می‌آید.`,
+          Deutsch: `„${supermarketArticle}“ → „einen“: Supermarkt ist maskulin und steht nach „es gibt“ im Akkusativ.`,
+          English: `“${supermarketArticle}” → “einen”: Supermarkt is masculine and takes the accusative after “es gibt”.`,
+          فارسی: `«${supermarketArticle}» → «einen»؛ Supermarkt مذکر است و پس از «es gibt» در حالت Akkusativ می‌آید.`,
         }),
       });
     }
@@ -720,10 +780,9 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     }
     if (!points.length) return null;
     return {
-      corrected:
-        /\b(?:supermarkt|spermarket)\b/u.test(normalizedAnswer)
-          ? "Es gibt einen Supermarkt in meiner Straße."
-          : "",
+      corrected: /\b(?:supermarkt|spermarket)\b/u.test(normalizedAnswer)
+        ? "Es gibt einen Supermarkt in meiner Straße."
+        : "",
       points,
     };
   };
@@ -731,7 +790,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
   const progress = readJson(progressKey, {});
   const unitKey = (unit) => `${unit.level}:${unit.title}`;
   const completedFor = (unit) => progress[unitKey(unit)] || [];
-  const saveProgress = () => localStorage.setItem(progressKey, JSON.stringify(progress));
+  const saveProgress = () =>
+    localStorage.setItem(progressKey, JSON.stringify(progress));
 
   const notify = (message) => {
     const toast = $("#toast");
@@ -759,7 +819,10 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       ["Form bilden", renderCardBody(explanation.formation, unit.rule)],
       ["Verwendung", renderCardBody(explanation.usage, unit.rule)],
       ["Satzstellung", renderCardBody(explanation.wordOrder, unit.rule)],
-      ["Transfer", renderCardBody(null, explanation.memoryTip || unit.transferTest)],
+      [
+        "Transfer",
+        renderCardBody(null, explanation.memoryTip || unit.transferTest),
+      ],
     ];
     $("#ruleBody").innerHTML = `
       <p class="rule-intro">${escapeHtml(unit.rule)}</p>
@@ -799,21 +862,35 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
   const renderExercise = () => {
     const unit = currentUnit();
     if (!unit) return;
-    const exercises = Array.isArray(unit.exercises) && unit.exercises.length
-      ? unit.exercises
-      : [[unit.recallTest || `Bilde einen Satz mit ${unit.title}.`, unit.testAnswer || unit.examples?.[0] || ""]];
+    const exercises =
+      Array.isArray(unit.exercises) && unit.exercises.length
+        ? unit.exercises
+        : [
+            [
+              unit.recallTest || `Bilde einen Satz mit ${unit.title}.`,
+              unit.testAnswer || unit.examples?.[0] || "",
+            ],
+          ];
     exerciseIndex = Math.max(0, Math.min(exerciseIndex, exercises.length - 1));
     const exercise = exercises[exerciseIndex];
     const metadata = exerciseMetadata(exercise);
     const open = isOpenProduction(exercise);
-    const requiresLearnerIntentFa =
-      metadata?.requiresLearnerIntentFa === true;
+    const requiresLearnerIntentFa = metadata?.requiresLearnerIntentFa === true;
     const copy = activeCopy();
     renderExamples(unit, !open);
     const language = instructionLanguage();
-    window.languageWriting.render($("#exercisePrompt"), localizedExerciseText(exercise, "prompt", exercise[0]), language);
+    window.languageWriting.render(
+      $("#exercisePrompt"),
+      localizedExerciseText(exercise, "prompt", exercise[0]),
+      language,
+    );
     const nav = navigationCopy[language];
-    for (const [id, text] of [["previousBtn", nav.previous], ["nextBtn", nav.next], ["hintBtn", nav.hint], ["writingGuideTitle", nav.guide]]) {
+    for (const [id, text] of [
+      ["previousBtn", nav.previous],
+      ["nextBtn", nav.next],
+      ["hintBtn", nav.hint],
+      ["writingGuideTitle", nav.guide],
+    ]) {
       const element = $(`#${id}`);
       element.textContent = text;
       element.lang = language;
@@ -821,12 +898,21 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     }
     $("#audioBtn").setAttribute("aria-label", nav.audio);
     $("#audioBtn").lang = language;
-    for (const id of ["exerciseEyebrow", "intentLabel", "intentHelp", "answerLabel", "checkBtn", "feedback"]) {
+    for (const id of [
+      "exerciseEyebrow",
+      "intentLabel",
+      "intentHelp",
+      "answerLabel",
+      "checkBtn",
+      "feedback",
+    ]) {
       const element = $(`#${id}`);
       element.lang = language;
       element.dir = language === "fa" ? "rtl" : "ltr";
     }
-    $$("#ruleReference, .accordion-list details").forEach(panel => { panel.open = false; });
+    $$("#ruleReference, .accordion-list details").forEach((panel) => {
+      panel.open = false;
+    });
     $("#exerciseEyebrow").textContent = open
       ? copy.openEyebrow
       : isRecitationExercise(unit, exercise)
@@ -880,7 +966,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         <li>Sprich den korrigierten Satz laut.</li>
         <li>Verwende ${escapeHtml(unit.title)} danach in einem eigenen, wahren Satz.</li>
       </ol>`;
-    const extraModel = (unit.examples || [])[1] || (unit.examples || [])[0] || unit.rule;
+    const extraModel =
+      (unit.examples || [])[1] || (unit.examples || [])[0] || unit.rule;
     $("#resourcesContent").innerHTML = `
       <p><strong>Zusätzliche freie Übung; das Beispiel dient nur als Inspiration:</strong></p>
       <ol>
@@ -909,11 +996,23 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         const levelUnits = units
           .map((unit, index) => ({ unit, index }))
           .filter(({ unit }) => unit.level === level)
-          .filter(({ unit }) => !needle || normalize(`${unit.title} ${unit.rule}`).includes(needle));
+          .filter(
+            ({ unit }) =>
+              !needle ||
+              normalize(`${unit.title} ${unit.rule}`).includes(needle),
+          );
         if (!levelUnits.length) return "";
-        const done = levelUnits.reduce((sum, { unit }) => sum + completedFor(unit).length, 0);
-        const total = levelUnits.reduce((sum, { unit }) => sum + Math.max(1, unit.exercises?.length || 1), 0);
-        const selectedInLevel = levelUnits.some(({ index }) => index === selectedIndex);
+        const done = levelUnits.reduce(
+          (sum, { unit }) => sum + completedFor(unit).length,
+          0,
+        );
+        const total = levelUnits.reduce(
+          (sum, { unit }) => sum + Math.max(1, unit.exercises?.length || 1),
+          0,
+        );
+        const selectedInLevel = levelUnits.some(
+          ({ index }) => index === selectedIndex,
+        );
         return `
           <details class="level" ${selectedInLevel || needle ? "open" : ""}>
             <summary>
@@ -945,12 +1044,17 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       resultStatus.setAttribute("role", "status");
       $("#topicSearch").closest(".catalog-tools").after(resultStatus);
     }
-    resultStatus.textContent = needle ? (resultCount ? `${resultCount} passende Themen` : "Keine passenden Themen. Versuche einen anderen Suchbegriff.") : "";
+    resultStatus.textContent = needle
+      ? resultCount
+        ? `${resultCount} passende Themen`
+        : "Keine passenden Themen. Versuche einen anderen Suchbegriff."
+      : "";
     $$(".topic", list).forEach((button) => {
       button.addEventListener("click", () => {
         selectedIndex = Number(button.dataset.index);
         renderLesson();
-        if (window.innerWidth <= 620) $(".content")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (window.innerWidth <= 620)
+          $(".content")?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
   };
@@ -959,7 +1063,10 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     if (!dailyContext) return;
     const session = readJson(dailySessionKey, {});
     const completedActivities = [
-      ...new Set([...(session.completedActivities || []), dailyContext.activity]),
+      ...new Set([
+        ...(session.completedActivities || []),
+        dailyContext.activity,
+      ]),
     ];
     localStorage.setItem(
       dailySessionKey,
@@ -978,7 +1085,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     progress[key] = [...new Set([...(progress[key] || []), exerciseIndex])];
     saveProgress();
     renderCatalog();
-    $(".crumbs .foundations").textContent = `${progress[key].length}/${unit.exercises.length} Übungen`;
+    $(".crumbs .foundations").textContent =
+      `${progress[key].length}/${unit.exercises.length} Übungen`;
     if (progress[key].length === unit.exercises.length) markDailyComplete();
     return progress[key].length;
   };
@@ -987,7 +1095,10 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     if (checkingOpenProduction) return;
     const unit = currentUnit();
     if (!unit) return;
-    const exercise = unit.exercises?.[exerciseIndex] || [unit.recallTest, unit.testAnswer];
+    const exercise = unit.exercises?.[exerciseIndex] || [
+      unit.recallTest,
+      unit.testAnswer,
+    ];
     const learnerIntentFa = $("#intentInput").value.trim();
     const answer = $("#answerInput").value.trim();
     const expected = exercise[1] || unit.testAnswer || unit.examples?.[0] || "";
@@ -1021,12 +1132,34 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       return;
     }
 
-    try { saveOpenResponse(unit, exercise, learnerIntentFa, answer, open ? "submitted-unassessed" : "guided-practice"); }
-    catch { feedback.className="feedback show bad"; feedback.textContent="Deine Antwort konnte nicht gespeichert werden. Lass diesen Tab offen und exportiere eine Sicherung."; return; }
-    const acceptedAnswers = open ? [] : [expected, ...(Array.isArray(metadata?.acceptedAnswers) ? metadata.acceptedAnswers : [])];
+    try {
+      saveOpenResponse(
+        unit,
+        exercise,
+        learnerIntentFa,
+        answer,
+        open ? "submitted-unassessed" : "guided-practice",
+      );
+    } catch {
+      feedback.className = "feedback show bad";
+      feedback.textContent =
+        "Deine Antwort konnte nicht gespeichert werden. Lass diesen Tab offen und exportiere eine Sicherung.";
+      return;
+    }
+    const acceptedAnswers = open
+      ? []
+      : [
+          expected,
+          ...(Array.isArray(metadata?.acceptedAnswers)
+            ? metadata.acceptedAnswers
+            : []),
+        ];
     const languageFeedback = answerLanguageFeedback(answer, acceptedAnswers);
     if (languageFeedback) {
-      feedback.className = languageFeedback.status === "language_uncertain" ? "feedback show" : "feedback show bad";
+      feedback.className =
+        languageFeedback.status === "language_uncertain"
+          ? "feedback show"
+          : "feedback show bad";
       feedback.innerHTML = renderFeedbackPoints(languageFeedback.points);
       return;
     }
@@ -1093,21 +1226,23 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         drafts.markAssisted();
         const completed = markExerciseComplete(unit);
         feedback.className = "feedback show";
-        feedback.innerHTML = `<strong>${escapeHtml(copy.selfCheck)}</strong>${renderFeedbackPoints([
-          { type: "check", message: copy.aiUnavailable },
-          {
-            type: "meaning",
-            message: `${learnerIntentFa} ↔ ${answer}`,
-          },
-          {
-            type: "check",
-            message: `${copy.dimensions}: ${localizedDimensions(metadata)}`,
-          },
-          {
-            type: "model",
-            message: `${copy.inspiration} ${expected}`,
-          },
-        ])}`;
+        feedback.innerHTML = `<strong>${escapeHtml(copy.selfCheck)}</strong>${renderFeedbackPoints(
+          [
+            { type: "check", message: copy.aiUnavailable },
+            {
+              type: "meaning",
+              message: `${learnerIntentFa} ↔ ${answer}`,
+            },
+            {
+              type: "check",
+              message: `${copy.dimensions}: ${localizedDimensions(metadata)}`,
+            },
+            {
+              type: "model",
+              message: `${copy.inspiration} ${expected}`,
+            },
+          ],
+        )}`;
         notify(`${completed}/${unit.exercises.length}`);
         return;
       }
@@ -1136,7 +1271,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     const correct = recitation
       ? answer.trim().length > 0
       : acceptedAnswers.some(
-          (acceptedAnswer) => normalizeAnswer(answer) === normalizeAnswer(acceptedAnswer),
+          (acceptedAnswer) =>
+            normalizeAnswer(answer) === normalizeAnswer(acceptedAnswer),
         );
     feedback.className = `feedback show ${correct ? "good" : "bad"}`;
     if (recitation) {
@@ -1177,7 +1313,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     }
     const completed = markExerciseComplete(unit);
     if (!recitation) {
-      const usedAlternative = normalizeAnswer(answer) !== normalizeAnswer(expected);
+      const usedAlternative =
+        normalizeAnswer(answer) !== normalizeAnswer(expected);
       const correctRulePoints =
         unit.title === "es gibt mit Akkusativ"
           ? [
@@ -1194,7 +1331,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
                 message: localizedMessage({
                   Deutsch: "Einen Supermarkt: es gibt verlangt den Akkusativ.",
                   English: "Einen Supermarkt: es gibt requires the accusative.",
-                  فارسی: "Einen Supermarkt: پس از es gibt حالت Akkusativ می‌آید.",
+                  فارسی:
+                    "Einen Supermarkt: پس از es gibt حالت Akkusativ می‌آید.",
                 }),
               },
             ]
@@ -1218,7 +1356,11 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang =
-      language === "English" ? "en-US" : language === "فارسی" ? "fa-IR" : "de-DE";
+      language === "English"
+        ? "en-US"
+        : language === "فارسی"
+          ? "fa-IR"
+          : "de-DE";
     speechSynthesis.speak(utterance);
   };
 
@@ -1231,24 +1373,35 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       dir: "ltr",
       html: "<strong>How to work:</strong> In a translation task, the app provides the Persian source sentence and you write only the German version. Only open tasks ask you to define your own meaning in Persian first. Errors are separated into bullet points. Without approved, connected AI, the app provides an honest self-check instead of pretending to correct every response.",
     },
-    "فارسی": {
+    فارسی: {
       dir: "rtl",
       html: "<strong>روش انجام تمرین:</strong> در تمرین ترجمه، اپ جملهٔ فارسی را می‌دهد و تو فقط ترجمهٔ آلمانی را می‌نویسی. فقط در تمرین باز، ابتدا معنیِ انتخابی خودت را به فارسی مشخص می‌کنی. هر خطا در یک بولت جدا توضیح داده می‌شود. بدون هوش مصنوعیِ متصل و مجاز، اپ به‌جای تصحیح ساختگی یک خودارزیابی صادقانه نشان می‌دهد.",
     },
   };
 
   const setupLearningControls = () => {
-    const selectedTime = localStorage.getItem("deutsch-automaticity:study-time") || "15";
-    const selectedLanguage = localStorage.getItem("deutsch-automaticity:explanation-language") || "فارسی"; // R77: Persian guidance until the learner chooses otherwise
+    const selectedTime =
+      localStorage.getItem("deutsch-automaticity:study-time") || "15";
+    const selectedLanguage =
+      localStorage.getItem("deutsch-automaticity:explanation-language") ||
+      "فارسی"; // R77: Persian guidance until the learner chooses otherwise
     const renderTime = (value) => {
       $("#timeSummary").textContent = `${value} Minuten`;
       $("#timeChoices").innerHTML = [10, 15, 20, 25, 30, 40, 50, 60]
-        .map((time) => `<button type="button" class="learning-choice ${String(time) === String(value) ? "active" : ""}" data-time="${time}">${time} Min.</button>`)
+        .map(
+          (time) =>
+            `<button type="button" class="learning-choice ${String(time) === String(value) ? "active" : ""}" data-time="${time}">${time} Min.</button>`,
+        )
         .join("");
-      $$("[data-time]").forEach((button) => button.addEventListener("click", () => {
-        localStorage.setItem("deutsch-automaticity:study-time", button.dataset.time);
-        renderTime(button.dataset.time);
-      }));
+      $$("[data-time]").forEach((button) =>
+        button.addEventListener("click", () => {
+          localStorage.setItem(
+            "deutsch-automaticity:study-time",
+            button.dataset.time,
+          );
+          renderTime(button.dataset.time);
+        }),
+      );
     };
     const renderLanguage = (value) => {
       explanationLanguage = languageGuides[value] ? value : "Deutsch";
@@ -1258,13 +1411,21 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       $("#honovrGuide").lang = instructionLanguage();
       $("#honovrGuide").innerHTML = guide.html;
       $("#languageChoices").innerHTML = Object.keys(languageGuides)
-        .map((language) => `<button type="button" class="learning-choice ${language === explanationLanguage ? "active" : ""}" data-language="${language}">${language}</button>`)
+        .map(
+          (language) =>
+            `<button type="button" class="learning-choice ${language === explanationLanguage ? "active" : ""}" data-language="${language}">${language}</button>`,
+        )
         .join("");
-      $$("[data-language]").forEach((button) => button.addEventListener("click", () => {
-        localStorage.setItem("deutsch-automaticity:explanation-language", button.dataset.language);
-        renderLanguage(button.dataset.language);
-        renderExercise();
-      }));
+      $$("[data-language]").forEach((button) =>
+        button.addEventListener("click", () => {
+          localStorage.setItem(
+            "deutsch-automaticity:explanation-language",
+            button.dataset.language,
+          );
+          renderLanguage(button.dataset.language);
+          renderExercise();
+        }),
+      );
     };
     renderTime(selectedTime);
     renderLanguage(selectedLanguage);
@@ -1272,27 +1433,60 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
 
   const setup = () => {
     if (!units.length) {
-      $("#levelList").innerHTML = '<p role="alert">Der vollständige Grammatikkatalog konnte nicht geladen werden.</p>';
+      $("#levelList").innerHTML =
+        '<p role="alert">Der vollständige Grammatikkatalog konnte nicht geladen werden.</p>';
       $("#unitCount").textContent = "0";
       return;
     }
 
     $("#unitCount").textContent = String(units.length);
     const requestedTopic = dailyContext?.topic || params.get("topic") || "";
-    const requestedIndex = units.findIndex((unit) => normalize(unit.title) === normalize(requestedTopic));
-    const requestedLevelIndex = units.findIndex((unit) => unit.level === (dailyContext?.level || params.get("level")));
-    selectedIndex = requestedIndex >= 0 ? requestedIndex : requestedLevelIndex >= 0 ? requestedLevelIndex : 0;
+    const requestedIndex = units.findIndex(
+      (unit) => normalize(unit.title) === normalize(requestedTopic),
+    );
+    const requestedLevelIndex = units.findIndex(
+      (unit) => unit.level === (dailyContext?.level || params.get("level")),
+    );
+    selectedIndex =
+      requestedIndex >= 0
+        ? requestedIndex
+        : requestedLevelIndex >= 0
+          ? requestedLevelIndex
+          : 0;
 
     window.createLanguageDrawer($("#sidebar"), $("#menuBtn"), $("#scrim"));
-    drafts = window.createGrammarDrafts({ language:"de", answer:$("#answerInput"), intent:$("#intentInput"), onError:()=>{
-      const feedback=$("#feedback"); feedback.className="feedback show bad"; feedback.textContent="Dein Entwurf konnte nicht gespeichert oder wiederhergestellt werden. Lass diesen Tab offen und exportiere eine Sicherung.";
-    }});
-    $$("#ruleReference, .accordion-list details").forEach(panel=>panel.addEventListener("toggle",()=>{if(panel.open) drafts.markAssisted();}));
-    $("#topicSearch")?.addEventListener("input", (event) => renderCatalog(event.target.value));
+    drafts = window.createGrammarDrafts({
+      language: "de",
+      answer: $("#answerInput"),
+      intent: $("#intentInput"),
+      onError: () => {
+        const feedback = $("#feedback");
+        feedback.className = "feedback show bad";
+        feedback.textContent =
+          "Dein Entwurf konnte nicht gespeichert oder wiederhergestellt werden. Lass diesen Tab offen und exportiere eine Sicherung.";
+      },
+    });
+    $$("#ruleReference, .accordion-list details").forEach((panel) =>
+      panel.addEventListener("toggle", () => {
+        if (panel.open) drafts.markAssisted();
+      }),
+    );
+    $("#topicSearch")?.addEventListener("input", (event) =>
+      renderCatalog(event.target.value),
+    );
     $("#checkBtn")?.addEventListener("click", checkAnswer);
-    $("#answerInput")?.addEventListener("keydown", (event) => event.key === "Enter" && checkAnswer());
-    $("#previousBtn")?.addEventListener("click", () => { exerciseIndex -= 1; renderExercise(); });
-    $("#nextBtn")?.addEventListener("click", () => { exerciseIndex += 1; renderExercise(); });
+    $("#answerInput")?.addEventListener(
+      "keydown",
+      (event) => event.key === "Enter" && checkAnswer(),
+    );
+    $("#previousBtn")?.addEventListener("click", () => {
+      exerciseIndex -= 1;
+      renderExercise();
+    });
+    $("#nextBtn")?.addEventListener("click", () => {
+      exerciseIndex += 1;
+      renderExercise();
+    });
     $("#hintBtn")?.addEventListener("click", () => {
       drafts.markAssisted();
       const unit = currentUnit();
@@ -1307,14 +1501,29 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       window.languageWriting.render(feedback, hint, instructionLanguage());
       notify(hint);
     });
-    $("#audioBtn")?.addEventListener("click", () => speak($("#exercisePrompt").textContent));
+    $("#audioBtn")?.addEventListener("click", () =>
+      speak($("#exercisePrompt").textContent),
+    );
     $("[data-action='use-today']")?.addEventListener("click", () => {
       const unit = currentUnit();
-      localStorage.setItem("deutsch-automaticity:today-grammar", JSON.stringify({ level: unit.level, topic: unit.title, updatedAt: new Date().toISOString() }));
+      localStorage.setItem(
+        "deutsch-automaticity:today-grammar",
+        JSON.stringify({
+          level: unit.level,
+          topic: unit.title,
+          updatedAt: new Date().toISOString(),
+        }),
+      );
       location.href = `/heute?from=grammar&level=${encodeURIComponent(unit.level)}&topic=${encodeURIComponent(unit.title)}`;
     });
-    $("[data-action='help']")?.addEventListener("click", () => notify("Wähle links ein Niveau und ein Thema. Bearbeite danach die Aufgaben der Reihe nach."));
-    $("[data-action='install']")?.addEventListener("click", () => location.assign("/support"));
+    $("[data-action='help']")?.addEventListener("click", () =>
+      notify(
+        "Wähle links ein Niveau und ein Thema. Bearbeite danach die Aufgaben der Reihe nach.",
+      ),
+    );
+    $("[data-action='install']")?.addEventListener("click", () =>
+      location.assign("/support"),
+    );
 
     const rulerButton = $("#rulerBtn");
     const ruler = $("#readingRuler");
@@ -1325,17 +1534,27 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       ruler?.setAttribute("aria-hidden", String(!active));
     });
     document.addEventListener("pointermove", (event) => {
-      if (document.body.classList.contains("ruler-active") && ruler) ruler.style.top = `${event.clientY - 18}px`;
+      if (document.body.classList.contains("ruler-active") && ruler)
+        ruler.style.top = `${event.clientY - 18}px`;
     });
 
-    $("#dailyReturnBtn")?.addEventListener("click", () => { location.href = dailyContext?.returnTo || "/heute"; });
-    $("#dailyRepeatBtn")?.addEventListener("click", () => { $("#dailyCompleteDialog")?.close(); exerciseIndex = 0; renderExercise(); });
-    $("#dailyMistakesBtn")?.addEventListener("click", () => { location.href = "/fehler"; });
+    $("#dailyReturnBtn")?.addEventListener("click", () => {
+      location.href = dailyContext?.returnTo || "/heute";
+    });
+    $("#dailyRepeatBtn")?.addEventListener("click", () => {
+      $("#dailyCompleteDialog")?.close();
+      exerciseIndex = 0;
+      renderExercise();
+    });
+    $("#dailyMistakesBtn")?.addEventListener("click", () => {
+      location.href = "/fehler";
+    });
 
     setupLearningControls();
     renderLesson();
   };
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setup, { once: true });
+  if (document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", setup, { once: true });
   else setup();
 })();

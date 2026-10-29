@@ -154,7 +154,33 @@ export function writingIssues(
         );
     }
     for (let i = 0; i < tokens.length - 1; i++) {
-      const indicative = ["know", "knows", "knew", "think", "thinks", "thought", "believe", "believes", "believed", "because", "although", "when"].includes(lower[i - 1] ?? "") || (lower[i-1] === "that" && ["know", "knows", "knew", "think", "thinks", "thought", "believe", "believes", "believed"].includes(lower[i-2] ?? ""));
+      const indicative =
+        [
+          "know",
+          "knows",
+          "knew",
+          "think",
+          "thinks",
+          "thought",
+          "believe",
+          "believes",
+          "believed",
+          "because",
+          "although",
+          "when",
+        ].includes(lower[i - 1] ?? "") ||
+        (lower[i - 1] === "that" &&
+          [
+            "know",
+            "knows",
+            "knew",
+            "think",
+            "thinks",
+            "thought",
+            "believe",
+            "believes",
+            "believed",
+          ].includes(lower[i - 2] ?? ""));
       if (i > 0 && !/[.!?]/u.test(tokens[i - 1]!.text) && !indicative) continue;
       const subject = lower[i]!,
         verb = lower[i + 1]!;
@@ -340,9 +366,39 @@ export function writingIssues(
         end++;
       const phrase = lower.slice(i + 1, end).join(" ");
       const finalParticiple = lower[end - 1] ?? "";
-      const interveningFinite = lower.slice(i + 1, end - 1).some(word => ["bin", "bist", "ist", "sind", "seid", "habe", "hast", "hat", "haben", "habt", "sei", "seien", "war", "waren", "wäre", "wären"].includes(word));
+      const interveningFinite = lower
+        .slice(i + 1, end - 1)
+        .some((word) =>
+          [
+            "bin",
+            "bist",
+            "ist",
+            "sind",
+            "seid",
+            "habe",
+            "hast",
+            "hat",
+            "haben",
+            "habt",
+            "sei",
+            "seien",
+            "war",
+            "waren",
+            "wäre",
+            "wären",
+          ].includes(word),
+        );
       if (
-        (!interveningFinite && ["gegangen", "gekommen", "geblieben", "gereist", "aufgestanden", "eingeschlafen", "geworden"].includes(finalParticiple)) ||
+        (!interveningFinite &&
+          [
+            "gegangen",
+            "gekommen",
+            "geblieben",
+            "gereist",
+            "aufgestanden",
+            "eingeschlafen",
+            "geworden",
+          ].includes(finalParticiple)) ||
         /^(?:(?:heute|gestern|schon|bereits|nicht) )?(?:gegangen|gekommen|geblieben|aufgestanden|eingeschlafen|geworden)$/u.test(
           phrase,
         ) ||

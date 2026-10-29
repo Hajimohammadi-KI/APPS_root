@@ -14,7 +14,9 @@ import {
   parseConstruction,
 } from "./construction-rules";
 export function normaliseAnswer(text: string, task: PracticeTask): string {
-  return normalizeText(text, { allowOptionalFinalPeriod: task.normalisation.terminalFullStop });
+  return normalizeText(text, {
+    allowOptionalFinalPeriod: task.normalisation.terminalFullStop,
+  });
 }
 /** Practice feedback is independent of approved mastery/evaluator scope. */
 export function assessControlledTask(
@@ -147,19 +149,23 @@ export function assessControlledTask(
     return parseAutomaticityEvent(base, attempt.language) as AssessmentEvent;
   }
   if (task.answerPolicy !== "closed") {
-    base.feedback += " " + discourseFeedback(attempt.response.text, attempt.language, "").description;
+    base.feedback +=
+      " " +
+      discourseFeedback(attempt.response.text, attempt.language, "")
+        .description;
     return base;
   }
   const value = normaliseAnswer(attempt.response.text, task);
-  const accepted = task.acceptedAnswers.some(
-    (answer) => {
-      const expected = normaliseAnswer(answer, task);
-      return expected === value || (
-        english && task.responseKind === "cloze" && /^[a-z]/u.test(expected) &&
-        value === expected[0]!.toUpperCase() + expected.slice(1)
-      );
-    },
-  );
+  const accepted = task.acceptedAnswers.some((answer) => {
+    const expected = normaliseAnswer(answer, task);
+    return (
+      expected === value ||
+      (english &&
+        task.responseKind === "cloze" &&
+        /^[a-z]/u.test(expected) &&
+        value === expected[0]!.toUpperCase() + expected.slice(1))
+    );
+  });
   if (accepted) {
     base.verdict = "pass";
     base.uncertainty = false;
@@ -196,10 +202,16 @@ export function assessControlledTask(
         : "Deine Antwort unterscheidet sich von den gespeicherten Formen. Sie wurde ohne Richtigkeitswert gespeichert. Vergleiche die Bedeutung oder lasse sie prüfen; eine andere richtige Antwort soll nicht als falsch gelten.";
   }
   if (!accepted && task.acceptedAnswers.length) {
-    const choices = task.acceptedAnswers.map(answer => alignAnswers(attempt.response.text, answer));
+    const choices = task.acceptedAnswers.map((answer) =>
+      alignAnswers(attempt.response.text, answer),
+    );
     const edits = choices.sort((a, b) => a.length - b.length)[0] ?? [];
     base.feedback += " " + describeAnswerEdits(edits, attempt.language);
-    base.spans = edits.map(edit => ({ start: edit.start, end: edit.end, explanation: describeAnswerEdits([edit], attempt.language) }));
+    base.spans = edits.map((edit) => ({
+      start: edit.start,
+      end: edit.end,
+      explanation: describeAnswerEdits([edit], attempt.language),
+    }));
   }
   return parseAutomaticityEvent(base, attempt.language) as AssessmentEvent;
 }

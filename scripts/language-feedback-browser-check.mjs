@@ -55,7 +55,18 @@ try {
       name: language === "en" ? "Read aloud practice" : "Laut lesen",
     });
     await panel.waitFor();
-    assert.ok(await panel.locator("input").evaluate(input => input.getBoundingClientRect().width >= 200 && parseFloat(getComputedStyle(input).borderTopWidth) >= 1 && input.parentElement.parentElement.getBoundingClientRect().width >= input.getBoundingClientRect().width), "Target input remains visible and usable on mobile and desktop");
+    assert.ok(
+      await panel
+        .locator("input")
+        .evaluate(
+          (input) =>
+            input.getBoundingClientRect().width >= 200 &&
+            parseFloat(getComputedStyle(input).borderTopWidth) >= 1 &&
+            input.parentElement.parentElement.getBoundingClientRect().width >=
+              input.getBoundingClientRect().width,
+        ),
+      "Target input remains visible and usable on mobile and desktop",
+    );
     await page
       .locator(".record-controls button", { hasText: "Record" })
       .click();

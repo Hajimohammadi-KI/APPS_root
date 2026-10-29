@@ -42,8 +42,18 @@ export function countWeilClauses(text: string): number {
 }
 
 function firstWordOrderIssue(text: string): AutomatikIssue | null {
- const issue = writingIssues(text, "de").find(issue => issue.ruleId === "DE_SUBORDINATE_FINAL" || issue.ruleId === "DE_V2");
- return issue ? { code: "word_order", message: issue.message, original: issue.original, corrected: issue.replacement } : null;
+  const issue = writingIssues(text, "de").find(
+    (issue) =>
+      issue.ruleId === "DE_SUBORDINATE_FINAL" || issue.ruleId === "DE_V2",
+  );
+  return issue
+    ? {
+        code: "word_order",
+        message: issue.message,
+        original: issue.original,
+        corrected: issue.replacement,
+      }
+    : null;
 }
 
 export function analyzeWeilClause(text: string): AutomatikAnalysis {

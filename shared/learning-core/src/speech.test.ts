@@ -95,7 +95,14 @@ test("W25 phonetic contrast exercises are optional practice, never an audio diag
   expect(phoneticPractice("schön", "de")[0]?.words).toEqual(["schön", "schon"]);
   expect(phoneticPractice("Xanthe", "en")).toEqual([]);
   expect(phoneticPractice("wet", "en")[0]?.words).toEqual(["wet", "vet"]);
-  expect(compareSpeechSounds("I sink", "I think", "en")[0]).toMatchObject({ recognizedWord: "sink", targetWord: "think", recognizedPhonemes: "sɪŋk", targetPhonemes: "θɪŋk", source: "transcript-only", pronunciationScore: null });
+  expect(compareSpeechSounds("I sink", "I think", "en")[0]).toMatchObject({
+    recognizedWord: "sink",
+    targetWord: "think",
+    recognizedPhonemes: "sɪŋk",
+    targetPhonemes: "θɪŋk",
+    source: "transcript-only",
+    pronunciationScore: null,
+  });
   expect(compareSpeechSounds("unknown", "invented", "en")).toEqual([]);
 });
 test("W24 spoken target alignment ignores punctuation and cannot certify pronunciation", () => {

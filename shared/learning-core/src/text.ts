@@ -22,7 +22,9 @@ export interface TextToken {
 
 export function tokenizeText(source: string): TextToken[] {
   return Array.from(
-    source.matchAll(/[\p{L}\p{N}][\p{L}\p{N}\p{M}]*(?:['’\-][\p{L}\p{N}][\p{L}\p{N}\p{M}]*)*|\p{P}/gu),
+    source.matchAll(
+      /[\p{L}\p{N}][\p{L}\p{N}\p{M}]*(?:['’\-][\p{L}\p{N}][\p{L}\p{N}\p{M}]*)*|\p{P}/gu,
+    ),
     (match) => ({
       text: match[0],
       normalized: match[0].normalize("NFC"),
@@ -35,7 +37,16 @@ export function tokenizeText(source: string): TextToken[] {
 
 /** Speaking anchors ignore punctuation, but never match inside another word. */
 export function containsTokenPhrase(source: string, phrase: string): boolean {
-  const words = (value: string) => tokenizeText(value.replace(/[’‘]/gu, "'")).filter(t => t.kind === "word").map(t => t.normalized.toLocaleLowerCase());
-  const haystack = words(source), needle = words(phrase);
-  return needle.length > 0 && haystack.some((_, start) => needle.every((word, offset) => haystack[start + offset] === word));
+  const words = (value: string) =>
+    tokenizeText(value.replace(/[’‘]/gu, "'"))
+      .filter((t) => t.kind === "word")
+      .map((t) => t.normalized.toLocaleLowerCase());
+  const haystack = words(source),
+    needle = words(phrase);
+  return (
+    needle.length > 0 &&
+    haystack.some((_, start) =>
+      needle.every((word, offset) => haystack[start + offset] === word),
+    )
+  );
 }

@@ -21,7 +21,11 @@ const presentPerfectGrammar = {
 
 describe("practice and mastery assessment", () => {
   test("W09 wrong output language cannot pass through a custom target pattern", async () => {
-    const result = await evaluateResponse("Ich kann heute mit dir lernen.", { grammar: modalGrammar, patterns: ["kann"], minWords: 3 }, { ...normalizeAppState(null).settings, onlineFeedback: false });
+    const result = await evaluateResponse(
+      "Ich kann heute mit dir lernen.",
+      { grammar: modalGrammar, patterns: ["kann"], minWords: 3 },
+      { ...normalizeAppState(null).settings, onlineFeedback: false },
+    );
     expect(result.pass).toBe(false);
     expect(result.masteryEligible).toBe(false);
   });

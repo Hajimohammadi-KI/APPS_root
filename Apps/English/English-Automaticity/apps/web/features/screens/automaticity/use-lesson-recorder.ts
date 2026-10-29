@@ -1,4 +1,7 @@
-import { RecognitionCollector, type SpeechRecognitionLike } from "@automaticity/learning-core/speech";
+import {
+  RecognitionCollector,
+  type SpeechRecognitionLike,
+} from "@automaticity/learning-core/speech";
 import * as React from "react";
 
 type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
@@ -83,9 +86,11 @@ export function useLessonRecorder({
         recognition.interimResults = true;
         recognition.maxAlternatives = 3;
         const collector = new RecognitionCollector(transcript);
-        recognition.onresult = event => {
+        recognition.onresult = (event) => {
           const result = collector.update(event);
-          setTranscript([result.finalText, result.interimText].filter(Boolean).join(" "));
+          setTranscript(
+            [result.finalText, result.interimText].filter(Boolean).join(" "),
+          );
         };
         recognition.start();
         recognitionRef.current = recognition;

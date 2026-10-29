@@ -3,30 +3,57 @@ const training = {
   de: "die menschen haben zusammen gearbeitet weil sie lernen möchten. sie schreibt einen brief und er wird ihn morgen lesen. wir gingen nach der schule mit unseren freunden nach hause. das ist mein buch und dein neues haus.",
 };
 function trigrams(text: string): string[] {
-  const words = text.toLocaleLowerCase().normalize("NFC").match(/\p{L}+/gu) ?? [];
-  return words.flatMap(word => { const padded = `^${word}$`; return Array.from({ length: Math.max(0, padded.length - 2) }, (_, i) => padded.slice(i, i + 3)); });
+  const words =
+    text
+      .toLocaleLowerCase()
+      .normalize("NFC")
+      .match(/\p{L}+/gu) ?? [];
+  return words.flatMap((word) => {
+    const padded = `^${word}$`;
+    return Array.from({ length: Math.max(0, padded.length - 2) }, (_, i) =>
+      padded.slice(i, i + 3),
+    );
+  });
 }
-const models = Object.fromEntries(Object.entries(training).map(([language, text]) => {
-  const counts = new Map<string, number>();
-  for (const gram of trigrams(text)) counts.set(gram, (counts.get(gram) ?? 0) + 1);
-  return [language, { counts, total: trigrams(text).length }];
-})) as Record<"en" | "de", { counts: Map<string, number>; total: number }>;
-const vocabulary = new Set([...models.en.counts.keys(), ...models.de.counts.keys()]).size;
+const models = Object.fromEntries(
+  Object.entries(training).map(([language, text]) => {
+    const counts = new Map<string, number>();
+    for (const gram of trigrams(text))
+      counts.set(gram, (counts.get(gram) ?? 0) + 1);
+    return [language, { counts, total: trigrams(text).length }];
+  }),
+) as Record<"en" | "de", { counts: Map<string, number>; total: number }>;
+const vocabulary = new Set([
+  ...models.en.counts.keys(),
+  ...models.de.counts.keys(),
+]).size;
 
 /** Smoothed character-trigram log likelihood; a diagnostic, never grammar evidence. */
 export function languageNgramScores(text: string): Record<"en" | "de", number> {
   const grams = trigrams(text.slice(0, 20000));
-  const score = (language: "en" | "de") => grams.reduce((sum, gram) => sum + Math.log(((models[language].counts.get(gram) ?? 0) + 1) / (models[language].total + vocabulary)), 0) / Math.max(1, grams.length);
+  const score = (language: "en" | "de") =>
+    grams.reduce(
+      (sum, gram) =>
+        sum +
+        Math.log(
+          ((models[language].counts.get(gram) ?? 0) + 1) /
+            (models[language].total + vocabulary),
+        ),
+      0,
+    ) / Math.max(1, grams.length);
   return { en: score("en"), de: score("de") };
 }
 
-export function detectTextLanguage(
-  text: string,
-): "de" | "fa" | "en" | "other" {
+export function detectTextLanguage(text: string): "de" | "fa" | "en" | "other" {
   const value = text.normalize("NFC").trim();
   if (!value) return "other";
   if (/[\x00-\x08\x0b\x0c\x0e-\x1f]/u.test(value)) return "other";
-  if (Array.from(value).some(character => /\p{Script=Arabic}/u.test(character) && /\p{L}/u.test(character))) {
+  if (
+    Array.from(value).some(
+      (character) =>
+        /\p{Script=Arabic}/u.test(character) && /\p{L}/u.test(character),
+    )
+  ) {
     return /[A-Za-zÄÖÜäöüß]/u.test(value) ? "other" : "fa";
   }
   const words = value.toLocaleLowerCase("de-DE").match(/\p{L}+/gu) ?? [];

@@ -203,8 +203,7 @@ export function parseTransformerFeedback(
     throw Error("A correction needs a definite error and original evidence");
   if (result.verdict !== "needs_repair" && result.minimalCorrection !== null)
     throw Error("A non-error verdict cannot contain a grammatical correction");
-  const comparable = (text: string) =>
-    normalizeText(text);
+  const comparable = (text: string) => normalizeText(text);
   if (
     result.verdict === "needs_repair" &&
     comparable(result.minimalCorrection!) === comparable(input.response)
@@ -354,8 +353,7 @@ export async function proposeTransformerFeedback(
         : TRANSFORMER_PASS_REVIEW_PROMPT,
       signal,
     );
-    const comparable = (text: string) =>
-      normalizeText(text);
+    const comparable = (text: string) => normalizeText(text);
     if (
       first.verdict === "needs_repair" &&
       second.verdict === "needs_repair" &&

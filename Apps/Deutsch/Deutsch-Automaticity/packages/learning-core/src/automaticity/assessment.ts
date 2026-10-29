@@ -1,4 +1,6 @@
 import { normalizeText } from "../text";
+import { discourseFeedback } from "../discourse";
+import { alignAnswers, describeAnswerEdits } from "./answer-alignment";
 import {
   parseAutomaticityEvent,
   type AssessmentEvent,
@@ -12,7 +14,9 @@ import {
   parseConstruction,
 } from "./construction-rules";
 export function normaliseAnswer(text: string, task: PracticeTask): string {
-  return normalizeText(text, { allowOptionalFinalPeriod: task.normalisation.terminalFullStop });
+  return normalizeText(text, {
+    allowOptionalFinalPeriod: task.normalisation.terminalFullStop,
+  });
 }
 /** Practice feedback is independent of approved mastery/evaluator scope. */
 export function assessControlledTask(
@@ -144,11 +148,24 @@ export function assessControlledTask(
     );
     return parseAutomaticityEvent(base, attempt.language) as AssessmentEvent;
   }
-  if (task.answerPolicy !== "closed") return base;
+  if (task.answerPolicy !== "closed") {
+    base.feedback +=
+      " " +
+      discourseFeedback(attempt.response.text, attempt.language, "")
+        .description;
+    return base;
+  }
   const value = normaliseAnswer(attempt.response.text, task);
-  const accepted = task.acceptedAnswers.some(
-    (answer) => normaliseAnswer(answer, task) === value,
-  );
+  const accepted = task.acceptedAnswers.some((answer) => {
+    const expected = normaliseAnswer(answer, task);
+    return (
+      expected === value ||
+      (english &&
+        task.responseKind === "cloze" &&
+        /^[a-z]/u.test(expected) &&
+        value === expected[0]!.toUpperCase() + expected.slice(1))
+    );
+  });
   if (accepted) {
     base.verdict = "pass";
     base.uncertainty = false;
@@ -183,6 +200,18 @@ export function assessControlledTask(
       base.feedback = english
         ? "Your answer differs from the stored forms. It has been saved without a correctness score. Compare the meaning or request a review; a different correct answer should not be marked wrong."
         : "Deine Antwort unterscheidet sich von den gespeicherten Formen. Sie wurde ohne Richtigkeitswert gespeichert. Vergleiche die Bedeutung oder lasse sie prüfen; eine andere richtige Antwort soll nicht als falsch gelten.";
+  }
+  if (!accepted && task.acceptedAnswers.length) {
+    const choices = task.acceptedAnswers.map((answer) =>
+      alignAnswers(attempt.response.text, answer),
+    );
+    const edits = choices.sort((a, b) => a.length - b.length)[0] ?? [];
+    base.feedback += " " + describeAnswerEdits(edits, attempt.language);
+    base.spans = edits.map((edit) => ({
+      start: edit.start,
+      end: edit.end,
+      explanation: describeAnswerEdits([edit], attempt.language),
+    }));
   }
   return parseAutomaticityEvent(base, attempt.language) as AssessmentEvent;
 }

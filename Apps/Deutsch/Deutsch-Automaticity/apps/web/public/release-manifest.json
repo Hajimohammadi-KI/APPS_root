@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-10-29",
   "version": "20.9.4",
-  "webRelease": "2026.10.29.3",
+  "webRelease": "2026.10.29.4",
   "changes": [
-    "W06: Das Gesprächsstudio sendet dein Transkript erst nach deiner Zustimmung an LanguageTool; markierte Stellen werden im Text hervorgehoben."
+    "Gemeinsame Textverarbeitung und präzise lokale Schreibrückmeldung; Lautlesevergleich, freiwillige Lautkontraste und beschreibende Wellenformmessung. Transkriptprüfungen bestätigen keine Sprechbeherrschung. Akustische Aussprachewarnungen bleiben bis zur echten Kalibrierung aus."
   ]
 }

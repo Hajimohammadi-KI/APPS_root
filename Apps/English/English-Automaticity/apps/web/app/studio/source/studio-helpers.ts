@@ -26,7 +26,8 @@ interface SpeechRecognitionConstructor {
   new (): SpeechRecognitionLike;
 }
 
-export function recognitionConstructor(): SpeechRecognitionConstructor | undefined {
+export function recognitionConstructor():
+  SpeechRecognitionConstructor | undefined {
   const browserWindow = window as typeof window & {
     SpeechRecognition?: SpeechRecognitionConstructor;
     webkitSpeechRecognition?: SpeechRecognitionConstructor;
@@ -36,7 +37,9 @@ export function recognitionConstructor(): SpeechRecognitionConstructor | undefin
   );
 }
 
-export function isEvaluationResponse(value: unknown): value is EvaluationResponse {
+export function isEvaluationResponse(
+  value: unknown,
+): value is EvaluationResponse {
   if (!value || typeof value !== "object") return false;
   const candidate = value as Record<string, unknown>;
   return (
@@ -164,7 +167,10 @@ export function comparableTokens(value: string) {
   );
 }
 
-export function topicForIntegratedUnit(level: string, unit: IntegratedSkillsUnit) {
+export function topicForIntegratedUnit(
+  level: string,
+  unit: IntegratedSkillsUnit,
+) {
   const unitTokens = new Set(comparableTokens(`${unit.title} ${unit.outcome}`));
   return conversationTopics
     .filter((topic) => topic.level === level)

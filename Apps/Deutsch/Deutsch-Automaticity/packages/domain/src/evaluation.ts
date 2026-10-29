@@ -526,9 +526,21 @@ export function getTaskIssues(
     .map((sentence) => sentence.trim())
     .filter(Boolean);
 
-  for (const issue of writingIssues(text, "de").filter(issue => issue.ruleId === "DE_PERFEKT_AUXILIARY")) {
- issues.push(createIssue({ type: "Zielgrammatik", message: issue.message, suggestion: text.slice(0, issue.start) + issue.replacement + text.slice(issue.end), errorClass: "auxiliary" }));
-}
+  for (const issue of writingIssues(text, "de").filter(
+    (issue) => issue.ruleId === "DE_PERFEKT_AUXILIARY",
+  )) {
+    issues.push(
+      createIssue({
+        type: "Zielgrammatik",
+        message: issue.message,
+        suggestion:
+          text.slice(0, issue.start) +
+          issue.replacement +
+          text.slice(issue.end),
+        errorClass: "auxiliary",
+      }),
+    );
+  }
 
   if (
     kind === "sentences" &&
@@ -790,12 +802,27 @@ export function evaluateAnswer(
         ]
       : [];
   const taskIssues = getTaskIssues(text, grammar, kind, taskPrompt);
-  const localIssues = writingIssues(text, "de").filter(issue => issue.ruleId !== "DE_PERFEKT_AUXILIARY").map(issue => createIssue({
-    type: "Lokale Grammatik", message: issue.message, userText: issue.original,
-    correctedText: issue.replacement, explanation: issue.ruleId,
-    suggestion: text.slice(0, issue.start) + issue.replacement + text.slice(issue.end),
-  }));
-  const issues = [...languageIssues, ...offlineIssue, ...taskIssues, ...localIssues];
+  const localIssues = writingIssues(text, "de")
+    .filter((issue) => issue.ruleId !== "DE_PERFEKT_AUXILIARY")
+    .map((issue) =>
+      createIssue({
+        type: "Lokale Grammatik",
+        message: issue.message,
+        userText: issue.original,
+        correctedText: issue.replacement,
+        explanation: issue.ruleId,
+        suggestion:
+          text.slice(0, issue.start) +
+          issue.replacement +
+          text.slice(issue.end),
+      }),
+    );
+  const issues = [
+    ...languageIssues,
+    ...offlineIssue,
+    ...taskIssues,
+    ...localIssues,
+  ];
   const targetCorrection = taskIssues.find(
     (issue) => issue.type === "Zielgrammatik" && issue.suggestion,
   )?.suggestion;

@@ -165,7 +165,10 @@ export function grammarFeedbackAssessment(
     uncertainty: true,
     confidence: null,
     feedback:
-      heading + " " + discourseFeedback(attempt.response.text, attempt.language, "").description +
+      heading +
+      " " +
+      discourseFeedback(attempt.response.text, attempt.language, "")
+        .description +
       " " +
       (result.issues.length
         ? result.issues.map((issue) => issue.message).join("\n")

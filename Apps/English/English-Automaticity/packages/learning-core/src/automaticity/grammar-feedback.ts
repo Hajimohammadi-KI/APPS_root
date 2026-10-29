@@ -1,4 +1,5 @@
 import { isRecord, type AssessmentEvent, type AttemptEvent } from "./contracts";
+import { discourseFeedback } from "../discourse";
 
 export interface GrammarIssue {
   message: string;
@@ -165,6 +166,9 @@ export function grammarFeedbackAssessment(
     confidence: null,
     feedback:
       heading +
+      " " +
+      discourseFeedback(attempt.response.text, attempt.language, "")
+        .description +
       " " +
       (result.issues.length
         ? result.issues.map((issue) => issue.message).join("\n")

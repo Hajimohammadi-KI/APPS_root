@@ -60,7 +60,6 @@ export function confirmsUnchangedText(
     !original.trim()
   )
     return false;
-  const normalized = (text: string) =>
-    normalizeText(text);
+  const normalized = (text: string) => normalizeText(text);
   return normalized(value.correction) === normalized(original);
 }

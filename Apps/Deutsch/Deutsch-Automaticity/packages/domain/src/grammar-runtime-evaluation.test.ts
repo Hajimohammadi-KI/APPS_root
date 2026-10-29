@@ -120,7 +120,10 @@ function grammarPage(
     /\n\}\)\(\);\s*$/u,
     "\n drafts = draftState; globalThis.harness = { checkAnswer, detectAnswerLanguage };\n})();",
   );
-  runInNewContext(`${textBrowserSource}\nwindow.AutomaticityText = globalThis.AutomaticityText;\n${instrumented}`, context);
+  runInNewContext(
+    `${textBrowserSource}\nwindow.AutomaticityText = globalThis.AutomaticityText;\n${instrumented}`,
+    context,
+  );
   return {
     detect: context.harness.detectAnswerLanguage,
     storage,

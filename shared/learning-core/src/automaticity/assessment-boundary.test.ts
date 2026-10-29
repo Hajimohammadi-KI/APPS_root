@@ -88,11 +88,36 @@ test("closed-answer assessment requires matching task context, version, language
   ).toBe("not_assessed");
 });
 test("W10 English cloze accepts initial capital only; German and internal case stay strict", () => {
-  expect(assessControlledTask({ ...attempt(), response: { ...attempt().response, text: "Works" } }, task, at, "capital").verdict).toBe("pass");
-  expect(assessControlledTask({ ...attempt(), response: { ...attempt().response, text: "WORKS" } }, task, at, "all-capitals").verdict).not.toBe("pass");
-  const germanTask = { ...task, constructionId: "de.c.001", acceptedAnswers: ["ihnen"] };
-  const germanAttempt = { ...attempt(), language: "de" as const, task: germanTask, response: { ...attempt().response, text: "Ihnen" } };
-  expect(assessControlledTask(germanAttempt, germanTask, at, "German").verdict).not.toBe("pass");
+  expect(
+    assessControlledTask(
+      { ...attempt(), response: { ...attempt().response, text: "Works" } },
+      task,
+      at,
+      "capital",
+    ).verdict,
+  ).toBe("pass");
+  expect(
+    assessControlledTask(
+      { ...attempt(), response: { ...attempt().response, text: "WORKS" } },
+      task,
+      at,
+      "all-capitals",
+    ).verdict,
+  ).not.toBe("pass");
+  const germanTask = {
+    ...task,
+    constructionId: "de.c.001",
+    acceptedAnswers: ["ihnen"],
+  };
+  const germanAttempt = {
+    ...attempt(),
+    language: "de" as const,
+    task: germanTask,
+    response: { ...attempt().response, text: "Ihnen" },
+  };
+  expect(
+    assessControlledTask(germanAttempt, germanTask, at, "German").verdict,
+  ).not.toBe("pass");
 });
 test("even an accidentally closed speaking task cannot grade its typed transcript", () => {
   const speaking = { ...task, modality: "speaking" as const };

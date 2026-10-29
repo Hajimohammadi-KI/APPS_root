@@ -52,7 +52,11 @@ test("W13 agreement respects questions, modals, subjunctives and noun phrase hea
   expect(
     writingIssues("He have a car.", "en").some((i) => i.replacement === "has"),
   ).toBe(true);
-  expect(writingIssues("I know he have a car.", "en").some(i => i.replacement === "has")).toBe(true);
+  expect(
+    writingIssues("I know he have a car.", "en").some(
+      (i) => i.replacement === "has",
+    ),
+  ).toBe(true);
 });
 test("W15 countability and verb complements use a narrow lexicon", () => {
   for (const text of [
@@ -110,7 +114,9 @@ test("W18 German field order handles V2 and finite-final with replacement infini
   expect(
     writingIssues("Ich bleibe, weil ich bin müde.", "de")[0]?.replacement,
   ).toBe("weil ich müde bin");
-  expect(writingIssues("Ich warte, weil er ist in Berlin.", "de")[0]?.replacement).toBe("weil er in Berlin ist");
+  expect(
+    writingIssues("Ich warte, weil er ist in Berlin.", "de")[0]?.replacement,
+  ).toBe("weil er in Berlin ist");
 });
 test("W19 Perfekt auxiliary is tied to its own clause and valency", () => {
   for (const text of [
@@ -131,8 +137,13 @@ test("W19 Perfekt auxiliary is tied to its own clause and valency", () => {
     start: 21,
   });
   expect(writingIssues("Ich habe gegangen.", "de")[0]?.replacement).toBe("bin");
-  expect(writingIssues("Ich habe schnell nach Hause gegangen.", "de")[0]?.replacement).toBe("bin");
-  expect(writingIssues("Er hat heute nicht gekommen.", "de")[0]?.replacement).toBe("ist");
+  expect(
+    writingIssues("Ich habe schnell nach Hause gegangen.", "de")[0]
+      ?.replacement,
+  ).toBe("bin");
+  expect(
+    writingIssues("Er hat heute nicht gekommen.", "de")[0]?.replacement,
+  ).toBe("ist");
 });
 test("W20 German noun capitalization requires a known noun and determiner context", () => {
   expect(writingIssues("Ich lese ein buch.", "de")[0]?.replacement).toBe(

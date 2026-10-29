@@ -52,8 +52,18 @@ const stepLabels = [
   "Save",
 ] as const;
 const modeCards: readonly ModeCard[] = [
-  ["guided", "☵", "Guided conversation", "Practice with a prompt and real correction."],
-  ["challenge", "◴", "60-second challenge", "Build fluency under time pressure."],
+  [
+    "guided",
+    "☵",
+    "Guided conversation",
+    "Practice with a prompt and real correction.",
+  ],
+  [
+    "challenge",
+    "◴",
+    "60-second challenge",
+    "Build fluency under time pressure.",
+  ],
   [
     "pronunciation",
     "▥",
@@ -107,7 +117,10 @@ export default function Home() {
   const bySkill = byLevel.filter(
     (topic) => skill === allLabel || topic.skill === skill,
   );
-  const categories = [allLabel, ...unique(bySkill.map((topic) => topic.category))];
+  const categories = [
+    allLabel,
+    ...unique(bySkill.map((topic) => topic.category)),
+  ];
   const filteredTopics = bySkill.filter(
     (topic) => category === allLabel || topic.category === category,
   );
@@ -289,7 +302,11 @@ export default function Home() {
 
         <div className="workspace">
           <section className="studio">
-            <StepPicker stepLabels={stepLabels} active={active} onSelect={setActive} />
+            <StepPicker
+              stepLabels={stepLabels}
+              active={active}
+              onSelect={setActive}
+            />
 
             <CoachCard
               language={language}
@@ -332,7 +349,14 @@ export default function Home() {
               onTranscriptChange={recorder.editTranscript}
             />
 
-            <SpeechPracticePanel transcript={recorder.transcript} evidence={recorder.recognitionEvidence} waveform={recorder.waveform} language={language} level={selected.level} onSpeak={value => void speak(value)} />
+            <SpeechPracticePanel
+              transcript={recorder.transcript}
+              evidence={recorder.recognitionEvidence}
+              waveform={recorder.waveform}
+              language={language}
+              level={selected.level}
+              onSpeak={(value) => void speak(value)}
+            />
 
             {active === 0 && (
               <ListenPanel

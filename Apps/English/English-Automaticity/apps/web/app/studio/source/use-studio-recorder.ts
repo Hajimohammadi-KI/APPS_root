@@ -1,4 +1,10 @@
-import { RecognitionCollector, spokenPracticeEvidence, describeRecording, type WaveformDescription, type RecognitionEvidence } from "@automaticity/learning-core/speech";
+import {
+  RecognitionCollector,
+  spokenPracticeEvidence,
+  describeRecording,
+  type WaveformDescription,
+  type RecognitionEvidence,
+} from "@automaticity/learning-core/speech";
 import { useEffect, useRef, useState } from "react";
 import {
   appendEvidenceInvalidationToStorage,
@@ -73,7 +79,8 @@ export function useStudioRecorder({
   const [attempts, setAttempts] = useState(0);
   const [voiceRecoveryAvailable, setVoiceRecoveryAvailable] = useState(false);
   const [consentNeeded, setConsentNeeded] = useState(false);
-  const [recognitionEvidence, setRecognitionEvidence] = useState<RecognitionEvidence | null>(null);
+  const [recognitionEvidence, setRecognitionEvidence] =
+    useState<RecognitionEvidence | null>(null);
   const transcriptEditedRef = useRef(false);
   const [waveform, setWaveform] = useState<WaveformDescription | null>(null);
 
@@ -237,7 +244,13 @@ export function useStudioRecorder({
           type: recorder.mimeType || "audio/webm",
         });
         audioBlobRef.current = blob;
-        void describeRecording(blob).then(description => { if (audioBlobRef.current === blob) setWaveform(description); }).catch(() => { if (audioBlobRef.current === blob) setWaveform(null); });
+        void describeRecording(blob)
+          .then((description) => {
+            if (audioBlobRef.current === blob) setWaveform(description);
+          })
+          .catch(() => {
+            if (audioBlobRef.current === blob) setWaveform(null);
+          });
         setHasAudioBlob(blob.size > 0);
         setAudioUrl(blob.size > 0 ? URL.createObjectURL(blob) : null);
         stream.getTracks().forEach((track) => track.stop());

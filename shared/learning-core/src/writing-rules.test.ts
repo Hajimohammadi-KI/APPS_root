@@ -52,6 +52,7 @@ test("W13 agreement respects questions, modals, subjunctives and noun phrase hea
   expect(
     writingIssues("He have a car.", "en").some((i) => i.replacement === "has"),
   ).toBe(true);
+  expect(writingIssues("I know he have a car.", "en").some(i => i.replacement === "has")).toBe(true);
 });
 test("W15 countability and verb complements use a narrow lexicon", () => {
   for (const text of [

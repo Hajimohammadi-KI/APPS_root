@@ -27,3 +27,9 @@ test("W15 countability and verb complements use a narrow lexicon", () => {
   expect(writingIssues("I need an advice.", "en")[0]?.ruleId).toBe("EN_UNCOUNTABLE");
   expect(writingIssues("I enjoy to read.", "en")[0]?.replacement).toBe("reading");
 });
+test("W16 reviewed proper names preserve unknown and ambiguous names", () => {
+  expect(writingIssues("I visited berlin on monday.", "en").map(i => i.replacement)).toEqual(["Berlin", "Monday"]);
+  for (const text of ["I may eat turkey.", "I met Xanthe and OpenAI.", "I visited Berlin on Monday."])
+    expect(writingIssues(text, "en")).toEqual([]);
+  expect(writingIssues("Wir essen heute.", "de")).toEqual([]);
+});

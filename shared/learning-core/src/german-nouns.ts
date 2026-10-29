@@ -8,3 +8,11 @@ export const GERMAN_NOUN_CORPUS: Readonly<Record<string, { readonly noun: string
   mann: { noun: "Mann", upper: 5, lower: 0 },
   haus: { noun: "Haus", upper: 4, lower: 0 },
 };
+export const GERMAN_NOUNS: Readonly<Record<string, { readonly gender: "m" | "f" | "n"; readonly plural: string; readonly weak: boolean }>> = {
+  Mann: { gender: "m", plural: "Männer", weak: false },
+  Frau: { gender: "f", plural: "Frauen", weak: false },
+  Kind: { gender: "n", plural: "Kinder", weak: false },
+  Buch: { gender: "n", plural: "Bücher", weak: false },
+  Haus: { gender: "n", plural: "Häuser", weak: false },
+  Student: { gender: "m", plural: "Studenten", weak: true },
+};

@@ -1,6 +1,6 @@
 import { tokenizeText } from "./text";
 import { ENGLISH_FINITE_TO_BASE } from "./english-lexicon";
-import { GERMAN_NOUN_CORPUS } from "./german-nouns";
+import { GERMAN_NOUN_CORPUS, GERMAN_NOUNS } from "./german-nouns";
 export { countPerfectUses } from "./english-lexicon";
 
 export interface WritingIssue {
@@ -70,6 +70,18 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
     }
   }
   if (language === "de") {
+    for (let i = 1; i < tokens.length; i++) {
+      const noun = GERMAN_NOUNS[tokens[i]!.normalized];
+      if (!noun) continue;
+      const article = lower[i-1]!, prep = lower[i-2] ?? "";
+      const nounCase = ["mit", "aus", "bei", "von", "zu"].includes(prep) ? "dat" : ["für", "durch", "ohne", "gegen", "um"].includes(prep) ? "acc" : lower[i-2] === "ist" && lower[i-3] === "das" && (!tokens[i+1] || /[.!?]/u.test(tokens[i+1]!.text)) ? "nom" : null;
+      if (nounCase && /^(?:ein|eine|einen|einem|einer|eines)$/u.test(article)) {
+        const expected = nounCase === "dat" ? noun.gender === "f" ? "einer" : "einem" : noun.gender === "f" ? "eine" : nounCase === "acc" && noun.gender === "m" ? "einen" : "ein";
+        if (article !== expected) add(i-1, expected, "DE_NOUN_GENDER_CASE", "Artikel und Nomen müssen in Genus und Kasus zusammenpassen.");
+      }
+      if (noun.weak && ["dem", "einem", "des", "eines", "den", "einen"].includes(article))
+        add(i, noun.plural, "DE_WEAK_NOUN", "Dieses schwache maskuline Nomen erhält außerhalb des Nominativs Singular die Endung -en.");
+    }
     for (let i = 1; i < tokens.length; i++) {
       const noun = GERMAN_NOUN_CORPUS[lower[i]!];
       if (noun && noun.upper >= 3 && noun.lower === 0 && tokens[i]!.text === lower[i] && ["der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem", "einer", "eines", "mein", "meine", "dein", "deine"].includes(lower[i-1]!))

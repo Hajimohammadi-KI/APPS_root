@@ -148,7 +148,13 @@ export function assessControlledTask(
   if (task.answerPolicy !== "closed") return base;
   const value = normaliseAnswer(attempt.response.text, task);
   const accepted = task.acceptedAnswers.some(
-    (answer) => normaliseAnswer(answer, task) === value,
+    (answer) => {
+      const expected = normaliseAnswer(answer, task);
+      return expected === value || (
+        english && task.responseKind === "cloze" && /^[a-z]/u.test(expected) &&
+        value === expected[0]!.toUpperCase() + expected.slice(1)
+      );
+    },
   );
   if (accepted) {
     base.verdict = "pass";

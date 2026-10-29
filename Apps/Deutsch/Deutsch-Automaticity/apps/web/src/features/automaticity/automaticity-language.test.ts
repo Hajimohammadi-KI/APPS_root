@@ -16,10 +16,24 @@ const handlerSource = new Bun.Transpiler({ loader: "tsx" }).transformSync(
   componentSource.slice(start, end),
 );
 
-async function analyzeViaLessonHandler(text: string) {
+async function analyzeViaLessonHandler(
+  text: string,
+  topic = "Nebensatz mit weil",
+  report = { verified: false, online: false, corrected: text },
+) {
   const messages: string[] = [];
   const context = {
-    TOPIC: "Nebensatz mit weil",
+    TOPIC: topic,
+    grammar: { title: topic, rule: "test", examples: [text] },
+    state: { learner: { allowOnlineAI: true }, settings: {} },
+    API_BASE_URL: "http://unused.invalid",
+    requestEvaluation: async () => ({
+      ...report,
+      accuracyScore: 90,
+      practiceReady: true,
+      targetHit: true,
+      issues: [],
+    }),
     detectAnswerLanguage,
     analyzeWeilClause,
     setMessage: (message: string) => messages.push(message),
@@ -48,5 +62,20 @@ describe("Automaticity language guard before special-case assessment", () => {
     const { result, messages } = await analyzeViaLessonHandler(text);
     expect(result).not.toBeNull();
     expect(messages).toEqual([]);
+    expect(result).toMatchObject({
+      verified: false,
+      online: false,
+      corrected: text,
+    });
   });
+
+  for (const online of [false, true]) {
+    it(`preserves actual evaluation provenance when online=${online}`, async () => {
+      const text =
+        "Ich lerne heute. Wir üben zusammen. Sie schreibt einen Brief. Ich lese ein Buch.";
+      const report = { verified: online, online, corrected: `${text} ` };
+      const { result } = await analyzeViaLessonHandler(text, "Präsens", report);
+      expect(result).toMatchObject(report);
+    });
+  }
 });

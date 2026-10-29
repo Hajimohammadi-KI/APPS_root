@@ -39,3 +39,9 @@ test("W17 fixed-case prepositions use unambiguous pronouns", () => {
   expect(writingIssues("Er spricht mit mich.", "de")[0]?.replacement).toBe("mir");
   expect(writingIssues("Das ist für mir.", "de")[0]?.replacement).toBe("mich");
 });
+test("W18 German field order handles V2 and finite-final with replacement infinitive abstention", () => {
+  for (const text of ["Heute gehe ich nach Hause.", "Ich bleibe, weil ich müde bin.", "Ich weiß, dass ich habe arbeiten müssen."])
+    expect(writingIssues(text, "de")).toEqual([]);
+  expect(writingIssues("Heute ich gehe nach Hause.", "de")[0]?.ruleId).toBe("DE_V2");
+  expect(writingIssues("Ich bleibe, weil ich bin müde.", "de")[0]?.replacement).toBe("weil ich müde bin");
+});

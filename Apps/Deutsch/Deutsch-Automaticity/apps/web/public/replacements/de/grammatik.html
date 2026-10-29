@@ -568,13 +568,13 @@
       ] : [
         { prompt:'Ergänze: Ich ___ heute müde.', answer:'bin', hint:'Bei ich steht bin.' },
         { prompt:'Ergänze: Meine Notizen ___ auf dem Tisch.', answer:'sind', hint:'Notizen ist Plural.' },
-        { prompt:'Verneine: Sie ist müde.', answer:'sie ist nicht müde', hint:'Setze nicht nach ist.' }
+        { prompt:'Verneine: Sie ist müde.', answer:'Sie ist nicht müde', hint:'Setze nicht nach ist.' }
       ];
       let taskIndex = 0;
       let lastMistake='';
       const answer = $('#answerInput');
       const feedback = $('#feedback');
-      const normalize = text => text.toLowerCase().trim().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+      const normalize = text => text.normalize('NFC').trim().replace(/\.$/, '').replace(/\s+/g, ' ');
       const detailedFallbackFeedback = (value, task) => {
         const text = value.trim();
         if (/\bich sehe der mann\b/i.test(text)) {
@@ -587,7 +587,13 @@
       };
       $('#checkBtn').addEventListener('click', () => {
         const value = normalize(answer.value);
-        const task=tasks[taskIndex];const correct=task.answer ? value===task.answer : value.split(/\s+/).length>=4;
+        const task=tasks[taskIndex];
+        if(!task.answer){
+          feedback.className='feedback show';
+          feedback.textContent='پاسخ ارزیابی نشده است: بررسی‌کنندهٔ اصلی بارگذاری نشد. برای بررسی دوباره صفحه را تازه کن؛ این پاسخ قبولی یا تکمیل تمرین ثبت نمی‌کند.';
+          return;
+        }
+        const correct=value===normalize(task.answer);
         feedback.className='feedback show '+(correct?'good':'bad');
         feedback.innerHTML=correct?'<strong>آفرین، پاسخ درست است.</strong>':detailedFallbackFeedback(answer.value, task);
         if(!correct)lastMistake=answer.value.trim();

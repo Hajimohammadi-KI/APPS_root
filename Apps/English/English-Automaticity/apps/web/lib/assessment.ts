@@ -735,10 +735,10 @@ export async function evaluateResponse(
   const grammarIssues = correction.matches.filter(
     (match) => issueType(match) === "Grammar",
   );
-  const knownLanguageIssues = correction.online
-    ? (!settings.spellingAffectsMastery || spelling.length === 0) &&
-      grammarIssues.length === 0
-    : !correction.changed;
+  const knownLanguageIssues =
+    grammarIssues.length === 0 &&
+    (!settings.spellingAffectsMastery || spelling.length === 0) &&
+    (correction.online || !correction.changed);
   const pass = knownLanguageIssues && targetSatisfied && complete && relevant;
   const masteryEligible = correction.online && pass;
   const issuePenalty = Math.min(

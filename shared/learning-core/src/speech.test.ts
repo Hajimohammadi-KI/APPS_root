@@ -44,4 +44,5 @@ test("W24 spoken target alignment ignores punctuation and cannot certify pronunc
   expect(compareSpeechTarget("I think", "I think.")).toMatchObject({ edits: [], pronunciationScore: null });
   expect(compareSpeechTarget("I gone home", "I have gone home").edits[0]?.type).toBe("missing");
   expect(compareSpeechTarget("I sink", "I think").edits[0]).toMatchObject({ original: "sink", expected: "think" });
+  expect(compareSpeechTarget("a ".repeat(250), "b ".repeat(250)).comparable).toBe(false);
 });

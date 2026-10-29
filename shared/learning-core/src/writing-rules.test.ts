@@ -52,3 +52,8 @@ test("W19 Perfekt auxiliary is tied to its own clause and valency", () => {
   expect(issue).toMatchObject({ ruleId: "DE_PERFEKT_AUXILIARY", original: "hat", replacement: "ist", start: 21 });
   expect(writingIssues("Ich habe gegangen.", "de")[0]?.replacement).toBe("bin");
 });
+test("W20 German noun capitalization requires a known noun and determiner context", () => {
+  expect(writingIssues("Ich lese ein buch.", "de")[0]?.replacement).toBe("Buch");
+  for (const text of ["Wir lernen morgen.", "Ich liebe dich.", "Wir essen zusammen.", "Das ist gut.", "Das neue ist anders."])
+    expect(writingIssues(text, "de")).toEqual([]);
+});

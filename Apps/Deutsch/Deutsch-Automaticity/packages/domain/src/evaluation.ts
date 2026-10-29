@@ -1,4 +1,5 @@
 import { detectTextLanguage } from "@automaticity/learning-core/text";
+import { writingIssues } from "@automaticity/learning-core/writing-rules";
 import type { ErrorClass } from "./learner-state";
 
 export type EvaluationKind =
@@ -810,7 +811,12 @@ export function evaluateAnswer(
         ]
       : [];
   const taskIssues = getTaskIssues(text, grammar, kind, taskPrompt);
-  const issues = [...languageIssues, ...offlineIssue, ...taskIssues];
+  const localIssues = writingIssues(text, "de").map(issue => createIssue({
+    type: "Lokale Grammatik", message: issue.message, userText: issue.original,
+    correctedText: issue.replacement, explanation: issue.ruleId,
+    suggestion: text.slice(0, issue.start) + issue.replacement + text.slice(issue.end),
+  }));
+  const issues = [...languageIssues, ...offlineIssue, ...taskIssues, ...localIssues];
   const targetCorrection = taskIssues.find(
     (issue) => issue.type === "Zielgrammatik" && issue.suggestion,
   )?.suggestion;

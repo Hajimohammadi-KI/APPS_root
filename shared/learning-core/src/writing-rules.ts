@@ -68,5 +68,14 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
       }
     }
   }
+  if (language === "de") {
+    const dative: Readonly<Record<string, string>> = { ich: "mir", mich: "mir", du: "dir", dich: "dir", er: "ihm", ihn: "ihm", wir: "uns", ihr: "euch" };
+    const accusative: Readonly<Record<string, string>> = { ich: "mich", mir: "mich", du: "dich", dir: "dich", er: "ihn", ihm: "ihn", wir: "uns", ihr: "euch" };
+    for (let i = 0; i < tokens.length - 1; i++) {
+      const forms = ["mit", "aus", "bei", "nach", "seit", "von", "zu"].includes(lower[i]!) ? dative : ["durch", "für", "gegen", "ohne", "um"].includes(lower[i]!) ? accusative : null;
+      const replacement = forms?.[lower[i+1]!];
+      if (replacement) add(i+1, replacement, "DE_PREPOSITION_CASE", "Diese Präposition verlangt hier einen anderen Pronomenkasus.");
+    }
+  }
   return issues;
 }

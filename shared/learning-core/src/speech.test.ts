@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { RecognitionCollector, compareSpeechTarget, phoneticPractice } from "./speech";
+import { RecognitionCollector, compareSpeechTarget, phoneticPractice, calibrateWarningThreshold, pronunciationWarning } from "./speech";
 test("W23 final result revisions do not duplicate text and unknown confidence abstains", () => {
   const collector = new RecognitionCollector();
   const event = { resultIndex: 0, results: [{ isFinal: true, length: 2, 0: { transcript: "I think", confidence: 0.6 }, 1: { transcript: "I sink", confidence: 0.4 } }] };
@@ -9,6 +9,15 @@ test("W23 final result revisions do not duplicate text and unknown confidence ab
   expect(result.reliable).toBe(false);
   expect(result.alternatives[0]?.length).toBe(2);
   expect(new RecognitionCollector().update({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "hello" } }] }).reliable).toBe(false);
+});
+test("W26 asymmetric calibration abstains without reviewed acoustic evidence", () => {
+  expect(calibrateWarningThreshold([])).toBeNull();
+  const sample = [{ errorProbability: .9, error: true }, { errorProbability: .8, error: false }, { errorProbability: .2, error: false }];
+  const calibrated = calibrateWarningThreshold(sample);
+  expect(calibrated?.falseAlerts).toBe(0);
+  expect(calibrated?.threshold).toBe(.9);
+  expect(pronunciationWarning({ source: "recognition", errorProbability: 1 }, calibrated)).toBeNull();
+  expect(pronunciationWarning({ source: "acoustic", errorProbability: .99 }, null)).toBeNull();
 });
 test("W25 phonetic contrast exercises are optional practice, never an audio diagnosis", () => {
   expect(phoneticPractice("thin", "en")[0]).toMatchObject({ words: ["thin", "tin"], phonemes: ["θɪn", "tɪn"], diagnosis: null });

@@ -8,8 +8,10 @@ export function countPerfectUses(text: string): number {
   const tokens = tokenizeText(text).map(t => t.normalized.toLocaleLowerCase("en"));
   let count = 0;
   for (let i = 0; i < tokens.length - 2; i++) {
-    if (!["i", "you", "we", "they", "he", "she", "it"].includes(tokens[i]!)) continue;
-    if (!["have", "has", "had"].includes(tokens[i+1]!)) continue;
+    const pronoun = ["i", "you", "we", "they", "he", "she", "it"].includes(tokens[i]!);
+    const noun = ["friend", "teacher", "student", "mother", "father", "brother", "sister", "friends", "students", "teachers"].includes(tokens[i]!) && ["my", "your", "our", "the", "his", "her", "their"].includes(tokens[i-1] ?? "");
+    if (!pronoun && !noun) continue;
+    if (!["have", "has"].includes(tokens[i+1]!)) continue;
     let j = i+2;
     while (["not", "never", "ever", "already", "just", "recently", "yet", "still"].includes(tokens[j] ?? "")) j++;
     if (ENGLISH_PARTICIPLES.has(tokens[j] ?? "")) count++;

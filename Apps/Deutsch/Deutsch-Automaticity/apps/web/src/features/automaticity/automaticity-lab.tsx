@@ -168,6 +168,9 @@ export function AutomaticityLab({
       });
     }
     return {
+      verified: result.verified,
+      online: result.online,
+      corrected: result.corrected,
       sentenceCount,
       wordCount,
       targetUses: result.targetHit ? 1 : 0,
@@ -240,9 +243,9 @@ export function AutomaticityLab({
       topic: TOPIC,
       mode: "writing",
       inputText: journal,
-      correctedText: journal,
+      correctedText: analysis.corrected,
       targetHit: analysis.targetHit,
-      verified: false,
+      verified: analysis.verified,
       accuracyScore: analysis.score,
     });
     appendLearningEvidenceBundleToStorage(
@@ -258,11 +261,11 @@ export function AutomaticityLab({
         prompt: `Schreibe vier eigene Sätze mit ${TOPIC}.`,
         mode: "writing",
         inputText: journal,
-        correctedText: journal,
+        correctedText: analysis.corrected,
         targetHit: analysis.targetHit,
         accuracyScore: analysis.score,
-        attemptVerified: true,
-        assessedBy: "deterministic",
+        attemptVerified: analysis.verified,
+        assessedBy: analysis.online ? "online" : "offline",
         sessionMinutes: normalizeDailySessionMinutes(missionMinutes),
         sourceId: "deutsch-authored-grammar-curriculum-v20",
       }),

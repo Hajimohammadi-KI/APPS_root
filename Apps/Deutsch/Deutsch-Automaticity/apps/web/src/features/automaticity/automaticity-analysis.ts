@@ -14,6 +14,9 @@ export interface AutomatikIssue {
 }
 
 export interface AutomatikAnalysis {
+  readonly verified: boolean;
+  readonly online: boolean;
+  readonly corrected: string;
   readonly sentenceCount: number;
   readonly wordCount: number;
   readonly targetUses: number;
@@ -98,6 +101,9 @@ export function analyzeWeilClause(text: string): AutomatikAnalysis {
   const score = Math.min(100, sentenceScore + targetScore + accuracyScore);
 
   return {
+    verified: false,
+    online: false,
+    corrected: cleanText,
     sentenceCount,
     wordCount,
     targetUses,

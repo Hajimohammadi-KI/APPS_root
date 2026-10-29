@@ -192,8 +192,8 @@ export function ReviewCenter() {
           correctedText: result.corrected,
           targetHit: exact && result.targetHit,
           accuracyScore: exact ? 100 : 40,
-          attemptVerified: true,
-          assessedBy: state.learner.allowOnlineAI ? "online" : "deterministic",
+          attemptVerified: result.verified,
+          assessedBy: result.online ? "online" : "offline",
           sessionMinutes: normalizeDailySessionMinutes(
             state.settings.dailyStudyMinutes,
           ),
@@ -207,7 +207,7 @@ export function ReviewCenter() {
         inputText: answer.trim(),
         correctedText: result.corrected,
         targetHit: exact && result.targetHit,
-        verified: true,
+        verified: result.verified,
         accuracyScore: exact ? 100 : 40,
         ...(timedActive ? { latencyMs: (8 - secondsLeft) * 1_000 } : {}),
       });

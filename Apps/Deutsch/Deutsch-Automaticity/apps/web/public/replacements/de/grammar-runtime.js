@@ -113,8 +113,10 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         "Der erste Schritt muss persischen Text enthalten, damit deine beabsichtigte Bedeutung feststeht.",
       incomplete: (minimum) =>
         `Schreibe mindestens ${minimum} vollständige${minimum === 1 ? "n Satz" : " Sätze"} auf Deutsch.`,
-      aiCorrect: "Sehr gut — deine eigene Formulierung wurde ausgewertet.",
-      aiRevision: "Fast richtig — überarbeite gezielt deine eigene Formulierung.",
+      aiNoIssues:
+        "KI-Hinweis: keine Fehler gemeldet. Das ist eine Rückmeldung, keine bestätigte Bewertung — die Übung zählt als Selbstcheck.",
+      aiRevision:
+        "KI-Hinweis: Überarbeite deine eigene Formulierung mit diesen Punkten. Die Übung zählt als Selbstcheck, nicht als bestätigte Bewertung.",
       selfCheck:
         "Selbstcheck: Dein eigener Text wurde lokal gespeichert und nicht mit dem Modellsatz verglichen. Ohne freigegebene, verbundene KI kann die App nicht jede freie Formulierung zuverlässig korrigieren.",
       inspiration: "Beispiel nur zur Inspiration, nicht als einzige Lösung:",
@@ -153,8 +155,10 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         "Step 1 must contain Persian text so your intended meaning is recorded.",
       incomplete: (minimum) =>
         `Write at least ${minimum} complete German ${minimum === 1 ? "sentence" : "sentences"}.`,
-      aiCorrect: "Very good — your own wording was evaluated.",
-      aiRevision: "Almost right — revise your own wording using this feedback.",
+      aiNoIssues:
+        "AI hint: no errors reported. This is feedback, not a confirmed grade — the exercise counts as a self-check.",
+      aiRevision:
+        "AI hint: revise your own wording using these points. The exercise counts as a self-check, not a confirmed grade.",
       selfCheck:
         "Self-check: Your own text was saved locally and was not compared with the model sentence. Without approved, connected AI, the app cannot reliably correct every open response.",
       inspiration: "Example for inspiration only, not the only answer:",
@@ -192,8 +196,10 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         "مرحلهٔ اول باید دارای متن فارسی باشد تا معنیِ موردنظرت مشخص شود.",
       incomplete: (minimum) =>
         `حداقل ${minimum} جملهٔ کامل به آلمانی بنویس.`,
-      aiCorrect: "بسیار خوب — جمله‌بندی خودت ارزیابی شد.",
-      aiRevision: "تقریباً درست است — جمله‌بندی خودت را با این بازخورد اصلاح کن.",
+      aiNoIssues:
+        "راهنمایی هوش مصنوعی: خطایی گزارش نشد. این یک بازخورد است، نه نمرهٔ تأییدشده — تمرین به‌عنوان خودارزیابی ثبت می‌شود.",
+      aiRevision:
+        "راهنمایی هوش مصنوعی: جمله‌بندی خودت را با این نکته‌ها اصلاح کن. تمرین به‌عنوان خودارزیابی ثبت می‌شود، نه نمرهٔ تأییدشده.",
       selfCheck:
         "خودارزیابی: متن خودت به‌صورت محلی ذخیره شد و با جملهٔ نمونه مقایسه نشد. بدون هوش مصنوعیِ متصل و مجاز، اپ نمی‌تواند هر پاسخ آزادی را قابل‌اعتماد تصحیح کند.",
       inspiration: "مثال فقط برای الهام است، نه تنها پاسخ درست:",
@@ -1130,19 +1136,23 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         return;
       }
 
+      // A single model verdict is advice only: completion rests on the local
+      // checks above, exactly as when no AI is connected.
       const { evaluation, source } = result;
-      const accepted =
+      const noIssuesReported =
         evaluation.verdict === "correct" &&
         evaluation.targetUsed &&
         evaluation.complete;
-      feedback.className = `feedback show ${accepted ? "good" : "bad"}`;
-      feedback.innerHTML = `<strong>${escapeHtml(accepted ? copy.aiCorrect : copy.aiRevision)}</strong>${renderFeedbackPoints(evaluation.feedbackPoints)}${
+      drafts.markAssisted();
+      const completed = markExerciseComplete(unit);
+      feedback.className = `feedback show${noIssuesReported ? "" : " bad"}`;
+      feedback.innerHTML = `<strong>${escapeHtml(noIssuesReported ? copy.aiNoIssues : copy.aiRevision)}</strong>${renderFeedbackPoints(evaluation.feedbackPoints)}${
         evaluation.correctedGerman &&
         normalizeAnswer(evaluation.correctedGerman) !== normalizeAnswer(answer)
           ? `<p><strong>${escapeHtml(copy.corrected)}:</strong> ${escapeHtml(evaluation.correctedGerman)}</p>`
           : ""
       }<small>${escapeHtml(source)} · ${escapeHtml(copy.dimensions)}: ${escapeHtml(localizedDimensions(metadata))}</small>`;
-      if (accepted) markExerciseComplete(unit);
+      notify(`${completed}/${unit.exercises.length}`);
       return;
     }
 

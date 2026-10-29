@@ -21,3 +21,9 @@ test("W13 agreement respects questions, modals, subjunctives and noun phrase hea
   expect(writingIssues("The lists of items are ready.", "en")).toEqual([]);
   expect(writingIssues("He have a car.", "en").some(i => i.replacement === "has")).toBe(true);
 });
+test("W15 countability and verb complements use a narrow lexicon", () => {
+  for (const text of ["I need some advice.", "I ordered two coffees.", "I stopped to smoke.", "I stopped smoking.", "I enjoy reading books."])
+    expect(writingIssues(text, "en")).toEqual([]);
+  expect(writingIssues("I need an advice.", "en")[0]?.ruleId).toBe("EN_UNCOUNTABLE");
+  expect(writingIssues("I enjoy to read.", "en")[0]?.replacement).toBe("reading");
+});

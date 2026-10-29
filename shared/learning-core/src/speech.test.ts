@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { RecognitionCollector, compareSpeechTarget, phoneticPractice, calibrateWarningThreshold, pronunciationWarning, describeWaveform } from "./speech";
+import { RecognitionCollector, compareSpeechTarget, phoneticPractice, calibrateWarningThreshold, pronunciationWarning, describeWaveform, spokenPracticeEvidence, splitSpokenSentences } from "./speech";
 test("W23 final result revisions do not duplicate text and unknown confidence abstains", () => {
   const collector = new RecognitionCollector();
   const event = { resultIndex: 0, results: [{ isFinal: true, length: 2, 0: { transcript: "I think", confidence: 0.6 }, 1: { transcript: "I sink", confidence: 0.4 } }] };
@@ -9,6 +9,13 @@ test("W23 final result revisions do not duplicate text and unknown confidence ab
   expect(result.reliable).toBe(false);
   expect(result.alternatives[0]?.length).toBe(2);
   expect(new RecognitionCollector().update({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "hello" } }] }).reliable).toBe(false);
+});
+test("W28 transcript checks cannot verify spoken accuracy or convert WPM into fluency", () => {
+  expect(spokenPracticeEvidence()).toEqual({ targetHit: false, accuracyScore: 0, fluencyScore: null, attemptVerified: false });
+  const source = "Dr. Smith is here. I agree!";
+  const sentences = splitSpokenSentences(source);
+  expect(sentences.map(s => s.text)).toEqual(["Dr. Smith is here.", "I agree!"]);
+  for (const sentence of sentences) expect(source.slice(sentence.start, sentence.end)).toBe(sentence.text);
 });
 test("W27 waveform descriptions count interior quiet intervals without giving a fluency score", () => {
   const samples = new Float32Array(1000);

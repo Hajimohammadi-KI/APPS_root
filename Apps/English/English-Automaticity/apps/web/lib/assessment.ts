@@ -1,4 +1,5 @@
 import type { GrammarUnit, GrammarResource } from "@grammar/content";
+import { writingIssues } from "@automaticity/learning-core/writing-rules";
 import type { ErrorClass, Settings } from "@/features/store/app-store";
 import { wordCount } from "@/lib/utils";
 
@@ -239,7 +240,11 @@ function localGrammarAssessment(
   text: string,
   grammar: EvaluationOptions["grammar"],
 ) {
-  const matches: LanguageToolMatch[] = [];
+  const matches: LanguageToolMatch[] = writingIssues(text, "en").map(issue => ({
+    message: issue.message, offset: issue.start, length: issue.end - issue.start,
+    replacements: [{ value: issue.replacement }],
+    rule: { id: issue.ruleId, category: { id: "GRAMMAR", name: "Grammar" } },
+  }));
   let corrected = text;
   const malformedPresentPerfect = text.match(
     /\b(i|you|we|they|he|she|it)\s+(have|has)\s+not\s+still\s+(?:an?\s+)?activity\s+same\s+([a-z]+)\s+tried\b/i,

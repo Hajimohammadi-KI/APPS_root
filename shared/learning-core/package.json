@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./writing-rules": "./src/writing-rules.ts",
     ".": "./src/index.ts",
     "./reference-answer": "./src/reference-answer.ts",
     "./adherence": "./src/adherence/index.ts",

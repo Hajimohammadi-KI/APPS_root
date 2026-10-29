@@ -224,8 +224,6 @@ function parseAssessmentResponse(
 const OFFLINE_RULES: Array<[RegExp, string]> = [
   [/\bshe don't\b/gi, "she doesn't"],
   [/\bhe don't\b/gi, "he doesn't"],
-  [/\bdoesn't ([a-z]+)s\b/gi, "doesn't $1"],
-  [/\bdid ([a-z]+)ed\b/gi, "did $1"],
   [/\bmore better\b/gi, "better"],
 ];
 

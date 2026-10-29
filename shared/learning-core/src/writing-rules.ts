@@ -1,4 +1,6 @@
 import { tokenizeText } from "./text";
+import { ENGLISH_FINITE_TO_BASE } from "./english-lexicon";
+export { countPerfectUses } from "./english-lexicon";
 
 export interface WritingIssue {
   readonly ruleId: string;
@@ -21,6 +23,12 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
     issues.push({ ruleId, start: token.start, end: token.end, original: token.text, replacement, message });
   };
   if (language === "en") {
+    for (let i = 0; i < tokens.length - 2; i++) {
+      if (!["i", "you", "he", "she", "it", "we", "they"].includes(lower[i]!)) continue;
+      if (!["did", "doesn't", "doesn’t", "didn't", "didn’t"].includes(lower[i+1]!)) continue;
+      const base = ENGLISH_FINITE_TO_BASE[lower[i+2]!];
+      if (base) add(i+2, base, "EN_AUXILIARY_BASE", "After do/does/did, use the base form of the main verb.");
+    }
     for (let i = 0; i < tokens.length - 1; i++) {
       if (i > 0 && !/[.!?]/u.test(tokens[i-1]!.text)) continue;
       const subject = lower[i]!, verb = lower[i+1]!;

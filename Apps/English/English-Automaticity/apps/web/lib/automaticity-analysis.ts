@@ -1,3 +1,4 @@
+import { countPerfectUses } from "@automaticity/learning-core/writing-rules";
 import { writingIssues } from "@automaticity/learning-core/writing-rules";
 import { matchesReferenceAnswer, normalizeReferenceAnswer } from "@automaticity/learning-core/reference-answer";
 
@@ -23,61 +24,6 @@ export interface AutomaticityAnalysis {
 	issues: AutomaticityIssue[];
 }
 
-const IRREGULAR_PARTICIPLES = [
-	"been",
-	"become",
-	"begun",
-	"bought",
-	"brought",
-	"built",
-	"caught",
-	"chosen",
-	"come",
-	"done",
-	"driven",
-	"eaten",
-	"fallen",
-	"felt",
-	"found",
-	"forgotten",
-	"given",
-	"gone",
-	"got",
-	"gotten",
-	"had",
-	"heard",
-	"kept",
-	"known",
-	"left",
-	"lost",
-	"made",
-	"met",
-	"paid",
-	"read",
-	"run",
-	"said",
-	"seen",
-	"sent",
-	"spoken",
-	"spent",
-	"stood",
-	"taken",
-	"taught",
-	"thought",
-	"told",
-	"understood",
-	"won",
-	"worn",
-	"written",
-] as const;
-
-const PARTICIPLE = `(?:[a-z]+ed|[a-z]+en|${IRREGULAR_PARTICIPLES.join("|")})`;
-const MODIFIER = "(?:(?:never|ever|already|just|recently|yet)\\s+)?";
-const PRESENT_PERFECT = new RegExp(
-	`\\b(?:(?:i|you|we|they)\\s+have|(?:he|she|it|[A-Z][a-z]+)\\s+has)\\s+${MODIFIER}${PARTICIPLE}\\b`,
-	"gi",
-);
-
 function sentences(text: string): string[] {
 	return text
 		.split(/(?:[.!?]+|\n+)/)
@@ -90,7 +36,7 @@ function words(text: string): string[] {
 }
 
 export function countPresentPerfectUses(text: string): number {
-	return text.match(PRESENT_PERFECT)?.length ?? 0;
+	return countPerfectUses(text);
 }
 
 export function analyzePresentPerfect(text: string): AutomaticityAnalysis {
@@ -101,7 +47,7 @@ export function analyzePresentPerfect(text: string): AutomaticityAnalysis {
 	const issues: AutomaticityIssue[] = [];
 
 	for (const issue of writingIssues(cleanText, "en").filter(issue => issue.ruleId === "EN_SUBJECT_AGREEMENT")) {
- issues.push({ code: "auxiliary_agreement", message: issue.message, original: issue.original, corrected: issue.replacement });
+ issues.push({ code: "auxiliary_agreement", message: issue.message, original: (cleanText.slice(0, issue.start).match(/\b(?:He|She|It|I|You|We|They)\s+$/i)?.[0] ?? "") + issue.original, corrected: (cleanText.slice(0, issue.start).match(/\b(?:He|She|It|I|You|We|They)\s+$/i)?.[0] ?? "") + issue.replacement });
 }
 
 	if (cleanText && targetUses === 0) {

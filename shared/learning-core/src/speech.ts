@@ -1,6 +1,51 @@
 import { normalizeText, tokenizeText } from "./text";
 import { alignAnswers } from "./automaticity/answer-alignment";
 export { describeAnswerEdits } from "./automaticity/answer-alignment";
+export interface WaveformDescription {
+  readonly durationSeconds: number;
+  readonly activeSeconds: number;
+  readonly quietIntervals: number;
+  readonly clipped: boolean;
+  readonly fluencyScore: null;
+}
+export function describeWaveform(samples: Float32Array, sampleRate: number): WaveformDescription | null {
+  if (!Number.isFinite(sampleRate) || sampleRate < 1000 || sampleRate > 192000 || !samples.length || samples.length > sampleRate * 600) return null;
+  const windowSize = Math.max(1, Math.round(sampleRate * .02));
+  const frames: { active: boolean; samples: number }[] = [];
+  let clipped = false, active = 0;
+  for (let start = 0; start < samples.length; start += windowSize) {
+    const end = Math.min(start + windowSize, samples.length);
+    let sum = 0;
+    for (let i = start; i < end; i++) {
+      const sample = samples[i]!;
+      if (!Number.isFinite(sample) || Math.abs(sample) > 1) return null;
+      clipped ||= Math.abs(sample) >= .99;
+      sum += sample * sample;
+    }
+    const audible = Math.sqrt(sum / (end-start)) >= .01;
+    if (audible) active += end-start;
+    frames.push({ active: audible, samples: end-start });
+  }
+  let quiet = 0, quietIntervals = 0, heard = false;
+  for (const frame of frames) {
+    if (frame.active) {
+      if (heard && quiet / sampleRate >= .3) quietIntervals++;
+      heard = true; quiet = 0;
+    } else quiet += frame.samples;
+  }
+  return { durationSeconds: samples.length / sampleRate, activeSeconds: active / sampleRate, quietIntervals, clipped, fluencyScore: null };
+}
+/** Decode and describe on this device; no raw audio leaves this function. */
+export async function describeRecording(blob: Blob): Promise<WaveformDescription | null> {
+  if (typeof AudioContext === "undefined" || !blob.size || blob.size > 20_000_000) return null;
+  const context = new AudioContext();
+  try {
+    const audio = await context.decodeAudioData(await blob.arrayBuffer());
+    if (audio.numberOfChannels !== 1) return null; // Do not hide a silent channel by averaging.
+    return describeWaveform(audio.getChannelData(0), audio.sampleRate);
+  } catch { return null; }
+  finally { await context.close(); }
+}
 export interface WarningCalibration {
   readonly threshold: number;
   readonly falseAlerts: number;

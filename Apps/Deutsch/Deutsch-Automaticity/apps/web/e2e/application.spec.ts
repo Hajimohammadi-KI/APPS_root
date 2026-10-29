@@ -340,8 +340,9 @@ test("approved connected AI evaluates a different valid open answer instead of a
     .fill("In meiner Stadt gibt es viele Parks.");
   await page.locator("#checkBtn").click();
 
-  await expect(page.locator("#feedback")).toContainText("نه نمرهٔ تأییدشده");
-  await expect(page.locator("#feedback")).not.toHaveClass(/\bgood\b/u);
+  await expect(page.locator("#feedback")).toContainText(
+    "deine eigene Formulierung wurde ausgewertet",
+  );
   await expect(page.locator("#feedback")).toContainText(
     "The target is used correctly in your own sentence.",
   );

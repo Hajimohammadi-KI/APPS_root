@@ -1,9 +1,9 @@
 {
-  "publishedAt": "2026-10-11",
+  "publishedAt": "2026-10-29",
   "version": "20.9.4",
-  "webRelease": "2026.10.11.5",
+  "webRelease": "2026.10.29.1",
   "changes": [
-    "Automatik-Mission aus kleineren Teilen neu zusammengesetzt (Lektionsinhalt, Aufnahme, Schrittkarten) mit denselben Schritten, Prüfungen und Nachweisen; ausgewählte Rahmen nutzen jetzt die Türkis-Palette",
-    "Lerndaten, gespeicherte Antworten und alle Links bleiben unverändert"
+    "W01/W02: Ungeprüfte freie Antworten erhalten keine bestätigte Bewertung, auch beim Ausfall des Grammatikskripts.",
+    "W04: Gespeicherte Nachweise übernehmen den tatsächlichen Prüfstatus und Anbieter."
   ]
 }

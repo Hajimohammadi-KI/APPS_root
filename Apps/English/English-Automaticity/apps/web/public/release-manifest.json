@@ -1,9 +1,9 @@
 {
-  "publishedAt": "2026-10-11",
+  "publishedAt": "2026-10-29",
   "version": "27.4.4",
-  "webRelease": "2026.10.11.5",
+  "webRelease": "2026.10.29.1",
   "changes": [
-    "Automaticity Mission rebuilt from smaller parts (lesson content, recorder, step cards) with the same steps, checks and saved evidence; selected-state borders now use the teal palette",
-    "Learner data, saved responses and all links are unchanged"
+    "W03: Offline grammar diagnostics block acceptance even without a replacement.",
+    "Previous locally tested learning and data integrity fixes are included."
   ]
 }

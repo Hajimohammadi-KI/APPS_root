@@ -10,6 +10,10 @@ const runtimeSource = readFileSync(
   ),
   "utf8",
 );
+const textBrowserSource = readFileSync(
+  new URL("../../../apps/web/public/learning-core/text.js", import.meta.url),
+  "utf8",
+);
 
 interface TestElement {
   value: string;
@@ -116,7 +120,7 @@ function grammarPage(
     /\n\}\)\(\);\s*$/u,
     "\n drafts = draftState; globalThis.harness = { checkAnswer, detectAnswerLanguage };\n})();",
   );
-  runInNewContext(instrumented, context);
+  runInNewContext(`${textBrowserSource}\nwindow.AutomaticityText = globalThis.AutomaticityText;\n${instrumented}`, context);
   return {
     detect: context.harness.detectAnswerLanguage,
     storage,

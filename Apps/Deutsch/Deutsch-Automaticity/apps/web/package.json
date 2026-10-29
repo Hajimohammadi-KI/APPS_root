@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "bun --bun next dev",
-    "build": "bun ../../../../../scripts/language-apps-roadmap.mjs --check --app=de && node ../../node_modules/next/dist/bin/next build",
+    "build": "bun ../../packages/learning-core/src/automaticity/audit-curriculum-cli.ts public/learning-core/curriculum-de.json && bun ../../../../../scripts/language-apps-roadmap.mjs --check --app=de && node ../../node_modules/next/dist/bin/next build",
     "start": "node ../../scripts/start-standalone.mjs",
     "lint": "biome lint src",
     "typecheck": "node ../../node_modules/typescript/bin/tsc --noEmit",

@@ -1,6 +1,29 @@
 import { normalizeText, tokenizeText } from "./text";
 import { alignAnswers } from "./automaticity/answer-alignment";
 export { describeAnswerEdits } from "./automaticity/answer-alignment";
+export interface WarningCalibration {
+  readonly threshold: number;
+  readonly falseAlerts: number;
+  readonly misses: number;
+  readonly samples: number;
+}
+/** Optimizer only. Synthetic unit fixtures do not qualify a deployed audio model. */
+export function calibrateWarningThreshold(samples: readonly { readonly errorProbability: number; readonly error: boolean }[]): WarningCalibration | null {
+  if (!samples.length || samples.some(s => !Number.isFinite(s.errorProbability) || s.errorProbability < 0 || s.errorProbability > 1) || !samples.some(s => s.error) || !samples.some(s => !s.error)) return null;
+  const candidates = [...new Set([1.000001, ...samples.map(s => s.errorProbability)])].sort((a, b) => b-a);
+  let best: WarningCalibration | null = null, bestCost = Infinity;
+  for (const threshold of candidates) {
+    const falseAlerts = samples.filter(s => !s.error && s.errorProbability >= threshold).length;
+    const misses = samples.filter(s => s.error && s.errorProbability < threshold).length;
+    const cost = 10 * falseAlerts + misses;
+    if (cost < bestCost) { bestCost = cost; best = { threshold, falseAlerts, misses, samples: samples.length }; }
+  }
+  return best;
+}
+/** No live calibration is approved yet; the installed apps intentionally pass null. */
+export function pronunciationWarning(evidence: { readonly source: "recognition" | "acoustic"; readonly errorProbability: number }, calibration: WarningCalibration | null): "review_audio" | null {
+  return evidence.source === "acoustic" && calibration && calibration.falseAlerts === 0 && calibration.samples >= 40 && Number.isFinite(evidence.errorProbability) && evidence.errorProbability >= calibration.threshold && evidence.errorProbability <= 1 ? "review_audio" : null;
+}
 const contrasts = {
   en: [
     { words: ["thin", "tin"], phonemes: ["θɪn", "tɪn"] },

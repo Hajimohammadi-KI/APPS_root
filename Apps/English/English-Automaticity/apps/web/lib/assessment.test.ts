@@ -20,6 +20,22 @@ const presentPerfectGrammar = {
 };
 
 describe("practice and mastery assessment", () => {
+  test("offline grammar issues without replacements block an otherwise eligible response", async () => {
+    const result = await evaluateResponse(
+      "I have went to work.",
+      { grammar: presentPerfectGrammar, patterns: ["have"], minWords: 3 },
+      { ...normalizeAppState(null).settings, onlineFeedback: false },
+    );
+    expect(result.online).toBe(false);
+    expect(result.changed).toBe(false);
+    expect(result.targetUses).toBe(1);
+    expect(result.complete).toBe(true);
+    expect(result.relevant).toBe(true);
+    expect(result.grammarIssues[0]?.replacements).toEqual([]);
+    expect(result.pass).toBe(false);
+    expect(result.masteryEligible).toBe(false);
+    expect(result.checkReasons.grammar).toContain("past participle");
+  });
   test("recognizes am, is, and are as the verb-be target", async () => {
     const settings = normalizeAppState(null).settings;
     const result = await evaluateResponse(

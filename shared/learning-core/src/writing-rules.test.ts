@@ -45,3 +45,10 @@ test("W18 German field order handles V2 and finite-final with replacement infini
   expect(writingIssues("Heute ich gehe nach Hause.", "de")[0]?.ruleId).toBe("DE_V2");
   expect(writingIssues("Ich bleibe, weil ich bin müde.", "de")[0]?.replacement).toBe("weil ich müde bin");
 });
+test("W19 Perfekt auxiliary is tied to its own clause and valency", () => {
+  for (const text of ["Ich habe gelernt. Er ist gegangen.", "Er hat das Auto gefahren.", "Sie hat das Flugzeug geflogen.", "Er ist nach Berlin gefahren."])
+    expect(writingIssues(text, "de")).toEqual([]);
+  const issue = writingIssues("Ich habe gelernt. Er hat nach Berlin gefahren.", "de")[0];
+  expect(issue).toMatchObject({ ruleId: "DE_PERFEKT_AUXILIARY", original: "hat", replacement: "ist", start: 20 });
+  expect(writingIssues("Ich habe gegangen.", "de")[0]?.replacement).toBe("bin");
+});

@@ -23,6 +23,15 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
     issues.push({ ruleId, start: token.start, end: token.end, original: token.text, replacement, message });
   };
   if (language === "en") {
+    for (let i = 0; i < tokens.length - 1; i++) {
+      if (["advice", "information", "furniture", "equipment", "homework", "luggage", "research"].includes(lower[i+1]!) && ["a", "an", "many", "few"].includes(lower[i]!))
+        add(i, "some", "EN_UNCOUNTABLE", "This noun is uncountable in this use; use some or a suitable unit phrase.");
+      const gerunds: Readonly<Record<string, string>> = { read: "reading", swim: "swimming", cook: "cooking", play: "playing", learn: "learning", walk: "walking" };
+      if (["enjoy", "enjoys", "enjoyed"].includes(lower[i]!) && lower[i+1] === "to" && gerunds[lower[i+2] ?? ""]) {
+        const from = tokens[i+1]!, to = tokens[i+2]!;
+        issues.push({ ruleId: "EN_VERB_COMPLEMENT", start: from.start, end: to.end, original: source.slice(from.start, to.end), replacement: gerunds[lower[i+2]!]!, message: "Enjoy takes an -ing complement, not a to-infinitive." });
+      }
+    }
     for (let i = 0; i < tokens.length - 2; i++) {
       if (!["i", "you", "he", "she", "it", "we", "they"].includes(lower[i]!)) continue;
       if (!["did", "doesn't", "doesn’t", "didn't", "didn’t"].includes(lower[i+1]!)) continue;

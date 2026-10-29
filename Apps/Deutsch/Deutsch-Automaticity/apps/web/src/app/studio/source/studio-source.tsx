@@ -302,7 +302,7 @@ export default function Home() {
               onTranscriptChange={recorder.editTranscript}
             />
 
-            <SpeechPracticePanel transcript={recorder.transcript} evidence={recorder.recognitionEvidence} waveform={recorder.waveform} language={language} onSpeak={value => void speak(value)} />
+            <SpeechPracticePanel transcript={recorder.transcript} evidence={recorder.recognitionEvidence} waveform={recorder.waveform} language={language} level={selected.level} onSpeak={value => void speak(value)} />
 
             {active === 0 && (
               <ListenPanel

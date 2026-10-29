@@ -75,7 +75,7 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
       let end = i+1;
       while (end < tokens.length && tokens[end]!.kind === "word" && !["und", "oder", "aber", "weil", "dass"].includes(lower[end]!)) end++;
       const phrase = lower.slice(i+1, end).join(" ");
-      if (/^(?:(?:heute|gestern|schon|bereits|nicht) )?(?:gegangen|gekommen|geblieben|aufgestanden|eingeschlafen|geworden)$/u.test(phrase) || /^(?:nach (?:berlin|hause)|zum bahnhof) (?:gefahren|geflogen|gelaufen|gereist)$/u.test(phrase))
+      if (/^(?:(?:heute|gestern|schon|bereits|nicht) )?(?:gegangen|gekommen|geblieben|aufgestanden|eingeschlafen|geworden)$/u.test(phrase) || /^(?:nach (?:berlin|hause)|zum bahnhof) (?:gefahren|geflogen|gelaufen|gereist|gegangen|gekommen)$/u.test(phrase))
         add(i, sein[lower[i]!]!, "DE_PERFEKT_AUXILIARY", "Dieses intransitive Perfekt benötigt hier das Hilfsverb sein.");
     }
     const finite = new Set("bin bist ist sind seid habe hast hat haben habt kann kannst können könnt muss musst müssen müsst gehe gehst geht gehen komme kommst kommt kommen lerne lernst lernt lernen arbeite arbeitest arbeitet arbeiten bleibe bleibst bleibt bleiben".split(" "));

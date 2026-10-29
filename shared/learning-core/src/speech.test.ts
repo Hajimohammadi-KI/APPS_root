@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { RecognitionCollector, compareSpeechTarget, phoneticPractice, calibrateWarningThreshold, pronunciationWarning } from "./speech";
+import { RecognitionCollector, compareSpeechTarget, phoneticPractice, calibrateWarningThreshold, pronunciationWarning, describeWaveform } from "./speech";
 test("W23 final result revisions do not duplicate text and unknown confidence abstains", () => {
   const collector = new RecognitionCollector();
   const event = { resultIndex: 0, results: [{ isFinal: true, length: 2, 0: { transcript: "I think", confidence: 0.6 }, 1: { transcript: "I sink", confidence: 0.4 } }] };
@@ -9,6 +9,14 @@ test("W23 final result revisions do not duplicate text and unknown confidence ab
   expect(result.reliable).toBe(false);
   expect(result.alternatives[0]?.length).toBe(2);
   expect(new RecognitionCollector().update({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "hello" } }] }).reliable).toBe(false);
+});
+test("W27 waveform descriptions count interior quiet intervals without giving a fluency score", () => {
+  const samples = new Float32Array(1000);
+  for (let i = 0; i < 300; i++) samples[i] = .2;
+  for (let i = 700; i < 1000; i++) samples[i] = .2;
+  expect(describeWaveform(samples, 1000)).toMatchObject({ durationSeconds: 1, activeSeconds: .6, quietIntervals: 1, fluencyScore: null });
+  expect(describeWaveform(new Float32Array(1000), 1000)?.quietIntervals).toBe(0);
+  expect(describeWaveform(new Float32Array([NaN]), 1000)).toBeNull();
 });
 test("W26 asymmetric calibration abstains without reviewed acoustic evidence", () => {
   expect(calibrateWarningThreshold([])).toBeNull();

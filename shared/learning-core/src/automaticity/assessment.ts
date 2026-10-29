@@ -1,4 +1,5 @@
 import { normalizeText } from "../text";
+import { alignAnswers, describeAnswerEdits } from "./answer-alignment";
 import {
   parseAutomaticityEvent,
   type AssessmentEvent,
@@ -183,6 +184,12 @@ export function assessControlledTask(
       base.feedback = english
         ? "Your answer differs from the stored forms. It has been saved without a correctness score. Compare the meaning or request a review; a different correct answer should not be marked wrong."
         : "Deine Antwort unterscheidet sich von den gespeicherten Formen. Sie wurde ohne Richtigkeitswert gespeichert. Vergleiche die Bedeutung oder lasse sie prüfen; eine andere richtige Antwort soll nicht als falsch gelten.";
+  }
+  if (!accepted && task.acceptedAnswers.length) {
+    const choices = task.acceptedAnswers.map(answer => alignAnswers(attempt.response.text, answer));
+    const edits = choices.sort((a, b) => a.length - b.length)[0] ?? [];
+    base.feedback += " " + describeAnswerEdits(edits, attempt.language);
+    base.spans = edits.map(edit => ({ start: edit.start, end: edit.end, explanation: describeAnswerEdits([edit], attempt.language) }));
   }
   return parseAutomaticityEvent(base, attempt.language) as AssessmentEvent;
 }

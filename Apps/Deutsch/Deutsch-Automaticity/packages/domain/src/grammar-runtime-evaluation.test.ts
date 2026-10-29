@@ -18,13 +18,26 @@ interface TestElement {
   className: string;
   querySelectorAll: () => readonly never[];
   focus: () => void;
+  setAttribute: () => void;
+  classList: { add: () => void; remove: () => void };
+}
+
+interface AiVerdict {
+  verdict: "correct" | "needs_revision";
+  targetUsed: boolean;
+  complete: boolean;
 }
 
 function grammarPage(
   expected: string,
-  options: { open?: boolean; alternatives?: string[] } = {},
+  options: { open?: boolean; alternatives?: string[]; ai?: AiVerdict } = {},
 ) {
   const storage = new Map<string, string>();
+  if (options.ai)
+    storage.set(
+      "GrammarAutomaticityV11_de",
+      JSON.stringify({ learner: { allowOnlineAI: true } }),
+    );
   const elements = new Map<string, TestElement>();
   const element = (selector: string): TestElement => {
     if (!elements.has(selector))
@@ -35,9 +48,26 @@ function grammarPage(
         className: "",
         querySelectorAll: () => [],
         focus: () => {},
+        setAttribute: () => {},
+        classList: { add: () => {}, remove: () => {} },
       });
     return elements.get(selector)!;
   };
+  const aiReply = (body: unknown) =>
+    Promise.resolve({ ok: true, json: () => Promise.resolve(body) });
+  const fetch = (_url: string, init?: { method?: string }) =>
+    init?.method === "POST"
+      ? aiReply({
+          providerLabel: "Test AI",
+          model: "test-model",
+          text: JSON.stringify({
+            ...options.ai,
+            correctedGerman: "",
+            issueTypes: [],
+            feedbackPoints: [{ type: "check", message: "Modellhinweis." }],
+          }),
+        })
+      : aiReply({ connected: true });
   const fixture = {
     level: "A2",
     title: "Grammatik im Kontext",
@@ -64,6 +94,9 @@ function grammarPage(
     },
     window: { GERMAN_GRAMMAR_UNITS: [fixture], location: { search: "" } },
     URLSearchParams,
+    fetch,
+    setTimeout: () => 0,
+    clearTimeout: () => {},
     document: {
       querySelector: element,
       readyState: "loading",
@@ -181,6 +214,35 @@ describe("active Grammar-Labor answer handler", () => {
       )[0].response,
     ).toBe("Hotel");
   });
+
+  it.each([
+    [{ verdict: "correct", targetUsed: true, complete: true }, "feedback show"],
+    [
+      { verdict: "needs_revision", targetUsed: true, complete: true },
+      "feedback show bad",
+    ],
+  ] as const)(
+    "treats a single model verdict as feedback, not acceptance: %o",
+    async (ai, className) => {
+      const page = grammarPage("In meiner Stadt gibt es viele Parks.", {
+        open: true,
+        ai,
+      });
+      await page.answer("In meiner Stadt gibt es einen großen Park.");
+      expect(page.feedback.className).toBe(className);
+      expect(page.feedback.innerHTML).toContain("bestätigte Bewertung");
+      expect(page.feedback.innerHTML).toContain("Modellhinweis.");
+      expect(page.draftState.assisted).toBe(true);
+      expect(page.storage.has("deutsch-automaticity:grammar-progress:v3")).toBe(
+        true,
+      );
+      expect(
+        JSON.parse(
+          page.storage.get("deutsch-automaticity:grammar-open-responses:v1")!,
+        )[0].outcome,
+      ).toBe("submitted-unassessed");
+    },
+  );
 
   it("checks language without a topic-specific hint or completion", async () => {
     const page = grammarPage("Der Bericht wird geprüft.");

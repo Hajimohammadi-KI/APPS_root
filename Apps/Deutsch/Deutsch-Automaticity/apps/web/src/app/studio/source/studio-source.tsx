@@ -1,4 +1,5 @@
 "use client";
+import { SpeechPracticePanel } from "./speech-practice-panel";
 import { useEffect, useMemo, useState } from "react";
 import { normalizeDailySessionMinutes } from "@automaticity/learning-core";
 import { useLearnerState } from "@/features/learner-state/learner-state-provider";
@@ -300,6 +301,8 @@ export default function Home() {
               }}
               onTranscriptChange={recorder.editTranscript}
             />
+
+            <SpeechPracticePanel transcript={recorder.transcript} evidence={recorder.recognitionEvidence} language={language} onSpeak={value => void speak(value)} />
 
             {active === 0 && (
               <ListenPanel

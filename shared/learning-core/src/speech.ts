@@ -1,4 +1,11 @@
-import { normalizeText } from "./text";
+import { normalizeText, tokenizeText } from "./text";
+import { alignAnswers } from "./automaticity/answer-alignment";
+export { describeAnswerEdits } from "./automaticity/answer-alignment";
+
+export function compareSpeechTarget(transcript: string, target: string) {
+  const words = (s: string) => tokenizeText(s.slice(0, 10000)).filter(t => t.kind === "word").map(t => t.normalized.toLocaleLowerCase()).join(" ");
+  return { edits: alignAnswers(words(transcript), words(target)), pronunciationScore: null } as const;
+}
 export interface RecognitionAlternative {
   readonly transcript: string;
   readonly confidence?: number;

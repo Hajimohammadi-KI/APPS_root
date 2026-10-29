@@ -1,4 +1,5 @@
 "use client";
+import { SpeechPracticePanel } from "./speech-practice-panel";
 import { LearningNavigation } from "@/components/learning-navigation";
 import { Disclosure } from "@/components/ui/disclosure";
 import { AutomaticityEvidenceSummary } from "@/features/components/automaticity-evidence-summary";
@@ -330,6 +331,8 @@ export default function Home() {
               }}
               onTranscriptChange={recorder.editTranscript}
             />
+
+            <SpeechPracticePanel transcript={recorder.transcript} evidence={recorder.recognitionEvidence} language={language} onSpeak={value => void speak(value)} />
 
             {active === 0 && (
               <ListenPanel

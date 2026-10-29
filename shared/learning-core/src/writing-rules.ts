@@ -69,6 +69,22 @@ export function writingIssues(source: string, language: "en" | "de"): WritingIss
     }
   }
   if (language === "de") {
+    const finite = new Set("bin bist ist sind seid habe hast hat haben habt kann kannst können könnt muss musst müssen müsst gehe gehst geht gehen komme kommst kommt kommen lerne lernst lernt lernen arbeite arbeitest arbeitet arbeiten bleibe bleibst bleibt bleiben".split(" "));
+    const pronouns = new Set("ich du er sie es wir ihr".split(" "));
+    for (let i = 0; i < tokens.length - 2; i++) {
+      if (["heute", "gestern", "morgen", "danach", "deshalb", "dann"].includes(lower[i]!) && (i === 0 || /[.!?]/u.test(tokens[i-1]!.text)) && pronouns.has(lower[i+1]!) && finite.has(lower[i+2]!)) {
+        const first = tokens[i+1]!, last = tokens[i+2]!;
+        issues.push({ ruleId: "DE_V2", start: first.start, end: last.end, original: source.slice(first.start, last.end), replacement: `${last.text} ${first.text}`, message: "Im Aussagesatz steht das finite Verb an zweiter Satzgliedposition." });
+      }
+      if (!["weil", "dass", "obwohl", "wenn"].includes(lower[i]!) || !pronouns.has(lower[i+1]!) || !finite.has(lower[i+2]!)) continue;
+      let end = i+3;
+      while (end < tokens.length && tokens[end]!.kind === "word") end++;
+      const tail = lower.slice(i+3, end).join(" ");
+      // Known predicates only; Ersatzinfinitiv clusters intentionally abstain.
+      if (!/^(?:müde|krank|hier|zu hause|keine zeit|ein buch|nach hause|kommen|gehen|lernen|arbeiten)$/u.test(tail)) continue;
+      const first = tokens[i]!, last = tokens[end-1]!;
+      issues.push({ ruleId: "DE_SUBORDINATE_FINAL", start: first.start, end: last.end, original: source.slice(first.start, last.end), replacement: `${first.text} ${tokens[i+1]!.text} ${source.slice(tokens[i+3]!.start, last.end)} ${tokens[i+2]!.text}`, message: "Im eingeleiteten Nebensatz steht das finite Verb hier am Ende." });
+    }
     const dative: Readonly<Record<string, string>> = { ich: "mir", mich: "mir", du: "dir", dich: "dir", er: "ihm", ihn: "ihm", wir: "uns", ihr: "euch" };
     const accusative: Readonly<Record<string, string>> = { ich: "mich", mir: "mich", du: "dich", dir: "dich", er: "ihn", ihm: "ihn", wir: "uns", ihr: "euch" };
     for (let i = 0; i < tokens.length - 1; i++) {

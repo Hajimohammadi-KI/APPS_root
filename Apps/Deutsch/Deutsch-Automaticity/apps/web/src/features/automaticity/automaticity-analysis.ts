@@ -1,3 +1,4 @@
+import { writingIssues } from "@automaticity/learning-core/writing-rules";
 import {
   matchesReferenceAnswer,
   normalizeReferenceAnswer,
@@ -41,19 +42,8 @@ export function countWeilClauses(text: string): number {
 }
 
 function firstWordOrderIssue(text: string): AutomatikIssue | null {
-  const match = text.match(
-    /\bweil\s+(ich|du|er|sie|es|wir|ihr|Sie)\s+(bin|bist|ist|sind|seid|habe|hast|hat|haben|habt|werde|wirst|wird|werden|werdet|kann|kannst|können|könnt|muss|musst|müssen|müsst)\b/i,
-  );
-  if (!match) return null;
-
-  const subject = match[1] ?? "ich";
-  const verb = match[2] ?? "bin";
-  return {
-    code: "word_order",
-    message: "Im weil-Nebensatz steht das finite Verb am Ende.",
-    original: match[0],
-    corrected: `weil ${subject} … ${verb}`,
-  };
+ const issue = writingIssues(text, "de").find(issue => issue.ruleId === "DE_SUBORDINATE_FINAL" || issue.ruleId === "DE_V2");
+ return issue ? { code: "word_order", message: issue.message, original: issue.original, corrected: issue.replacement } : null;
 }
 
 export function analyzeWeilClause(text: string): AutomatikAnalysis {

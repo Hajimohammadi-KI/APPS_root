@@ -2,6 +2,11 @@ import { describe, expect, test } from "bun:test";
 import { conversationTopics, spokenChunksUsed } from "./conversation-data";
 
 describe("natural spoken English chunks", () => {
+  test("W11 chunk anchors require complete words", () => {
+    const chunks = [{ text: "in my view", purpose: "opinion", example: "In my view, it works." }];
+    expect(spokenChunksUsed("Within my viewpoint, it works.", chunks)).toEqual([]);
+    expect(spokenChunksUsed("In my view, it works.", chunks)).toEqual(chunks);
+  });
   test("covers every conversation topic", () => {
     expect(conversationTopics).toHaveLength(72);
     expect(

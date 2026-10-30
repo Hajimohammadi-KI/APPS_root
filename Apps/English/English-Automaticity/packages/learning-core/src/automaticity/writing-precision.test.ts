@@ -30,6 +30,24 @@ test("W29 every installed correct example and accepted answer passes the precisi
     count += sentences.length;
   }
   expect(count).toBeGreaterThan(300);
+  // Correct sentences outside the curriculum that earlier rules flagged.
+  assertWritingPrecision(
+    [
+      "I work at a research institute.",
+      "Ask at an information desk.",
+      "I read a few research papers.",
+      "The group of students are arguing among themselves.",
+    ],
+    "en",
+  );
+  assertWritingPrecision(
+    [
+      "Ich spreche mit ihr.",
+      "Das ist für ihr Kind.",
+      "Seit ich in Berlin wohne, lerne ich Deutsch.",
+    ],
+    "de",
+  );
   expect(() => assertWritingPrecision(["a hour"], "en")).toThrow(
     "EN_INITIAL_SOUND",
   );

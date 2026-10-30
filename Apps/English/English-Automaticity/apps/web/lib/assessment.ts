@@ -687,7 +687,10 @@ export async function evaluateResponse(
     const response = await fetch(`${settings.apiBaseUrl}/api/assessment`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ text, language: "en-US" }),
+      body: JSON.stringify({
+        text,
+        language: settings.englishVariant === "en-GB" ? "en-GB" : "en-US",
+      }),
       signal: controller.signal,
     });
     if (!response.ok)

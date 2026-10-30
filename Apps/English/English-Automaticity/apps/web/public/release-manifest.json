@@ -1,8 +1,8 @@
 {
-  "publishedAt": "2026-10-29",
+  "publishedAt": "2026-10-30",
   "version": "27.4.4",
-  "webRelease": "2026.10.29.6",
+  "webRelease": "2026.10.30.1",
   "changes": [
-    "Pronunciation warnings remain disabled without validated acoustic evidence; offline research checks speaker-separated calibration and false-alert uncertainty."
+    "Correct sentences such as 'mit ihr', 'Seit ich hier wohne' and 'a research institute' are no longer marked as errors; English lesson checks honour the chosen spelling variant."
   ]
 }

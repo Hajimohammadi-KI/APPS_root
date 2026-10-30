@@ -74,6 +74,33 @@ test("W15 countability and verb complements use a narrow lexicon", () => {
     "reading",
   );
 });
+test("W15 RED noun modifiers and a few are not countability errors", () => {
+  for (const text of [
+    "I work at a research institute.",
+    "She has a homework assignment.",
+    "Ask at an information desk.",
+    "I read a few research papers.",
+    "We bought a furniture store.",
+  ])
+    expect(writingIssues(text, "en")).toEqual([]);
+  for (const text of [
+    "I need an advice.",
+    "She gave me an information about it.",
+    "We bought a furniture for the flat.",
+    "He has many homework.",
+  ])
+    expect(writingIssues(text, "en")[0]?.ruleId).toBe("EN_UNCOUNTABLE");
+});
+test("W13 RED collective group nouns allow notional plural agreement", () => {
+  for (const text of [
+    "The group of students are arguing among themselves.",
+    "The group of students is small.",
+  ])
+    expect(writingIssues(text, "en")).toEqual([]);
+  expect(
+    writingIssues("The box of books are heavy.", "en")[0]?.replacement,
+  ).toBe("is");
+});
 test("W16 reviewed proper names preserve unknown and ambiguous names", () => {
   expect(
     writingIssues("I visited berlin on monday.", "en").map(
@@ -100,6 +127,25 @@ test("W17 fixed-case prepositions use unambiguous pronouns", () => {
     "mir",
   );
   expect(writingIssues("Das ist für mir.", "de")[0]?.replacement).toBe("mich");
+});
+test("W17 RED ambiguous ihr and conjunction seit are not case errors", () => {
+  for (const text of [
+    "Ich spreche mit ihr.",
+    "Ich gehe zu ihr.",
+    "Das Geschenk ist von ihr.",
+    "Das ist für ihr Kind.",
+    "Ohne ihr Handy geht sie nicht.",
+    "Nach ihr kommt er.",
+    "Bei ihr ist es schön.",
+    "Seit ich in Berlin wohne, lerne ich Deutsch.",
+    "Seit du hier bist, ist alles besser.",
+    "Seit er arbeitet, hat er wenig Zeit.",
+  ])
+    expect(writingIssues(text, "de")).toEqual([]);
+  expect(writingIssues("Ich wohne seit mich hier.", "de")[0]?.replacement).toBe(
+    "mir",
+  );
+  expect(writingIssues("Er kommt mit ich.", "de")[0]?.replacement).toBe("mir");
 });
 test("W18 German field order handles V2 and finite-final with replacement infinitive abstention", () => {
   for (const text of [

@@ -91,8 +91,19 @@ export function writingIssues(
           "Capitalize this place, language, day or unambiguous month name.",
         );
     }
+    // A following noun makes the uncountable word a modifier (a research institute).
+    const clauseBoundary = new Set(
+      "for about on from to with and or but is was are were in at of that which today now here there".split(
+        " ",
+      ),
+    );
     for (let i = 0; i < tokens.length - 1; i++) {
+      const after = tokens[i + 2];
       if (
+        (!after ||
+          after.kind !== "word" ||
+          clauseBoundary.has(lower[i + 2]!)) &&
+        !(lower[i] === "few" && lower[i - 1] === "a") &&
         [
           "advice",
           "information",
@@ -199,12 +210,13 @@ export function writingIssues(
           "Use have with this subject in a direct statement.",
         );
       // A finite, unambiguous head lexicon; no guessing unknown noun number.
+      // Collective heads such as group allow notional plural agreement.
       const nounIndex = ["the", "these", "those"].includes(lower[i + 3] ?? "")
         ? i + 4
         : i + 3;
       if (
         subject === "the" &&
-        ["list", "box", "group", "lists", "boxes", "groups"].includes(verb) &&
+        ["list", "box", "lists", "boxes"].includes(verb) &&
         lower[i + 2] === "of" &&
         ["items", "books", "students"].includes(lower[nounIndex] ?? "")
       ) {
@@ -468,6 +480,7 @@ export function writingIssues(
           "Im eingeleiteten Nebensatz steht das finite Verb hier am Ende.",
       });
     }
+    // ihr is also dative "her" and possessive, so it never signals a case error.
     const dative: Readonly<Record<string, string>> = {
       ich: "mir",
       mich: "mir",
@@ -476,7 +489,6 @@ export function writingIssues(
       er: "ihm",
       ihn: "ihm",
       wir: "uns",
-      ihr: "euch",
     };
     const accusative: Readonly<Record<string, string>> = {
       ich: "mich",
@@ -486,9 +498,10 @@ export function writingIssues(
       er: "ihn",
       ihm: "ihn",
       wir: "uns",
-      ihr: "euch",
     };
     for (let i = 0; i < tokens.length - 1; i++) {
+      // seit before a nominative pronoun is the conjunction (Seit ich hier wohne).
+      if (lower[i] === "seit" && pronouns.has(lower[i + 1]!)) continue;
       const forms = ["mit", "aus", "bei", "nach", "seit", "von", "zu"].includes(
         lower[i]!,
       )

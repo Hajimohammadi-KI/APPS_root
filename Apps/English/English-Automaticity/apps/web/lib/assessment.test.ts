@@ -326,6 +326,29 @@ describe("assessment API response validation", () => {
     });
   }
 
+  test("W06 RED lesson assessment sends the learner's spelling variant", async () => {
+    const originalFetch = globalThis.fetch;
+    const sent: unknown[] = [];
+    globalThis.fetch = (async (_url: string, init?: RequestInit) => {
+      sent.push(JSON.parse(String(init?.body)));
+      return Response.json(valid);
+    }) as unknown as typeof fetch;
+    try {
+      const settings = normalizeAppState(null).settings;
+      for (const englishVariant of ["en-GB", "en-US"] as const)
+        await evaluateResponse(
+          text,
+          { grammar: modalGrammar },
+          { ...settings, onlineFeedback: true, englishVariant },
+        );
+      expect(
+        sent.map((body) => (body as { language: string }).language),
+      ).toEqual(["en-GB", "en-US"]);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
   test("accepts a valid correction and retains the original error evidence", async () => {
     const originalFetch = globalThis.fetch;
     const original = "  I can explains it.  ";

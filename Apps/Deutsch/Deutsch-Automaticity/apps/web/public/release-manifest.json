@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-10-30",
   "version": "20.9.4",
-  "webRelease": "2026.10.30.2",
+  "webRelease": "2026.10.30.3",
   "changes": [
-    "The main practice path now offers only checked written tasks; open writing and speech remain optional, saved without a score, and saved drafts can be resumed."
+    "Pronunciation research abstains on empty model output and retains unusable results in cohort coverage; pronunciation grading and warnings remain disabled pending validation."
   ]
 }

@@ -7,7 +7,8 @@ export interface AcousticObservation {
   readonly language: "en" | "de";
   readonly label: "correct" | "error";
   readonly labelSource: "human";
-  readonly score: number;
+  /** null retains unusable inference in the cohort without inventing a score. */
+  readonly score: number | null;
 }
 export interface CalibrationConfig {
   readonly language: "en" | "de";
@@ -26,6 +27,15 @@ export interface CalibrationSlice {
   readonly positiveSpeakers: number;
   readonly detectedSpeakers: number;
   readonly sensitivity: number | null;
+  readonly coverage: Record<
+    AcousticObservation["split"],
+    Record<AcousticObservation["label"], ScoreCoverage>
+  >;
+}
+export interface ScoreCoverage {
+  readonly total: number;
+  readonly scored: number;
+  readonly unusable: number;
 }
 interface SpeakerScores {
   correct: number | null;
@@ -96,7 +106,10 @@ export function evaluatePronunciationCalibration(
     speakers = new Map<string, SpeakerScores>();
   for (const row of observations) {
     if (row.labelSource !== "human") throw Error("A human label is required");
-    if (!Number.isFinite(row.score) || row.score < 0 || row.score > 1)
+    if (
+      row.score !== null &&
+      (!Number.isFinite(row.score) || row.score < 0 || row.score > 1)
+    )
       throw Error("Invalid score");
     if (!row.sampleId || row.sampleId.length > 128 || samples.has(row.sampleId))
       throw Error("Invalid or duplicate sample");
@@ -122,7 +135,8 @@ export function evaluatePronunciationCalibration(
       group: row.group,
       split: row.split,
     };
-    speaker[row.label] = Math.max(speaker[row.label] ?? -1, row.score);
+    if (row.score !== null)
+      speaker[row.label] = Math.max(speaker[row.label] ?? -1, row.score);
     speakers.set(row.speakerId, speaker);
   }
   const training = [...speakers.values()].filter(
@@ -155,6 +169,17 @@ export function evaluatePronunciationCalibration(
     ...new Set([...config.requiredGroups, ...observations.map((r) => r.group)]),
   ].sort();
   const slices: CalibrationSlice[] = groups.map((group) => {
+    const groupRows = observations.filter((row) => row.group === group);
+    const coverageFor = (
+      split: AcousticObservation["split"],
+      label: AcousticObservation["label"],
+    ): ScoreCoverage => {
+      const rows = groupRows.filter(
+        (row) => row.split === split && row.label === label,
+      );
+      const scored = rows.filter((row) => row.score !== null).length;
+      return { total: rows.length, scored, unusable: rows.length - scored };
+    };
     const cal = training.filter((s) => s.group === group);
     const held = [...speakers.values()].filter(
       (s) => s.group === group && s.split === "evaluation",
@@ -177,6 +202,16 @@ export function evaluatePronunciationCalibration(
       positiveSpeakers: positive.length,
       detectedSpeakers,
       sensitivity: positive.length ? detectedSpeakers / positive.length : null,
+      coverage: {
+        calibration: {
+          correct: coverageFor("calibration", "correct"),
+          error: coverageFor("calibration", "error"),
+        },
+        evaluation: {
+          correct: coverageFor("evaluation", "correct"),
+          error: coverageFor("evaluation", "error"),
+        },
+      },
     };
   });
   const meetsStatisticalGate =
@@ -184,6 +219,11 @@ export function evaluatePronunciationCalibration(
     config.requiredGroups.every((group) => {
       const s = slices.find((slice) => slice.group === group)!;
       return (
+        // Conditional scores alone cannot qualify an incompletely scored
+        // cohort. This is a research gate, never production authorization.
+        Object.values(s.coverage).every((split) =>
+          Object.values(split).every((label) => label.unusable === 0),
+        ) &&
         s.calibrationNegativeSpeakers >= 60 &&
         s.calibrationPositiveSpeakers >= 20 &&
         s.negativeSpeakers >= 60 &&

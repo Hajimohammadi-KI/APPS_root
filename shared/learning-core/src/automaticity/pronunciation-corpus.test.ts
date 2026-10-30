@@ -31,6 +31,13 @@ test("W26 raw phoneme discrepancy is a bounded descriptive signal, never a corre
   expect(phoneDisagreement([], ["a"])).toBeNull();
   expect(phoneDisagreement(["a"], Array(301).fill("a"))).toBeNull();
 });
+test("W26 missing ASR phones abstain instead of becoming maximum pronunciation disagreement", () => {
+  expect(phoneDisagreement(["θ", "ɪ", "ŋ", "k"], [])).toBeNull();
+  expect(phoneDisagreement(["a"], ["", " ", "ˈ", "ˌ"])).toBeNull();
+  expect(phoneDisagreement([" ", "ˈ"], ["a"])).toBeNull();
+  // An actual nonempty mismatch remains a descriptive discrepancy.
+  expect(phoneDisagreement(["a"], ["b"])).toBe(1);
+});
 test("W26 selects utterances before inspecting any pronunciation labels", () => {
   const metadata = [
     { sampleId: "a", speakerId: "one", label: "correct" },

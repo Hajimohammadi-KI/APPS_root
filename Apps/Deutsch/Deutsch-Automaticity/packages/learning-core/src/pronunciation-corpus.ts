@@ -59,8 +59,9 @@ function normalizePhones(tokens: readonly string[]): string[] {
     )
     .filter(Boolean);
 }
-/** Normalized edit distance between phone sequences. Not an error probability
- * and not proof that the learner pronounced any sound incorrectly. */
+/** Normalized edit distance between nonempty phone sequences. Missing model
+ * output abstains; it is not evidence of a learner error. Not an error
+ * probability or proof that any sound was pronounced incorrectly. */
 export function phoneDisagreement(
   reference: readonly string[],
   recognized: readonly string[],
@@ -68,7 +69,7 @@ export function phoneDisagreement(
   if (reference.length > 200 || recognized.length > 300) return null;
   const a = normalizePhones(reference),
     b = normalizePhones(recognized);
-  if (!a.length) return null;
+  if (!a.length || !b.length) return null;
   let previous = Array.from({ length: b.length + 1 }, (_, i) => i);
   for (let i = 0; i < a.length; i++) {
     const next = [i + 1];

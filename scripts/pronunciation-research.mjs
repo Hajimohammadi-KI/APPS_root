@@ -57,6 +57,8 @@ const modelSha256 = modelHash.digest("hex"),
   labelsBytes = readFileSync(join(corpus, "resource/scores-detail.json")),
   labelsSha256 = hash(labelsBytes);
 const sourceUrl = "https://www.openslr.org/101/";
+// v1 could score empty ASR output as maximum disagreement. Re-extract it.
+const scoringVersion = "phone-disagreement-v2";
 const labels = JSON.parse(labelsBytes.toString("utf8"));
 const candidates = [],
   expectedRows = new Map();
@@ -164,6 +166,7 @@ if (mode === "extract") {
   writeFileSync(
     output,
     JSON.stringify({
+      scoringVersion,
       modelSha256,
       labelsSha256,
       audioSha256: audioHash.digest("hex"),
@@ -180,6 +183,10 @@ if (mode === "extract") {
   );
 } else {
   const input = JSON.parse(readFileSync(observationsPath, "utf8"));
+  if (input.scoringVersion !== scoringVersion)
+    throw Error(
+      "Observations use an outdated scoring version; re-extract them.",
+    );
   if (
     input.modelSha256 !== modelSha256 ||
     input.labelsSha256 !== labelsSha256 ||
@@ -236,8 +243,8 @@ if (mode === "extract") {
     sourceUrl,
   };
   const scored = input.rows.filter((row) => row.status === "scored");
-  const population = evaluatePronunciationCalibration(scored, config);
-  const demographicRows = scored.map((row) => ({
+  const population = evaluatePronunciationCalibration(input.rows, config);
+  const demographicRows = input.rows.map((row) => ({
     ...row,
     group: row.demographic ?? "zh_unknown",
   }));
@@ -250,8 +257,9 @@ if (mode === "extract") {
       {
         dataset: "OpenSLR 101 / speechocean762",
         datasetLicense: "CC BY 4.0",
+        scoringVersion,
         limitations:
-          "First three corpus-order recordings per speaker, with ambiguous labels excluded: not a representative random sample. Mandarin L1, not Persian. The false-alert bound counts speakers with at least one alert on selected correct utterances, not daily per-utterance alerts. Utterance-level disagreement is not a phoneme diagnosis; model-training overlap is unknown. Scores and unusable statuses are not authenticated: independent re-extraction is needed. Hashes detect corruption, not adversarial changes. Per-group confidence intervals are not a simultaneous fairness guarantee.",
+          "First three corpus-order recordings per speaker, with ambiguous labels excluded: not a representative random sample. Mandarin L1, not Persian. Detection and false-alert statistics are conditional on usable model output; coverage includes unusable results by split, label and group, and incomplete required groups cannot pass the statistical gate. The false-alert bound counts speakers with at least one alert on selected correct utterances, not daily per-utterance alerts. Utterance-level disagreement is not a phoneme diagnosis; model-training overlap is unknown. Scores and unusable statuses are not authenticated: independent re-extraction is needed. Hashes detect corruption, not adversarial changes. Per-group confidence intervals are not a simultaneous fairness guarantee.",
         audioSha256: input.audioSha256,
         candidates: candidates.length,
         excludedAmbiguousOrMissing: candidates.length - eligible.length,

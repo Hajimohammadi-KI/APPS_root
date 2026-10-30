@@ -101,3 +101,46 @@ test("W26 rejects labels explicitly marked synthetic, inconsistent model scope a
     "score",
   );
 });
+test("W26 retains unusable observations in coverage and cannot qualify a selectively scored cohort", () => {
+  for (const split of ["calibration", "evaluation"] as const) {
+    for (const label of ["correct", "error"] as const) {
+      const cohort = rows();
+      cohort.push({
+        ...cohort.find((row) => row.split === split && row.label === label)!,
+        sampleId: "unusable-sample",
+        score: null,
+      });
+      const report = evaluatePronunciationCalibration(cohort, config);
+      expect(report.threshold).toBe(0.9);
+      expect(report.meetsStatisticalGate).toBe(false);
+      expect(report.readyForProduction).toBe(false);
+      expect(report.slices[0]!.coverage[split][label]).toEqual({
+        total: 81,
+        scored: 80,
+        unusable: 1,
+      });
+      expect(report.slices[0]!.negativeSpeakers).toBe(80);
+      expect(report.slices[0]!.detectedSpeakers).toBe(80);
+    }
+  }
+});
+test("W26 an entirely unusable cohort returns coverage without inventing scores or passing the gate", () => {
+  const report = evaluatePronunciationCalibration(
+    rows().map((row) => ({ ...row, score: null })),
+    config,
+  );
+  expect(report.meetsStatisticalGate).toBe(false);
+  expect(report.readyForProduction).toBe(false);
+  expect(report.slices[0]).toMatchObject({
+    negativeSpeakers: 0,
+    positiveSpeakers: 0,
+    sensitivity: null,
+    falseAlertUpper95: 1,
+    coverage: {
+      evaluation: {
+        correct: { total: 80, scored: 0, unusable: 80 },
+        error: { total: 80, scored: 0, unusable: 80 },
+      },
+    },
+  });
+});

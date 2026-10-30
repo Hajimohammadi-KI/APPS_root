@@ -45,6 +45,7 @@ import {
   type StoredRecording,
 } from "./media";
 import {
+  isCheckedTask,
   selectDailyFocus,
   selectDailyTask,
   selectNextLearningTask,
@@ -203,7 +204,14 @@ export async function mountPractice(
         unit: requestedUnit,
         ...selectDailyTask(requestedUnit, initialState, now()),
       }
-    : selectNextLearningTask(recommendationPack(), initialState, now(), level);
+    : selectNextLearningTask(
+        recommendationPack(),
+        initialState,
+        now(),
+        level,
+        undefined,
+        "checked",
+      );
   let unit: ConstructionUnit =
     initialChoice?.unit ?? requestedUnit ?? pack.units[0]!;
   let task: PracticeTask =
@@ -221,6 +229,10 @@ export async function mountPractice(
     task = requestedTask;
     unit = unitById.get(task.constructionId)!;
   }
+  // The main path offers only checked writing; it never falls back to
+  // unassessed practice. Explicit task links still open optional work.
+  let checkedUnavailable =
+    !requestedTask && !requestedUnit && !initialChoice?.task;
   let session: Session;
   let timer: ResponseTimer | null = null;
   let recording: StoredRecording | null = null;
@@ -458,7 +470,20 @@ export async function mountPractice(
     const savedSession = readSavedSession(raw)!;
     const savedTask = taskById.get(savedSession.taskId);
     if (savedTask && savedTask.version === savedSession.taskVersion) {
+      // A general entry keeps an optional draft in its task storage and
+      // archive, and continues with checked practice instead.
+      const optionalDraft =
+        !requestedTask &&
+        !requestedUnit &&
+        !requested.has("review") &&
+        !isCheckedTask(savedTask);
+      if (optionalDraft && hasUnfinishedPractice(savedSession))
+        localStorage.setItem(
+          `automaticity:v2:${language}:archived-session:${id()}`,
+          raw,
+        );
       if (
+        !optionalDraft &&
         shouldResumeSavedPractice(
           savedSession,
           requestedTask
@@ -489,10 +514,12 @@ export async function mountPractice(
             now(),
             requested.has("level") ? level : savedUnit.level,
             preferred,
+            "checked",
           );
           if (next?.task) {
             unit = next.unit;
             task = next.task;
+            checkedUnavailable = false;
           }
         }
       }
@@ -831,6 +858,7 @@ export async function mountPractice(
       now(),
       level,
       unit.id,
+      "checked",
     );
     if (!next?.task)
       throw new Error(
@@ -861,6 +889,7 @@ export async function mountPractice(
       now(),
       level,
       unit.id,
+      "checked",
     );
     const resumeDraft =
       !!session &&
@@ -910,7 +939,12 @@ export async function mountPractice(
     );
     focusPanel.append(alternatives);
     for (const selected of selection.focus) {
-      const recommendation = selectDailyTask(selected, ledger(), now());
+      const recommendation = selectDailyTask(
+        selected,
+        ledger(),
+        now(),
+        "checked",
+      );
       alternatives.append(
         button(`${selected.title}`, () => {
           if (!recommendation.task)
@@ -924,6 +958,7 @@ export async function mountPractice(
             selected,
             ledger(),
             now(),
+            "checked",
           );
           if (currentRecommendation.task)
             return fresh(
@@ -1362,6 +1397,95 @@ export async function mountPractice(
       historyPanel.append(entry);
     }
   }
+  /** Unchecked writing and speech stay one link away, saved without a score. */
+  function optionalPractice(activeTasks: PracticeTask[]): HTMLElement {
+    const section = element("section", undefined, "practice-optional");
+    const more = element("details");
+    more.append(
+      element(
+        "summary",
+        t("Optional writing and speaking", "Optional schreiben und sprechen"),
+      ),
+      element(
+        "p",
+        t(
+          "These responses are saved without a check or score.",
+          "Diese Antworten werden ohne Prüfung und ohne Bewertung gespeichert.",
+        ),
+        "muted",
+      ),
+    );
+    const stageLabel = (stage: Stage) =>
+      (en
+        ? [
+            "Notice",
+            "Recall",
+            "Vary",
+            "Produce",
+            "Repair",
+            "Transfer",
+            "Return later",
+          ]
+        : [
+            "Erkennen",
+            "Abrufen",
+            "Variieren",
+            "Produzieren",
+            "Korrigieren",
+            "Übertragen",
+            "Später abrufen",
+          ])[stages.indexOf(stage)];
+    const list = element("ul");
+    // Saved optional drafts stay visible; other optional tasks are collapsed.
+    const resumeList = element("ul");
+    let drafts = 0;
+    for (const row of activeTasks
+      .filter((candidate) => !isCheckedTask(candidate))
+      .sort(
+        (a, b) =>
+          stages.indexOf(a.stage) - stages.indexOf(b.stage) ||
+          Number(a.modality === "speaking") - Number(b.modality === "speaking"),
+      )) {
+      let draft = false;
+      try {
+        const saved = parseSavedPracticeSession(
+          localStorage.getItem(
+            `${sessionKey(language)}:task:${encodeURIComponent(row.id)}`,
+          ),
+        );
+        draft =
+          !!saved &&
+          saved.taskVersion === row.version &&
+          hasUnfinishedPractice(saved);
+      } catch {
+        draft = false;
+      }
+      const url = new URL(location.href);
+      for (const key of ["repairOf", "review", "attempt"])
+        url.searchParams.delete(key);
+      url.searchParams.set("task", row.id);
+      url.searchParams.set("topic", unit.title);
+      url.searchParams.set("level", unit.level);
+      const mode =
+        row.modality === "speaking"
+          ? t("Speak", "Sprechen")
+          : t("Write", "Schreiben");
+      const link = element(
+        "a",
+        draft
+          ? `${t("Resume optional saved response", "Optionale gespeicherte Antwort fortsetzen")}${drafts++ ? ` · ${stageLabel(row.stage)} · ${mode}` : ""}`
+          : `${stageLabel(row.stage)} · ${mode}`,
+      );
+      link.href = url.href;
+      const item = element("li");
+      item.append(link);
+      (draft ? resumeList : list).append(item);
+    }
+    if (list.childElementCount) more.append(list);
+    section.append(more);
+    if (resumeList.childElementCount) section.append(resumeList);
+    return section;
+  }
   function renderTask(): void {
     const activeTasks = activePracticeTasks(unit).filter(
       (row) => row.partition === "practice",
@@ -1388,6 +1512,19 @@ export async function mountPractice(
             "Du machst gerade Pause. Dein Entwurf ist gespeichert. Wähle oben Weiterüben, um fortzufahren.",
           ),
         ),
+      );
+      return;
+    }
+    if (checkedUnavailable && !isCheckedTask(task)) {
+      taskPanel.append(
+        element(
+          "p",
+          t(
+            "No checked practice is available for this topic.",
+            "Für dieses Thema ist noch keine prüfbare Übung verfügbar.",
+          ),
+        ),
+        optionalPractice(activeTasks),
       );
       return;
     }
@@ -1578,7 +1715,8 @@ export async function mountPractice(
       const other = activeTasks.find(
         (row) => row.stage === task.stage && row.modality === mode,
       );
-      if (other)
+      // From checked practice, unchecked modes are offered only as optional links.
+      if (other && (!isCheckedTask(task) || isCheckedTask(other)))
         modalityNav.append(
           button(
             mode === "writing"
@@ -1590,6 +1728,7 @@ export async function mountPractice(
         );
     }
     taskPanel.append(modalityNav);
+    if (isCheckedTask(task)) taskPanel.append(optionalPractice(activeTasks));
     const prompt = element("p", undefined, "task-prompt");
     prompt.lang = language;
     prompt.dir = "ltr";
@@ -1973,7 +2112,9 @@ export async function mountPractice(
     form.append(assistance);
     const submit = element(
       "button",
-      t("Save and check", "Speichern und prüfen"),
+      isCheckedTask(task)
+        ? t("Save and check", "Speichern und prüfen")
+        : t("Save response", "Antwort speichern"),
       "primary",
     );
     submit.type = "submit";
@@ -2406,6 +2547,7 @@ export async function mountPractice(
       now(),
       level,
       unit.id,
+      "checked",
     );
     if (session.submittedId && recommendation?.task) {
       taskPanel.append(
@@ -2485,6 +2627,10 @@ export async function mountPractice(
       "Die neue Übung ist bereit. Deine frühere Antwort bleibt im gespeicherten Verlauf erhalten.",
     );
   } else if (resume) {
+    // An explicitly resumed draft becomes the current session again; its
+    // task storage stays byte-for-byte unchanged.
+    if (editing)
+      localStorage.setItem(sessionKey(language), JSON.stringify(resume));
     renderTask();
     renderProgress();
     if (!resume.submittedId)

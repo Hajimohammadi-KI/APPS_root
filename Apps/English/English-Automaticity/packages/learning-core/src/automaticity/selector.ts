@@ -23,19 +23,49 @@ export interface TaskRecommendation {
   reason: DailySelection["reason"];
 }
 
+/** "checked" keeps the main path to responses with a deterministic check. */
+export type TaskScope = "all" | "checked";
+
+/** Closed written answers with an accepted solution; open, spoken and
+ * human-review tasks remain available as optional practice. */
+export function isCheckedTask(task: PracticeTask): boolean {
+  return (
+    task.modality === "writing" &&
+    task.answerPolicy === "closed" &&
+    task.acceptedAnswers.length > 0 &&
+    !task.constructionAssessment
+  );
+}
+
+/** Attempts store only a task identity; judge them by their authored definition. */
+function attemptWasChecked(
+  unit: ConstructionUnit,
+  attempt: AttemptEvent,
+): boolean {
+  const definition = unit.tasks.find(
+    (task) =>
+      task.id === attempt.task.id && task.version === attempt.task.version,
+  );
+  return !!definition && isCheckedTask(definition);
+}
+
 /** Resolve a historical repair to a current practice item in the same response mode. */
 export function repairTaskForAttempt(
   unit: ConstructionUnit,
   original: AttemptEvent,
+  scope: TaskScope = "all",
 ): PracticeTask | null {
   if (
     unit.id !== original.task.constructionId ||
-    unit.language !== original.language
+    unit.language !== original.language ||
+    (scope === "checked" && !attemptWasChecked(unit, original))
   )
     return null;
   const tasks = activePracticeTasks(unit).filter(
     (task) =>
-      task.partition === "practice" && task.modality === original.task.modality,
+      task.partition === "practice" &&
+      task.modality === original.task.modality &&
+      (scope === "all" || isCheckedTask(task)),
   );
   const replacementId = unit.retiredTasks?.find(
     (row) => row.taskId === original.task.id,
@@ -57,22 +87,39 @@ export function selectDailyTask(
   unit: ConstructionUnit,
   state: EvidenceReduction,
   now: string,
+  scope: TaskScope = "all",
 ): TaskRecommendation {
   const tasks = activePracticeTasks(unit).filter(
-    (task) => task.partition === "practice",
+    (task) =>
+      task.partition === "practice" && (scope === "all" || isCheckedTask(task)),
   );
-  const rows = state.progress.filter((row) => row.constructionId === unit.id);
+  const history = state.attempts.filter(
+    (row) => row.attempt.task.constructionId === unit.id,
+  );
+  const pending = unresolvedRepairs(history);
+  // In the checked scope, only urgency that a checked task can serve counts;
+  // an open or spoken original never gains a checked replacement.
+  const rows = state.progress.filter(
+    (row) =>
+      row.constructionId === unit.id &&
+      (scope === "all" || row.modality === "writing"),
+  );
   const due = rows
     .filter(
       (row) =>
         row.nextReviewAt && Date.parse(row.nextReviewAt) <= Date.parse(now),
     )
     .sort((a, b) => Date.parse(a.nextReviewAt!) - Date.parse(b.nextReviewAt!));
-  const repairs = rows.filter((row) => row.repairNeeded);
-  const history = state.attempts.filter(
-    (row) => row.attempt.task.constructionId === unit.id,
+  const repairs = rows.filter(
+    (row) =>
+      row.repairNeeded &&
+      (scope === "all" ||
+        pending.some(
+          (item) =>
+            item.attempt.task.modality === row.modality &&
+            attemptWasChecked(unit, item.attempt),
+        )),
   );
-  const pending = unresolvedRepairs(history);
   const rankedTasks = (candidates: PracticeTask[]) =>
     candidates
       .map((candidate) => {
@@ -97,11 +144,14 @@ export function selectDailyTask(
   for (const row of [...repairs, ...due.filter((row) => !row.repairNeeded)]) {
     const reason = row.repairNeeded ? "repair" : "due_review";
     const original = row.repairNeeded
-      ? pending.find((item) => item.attempt.task.modality === row.modality)
-          ?.attempt
+      ? pending.find(
+          (item) =>
+            item.attempt.task.modality === row.modality &&
+            (scope === "all" || attemptWasChecked(unit, item.attempt)),
+        )?.attempt
       : undefined;
     const originalTask = original
-      ? repairTaskForAttempt(unit, original)
+      ? repairTaskForAttempt(unit, original, scope)
       : undefined;
     const stage = row.repairNeeded ? "repair" : "retain";
     const selected =
@@ -314,6 +364,7 @@ export function selectNextLearningTask(
   now: string,
   level: string,
   preferredUnitId?: string,
+  scope: TaskScope = "all",
 ): (TaskRecommendation & { unit: ConstructionUnit }) | null {
   const { ranked } = rankDailyFocus(pack, state.progress, now, level);
   const preferred = pack.units.find(
@@ -334,7 +385,7 @@ export function selectNextLearningTask(
   for (const unit of candidates) {
     if (seen.has(unit.id) || unit.language !== pack.language) continue;
     seen.add(unit.id);
-    const choice = selectDailyTask(unit, state, now);
+    const choice = selectDailyTask(unit, state, now, scope);
     if (choice.task) return { unit, ...choice };
   }
   return null;

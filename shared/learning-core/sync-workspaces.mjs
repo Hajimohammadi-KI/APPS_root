@@ -29,12 +29,7 @@ const IGNORED_NAMES = new Set(["node_modules", ".turbo", "dist", ".DS_Store"]);
 
 // Canonical files intentionally kept out of the app copies. Each entry needs
 // a reason and must still exist in the source, so the list cannot go stale.
-const PENDING = new Map([
-  [
-    "src/automaticity/selection-scope.test.ts",
-    "R88 RED test: reproduces unchecked responses in the main path; mirror it with the R88 implementation.",
-  ],
-]);
+const PENDING = new Map([]);
 
 function walk(root, directory, out) {
   if (!existsSync(directory)) return out;

@@ -5,6 +5,7 @@ import {
 } from "../../shared/learning-core/src/automaticity/curriculum";
 
 const version = "2026-10-31.1";
+import { KNOWN_CONTENT_REPAIRS } from "../../shared/learning-core/src/content-repairs";
 interface TargetPractice {
   unit: string;
   level: string;
@@ -204,13 +205,9 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
       changed = true;
     }
   }
-  const repairUnit = pack.units.find(
-    (unit) => unit.id === (pack.language === "en" ? "en.c.072" : "de.c.071"),
-  )!;
-  repairUnit.commonError =
-    pack.language === "en"
-      ? "Although the data were limited, the pattern that emerge was consistent. → Although the data were limited, the pattern that emerged was consistent."
-      : "Es wären denkbar, dass die Maßnahme unbeabsichtigte Folgen hat. → Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat.";
+  const repair = KNOWN_CONTENT_REPAIRS.find(row => row.language === pack.language)!;
+  const repairUnit = pack.units.find(unit => unit.id === repair.constructionId)!;
+  repairUnit.commonError = `${repair.source} → ${repair.answer}`;
   for (const modality of ["writing", "speaking"] as const) {
     const original = activePracticeTasks(repairUnit).find(
       (task) =>
@@ -220,12 +217,8 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
     if (!original) continue;
     const id = `${repairUnit.id}.repair.mastery-20261031.${modality}`;
     const english = pack.language === "en";
-    const prompt = english
-      ? "Correct only the verb form and keep the meaning: Although the data were limited, the pattern that emerge was consistent."
-      : "Korrigiere nur die Verbform im Hauptsatz und behalte die Bedeutung bei: Es wären denkbar, dass die Maßnahme unbeabsichtigte Folgen hat.";
-    const answer = english
-      ? "Although the data were limited, the pattern that emerged was consistent."
-      : "Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat.";
+    const prompt = repair.prompt;
+    const answer = repair.answer;
     const replacement: PracticeTask = {
       ...original,
       id,

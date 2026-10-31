@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./content-repairs": "./src/content-repairs.ts",
     "./discourse": "./src/discourse.ts",
     "./speech": "./src/speech.ts",
     "./writing-rules": "./src/writing-rules.ts",

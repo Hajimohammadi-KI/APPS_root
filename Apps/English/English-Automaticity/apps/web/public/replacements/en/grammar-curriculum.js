@@ -3799,10 +3799,10 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "Although the data were limited, the pattern that emerged was consistent."
     ],
-    "commonError": "Stacked clauses with unclear reference.",
+    "commonError": "Although the data were limited, the pattern that emerge was consistent. → Although the data were limited, the pattern that emerged was consistent.",
     "exercises": [
       [
-        "Correct the sentence: Stacked clauses with unclear reference.",
+        "Correct only the verb form and keep the meaning: Although the data were limited, the pattern that emerge was consistent.",
         "Although the data were limited, the pattern that emerged was consistent."
       ],
       [

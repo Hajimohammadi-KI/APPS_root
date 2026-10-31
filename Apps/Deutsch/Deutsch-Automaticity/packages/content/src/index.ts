@@ -1,4 +1,5 @@
 import grammarData from "./data/grammar.json";
+import { knownContentRepair } from "@automaticity/learning-core/content-repairs";
 import topicsData from "./data/topics.json";
 import {
   classifyGrammarContent,
@@ -177,7 +178,10 @@ const legacyGrammarUnits =
   grammarData as unknown as readonly LegacyGrammarUnit[];
 
 export const grammarUnits: readonly GrammarUnit[] = [
-  ...legacyGrammarUnits.map((unit) => {
+  ...legacyGrammarUnits.map((original) => {
+    const repair = knownContentRepair("de", original.title);
+    const unit = repair ? { ...original, commonError: `${repair.source} → ${repair.answer}`, repairTest: repair.answer,
+      exercises: original.exercises.map<GrammarExercise>(exercise => exercise[0] === repair.legacyPrompt ? [repair.prompt, repair.answer] : exercise) } : original;
     const explanation =
       grammarExplanations[unit.title as keyof typeof grammarExplanations];
 

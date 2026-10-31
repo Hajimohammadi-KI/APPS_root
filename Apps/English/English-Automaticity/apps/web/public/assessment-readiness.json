@@ -1,6 +1,6 @@
 {
   "language": "en",
-  "contentVersion": "2026-10-02.1",
+  "contentVersion": "2026-10-31.1",
   "units": [
     {
       "id": "en.c.001",
@@ -9,7 +9,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 8,
+          "tasks": 10,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -275,7 +275,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 8,
+          "tasks": 10,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -636,7 +636,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 9,
+          "tasks": 11,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -902,7 +902,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 9,
+          "tasks": 11,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -1092,7 +1092,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 9,
+          "tasks": 11,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -1358,7 +1358,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 9,
+          "tasks": 11,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },

@@ -1,13 +1,9 @@
 import { normalizeText } from "../text";
 import type { PracticeTask } from "./curriculum";
+import { KNOWN_CONTENT_REPAIRS } from "../content-repairs";
 // Confirmed content defects, not a general semantic parser. Historical task
 // definitions stay readable, but these prompts must never earn new credit.
-const withdrawnCorrections = new Set(
-  [
-    "Correct the sentence: Stacked clauses with unclear reference.",
-    "Korrigiere die vorgegebene Form. Nicht richtig: Die Maßnahme hat sicher keine Folgen. Schreibe die vollständige richtige Antwort auf Deutsch.",
-  ].map((prompt) => normalizeText(prompt)),
-);
+const withdrawnCorrections = new Set(KNOWN_CONTENT_REPAIRS.flatMap(row => [row.legacyPrompt, row.primaryPrompt]).map(prompt => normalizeText(prompt)));
 export interface ContentAuditIssue {
   readonly taskId: string;
   readonly code: string;

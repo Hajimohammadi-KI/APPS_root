@@ -57,7 +57,10 @@ try {
           page.on("request", request => { if (request.method() === "POST") posts.push(request.url()); });
           page.on("download", download => downloads.push(download));
           await page.goto(`${base}/practice?task=${task.id}&review=1`, { waitUntil: "networkidle" });
-          await page.getByText(language === "en" ? "Saved responses & independent review" : "Gespeicherte Antworten & unabhängige Prüfung", { exact: true }).click();
+          const reviewSummary = page.getByText(language === "en" ? "Saved responses & independent review" : "Gespeicherte Antworten & unabhängige Prüfung", { exact: true });
+          if (!await reviewSummary.evaluate(el => el.parentElement.open)) await reviewSummary.click();
+          if (!await page.locator("#response-review").evaluate(el => el.open))
+            await page.locator("#response-review > summary").click();
           await page.locator("#training-contribution > summary").click();
           const consent = page.locator("#training-consent"), downloadButton = page.locator("#training-download");
           await expect(consent).not.toBeChecked();

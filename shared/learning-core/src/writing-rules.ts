@@ -66,7 +66,13 @@ export function writingIssues(
   let start = 0;
   for (const match of [...text.matchAll(/\n/gu), null]) {
     const end = match ? match.index : text.length;
-    if (match && /^[^\S\n]*\p{Ll}/u.test(text.slice(end + 1))) continue;
+    const next = text.slice(end + 1);
+    // A line ending in a lowercase word without punctuation runs on: German
+    // nouns and English "I" start the next line with a capital.
+    const runsOn =
+      /\p{Ll}[^\S\n]*$/u.test(text.slice(start, end)) &&
+      (language === "de" || /^[^\S\n]*I\b/u.test(next));
+    if (match && (/^[^\S\n]*\p{Ll}/u.test(next) || runsOn)) continue;
     for (const issue of lineIssues(text.slice(start, end), language))
       issues.push({
         ...issue,

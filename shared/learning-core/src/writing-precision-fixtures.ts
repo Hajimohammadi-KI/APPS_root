@@ -115,7 +115,7 @@ export const CORRECT_EN: readonly string[] = [
   "An information is a formal criminal charge filed by a prosecutor.",
   "In some states, a felony can be charged by an information.",
   "An information was filed against him in district court.",
-  "Our school has a homework \"hotline\" for parents.",
+  'Our school has a homework "hotline" for parents.',
   "He asked for a luggage ‘allowance’ form.",
   "She is a research (and teaching) assistant at the university.",
   "An once told me that she loved Paris.",

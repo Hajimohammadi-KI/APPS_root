@@ -17,7 +17,8 @@ const vowelSound = new Set(
     .split(" "),
 );
 const consonantSound = new Set(
-  "university universities universal uniform union unique unit united useful user European euro one one-way once book car dog house student teacher friend new good big small young year yellow"
+  // No "once": "An once told me…" starts with the name An.
+  "university universities universal uniform union unique unit united useful user European euro one one-way book car dog house student teacher friend new good big small young year yellow"
     .toLowerCase()
     .split(" "),
 );
@@ -49,7 +50,7 @@ const properNames = [
   "German",
 ];
 const germanPrepositions = new Set(
-  "mit aus bei nach seit von zu für durch ohne gegen um in an auf über unter vor hinter neben zwischen".split(
+  "mit aus bei nach seit von zu für durch ohne gegen um in an auf über unter vor hinter neben zwischen samt nebst gegenüber außer entlang trotz wegen während ab bis gemäß laut".split(
     " ",
   ),
 );
@@ -66,7 +67,13 @@ export function writingIssues(
   let start = 0;
   for (const match of [...text.matchAll(/\n/gu), null]) {
     const end = match ? match.index : text.length;
-    if (match && /^[^\S\n]*\p{Ll}/u.test(text.slice(end + 1))) continue;
+    const next = text.slice(end + 1);
+    // A line ending in a lowercase word without punctuation runs on: German
+    // nouns and English "I" start the next line with a capital.
+    const runsOn =
+      /\p{Ll}[^\S\n]*$/u.test(text.slice(start, end)) &&
+      (language === "de" || /^[^\S\n]*I\b/u.test(next));
+    if (match && (/^[^\S\n]*\p{Ll}/u.test(next) || runsOn)) continue;
     for (const issue of lineIssues(text.slice(start, end), language))
       issues.push({
         ...issue,
@@ -98,15 +105,17 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
       message,
     });
   };
+  const abbreviationStop = (dot: number) =>
+    /^(?:mr|mrs|ms|dr|prof|st|hr|fr|vol|art|bk|ch|chap|no|nr|p|pp|fig|sec|para|ed|cf|bzw|ggf|usw|ca|vgl|evtl|z|b|d|h|u|a)$/u.test(
+      lower[dot - 1] ?? "",
+    ) ||
+    (language === "de" && /^\p{N}+$/u.test(lower[dot - 1] ?? ""));
   const sentenceStart = (i: number): boolean => {
     let j = i - 1;
     while (j >= 0 && /^["'“”„«»‘’(]$/u.test(tokens[j]!.text)) j--;
-    // "Mr. An" and "Dr. Weber" continue the sentence.
-    if (
-      tokens[j]?.text === "." &&
-      /^(?:mr|mrs|ms|dr|prof|st|hr|fr)$/u.test(lower[j - 1] ?? "")
-    )
-      return false;
+    // Abbreviations (Mr. An, Vol. I, z. B., bzw.) and German ordinals
+    // (zum 5. Geburtstag) continue the sentence.
+    if (tokens[j]?.text === "." && abbreviationStop(j)) return false;
     return j < 0 || /^[.!?]$/u.test(tokens[j]!.text);
   };
   /** A whole-word capital acronym (IT, AN) is never the pronoun or article. */
@@ -114,26 +123,30 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
     (tokens[i]?.text.length ?? 0) > 1 &&
     tokens[i]!.text === tokens[i]!.text.toUpperCase() &&
     /\p{Lu}/u.test(tokens[i]!.text);
-  /** Tokens up to the end of the sentence, across commas. */
+  /** All words of the sentence containing token i. */
+  const sentenceWordsAround = (i: number): string[] => {
+    let from = i;
+    while (from > 0 && !sentenceStart(from)) from--;
+    return sentenceWords(from);
+  };
+  /** Words up to the end of the sentence, across commas, abbreviations and numbers. */
   const sentenceWords = (from: number): string[] => {
     const words: string[] = [];
-    for (
-      let j = from;
-      j < tokens.length && !/^[.!?]$/u.test(tokens[j]!.text);
-      j++
-    )
+    for (let j = from; j < tokens.length; j++) {
+      if (/^[!?]$/u.test(tokens[j]!.text)) break;
+      // A period ends the sentence unless it closes an abbreviation or sits in a number (2.000, 9.30).
+      if (
+        tokens[j]!.text === "." &&
+        !abbreviationStop(j) &&
+        !/^\p{N}/u.test(tokens[j + 1]?.text ?? "")
+      )
+        break;
       if (isWord(j)) words.push(lower[j]!);
+    }
     return words;
   };
   const capitalized = (i: number) => /^\p{Lu}/u.test(tokens[i]?.text ?? "");
   const isWord = (i: number) => tokens[i]?.kind === "word";
-  /** Words up to the next punctuation mark, inside the current clause. */
-  const clauseWords = (from: number): string[] => {
-    const words: string[] = [];
-    for (let j = from; j < tokens.length && isWord(j); j++)
-      words.push(lower[j]!);
-    return words;
-  };
   if (language === "en") {
     // "and" is left out: "you and I did…" is a coordinated subject.
     const clauseStart = (i: number) =>
@@ -157,7 +170,8 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
       return (
         /[@/#_\\]/u.test(before) ||
         /[@/#_\\]/u.test(after) ||
-        (before === "." && /[\p{L}\p{N}]/u.test(source[start - 2] ?? "")) ||
+        // a.london@… and a .berlin domain
+        before === "." ||
         (after === "." && /[\p{L}\p{N}]/u.test(source[end + 1] ?? ""))
       );
     };
@@ -173,21 +187,14 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
         !["March", "April", "June", "August"].includes(expected) &&
         head === expected.toLowerCase() &&
         !inAddress(i) &&
-        // Billiards: "put english on the ball", "left english" (spin).
+        // Billiards "english" (spin) is a common noun: judged by the sentence.
         !(
           head === "english" &&
-          (lower[i + 1] === "on" ||
-            [
-              "left",
-              "right",
-              "side",
-              "reverse",
-              "running",
-              "top",
-              "bottom",
-              "inside",
-              "outside",
-            ].includes(lower[i - 1] ?? ""))
+          sentenceWordsAround(i).some((w) =>
+            /^(?:ball|balls|cue|shot|shots|billiards|pool|snooker|spin|cushion|pocket)$/u.test(
+              w,
+            ),
+          )
         )
       )
         add(
@@ -221,8 +228,17 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
       if (/^[-‐‑‒–—/&]$/u.test(after.text)) return false;
       if (after.text === ",")
         return !isWord(i + 1) || clauseOpeners.has(lower[i + 1]!);
-      return true;
+      // Only sentence and clause marks end it; quotes and brackets may open
+      // a modifier: a homework "hotline", a research (and teaching) assistant.
+      return /^[.!?;:)]$/u.test(after.text);
     };
+    // "information" as a charging document is countable (legal English).
+    const legalSense = (i: number) =>
+      sentenceWordsAround(i).some((w) =>
+        /^(?:charge|charges|charged|charging|prosecutor|prosecution|court|indictment|felony|misdemeanou?r|filed|filing|lodged|laid|sworn|defendant)$/u.test(
+          w,
+        ),
+      );
     for (let i = 0; i < tokens.length - 1; i++) {
       if (
         nounPhraseEnds(i + 2) &&
@@ -234,7 +250,7 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
         // A filed or laid information is a countable legal document.
         !(
           lower[i + 1] === "information" &&
-          [
+          ([
             "file",
             "files",
             "filed",
@@ -250,7 +266,8 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
             "sworn",
             "prefer",
             "preferred",
-          ].includes(lower[i - 1] ?? "")
+          ].includes(lower[i - 1] ?? "") ||
+            legalSense(i))
         ) &&
         [
           "advice",
@@ -280,18 +297,28 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
         dance: "dancing",
         sing: "singing",
       };
-      // "the right they enjoy to walk": the infinitive belongs to the noun.
-      const reducedRelative =
-        ["i", "you", "he", "she", "we", "they"].includes(lower[i - 1] ?? "") &&
-        i >= 2 &&
-        isWord(i - 2) &&
-        !clauseStart(i - 1) &&
-        !["and", "or"].includes(lower[i - 2]!);
+      // Only enjoy with its own clause-initial pronoun subject is checked
+      // ("I really don't enjoy to read"); in "the freedom (that) we all enjoy
+      // to walk" the infinitive belongs to the noun.
+      let subject = i - 1;
+      while (
+        /^(?:really|also|always|usually|often|never|still|just|not|don't|don’t|doesn't|doesn’t|didn't|didn’t|do|does|did|will|would|can|could|is|am|are|was|were)$/u.test(
+          lower[subject] ?? "",
+        )
+      )
+        subject--;
+      // A comma is not enough: "The freedom that, as citizens, we enjoy to walk".
+      const ownSubject =
+        ["i", "you", "he", "she", "we", "they"].includes(
+          lower[subject] ?? "",
+        ) &&
+        clauseStart(subject) &&
+        tokens[subject - 1]?.text !== ",";
       if (
         ["enjoy", "enjoys", "enjoyed", "enjoying"].includes(lower[i]!) &&
         lower[i + 1] === "to" &&
         gerunds[lower[i + 2] ?? ""] &&
-        !reducedRelative
+        ownSubject
       ) {
         const from = tokens[i + 1]!,
           to = tokens[i + 2]!;
@@ -335,13 +362,18 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
     ) => {
       const verb = lower[verbIndex] ?? "";
       const base = ENGLISH_FINITE_TO_BASE[verb];
-      // After present do, "saw" is the verb to saw: "We don't saw the boards".
+      // After present do, "saw" is the verb to saw ("We don't saw the
+      // boards"), and also after did when the sentence is about cutting wood.
       const pastAux = /^did/u.test(lower[auxIndex] ?? "");
-      if (
-        base &&
-        (allowHomograph || !nounHomographs.has(verb)) &&
-        !(verb === "saw" && !pastAux)
-      )
+      const sawing =
+        verb === "saw" &&
+        (!pastAux ||
+          sentenceWordsAround(verbIndex).some((w) =>
+            /^(?:wood|log|logs|plank|planks|board|boards|timber|lumber|tree|trees|branch|branches|axe|firewood|beam|beams)$/u.test(
+              w,
+            ),
+          ));
+      if (base && (allowHomograph || !nounHomographs.has(verb)) && !sawing)
         add(
           verbIndex,
           base,
@@ -529,7 +561,7 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
       ["um", "ohne"].includes(lower[i]!) &&
       sentenceWords(i + 1).some(
         (w) =>
-          w === "zu" || w === "willen" || /^\p{L}{2,}zu\p{L}{3,}en$/u.test(w),
+          w === "zu" || w === "willen" || /^\p{L}{2,}zu\p{L}{2,}n$/u.test(w),
       );
     /** The words of the current clause before index i (back to punctuation). */
     const clauseBefore = (i: number): string[] => {
@@ -541,18 +573,32 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
       (lower[i] === "zu" && lower[i - 1] === "und" && lower[i - 2] === "ab") ||
       (lower[i] === "durch" && lower[i - 1] === "und") ||
       // was für ein…, also split: Was ist das für ein Mann?
-      (lower[i] === "für" && clauseBefore(i).includes("was"));
-    // ", zu dem Frau Müller geht": a relative pronoun, not an article.
+      (lower[i] === "für" && clauseBefore(i).includes("was")) ||
+      // von hier aus, vom Fenster aus: a postposition closing the phrase.
+      (lower[i] === "aus" &&
+        clauseBefore(i).some((w) => w === "von" || w === "vom"));
+    // ", zu dem Frau Müller geht" and "… und mit dem Frau Weber …":
+    // a relative pronoun, not an article.
     const relativeAfterPreposition = (prepIndex: number) =>
       germanPrepositions.has(lower[prepIndex] ?? "") &&
-      tokens[prepIndex - 1]?.text === ",";
+      (tokens[prepIndex - 1]?.text === "," ||
+        ["und", "oder"].includes(lower[prepIndex - 1] ?? ""));
     for (let i = 1; i < tokens.length; i++) {
       const noun = GERMAN_NOUNS[tokens[i]!.normalized];
       if (!noun) continue;
+      // "Haus- und Gartenarbeit": a suspended compound, not the head noun.
+      if (/^[-‐‑]$/u.test(tokens[i + 1]?.text ?? "")) continue;
       const article = lower[i - 1]!,
         prep = lower[i - 2] ?? "";
+      // "bei das Kind betreffenden Fragen": the noun is inside an attribute.
+      const insideAttribute =
+        isWord(i + 1) &&
+        !capitalized(i + 1) &&
+        /(?:e|en|er|es|em)$/u.test(lower[i + 1]!) &&
+        capitalized(i + 2);
       const governed =
         i >= 2 &&
+        !insideAttribute &&
         !fixedPhrase(i - 2) &&
         !infinitiveClause(i - 2) &&
         !relativeAfterPreposition(i - 2);
@@ -623,8 +669,10 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
         ["dem", "einem", "des", "eines", "den", "einen"].includes(
           lower[articleIndex] ?? "",
         ) &&
-        // ", mit dem Student und Professor kämpfen": a relative pronoun.
-        !relativeAfterPreposition(articleIndex - 1)
+        // ", mit dem Student und Professor kämpfen" and ", dem Student und
+        // Lehrer begegnen": a relative pronoun.
+        !relativeAfterPreposition(articleIndex - 1) &&
+        tokens[articleIndex - 1]?.text !== ","
       )
         add(
           i,
@@ -668,19 +716,28 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
           "kein",
           "keine",
         ].includes(lower[i - 1]!) &&
-        // "(Ja,) den buch bitte heute noch!": buchen as an imperative.
+        // "(Ja,) den buch bitte heute noch!": buchen as an imperative. "den
+        // Buch" is never a noun phrase, so after den it is always the verb.
         !(
           lower[i] === "buch" &&
-          [
-            "bitte",
-            "doch",
-            "mal",
-            "schnell",
-            "sofort",
-            "heute",
-            "jetzt",
-            "noch",
-          ].includes(lower[i + 1] ?? "")
+          (lower[i - 1] === "den" ||
+            [
+              "bitte",
+              "doch",
+              "mal",
+              "schnell",
+              "sofort",
+              "heute",
+              "jetzt",
+              "noch",
+              "am",
+              "lieber",
+              "einfach",
+              "gleich",
+              "online",
+              "direkt",
+              "besser",
+            ].includes(lower[i + 1] ?? ""))
         )
       )
         add(
@@ -868,6 +925,13 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
         )
           attribute = true;
       if (attribute) continue;
+      // At a clause start seit is the conjunction and takes any pronoun
+      // ("Seit mich Anna verlassen hat", "…, seit ihn niemand anruft").
+      if (
+        lower[i] === "seit" &&
+        (sentenceStart(i) || tokens[i - 1]?.text === ",")
+      )
+        continue;
       const forms = ["mit", "aus", "bei", "nach", "seit", "von", "zu"].includes(
         lower[i]!,
       )

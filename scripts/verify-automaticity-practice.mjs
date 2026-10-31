@@ -13,6 +13,28 @@ const activeTasks = (unit) =>
   unit.tasks.filter(
     (task) => !(unit.retiredTasks ?? []).some((row) => row.taskId === task.id),
   );
+// Mirrors isCheckedTask: only these tasks are scored and labelled "Save and check".
+const checked = (task) =>
+  task.modality === "writing" &&
+  task.answerPolicy === "closed" &&
+  task.acceptedAnswers.length > 0 &&
+  !task.constructionAssessment;
+const saveLabel = (task) =>
+  checked(task)
+    ? language === "en"
+      ? "Save and check"
+      : "Speichern und prüfen"
+    : language === "en"
+      ? "Save response"
+      : "Antwort speichern";
+// Controls inside a collapsed <details> stay hidden until the learner opens it.
+const disclose = async (page, english, german) => {
+  const summary = page.getByText(language === "en" ? english : german, {
+    exact: true,
+  });
+  if (!(await summary.evaluate((node) => node.closest("details").open)))
+    await summary.click();
+};
 const output = resolve(
   root,
   `artifacts/automaticity-practice/${new Date().toISOString().replace(/[:.]/g, "-")}`,
@@ -100,18 +122,32 @@ try {
           "utf8",
         ),
       );
-      const unit = pack.units.find(
-        (unit) =>
-          activeTasks(unit).find(
-            (task) => task.stage === "retrieve" && task.modality === "writing",
-          )?.answerPolicy === "closed",
-      );
+      // Topic choice opens the first active retrieval writing task; it must be checked here.
+      const unit = pack.units.find((unit) => {
+        const first = activeTasks(unit).find(
+          (task) => task.stage === "retrieve" && task.modality === "writing",
+        );
+        return first && checked(first) && first.solution;
+      });
       assert.ok(unit);
       const task = activeTasks(unit).find(
         (task) => task.stage === "retrieve" && task.modality === "writing",
       );
+      const produce = activeTasks(unit).find(
+        (task) =>
+          task.stage === "produce" &&
+          task.modality === "writing" &&
+          task.partition === "practice",
+      );
+      assert.ok(produce && !checked(produce));
       await page.goto(`${base}/practice`);
       await page.locator("#practice-response").waitFor();
+      await page.waitForURL(/[?&]task=/u);
+      await disclose(
+        page,
+        "My plan & practice options",
+        "Mein Plan & Übungseinstellungen",
+      );
       await page
         .getByLabel(language === "en" ? "Grammar topic" : "Grammatikthema", {
           exact: true,
@@ -208,12 +244,32 @@ try {
       );
       assert.equal(repair.previousAttemptId, original.id);
       assert.equal(repair.assistance.solutionRevealed, true);
+      // Since R88 open production is reached only through the optional section.
+      await disclose(
+        page,
+        "Optional writing and speaking",
+        "Optional schreiben und sprechen",
+      );
       await page
-        .getByRole("button", {
-          name: language === "en" ? "Produce" : "Produzieren",
+        .getByRole("link", {
+          name:
+            language === "en" ? "Produce · Write" : "Produzieren · Schreiben",
           exact: true,
         })
         .click();
+      await page.waitForURL(
+        (url) => url.searchParams.get("task") === produce.id,
+      );
+      await page.locator("#practice-response").waitFor();
+      assert.equal(
+        await page
+          .getByRole("button", {
+            name: language === "en" ? "Save and check" : "Speichern und prüfen",
+            exact: true,
+          })
+          .count(),
+        0,
+      );
       await page
         .locator("#practice-response")
         .fill(
@@ -223,7 +279,7 @@ try {
         );
       await page
         .getByRole("button", {
-          name: language === "en" ? "Save and check" : "Speichern und prüfen",
+          name: saveLabel(produce),
           exact: true,
         })
         .click();
@@ -269,12 +325,21 @@ try {
           .count(),
         1,
       );
+      assert.equal(
+        await page
+          .getByRole("button", {
+            name: language === "en" ? "Save and check" : "Speichern und prüfen",
+            exact: true,
+          })
+          .count(),
+        0,
+      );
       await page
         .locator("#practice-response")
         .fill("Transcript without a recording");
       await page
         .getByRole("button", {
-          name: language === "en" ? "Save and check" : "Speichern und prüfen",
+          name: language === "en" ? "Save response" : "Antwort speichern",
           exact: true,
         })
         .click();
@@ -299,6 +364,11 @@ try {
           (row) => row.type === "assessment" && row.attemptId === speech.id,
         ).verdict,
         "not_assessed",
+      );
+      await disclose(
+        page,
+        "Saved responses & independent review",
+        "Gespeicherte Antworten & unabhängige Prüfung",
       );
       await page.locator("#response-review > summary").click();
       await page.locator("#review-attempt").selectOption(original.id);
@@ -351,6 +421,11 @@ try {
         events.find((row) => row.id === original.id),
         original,
       );
+      await disclose(
+        page,
+        "Backup & transfer my work",
+        "Meine Arbeit sichern & übertragen",
+      );
       const downloadPromise = page.waitForEvent("download");
       await page
         .getByRole("button", {
@@ -375,6 +450,13 @@ try {
         language === "en" ? "Grammar topic" : "Grammatikthema",
         { exact: true },
       );
+      const options = () =>
+        disclose(
+          page,
+          "My plan & practice options",
+          "Mein Plan & Übungseinstellungen",
+        );
+      await options();
       await topics.selectOption(pack.units[0].id);
       await page
         .locator("#practice-response")
@@ -395,6 +477,7 @@ try {
         await page.locator("#practice-response").inputValue(),
         "Draft B survives navigation",
       );
+      await options();
       await page.getByText("راهنمای فارسی", { exact: true }).click();
       assert.equal(
         await page.locator('p[lang="fa"]').getAttribute("dir"),
@@ -409,10 +492,25 @@ try {
         )
         .uncheck();
       await topics.selectOption(pack.units[2].id);
+      // Topic choice opens this task; an unchecked one must not claim a check.
+      const untimed =
+        activeTasks(pack.units[2]).find(
+          (task) => task.stage === "retrieve" && task.modality === "writing",
+        ) ?? activeTasks(pack.units[2])[0];
+      assert.equal(new URL(page.url()).searchParams.get("task"), untimed.id);
+      assert.equal(
+        await page
+          .getByRole("button", {
+            name: language === "en" ? "Save and check" : "Speichern und prüfen",
+            exact: true,
+          })
+          .count(),
+        checked(untimed) ? 1 : 0,
+      );
       await page.locator("#practice-response").fill("Synthetic untimed answer");
       await page
         .getByRole("button", {
-          name: language === "en" ? "Save and check" : "Speichern und prüfen",
+          name: saveLabel(untimed),
           exact: true,
         })
         .focus();
@@ -492,6 +590,7 @@ try {
         solutionExposureRetained: true,
         repairLinkedToOriginal: true,
         openOutputUnassessed: true,
+        unscoredSaveLabelHonest: true,
         noRecordingNoSpeechCredit: true,
         concurrentDraftProtected: true,
         reviewPreservesOriginal: true,

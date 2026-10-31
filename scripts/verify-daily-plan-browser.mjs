@@ -89,6 +89,24 @@ try {
             .map((key) => JSON.parse(localStorage.getItem(key))),
         language,
       );
+    // Collapsed sections are opened, as a learner would, before their controls are used.
+    const expand = async (en, de, target = page) => {
+      const summary = target.getByText(t(en, de), { exact: true });
+      if (!(await summary.evaluate((node) => node.parentElement.open)))
+        await summary.click();
+    };
+    const planOptions = (target = page) =>
+      expand(
+        "My plan & practice options",
+        "Mein Plan & Übungseinstellungen",
+        target,
+      );
+    const continuation = () =>
+      page.getByRole("button", {
+        name: new RegExp(
+          `^(?:${t("Repair before continuing|Continue learning path", "Vor dem Weitergehen korrigieren|Lernweg fortsetzen")})$`,
+        ),
+      });
     try {
       for (const asset of [
         "practice.js",
@@ -114,6 +132,7 @@ try {
         .locator("option")
         .count();
       assert.equal(count, language === "en" ? 124 : 156);
+      await planOptions();
       await page.locator("#daily-response-goal").focus();
       await page.locator("#daily-response-goal").selectOption("5");
       await expect(page.locator("#daily-response-goal")).toBeFocused();
@@ -159,6 +178,12 @@ try {
       );
       const first = (await events()).find((row) => row.type === "attempt");
       assert.equal(first.timing.source, "unavailable");
+      // Since W08 an unmatched closed answer is saved without a score; it is never accepted.
+      const firstVerdicts = (await events())
+        .filter((row) => row.type === "assessment" && row.attemptId === first.id)
+        .map((row) => row.verdict);
+      assert.ok(firstVerdicts.includes("not_assessed"));
+      assert.ok(!firstVerdicts.includes("pass"));
       await action(
         "Try again as a repair",
         "Als Korrektur erneut versuchen",
@@ -177,15 +202,30 @@ try {
       );
       assert.equal(repaired.assistance.solutionRevealed, true);
       await page.locator("#daily-response-goal").selectOption("3");
-      await action("Produce", "Produzieren").click();
+      // R88: open writing is optional and opened through its explicit task link.
+      await expand(
+        "Optional writing and speaking",
+        "Optional schreiben und sprechen",
+      );
+      await page
+        .getByRole("link", {
+          name: `${t("Produce", "Produzieren")} · ${t("Write", "Schreiben")}`,
+          exact: true,
+        })
+        .click();
+      await expect(action("Save response", "Antwort speichern")).toBeVisible();
+      await expect(action("Save and check", "Speichern und prüfen")).toHaveCount(
+        0,
+      );
       await page
         .locator("#practice-response")
         .fill("Synthetic open response for effort counting only");
-      await action("Save and check", "Speichern und prüfen").click();
+      await action("Save response", "Antwort speichern").click();
       await expect(page.locator("[data-daily-responses]")).toHaveAttribute(
         "data-daily-responses",
         "3",
       );
+      await planOptions();
       await expect(
         page.getByText(
           t(/Today's goal is reached/, /Dein Tagesziel ist erreicht/),
@@ -200,7 +240,11 @@ try {
       row.checks.push(
         "assisted repair and open responses count as effort without mastery; interrupted timing unavailable",
       );
-      await action("Next task", "Nächste Aufgabe").click();
+      // A saved response continues on the main path, which offers only checked writing.
+      await continuation().click();
+      await expect(
+        action("Save and check", "Speichern und prüfen"),
+      ).toBeVisible();
       await page
         .locator("#practice-response")
         .fill("Synthetic draft retained through quota failure");
@@ -220,6 +264,7 @@ try {
         key,
       );
       await page.reload({ waitUntil: "domcontentloaded" });
+      await planOptions();
       await expect(
         page.getByText(
           t(
@@ -279,6 +324,7 @@ try {
       const other = await context.newPage();
       other.setDefaultNavigationTimeout(30000);
       await other.goto(`${base}/practice`, { waitUntil: "domcontentloaded" });
+      await planOptions(other);
       await expect(other.locator("#daily-response-goal")).toBeDisabled();
       await expect(
         other.getByRole("button", {
@@ -301,12 +347,15 @@ try {
           fullPage: true,
         });
       }
-      await page
-        .locator("details")
-        .filter({ has: page.locator("[lang=fa]") })
-        .locator("summary")
-        .click();
-      await expect(page.locator("[lang=fa]")).toHaveAttribute("dir", "rtl");
+      await planOptions();
+      // The support-language guide and prompts also carry lang=fa; target the Persian help itself.
+      const persianHelp = page.getByText("راهنمای فارسی", { exact: true });
+      await persianHelp.click();
+      const persianGuide = persianHelp.locator(
+        "xpath=following-sibling::p[@lang='fa']",
+      );
+      await expect(persianGuide).toBeVisible();
+      await expect(persianGuide).toHaveAttribute("dir", "rtl");
       await action("Finish for now", "Für heute pausieren").click();
       await action("Resume practice", "Weiterüben").click();
       await expect(page.locator("#practice-response")).toHaveValue(

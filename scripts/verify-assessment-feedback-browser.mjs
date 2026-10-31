@@ -11,7 +11,7 @@ const report={at:new Date().toISOString(),scope:`${installed?"Installed":"Compil
 const browser=await chromium.launch({channel:"msedge",headless:true});
 try{
  for(const language of ["en","de"]){
-  const app=`Apps/${language==="en"?"English/English-Automaticity":"Deutsch-Automaticity"}`,publicRoot=resolve(root,app,"apps/web/public");
+  const app=`Apps/${language==="en"?"English/English-Automaticity":"Deutsch/Deutsch-Automaticity"}`,publicRoot=resolve(root,app,"apps/web/public");
   const pack=JSON.parse(await readFile(resolve(publicRoot,`learning-core/curriculum-${language}.json`),"utf8"));
   const task=pack.units.flatMap(unit=>unit.tasks).find(task=>task.constructionAssessment?.rule===`${language}.inflection`&&task.stage==="retrieve"&&task.modality==="writing");
   assert(task);const answer=language==="en"?"Mina works in the library every day.":"Ich erkläre den neuen Plan.";
@@ -28,8 +28,8 @@ try{
   const events=()=>page.evaluate(lang=>Object.keys(localStorage).filter(key=>key.startsWith(`automaticity:v2:${lang}:event:`)).map(key=>JSON.parse(localStorage.getItem(key))),language);
   const currentAttempt=async()=>{const id=await page.evaluate(lang=>JSON.parse(localStorage.getItem(`automaticity:v2:${lang}:session`)).submittedId,language);return(await events()).find(event=>event.id===id);};
   const action=(en,de)=>page.getByRole("button",{name:language==="en"?en:de,exact:true});
-  const openReview=async()=>{if(!await page.locator("#response-review").evaluate(node=>node.open))await page.locator("#response-review > summary").click();};
-  const submit=async()=>{await page.locator("#practice-response").fill(answer);await action("Save and check","Speichern und prüfen").click();await expect(action("Try again as a repair","Als Korrektur erneut versuchen")).toBeVisible();};
+  const openReview=async()=>{if(!await page.locator("#response-review").evaluate(node=>node.parentElement.closest("details").open))await page.locator("details:has(> section > #response-review) > summary").click();if(!await page.locator("#response-review").evaluate(node=>node.open))await page.locator("#response-review > summary").click();};
+  const submit=async()=>{await page.locator("#practice-response").fill(answer);await expect(action("Save and check","Speichern und prüfen")).toHaveCount(0);await action("Save response","Antwort speichern").click();await expect(action("Try again as a repair","Als Korrektur erneut versuchen")).toBeVisible();};
   try{
    await page.goto(`${base}/practice?task=${encodeURIComponent(task.id)}`,{waitUntil:"domcontentloaded"});
    await submit();const first=(await events()).find(event=>event.type==="attempt");assert(first);

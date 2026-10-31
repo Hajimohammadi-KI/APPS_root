@@ -205,8 +205,12 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
       changed = true;
     }
   }
-  const repair = KNOWN_CONTENT_REPAIRS.find(row => row.language === pack.language)!;
-  const repairUnit = pack.units.find(unit => unit.id === repair.constructionId)!;
+  const repair = KNOWN_CONTENT_REPAIRS.find(
+    (row) => row.language === pack.language,
+  )!;
+  const repairUnit = pack.units.find(
+    (unit) => unit.id === repair.constructionId,
+  )!;
   repairUnit.commonError = `${repair.source} → ${repair.answer}`;
   for (const modality of ["writing", "speaking"] as const) {
     const original = activePracticeTasks(repairUnit).find(

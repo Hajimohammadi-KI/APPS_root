@@ -9,15 +9,28 @@ import {
 import { auditClosedTask } from "../shared/learning-core/src/automaticity/curriculum-audit";
 import { assertWritingPrecision } from "../shared/learning-core/src/writing-precision";
 test("W33 both legacy labs use repaired prompts while raw historical catalogs remain intact", async () => {
-  const english = await import("../Apps/English/English-Automaticity/packages/content/src/index");
-  const german = await import("../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/index");
-  const en = english.grammarUnits.find(unit => unit.title === "Layered subordination")!;
-  const de = german.grammarUnits.find(unit => unit.title === "Feine Bedeutungsunterschiede im Modus")!;
-  expect(en.exercises[0]![0]).not.toContain("Stacked clauses with unclear reference");
+  const english =
+    await import("../Apps/English/English-Automaticity/packages/content/src/index");
+  const german =
+    await import("../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/index");
+  const en = english.grammarUnits.find(
+    (unit) => unit.title === "Layered subordination",
+  )!;
+  const de = german.grammarUnits.find(
+    (unit) => unit.title === "Feine Bedeutungsunterschiede im Modus",
+  )!;
+  expect(en.exercises[0]![0]).not.toContain(
+    "Stacked clauses with unclear reference",
+  );
   expect(en.commonError).toContain("pattern that emerge was");
-  expect(de.exercises[0]![0]).not.toContain("Die Maßnahme hat sicher keine Folgen");
+  expect(de.exercises[0]![0]).not.toContain(
+    "Die Maßnahme hat sicher keine Folgen",
+  );
   expect(de.commonError).toContain("Es wären denkbar");
-  expect(english.legacyGrammarUnits.find(unit => unit.title === en.title)!.commonError).toBe("Stacked clauses with unclear reference.");
+  expect(
+    english.legacyGrammarUnits.find((unit) => unit.title === en.title)!
+      .commonError,
+  ).toBe("Stacked clauses with unclear reference.");
 });
 for (const language of ["en", "de"] as const)
   test(`W33 ${language}: preserve original definitions, replace invalid corrections, and add real target practice in A1–C2`, () => {

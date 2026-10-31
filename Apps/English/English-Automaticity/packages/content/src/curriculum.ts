@@ -8,10 +8,7 @@ const MINIMUM_CONTROLLED_EXERCISES = 6;
 
 function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
   const candidates: GrammarExercise[] = [
-    [
-      `State the rule for “${unit.title}” from memory.`,
-      unit.recallTest,
-    ],
+    [`State the rule for “${unit.title}” from memory.`, unit.recallTest],
     [
       `Write the transfer model for “${unit.title}” accurately.`,
       unit.transferTest,
@@ -40,11 +37,22 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
 function repairKnownContent(unit: GrammarUnit): GrammarUnit {
   const repair = knownContentRepair("en", unit.title);
   if (!repair) return unit;
-  return { ...unit, commonError: `${repair.source} → ${repair.answer}`, repairTest: repair.answer,
-    exercises: unit.exercises.map<GrammarExercise>(exercise => exercise[0] === repair.legacyPrompt ? [repair.prompt, repair.answer] : exercise) };
+  return {
+    ...unit,
+    commonError: `${repair.source} → ${repair.answer}`,
+    repairTest: repair.answer,
+    exercises: unit.exercises.map<GrammarExercise>((exercise) =>
+      exercise[0] === repair.legacyPrompt
+        ? [repair.prompt, repair.answer]
+        : exercise,
+    ),
+  };
 }
 export { legacyGrammarUnits };
 export const grammarUnits: GrammarUnit[] = [
   ...legacyGrammarUnits,
   ...cefrSupplementalUnits,
-].map(repairKnownContent).map(ensureSixExercises).map(repairGrammarUnitLinks);
+]
+  .map(repairKnownContent)
+  .map(ensureSixExercises)
+  .map(repairGrammarUnitLinks);

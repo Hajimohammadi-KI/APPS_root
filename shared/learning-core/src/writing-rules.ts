@@ -59,17 +59,21 @@ export function writingIssues(
   source: string,
   language: "en" | "de",
 ): WritingIssue[] {
-  // A line break ends a clause: headings, list items and lines never join.
+  // A line break ends a clause (headings, list items) unless the next line
+  // continues in lowercase, as in hard-wrapped or pasted text.
+  const text = source.slice(0, 20000);
   const issues: WritingIssue[] = [];
-  let offset = 0;
-  for (const line of source.slice(0, 20000).split("\n")) {
-    for (const issue of lineIssues(line, language))
+  let start = 0;
+  for (const match of [...text.matchAll(/\n/gu), null]) {
+    const end = match ? match.index : text.length;
+    if (match && /^[^\S\n]*\p{Ll}/u.test(text.slice(end + 1))) continue;
+    for (const issue of lineIssues(text.slice(start, end), language))
       issues.push({
         ...issue,
-        start: issue.start + offset,
-        end: issue.end + offset,
+        start: issue.start + start,
+        end: issue.end + start,
       });
-    offset += line.length + 1;
+    start = end + 1;
   }
   return issues;
 }
@@ -97,7 +101,29 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
   const sentenceStart = (i: number): boolean => {
     let j = i - 1;
     while (j >= 0 && /^["'“”„«»‘’(]$/u.test(tokens[j]!.text)) j--;
+    // "Mr. An" and "Dr. Weber" continue the sentence.
+    if (
+      tokens[j]?.text === "." &&
+      /^(?:mr|mrs|ms|dr|prof|st|hr|fr)$/u.test(lower[j - 1] ?? "")
+    )
+      return false;
     return j < 0 || /^[.!?]$/u.test(tokens[j]!.text);
+  };
+  /** A whole-word capital acronym (IT, AN) is never the pronoun or article. */
+  const acronym = (i: number) =>
+    (tokens[i]?.text.length ?? 0) > 1 &&
+    tokens[i]!.text === tokens[i]!.text.toUpperCase() &&
+    /\p{Lu}/u.test(tokens[i]!.text);
+  /** Tokens up to the end of the sentence, across commas. */
+  const sentenceWords = (from: number): string[] => {
+    const words: string[] = [];
+    for (
+      let j = from;
+      j < tokens.length && !/^[.!?]$/u.test(tokens[j]!.text);
+      j++
+    )
+      if (isWord(j)) words.push(lower[j]!);
+    return words;
   };
   const capitalized = (i: number) => /^\p{Lu}/u.test(tokens[i]?.text ?? "");
   const isWord = (i: number) => tokens[i]?.kind === "word";

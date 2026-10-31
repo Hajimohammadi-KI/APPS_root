@@ -1,8 +1,8 @@
 {
-  "publishedAt": "2026-10-30",
+  "publishedAt": "2026-10-31",
   "version": "20.9.4",
-  "webRelease": "2026.10.30.3",
+  "webRelease": "2026.10.31.1",
   "changes": [
-    "Pronunciation research abstains on empty model output and retains unusable results in cohort coverage; pronunciation grading and warnings remain disabled pending validation."
+    "A shared A1–C2 mastery roadmap, repaired content and 24 authored target exercises; optional selected-text contributions require preview and separate per-download consent. Exports are review candidates, without automatic uploads, model training or validated CEFR claims."
   ]
 }

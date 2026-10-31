@@ -30,6 +30,17 @@ const task: PracticeTask = {
   },
   sourceId: "synthetic-test",
 };
+test("W33 historical links to a known invalid correction stay unscored", () => {
+  const withdrawn = {
+    ...task,
+    responseKind: "correction" as const,
+    prompt: "Correct the sentence: Stacked clauses with unclear reference.",
+  };
+  const response = { ...attempt(), task: withdrawn };
+  expect(
+    assessControlledTask(response, withdrawn, at, "withdrawn").verdict,
+  ).toBe("not_assessed");
+});
 function attempt(overrides: Partial<TaskIdentity> = {}): AttemptEvent {
   return {
     version: 2,

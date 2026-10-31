@@ -1,12 +1,20 @@
 import { readFileSync } from "node:fs";
 import { auditClosedTask } from "./curriculum-audit";
-import { validateCurriculum, type CurriculumPack } from "./curriculum";
+import {
+  activePracticeTasks,
+  validateCurriculum,
+  type CurriculumPack,
+} from "./curriculum";
 import { assertWritingPrecision } from "../writing-precision";
 const path = process.argv[2];
 if (!path) throw Error("Curriculum path is required");
 const pack = JSON.parse(readFileSync(path, "utf8")) as CurriculumPack;
-validateCurriculum(pack);
-const issues = pack.units.flatMap((u) => u.tasks.flatMap(auditClosedTask));
+const structuralIssues = validateCurriculum(pack);
+if (structuralIssues.length)
+  throw Error(`Invalid curriculum: ${structuralIssues.join("; ")}`);
+const issues = pack.units.flatMap((u) =>
+  activePracticeTasks(u).flatMap(auditClosedTask),
+);
 const errors = issues.filter((i) => i.severity === "error");
 if (errors.length)
   throw Error(

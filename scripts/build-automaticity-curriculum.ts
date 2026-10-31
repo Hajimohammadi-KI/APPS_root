@@ -8,6 +8,7 @@ import {
 } from "../shared/learning-core/src/automaticity/curriculum";
 import type { HumanReviewManifest } from "../shared/learning-core/src/automaticity/human-review";
 import { reviseVariationTasks } from "./lib/variation-revisions";
+import { reviseMasteryContent } from "./lib/mastery-content-revisions";
 
 const root = resolve(import.meta.dir, "..");
 const checkOnly = Bun.argv.includes("--check");
@@ -45,7 +46,7 @@ for (const [language, app] of [
     !Array.isArray(manifest.scopes)
   )
     throw new Error(`Stale ${language} review manifest`);
-  const pack = reviseVariationTasks(source);
+  const pack = reviseMasteryContent(reviseVariationTasks(source));
   const revisedIssues = validateCurriculum(pack);
   if (revisedIssues.length) throw new Error(revisedIssues.join("\n"));
   const active = pack.units.flatMap(activePracticeTasks);

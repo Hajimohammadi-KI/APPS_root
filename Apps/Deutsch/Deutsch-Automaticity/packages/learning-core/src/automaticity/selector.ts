@@ -11,6 +11,7 @@ import {
 } from "./evidence";
 import type { AttemptEvent } from "./contracts";
 import { constructionTargetMet } from "./learning-target";
+import { auditClosedTask } from "./curriculum-audit";
 export { shouldResumeSavedPractice } from "./practice-session";
 export interface DailySelection {
   focus: ConstructionUnit[];
@@ -33,7 +34,8 @@ export function isCheckedTask(task: PracticeTask): boolean {
     task.modality === "writing" &&
     task.answerPolicy === "closed" &&
     task.acceptedAnswers.length > 0 &&
-    !task.constructionAssessment
+    !task.constructionAssessment &&
+    !auditClosedTask(task).some((issue) => issue.severity === "error")
   );
 }
 

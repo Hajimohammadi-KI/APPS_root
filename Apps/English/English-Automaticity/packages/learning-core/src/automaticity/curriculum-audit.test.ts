@@ -25,3 +25,16 @@ test("W33 build audit finds missing solutions, duplicate alternatives and ambigu
     ),
   ).toBe(true);
 });
+test("W33 known correction prompts with no source sentence or changed meaning cannot pass the audit", () => {
+  for (const prompt of [
+    "Correct the sentence: Stacked clauses with unclear reference.",
+    "Korrigiere die vorgegebene Form. Nicht richtig: Die Maßnahme hat sicher keine Folgen. Schreibe die vollständige richtige Antwort auf Deutsch.",
+  ])
+    expect(
+      auditClosedTask({ ...task, responseKind: "correction", prompt }),
+    ).toContainEqual({
+      taskId: "fixture",
+      code: "known-invalid-correction",
+      severity: "error",
+    });
+});

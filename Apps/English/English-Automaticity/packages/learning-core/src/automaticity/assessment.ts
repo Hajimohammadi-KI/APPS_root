@@ -8,6 +8,7 @@ import {
 } from "./contracts";
 import type { PracticeTask } from "./curriculum";
 import { resolveRepresentativeTask } from "./representative-tasks";
+import { auditClosedTask } from "./curriculum-audit";
 import {
   CONSTRUCTION_RULE_VERSION,
   constructionFeedback,
@@ -153,6 +154,12 @@ export function assessControlledTask(
       " " +
       discourseFeedback(attempt.response.text, attempt.language, "")
         .description;
+    return base;
+  }
+  if (auditClosedTask(task).some((issue) => issue.severity === "error")) {
+    base.feedback = english
+      ? "Saved without a score: this exercise needs content repair. Continue with a current exercise; your original response is kept."
+      : "Ohne Bewertung gespeichert: Diese Aufgabe muss inhaltlich überarbeitet werden. Fahre mit einer aktuellen Aufgabe fort; deine Originalantwort bleibt erhalten.";
     return base;
   }
   const value = normaliseAnswer(attempt.response.text, task);

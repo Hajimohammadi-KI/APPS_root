@@ -1,6 +1,7 @@
 import type { CurriculumPack } from "./curriculum";
 import { collectAssessmentFeedback } from "./assessment-feedback";
 import { readAutomaticityEvents } from "./storage";
+import { mountTrainingContributionPanel } from "./training-contribution-panel";
 
 /** The report is downloaded only on request; no feedback or learner text is uploaded. */
 export function mountAssessmentFeedbackPanel(
@@ -25,6 +26,7 @@ export function mountAssessmentFeedbackPanel(
     : "Rückmeldungen zum Prüfer herunterladen";
   section.append(description, status, download);
   root.append(section);
+  const refreshContributions = mountTrainingContributionPanel(section, pack);
   let generation = 0;
   const read = () =>
     collectAssessmentFeedback(
@@ -42,10 +44,12 @@ export function mountAssessmentFeedbackPanel(
           ? `${count} reviewer disagreements saved. ${report.excluded.length} reviews cannot be reused in the current writing checker.`
           : `${count} abweichende Rückmeldungen gespeichert. ${report.excluded.length} Prüfungen können im aktuellen Schreibprüfer nicht wiederverwendet werden.`;
         download.disabled = report.cases.length === 0;
+        refreshContributions(report);
       })
       .catch(() => {
         if (request === generation) {
           download.disabled = true;
+          refreshContributions(null);
           status.textContent = en
             ? "Feedback could not be read. Original records were kept."
             : "Rückmeldungen konnten nicht gelesen werden. Originaldaten bleiben erhalten.";

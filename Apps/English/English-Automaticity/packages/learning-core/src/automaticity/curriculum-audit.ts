@@ -1,5 +1,13 @@
 import { normalizeText } from "../text";
 import type { PracticeTask } from "./curriculum";
+// Confirmed content defects, not a general semantic parser. Historical task
+// definitions stay readable, but these prompts must never earn new credit.
+const withdrawnCorrections = new Set(
+  [
+    "Correct the sentence: Stacked clauses with unclear reference.",
+    "Korrigiere die vorgegebene Form. Nicht richtig: Die Maßnahme hat sicher keine Folgen. Schreibe die vollständige richtige Antwort auf Deutsch.",
+  ].map((prompt) => normalizeText(prompt)),
+);
 export interface ContentAuditIssue {
   readonly taskId: string;
   readonly code: string;
@@ -21,6 +29,11 @@ export function auditClosedTask(
   const add = (code: string, severity: "error" | "warning") =>
     issues.push({ taskId: task.id, code, severity });
   const answers = task.acceptedAnswers.map((a) => normalizeText(a));
+  if (
+    task.responseKind === "correction" &&
+    withdrawnCorrections.has(normalizeText(task.prompt))
+  )
+    add("known-invalid-correction", "error");
   if (!answers.length || answers.some((a) => !a))
     add("missing-answer", "error");
   if (!task.solution || !answers.includes(normalizeText(task.solution)))

@@ -135,11 +135,11 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
     return words;
   };
   if (language === "en") {
+    // "and" is left out: "you and I did…" is a coordinated subject.
     const clauseStart = (i: number) =>
       sentenceStart(i) ||
       tokens[i - 1]?.text === "," ||
       [
-        "and",
         "but",
         "so",
         "because",
@@ -173,11 +173,21 @@ function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
         !["March", "April", "June", "August"].includes(expected) &&
         head === expected.toLowerCase() &&
         !inAddress(i) &&
-        // Billiards: "a lot of english on the ball" is a common noun.
+        // Billiards: "put english on the ball", "left english" (spin).
         !(
           head === "english" &&
-          ["of", "some", "more", "much", "the"].includes(lower[i - 1] ?? "") &&
-          lower[i + 1] === "on"
+          (lower[i + 1] === "on" ||
+            [
+              "left",
+              "right",
+              "side",
+              "reverse",
+              "running",
+              "top",
+              "bottom",
+              "inside",
+              "outside",
+            ].includes(lower[i - 1] ?? ""))
         )
       )
         add(

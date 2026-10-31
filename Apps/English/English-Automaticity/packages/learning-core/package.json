@@ -17,7 +17,8 @@
     "./measurement-schema": "./schemas/measurement-contract.schema.json",
     "./mediation-schema": "./schemas/mediation-content-pilot.schema.json",
     "./grammar-feedback-server": "./src/automaticity/grammar-feedback-route.ts",
-    "./text": "./src/text.ts"
+    "./text": "./src/text.ts",
+    "./feedback": "./src/feedback.ts"
   },
   "scripts": {
     "build:browser": "bun build src/adherence/browser-entry.ts --target=browser --format=iife --global-name=AutomaticityAdherenceShadow --outfile=browser/adherence-shadow.js --minify && bun build src/booster/browser-entry.ts --target=browser --format=iife --global-name=AutomaticityForcedOutputBooster --outfile=browser/forced-output-booster.js --minify && bun build src/text-browser.ts --target=browser --format=iife --global-name=AutomaticityText --outfile=browser/text.js --minify",

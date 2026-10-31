@@ -1409,8 +1409,8 @@ export async function mountPractice(
       element(
         "p",
         t(
-          "These responses are saved without a check or score.",
-          "Diese Antworten werden ohne Prüfung und ohne Bewertung gespeichert.",
+          "These responses do not count as checked evidence. Some show practice feedback, never a verified score.",
+          "Diese Antworten zählen nicht als geprüfter Nachweis. Manche zeigen Übungsfeedback, nie eine bestätigte Bewertung.",
         ),
         "muted",
       ),

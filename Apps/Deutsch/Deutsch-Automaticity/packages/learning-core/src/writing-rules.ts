@@ -48,14 +48,35 @@ const properNames = [
   "English",
   "German",
 ];
+const germanPrepositions = new Set(
+  "mit aus bei nach seit von zu für durch ohne gegen um in an auf über unter vor hinter neben zwischen".split(
+    " ",
+  ),
+);
 
 /** High precision, finite lexical scope. Absence of issues never establishes correctness. */
 export function writingIssues(
   source: string,
   language: "en" | "de",
 ): WritingIssue[] {
+  // A line break ends a clause: headings, list items and lines never join.
   const issues: WritingIssue[] = [];
-  const tokens = tokenizeText(source.slice(0, 20000));
+  let offset = 0;
+  for (const line of source.slice(0, 20000).split("\n")) {
+    for (const issue of lineIssues(line, language))
+      issues.push({
+        ...issue,
+        start: issue.start + offset,
+        end: issue.end + offset,
+      });
+    offset += line.length + 1;
+  }
+  return issues;
+}
+
+function lineIssues(source: string, language: "en" | "de"): WritingIssue[] {
+  const issues: WritingIssue[] = [];
+  const tokens = tokenizeText(source);
   const lower = tokens.map((t) => t.normalized.toLocaleLowerCase(language));
   const add = (
     index: number,
@@ -73,27 +94,78 @@ export function writingIssues(
       message,
     });
   };
+  const sentenceStart = (i: number): boolean => {
+    let j = i - 1;
+    while (j >= 0 && /^["'“”„«»‘’(]$/u.test(tokens[j]!.text)) j--;
+    return j < 0 || /^[.!?]$/u.test(tokens[j]!.text);
+  };
+  const capitalized = (i: number) => /^\p{Lu}/u.test(tokens[i]?.text ?? "");
+  const isWord = (i: number) => tokens[i]?.kind === "word";
+  /** Words up to the next punctuation mark, inside the current clause. */
+  const clauseWords = (from: number): string[] => {
+    const words: string[] = [];
+    for (let j = from; j < tokens.length && isWord(j); j++)
+      words.push(lower[j]!);
+    return words;
+  };
   if (language === "en") {
+    const clauseStart = (i: number) =>
+      sentenceStart(i) ||
+      tokens[i - 1]?.text === "," ||
+      [
+        "and",
+        "but",
+        "so",
+        "because",
+        "although",
+        "when",
+        "if",
+        "then",
+        "while",
+      ].includes(lower[i - 1] ?? "");
+    // A token joined to . @ / # _ belongs to an address or file name.
+    const inAddress = (i: number) => {
+      const { start, end } = tokens[i]!;
+      const before = source[start - 1] ?? "",
+        after = source[end] ?? "";
+      return (
+        /[@/#_\\]/u.test(before) ||
+        /[@/#_\\]/u.test(after) ||
+        (before === "." && /[\p{L}\p{N}]/u.test(source[start - 2] ?? "")) ||
+        (after === "." && /[\p{L}\p{N}]/u.test(source[end + 1] ?? ""))
+      );
+    };
     for (let i = 0; i < tokens.length; i++) {
+      const text = tokens[i]!.text;
+      const head = text.split(/['’-]/u)[0]!;
       const expected = properNames.find(
-        (name) => name.toLowerCase() === lower[i],
+        (name) => name.toLowerCase() === head.toLowerCase(),
       );
       // March/April/June/August can be names or ordinary words in special contexts.
       if (
         expected &&
         !["March", "April", "June", "August"].includes(expected) &&
-        tokens[i]!.text === expected.toLowerCase()
+        head === expected.toLowerCase() &&
+        !inAddress(i) &&
+        // Billiards: "a lot of english on the ball" is a common noun.
+        !(
+          head === "english" &&
+          ["of", "some", "more", "much", "the"].includes(lower[i - 1] ?? "") &&
+          lower[i + 1] === "on"
+        )
       )
         add(
           i,
-          expected,
+          expected + text.slice(head.length),
           "EN_PROPER_NAME",
           "Capitalize this place, language, day or unambiguous month name.",
         );
     }
-    // A following noun makes the uncountable word a modifier (a research institute).
+    // A following noun makes the uncountable word a modifier (a research
+    // institute, a research and development plan); only a clear clause
+    // continuation shows that it is the head noun.
     const clauseBoundary = new Set(
-      "for about on from to with and or but is was are were in at of that which today now here there".split(
+      "for about on from to with is was are were in at that which today now here there yesterday tomorrow again too".split(
         " ",
       ),
     );
@@ -101,9 +173,16 @@ export function writingIssues(
       const after = tokens[i + 2];
       if (
         (!after ||
-          after.kind !== "word" ||
+          (after.kind !== "word" && !["/", "&"].includes(after.text)) ||
           clauseBoundary.has(lower[i + 2]!)) &&
         !(lower[i] === "few" && lower[i - 1] === "a") &&
+        // many/few research: research is also a verb.
+        !(["many", "few"].includes(lower[i]!) && lower[i + 1] === "research") &&
+        // A filed information is a countable legal document.
+        !(
+          lower[i + 1] === "information" &&
+          ["file", "files", "filed", "lodged"].includes(lower[i - 1] ?? "")
+        ) &&
         [
           "advice",
           "information",
@@ -117,7 +196,7 @@ export function writingIssues(
       )
         add(
           i,
-          "some",
+          capitalized(i) ? "Some" : "some",
           "EN_UNCOUNTABLE",
           "This noun is uncountable in this use; use some or a suitable unit phrase.",
         );
@@ -128,9 +207,12 @@ export function writingIssues(
         play: "playing",
         learn: "learning",
         walk: "walking",
+        watch: "watching",
+        dance: "dancing",
+        sing: "singing",
       };
       if (
-        ["enjoy", "enjoys", "enjoyed"].includes(lower[i]!) &&
+        ["enjoy", "enjoys", "enjoyed", "enjoying"].includes(lower[i]!) &&
         lower[i + 1] === "to" &&
         gerunds[lower[i + 2] ?? ""]
       ) {
@@ -146,63 +228,95 @@ export function writingIssues(
         });
       }
     }
-    for (let i = 0; i < tokens.length - 2; i++) {
-      if (!["i", "you", "he", "she", "it", "we", "they"].includes(lower[i]!))
-        continue;
-      if (
-        !["did", "doesn't", "doesn’t", "didn't", "didn’t"].includes(
-          lower[i + 1]!,
-        )
-      )
-        continue;
-      const base = ENGLISH_FINITE_TO_BASE[lower[i + 2]!];
-      if (base)
+    // do-support needs the base form. Only a clause-initial subject is
+    // checked: "What I did had…" and "the ones I didn't had…" are complete.
+    const subjects = ["i", "you", "he", "she", "it", "we", "they"];
+    const negatedAux = [
+      "doesn't",
+      "doesn’t",
+      "didn't",
+      "didn’t",
+      "don't",
+      "don’t",
+    ];
+    // Plural nouns as well as verbs: "they did studies", "they do needs assessments".
+    const nounHomographs = new Set([
+      "studies",
+      "works",
+      "likes",
+      "needs",
+      "wants",
+      "watches",
+    ]);
+    const auxiliaryBase = (verbIndex: number, allowHomograph: boolean) => {
+      const verb = lower[verbIndex] ?? "";
+      const base = ENGLISH_FINITE_TO_BASE[verb];
+      if (base && (allowHomograph || !nounHomographs.has(verb)))
         add(
-          i + 2,
+          verbIndex,
           base,
           "EN_AUXILIARY_BASE",
           "After do/does/did, use the base form of the main verb.",
         );
+    };
+    for (let i = 0; i < tokens.length - 2; i++) {
+      const aux = lower[i + 1]!;
+      if (
+        subjects.includes(lower[i]!) &&
+        clauseStart(i) &&
+        (negatedAux.includes(aux) || ["did", "does", "do"].includes(aux))
+      ) {
+        const not = ["not", "never"].includes(lower[i + 2]!);
+        auxiliaryBase(not ? i + 3 : i + 2, not || negatedAux.includes(aux));
+      }
+      // Questions: Did you went…? Does she likes…?
+      if (
+        sentenceStart(i) &&
+        (negatedAux.includes(lower[i]!) ||
+          ["did", "does", "do"].includes(lower[i]!)) &&
+        subjects.includes(lower[i + 1]!)
+      )
+        auxiliaryBase(i + 2, true);
     }
+    // Verbs whose object can be you or it: "Anyone who knows you has…".
+    const cueVerbs = [
+      "know",
+      "knows",
+      "knew",
+      "think",
+      "thinks",
+      "thought",
+      "believe",
+      "believes",
+      "believed",
+    ];
     for (let i = 0; i < tokens.length - 1; i++) {
-      const indicative =
-        [
-          "know",
-          "knows",
-          "knew",
-          "think",
-          "thinks",
-          "thought",
-          "believe",
-          "believes",
-          "believed",
-          "because",
-          "although",
-          "when",
-        ].includes(lower[i - 1] ?? "") ||
-        (lower[i - 1] === "that" &&
-          [
-            "know",
-            "knows",
-            "knew",
-            "think",
-            "thinks",
-            "thought",
-            "believe",
-            "believes",
-            "believed",
-          ].includes(lower[i - 2] ?? ""));
-      if (i > 0 && !/[.!?]/u.test(tokens[i - 1]!.text) && !indicative) continue;
       const subject = lower[i]!,
         verb = lower[i + 1]!;
-      if (["he", "she", "it"].includes(subject) && verb === "have")
+      const afterCueVerb = cueVerbs.includes(lower[i - 1] ?? "");
+      const clauseInitial =
+        sentenceStart(i) ||
+        ["because", "although", "when", "if"].includes(lower[i - 1] ?? "") ||
+        (lower[i - 1] === "that" && cueVerbs.includes(lower[i - 2] ?? ""));
+      if (!clauseInitial && !afterCueVerb) continue;
+      const subjectForm =
+        clauseInitial || ["i", "he", "she", "we", "they"].includes(subject);
+      if (
+        subjectForm &&
+        ["he", "she", "it"].includes(subject) &&
+        verb === "have"
+      )
         add(
           i + 1,
           "has",
           "EN_SUBJECT_AGREEMENT",
           "Use has with a singular third-person subject in a direct statement.",
         );
-      if (["i", "you", "we", "they"].includes(subject) && verb === "has")
+      if (
+        subjectForm &&
+        ["i", "you", "we", "they"].includes(subject) &&
+        verb === "has"
+      )
         add(
           i + 1,
           "have",
@@ -215,13 +329,14 @@ export function writingIssues(
         ? i + 4
         : i + 3;
       if (
+        clauseInitial &&
         subject === "the" &&
         ["list", "box", "lists", "boxes"].includes(verb) &&
         lower[i + 2] === "of" &&
         ["items", "books", "students"].includes(lower[nounIndex] ?? "")
       ) {
         const finite = lower[nounIndex + 1],
-          plural = ["lists", "boxes", "groups"].includes(verb);
+          plural = ["lists", "boxes"].includes(verb);
         if (finite === (plural ? "is" : "are"))
           add(
             nounIndex + 1,
@@ -232,10 +347,14 @@ export function writingIssues(
       }
     }
     for (let i = 0; i < tokens.length - 1; i++) {
-      const article = lower[i]!,
-        next = lower[i + 1]!;
+      const article = lower[i]!;
+      if (article !== "a" && article !== "an") continue;
+      // A capital letter mid-sentence is a label (vitamin A) or a name (An).
+      if (tokens[i]!.text !== article && !sentenceStart(i)) continue;
+      const next = lower[i + 1]!.split(/['’-]/u)[0]!;
       if (
         (article === "a" && vowelSound.has(next)) ||
+        (article === "an" && consonantSound.has(lower[i + 1]!)) ||
         (article === "an" && consonantSound.has(next))
       ) {
         let replacement = article === "a" ? "an" : "a";
@@ -251,11 +370,33 @@ export function writingIssues(
     }
   }
   if (language === "de") {
-    for (let i = 1; i < tokens.length - 3; i++) {
+    for (let i = 2; i < tokens.length - 3; i++) {
       if (
         tokens[i]!.text !== "," ||
         !["der", "die", "das"].includes(lower[i + 1]!) ||
         lower[i + 2] !== "hier"
+      )
+        continue;
+      // The antecedent must be a determiner + noun phrase of its own, not
+      // an attribute: "die Frau mit dem Kind, die…", "das Kind der Frau, das…".
+      if (
+        ![
+          "der",
+          "die",
+          "das",
+          "den",
+          "dem",
+          "ein",
+          "eine",
+          "einen",
+          "einem",
+        ].includes(lower[i - 2]!)
+      )
+        continue;
+      if (
+        i - 3 >= 0 &&
+        (germanPrepositions.has(lower[i - 3]!) ||
+          (isWord(i - 3) && capitalized(i - 3) && !sentenceStart(i - 3)))
       )
         continue;
       const noun = GERMAN_NOUNS[tokens[i - 1]!.normalized];
@@ -283,20 +424,31 @@ export function writingIssues(
           "Das als Subjekt verwendete Relativpronomen stimmt mit dem Bezugsnomen in Genus und Numerus überein.",
         );
     }
+    // um/ohne … zu and um … willen are not the case-governing prepositions.
+    const infinitiveClause = (i: number) =>
+      ["um", "ohne"].includes(lower[i]!) &&
+      clauseWords(i + 1).some((w) => w === "zu" || w === "willen");
+    const fixedPhrase = (i: number) =>
+      (lower[i] === "zu" && lower[i - 1] === "und" && lower[i - 2] === "ab") ||
+      (lower[i] === "durch" && lower[i - 1] === "und") ||
+      (lower[i] === "für" && lower[i - 1] === "was");
     for (let i = 1; i < tokens.length; i++) {
       const noun = GERMAN_NOUNS[tokens[i]!.normalized];
       if (!noun) continue;
       const article = lower[i - 1]!,
         prep = lower[i - 2] ?? "";
-      const nounCase = ["mit", "aus", "bei", "von", "zu"].includes(prep)
-        ? "dat"
-        : ["für", "durch", "ohne", "gegen", "um"].includes(prep)
-          ? "acc"
-          : lower[i - 2] === "ist" &&
-              lower[i - 3] === "das" &&
-              (!tokens[i + 1] || /[.!?]/u.test(tokens[i + 1]!.text))
-            ? "nom"
-            : null;
+      const governed =
+        i >= 2 && !fixedPhrase(i - 2) && !infinitiveClause(i - 2);
+      const nounCase =
+        governed && ["mit", "aus", "bei", "von", "zu"].includes(prep)
+          ? "dat"
+          : governed && ["für", "durch", "ohne", "gegen", "um"].includes(prep)
+            ? "acc"
+            : lower[i - 2] === "ist" &&
+                lower[i - 3] === "das" &&
+                (!tokens[i + 1] || /[.!?]/u.test(tokens[i + 1]!.text))
+              ? "nom"
+              : null;
       if (nounCase && /^(?:ein|eine|einen|einem|einer|eines)$/u.test(article)) {
         const expected =
           nounCase === "dat"
@@ -317,8 +469,48 @@ export function writingIssues(
           );
       }
       if (
+        nounCase &&
+        nounCase !== "nom" &&
+        /^(?:der|die|das|den|dem|des)$/u.test(article)
+      ) {
+        const expected =
+          nounCase === "dat"
+            ? noun.gender === "f"
+              ? "der"
+              : "dem"
+            : noun.gender === "m"
+              ? "den"
+              : noun.gender === "f"
+                ? "die"
+                : "das";
+        if (article !== expected)
+          add(
+            i - 1,
+            expected,
+            "DE_NOUN_GENDER_CASE",
+            "Artikel und Nomen müssen in Genus und Kasus zusammenpassen.",
+          );
+      }
+      // One inflected adjective may stand between article and noun.
+      const articleIndex =
+        isWord(i - 1) &&
+        !capitalized(i - 1) &&
+        /en$/u.test(lower[i - 1]!) &&
+        !["den", "dem", "einen", "einem", "des", "eines"].includes(
+          lower[i - 1]!,
+        )
+          ? i - 2
+          : i - 1;
+      if (
         noun.weak &&
-        ["dem", "einem", "des", "eines", "den", "einen"].includes(article)
+        ["dem", "einem", "des", "eines", "den", "einen"].includes(
+          lower[articleIndex] ?? "",
+        ) &&
+        // ", mit dem Student und Professor kämpfen": a relative pronoun.
+        !(
+          germanPrepositions.has(lower[articleIndex - 1] ?? "") &&
+          tokens[articleIndex - 2]?.text === ","
+        )
       )
         add(
           i,
@@ -351,7 +543,32 @@ export function writingIssues(
           "meine",
           "dein",
           "deine",
-        ].includes(lower[i - 1]!)
+          "sein",
+          "seine",
+          "ihr",
+          "ihre",
+          "unser",
+          "unsere",
+          "euer",
+          "eure",
+          "kein",
+          "keine",
+        ].includes(lower[i - 1]!) &&
+        // "Den buch bitte heute noch!": buchen as an imperative.
+        !(
+          lower[i] === "buch" &&
+          sentenceStart(i - 1) &&
+          [
+            "bitte",
+            "doch",
+            "mal",
+            "schnell",
+            "sofort",
+            "heute",
+            "jetzt",
+            "noch",
+          ].includes(lower[i + 1] ?? "")
+        )
       )
         add(
           i,
@@ -369,6 +586,8 @@ export function writingIssues(
     };
     for (let i = 0; i < tokens.length; i++) {
       if (!sein[lower[i]!]) continue;
+      // Capitalized mid-sentence it is a noun or name: in aller Hast, seine Habe.
+      if (capitalized(i) && !sentenceStart(i)) continue;
       let end = i + 1;
       while (
         end < tokens.length &&
@@ -410,11 +629,18 @@ export function writingIssues(
             "aufgestanden",
             "eingeschlafen",
             "geworden",
+            "angekommen",
+            "zurückgekommen",
+            "gestorben",
+            "eingestiegen",
+            "ausgestiegen",
           ].includes(finalParticiple)) ||
         /^(?:(?:heute|gestern|schon|bereits|nicht) )?(?:gegangen|gekommen|geblieben|aufgestanden|eingeschlafen|geworden)$/u.test(
           phrase,
         ) ||
-        /^(?:nach (?:berlin|hause)|zum bahnhof) (?:gefahren|geflogen|gelaufen|gereist|gegangen|gekommen)$/u.test(
+        // Only a directional phrase right after the auxiliary: "hat ihn nach
+        // Hamburg gefahren" (transitive) does not match.
+        /^(?:(?:heute|gestern|schon|bereits|nicht) )?(?:nach [\p{L}]+|zum bahnhof) (?:gefahren|geflogen|gelaufen|gereist|gegangen|gekommen)$/u.test(
           phrase,
         )
       )
@@ -425,18 +651,24 @@ export function writingIssues(
           "Dieses intransitive Perfekt benötigt hier das Hilfsverb sein.",
         );
     }
-    const finite = new Set(
-      "bin bist ist sind seid habe hast hat haben habt kann kannst können könnt muss musst müssen müsst gehe gehst geht gehen komme kommst kommt kommen lerne lernst lernt lernen arbeite arbeitest arbeitet arbeiten bleibe bleibst bleibt bleiben".split(
+    const modals = new Set(
+      "kann kannst können könnt muss musst müssen müsst will willst wollen wollt darf darfst dürfen dürft soll sollst sollen sollt".split(
         " ",
       ),
     );
+    const finite = new Set([
+      ..."bin bist ist sind seid habe hast hat haben habt war warst waren wart hatte hattest hatten hattet gehe gehst geht gehen komme kommst kommt kommen lerne lernst lernt lernen arbeite arbeitest arbeitet arbeiten bleibe bleibst bleibt bleiben spiele spielst spielt spielen fahre fährst fährt fahren mache machst macht machen wohne wohnst wohnt wohnen".split(
+        " ",
+      ),
+      ...modals,
+    ]);
     const pronouns = new Set("ich du er sie es wir ihr".split(" "));
     for (let i = 0; i < tokens.length - 2; i++) {
       if (
         ["heute", "gestern", "morgen", "danach", "deshalb", "dann"].includes(
           lower[i]!,
         ) &&
-        (i === 0 || /[.!?]/u.test(tokens[i - 1]!.text)) &&
+        sentenceStart(i) &&
         pronouns.has(lower[i + 1]!) &&
         finite.has(lower[i + 2]!)
       ) {
@@ -462,9 +694,14 @@ export function writingIssues(
       while (end < tokens.length && tokens[end]!.kind === "word") end++;
       const tail = lower.slice(i + 3, end).join(" ");
       // Known predicates only; Ersatzinfinitiv clusters intentionally abstain.
+      // A bare infinitive tail needs a modal: "weil wir arbeiten gehen" is final already.
       if (
-        !/^(?:müde|krank|hier|zu hause|in berlin|in london|in der schule|keine zeit|ein buch|nach hause|kommen|gehen|lernen|arbeiten)$/u.test(
+        !/^(?:(?:sehr|so|wirklich|noch|oft|immer|heute) )?(?:müde|krank|hier|zu hause|in berlin|in london|in der schule|keine zeit|zeit|hunger|durst|ein buch|nach hause)$/u.test(
           tail,
+        ) &&
+        !(
+          /^(?:kommen|gehen|lernen|arbeiten)$/u.test(tail) &&
+          modals.has(lower[i + 2]!)
         )
       )
         continue;
@@ -502,6 +739,18 @@ export function writingIssues(
     for (let i = 0; i < tokens.length - 1; i++) {
       // seit before a nominative pronoun is the conjunction (Seit ich hier wohne).
       if (lower[i] === "seit" && pronouns.has(lower[i + 1]!)) continue;
+      // Capitalized "Du" and "Ich" are nouns: mit Du anreden, kein Du ohne Ich.
+      if (capitalized(i + 1)) continue;
+      if (infinitiveClause(i) || fixedPhrase(i)) continue;
+      // A pre-nominal attribute: "für mir unbekannte Wörter".
+      if (
+        isWord(i + 2) &&
+        !capitalized(i + 2) &&
+        /(?:e|en|er|es|em)$/u.test(lower[i + 2]!) &&
+        isWord(i + 3) &&
+        capitalized(i + 3)
+      )
+        continue;
       const forms = ["mit", "aus", "bei", "nach", "seit", "von", "zu"].includes(
         lower[i]!,
       )

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { feedbackAddress } from "@automaticity/learning-core/feedback";
+import { ContactFeedback } from "@/features/components/contact-feedback";
 
 export const metadata: Metadata = {
   description:
@@ -8,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function SupportPage() {
+  const contact = feedbackAddress();
   return (
     <main className="legal-page">
       <div className="legal-shell">
@@ -16,9 +19,7 @@ export default function SupportPage() {
         </Link>
 
         <header className="legal-hero legal-hero-support">
-          <span className="legal-kicker">
-            Install once, practice anywhere
-          </span>
+          <span className="legal-kicker">Install once, practice anywhere</span>
           <h1>Installation and Support</h1>
           <p>
             Open this web app on your phone, tablet, or computer. Your progress
@@ -39,7 +40,8 @@ export default function SupportPage() {
             <h2>Android</h2>
             <p>
               Open this web app in Chrome. In the browser menu, choose
-              <strong> Add to Home screen</strong> or <strong>Install app</strong>
+              <strong> Add to Home screen</strong> or{" "}
+              <strong>Install app</strong>
               when offered.
             </p>
           </section>
@@ -57,8 +59,8 @@ export default function SupportPage() {
             <p>
               Open the app once with internet access after each update.
               Catalogs, exercises, progress, settings, and supported audio
-              recordings work locally. Full LanguageTool evaluation requires
-              a configured online service.
+              recordings work locally. Full LanguageTool evaluation requires a
+              configured online service.
             </p>
           </section>
 
@@ -75,12 +77,15 @@ export default function SupportPage() {
             <h2>Evaluation issues</h2>
             <p>
               The public web app supports practice on this device. Online
-              assessment needs a separately configured service. Offline correction supports practice,
-              but intentionally does not unlock a verified checkpoint.
+              assessment needs a separately configured service. Offline
+              correction supports practice, but intentionally does not unlock a
+              verified checkpoint.
             </p>
             <Link href="/privacy">Read privacy notice →</Link>
           </section>
         </div>
+
+        {contact ? <ContactFeedback address={contact} /> : null}
       </div>
     </main>
   );

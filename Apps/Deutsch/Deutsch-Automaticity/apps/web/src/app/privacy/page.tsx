@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { feedbackAddress } from "@automaticity/learning-core/feedback";
+
 import { PageHeader } from "@/components/page-header";
 import { SectionBox } from "@/components/ui/section-box";
 
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 const updated = "1. August 2026";
 
 export default function PrivacyPage() {
+  const contact = feedbackAddress();
   return (
     <main className="mx-auto max-w-5xl px-6 py-10 sm:px-8">
       <div className="mb-8">
@@ -70,15 +73,20 @@ export default function PrivacyPage() {
           footer={
             <Link
               className="mt-3 inline-flex text-sm font-medium text-primary hover:underline"
-              href="/support"
+              href={contact ? "/support#contact" : "/support"}
             >
-              Installations- und Supporthilfe öffnen →
+              {contact
+                ? "Kontakt aufnehmen →"
+                : "Installations- und Supporthilfe öffnen →"}
             </Link>
           }
           title="Fragen und Support"
         >
           Weil diese Version keine serverseitigen Lernkonten erstellt, werden
           lokale Lerndaten direkt auf deinem Gerät verwaltet.
+          {contact
+            ? ` Für Fragen oder Feedback schreibe an ${contact}. Feedback erreicht uns als gewöhnliche E-Mail mit deiner Adresse und Nachricht; es wird nur zum Antworten und zur Verbesserung der Apps genutzt und auf Wunsch gelöscht.`
+            : null}
         </SectionBox>
       </div>
     </main>

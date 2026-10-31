@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { feedbackAddress } from "@automaticity/learning-core/feedback";
+
+import { ContactFeedback } from "@/components/contact-feedback";
 import { PageHeader } from "@/components/page-header";
 import { SectionBox } from "@/components/ui/section-box";
 
@@ -11,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function SupportPage() {
+  const contact = feedbackAddress();
   return (
     <main className="mx-auto max-w-5xl px-6 py-10 sm:px-8">
       <div className="mb-8">
@@ -67,6 +71,8 @@ export default function SupportPage() {
           Online-Auswertungen benötigen einen separat eingerichteten Dienst.
         </SectionBox>
       </div>
+
+      {contact ? <ContactFeedback address={contact} /> : null}
     </main>
   );
 }

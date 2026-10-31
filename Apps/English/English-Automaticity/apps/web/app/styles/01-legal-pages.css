@@ -165,3 +165,12 @@ summary {
   outline-offset: 3px;
 }
 
+
+.legal-contact {
+  margin-top: 18px;
+}
+
+.legal-contact form p {
+  color: #172b4d;
+}
+

@@ -16,9 +16,7 @@ test("R100 RED reviewed correct sentences outside the curriculum raise no issue"
   expect(flagged).toEqual([]);
 });
 test("R97 RED unambiguous learner errors in reviewed contexts are found", () => {
-  const cases: ReadonlyArray<
-    readonly ["en" | "de", string, string, string]
-  > = [
+  const cases: ReadonlyArray<readonly ["en" | "de", string, string, string]> = [
     ["en", "Did you went to the party?", "EN_AUXILIARY_BASE", "go"],
     ["en", "She did not went home.", "EN_AUXILIARY_BASE", "go"],
     ["en", "He does not goes to school.", "EN_AUXILIARY_BASE", "go"],
@@ -70,7 +68,9 @@ test("R97 RED unambiguous learner errors in reviewed contexts are found", () => 
           (i) => i.ruleId === ruleId && i.replacement === replacement,
         ),
     )
-    .map(([, text, ruleId, replacement]) => `${text} :: ${ruleId}→${replacement}`);
+    .map(
+      ([, text, ruleId, replacement]) => `${text} :: ${ruleId}→${replacement}`,
+    );
   expect(missed).toEqual([]);
 });
 test("R97 RED reviewed contexts that must still abstain", () => {

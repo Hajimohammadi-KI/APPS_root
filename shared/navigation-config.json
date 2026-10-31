@@ -15,7 +15,9 @@
       { "href": "/resources", "label": "Learning resources" },
       { "href": "/errors", "label": "Error workshop" },
       { "href": "/library", "label": "Audio library" },
-      { "href": "/teacher", "label": "Teacher studio" }
+      { "href": "/teacher", "label": "Teacher studio" },
+      { "href": "/support", "label": "Help" },
+      { "href": "/privacy", "label": "Privacy" }
     ],
     "settings": "/settings"
   },

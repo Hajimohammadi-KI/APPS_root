@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { feedbackAddress } from "@automaticity/learning-core/feedback";
 
 export const metadata: Metadata = {
   description:
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 const updated = "July 28, 2026";
 
 export default function PrivacyPage() {
+  const contact = feedbackAddress();
   return (
     <main className="legal-page">
       <div className="legal-shell">
@@ -18,9 +20,7 @@ export default function PrivacyPage() {
         </Link>
 
         <header className="legal-hero">
-          <span className="legal-kicker">
-            Clear, local-first data handling
-          </span>
+          <span className="legal-kicker">Clear, local-first data handling</span>
           <h1>Privacy</h1>
           <p>
             English Automaticity is designed so the full learning catalog and
@@ -35,8 +35,8 @@ export default function PrivacyPage() {
             <p>
               Progress, settings, responses, error history, review status, and
               locally recorded audio are stored in browser storage or IndexedDB.
-              In this version, they are not synced with a user account.
-              Removing the app or clearing website data may delete them.
+              In this version, they are not synced with a user account. Removing
+              the app or clearing website data may delete them.
             </p>
           </section>
 
@@ -65,9 +65,9 @@ export default function PrivacyPage() {
             <h2>Accounts, advertising, and tracking</h2>
             <p>
               This version includes no learning accounts, no ad SDK, no sale of
-              personal data, and no cross-app tracking. The hosting platform
-              may process standard technical request data required to provide
-              and protect the service.
+              personal data, and no cross-app tracking. The hosting platform may
+              process standard technical request data required to provide and
+              protect the service.
             </p>
           </section>
 
@@ -86,11 +86,14 @@ export default function PrivacyPage() {
             <p>
               Because this version does not create server-side learning
               accounts, local learning data is controlled from the device.
-              Distribution owners should include a public support contact in
-              store listings before release.
+              {contact
+                ? ` For questions or feedback, write to ${contact}. Feedback reaches us as an ordinary email with your address and message; it is used only to reply and to improve the apps, and is deleted on request.`
+                : " Distribution owners should include a public support contact in store listings before release."}
             </p>
-            <Link href="/support">
-              Open installation and support guide →
+            <Link href={contact ? "/support#contact" : "/support"}>
+              {contact
+                ? "Contact us →"
+                : "Open installation and support guide →"}
             </Link>
           </section>
         </div>

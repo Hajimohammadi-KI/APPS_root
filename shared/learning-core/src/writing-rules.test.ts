@@ -1,6 +1,100 @@
 import { expect, test } from "bun:test";
 import { writingIssues } from "./writing-rules";
 import { countPerfectUses } from "./english-lexicon";
+import { CORRECT_DE, CORRECT_EN } from "./writing-precision-fixtures";
+
+test("R100 RED reviewed correct sentences outside the curriculum raise no issue", () => {
+  const flagged = [
+    ...CORRECT_EN.map((text) => ({ text, issues: writingIssues(text, "en") })),
+    ...CORRECT_DE.map((text) => ({ text, issues: writingIssues(text, "de") })),
+  ]
+    .filter((row) => row.issues.length)
+    .map(
+      (row) =>
+        `${row.text} :: ${row.issues.map((i) => `${i.ruleId} ${i.original}→${i.replacement}`).join(", ")}`,
+    );
+  expect(flagged).toEqual([]);
+});
+test("R97 RED unambiguous learner errors in reviewed contexts are found", () => {
+  const cases: ReadonlyArray<
+    readonly ["en" | "de", string, string, string]
+  > = [
+    ["en", "Did you went to the party?", "EN_AUXILIARY_BASE", "go"],
+    ["en", "She did not went home.", "EN_AUXILIARY_BASE", "go"],
+    ["en", "He does not goes to school.", "EN_AUXILIARY_BASE", "go"],
+    ["en", "If he have time, he will call.", "EN_SUBJECT_AGREEMENT", "has"],
+    ["en", "We had a hour-long meeting.", "EN_INITIAL_SOUND", "an"],
+    ["en", "It is only a hour's drive.", "EN_INITIAL_SOUND", "an"],
+    ["en", "She gave me an advice yesterday.", "EN_UNCOUNTABLE", "some"],
+    ["en", "Many advice is useless.", "EN_UNCOUNTABLE", "Some"],
+    ["en", "I love london's parks.", "EN_PROPER_NAME", "London's"],
+    ["en", "I don't enjoy to watch TV.", "EN_VERB_COMPLEMENT", "watching"],
+    ["en", "I enjoy to dance.", "EN_VERB_COMPLEMENT", "dancing"],
+    ["de", "Gestern ich war krank.", "DE_V2", "war ich"],
+    ["de", "Morgen wir fahren nach Berlin.", "DE_V2", "fahren wir"],
+    ["de", "Heute ich spiele Fußball.", "DE_V2", "spiele ich"],
+    [
+      "de",
+      "Ich bleibe zu Hause, weil ich bin sehr müde.",
+      "DE_SUBORDINATE_FINAL",
+      "weil ich sehr müde bin",
+    ],
+    [
+      "de",
+      "Ich esse, weil ich habe Hunger.",
+      "DE_SUBORDINATE_FINAL",
+      "weil ich Hunger habe",
+    ],
+    [
+      "de",
+      "Ich bleibe, weil wir müssen arbeiten.",
+      "DE_SUBORDINATE_FINAL",
+      "weil wir arbeiten müssen",
+    ],
+    ["de", "Wir haben pünktlich angekommen.", "DE_PERFEKT_AUXILIARY", "sind"],
+    [
+      "de",
+      "Ich habe gestern nach Berlin gefahren.",
+      "DE_PERFEKT_AUXILIARY",
+      "bin",
+    ],
+    ["de", "Ich spreche mit der Mann.", "DE_NOUN_GENDER_CASE", "dem"],
+    ["de", "Das ist für der Frau.", "DE_NOUN_GENDER_CASE", "die"],
+    ["de", "Ich helfe dem neuen Student.", "DE_WEAK_NOUN", "Studenten"],
+    ["de", "Das ist unser haus.", "DE_NOUN_CAPITAL", "Haus"],
+  ];
+  const missed = cases
+    .filter(
+      ([language, text, ruleId, replacement]) =>
+        !writingIssues(text, language).some(
+          (i) => i.ruleId === ruleId && i.replacement === replacement,
+        ),
+    )
+    .map(([, text, ruleId, replacement]) => `${text} :: ${ruleId}→${replacement}`);
+  expect(missed).toEqual([]);
+});
+test("R97 RED reviewed contexts that must still abstain", () => {
+  for (const [language, text] of [
+    ["en", "Mary and he have arrived."],
+    ["en", "Did she say anything?"],
+    ["en", "They do needs assessments every year."],
+    ["en", "Ask for a research grant."],
+    ["en", "A apple a day is a myth."],
+    ["de", "Ich fahre ihn nach Hamburg."],
+    ["de", "Er hat ihn nach Hamburg gefahren."],
+    ["de", "Ich habe mich umgezogen."],
+    ["de", "Ich spreche mit der Frau."],
+    ["de", "Für die Frau ist das wichtig."],
+    ["de", "Ich warte, weil wir arbeiten gehen."],
+    ["de", "Habe ich das Buch?"],
+  ] as const) {
+    const issues = writingIssues(text, language);
+    // "A apple" keeps its sentence-initial article check.
+    if (text.startsWith("A apple"))
+      expect(issues.map((i) => i.replacement)).toEqual(["An"]);
+    else expect(issues).toEqual([]);
+  }
+});
 
 test("W12 a/an follows known initial sounds and abstains on ambiguous words", () => {
   for (const text of [

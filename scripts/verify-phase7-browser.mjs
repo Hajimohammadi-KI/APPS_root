@@ -1,14 +1,23 @@
 import assert from "node:assert/strict";
+import {spawnSync} from "node:child_process";
 import {createRequire} from "node:module";
 import {createServer} from "node:http";
+import {existsSync} from "node:fs";
 import {mkdir,readFile,writeFile} from "node:fs/promises";
-import {resolve} from "node:path";
+import {relative,resolve} from "node:path";
+import {pathToFileURL} from "node:url";
 const root=resolve(import.meta.dirname,".."),require=createRequire(resolve(root,"Apps/English/English-Automaticity/package.json"));
 const {chromium,expect}=require("@playwright/test"),installed=process.argv.includes("--installed");
 const folder=resolve(root,`artifacts/phase7-browser/${new Date().toISOString().replace(/[:.]/g,"-")}`);await mkdir(folder,{recursive:true});
-let language="en";
+let language="en",reviewPage;
+// docs/model-evaluation is generator output and is not committed. When it is absent, run the committed generator
+// (scripts/prepare-model-benchmark.ts) with its output redirected into this run's folder; docs/ is never written.
+async function reviewFixture(){const committed=resolve(root,"docs/model-evaluation/REVIEW.html");if(existsSync(committed))return committed;
+ const out=resolve(folder,"model-evaluation"),entry=resolve(folder,"prepare-model-benchmark.ts");let source=await readFile(resolve(root,"scripts/prepare-model-benchmark.ts"),"utf8");
+ for(const [from,to] of [['resolve(import.meta.dir,"..")',JSON.stringify(root)],['resolve(root,"docs/model-evaluation")',JSON.stringify(out)],...["./lib/model-benchmark","./lib/model-benchmark-seeds","../shared/learning-core/src/automaticity/curriculum"].map(path=>[JSON.stringify(path),JSON.stringify(pathToFileURL(resolve(root,"scripts",`${path}.ts`)).href)])]){assert(source.includes(from),`Review generator changed; update the fixture redirect for ${from}`);source=source.replace(from,()=>to);}
+ await writeFile(entry,source);const run=spawnSync("bun",[entry],{cwd:root,encoding:"utf8"});assert.equal(run.status,0,`Review generator failed: ${run.error??run.stderr}`);return resolve(out,"REVIEW.html");}
 const server=createServer(async(req,res)=>{try{const path=new URL(req.url,"http://localhost").pathname;let file;
- if(path==="/review")file=resolve(root,"docs/model-evaluation/REVIEW.html");
+ if(path==="/review")file=reviewPage;
  else if(path==="/practice")file=resolve(root,`shared/learning-core/browser/practice-${language}.html`);
  else if(path==="/overview"){res.setHeader("Content-Type","text/html; charset=utf-8");res.end(`<html lang="${language}"><meta name="viewport" content="width=device-width,initial-scale=1"><section data-automaticity-overview></section><script src="/learning-core/overview.js"></script></html>`);return;}
  else if(path===`/learning-core/curriculum-${language}.json`)file=resolve(root,`${language==="en"?"Apps/English/English-Automaticity":"Apps/Deutsch/Deutsch-Automaticity"}/apps/web/public${path}`);
@@ -18,6 +27,7 @@ await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));const local=`ht
 const browser=await chromium.launch({channel:"msedge",headless:true});const report={createdAt:new Date().toISOString(),status:"running",scope:installed?"Installed apps; isolated synthetic browser profiles":"Compiled source assets; isolated synthetic browser profiles",cases:[]};
 try{
  if(!process.argv.includes("--routes-only")){
+ reviewPage=await reviewFixture();report.reviewPage=relative(root,reviewPage).replaceAll("\\","/");
  const context=await browser.newContext({acceptDownloads:true,viewport:{width:1280,height:900}}),page=await context.newPage();
  await page.goto(local+"/review");await expect(page.locator("details")).toHaveCount(20);
  await page.getByRole("button",{name:"Download my review"}).click();await expect(page.locator("#status")).toContainText("Enter your name");
@@ -36,19 +46,28 @@ try{
   const context=await browser.newContext({viewport:{width:1365,height:950},serviceWorkers:"block"}),page=await context.newPage(),errors=[];page.on("pageerror",error=>errors.push(error.message));
   const pack=await (await fetch(base+`/learning-core/curriculum-${language}.json`)).json();assert.equal(pack.units.length,language==="en"?124:156);
   const unit=pack.units.find(row=>row.id===(language==="en"?"en.c.119":"de.c.150")),task=unit.tasks.find(row=>row.stage==="retrieve"&&row.modality==="writing");
+  // R88: a checked task offers no Speak button; unchecked writing and speech are explicit links under "Optional writing and speaking".
+  const speak=page.getByRole("button",{name:language==="en"?"Speak":"Sprechen",exact:true}),optionalModes=async row=>(await page.locator(".practice-optional a").evaluateAll(links=>links.map(link=>new URL(link.href).searchParams.get("task")))).map(id=>row.tasks.find(item=>item.id===id)?.modality);
   await page.goto(base+`/practice?task=${task.id}`);await expect(page.locator("#practice-response")).toBeVisible();
+  await expect(speak).toHaveCount(0);assert((await optionalModes(unit)).includes("speaking"),"A unit with speech tasks must still offer speech as an optional link");
   await page.locator("#practice-response").fill(task.acceptedAnswers[0].toLowerCase());await page.getByRole("button",{name:language==="en"?"Save and check":"Speichern und prüfen",exact:true}).click();
   await page.waitForFunction(lang=>Object.keys(localStorage).filter(key=>key.startsWith(`automaticity:v2:${lang}:event:`)).some(key=>JSON.parse(localStorage.getItem(key)).verdict==="needs_repair"),language);
   const attemptId=await page.evaluate(lang=>Object.keys(localStorage).filter(key=>key.startsWith(`automaticity:v2:${lang}:event:`)).map(key=>JSON.parse(localStorage.getItem(key))).find(row=>row.type==="attempt").id,language);
   const routes=installed?(language==="en"?["/daily","/grammar","/studio","/?screen=errors","/teacher","/?screen=progress"]:["/heute","/grammatik","/studio","/fehler","/wiederholungen","/lehrkraft","/fortschritt"]):["/overview"];
-  for(const route of routes){report.lastRoute=language+route;await page.goto(base+route);const link=page.locator(`[data-repair-queue] a[data-attempt="${attemptId}"]`);await expect(link).toBeVisible();assert((await link.getAttribute("href")).includes(`attempt=${attemptId}`));}
+  // Installed pages keep saved responses in collapsed disclosures; open them as a learner would before checking the link.
+  for(const route of routes){report.lastRoute=language+route;await page.goto(base+route);const link=page.locator(`[data-repair-queue] a[data-attempt="${attemptId}"]`);await expect(link).toBeAttached();
+   const closed=page.locator("details:not([open])",{has:link});for(let depth=0;depth<5&&await closed.count();depth++)await closed.first().locator(":scope > summary").click();
+   await expect(link).toBeVisible();assert((await link.getAttribute("href")).includes(`attempt=${attemptId}`));}
   await page.screenshot({path:resolve(folder,`${language}-overview.png`)});
   await page.locator(`[data-repair-queue] a[data-attempt="${attemptId}"]`).click();await expect(page.locator("#review-attempt")).toHaveValue(attemptId);
   await page.getByRole("button",{name:language==="en"?"Start a repair of this response":"Korrektur dieser Antwort beginnen",exact:true}).click();await page.locator("#practice-response").fill(task.acceptedAnswers[0]);await page.getByRole("button",{name:language==="en"?"Save and check":"Speichern und prüfen",exact:true}).click();
   await page.waitForFunction(({lang,id})=>Object.keys(localStorage).filter(key=>key.startsWith(`automaticity:v2:${lang}:event:`)).map(key=>JSON.parse(localStorage.getItem(key))).some(row=>row.type==="attempt"&&row.previousAttemptId===id),{lang:language,id:attemptId});
-  await page.goto(base+routes[0]);await expect(page.locator("[data-repair-queue]")).toHaveCount(0);
-  const writtenOnly=pack.units.find(row=>row.id===(language==="en"?"en.c.124":"de.c.156"));await page.goto(base+`/practice?task=${writtenOnly.tasks.find(row=>row.stage==="retrieve").id}`);await expect(page.locator("#practice-response")).toBeVisible();await expect(page.getByRole("button",{name:language==="en"?"Speak":"Sprechen",exact:true})).toHaveCount(0);
-  await page.screenshot({path:resolve(folder,`${language}-supplement.png`)});assert.deepEqual(errors,[]);report.cases.push(`${language}: ${routes.length} routes agree on the original repair; linked correction clears queue; new spelling task is writing-only`);await context.close();
+  assert(await page.evaluate(({lang,id})=>Object.keys(localStorage).filter(key=>key.startsWith(`automaticity:v2:${lang}:event:`)).map(key=>JSON.parse(localStorage.getItem(key))).some(row=>row.type==="attempt"&&row.id===id),{lang:language,id:attemptId}),"The linked correction must keep the original attempt");
+  // The overview renders after an async catalog fetch; an empty queue counts only once it has rendered.
+  await page.goto(base+routes[0]);await expect(page.locator(".automaticity-overview a[href='/practice?review=1']").first()).toBeAttached();await expect(page.locator("[data-repair-queue]")).toHaveCount(0);
+  const writtenOnly=pack.units.find(row=>row.id===(language==="en"?"en.c.124":"de.c.156"));await page.goto(base+`/practice?task=${writtenOnly.tasks.find(row=>row.stage==="retrieve").id}`);await expect(page.locator("#practice-response")).toBeVisible();await expect(speak).toHaveCount(0);
+  const writtenModes=await optionalModes(writtenOnly);assert(writtenModes.length&&writtenModes.every(mode=>mode==="writing"),`Writing-only unit offered ${writtenModes.join(", ")}`);
+  await page.screenshot({path:resolve(folder,`${language}-supplement.png`)});assert.deepEqual(errors,[]);report.cases.push(`${language}: checked task offers speech only as an optional link; ${routes.length} routes agree on the original repair; linked correction keeps the original and clears queue; new spelling task is writing-only`);await context.close();
  }
  if(installed&&!process.argv.includes("--german-only")){
   const context=await browser.newContext();await context.addInitScript(()=>{navigator.serviceWorker.register=()=>Promise.reject(new DOMException("Synthetic browser policy refusal","SecurityError"));});

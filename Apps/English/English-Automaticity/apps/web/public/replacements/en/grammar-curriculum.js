@@ -4618,11 +4618,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "This is Sara’s bag."
       ],
       [
-        "Complete the sentence: This is _____ book.",
+        "Complete the sentence with the possessive form of the name in brackets: This is _____ book. (Maya)",
         "This is Maya’s book."
       ],
       [
-        "Complete the sentence: My _____ room is small.",
+        "Complete the sentence with the possessive form of the word in brackets: My _____ room is small. (brother)",
         "My brother’s room is small."
       ],
       [
@@ -4630,7 +4630,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Whose coat is this?"
       ],
       [
-        "Complete the sentence: The _____ bags are by the door.",
+        "Complete the sentence with the possessive form of the word in brackets: The _____ bags are by the door. (children)",
         "The children’s bags are by the door."
       ],
       [
@@ -4732,7 +4732,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She is good at maths."
       ],
       [
-        "Complete the sentence: I am _____terested in photography.",
+        "Complete the sentence with the right preposition: I am interested _____ photography.",
         "I am interested in photography."
       ],
       [
@@ -4783,19 +4783,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I was bored during the lecture."
       ],
       [
-        "Complete the sentence: I was _____ during the lecture.",
+        "Say how you felt while you listened. Complete the sentence with bored or boring: I was _____ during the lecture.",
         "I was bored during the lecture."
       ],
       [
-        "Complete the sentence: The lecture was _____.",
+        "Complete the sentence with bored or boring: The lecture was _____.",
         "The lecture was boring."
       ],
       [
-        "Complete the sentence: We were _____ about the trip.",
+        "Complete the sentence with excited or exciting: We were _____ about the trip.",
         "We were excited about the trip."
       ],
       [
-        "Complete the sentence: The final scene was _____.",
+        "Complete the sentence with surprised or surprising: The final scene was _____.",
         "The final scene was surprising."
       ],
       [
@@ -4838,20 +4838,40 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I went to the shop to buy milk."
       ],
       [
-        "Complete the sentence: I called _____ for your help.",
-        "I called to ask for your help."
+        "Complete the sentence with the verb in brackets to show the purpose: I called _____ for your help. (ask)",
+        "I called to ask for your help.",
+        {
+          "acceptedAnswers": [
+            "I called in order to ask for your help."
+          ]
+        }
       ],
       [
-        "Complete the sentence: She went outside _____ some air.",
-        "She went outside to get some air."
+        "Complete the sentence with the verb in brackets to show the purpose: She went outside _____ some air. (get)",
+        "She went outside to get some air.",
+        {
+          "acceptedAnswers": [
+            "She went outside in order to get some air."
+          ]
+        }
       ],
       [
-        "Complete the sentence: We exercise _____ healthy.",
-        "We exercise to stay healthy."
+        "Complete the sentence with the verb in brackets to show the purpose: We exercise _____ healthy. (stay)",
+        "We exercise to stay healthy.",
+        {
+          "acceptedAnswers": [
+            "We exercise in order to stay healthy."
+          ]
+        }
       ],
       [
-        "Complete the sentence: He saved money _____ a bicycle.",
-        "He saved money to buy a bicycle."
+        "Complete the sentence with the verb in brackets to show the purpose: He saved money _____ a bicycle. (buy)",
+        "He saved money to buy a bicycle.",
+        {
+          "acceptedAnswers": [
+            "He saved money in order to buy a bicycle."
+          ]
+        }
       ],
       [
         "State the rule for “Infinitive of purpose” from memory.",
@@ -4948,15 +4968,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "My sisters live in Canada."
       ],
       [
-        "Complete the sentence: I’m visiting _____ in July.",
+        "Complete the sentence with the word in brackets, using capital letters correctly: I’m visiting _____ in July. (france)",
         "I’m visiting France in July."
       ],
       [
-        "Complete the sentence: _____ laptop is on the desk.",
+        "Complete the sentence with the possessive form of the name in brackets, using capital letters correctly: _____ laptop is on the desk. (sarah)",
         "Sarah’s laptop is on the desk."
       ],
       [
-        "Complete the sentence: The _____ projects are ready.",
+        "Complete the sentence with the possessive form of the plural word in brackets: The _____ projects are ready. (students)",
         "The students’ projects are ready."
       ],
       [
@@ -5007,15 +5027,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Although it was raining, we went out."
       ],
       [
-        "Complete the sentence: _____ the rain, we went out.",
+        "Complete the sentence: _____ the rain, we went out. (Despite / Although)",
         "Despite the rain, we went out."
       ],
       [
-        "Complete the sentence: The task was difficult; _____, we finished it.",
+        "Complete the sentence: The task was difficult; _____, we finished it. (however / although)",
         "The task was difficult; however, we finished it."
       ],
       [
-        "Complete the sentence: _____ feeling tired, she continued.",
+        "Complete the sentence: _____ feeling tired, she continued. (In spite of / However)",
         "In spite of feeling tired, she continued."
       ],
       [
@@ -5058,19 +5078,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I am used to working at night."
       ],
       [
-        "Complete the sentence: I _____ near the sea.",
+        "Write about a past state that is no longer true. Use used to and live: I _____ near the sea.",
         "I used to live near the sea."
       ],
       [
-        "Complete the sentence: She is _____ at night.",
+        "Say that working at night is normal for her. Use be used to and work: She is _____ at night.",
         "She is used to working at night."
       ],
       [
-        "Complete the sentence: They are _____ the weather.",
+        "Say that they are slowly becoming familiar with it. Use get used to: They are _____ the weather.",
         "They are getting used to the weather."
       ],
       [
-        "Complete the sentence: Did you _____ outside?",
+        "Ask about a childhood habit. Use used to and play: Did you _____ outside?",
         "Did you use to play outside?"
       ],
       [
@@ -5117,7 +5137,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The film was so exciting."
       ],
       [
-        "Complete the sentence: It was _____ an exciting film.",
+        "Complete the sentence with so or such: It was _____ an exciting film.",
         "It was such an exciting film."
       ],
       [
@@ -5125,7 +5145,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She has so many ideas."
       ],
       [
-        "Complete the sentence: We had _____ good weather.",
+        "Complete the sentence with so or such: We had _____ good weather.",
         "We had such good weather."
       ],
       [
@@ -5177,11 +5197,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I could swim when I was six."
       ],
       [
-        "Complete the sentence: We _____ solve the problem.",
+        "Say that they succeeded on one occasion. Use be able to: We _____ solve the problem.",
         "We were able to solve the problem."
       ],
       [
-        "Complete the sentence: She _____ open the door.",
+        "Say that she succeeded after trying. Use manage to: She _____ open the door.",
         "She managed to open the door."
       ],
       [
@@ -5228,7 +5248,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "We used to live in Madrid."
       ],
       [
-        "Complete the sentence: We _____ live in Madrid.",
+        "Write about a past state that has changed. Use used to: We _____ live in Madrid.",
         "We used to live in Madrid."
       ],
       [
@@ -5236,11 +5256,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Every summer, we would visit my aunt."
       ],
       [
-        "Complete the sentence: I _____ tennis every Saturday.",
+        "Complete the sentence with the past simple of the verb in brackets: I _____ tennis every Saturday. (play)",
         "I played tennis every Saturday."
       ],
       [
-        "Complete the sentence: She _____ like coffee.",
+        "Say that this past state was not true. Use not and use to: She _____ like coffee.",
         "She didn’t use to like coffee."
       ],
       [
@@ -5288,19 +5308,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         }
       ],
       [
-        "Complete the sentence: Please _____ the form.",
+        "Complete the sentence with the phrasal verb that means write the information on: Please _____ the form. (fill in / call off)",
         "Please fill in the form."
       ],
       [
-        "Complete the sentence: They _____ the meeting.",
+        "Complete the sentence with the phrasal verb that means cancelled: They _____ the meeting. (called off / looked after)",
         "They called off the meeting."
       ],
       [
-        "Complete the sentence: Can you _____ my cat?",
+        "Complete the sentence with the phrasal verb that means take care of: Can you _____ my cat? (look after / fill in)",
         "Can you look after my cat?"
       ],
       [
-        "Complete the sentence: We need to _____ a solution.",
+        "Complete the sentence with the phrasal verb that means think of: We need to _____ a solution. (come up with / call off)",
         "We need to come up with a solution."
       ],
       [
@@ -5343,19 +5363,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I finished yesterday."
       ],
       [
-        "Complete the sentence: I have _____ finished.",
+        "Complete the sentence with just or yet: I have _____ finished.",
         "I have just finished."
       ],
       [
-        "Complete the sentence: She has _____ called.",
+        "Complete the sentence with already or yet: She has _____ called.",
         "She has already called."
       ],
       [
-        "Complete the sentence: Have they arrived _____?",
+        "Complete the sentence with yet or still: Have they arrived _____?",
         "Have they arrived yet?"
       ],
       [
-        "Complete the sentence: He _____ hasn’t replied.",
+        "Complete the sentence with still or yet: He _____ hasn’t replied.",
         "He still hasn’t replied."
       ],
       [
@@ -5453,19 +5473,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I know the answer."
       ],
       [
-        "Complete the sentence: I _____ you.",
+        "Use the verb in brackets in the correct present form: I _____ you. (believe)",
         "I believe you."
       ],
       [
-        "Complete the sentence: She _____ two bicycles.",
+        "Use the verb in brackets in the correct present form: She _____ two bicycles. (own)",
         "She owns two bicycles."
       ],
       [
-        "Complete the sentence: I _____ about the problem.",
+        "Use the verb in brackets in the correct present form: I _____ about the problem. (think)",
         "I am thinking about the problem."
       ],
       [
-        "Complete the sentence: The soup _____ delicious.",
+        "Use the verb in brackets in the correct present form: The soup _____ delicious. (taste)",
         "The soup tastes delicious."
       ],
       [
@@ -5508,7 +5528,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "He works as a teacher at the school."
       ],
       [
-        "Complete the sentence: She sings _____ a professional.",
+        "She is not a professional, but she sings well. Complete the sentence with as or like: She sings _____ a professional.",
         "She sings like a professional."
       ],
       [
@@ -5520,7 +5540,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "He works as a designer."
       ],
       [
-        "Complete the sentence: It looks _____ rain.",
+        "Complete the sentence with as or like: It looks _____ rain.",
         "It looks like rain."
       ],
       [
@@ -5563,19 +5583,24 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "It depends on the weather."
       ],
       [
-        "Complete the sentence: This book _____ me.",
+        "Use the verb in brackets with the right preposition: This book _____ me. (belong)",
         "This book belongs to me."
       ],
       [
-        "Complete the sentence: We _____ the proposal.",
+        "Use the verb in brackets in the past simple with the right preposition: We _____ the proposal. (talk)",
         "We talked about the proposal."
       ],
       [
-        "Complete the sentence: She _____ the delay.",
-        "She apologized for the delay."
+        "Use the verb in brackets in the past simple with the right preposition: She _____ the delay. (apologize)",
+        "She apologized for the delay.",
+        {
+          "acceptedAnswers": [
+            "She apologised for the delay."
+          ]
+        }
       ],
       [
-        "Complete the sentence: I _____ your conclusion.",
+        "Use the verb in brackets with the right preposition: I _____ your conclusion. (agree)",
         "I agree with your conclusion."
       ],
       [
@@ -5618,11 +5643,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The water was absolutely freezing."
       ],
       [
-        "Complete the sentence: The room was _____ cold.",
+        "Complete the sentence with fairly or absolutely: The room was _____ cold.",
         "The room was fairly cold."
       ],
       [
-        "Complete the sentence: The water was _____ freezing.",
+        "Complete the sentence with absolutely or fairly: The water was _____ freezing.",
         "The water was absolutely freezing."
       ],
       [
@@ -5630,7 +5655,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "That explanation is completely impossible."
       ],
       [
-        "Complete the sentence: I was _____ tired after the journey.",
+        "Complete the sentence: I was _____ tired after the journey. (a bit / absolutely)",
         "I was a bit tired after the journey."
       ],
       [
@@ -5673,12 +5698,17 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I have just eaten lunch."
       ],
       [
-        "Complete the sentence: British English: _____.",
-        "British English: I’ve just eaten."
+        "Write the sentence in typical British English with just and eat: I _____.",
+        "I’ve just eaten.",
+        {
+          "acceptedAnswers": [
+            "I have just eaten."
+          ]
+        }
       ],
       [
-        "Complete the sentence: American English: _____.",
-        "American English: I just ate."
+        "Write the sentence in typical American English with just: I _____. (eat, past simple)",
+        "I just ate."
       ],
       [
         "Complete the sentence: British English: We met _____.",
@@ -5732,15 +5762,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The new route is much shorter."
       ],
       [
-        "Complete the sentence: Sales were _____ lower.",
+        "Complete the sentence with slightly or almost: Sales were _____ lower.",
         "Sales were slightly lower."
       ],
       [
-        "Complete the sentence: She is _____ as tall as her sister.",
+        "Complete the sentence with almost or slightly: She is _____ as tall as her sister.",
         "She is almost as tall as her sister."
       ],
       [
-        "Complete the sentence: The result was _____ the same as before.",
+        "Complete the sentence with exactly or slightly: The result was _____ the same as before.",
         "The result was exactly the same as before."
       ],
       [
@@ -5783,15 +5813,27 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She asked where I lived."
       ],
       [
-        "Complete the sentence: She asked _____.",
-        "She asked where I lived."
+        "Report the question “Where do you live?”: She asked _____.",
+        "She asked where I lived.",
+        {
+          "acceptedAnswers": [
+            "She asked me where I lived."
+          ]
+        }
       ],
       [
-        "Complete the sentence: He asked _____.",
-        "He asked if I was ready."
+        "Report the question “Are you ready?”: He asked _____.",
+        "He asked if I was ready.",
+        {
+          "acceptedAnswers": [
+            "He asked whether I was ready.",
+            "He asked me if I was ready.",
+            "He asked me whether I was ready."
+          ]
+        }
       ],
       [
-        "Complete the sentence: They wanted to know _____.",
+        "Report the question “What have you decided?”: They wanted to know _____.",
         "They wanted to know what we had decided."
       ],
       [
@@ -5838,19 +5880,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She will probably accept."
       ],
       [
-        "Complete the sentence: The train will _____ be late.",
+        "Complete the sentence with definitely or unlikely: The train will _____ be late.",
         "The train will definitely be late."
       ],
       [
-        "Complete the sentence: She will _____ accept.",
+        "You think this is likely but not certain. Complete the sentence with probably or definitely: She will _____ accept.",
         "She will probably accept."
       ],
       [
-        "Complete the sentence: Prices are _____ rise.",
+        "Complete the sentence: Prices are _____ rise. (likely to / probably)",
         "Prices are likely to rise."
       ],
       [
-        "Complete the sentence: They are _____ arrive before noon.",
+        "Complete the sentence: They are _____ arrive before noon. (unlikely to / probably)",
         "They are unlikely to arrive before noon."
       ],
       [
@@ -5893,19 +5935,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I stopped smoking last year."
       ],
       [
-        "Complete the sentence: He _____.",
-        "He stopped smoking."
+        "He no longer smokes. Complete the sentence with stop and smoke: He _____.",
+        "He stopped smoking.",
+        {
+          "acceptedAnswers": [
+            "He has stopped smoking.",
+            "He’s stopped smoking."
+          ]
+        }
       ],
       [
-        "Complete the sentence: He _____.",
+        "He paused what he was doing in order to have a cigarette. Complete the sentence with stop and smoke: He _____.",
         "He stopped to smoke."
       ],
       [
-        "Complete the sentence: I _____ her.",
+        "You met her in the past and you still have that memory. Complete the sentence with remember and meet: I _____ her.",
         "I remember meeting her."
       ],
       [
-        "Complete the sentence: _____ the door.",
+        "Tell someone not to forget this task. Complete the sentence with remember and lock: _____ the door.",
         "Remember to lock the door."
       ],
       [
@@ -5948,19 +5996,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The work has been completed."
       ],
       [
-        "Complete the sentence: The road _____.",
+        "Use the present continuous passive of repair: The road _____.",
         "The road is being repaired."
       ],
       [
-        "Complete the sentence: The results _____ by noon.",
+        "Use the future perfect passive of publish: The results _____ by noon.",
         "The results will have been published by noon."
       ],
       [
-        "Complete the sentence: She _____ to live abroad.",
+        "Use believe in a passive reporting structure: She _____ to live abroad.",
         "She is believed to live abroad."
       ],
       [
-        "Complete the sentence: The documents _____ earlier.",
+        "Use should and the perfect passive of sign: The documents _____ earlier.",
         "The documents should have been signed earlier."
       ],
       [
@@ -6007,15 +6055,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The keys must be upstairs."
       ],
       [
-        "Complete the sentence: She _____ the train.",
+        "Say that it is possible this happened. Use may and miss: She _____ the train.",
         "She may have missed the train."
       ],
       [
-        "Complete the sentence: They are _____ notice the change.",
+        "Say that it is certain to happen. Use be bound to: They are _____ notice the change.",
         "They are bound to notice the change."
       ],
       [
-        "Complete the sentence: It is _____ that the result is random.",
+        "Say that the chance is very small. Use highly and likely: It is _____ that the result is random.",
         "It is highly unlikely that the result is random."
       ],
       [
@@ -6058,19 +6106,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "It’s time we left."
       ],
       [
-        "Complete the sentence: It’s time we _____.",
+        "Complete the sentence with the verb in brackets: It’s time we _____. (leave)",
         "It’s time we left."
       ],
       [
-        "Complete the sentence: I’d rather you _____ it.",
+        "Complete the sentence with the negative of the verb in brackets: I’d rather you _____ it. (mention)",
         "I’d rather you didn’t mention it."
       ],
       [
-        "Complete the sentence: She talks as though she _____ everything.",
+        "Complete the sentence with the verb in brackets: She talks as though she _____ everything. (know)",
         "She talks as though she knew everything."
       ],
       [
-        "Complete the sentence: I wish I _____ the offer.",
+        "Express regret about the past with the verb in brackets: I wish I _____ the offer. (accept)",
         "I wish I had accepted the offer."
       ],
       [
@@ -6113,19 +6161,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Turn it down."
       ],
       [
-        "Complete the sentence: Turn the _____.",
+        "Put the noun object between the verb and the particle. Use radio and down: Turn the _____.",
         "Turn the radio down."
       ],
       [
-        "Complete the sentence: Turn _____.",
+        "Replace the radio with a pronoun. Use it and down: Turn _____.",
         "Turn it down."
       ],
       [
-        "Complete the sentence: She _____ her younger brother.",
+        "Complete the sentence with look after, which cannot be separated: She _____ her younger brother.",
         "She looks after her younger brother."
       ],
       [
-        "Complete the sentence: We _____ time.",
+        "Complete the sentence: We _____ time. (run out of, past simple)",
         "We ran out of time."
       ],
       [

@@ -25,6 +25,8 @@ import {
   releasedGermanMediationB1,
 } from "./index";
 import { assessMediationContentRelease } from "@automaticity/learning-core";
+import { gapFill } from "@automaticity/learning-core/text";
+import { LAB_GAP_CUES } from "./lab-gap-cues";
 import { isRetiredGermanResource } from "./resource-links";
 
 describe("browser grammar catalog", () => {
@@ -40,6 +42,24 @@ describe("browser grammar catalog", () => {
     expect(
       JSON.parse(source.slice(prefix.length).trim().replace(/;$/u, "")),
     ).toEqual(JSON.parse(JSON.stringify(browserGrammarCatalog)));
+  });
+  it("zeigt in jeder Lückenübung, welches Wort fehlt", () => {
+    for (const [title, index, sentence] of LAB_GAP_CUES) {
+      const exercise = grammarUnits.find((unit) => unit.title === title)
+        ?.exercises[index];
+      expect(`${title}#${index}: ${exercise?.[0]}`).toEndWith(` ${sentence}`);
+      expect(exercise?.[2]?.prompt.English).toEndWith(` ${sentence}`);
+      expect(gapFill(exercise![0], exercise![1])).not.toBeNull();
+    }
+    const exercise = grammarUnits.find(
+      (unit) => unit.title === "Satzklammer im einfachen Hauptsatz",
+    )!.exercises[1]!;
+    expect(exercise[0]).toEndWith(
+      "Ich ___ jeden Morgen um sieben Uhr auf. (aufstehen)",
+    );
+    expect(exercise[2]?.prompt.فارسی).toEndWith(
+      "Ich ___ jeden Morgen um sieben Uhr auf. (aufstehen)",
+    );
   });
 });
 

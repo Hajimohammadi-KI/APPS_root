@@ -19,12 +19,13 @@
     "./measurement-schema": "./schemas/measurement-contract.schema.json",
     "./mediation-schema": "./schemas/mediation-content-pilot.schema.json",
     "./grammar-feedback-server": "./src/automaticity/grammar-feedback-route.ts",
+    "./learner-feedback-server": "./src/automaticity/learner-feedback-server.ts",
     "./text": "./src/text.ts",
     "./feedback": "./src/feedback.ts"
   },
   "scripts": {
     "build:browser": "bun build src/adherence/browser-entry.ts --target=browser --format=iife --global-name=AutomaticityAdherenceShadow --outfile=browser/adherence-shadow.js --minify && bun build src/booster/browser-entry.ts --target=browser --format=iife --global-name=AutomaticityForcedOutputBooster --outfile=browser/forced-output-booster.js --minify && bun build src/text-browser.ts --target=browser --format=iife --global-name=AutomaticityText --outfile=browser/text.js --minify",
-    "build:automaticity": "bun build src/automaticity/browser-entry.ts --target=browser --format=iife --outfile=browser/automaticity-v2.js --minify && bun build src/automaticity/practice-entry.ts --target=browser --format=iife --outfile=browser/practice.js --minify",
+    "build:automaticity": "bun build src/automaticity/browser-entry.ts --target=browser --format=iife --outfile=browser/automaticity-v2.js --minify && bun build src/automaticity/practice-entry.ts --target=browser --format=iife --outfile=browser/practice.js --minify && bun build src/automaticity/feedback-review-entry.ts --target=browser --format=iife --outfile=browser/feedback-review.js --minify",
     "test:automaticity": "bun test src/automaticity",
     "test:booster": "bun test src/booster/booster.test.ts",
     "test:fsrs-shadow": "bun test src/fsrs-shadow",

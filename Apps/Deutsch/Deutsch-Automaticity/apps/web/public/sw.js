@@ -3,7 +3,7 @@ const CACHE = "deutschflow-web-2026.11.01.4";
 const CORE = [
   "/learning-core/text.js",
   "/replacements/de/grammar-runtime.js?v=2026.10.10.1",
-  "/replacements/de/grammar-catalog.js?v=20261101-content-1",
+  "/replacements/de/grammar-catalog.js?v=20261101-content-2",
   "/device-access/learning-path.js",
   "/device-access/grammar-drafts.js",
   "/device-access/writing.js",

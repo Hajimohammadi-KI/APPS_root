@@ -5,6 +5,7 @@ import {
   learnerFeedbackIssue,
   learnerFeedbackState,
   parseLearnerFeedback,
+  parseLearnerFeedbackData,
   parseLearnerFeedbackDecision,
   parseLearnerFeedbackIssue,
 } from "./learner-feedback";
@@ -73,18 +74,26 @@ test("an issue never turns learner text into mentions, links or markup", () => {
     "app:en",
     "category:answer_correct",
   ]);
-  // Learner-written text sits only inside code fences longer than any run in it.
-  const outside = issue.body.replace(
+  // GitHub keeps edit history for issue bodies, so the body holds no learner
+  // text; it lives in one deletable comment, inside code fences.
+  for (const text of ["octocat", "evil.example", "please", hostile.task.prompt])
+    expect(issue.body).not.toContain(text);
+  const outside = issue.comment.replace(
     /(`{4,})[^\n]*\n[\s\S]*?\n\1(?=\n|$)/g,
     "",
   );
   expect(outside).not.toContain("@");
   expect(outside).not.toContain("<img");
   expect(outside).not.toContain("evil.example");
-  const parsed = parseLearnerFeedbackIssue(issue.body);
-  expect(parsed?.feedback).toEqual(hostile);
-  expect(parsed?.receipt).toBe("a".repeat(64));
+  expect(parseLearnerFeedbackIssue(issue.body)).toEqual({
+    receipt: "a".repeat(64),
+    language: "en",
+    taskId: hostile.task.id,
+    category: "answer_correct",
+  });
+  expect(parseLearnerFeedbackData(issue.comment)).toEqual(hostile);
   expect(parseLearnerFeedbackIssue("Opened by hand.")).toBeNull();
+  expect(parseLearnerFeedbackData("A normal comment.")).toBeNull();
 });
 
 test("the learner sees a state derived only from decision labels", () => {

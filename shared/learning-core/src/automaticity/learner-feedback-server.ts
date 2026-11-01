@@ -10,6 +10,7 @@ import {
   learnerFeedbackIssue,
   learnerFeedbackState,
   parseLearnerFeedback,
+  parseLearnerFeedbackData,
   parseLearnerFeedbackDecision,
   parseLearnerFeedbackIssue,
   type LearnerFeedback,
@@ -35,9 +36,35 @@ export function learnerFeedbackConfig(
   const reviewKey = env.LEARNER_FEEDBACK_REVIEW_KEY?.trim() ?? "";
   return { token, repo, reviewKey: reviewKey.length >= 24 ? reviewKey : null };
 }
+
+/** Repeats and floods across all clients. Serverless instances keep their own
+ * memory, so this bounds abuse per instance; platform bot protection is the
+ * stronger layer. */
+export interface LearnerFeedbackGuard {
+  /** null when allowed, otherwise the refusal status. */
+  admit(fingerprint: string): 409 | 429 | null;
+}
+export function createLearnerFeedbackGuard({
+  cap = 60,
+  windowMs = 3_600_000,
+  now = Date.now,
+}: { cap?: number; windowMs?: number; now?: () => number } = {}): LearnerFeedbackGuard {
+  const seen = new Map<string, number>();
+  return {
+    admit(fingerprint) {
+      const at = now();
+      for (const [key, time] of seen) if (at - time >= windowMs) seen.delete(key);
+      if (seen.has(fingerprint)) return 409;
+      if (seen.size >= cap) return 429;
+      seen.set(fingerprint, at);
+      return null;
+    },
+  };
+}
 interface Options {
   readonly fetcher?: typeof fetch;
   readonly limiter?: GrammarRateLimiter;
+  readonly guard?: LearnerFeedbackGuard;
 }
 
 const headers = { "Cache-Control": "no-store" };
@@ -46,6 +73,7 @@ const reply = (body: unknown, status = 200, extra: HeadersInit = {}) =>
 const sendLimiter = createGrammarRateLimiter({ limit: 5, windowMs: 600_000 });
 const readLimiter = createGrammarRateLimiter({ limit: 30 });
 const reviewLimiter = createGrammarRateLimiter({ limit: 30 });
+const sendGuard = createLearnerFeedbackGuard();
 
 function clientKey(request: Request): string {
   return (
@@ -65,6 +93,14 @@ function limited(request: Request, limiter: GrammarRateLimiter) {
         { "Retry-After": String(retryAfter) },
       )
     : null;
+}
+/** A browser sending from another site is refused before anything is stored. */
+function crossSite(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  return (
+    request.headers.get("sec-fetch-site") === "cross-site" ||
+    (origin !== null && origin !== new URL(request.url).origin)
+  );
 }
 /** Equal-length hex digests compared without an early exit. */
 function sameDigest(a: string, b: string): boolean {
@@ -128,6 +164,7 @@ function github(config: LearnerFeedbackConfig, fetcher: typeof fetch) {
     return (response.status === 204 ? null : await response.json()) as T;
   };
 }
+type GitHub = ReturnType<typeof github>;
 const labelNames = (issue: GitHubIssue) =>
   issue.labels
     .map((label) => (typeof label === "string" ? label : (label.name ?? "")))
@@ -144,7 +181,7 @@ const LABELS = [
   ...LEARNER_FEEDBACK_DECISIONS.map((decision) => `decision:${decision}`),
 ];
 const ensured = new Set<string>();
-async function ensureLabels(api: ReturnType<typeof github>, repo: string) {
+async function ensureLabels(api: GitHub, repo: string) {
   if (ensured.has(repo)) return;
   for (const name of LABELS)
     try {
@@ -156,12 +193,22 @@ async function ensureLabels(api: ReturnType<typeof github>, repo: string) {
   ensured.add(repo);
 }
 
+/** The learner's text and the owner's latest decision, both from comments. */
+async function contents(api: GitHub, number: number) {
+  const comments = await api<GitHubComment[]>(
+    "GET",
+    `/issues/${number}/comments?per_page=100`,
+  );
+  let feedback: LearnerFeedback | null = null;
+  let decision: LearnerFeedbackDecision | null = null;
+  for (const comment of comments) {
+    feedback ??= parseLearnerFeedbackData(comment.body ?? "");
+    decision = parseLearnerFeedbackDecision(comment.body ?? "") ?? decision;
+  }
+  return { comments, feedback, decision };
+}
 /** The issue for a receipt, only when the secret matches its stored digest. */
-async function ownIssue(
-  api: ReturnType<typeof github>,
-  id: string | null,
-  secret: string | null,
-) {
+async function ownIssue(api: GitHub, id: string | null, secret: string | null) {
   if (!id || !/^\d{1,9}$/u.test(id) || !secret || secret.length < 40)
     return null;
   let issue: GitHubIssue;
@@ -171,27 +218,11 @@ async function ownIssue(
     if (error instanceof GitHubError && error.status === 404) return null;
     throw error;
   }
-  const parsed = parseLearnerFeedbackIssue(issue.body ?? "");
-  if (!parsed || !labelNames(issue).includes("learner-feedback")) return null;
-  return sameDigest(await sha256(secret), parsed.receipt)
-    ? { issue, parsed }
+  const header = parseLearnerFeedbackIssue(issue.body ?? "");
+  if (!header || !labelNames(issue).includes("learner-feedback")) return null;
+  return sameDigest(await sha256(secret), header.receipt)
+    ? { issue, header }
     : null;
-}
-async function decisionOf(api: ReturnType<typeof github>, number: number) {
-  const comments = await api<GitHubComment[]>(
-    "GET",
-    `/issues/${number}/comments?per_page=100`,
-  );
-  const decided = comments
-    .map((comment) => ({
-      comment,
-      decision: parseLearnerFeedbackDecision(comment.body ?? ""),
-    }))
-    .filter((row) => row.decision);
-  return {
-    comments: decided.map((row) => row.comment),
-    decision: decided.at(-1)?.decision ?? null,
-  };
 }
 
 /** GET: availability, or the status of one receipt. POST: send one comment.
@@ -199,7 +230,7 @@ async function decisionOf(api: ReturnType<typeof github>, number: number) {
 export async function handleLearnerFeedback(
   request: Request,
   config: LearnerFeedbackConfig | null,
-  { fetcher = fetch, limiter }: Options = {},
+  { fetcher = fetch, limiter, guard = sendGuard }: Options = {},
 ): Promise<Response> {
   const url = new URL(request.url);
   const id = url.searchParams.get("id"),
@@ -211,6 +242,8 @@ export async function handleLearnerFeedback(
       { error: "Sending comments is not switched on yet. Nothing was sent." },
       503,
     );
+  if (request.method !== "GET" && crossSite(request))
+    return reply({ error: "Comments can only be sent from this app." }, 403);
   const api = github(config, fetcher);
   if (request.method === "POST") {
     const blocked = limited(request, limiter ?? sendLimiter);
@@ -226,24 +259,45 @@ export async function handleLearnerFeedback(
         400,
       );
     }
+    const refused = guard.admit(
+      await sha256(
+        JSON.stringify([
+          feedback.language,
+          feedback.task.id,
+          feedback.response,
+          feedback.category,
+          feedback.comment,
+        ]),
+      ),
+    );
+    if (refused === 409)
+      return reply({ error: "This comment was already received." }, 409);
+    if (refused === 429)
+      return reply(
+        { error: "Too many comments right now. Nothing was sent; try again later." },
+        429,
+        { "Retry-After": "600" },
+      );
+    let number: number | null = null;
     try {
       await ensureLabels(api, config.repo);
       const token = receiptSecret();
-      const issue = await api<GitHubIssue>(
-        "POST",
-        "/issues",
-        learnerFeedbackIssue(feedback, await sha256(token)),
+      const { comment, ...issue } = learnerFeedbackIssue(
+        feedback,
+        await sha256(token),
       );
-      return reply(
-        { receipt: { id: issue.number, token }, state: "received" },
-        201,
-      );
+      number = (await api<GitHubIssue>("POST", "/issues", issue)).number;
+      await api("POST", `/issues/${number}/comments`, { body: comment });
+      return reply({ receipt: { id: number, token }, state: "received" }, 201);
     } catch {
+      // An issue without its text carries nothing personal; close it.
+      if (number !== null)
+        await api("PATCH", `/issues/${number}`, {
+          state: "closed",
+          state_reason: "not_planned",
+        }).catch(() => undefined);
       return reply(
-        {
-          error:
-            "The comment could not be stored. Nothing was kept; try again later.",
-        },
+        { error: "The comment could not be stored. Nothing was kept; try again later." },
         502,
       );
     }
@@ -253,8 +307,8 @@ export async function handleLearnerFeedback(
   try {
     const own = await ownIssue(api, id, secret);
     if (!own) return reply({ error: "No comment matches this receipt." }, 404);
-    const { issue } = own;
-    const { comments, decision } = await decisionOf(api, issue.number);
+    const { issue, header } = own;
+    const { comments, decision } = await contents(api, issue.number);
     if (request.method === "GET")
       return reply({
         state: learnerFeedbackState(labelNames(issue), issue.state),
@@ -268,19 +322,14 @@ export async function handleLearnerFeedback(
       variables: { id: issue.node_id },
     }).catch(() => ({ errors: ["not permitted"] }));
     if (!removed.errors?.length) return reply({ state: "deleted" });
-    // Without delete rights, remove the text and the decision that quoted it.
+    // Without delete rights: delete every comment (they hold the learner's
+    // text and any decision quoting it) and close the text-free issue.
     for (const comment of comments)
       await api("DELETE", `/issues/comments/${comment.id}`);
     await api("PATCH", `/issues/${issue.number}`, {
-      title: "[withdrawn learner comment]",
-      body: `Withdrawn by the learner on ${new Date().toISOString().slice(0, 10)}. The original text was removed.`,
       state: "closed",
       state_reason: "not_planned",
-      labels: [
-        "learner-feedback",
-        `app:${own.parsed.feedback.language}`,
-        "withdrawn",
-      ],
+      labels: ["learner-feedback", `app:${header.language}`, "withdrawn"],
     });
     return reply({ state: "withdrawn" });
   } catch {
@@ -298,19 +347,25 @@ async function reviewAllowed(request: Request, config: LearnerFeedbackConfig) {
     sameDigest(await sha256(key), await sha256(config.reviewKey))
   );
 }
-async function feedbackIssues(
-  api: ReturnType<typeof github>,
-  state: "open" | "closed",
-) {
-  const rows: { issue: GitHubIssue; feedback: LearnerFeedback }[] = [];
+async function feedbackIssues(api: GitHub, state: "open" | "closed") {
+  const rows: {
+    issue: GitHubIssue;
+    feedback: LearnerFeedback;
+    decision: LearnerFeedbackDecision | null;
+  }[] = [];
   for (let page = 1; page <= 5; page++) {
     const issues = await api<GitHubIssue[]>(
       "GET",
       `/issues?labels=learner-feedback&state=${state}&per_page=100&page=${page}`,
     );
     for (const issue of issues) {
-      const parsed = parseLearnerFeedbackIssue(issue.body ?? "");
-      if (parsed) rows.push({ issue, feedback: parsed.feedback });
+      if (
+        !parseLearnerFeedbackIssue(issue.body ?? "") ||
+        labelNames(issue).includes("withdrawn")
+      )
+        continue;
+      const { feedback, decision } = await contents(api, issue.number);
+      if (feedback) rows.push({ issue, feedback, decision });
     }
     if (issues.length < 100) break;
   }
@@ -348,24 +403,27 @@ export async function handleLearnerFeedbackReview(
     if (!isRecord(body) || typeof body.issue !== "number")
       return reply({ error: "Choose a comment." }, 400);
     const issue = await api<GitHubIssue>("GET", `/issues/${body.issue}`);
-    const parsed = parseLearnerFeedbackIssue(issue.body ?? "");
-    if (!parsed || issue.state !== "open")
+    const { feedback } = await contents(api, issue.number);
+    if (
+      !parseLearnerFeedbackIssue(issue.body ?? "") ||
+      !feedback ||
+      issue.state !== "open"
+    )
       return reply({ error: "This comment is no longer open." }, 409);
     const kind = body.decision as LearnerFeedbackDecisionKind;
     let comment: string;
     try {
-      const decision: LearnerFeedbackDecision = {
+      comment = learnerFeedbackDecisionComment({
         decision: kind,
         answer:
           typeof body.answer === "string" && body.answer.trim()
             ? body.answer
-            : parsed.feedback.response,
+            : feedback.response,
         explanation:
           typeof body.explanation === "string" ? body.explanation : "",
         reply: typeof body.reply === "string" ? body.reply : "",
         decidedAt: new Date().toISOString(),
-      };
-      comment = learnerFeedbackDecisionComment(decision);
+      });
     } catch (error) {
       return reply(
         { error: error instanceof Error ? error.message : "Invalid decision." },
@@ -394,16 +452,15 @@ export async function readDecidedLearnerFeedback(
   config: LearnerFeedbackConfig,
   fetcher: typeof fetch = fetch,
 ) {
-  const api = github(config, fetcher);
   const decided: {
     issue: number;
     feedback: LearnerFeedback;
     decision: LearnerFeedbackDecision;
   }[] = [];
-  for (const { issue, feedback } of await feedbackIssues(api, "closed")) {
-    if (labelNames(issue).includes("withdrawn")) continue;
-    const { decision } = await decisionOf(api, issue.number);
+  for (const { issue, feedback, decision } of await feedbackIssues(
+    github(config, fetcher),
+    "closed",
+  ))
     if (decision) decided.push({ issue: issue.number, feedback, decision });
-  }
   return decided.sort((a, b) => a.issue - b.issue);
 }

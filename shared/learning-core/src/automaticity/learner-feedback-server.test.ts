@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { createGrammarRateLimiter } from "./grammar-feedback-route";
 import { LEARNER_FEEDBACK_POLICY } from "./learner-feedback";
 import {
+  createLearnerFeedbackGuard,
   handleLearnerFeedback,
   handleLearnerFeedbackReview,
   learnerFeedbackConfig,
@@ -154,6 +155,7 @@ const send = (
     {
       fetcher: github.fetcher,
       limiter: createGrammarRateLimiter({ limit: 5 }),
+      guard: createLearnerFeedbackGuard(),
     },
   );
 
@@ -195,7 +197,10 @@ test("a consented comment becomes one private issue; the receipt secret stays wi
   expect(receipt.token.length).toBeGreaterThanOrEqual(40);
   const issue = github.issues[0]!;
   expect(issue.body).not.toContain(receipt.token);
-  expect(issue.body).toContain("Das Buch liegt jetzt auf dem Tisch.");
+  expect(issue.body).not.toContain("Das Buch liegt jetzt auf dem Tisch.");
+  expect(github.comments.get(1)?.[0]?.body).toContain(
+    "Das Buch liegt jetzt auf dem Tisch.",
+  );
   expect(issue.labels.map((l) => l.name)).toEqual([
     "learner-feedback",
     "app:de",
@@ -215,19 +220,44 @@ test("a consented comment becomes one private issue; the receipt secret stays wi
 test("sending is rate limited per client", async () => {
   const github = fakeGitHub();
   const limiter = createGrammarRateLimiter({ limit: 2 });
+  const guard = createLearnerFeedbackGuard();
+  let n = 0;
   const post = () =>
     handleLearnerFeedback(
       new Request("https://app.example/api/learner-feedback", {
         method: "POST",
         headers: { "x-forwarded-for": "9.9.9.9" },
-        body: JSON.stringify(feedback),
+        body: JSON.stringify({ ...feedback, comment: `Kommentar ${++n}` }),
       }),
       config,
-      { fetcher: github.fetcher, limiter },
+      { fetcher: github.fetcher, limiter, guard },
     );
   expect((await post()).status).toBe(201);
   expect((await post()).status).toBe(201);
   expect((await post()).status).toBe(429);
+  expect(github.issues).toHaveLength(2);
+});
+
+test("comments from other sites, repeats and floods are refused before GitHub", async () => {
+  const github = fakeGitHub();
+  const guard = createLearnerFeedbackGuard({ cap: 2 });
+  const post = (body: unknown, headers: Record<string, string> = {}) =>
+    handleLearnerFeedback(
+      new Request("https://app.example/api/learner-feedback", {
+        method: "POST",
+        headers: { "x-forwarded-for": `5.5.5.${Math.random()}`, ...headers },
+        body: JSON.stringify(body),
+      }),
+      config,
+      { fetcher: github.fetcher, guard },
+    );
+  expect((await post(feedback, { origin: "https://evil.example" })).status).toBe(403);
+  expect((await post(feedback, { "sec-fetch-site": "cross-site" })).status).toBe(403);
+  expect(github.calls).toEqual([]);
+  expect((await post(feedback, { origin: "https://app.example" })).status).toBe(201);
+  expect((await post(feedback)).status).toBe(409);
+  expect((await post({ ...feedback, comment: "zweiter" })).status).toBe(201);
+  expect((await post({ ...feedback, comment: "dritter" })).status).toBe(429);
   expect(github.issues).toHaveLength(2);
 });
 
@@ -303,11 +333,22 @@ test("status and the owner's reply need the receipt; withdrawal removes the text
     }),
   ]);
 
+  const bodyBefore = github.issues[0]!.body;
   const withdrawn = await ask(receipt.token, "DELETE");
   expect(await withdrawn.json()).toEqual({ state: "withdrawn" });
-  expect(github.issues[0]!.body).not.toContain("jetzt auf dem Tisch");
+  // Deleted comments leave no edit history; the body never held the text.
   expect(github.comments.get(1)).toEqual([]);
-  expect((await ask(receipt.token)).status).toBe(404);
+  expect(github.issues[0]!.body).toBe(bodyBefore);
+  expect(
+    github.calls.some(
+      (call) => call.method === "PATCH" && (call.body as { body?: string })?.body,
+    ),
+  ).toBe(false);
+  expect(JSON.stringify(github.issues)).not.toContain("jetzt auf dem Tisch");
+  expect(await (await ask(receipt.token)).json()).toEqual({
+    state: "withdrawn",
+    reply: "",
+  });
 });
 
 test("the review endpoint stays closed without its own key", async () => {

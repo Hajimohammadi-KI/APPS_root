@@ -118,6 +118,11 @@ const shippedDefinitions = {
   en: "8c7da4da64cc6784529319b4bb84eaaf158b64879f0067a27c5a6c3b7a313195",
   de: "e9d645004aff584bc2828b060dc09993655720753178b0b22af48cf6b0ce3a8c",
 };
+// Definitions published in 2026.11.01.1.
+const releasedNovember = {
+  en: "c5b92cd6333c6abdd8edd4d4c792bd1616f5a56b779168fb821f031749b57ea2",
+  de: "464ab01e01b8d9c79c9a7530c559e250b150f800863e8973454153cb262ce43d",
+};
 for (const language of ["en", "de"] as const) {
   test(`W33 ${language}: no active closed task in the built curriculum fails the content audit`, () => {
     const issues = built(language)
@@ -139,6 +144,15 @@ for (const language of ["en", "de"] as const) {
         .update(earlier.map((task) => JSON.stringify(task)).join("\n"))
         .digest("hex"),
     ).toBe(shippedDefinitions[language]);
+    const released = pack.units
+      .flatMap((unit) => unit.tasks)
+      .filter((task) => task.version === "2026-11-01.1")
+      .sort((a, b) => (a.id < b.id ? -1 : 1));
+    expect(
+      createHash("sha256")
+        .update(released.map((task) => JSON.stringify(task)).join("\n"))
+        .digest("hex"),
+    ).toBe(releasedNovember[language]);
     expect(validateCurriculum(pack)).toEqual([]);
   });
 }
@@ -149,6 +163,9 @@ test("W33 the complete corrected sentence earns the controlled pass, typed apost
     ["de", "Ich gehe in der Schule.", "Ich gehe in die Schule."],
     ["en", "I don’t have some time.", "I don't have any time."],
     ["en", "You’re ready, isn’t it?", "You're ready, aren't you?"],
+    ["en", "I ___ ready for the lesson.", "I'm ready for the lesson."],
+    ["en", "She doesn’t works.", "She does not work."],
+    ["en", "I don’t have some time.", "I do not have any time."],
   ] as const) {
     const task = built(language)
       .units.flatMap(activePracticeTasks)

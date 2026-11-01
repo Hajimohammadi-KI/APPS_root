@@ -3395,13 +3395,12 @@ export function gapCueRevisionsFor(
     ([id, name]) => id.startsWith(`${language}.`) && name === title,
   )?.[0];
   const revisions = new Map<number, (typeof GAP_CUE_REVISIONS)[number]>();
-  for (const revision of GAP_CUE_REVISIONS) {
-    const index = unit
-      ? revision.taskId.match(
-          /^(.+?)\.retrieve\.(?:content-\d+-)?(\d+)\.(?:forms-\d+\.)?writing$/u,
-        )
-      : null;
-    if (index?.[1] === unit) revisions.set(Number(index![2]), revision);
+  for (const revision of unit ? GAP_CUE_REVISIONS : []) {
+    const [, id, index] =
+      revision.taskId.match(
+        /^(.+?)\.retrieve\.(?:content-\d+-)?(\d+)\.(?:forms-\d+\.)?writing$/u,
+      ) ?? [];
+    if (id === unit) revisions.set(Number(index), revision);
   }
   return revisions;
 }

@@ -1,7 +1,12 @@
 import grammarData from "./data/grammar.json";
 import { knownContentRepair } from "@automaticity/learning-core/content-repairs";
-import { contentRevisionFor } from "@automaticity/learning-core/content-revisions";
+import {
+  contentRevisionFor,
+  gapCueRevisionsFor,
+} from "@automaticity/learning-core/content-revisions";
+import { gapFill } from "@automaticity/learning-core/text";
 import topicsData from "./data/topics.json";
+import { labGapCueFor } from "./lab-gap-cues";
 import {
   classifyGrammarContent,
   completeControlledExercises,
@@ -236,6 +241,57 @@ function withRevisedCorrection(
   ];
 }
 
+/** The learning path's visible cue for a one-gap exercise that had none. The
+ * German frame keeps its translations; only the sentence after it changes. */
+function withGapCues(
+  title: string,
+  exercises: readonly GrammarExercise[],
+): readonly GrammarExercise[] {
+  const revisions = gapCueRevisionsFor("de", title);
+  return exercises.map((exercise, index) => {
+    const [old, oldAnswer, metadata] = exercise;
+    const cue = revisions.get(index) ?? labGapCueFor(title, index, old);
+    const [answer, ...alternatives] = cue?.answers ?? [
+      oldAnswer,
+      ...(metadata?.acceptedAnswers ?? []),
+    ];
+    if (
+      !cue ||
+      !metadata ||
+      !/_{2,}/u.test(old) ||
+      gapFill(cue.prompt, answer!) === null
+    )
+      return exercise;
+    const task = old.slice(old.lastIndexOf(":") + 1).trim();
+    const frame = old.slice(0, old.length - task.length);
+    const prompt =
+      cue.prompt.startsWith(frame) &&
+      Object.values(metadata.prompt).every((text) => text.endsWith(task))
+      ? (Object.fromEntries(
+          Object.entries(metadata.prompt).map(([language, text]) => [
+            language,
+            text.slice(0, text.length - task.length) +
+              cue.prompt.slice(frame.length),
+          ]),
+        ) as typeof metadata.prompt)
+      : {
+          Deutsch: cue.prompt,
+          English: `Follow this German instruction and write the complete answer in German: ${cue.prompt}`,
+          فارسی: `طبق این دستور آلمانی عمل کن و پاسخ کامل را به آلمانی بنویس: ${cue.prompt}`,
+        };
+    const { acceptedAnswers: _, ...rest } = metadata;
+    return [
+      cue.prompt,
+      answer!,
+      {
+        ...rest,
+        prompt,
+        ...(alternatives.length ? { acceptedAnswers: alternatives } : {}),
+      },
+    ];
+  });
+}
+
 export const grammarUnits: readonly GrammarUnit[] = [
   ...legacyGrammarUnits.map((original) => {
     const repair = knownContentRepair("de", original.title);
@@ -263,9 +319,9 @@ export const grammarUnits: readonly GrammarUnit[] = [
     return repairGermanGrammarLinks({
       ...unit,
       contentType: classifyGrammarContent(unit),
-      exercises: withRevisedCorrection(
+      exercises: withGapCues(
         unit.title,
-        completeControlledExercises(unit),
+        withRevisedCorrection(unit.title, completeControlledExercises(unit)),
       ),
       explanation,
     });
@@ -275,9 +331,9 @@ export const grammarUnits: readonly GrammarUnit[] = [
     return repairGermanGrammarLinks({
       ...unit,
       contentType: classifyGrammarContent(unit),
-      exercises: withRevisedCorrection(
+      exercises: withGapCues(
         unit.title,
-        completeControlledExercises(unit),
+        withRevisedCorrection(unit.title, completeControlledExercises(unit)),
       ),
     });
   }),

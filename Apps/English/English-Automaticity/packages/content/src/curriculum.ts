@@ -101,7 +101,10 @@ function cueGaps(unit: GrammarUnit): GrammarUnit {
     ...unit,
     exercises: unit.exercises.map<GrammarExercise>((exercise, index) => {
       const revision = revisions.get(index);
-      const [answer, ...alternatives] = revision?.answers ?? [exercise[1]];
+      const [answer, ...alternatives] = revision?.answers ?? [
+        exercise[1],
+        ...(exercise[2]?.acceptedAnswers ?? []),
+      ];
       return revision &&
         /_{2,}/u.test(exercise[0]) &&
         gapFill(revision.prompt, answer!) !== null

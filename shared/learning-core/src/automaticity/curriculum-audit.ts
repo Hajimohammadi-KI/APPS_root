@@ -53,7 +53,8 @@ export function auditClosedTask(
     | "prompt"
     | "acceptedAnswers"
     | "solution"
-  >,
+  > &
+    Partial<Pick<PracticeTask, "rejectedAnswers">>,
 ): ContentAuditIssue[] {
   if (task.answerPolicy !== "closed") return [];
   const issues: ContentAuditIssue[] = [];
@@ -84,6 +85,14 @@ export function auditClosedTask(
     add("note-as-answer", "error");
   if (new Set(answers).size !== answers.length)
     add("duplicate-answer", "warning");
+  // A reviewed wrong form needs an explanation and can never also be accepted.
+  if (
+    task.rejectedAnswers?.some(
+      (row) =>
+        !row.explanation.trim() || answers.includes(normalizeText(row.answer)),
+    )
+  )
+    add("rejected-answer-conflict", "error");
   const gaps = task.prompt.match(/_{2,}/gu) ?? [];
   if (task.responseKind === "cloze" && gaps.length > 1)
     add("multiple-gaps", "warning");

@@ -220,6 +220,24 @@ const cuedBy = (word: string, cue: string) => {
   const shared = [...a].filter((pair) => b.has(pair)).length;
   return (2 * shared) / (a.size + b.size) >= 0.5;
 };
+/** What an answer puts into the single gap of the sentence after the last
+ * colon (a trailing bracket cue aside), or null when the answer does not fit. */
+export function gapFill(prompt: string, answer: string): string | null {
+  if ((prompt.match(/_{2,}/gu) ?? []).length !== 1) return null;
+  const [before = "", after = ""] = prompt
+    .slice(prompt.lastIndexOf(":") + 1)
+    .replace(/\s*\([^()]+\)\s*$/u, "")
+    .trim()
+    .split(/_{2,}/u);
+  const key = normalizeText(answer);
+  const pre = normalizeText(before).trimEnd(),
+    post = normalizeText(after).trimStart();
+  return key.startsWith(pre) &&
+    key.endsWith(post) &&
+    key.length >= pre.length + post.length
+    ? key.slice(pre.length, key.length - post.length).trim()
+    : null;
+}
 /** A one-gap cloze must let the learner work out what is missing: each
  * content word in the gap appears, in some form, in the instruction or the
  * rest of the sentence, or the prompt offers options or ends with a cue in
@@ -238,32 +256,20 @@ export function auditGapCue(
   ];
   if (/\p{L}_{2,}|_{2,}\p{L}/u.test(task.prompt))
     return issue("gap-inside-word");
+  const fill = gapFill(task.prompt, task.acceptedAnswers[0] ?? "");
   if (
-    (task.prompt.match(/_{2,}/gu) ?? []).length !== 1 ||
+    fill === null ||
     /\([^()]+\)\s*$/u.test(task.prompt) ||
     offeredOptions(task.prompt).length > 1
   )
     return [];
   const colon = task.prompt.lastIndexOf(":");
-  const [before = "", after = ""] = task.prompt
-    .slice(colon + 1)
-    .trim()
-    .split(/_{2,}/u);
-  const key = normalizeText(task.acceptedAnswers[0] ?? "");
-  const pre = normalizeText(before).trimEnd(),
-    post = normalizeText(after).trimStart();
-  if (
-    !key.startsWith(pre) ||
-    !key.endsWith(post) ||
-    key.length < pre.length + post.length
-  )
-    return [];
   const cues = foldedWords(
-    [task.prompt.slice(0, Math.max(0, colon)), before, after].join(" "),
+    task.prompt.slice(0, Math.max(0, colon)) +
+      " " +
+      task.prompt.slice(colon + 1).replace(/_{2,}/u, " "),
   );
-  const uncued = foldedWords(
-    key.slice(pre.length, key.length - post.length),
-  ).filter(
+  const uncued = foldedWords(fill).filter(
     (word) =>
       !isFunctionWord(word, language) &&
       !cues.some((cue) => cuedBy(word, cue)),

@@ -11,8 +11,12 @@ import {
 } from "../shared/learning-core/src/automaticity/curriculum";
 import {
   auditClosedTask,
+  auditGapCue,
   auditUnitAnswers,
+  gapFill,
+  optionDistractors,
 } from "../shared/learning-core/src/automaticity/curriculum-audit";
+import { GAP_CUE_REVISIONS } from "../shared/learning-core/src/content-revisions";
 import { assertWritingPrecision } from "../shared/learning-core/src/writing-precision";
 test("W33 both legacy labs use repaired prompts while raw historical catalogs remain intact", async () => {
   const english =
@@ -118,16 +122,23 @@ const shippedDefinitions = {
   en: "8c7da4da64cc6784529319b4bb84eaaf158b64879f0067a27c5a6c3b7a313195",
   de: "e9d645004aff584bc2828b060dc09993655720753178b0b22af48cf6b0ce3a8c",
 };
-// Definitions published in 2026.11.01.1.
+// Definitions published in 2026.11.01.1, and the accepted forms of 2026.11.01.2.
 const releasedNovember = {
   en: "c5b92cd6333c6abdd8edd4d4c792bd1616f5a56b779168fb821f031749b57ea2",
   de: "464ab01e01b8d9c79c9a7530c559e250b150f800863e8973454153cb262ce43d",
+};
+const releasedForms = {
+  en: "6bbe534ab49a4d8bacf37a97e9d72ba341b3d498f645990b7b91d20d8925f6d6",
+  de: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
 };
 for (const language of ["en", "de"] as const) {
   test(`W33 ${language}: no active closed task in the built curriculum fails the content audit`, () => {
     const issues = built(language)
       .units.flatMap((unit) => [
         ...activePracticeTasks(unit).flatMap(auditClosedTask),
+        ...activePracticeTasks(unit).flatMap((task) =>
+          auditGapCue(task, language),
+        ),
         ...auditUnitAnswers(unit, activePracticeTasks(unit)),
       ])
       .filter((issue) => issue.severity === "error");
@@ -153,9 +164,51 @@ for (const language of ["en", "de"] as const) {
         .update(released.map((task) => JSON.stringify(task)).join("\n"))
         .digest("hex"),
     ).toBe(releasedNovember[language]);
+    const forms = pack.units
+      .flatMap((unit) => unit.tasks)
+      .filter((task) => task.version === "2026-11-01.2")
+      .sort((a, b) => (a.id < b.id ? -1 : 1));
+    expect(
+      createHash("sha256")
+        .update(forms.map((task) => JSON.stringify(task)).join("\n"))
+        .digest("hex"),
+    ).toBe(releasedForms[language]);
     expect(validateCurriculum(pack)).toEqual([]);
   });
 }
+test("W33 every cued gap fits its stored answer, and offered options expose the wrong one", () => {
+  const active = new Map(
+    (["en", "de"] as const).flatMap((language) =>
+      built(language)
+        .units.flatMap(activePracticeTasks)
+        .map((task) => [task.id, task] as const),
+    ),
+  );
+  for (const revision of GAP_CUE_REVISIONS) {
+    const task = active.get(
+      revision.taskId.replace(/\.writing$/u, ".cues-202611013.writing"),
+    );
+    expect(task?.prompt).toBe(revision.prompt);
+    expect(`${task!.id}: ${gapFill(task!.prompt, task!.solution!)}`).not.toBe(
+      `${task!.id}: null`,
+    );
+    if (/\([^()]*\/[^()]*\)\s*$|\bwith [\p{L}’']+ or [\p{L}’']+:/u.test(task!.prompt))
+      expect(`${task!.id}: ${optionDistractors(task!).length}`).not.toBe(
+        `${task!.id}: 0`,
+      );
+  }
+  const first = active.get("de.c.086.retrieve.1.cues-202611013.writing")!;
+  expect(first.prompt).toEndWith("Ich ___ jeden Morgen um sieben Uhr auf. (aufstehen)");
+  expect(first.acceptedAnswers).toEqual(["Ich stehe jeden Morgen um sieben Uhr auf."]);
+  expect(
+    [...active.values()].some(
+      (task) =>
+        task.modality === "speaking" &&
+        task.id === "de.c.086.retrieve.98.cues-202611013.speaking" &&
+        task.prompt.endsWith(first.prompt),
+    ),
+  ).toBe(true);
+});
 test("W33 the complete corrected sentence earns the controlled pass, typed apostrophe included", () => {
   const sha = (text: string) => createHash("sha256").update(text).digest("hex");
   for (const [language, source, answer] of [

@@ -11,6 +11,8 @@ import {
   ACCEPTED_FORM_VERSION,
   CONTENT_REVISION,
   CONTENT_REVISION_VERSION,
+  GAP_CUE_REVISIONS,
+  GAP_CUE_VERSION,
   UNIT_CONTENT_REVISIONS,
   retiredRepairPrompt,
   type RevisedTask,
@@ -268,7 +270,73 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
   if (changed) pack.version = version;
   if (reviseUnitContent(pack)) pack.version = CONTENT_REVISION_VERSION;
   if (reviseAcceptedForms(pack)) pack.version = ACCEPTED_FORM_VERSION;
+  if (reviseGapCues(pack)) pack.version = GAP_CUE_VERSION;
   return pack;
+}
+
+/** Gives each uncued one-gap item its authored cue as a new version; spoken
+ * variants that repeat the written prompt move with it. */
+function reviseGapCues(pack: CurriculumPack): boolean {
+  let changed = false;
+  const suffix = `.cues-${GAP_CUE_VERSION.replace(/\D/gu, "")}`;
+  for (const revision of GAP_CUE_REVISIONS) {
+    if (!revision.taskId.startsWith(`${pack.language}.`)) continue;
+    const unit = pack.units.find((row) =>
+      revision.taskId.startsWith(`${row.id}.`),
+    );
+    const id = revision.taskId.replace(/\.writing$/u, `${suffix}.writing`);
+    if (!unit || unit.tasks.some((task) => task.id === id)) continue;
+    const active = activePracticeTasks(unit);
+    const original = active.find((task) => task.id === revision.taskId);
+    if (!original || original.answerPolicy !== "closed")
+      throw Error(`Gap-cue target not active: ${revision.taskId}`);
+    const answers = revision.answers ?? original.acceptedAnswers;
+    const replace = (task: PracticeTask, replacement: PracticeTask) => {
+      unit.tasks.splice(unit.tasks.indexOf(task) + 1, 0, replacement);
+      unit.retiredTasks ??= [];
+      for (const retired of unit.retiredTasks)
+        if (retired.replacementTaskId === task.id)
+          retired.replacementTaskId = replacement.id;
+      unit.retiredTasks.push({
+        taskId: task.id,
+        replacementTaskId: replacement.id,
+        reason:
+          "Show a cue for the missing words; without one, many correct sentences fit the gap.",
+        retiredOn: CONTENT_REVISION,
+      });
+    };
+    for (const variant of active.filter(
+      (task) =>
+        task.modality === "speaking" &&
+        task.stage === original.stage &&
+        normalizeText(task.prompt).endsWith(normalizeText(original.prompt)),
+    ))
+      replace(variant, {
+        ...variant,
+        id: variant.id.replace(/\.speaking$/u, `${suffix}.speaking`),
+        version: GAP_CUE_VERSION,
+        contentReview: "authored",
+        prompt:
+          (variant.prompt.endsWith(original.prompt)
+            ? variant.prompt.slice(0, -original.prompt.length)
+            : pack.language === "en"
+              ? "Say and record your answer. "
+              : "Sprich deine Antwort und nimm sie auf. ") + revision.prompt,
+        sourceId: `authored-gap-cue-${GAP_CUE_VERSION}:${variant.id}`,
+      });
+    replace(original, {
+      ...original,
+      id,
+      version: GAP_CUE_VERSION,
+      contentReview: "authored",
+      prompt: revision.prompt,
+      acceptedAnswers: [...answers],
+      solution: answers[0]!,
+      sourceId: `authored-gap-cue-${GAP_CUE_VERSION}:${original.id}`,
+    });
+    changed = true;
+  }
+  return changed;
 }
 
 /** Adds reviewed equivalent forms as a new version of each task. Links to

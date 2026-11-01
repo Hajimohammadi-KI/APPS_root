@@ -7,6 +7,8 @@ import {
 const version = "2026-10-31.1";
 import { KNOWN_CONTENT_REPAIRS } from "../../shared/learning-core/src/content-repairs";
 import {
+  ACCEPTED_FORM_REVISIONS,
+  ACCEPTED_FORM_VERSION,
   CONTENT_REVISION,
   CONTENT_REVISION_VERSION,
   UNIT_CONTENT_REVISIONS,
@@ -265,7 +267,54 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
   }
   if (changed) pack.version = version;
   if (reviseUnitContent(pack)) pack.version = CONTENT_REVISION_VERSION;
+  if (reviseAcceptedForms(pack)) pack.version = ACCEPTED_FORM_VERSION;
   return pack;
+}
+
+/** Adds reviewed equivalent forms as a new version of each task. Links to
+ * earlier versions follow one hop, so they move to the new version. */
+function reviseAcceptedForms(pack: CurriculumPack): boolean {
+  let changed = false;
+  for (const revision of ACCEPTED_FORM_REVISIONS) {
+    if (!revision.taskId.startsWith(`${pack.language}.`)) continue;
+    const unit = pack.units.find((row) =>
+      revision.taskId.startsWith(`${row.id}.`),
+    );
+    const id = revision.taskId.replace(
+      /\.writing$/u,
+      `.forms-${ACCEPTED_FORM_VERSION.replace(/\D/gu, "")}.writing`,
+    );
+    if (!unit || unit.tasks.some((task) => task.id === id)) continue;
+    const original = activePracticeTasks(unit).find(
+      (task) => task.id === revision.taskId,
+    );
+    if (!original || original.answerPolicy !== "closed")
+      throw Error(`Accepted-form target not active: ${revision.taskId}`);
+    const added = revision.answers.filter(
+      (answer) =>
+        !original.acceptedAnswers.some((known) => same(known, answer)),
+    );
+    if (!added.length) throw Error(`No new form for ${revision.taskId}`);
+    unit.tasks.splice(unit.tasks.indexOf(original) + 1, 0, {
+      ...original,
+      id,
+      version: ACCEPTED_FORM_VERSION,
+      acceptedAnswers: [...original.acceptedAnswers, ...added],
+      sourceId: `authored-accepted-forms-${ACCEPTED_FORM_VERSION}:${original.id}`,
+    });
+    unit.retiredTasks ??= [];
+    for (const retired of unit.retiredTasks)
+      if (retired.replacementTaskId === original.id)
+        retired.replacementTaskId = id;
+    unit.retiredTasks.push({
+      taskId: original.id,
+      replacementTaskId: id,
+      reason: "Accept reviewed equivalent contracted or full forms.",
+      retiredOn: CONTENT_REVISION,
+    });
+    changed = true;
+  }
+  return changed;
 }
 
 const tag = `content-${CONTENT_REVISION.replaceAll("-", "")}`;

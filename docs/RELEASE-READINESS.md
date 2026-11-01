@@ -96,12 +96,18 @@ and send nothing. Set them in both Vercel projects (Production), then redeploy:
 
 - `LEARNER_FEEDBACK_GITHUB_REPO`: `<owner>/<repository>` of the private repository.
 - `LEARNER_FEEDBACK_GITHUB_TOKEN`: a fine-grained token limited to that
-  repository with Issues read/write. Deleting a withdrawn issue additionally
-  needs admin rights; without them the text is removed and the issue closed.
+  repository with Issues read/write. The learner's text is kept only in issue
+  comments, because GitHub deletes comments completely but keeps the edit
+  history of issue bodies. A withdrawal deletes those comments and closes the
+  text-free issue (with admin rights it deletes the whole issue).
 - `LEARNER_FEEDBACK_REVIEW_KEY`: a random string of at least 24 characters for
   the review page `<canonical URL>/learning-core/feedback-review.html`.
 
 Check `<canonical URL>/api/learner-feedback` returns `{"available":true}`.
+The comment section stays hidden in the app until then. The routes refuse
+requests from other sites, repeats, and more than 60 comments per hour per
+server instance; for stronger protection against bots, enable the Vercel
+firewall or bot protection for `/api/learner-feedback` on both projects.
 Decisions on the review page change nothing until they are imported and
 released:
 

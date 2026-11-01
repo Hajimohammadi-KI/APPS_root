@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-01",
   "version": "27.4.4",
-  "webRelease": "2026.11.01.2",
+  "webRelease": "2026.11.01.3",
   "changes": [
-    "Optional comments on a checked answer with an exact preview and fresh consent each time, a receipt to check status or withdraw, and an owner review page; approved decisions become new exercise versions. Off until the owner sets the private repository and token. A learner's claim never changes a result by itself."
+    "When an exercise names its options, another of those options is marked wrong with an explanation; 47 reviewed contracted or full forms are accepted. Comment text is stored only in deletable comments, the comment section stays hidden until the service is on, and repeats and cross-site sends are refused."
   ]
 }

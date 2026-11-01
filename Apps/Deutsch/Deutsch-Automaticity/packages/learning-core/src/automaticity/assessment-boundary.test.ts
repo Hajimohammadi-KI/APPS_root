@@ -89,6 +89,24 @@ test("an unchanged copy of the sentence to correct is marked for repair", () => 
     assessControlledTask(response, transformation, at, "copy").verdict,
   ).toBe("not_assessed");
 });
+test("another offered option in the gap is marked for repair; an unoffered form stays unscored", () => {
+  const options: PracticeTask = {
+    ...task,
+    prompt:
+      "Complete with am, is or are. Write the full sentence: I ___ ready for the lesson.",
+    acceptedAnswers: ["I am ready for the lesson."],
+    solution: "I am ready for the lesson.",
+  };
+  const response = { ...attempt(), task: options };
+  response.response.text = "I is ready for the lesson.";
+  const wrong = assessControlledTask(response, options, at, "option");
+  expect(wrong.verdict).toBe("needs_repair");
+  expect(wrong.feedback).toContain("not the one that fits");
+  response.response.text = "I was ready for the lesson.";
+  expect(assessControlledTask(response, options, at, "other").verdict).toBe(
+    "not_assessed",
+  );
+});
 function attempt(overrides: Partial<TaskIdentity> = {}): AttemptEvent {
   return {
     version: 2,

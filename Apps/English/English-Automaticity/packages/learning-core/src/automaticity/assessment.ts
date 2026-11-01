@@ -8,7 +8,11 @@ import {
 } from "./contracts";
 import type { PracticeTask } from "./curriculum";
 import { resolveRepresentativeTask } from "./representative-tasks";
-import { auditClosedTask, correctionSource } from "./curriculum-audit";
+import {
+  auditClosedTask,
+  correctionSource,
+  optionDistractors,
+} from "./curriculum-audit";
 import {
   CONSTRUCTION_RULE_VERSION,
   constructionFeedback,
@@ -194,7 +198,10 @@ export function assessControlledTask(
     const source =
       task.responseKind === "correction" ? correctionSource(task.prompt) : null;
     const unchanged = !!source && normaliseAnswer(source, task) === value;
-    if (rejected || unchanged) {
+    const distractor = optionDistractors(task).some(
+      (sentence) => normaliseAnswer(sentence, task) === value,
+    );
+    if (rejected || unchanged || distractor) {
       base.verdict = "needs_repair";
       base.uncertainty = false;
       base.dimensions = {
@@ -207,9 +214,13 @@ export function assessControlledTask(
         ? english
           ? `This form was reviewed and is not correct here. ${rejected.explanation}`
           : `Diese Form wurde geprüft und ist hier nicht richtig. ${rejected.explanation}`
-        : english
-          ? "This is still the sentence to correct. Change the part the instruction names and write the full sentence."
-          : "Das ist noch der Satz, der korrigiert werden soll. Ändere die genannte Stelle und schreibe den ganzen Satz.";
+        : unchanged
+          ? english
+            ? "This is still the sentence to correct. Change the part the instruction names and write the full sentence."
+            : "Das ist noch der Satz, der korrigiert werden soll. Ändere die genannte Stelle und schreibe den ganzen Satz."
+          : english
+            ? "This is one of the given options, but not the one that fits here."
+            : "Das ist eine der angegebenen Möglichkeiten, aber nicht die passende.";
       return finishControlledAssessment(base, attempt, task, value);
     }
     const caseOnly = task.acceptedAnswers.some(

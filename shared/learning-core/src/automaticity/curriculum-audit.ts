@@ -169,7 +169,10 @@ export function optionDistractors(
         template.replace(/_{2,}/u, option),
       );
   }
-  if (candidates.length < 2 || !candidates.some((c) => accepted.includes(plain(c))))
+  if (
+    candidates.length < 2 ||
+    !candidates.some((c) => accepted.includes(plain(c)))
+  )
     return [];
   return candidates.filter((candidate) => !accepted.includes(plain(candidate)));
 }

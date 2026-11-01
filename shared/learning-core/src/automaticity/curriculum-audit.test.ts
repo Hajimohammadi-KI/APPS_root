@@ -237,7 +237,9 @@ test("another option the prompt itself offers is a certain distractor", () => {
     ),
   ).toEqual([]);
   expect(
-    optionDistractors(cloze("Complete the sentence: She ___ here.", "She is here.")),
+    optionDistractors(
+      cloze("Complete the sentence: She ___ here.", "She is here."),
+    ),
   ).toEqual([]);
 });
 test("W33 the content gate keeps genuine minimal repairs", () => {

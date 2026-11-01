@@ -1,5 +1,9 @@
 import { expect, test } from "bun:test";
-import { auditClosedTask, auditUnitAnswers } from "./curriculum-audit";
+import {
+  auditClosedTask,
+  auditUnitAnswers,
+  optionDistractors,
+} from "./curriculum-audit";
 const task = {
   id: "fixture",
   answerPolicy: "closed" as const,
@@ -186,6 +190,56 @@ test("a reviewed wrong form needs an explanation and can never also be accepted"
         { answer: "She are here.", explanation: "Use is with she." },
       ],
     }),
+  ).toEqual([]);
+});
+test("another option the prompt itself offers is a certain distractor", () => {
+  const cloze = (prompt: string, answer: string) => ({
+    prompt,
+    responseKind: "cloze" as const,
+    acceptedAnswers: [answer],
+  });
+  expect(
+    optionDistractors(
+      cloze(
+        "Complete with am, is or are. Write the full sentence: I ___ ready for the lesson.",
+        "I am ready for the lesson.",
+      ),
+    ),
+  ).toEqual(["I is ready for the lesson.", "I are ready for the lesson."]);
+  expect(
+    optionDistractors(
+      cloze(
+        "Setze die richtige Akkusativform ein und schreibe den vollständigen Satz: Es gibt ___ Supermarkt in meiner Straße. (ein / einen)",
+        "Es gibt einen Supermarkt in meiner Straße.",
+      ),
+    ),
+  ).toEqual(["Es gibt ein Supermarkt in meiner Straße."]);
+  expect(
+    optionDistractors(
+      cloze(
+        "Ergänze viel oder viele vor dem nicht zählbaren Nomen und schreibe den ganzen Satz: Heute habe ich ___ Zeit.",
+        "Heute habe ich viel Zeit.",
+      ),
+    ),
+  ).toEqual(["Heute habe ich viele Zeit."]);
+  expect(
+    optionDistractors({
+      prompt:
+        "Wähle die passende Form und schreibe sie vollständig auf Deutsch: A: zwei Buch / B: zwei Bücher",
+      responseKind: "choice",
+      acceptedAnswers: ["zwei Bücher"],
+    }),
+  ).toEqual(["zwei Buch"]);
+  // Without an option that yields a stored answer nothing is inferred.
+  expect(
+    optionDistractors(
+      cloze("Complete with am, is or are: She ___ here.", "She was here."),
+    ),
+  ).toEqual([]);
+  expect(
+    optionDistractors(
+      cloze("Complete the sentence: She ___ here.", "She is here."),
+    ),
   ).toEqual([]);
 });
 test("W33 the content gate keeps genuine minimal repairs", () => {

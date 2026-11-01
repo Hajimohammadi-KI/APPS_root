@@ -65,8 +65,9 @@ export default function PrivacyPage() {
           richtig angenommen oder eine falsche Form erklärt, kann diese Form
           ohne Bezug zu dir Teil der Aufgabe werden. Dein Browser speichert eine
           Quittung unter „Meine Kommentare“; dort kannst du den Status und die
-          Antwort lesen oder den Kommentar zurückziehen, wodurch sein Text
-          entfernt wird.
+          Antwort lesen oder den Kommentar zurückziehen. Dabei werden dein Text
+          und die Antwort gelöscht; nur ein geschlossener Eintrag mit der
+          Aufgabennummer und dem gewählten Grund bleibt.
         </SectionBox>
 
         <SectionBox title="Mikrofon und Sprache">

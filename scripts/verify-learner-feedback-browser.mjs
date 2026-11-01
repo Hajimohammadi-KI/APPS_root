@@ -104,7 +104,10 @@ try {
         await offPage.getByText(t.summary, { exact: true }).first().isVisible(),
         false,
       );
-      assert.equal(await offPage.locator("#learner-feedback-receipts").isVisible(), false);
+      assert.equal(
+        await offPage.locator("#learner-feedback-receipts").isVisible(),
+        false,
+      );
       assert.equal(offPosts.length, 0);
       await off.close();
 

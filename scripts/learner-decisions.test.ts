@@ -68,7 +68,9 @@ const file = (
 });
 
 test("a later batch builds on the released version instead of replacing it", () => {
-  const first = file([decision(4, "accept_answer", "The keys are lying on the table.")]);
+  const first = file([
+    decision(4, "accept_answer", "The keys are lying on the table."),
+  ]);
   const both = file(
     [decision(4, "accept_answer", "The keys are lying on the table.")],
     [decision(8, "accept_answer", "The keys are sitting on the table.")],
@@ -77,10 +79,14 @@ test("a later batch builds on the released version instead of replacing it", () 
   const two = applyLearnerDecisions(built(), both).pack;
   const unitOne = one.units.find((row) => row.id === "en.c.013")!;
   const unitTwo = two.units.find((row) => row.id === "en.c.013")!;
-  const released = activePracticeTasks(unitOne).find((row) => row.prompt === prompt)!;
+  const released = activePracticeTasks(unitOne).find(
+    (row) => row.prompt === prompt,
+  )!;
   // The version learners already answered stays byte-identical, now retired.
   expect(unitTwo.tasks.find((row) => row.id === released.id)).toEqual(released);
-  const latest = activePracticeTasks(unitTwo).find((row) => row.prompt === prompt)!;
+  const latest = activePracticeTasks(unitTwo).find(
+    (row) => row.prompt === prompt,
+  )!;
   expect(latest.version).toBe("2026-11-06.1");
   expect(latest.acceptedAnswers).toEqual([
     "The keys are on the table.",
@@ -89,7 +95,11 @@ test("a later batch builds on the released version instead of replacing it", () 
   ]);
   // Old links follow one hop to the newest version.
   for (const retired of unitTwo.retiredTasks ?? [])
-    expect(unitTwo.retiredTasks!.some((row) => row.taskId === retired.replacementTaskId)).toBe(false);
+    expect(
+      unitTwo.retiredTasks!.some(
+        (row) => row.taskId === retired.replacementTaskId,
+      ),
+    ).toBe(false);
   expect(validateCurriculum(two)).toEqual([]);
 });
 const sha = (text: string) => createHash("sha256").update(text).digest("hex");
@@ -278,10 +288,24 @@ test("only answer decisions are imported; fixes are listed for authoring", () =>
 });
 
 test("an import only appends a batch of new decisions and never removes a released one", () => {
-  const start = file([decision(4, "accept_answer", "The keys are lying on the table.")]);
+  const start = file([
+    decision(4, "accept_answer", "The keys are lying on the table."),
+  ]);
   // Issue 4 was withdrawn after release, so GitHub no longer returns it.
-  const next = appendDecisionBatch(start, [decision(9, "known_wrong", "The keys are at the table.")], "2026-11-07.1");
-  expect(next.batches.map((batch) => batch.decisions.map((row) => row.issue))).toEqual([[4], [9]]);
+  const next = appendDecisionBatch(
+    start,
+    [decision(9, "known_wrong", "The keys are at the table.")],
+    "2026-11-07.1",
+  );
+  expect(
+    next.batches.map((batch) => batch.decisions.map((row) => row.issue)),
+  ).toEqual([[4], [9]]);
   expect(next.batches[1]!.version).toBe("2026-11-07.1");
-  expect(appendDecisionBatch(next, [decision(9, "known_wrong", "The keys are at the table.")], "2026-11-08.1")).toBe(next);
+  expect(
+    appendDecisionBatch(
+      next,
+      [decision(9, "known_wrong", "The keys are at the table.")],
+      "2026-11-08.1",
+    ),
+  ).toBe(next);
 });

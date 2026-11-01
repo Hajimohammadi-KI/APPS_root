@@ -2360,6 +2360,90 @@ export const UNIT_CONTENT_REVISIONS: readonly UnitContentRevision[] = [
   }),
 ];
 
+/** Equivalent contracted or full forms, each reviewed by hand (2026-11-01).
+ * Generated candidates were rejected where contraction is impossible or the
+ * instruction restricts the change; these are authored answers, not a rule. */
+export const ACCEPTED_FORM_VERSION = "2026-11-01.2";
+export const ACCEPTED_FORM_REVISIONS: readonly {
+  readonly taskId: string;
+  readonly answers: readonly string[];
+}[] = [
+  ["en.c.001.retrieve.mastery-20261031-0.writing", "I’m ready for the lesson."],
+  ["en.c.001.retrieve.mastery-20261031-1.writing", "They’re at the station."],
+  ["en.c.008.repair.0.writing", "She does not work."],
+  ["en.c.010.repair.0.writing", "There’s a bank."],
+  ["en.c.015.repair.0.writing", "I’m studying now."],
+  [
+    "en.c.015.retrieve.mastery-20261031-0.writing",
+    "She’s studying for her exam.",
+  ],
+  [
+    "en.c.015.retrieve.mastery-20261031-1.writing",
+    "They’re preparing lunch right now.",
+  ],
+  ["en.c.020.repair.0.writing", "I’ll help."],
+  ["en.c.021.repair.0.writing", "I’m going to study."],
+  ["en.c.024.repair.content-20261101.writing", "I do not have any time."],
+  [
+    "en.c.034.retrieve.mastery-20261031-0.writing",
+    "If it rains, we’ll stay at home.",
+  ],
+  [
+    "en.c.034.retrieve.mastery-20261031-1.writing",
+    "Unless you hurry, you’ll miss the bus.",
+  ],
+  [
+    "en.c.048.retrieve.mastery-20261031-0.writing",
+    "If I’d known, I would have helped you.",
+  ],
+  [
+    "en.c.048.retrieve.mastery-20261031-1.writing",
+    "If she’d left earlier, she would have caught the train.",
+  ],
+  ["en.c.049.repair.0.writing", "If I’d taken."],
+  ["en.c.053.repair.content-20261101.writing", "He’s believed to be abroad."],
+  [
+    "en.c.061.repair.content-20261101.writing",
+    "The findings are promising. What’s more, they confirm earlier studies.",
+  ],
+  [
+    "en.c.073.repair.content-20261101.writing",
+    "I did not need to take an umbrella, so I did not take one.",
+  ],
+  ["en.c.087.retrieve.1.writing", "She’s good at maths."],
+  ["en.c.087.retrieve.2.writing", "I’m interested in photography."],
+  ["en.c.087.retrieve.3.writing", "They’re worried about the exam."],
+  ["en.c.087.repair.0.writing", "She’s good at maths."],
+  ["en.c.090.retrieve.3.writing", "There’s a little milk left."],
+  ["en.c.091.retrieve.1.writing", "I am visiting France in July."],
+  ["en.c.091.retrieve.4.writing", "We do not work on Sundays."],
+  ["en.c.093.retrieve.2.writing", "She’s used to working at night."],
+  ["en.c.093.retrieve.3.writing", "They’re getting used to the weather."],
+  ["en.c.093.repair.0.writing", "I’m used to working at night."],
+  ["en.c.095.retrieve.4.writing", "He could not read the sign."],
+  ["en.c.096.retrieve.4.writing", "She did not use to like coffee."],
+  ["en.c.098.retrieve.4.writing", "He still has not replied."],
+  ["en.c.100.retrieve.3.writing", "I’m thinking about the problem."],
+  ["en.c.105.retrieve.3.writing", "She’s almost as tall as her sister."],
+  ["en.c.106.retrieve.3.writing", "They wanted to know what we’d decided."],
+  ["en.c.107.retrieve.2.writing", "She’ll probably accept."],
+  ["en.c.107.retrieve.4.writing", "They’re unlikely to arrive before noon."],
+  ["en.c.107.repair.0.writing", "She’ll probably accept."],
+  ["en.c.109.retrieve.3.writing", "She’s believed to live abroad."],
+  ["en.c.110.retrieve.3.writing", "They’re bound to notice the change."],
+  [
+    "en.c.110.retrieve.4.writing",
+    "It’s highly unlikely that the result is random.",
+  ],
+  ["en.c.111.retrieve.2.writing", "I’d rather you did not mention it."],
+  ["en.c.111.retrieve.4.writing", "I wish I’d accepted the offer."],
+  ["en.c.120.retrieve.supplement.writing", "It’s useful to check the address."],
+  ["en.c.120.repair.supplement.writing", "It’s raining outside."],
+  ["en.c.122.retrieve.supplement.writing", "She’s a friend of mine."],
+  ["en.c.122.vary.supplement.writing", "She’s a friend of hers."],
+  ["en.c.122.repair.supplement.writing", "He’s a colleague of mine."],
+].map(([taskId, answer]) => ({ taskId: taskId!, answers: [answer!] }));
+
 /** The 2026-11-01 revision of one unit, for the Grammar Labs and the curriculum build. */
 export function contentRevisionFor(
   language: Language,

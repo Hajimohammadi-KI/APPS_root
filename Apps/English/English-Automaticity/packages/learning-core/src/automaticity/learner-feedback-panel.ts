@@ -68,7 +68,6 @@ const copy = {
     summary: "Comment on this check",
     intro:
       "Tell the app owner if you think your answer is correct, the feedback is unclear or the exercise is wrong. The owner reviews every comment; a comment never changes your result by itself.",
-    off: "Sending comments is not switched on yet. Nothing is sent.",
     categories: {
       answer_correct: "My answer is correct",
       feedback_unclear: "I don't understand the feedback",
@@ -96,7 +95,6 @@ const copy = {
     summary: "Kommentar zu dieser Prüfung",
     intro:
       "Sag den Verantwortlichen der App, wenn du deine Antwort für richtig hältst, die Rückmeldung unklar ist oder die Aufgabe fehlerhaft ist. Jeder Kommentar wird geprüft; ein Kommentar ändert dein Ergebnis nie von selbst.",
-    off: "Das Senden von Kommentaren ist noch nicht eingeschaltet. Es wird nichts gesendet.",
     categories: {
       answer_correct: "Meine Antwort ist richtig",
       feedback_unclear: "Ich verstehe die Rückmeldung nicht",
@@ -147,15 +145,17 @@ export function appendLearnerFeedbackPanel(
     status = node("p");
   status.setAttribute("role", "status");
   details.append(form, status);
+  // Hidden until the service answers that it is switched on.
+  details.hidden = true;
   root.append(details);
+  void available().then((on) => {
+    details.hidden = !on;
+  });
   let built = false;
   details.addEventListener("toggle", () => {
     if (!details.open || built) return;
     built = true;
-    void available().then((on) => {
-      if (on) buildForm();
-      else status.textContent = t.off;
-    });
+    buildForm();
   });
   function buildForm() {
     const group = node("fieldset");
@@ -307,7 +307,6 @@ export function appendLearnerFeedbackPanel(
 const receiptCopy = {
   en: {
     summary: "My comments",
-    empty: "You have not sent any comments from this browser.",
     check: "Check status",
     withdraw: "Withdraw",
     confirm: "Withdraw this comment? Its text is removed from the review list.",
@@ -325,7 +324,6 @@ const receiptCopy = {
   },
   de: {
     summary: "Meine Kommentare",
-    empty: "Du hast von diesem Browser aus noch keine Kommentare gesendet.",
     check: "Status prüfen",
     withdraw: "Zurückziehen",
     confirm:
@@ -359,7 +357,7 @@ export function mountLearnerFeedbackReceipts(
   const render = () => {
     const rows = readLearnerFeedbackReceipts(language);
     list.replaceChildren();
-    if (!rows.length) list.append(node("li", t.empty));
+    details.hidden = !rows.length;
     for (const row of rows) {
       const item = node("li"),
         line = node("p"),

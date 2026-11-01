@@ -67,7 +67,9 @@ export default function PrivacyPage() {
               wrong form, that form can become part of the exercise without any
               link to you. Your browser keeps a receipt under “My comments”,
               where you can check the status, read the owner&apos;s reply, or
-              withdraw the comment, which removes its text.
+              withdraw the comment. Withdrawing deletes your text and the
+              owner&apos;s reply; only a closed entry with the exercise number
+              and the reason you chose remains.
             </p>
           </section>
 

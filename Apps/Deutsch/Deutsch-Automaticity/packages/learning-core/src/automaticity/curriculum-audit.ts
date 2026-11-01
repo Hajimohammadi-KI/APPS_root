@@ -121,6 +121,61 @@ export function auditClosedTask(
   }
   return issues;
 }
+/** The options a prompt itself offers: "with am, is or are", "(ein / einen)", "Ergänze viel oder viele". */
+function offeredOptions(prompt: string): string[] {
+  const list = prompt.match(
+    /\bwith ((?:[\p{L}’']+, )+[\p{L}’']+,? or [\p{L}’']+|[\p{L}’']+ or [\p{L}’']+)[.:]/u,
+  );
+  if (list)
+    return list[1]!
+      .split(/,\s*(?:or\s+)?|\s+or\s+/u)
+      .map((option) => option.trim())
+      .filter(Boolean);
+  const bracket = prompt.match(/\(([^()]+\/[^()]+)\)\s*$/u);
+  if (bracket)
+    return bracket[1]!
+      .split("/")
+      .map((option) => option.trim())
+      .filter(Boolean);
+  const german = prompt.match(/\bErgänze (\p{L}+) oder (\p{L}+)\b/u);
+  return german ? [german[1]!, german[2]!] : [];
+}
+/** Sentences built with another option the prompt offers. They are certainly
+ * not the answer, because the task restricts the choice to its options; they
+ * are inferred only when one option yields a stored answer exactly. */
+export function optionDistractors(
+  task: Pick<PracticeTask, "prompt" | "responseKind" | "acceptedAnswers">,
+): string[] {
+  const plain = (text: string) =>
+    normalizeText(text, { allowOptionalFinalPeriod: true });
+  const accepted = task.acceptedAnswers.map(plain);
+  let candidates: string[] = [];
+  if (task.responseKind === "choice" && task.prompt.includes("A:"))
+    candidates = task.prompt
+      .slice(task.prompt.indexOf("A:"))
+      .split(/\s*\/\s*(?=[A-D]:)/u)
+      .map((option) => option.replace(/^[A-D]:\s*/u, "").trim())
+      .filter(Boolean);
+  else if (
+    task.responseKind === "cloze" &&
+    (task.prompt.match(/_{2,}/gu) ?? []).length === 1
+  ) {
+    const template = task.prompt
+      .slice(task.prompt.lastIndexOf(":") + 1)
+      .replace(/\s*\([^()]*\/[^()]*\)\s*$/u, "")
+      .trim();
+    if (/_{2,}/u.test(template))
+      candidates = offeredOptions(task.prompt).map((option) =>
+        template.replace(/_{2,}/u, option),
+      );
+  }
+  if (
+    candidates.length < 2 ||
+    !candidates.some((c) => accepted.includes(plain(c)))
+  )
+    return [];
+  return candidates.filter((candidate) => !accepted.includes(plain(candidate)));
+}
 /** A closed answer must be target language, not the unit's own rule or error description. */
 export function auditUnitAnswers(
   unit: Pick<ConstructionUnit, "rule" | "commonError">,

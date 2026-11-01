@@ -251,10 +251,16 @@ test("comments from other sites, repeats and floods are refused before GitHub", 
       config,
       { fetcher: github.fetcher, guard },
     );
-  expect((await post(feedback, { origin: "https://evil.example" })).status).toBe(403);
-  expect((await post(feedback, { "sec-fetch-site": "cross-site" })).status).toBe(403);
+  expect(
+    (await post(feedback, { origin: "https://evil.example" })).status,
+  ).toBe(403);
+  expect(
+    (await post(feedback, { "sec-fetch-site": "cross-site" })).status,
+  ).toBe(403);
   expect(github.calls).toEqual([]);
-  expect((await post(feedback, { origin: "https://app.example" })).status).toBe(201);
+  expect((await post(feedback, { origin: "https://app.example" })).status).toBe(
+    201,
+  );
   expect((await post(feedback)).status).toBe(409);
   expect((await post({ ...feedback, comment: "zweiter" })).status).toBe(201);
   expect((await post({ ...feedback, comment: "dritter" })).status).toBe(429);
@@ -341,7 +347,8 @@ test("status and the owner's reply need the receipt; withdrawal removes the text
   expect(github.issues[0]!.body).toBe(bodyBefore);
   expect(
     github.calls.some(
-      (call) => call.method === "PATCH" && (call.body as { body?: string })?.body,
+      (call) =>
+        call.method === "PATCH" && (call.body as { body?: string })?.body,
     ),
   ).toBe(false);
   expect(JSON.stringify(github.issues)).not.toContain("jetzt auf dem Tisch");

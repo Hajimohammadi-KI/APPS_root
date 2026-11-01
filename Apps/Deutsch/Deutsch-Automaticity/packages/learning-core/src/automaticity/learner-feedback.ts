@@ -186,20 +186,37 @@ const CATEGORY_TITLES: Record<LearnerFeedbackCategory, string> = {
   exercise_wrong: "The exercise is wrong",
   other: "Other",
 };
-const ISSUE_MARKER = "<!-- automaticity-learner-feedback v1 -->";
+const ISSUE_MARKER = "<!-- automaticity-learner-feedback v2 -->";
+const DATA_MARKER = "<!-- automaticity-learner-feedback-data v2 -->";
 const DECISION_MARKER = "<!-- automaticity-learner-feedback-decision v1 -->";
 
-/** Issue text for the owner; `receipt` is the SHA-256 of the learner's secret. */
+/** GitHub keeps the edit history of an issue body but deletes a comment
+ * completely, so the body carries no learner text: the learner's text is one
+ * comment that a withdrawal deletes. `receipt` is the SHA-256 of the
+ * learner's secret. */
 export function learnerFeedbackIssue(
   feedback: LearnerFeedback,
   receipt: string,
-): { title: string; body: string; labels: string[] } {
+): { title: string; body: string; labels: string[]; comment: string } {
   if (!/^[a-f0-9]{64}$/u.test(receipt)) throw Error("Invalid receipt.");
   const { task, check } = feedback;
   const body = [
     ISSUE_MARKER,
     `**Category:** ${CATEGORY_TITLES[feedback.category]}`,
     `**Exercise:** ${task.id} (task ${task.version}, content ${feedback.contentVersion}, release ${feedback.release ?? "unknown"})`,
+    "The learner's text is in the first comment. Withdrawing deletes it.",
+    fenced(
+      JSON.stringify({
+        receipt,
+        language: feedback.language,
+        taskId: task.id,
+        category: feedback.category,
+      }),
+      "json",
+    ),
+  ].join("\n\n");
+  const comment = [
+    DATA_MARKER,
     "**Prompt**",
     fenced(task.prompt),
     "**Stored answers**",
@@ -212,7 +229,7 @@ export function learnerFeedbackIssue(
     fenced(feedback.comment || "(none)"),
     "<details><summary>Machine-readable data</summary>",
     "",
-    fenced(JSON.stringify({ ...feedback, receipt }, null, 2), "json"),
+    fenced(JSON.stringify(feedback, null, 2), "json"),
     "",
     "</details>",
   ].join("\n\n");
@@ -224,18 +241,43 @@ export function learnerFeedbackIssue(
       `app:${feedback.language}`,
       `category:${feedback.category}`,
     ],
+    comment,
   };
 }
 
-export function parseLearnerFeedbackIssue(
-  body: string,
-): { feedback: LearnerFeedback; receipt: string } | null {
+/** The non-personal issue header: receipt digest, language, task and reason. */
+export function parseLearnerFeedbackIssue(body: string): {
+  receipt: string;
+  language: "en" | "de";
+  taskId: string;
+  category: LearnerFeedbackCategory;
+} | null {
   if (!body.startsWith(ISSUE_MARKER)) return null;
   const data = fencedJson(body);
-  if (!isRecord(data) || typeof data.receipt !== "string") return null;
-  if (!/^[a-f0-9]{64}$/u.test(data.receipt)) return null;
+  if (
+    !isRecord(data) ||
+    typeof data.receipt !== "string" ||
+    !/^[a-f0-9]{64}$/u.test(data.receipt) ||
+    (data.language !== "en" && data.language !== "de") ||
+    typeof data.taskId !== "string" ||
+    !LEARNER_FEEDBACK_CATEGORIES.includes(data.category as never)
+  )
+    return null;
+  return {
+    receipt: data.receipt,
+    language: data.language,
+    taskId: data.taskId,
+    category: data.category as LearnerFeedbackCategory,
+  };
+}
+
+/** The learner's text from its comment, or null for any other comment. */
+export function parseLearnerFeedbackData(
+  comment: string,
+): LearnerFeedback | null {
+  if (!comment.startsWith(DATA_MARKER)) return null;
   try {
-    return { feedback: parseLearnerFeedback(data), receipt: data.receipt };
+    return parseLearnerFeedback(fencedJson(comment));
   } catch {
     return null;
   }

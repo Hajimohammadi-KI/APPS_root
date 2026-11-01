@@ -48,12 +48,17 @@ export function createLearnerFeedbackGuard({
   cap = 60,
   windowMs = 3_600_000,
   now = Date.now,
-}: { cap?: number; windowMs?: number; now?: () => number } = {}): LearnerFeedbackGuard {
+}: {
+  cap?: number;
+  windowMs?: number;
+  now?: () => number;
+} = {}): LearnerFeedbackGuard {
   const seen = new Map<string, number>();
   return {
     admit(fingerprint) {
       const at = now();
-      for (const [key, time] of seen) if (at - time >= windowMs) seen.delete(key);
+      for (const [key, time] of seen)
+        if (at - time >= windowMs) seen.delete(key);
       if (seen.has(fingerprint)) return 409;
       if (seen.size >= cap) return 429;
       seen.set(fingerprint, at);
@@ -274,7 +279,10 @@ export async function handleLearnerFeedback(
       return reply({ error: "This comment was already received." }, 409);
     if (refused === 429)
       return reply(
-        { error: "Too many comments right now. Nothing was sent; try again later." },
+        {
+          error:
+            "Too many comments right now. Nothing was sent; try again later.",
+        },
         429,
         { "Retry-After": "600" },
       );
@@ -297,7 +305,10 @@ export async function handleLearnerFeedback(
           state_reason: "not_planned",
         }).catch(() => undefined);
       return reply(
-        { error: "The comment could not be stored. Nothing was kept; try again later." },
+        {
+          error:
+            "The comment could not be stored. Nothing was kept; try again later.",
+        },
         502,
       );
     }

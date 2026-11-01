@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-01",
   "version": "20.9.4",
-  "webRelease": "2026.11.01.3",
+  "webRelease": "2026.11.01.4",
   "changes": [
-    "When an exercise names its options, another of those options is marked wrong with an explanation; 47 reviewed contracted or full forms are accepted. Comment text is stored only in deletable comments, the comment section stays hidden until the service is on, and repeats and cross-site sends are refused."
+    "Every gap now shows a visible cue (a word in brackets, an instruction that names it, or options of which only one fits), checked at build time; an unscored answer gets one sentence naming the different word, marked in the learner's own answer; every English unit has at least three checkable items."
   ]
 }

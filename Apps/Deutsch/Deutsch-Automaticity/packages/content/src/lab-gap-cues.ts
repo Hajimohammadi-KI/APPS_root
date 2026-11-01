@@ -65,12 +65,12 @@ export const LAB_GAP_CUES: readonly (readonly [
     "___ Winter beginnt der Kurs um neun Uhr. (Im / Am)",
   ],
   ["Häufigkeitsadverbien", 3, "Wir ___ morgens selten Kaffee. (trinken)"],
+  ["Akkusativpronomen", 3, "Ich rufe meine Schwester an. Ich rufe ___ an."],
   [
-    "Akkusativpronomen",
+    "Relativsätze mit der, die und das",
     3,
-    "Ich rufe meine Schwester an. Ich rufe ___ an.",
+    "Das ist der Mann, ___ hier arbeitet.",
   ],
-  ["Relativsätze mit der, die und das", 3, "Das ist der Mann, ___ hier arbeitet."],
   ["Nebensätze mit ob", 3, "Sie fragt, ___ du morgen Zeit hast."],
   [
     "darum, deshalb und deswegen",
@@ -116,11 +116,7 @@ export const LAB_GAP_CUES: readonly (readonly [
     3,
     "Sie lässt ihre Haare ___. (schneiden)",
   ],
-  [
-    "brauchen nicht zu",
-    3,
-    "Sie brauchen das Formular nicht ___. (ausdrucken)",
-  ],
+  ["brauchen nicht zu", 3, "Sie brauchen das Formular nicht ___. (ausdrucken)"],
   [
     "Zweiteilige Konnektoren",
     1,
@@ -168,7 +164,11 @@ export const LAB_GAP_CUES: readonly (readonly [
     "Nachdem die Teilnehmenden ___ worden waren, begann die Befragung. (informieren)",
     "Nachdem die Teilnehmenden informiert worden waren, begann die Befragung.",
   ],
-  ["Komplexe Verbvalenz und Rektion", 3, "Das Ergebnis hängt ___ der Stichprobe ab."],
+  [
+    "Komplexe Verbvalenz und Rektion",
+    3,
+    "Das Ergebnis hängt ___ der Stichprobe ab.",
+  ],
   [
     "Infinitiv- und Partizipialverdichtung",
     3,
@@ -277,7 +277,9 @@ export function labGapCueFor(
   title: string,
   exercise: number,
   prompt: string,
-): { readonly prompt: string; readonly answers?: readonly string[] } | undefined {
+):
+  | { readonly prompt: string; readonly answers?: readonly string[] }
+  | undefined {
   const row = LAB_GAP_CUES.find(
     ([name, index]) => name === title && index === exercise,
   );

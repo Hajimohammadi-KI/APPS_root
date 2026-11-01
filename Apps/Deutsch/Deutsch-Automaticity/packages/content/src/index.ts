@@ -267,18 +267,18 @@ function withGapCues(
     const prompt =
       cue.prompt.startsWith(frame) &&
       Object.values(metadata.prompt).every((text) => text.endsWith(task))
-      ? (Object.fromEntries(
-          Object.entries(metadata.prompt).map(([language, text]) => [
-            language,
-            text.slice(0, text.length - task.length) +
-              cue.prompt.slice(frame.length),
-          ]),
-        ) as typeof metadata.prompt)
-      : {
-          Deutsch: cue.prompt,
-          English: `Follow this German instruction and write the complete answer in German: ${cue.prompt}`,
-          فارسی: `طبق این دستور آلمانی عمل کن و پاسخ کامل را به آلمانی بنویس: ${cue.prompt}`,
-        };
+        ? (Object.fromEntries(
+            Object.entries(metadata.prompt).map(([language, text]) => [
+              language,
+              text.slice(0, text.length - task.length) +
+                cue.prompt.slice(frame.length),
+            ]),
+          ) as typeof metadata.prompt)
+        : {
+            Deutsch: cue.prompt,
+            English: `Follow this German instruction and write the complete answer in German: ${cue.prompt}`,
+            فارسی: `طبق این دستور آلمانی عمل کن و پاسخ کامل را به آلمانی بنویس: ${cue.prompt}`,
+          };
     const { acceptedAnswers: _, ...rest } = metadata;
     return [
       cue.prompt,

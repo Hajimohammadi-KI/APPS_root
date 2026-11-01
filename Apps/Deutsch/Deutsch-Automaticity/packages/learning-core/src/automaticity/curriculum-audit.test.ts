@@ -258,7 +258,11 @@ test("W33 build audit requires a cue for every content word a one-gap cloze leav
   const setze =
     "Setze die fehlende Form ein und schreibe die vollständige Antwort auf Deutsch: ";
   for (const [language, prompt, answer] of [
-    ["en", "Complete the sentence: This is _____ book.", "This is Maya’s book."],
+    [
+      "en",
+      "Complete the sentence: This is _____ book.",
+      "This is Maya’s book.",
+    ],
     [
       "de",
       setze + "Ich ___ jeden Morgen um sieben Uhr auf.",
@@ -315,8 +319,16 @@ test("W33 build audit requires a cue for every content word a one-gap cloze leav
       "Sie hat den Brief geschrieben.",
     ],
     // Function words are the grammar target and need no cue.
-    ["en", "Complete the sentence: She is good ___ maths.", "She is good at maths."],
-    ["en", "Complete the sentence: We _____ work on Sundays.", "We don’t work on Sundays."],
+    [
+      "en",
+      "Complete the sentence: She is good ___ maths.",
+      "She is good at maths.",
+    ],
+    [
+      "en",
+      "Complete the sentence: We _____ work on Sundays.",
+      "We don’t work on Sundays.",
+    ],
     [
       "de",
       "Ergänze das Fragewort für eine Sache und schreibe beide Sätze: ___ freust du dich? Ich freue mich auf die Ferien.",

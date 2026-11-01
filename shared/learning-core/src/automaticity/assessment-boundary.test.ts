@@ -122,7 +122,9 @@ test("an unmatched answer gets one sentence naming the different word, marked in
   expect(one.feedback).toBe(
     "Saved without a score: the stored answer has “am” where you wrote “was”.",
   );
-  expect(one.spans.map((span) => response.response.text.slice(span.start, span.end))).toEqual(["was"]);
+  expect(
+    one.spans.map((span) => response.response.text.slice(span.start, span.end)),
+  ).toEqual(["was"]);
   expect(markedAnswer(response.response.text, one.spans)).toEqual([
     { text: "I " },
     { text: "was", note: "The stored answer has “am” where you wrote “was”." },
@@ -155,11 +157,9 @@ test("an unmatched answer gets one sentence naming the different word, marked in
     "Ohne Bewertung gespeichert: Die gespeicherte Antwort hat „war“, wo du „bin“ geschrieben hast.",
   );
   // A missing word is marked where it belongs.
-  expect(markedAnswer("I ready.", [{ start: 2, end: 2, explanation: "x" }])).toEqual([
-    { text: "I " },
-    { text: "", note: "x" },
-    { text: "ready." },
-  ]);
+  expect(
+    markedAnswer("I ready.", [{ start: 2, end: 2, explanation: "x" }]),
+  ).toEqual([{ text: "I " }, { text: "", note: "x" }, { text: "ready." }]);
 });
 function attempt(overrides: Partial<TaskIdentity> = {}): AttemptEvent {
   return {

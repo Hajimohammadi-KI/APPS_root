@@ -2840,10 +2840,7 @@ export const GAP_CUE_REVISIONS: readonly {
       "de.c.014.retrieve.3.writing",
       zweites + "Das Buch liegt ___ Tisch. (auf)",
     ],
-    [
-      "de.c.015.retrieve.1.writing",
-      setze + "Ich habe gestern ___. (arbeiten)",
-    ],
+    ["de.c.015.retrieve.1.writing", setze + "Ich habe gestern ___. (arbeiten)"],
     [
       "de.c.015.retrieve.3.writing",
       zweites + "Ich habe gestern Tennis ___. (spielen)",
@@ -2859,10 +2856,7 @@ export const GAP_CUE_REVISIONS: readonly {
     ],
     ["de.c.019.retrieve.1.writing", setze + "Das Bild hängt ___ Wand. (an)"],
     ["de.c.019.retrieve.3.writing", zweites + "Ich hänge es ___ Wand. (an)"],
-    [
-      "de.c.020.retrieve.1.writing",
-      setze + "Ich ___ heute lernen. (müssen)",
-    ],
+    ["de.c.020.retrieve.1.writing", setze + "Ich ___ heute lernen. (müssen)"],
     ["de.c.021.retrieve.3.writing", zweites + "Das ist am ___. (gut)"],
     [
       "de.c.023.retrieve.1.writing",
@@ -2877,10 +2871,7 @@ export const GAP_CUE_REVISIONS: readonly {
       "de.c.025.retrieve.3.writing",
       zweites + "Ich interessiere ___ für Musik. (sich)",
     ],
-    [
-      "de.c.026.retrieve.1.writing",
-      setze + "Der Kurs ist ___. (interessant)",
-    ],
+    ["de.c.026.retrieve.1.writing", setze + "Der Kurs ist ___. (interessant)"],
     [
       "de.c.026.retrieve.3.writing",
       zweites + "Die Aufgabe ist ___. (schwierig)",
@@ -3131,7 +3122,8 @@ export const GAP_CUE_REVISIONS: readonly {
     ],
     [
       "de.c.072.retrieve.3.writing",
-      zweites + "Dieses Ergebnis, das muss betont werden, ___ vorläufig. (sein)",
+      zweites +
+        "Dieses Ergebnis, das muss betont werden, ___ vorläufig. (sein)",
     ],
     [
       "de.c.073.retrieve.1.writing",
@@ -3270,6 +3262,842 @@ export const GAP_CUE_REVISIONS: readonly {
 ).map(([taskId, prompt, ...answers]) =>
   answers.length ? { taskId, prompt, answers } : { taskId, prompt },
 );
+
+/** Two more checkable written items for each English unit whose only closed
+ * item was its repair (2026-11-01, W33). Most offer two options of which only
+ * one fits, so the other is recognised as wrong; the rest name the word to use.
+ * The first answer fits the gap; further answers are reviewed equivalents. */
+export const CHECKED_PRACTICE_VERSION = "2026-11-01.4";
+export const CHECKED_PRACTICE: readonly {
+  readonly unit: string;
+  readonly prompt: string;
+  readonly answers: readonly string[];
+}[] = (
+  [
+    [
+      "en.c.002",
+      "Complete the sentence: ___ lives near the station. (He / Him)",
+      "He lives near the station.",
+    ],
+    [
+      "en.c.002",
+      "Complete the sentence: My sister and I are students. ___ study at the same school. (We / Us)",
+      "My sister and I are students. We study at the same school.",
+    ],
+    [
+      "en.c.003",
+      "Complete the sentence with a or an: She is ___ engineer.",
+      "She is an engineer.",
+    ],
+    [
+      "en.c.003",
+      "Complete the sentence: I bought a lamp. ___ lamp is in my bedroom. (The / A)",
+      "I bought a lamp. The lamp is in my bedroom.",
+    ],
+    [
+      "en.c.004",
+      "Write the plural of the noun in brackets: There are three ___ on the table. (box)",
+      "There are three boxes on the table.",
+    ],
+    [
+      "en.c.004",
+      "Write the plural of the noun in brackets: Two ___ are waiting outside. (child)",
+      "Two children are waiting outside.",
+    ],
+    [
+      "en.c.005",
+      "Complete the sentence with my or mine: This is ___ phone.",
+      "This is my phone.",
+    ],
+    [
+      "en.c.005",
+      "Complete the sentence: ___ house is new. (Their / They)",
+      "Their house is new.",
+    ],
+    [
+      "en.c.006",
+      "Complete the sentence with have or has: She ___ a car.",
+      "She has a car.",
+    ],
+    [
+      "en.c.006",
+      "Complete the sentence with have or has: I ___ got a brother.",
+      "I have got a brother.",
+      "I’ve got a brother.",
+    ],
+    [
+      "en.c.007",
+      "Use the verb in brackets in the present simple: He ___ every day. (study)",
+      "He studies every day.",
+    ],
+    [
+      "en.c.007",
+      "Use the verb in brackets in the present simple: She ___ to work by bus. (go)",
+      "She goes to work by bus.",
+    ],
+    [
+      "en.c.008",
+      "Complete the sentence with don’t or doesn’t: She ___ work here.",
+      "She doesn’t work here.",
+      "She does not work here.",
+    ],
+    [
+      "en.c.008",
+      "Complete the sentence with don’t or doesn’t: I ___ drive.",
+      "I don’t drive.",
+      "I do not drive.",
+    ],
+    [
+      "en.c.009",
+      "Complete the question with Do or Does: ___ he speak English?",
+      "Does he speak English?",
+    ],
+    [
+      "en.c.009",
+      "Complete the question with Do or Does: ___ you live here?",
+      "Do you live here?",
+    ],
+    [
+      "en.c.010",
+      "Complete the sentence with is or are: There ___ two parks near my flat.",
+      "There are two parks near my flat.",
+    ],
+    [
+      "en.c.010",
+      "Complete the sentence with is or are: There ___ a bank on this street.",
+      "There is a bank on this street.",
+      "There’s a bank on this street.",
+    ],
+    [
+      "en.c.011",
+      "Use can and the verb in brackets: I ___ very well. (swim)",
+      "I can swim very well.",
+    ],
+    [
+      "en.c.011",
+      "Complete the sentence with can or can’t: I ___ come tomorrow because I am working.",
+      "I can’t come tomorrow because I am working.",
+      "I cannot come tomorrow because I am working.",
+    ],
+    [
+      "en.c.012",
+      "Complete the instruction: ___ worry about the test. (Don’t / Not)",
+      "Don’t worry about the test.",
+      "Do not worry about the test.",
+    ],
+    [
+      "en.c.012",
+      "Use the verb in brackets as an instruction: ___ the door, please. (open)",
+      "Open the door, please.",
+    ],
+    [
+      "en.c.013",
+      "Complete the sentence with in or at: The milk is ___ the fridge.",
+      "The milk is in the fridge.",
+    ],
+    [
+      "en.c.013",
+      "Complete the sentence with under or between: The cat is ___ the bed.",
+      "The cat is under the bed.",
+    ],
+    [
+      "en.c.014",
+      "Complete the question with much or many: How ___ water do you drink?",
+      "How much water do you drink?",
+    ],
+    [
+      "en.c.014",
+      "Complete the sentence with much or many: There aren’t ___ chairs in the room.",
+      "There aren’t many chairs in the room.",
+      "There are not many chairs in the room.",
+    ],
+    [
+      "en.c.016",
+      "Use the verb in brackets in the present continuous for now: Look! It ___. (rain)",
+      "Look! It is raining.",
+      "Look! It’s raining.",
+    ],
+    [
+      "en.c.016",
+      "Use the verb in brackets in the present simple for a routine: She ___ to work every day. (drive)",
+      "She drives to work every day.",
+    ],
+    [
+      "en.c.017",
+      "Use the past simple of the verb in brackets: They ___ the museum on Sunday. (visit)",
+      "They visited the museum on Sunday.",
+    ],
+    [
+      "en.c.017",
+      "Use the past simple of the verb in brackets: I ___ my grandmother yesterday. (call)",
+      "I called my grandmother yesterday.",
+    ],
+    [
+      "en.c.018",
+      "Use the past simple of the verb in brackets: She ___ an email last night. (write)",
+      "She wrote an email last night.",
+    ],
+    [
+      "en.c.018",
+      "Use the past simple of the verb in brackets: We ___ home early yesterday. (go)",
+      "We went home early yesterday.",
+    ],
+    [
+      "en.c.019",
+      "Use didn’t and the verb in brackets: I ___ him at the party. (see)",
+      "I didn’t see him at the party.",
+      "I did not see him at the party.",
+    ],
+    [
+      "en.c.019",
+      "Complete the question with Did or Do: ___ you call her yesterday?",
+      "Did you call her yesterday?",
+    ],
+    [
+      "en.c.020",
+      "Use will and the verb in brackets for a promise: I ___ you tomorrow. (help)",
+      "I will help you tomorrow.",
+      "I’ll help you tomorrow.",
+    ],
+    [
+      "en.c.020",
+      "Use will and the verb in brackets for a prediction: I think it ___ later. (rain)",
+      "I think it will rain later.",
+      "I think it’ll rain later.",
+    ],
+    [
+      "en.c.021",
+      "Use be going to and the verb in brackets for a plan: I ___ German next year. (study)",
+      "I am going to study German next year.",
+      "I’m going to study German next year.",
+    ],
+    [
+      "en.c.021",
+      "Use be going to and the verb in brackets: Look at those clouds! It ___. (rain)",
+      "Look at those clouds! It is going to rain.",
+      "Look at those clouds! It’s going to rain.",
+    ],
+    [
+      "en.c.022",
+      "Use the comparative of the adjective in brackets: This book is ___ than that one. (easy)",
+      "This book is easier than that one.",
+    ],
+    [
+      "en.c.022",
+      "Use the comparative of the adjective in brackets: Trains are ___ than buses. (comfortable)",
+      "Trains are more comfortable than buses.",
+    ],
+    [
+      "en.c.023",
+      "Use the superlative of the adjective in brackets: It is ___ app on my phone. (useful)",
+      "It is the most useful app on my phone.",
+    ],
+    [
+      "en.c.023",
+      "Use the superlative of the adjective in brackets: This is ___ room in the house. (small)",
+      "This is the smallest room in the house.",
+    ],
+    [
+      "en.c.024",
+      "Complete the sentence with some or any: I have ___ questions about the homework.",
+      "I have some questions about the homework.",
+    ],
+    [
+      "en.c.024",
+      "Complete the sentence with some or any: We don’t have ___ milk left.",
+      "We don’t have any milk left.",
+      "We do not have any milk left.",
+    ],
+    [
+      "en.c.025",
+      "Complete the sentence with much or many: She has ___ ideas for the project.",
+      "She has many ideas for the project.",
+    ],
+    [
+      "en.c.025",
+      "Complete the sentence with much or many: We don’t have ___ time.",
+      "We don’t have much time.",
+      "We do not have much time.",
+    ],
+    [
+      "en.c.026",
+      "Put usually in the right place: She ___ early. (is, usually)",
+      "She is usually early.",
+    ],
+    [
+      "en.c.026",
+      "Put always in the right place: We ___ breakfast at home. (always, have)",
+      "We always have breakfast at home.",
+    ],
+    [
+      "en.c.027",
+      "Complete the sentence with them or they: I saw ___ at the station.",
+      "I saw them at the station.",
+    ],
+    [
+      "en.c.027",
+      "Complete the question with me or I: Can you help ___?",
+      "Can you help me?",
+    ],
+    [
+      "en.c.028",
+      "Use have to and the verb in brackets for a rule at work: I ___ a uniform at work. (wear)",
+      "I have to wear a uniform at work.",
+    ],
+    [
+      "en.c.028",
+      "Use must and the verb in brackets for strong advice: You ___ careful on this road. (be)",
+      "You must be careful on this road.",
+    ],
+    [
+      "en.c.029",
+      "Use the present perfect of the verb in brackets: She ___ in Paris since 2020. (work)",
+      "She has worked in Paris since 2020.",
+      "She’s worked in Paris since 2020.",
+    ],
+    [
+      "en.c.029",
+      "Use the present perfect of the verb in brackets: I ___ this film before. (see)",
+      "I have seen this film before.",
+      "I’ve seen this film before.",
+    ],
+    [
+      "en.c.030",
+      "Use the past simple or the present perfect of the verb in brackets: I ___ it yesterday. (see)",
+      "I saw it yesterday.",
+    ],
+    [
+      "en.c.030",
+      "Use the past simple or the present perfect of the verb in brackets: I ___ to Japan twice so far. (be)",
+      "I have been to Japan twice so far.",
+      "I’ve been to Japan twice so far.",
+    ],
+    [
+      "en.c.031",
+      "Complete the sentence with for or since: I have lived here ___ 2024.",
+      "I have lived here since 2024.",
+    ],
+    [
+      "en.c.031",
+      "Complete the sentence with for or since: She has worked here ___ two years.",
+      "She has worked here for two years.",
+    ],
+    [
+      "en.c.032",
+      "Use the past continuous of the verb in brackets: They ___ TV at eight o’clock last night. (watch)",
+      "They were watching TV at eight o’clock last night.",
+    ],
+    [
+      "en.c.032",
+      "Use the past continuous of the verb in brackets: She ___ dinner when I arrived. (cook)",
+      "She was cooking dinner when I arrived.",
+    ],
+    [
+      "en.c.033",
+      "Use the past simple of the verb in brackets for the interrupting event: I was walking home when it ___ to rain. (start)",
+      "I was walking home when it started to rain.",
+    ],
+    [
+      "en.c.033",
+      "Use the past continuous of the verb in brackets for the background: She ___ when the lights went out. (read)",
+      "She was reading when the lights went out.",
+    ],
+    [
+      "en.c.035",
+      "Use the past simple of the verb in brackets: If I ___ more time, I would study German. (have)",
+      "If I had more time, I would study German.",
+    ],
+    [
+      "en.c.035",
+      "Use would and the verb in brackets: If she lived closer, she ___ us more often. (visit)",
+      "If she lived closer, she would visit us more often.",
+      "If she lived closer, she’d visit us more often.",
+    ],
+    [
+      "en.c.036",
+      "Complete the sentence with who or which: The woman ___ called is my teacher.",
+      "The woman who called is my teacher.",
+    ],
+    [
+      "en.c.036",
+      "Complete the sentence with who or which: This is the book ___ changed my mind.",
+      "This is the book which changed my mind.",
+    ],
+    [
+      "en.c.037",
+      "Use the verb in brackets after enjoy: I enjoy ___ in the park. (walk)",
+      "I enjoy walking in the park.",
+    ],
+    [
+      "en.c.037",
+      "Use the verb in brackets after decided: She decided ___ early. (leave)",
+      "She decided to leave early.",
+    ],
+    [
+      "en.c.038",
+      "Use should and the verb in brackets: You ___ more water. (drink)",
+      "You should drink more water.",
+    ],
+    [
+      "en.c.038",
+      "Use shouldn’t and the verb in brackets: You ___ so late. (stay up)",
+      "You shouldn’t stay up so late.",
+      "You should not stay up so late.",
+    ],
+    [
+      "en.c.039",
+      "Use the present simple passive of the verb in brackets: English ___ in many countries. (speak)",
+      "English is spoken in many countries.",
+    ],
+    [
+      "en.c.039",
+      "Use the past simple passive of the verb in brackets: The letter ___ last week. (send)",
+      "The letter was sent last week.",
+    ],
+    [
+      "en.c.040",
+      "Report the statement “I am tired.”: She said that she ___.",
+      "She said that she was tired.",
+    ],
+    [
+      "en.c.040",
+      "Report the statement “We live in Leeds.”: They said that they ___ in Leeds.",
+      "They said that they lived in Leeds.",
+    ],
+    [
+      "en.c.041",
+      "Complete the question tag: She works here, ___? (doesn’t she / isn’t she)",
+      "She works here, doesn’t she?",
+    ],
+    [
+      "en.c.041",
+      "Complete the question tag: They can swim, ___? (can’t they / don’t they)",
+      "They can swim, can’t they?",
+    ],
+    [
+      "en.c.042",
+      "Complete the sentence with too or enough: The water is warm ___ for swimming.",
+      "The water is warm enough for swimming.",
+    ],
+    [
+      "en.c.042",
+      "Complete the sentence with too or enough: It is ___ cold to go out.",
+      "It is too cold to go out.",
+    ],
+    [
+      "en.c.043",
+      "Use the present perfect continuous of the verb in brackets: She ___ for two hours. (study)",
+      "She has been studying for two hours.",
+      "She’s been studying for two hours.",
+    ],
+    [
+      "en.c.043",
+      "Use the present perfect continuous of the verb in brackets: It ___ all day. (rain)",
+      "It has been raining all day.",
+      "It’s been raining all day.",
+    ],
+    [
+      "en.c.044",
+      "Use the past perfect of the verb in brackets: When we arrived, the film ___. (start)",
+      "When we arrived, the film had started.",
+    ],
+    [
+      "en.c.044",
+      "Use the past perfect of the verb in brackets: She ___ the book before she saw the film. (read)",
+      "She had read the book before she saw the film.",
+    ],
+    [
+      "en.c.045",
+      "Use the past perfect continuous of the verb in brackets: She ___ for an hour when the bus came. (wait)",
+      "She had been waiting for an hour when the bus came.",
+    ],
+    [
+      "en.c.045",
+      "Use the past perfect continuous of the verb in brackets: They were tired because they ___ all day. (work)",
+      "They were tired because they had been working all day.",
+    ],
+    [
+      "en.c.046",
+      "Use the future continuous of the verb in brackets: This time tomorrow, I ___ to Rome. (fly)",
+      "This time tomorrow, I will be flying to Rome.",
+      "This time tomorrow, I’ll be flying to Rome.",
+    ],
+    [
+      "en.c.046",
+      "Use the future continuous of the verb in brackets: At nine tonight, we ___ dinner. (have)",
+      "At nine tonight, we will be having dinner.",
+      "At nine tonight, we’ll be having dinner.",
+    ],
+    [
+      "en.c.047",
+      "Use the future perfect of the verb in brackets: By June, they ___ the new library. (build)",
+      "By June, they will have built the new library.",
+      "By June, they’ll have built the new library.",
+    ],
+    [
+      "en.c.047",
+      "Use the future perfect of the verb in brackets: By the time you arrive, we ___ dinner. (cook)",
+      "By the time you arrive, we will have cooked dinner.",
+      "By the time you arrive, we’ll have cooked dinner.",
+    ],
+    [
+      "en.c.049",
+      "Use the past perfect of the verb in brackets: If I ___ the job, I would live in Berlin now. (take)",
+      "If I had taken the job, I would live in Berlin now.",
+      "If I’d taken the job, I would live in Berlin now.",
+    ],
+    [
+      "en.c.049",
+      "Use would and the verb in brackets for a present result: If she had studied medicine, she ___ a doctor now. (be)",
+      "If she had studied medicine, she would be a doctor now.",
+      "If she had studied medicine, she’d be a doctor now.",
+    ],
+    [
+      "en.c.050",
+      "Her light is on and her phone is engaged. Complete the sentence with must or can’t: She ___ be busy.",
+      "She must be busy.",
+    ],
+    [
+      "en.c.050",
+      "He has never studied this topic. Complete the sentence with must or can’t: He ___ know the answer.",
+      "He can’t know the answer.",
+      "He cannot know the answer.",
+    ],
+    [
+      "en.c.051",
+      "Use must have and the verb in brackets: The door is open; they ___ to lock it. (forget)",
+      "The door is open; they must have forgotten to lock it.",
+    ],
+    [
+      "en.c.051",
+      "Use can’t have and the verb in brackets: She ___ the email; she was offline all day. (read)",
+      "She can’t have read the email; she was offline all day.",
+      "She cannot have read the email; she was offline all day.",
+    ],
+    [
+      "en.c.052",
+      "Use had, the object and the past participle of the verb in brackets: She ___ last week. (her hair, cut)",
+      "She had her hair cut last week.",
+    ],
+    [
+      "en.c.052",
+      "Use have, the object and the past participle of the verb in brackets: We are going to ___ next month. (the house, paint)",
+      "We are going to have the house painted next month.",
+      "We are going to get the house painted next month.",
+    ],
+    [
+      "en.c.053",
+      "Use believe in a passive reporting structure: The painting ___ to be very old.",
+      "The painting is believed to be very old.",
+    ],
+    [
+      "en.c.053",
+      "Use should and the passive of the verb in brackets: The work ___ by Friday. (complete)",
+      "The work should be completed by Friday.",
+    ],
+    [
+      "en.c.054",
+      "Use having and the past participle of the verb in brackets: ___ the report, she went home. (finish)",
+      "Having finished the report, she went home.",
+    ],
+    [
+      "en.c.054",
+      "Use a past participle clause with the verb in brackets: ___ in 1900, the house needs repairs. (build)",
+      "Built in 1900, the house needs repairs.",
+    ],
+    [
+      "en.c.055",
+      "Use the past simple of the verb in brackets after wish: I wish I ___ the answer. (know)",
+      "I wish I knew the answer.",
+    ],
+    [
+      "en.c.055",
+      "Use the past perfect of the verb in brackets after if only: If only I ___ to your advice. (listen)",
+      "If only I had listened to your advice.",
+      "If only I’d listened to your advice.",
+    ],
+    [
+      "en.c.056",
+      "Complete the sentence: Never ___ seen such a result. (have I / I have)",
+      "Never have I seen such a result.",
+    ],
+    [
+      "en.c.056",
+      "Complete the sentence: Rarely ___ such a clear answer. (do we hear / we hear)",
+      "Rarely do we hear such a clear answer.",
+    ],
+    [
+      "en.c.057",
+      "Complete the sentence with who or which: It was Anna ___ called me.",
+      "It was Anna who called me.",
+    ],
+    [
+      "en.c.057",
+      "Complete the sentence: What I need ___ more practice. (is / it is)",
+      "What I need is more practice.",
+    ],
+    [
+      "en.c.059",
+      "Use the noun form of the verb in brackets: The ___ of the data took a week. (analyse)",
+      "The analysis of the data took a week.",
+    ],
+    [
+      "en.c.059",
+      "Use the noun form of the verb in brackets: The ___ of the new rules caused confusion. (introduce)",
+      "The introduction of the new rules caused confusion.",
+    ],
+    [
+      "en.c.060",
+      "Use tend to to limit the claim: Older learners ___ need more practice.",
+      "Older learners tend to need more practice.",
+    ],
+    [
+      "en.c.060",
+      "Use may to limit the claim: This method ___ reduce errors.",
+      "This method may reduce errors.",
+    ],
+    [
+      "en.c.061",
+      "Complete the text with Moreover or However: The method is fast. ___, it is expensive.",
+      "The method is fast. However, it is expensive.",
+    ],
+    [
+      "en.c.061",
+      "Complete the text with Moreover or Nevertheless: The study was small. ___, the results are useful.",
+      "The study was small. Nevertheless, the results are useful.",
+    ],
+    [
+      "en.c.062",
+      "Complete the sentence with so or neither: I like coffee, and ___ does my brother.",
+      "I like coffee, and so does my brother.",
+    ],
+    [
+      "en.c.062",
+      "Complete the sentence with one or ones: I don’t like the red shoes; I prefer the black ___.",
+      "I don’t like the red shoes; I prefer the black ones.",
+      "I do not like the red shoes; I prefer the black ones.",
+    ],
+    [
+      "en.c.063",
+      "Complete the sentence with whom or which: The colleague with ___ I work is very helpful.",
+      "The colleague with whom I work is very helpful.",
+    ],
+    [
+      "en.c.063",
+      "Complete the sentence with which or whom: The method on ___ we relied was robust.",
+      "The method on which we relied was robust.",
+    ],
+    [
+      "en.c.064",
+      "Use the verb in brackets after deny: He denied ___ the money. (take)",
+      "He denied taking the money.",
+      "He denied having taken the money.",
+    ],
+    [
+      "en.c.064",
+      "Use urge with the object and the verb in brackets: She urged ___ carefully. (us, check)",
+      "She urged us to check carefully.",
+    ],
+    [
+      "en.c.065",
+      "Add emphasis with does: She ___ like the idea, but she has questions.",
+      "She does like the idea, but she has questions.",
+    ],
+    [
+      "en.c.065",
+      "Add emphasis with did: We ___ send the form last week.",
+      "We did send the form last week.",
+    ],
+    [
+      "en.c.066",
+      "Keep the fronted object and order the words in brackets: This issue, ___ immediately. (we, address, must)",
+      "This issue, we must address immediately.",
+    ],
+    [
+      "en.c.066",
+      "Complete the sentence with the fronted place phrase: On the table ___ a letter. (lay / laid)",
+      "On the table lay a letter.",
+    ],
+    [
+      "en.c.067",
+      "Use the -ing form of the verb in brackets after the noun: The students ___ in the study improved quickly. (take part)",
+      "The students taking part in the study improved quickly.",
+    ],
+    [
+      "en.c.067",
+      "Use the past participle of the verb in brackets after the noun: The data ___ last year were incomplete. (collect)",
+      "The data collected last year were incomplete.",
+    ],
+    [
+      "en.c.068",
+      "Write a formal request with could and send: ___ me the report by Friday?",
+      "Could you send me the report by Friday?",
+    ],
+    [
+      "en.c.068",
+      "Use would you mind and the verb in brackets: Would you mind ___ the door? (close)",
+      "Would you mind closing the door?",
+    ],
+    [
+      "en.c.069",
+      "Use the present perfect or past simple of the verb in brackets: Since then, several studies ___ the effect. (confirm)",
+      "Since then, several studies have confirmed the effect.",
+    ],
+    [
+      "en.c.069",
+      "Use the present perfect or past simple of the verb in brackets: The researchers ___ the data in 2021. (publish)",
+      "The researchers published the data in 2021.",
+    ],
+    [
+      "en.c.070",
+      "Keep the list parallel with the verb in brackets: She likes swimming, cycling and ___. (run)",
+      "She likes swimming, cycling and running.",
+      "She likes swimming, cycling, and running.",
+    ],
+    [
+      "en.c.070",
+      "Keep the list parallel with the verb in brackets: We want to reduce costs and ___ quality. (improve)",
+      "We want to reduce costs and improve quality.",
+      "We want to reduce costs and to improve quality.",
+    ],
+    [
+      "en.c.071",
+      "Complete the sentence: Only later ___ the mistake. (did she notice / she noticed)",
+      "Only later did she notice the mistake.",
+    ],
+    [
+      "en.c.071",
+      "Complete the sentence: Not only ___ late, but he also forgot the documents. (was he / he was)",
+      "Not only was he late, but he also forgot the documents.",
+    ],
+    [
+      "en.c.073",
+      "The meeting was not necessary, but you went. Use needn’t have and the verb in brackets: You ___. (attend)",
+      "You needn’t have attended.",
+      "You need not have attended.",
+    ],
+    [
+      "en.c.073",
+      "It was not necessary, so you did not do it. Use didn’t need to and the verb in brackets: I ___ a taxi. (take)",
+      "I didn’t need to take a taxi.",
+      "I did not need to take a taxi.",
+    ],
+    [
+      "en.c.074",
+      "Make the request more distant with the past tense of the verb in brackets: I ___ if you could help me. (wonder)",
+      "I wondered if you could help me.",
+      "I was wondering if you could help me.",
+    ],
+    [
+      "en.c.074",
+      "Use might to make the suggestion tentative: It ___ be worth checking the figures again.",
+      "It might be worth checking the figures again.",
+    ],
+    [
+      "en.c.075",
+      "Complete the text with This or These: The sample was small. ___ limitation weakens the conclusions.",
+      "The sample was small. This limitation weakens the conclusions.",
+    ],
+    [
+      "en.c.075",
+      "Complete the text with Such or This: The response rate was low. ___ a constraint affects every estimate.",
+      "The response rate was low. Such a constraint affects every estimate.",
+    ],
+    [
+      "en.c.076",
+      "Complete the contrast with but: Not the price ___ the quality decided the matter.",
+      "Not the price but the quality decided the matter.",
+    ],
+    [
+      "en.c.076",
+      "Complete the sentence for emphasis: ___ was the result that nobody believed it. (So surprising / Such surprising)",
+      "So surprising was the result that nobody believed it.",
+    ],
+    [
+      "en.c.077",
+      "Use the past participle of the verb in brackets: The survey, ___ in 2024, included 500 participants. (conduct)",
+      "The survey, conducted in 2024, included 500 participants.",
+    ],
+    [
+      "en.c.077",
+      "Add the words in brackets as an apposition: Dr Lee, ___, presented the results. (the project leader)",
+      "Dr Lee, the project leader, presented the results.",
+    ],
+    [
+      "en.c.078",
+      "Complete the fixed expression: ___ it may, we must decide today. (Be that as / Be it as)",
+      "Be that as it may, we must decide today.",
+    ],
+    [
+      "en.c.078",
+      "Complete the fixed pattern with the adjective in brackets: ___ as it may seem, the plan worked. (strange)",
+      "Strange as it may seem, the plan worked.",
+    ],
+    [
+      "en.c.079",
+      "Use who so that the supervisor approved it: She discussed the result with the supervisor, ___ approved it.",
+      "She discussed the result with the supervisor, who approved it.",
+    ],
+    [
+      "en.c.079",
+      "Complete the sentence with which or who: The manager praised the report, ___ was finished early.",
+      "The manager praised the report, which was finished early.",
+    ],
+    [
+      "en.c.080",
+      "Recast the sentence in academic style with indicate: The data ___ that costs have risen.",
+      "The data indicate that costs have risen.",
+      "The data indicates that costs have risen.",
+    ],
+    [
+      "en.c.080",
+      "Recast the sentence for a formal report with the verb in brackets: We ___ a survey of 200 users. (conduct, past simple)",
+      "We conducted a survey of 200 users.",
+    ],
+    [
+      "en.c.081",
+      "Add however between commas: The plan, ___ was rejected.",
+      "The plan, however, was rejected.",
+    ],
+    [
+      "en.c.081",
+      "Join the clauses with a semicolon and therefore: Costs rose ___ prices increased.",
+      "Costs rose; therefore, prices increased.",
+    ],
+    [
+      "en.c.082",
+      "Use recommend with the -ing form of the verb in brackets: We strongly recommend ___ the figures. (review)",
+      "We strongly recommend reviewing the figures.",
+    ],
+    [
+      "en.c.082",
+      "Use suggest with a that-clause and the verb in brackets: I suggest that he ___ the manager. (call)",
+      "I suggest that he call the manager.",
+      "I suggest that he calls the manager.",
+      "I suggest that he should call the manager.",
+    ],
+    [
+      "en.c.083",
+      "Use the present simple of the verb in brackets, as in a report summary: The report ___ the problem and evaluates two options. (outline)",
+      "The report outlines the problem and evaluates two options.",
+    ],
+    [
+      "en.c.083",
+      "Use the present simple of the verb in brackets: The proposal ___ a clear timetable. (set out)",
+      "The proposal sets out a clear timetable.",
+    ],
+    [
+      "en.c.084",
+      "Use the past simple of the verb in brackets: Yesterday the team ___ the analysis. (finish)",
+      "Yesterday the team finished the analysis.",
+    ],
+    [
+      "en.c.084",
+      "Use the past simple of the verb in brackets: Then they ___ the report to the client. (send)",
+      "Then they sent the report to the client.",
+    ],
+  ] as const
+).map(([unit, prompt, ...answers]) => ({ unit, prompt, answers }));
 
 /** Unit titles for the gap-cue revisions, so the Grammar Labs find them. */
 const GAP_CUE_UNIT_TITLES: ReadonlyMap<string, string> = new Map([

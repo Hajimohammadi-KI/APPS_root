@@ -195,14 +195,22 @@ test("W33 every cued gap fits its stored answer, and offered options expose the 
     expect(`${task!.id}: ${gapFill(task!.prompt, task!.solution!)}`).not.toBe(
       `${task!.id}: null`,
     );
-    if (/\([^()]*\/[^()]*\)\s*$|\bwith [\p{L}’']+ or [\p{L}’']+:/u.test(task!.prompt))
+    if (
+      /\([^()]*\/[^()]*\)\s*$|\bwith [\p{L}’']+ or [\p{L}’']+:/u.test(
+        task!.prompt,
+      )
+    )
       expect(`${task!.id}: ${optionDistractors(task!).length}`).not.toBe(
         `${task!.id}: 0`,
       );
   }
   const first = active.get("de.c.086.retrieve.1.cues-202611013.writing")!;
-  expect(first.prompt).toEndWith("Ich ___ jeden Morgen um sieben Uhr auf. (aufstehen)");
-  expect(first.acceptedAnswers).toEqual(["Ich stehe jeden Morgen um sieben Uhr auf."]);
+  expect(first.prompt).toEndWith(
+    "Ich ___ jeden Morgen um sieben Uhr auf. (aufstehen)",
+  );
+  expect(first.acceptedAnswers).toEqual([
+    "Ich stehe jeden Morgen um sieben Uhr auf.",
+  ]);
   expect(
     [...active.values()].some(
       (task) =>
@@ -211,6 +219,40 @@ test("W33 every cued gap fits its stored answer, and offered options expose the 
         task.prompt.endsWith(first.prompt),
     ),
   ).toBe(true);
+});
+test("W33 every unit offers at least three checkable written items, and offered options expose the wrong one", () => {
+  for (const language of ["en", "de"] as const) {
+    const thin = built(language)
+      .units.map((unit) => ({
+        unit: unit.id,
+        checkable: activePracticeTasks(unit).filter(
+          (task) =>
+            task.answerPolicy === "closed" &&
+            task.modality === "writing" &&
+            ![...auditClosedTask(task), ...auditGapCue(task, language)].some(
+              (issue) => issue.severity === "error",
+            ),
+        ).length,
+      }))
+      .filter((row) => row.checkable < 3);
+    if (language === "en") expect(thin).toEqual([]);
+    else expect(thin.length).toBeLessThanOrEqual(2);
+  }
+  for (const task of built("en").units.flatMap(activePracticeTasks))
+    if (task.id.includes(".checks-202611014-")) {
+      expect(task.solution).toBe(task.acceptedAnswers[0]!);
+      expect(`${task.id}: ${gapFill(task.prompt, task.solution!)}`).not.toBe(
+        `${task.id}: null`,
+      );
+      if (
+        /\([^()]*\/[^()]*\)\s*$|\bwith [\p{L}’']+ or [\p{L}’']+:/u.test(
+          task.prompt,
+        )
+      )
+        expect(`${task.id}: ${optionDistractors(task).length}`).not.toBe(
+          `${task.id}: 0`,
+        );
+    }
 });
 test("W33 the complete corrected sentence earns the controlled pass, typed apostrophe included", () => {
   const sha = (text: string) => createHash("sha256").update(text).digest("hex");

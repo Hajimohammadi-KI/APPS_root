@@ -108,7 +108,11 @@ function cueGaps(unit: GrammarUnit): GrammarUnit {
       return revision &&
         /_{2,}/u.test(exercise[0]) &&
         gapFill(revision.prompt, answer!) !== null
-        ? revisedExercise({ prompt: revision.prompt, answer: answer!, alternatives })
+        ? revisedExercise({
+            prompt: revision.prompt,
+            answer: answer!,
+            alternatives,
+          })
         : exercise;
     }),
   };

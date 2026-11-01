@@ -111,7 +111,9 @@ export function unscoredFeedback(
   language: "en" | "de",
 ): string {
   const lead =
-    language === "en" ? "Saved without a score: " : "Ohne Bewertung gespeichert: ";
+    language === "en"
+      ? "Saved without a score: "
+      : "Ohne Bewertung gespeichert: ";
   if (edits.length === 1) {
     const sentence = answerDifference(edits[0]!, language);
     return (
@@ -147,7 +149,10 @@ export function markedAnswer(
   for (const span of [...spans].sort((a, b) => a.start - b.start)) {
     if (span.start < at) continue;
     if (span.start > at) parts.push({ text: text.slice(at, span.start) });
-    parts.push({ text: text.slice(span.start, span.end), note: span.explanation });
+    parts.push({
+      text: text.slice(span.start, span.end),
+      note: span.explanation,
+    });
     at = span.end;
   }
   if (at < text.length) parts.push({ text: text.slice(at) });

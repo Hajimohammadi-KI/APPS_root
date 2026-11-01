@@ -253,8 +253,7 @@ export function auditGapCue(
   );
   const uncued = foldedWords(fill).filter(
     (word) =>
-      !isFunctionWord(word, language) &&
-      !cues.some((cue) => cuedBy(word, cue)),
+      !isFunctionWord(word, language) && !cues.some((cue) => cuedBy(word, cue)),
   );
   return uncued.length ? issue("uncued-gap") : [];
 }

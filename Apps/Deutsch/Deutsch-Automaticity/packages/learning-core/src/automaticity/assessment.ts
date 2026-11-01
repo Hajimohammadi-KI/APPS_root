@@ -267,9 +267,7 @@ function finishControlledAssessment(
       alignAnswers(attempt.response.text, answer),
     );
     const edits = choices.sort((a, b) => a.length - b.length)[0] ?? [];
-    const notes = edits.map((edit) =>
-      answerDifference(edit, attempt.language),
-    );
+    const notes = edits.map((edit) => answerDifference(edit, attempt.language));
     if (base.verdict === "not_assessed")
       base.feedback = unscoredFeedback(edits, attempt.language);
     else if (notes.length === 1) base.feedback += " " + notes[0];

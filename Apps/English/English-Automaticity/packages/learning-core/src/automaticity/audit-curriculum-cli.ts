@@ -1,5 +1,9 @@
 import { readFileSync } from "node:fs";
-import { auditClosedTask, auditUnitAnswers } from "./curriculum-audit";
+import {
+  auditClosedTask,
+  auditGapCue,
+  auditUnitAnswers,
+} from "./curriculum-audit";
 import {
   activePracticeTasks,
   validateCurriculum,
@@ -14,6 +18,7 @@ if (structuralIssues.length)
   throw Error(`Invalid curriculum: ${structuralIssues.join("; ")}`);
 const issues = pack.units.flatMap((u) => [
   ...activePracticeTasks(u).flatMap(auditClosedTask),
+  ...activePracticeTasks(u).flatMap((t) => auditGapCue(t, pack.language)),
   ...auditUnitAnswers(u, activePracticeTasks(u)),
 ]);
 const errors = issues.filter((i) => i.severity === "error");

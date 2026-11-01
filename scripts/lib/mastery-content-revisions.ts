@@ -9,6 +9,8 @@ import { KNOWN_CONTENT_REPAIRS } from "../../shared/learning-core/src/content-re
 import {
   ACCEPTED_FORM_REVISIONS,
   ACCEPTED_FORM_VERSION,
+  CHECKED_PRACTICE,
+  CHECKED_PRACTICE_VERSION,
   CONTENT_REVISION,
   CONTENT_REVISION_VERSION,
   GAP_CUE_REVISIONS,
@@ -271,7 +273,54 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
   if (reviseUnitContent(pack)) pack.version = CONTENT_REVISION_VERSION;
   if (reviseAcceptedForms(pack)) pack.version = ACCEPTED_FORM_VERSION;
   if (reviseGapCues(pack)) pack.version = GAP_CUE_VERSION;
+  if (addCheckedPractice(pack)) pack.version = CHECKED_PRACTICE_VERSION;
   return pack;
+}
+
+/** Adds the authored checkable items as new retrieval tasks of their unit. */
+function addCheckedPractice(pack: CurriculumPack): boolean {
+  let changed = false;
+  const tag = `checks-${CHECKED_PRACTICE_VERSION.replace(/\D/gu, "")}`;
+  const rows = CHECKED_PRACTICE.filter((row) =>
+    row.unit.startsWith(`${pack.language}.`),
+  );
+  for (const unit of pack.units) {
+    const own = rows.filter((row) => row.unit === unit.id);
+    if (!own.length) continue;
+    const template = unit.tasks.find(
+      (task) => task.modality === "writing" && task.partition === "practice",
+    );
+    if (!template) throw Error(`Missing written target: ${unit.id}`);
+    own.forEach((row, index) => {
+      const id = `${unit.id}.retrieve.${tag}-${index}.writing`;
+      if (unit.tasks.some((task) => task.id === id)) return;
+      const task: PracticeTask = {
+        ...template,
+        id,
+        version: CHECKED_PRACTICE_VERSION,
+        itemFamily: `${unit.id}.${tag}-${index}`,
+        contextId: `${unit.id}.${tag}-${index}`,
+        rubricVersion: "closed-nfc-case-v1",
+        stage: "retrieve",
+        modality: "writing",
+        partition: "practice",
+        transferCondition: "none",
+        contentReview: "authored",
+        prompt: row.prompt,
+        answerPolicy: "closed",
+        responseKind: /_{2,}/u.test(row.prompt) ? "cloze" : "transformation",
+        acceptedAnswers: [...row.answers],
+        hints: [unit.rule],
+        solution: row.answers[0]!,
+        sourceId: `authored-checked-practice-${CHECKED_PRACTICE_VERSION}:${unit.id}:${index}`,
+      };
+      delete task.constructionAssessment;
+      delete task.rejectedAnswers;
+      unit.tasks.push(task);
+      changed = true;
+    });
+  }
+  return changed;
 }
 
 /** Gives each uncued one-gap item its authored cue as a new version; spoken

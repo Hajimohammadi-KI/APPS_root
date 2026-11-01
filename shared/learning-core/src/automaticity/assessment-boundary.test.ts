@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { markedAnswer } from "./answer-alignment";
 import { assessControlledTask } from "./assessment";
 import type { AttemptEvent, TaskIdentity } from "./contracts";
 import type { PracticeTask } from "./curriculum";
@@ -106,6 +107,59 @@ test("another offered option in the gap is marked for repair; an unoffered form 
   expect(assessControlledTask(response, options, at, "other").verdict).toBe(
     "not_assessed",
   );
+});
+test("an unmatched answer gets one sentence naming the different word, marked in the learner's own text", () => {
+  const options: PracticeTask = {
+    ...task,
+    prompt: "Complete the sentence: I ___ ready for the lesson.",
+    acceptedAnswers: ["I am ready for the lesson."],
+    solution: "I am ready for the lesson.",
+  };
+  const response = { ...attempt(), task: options };
+  response.response.text = "I was ready for the lesson.";
+  const one = assessControlledTask(response, options, at, "one");
+  expect(one.verdict).toBe("not_assessed");
+  expect(one.feedback).toBe(
+    "Saved without a score: the stored answer has “am” where you wrote “was”.",
+  );
+  expect(one.spans.map((span) => response.response.text.slice(span.start, span.end))).toEqual(["was"]);
+  expect(markedAnswer(response.response.text, one.spans)).toEqual([
+    { text: "I " },
+    { text: "was", note: "The stored answer has “am” where you wrote “was”." },
+    { text: " ready for the lesson." },
+  ]);
+  response.response.text = "We were ready for a lesson.";
+  const many = assessControlledTask(response, options, at, "many");
+  expect(many.feedback).toBe(
+    "Saved without a score: it differs from the stored answer in 3 places, marked in your answer.",
+  );
+  expect(many.feedback.split(/(?<=[.!?])\s/u)).toHaveLength(1);
+  const german = {
+    ...response,
+    language: "de" as const,
+    task: { ...response.task, constructionId: "de.c.001" },
+  };
+  german.response = { ...response.response, text: "Ich bin bereit." };
+  const de = assessControlledTask(
+    german,
+    {
+      ...options,
+      constructionId: "de.c.001",
+      acceptedAnswers: ["Ich war bereit."],
+      solution: "Ich war bereit.",
+    },
+    at,
+    "de",
+  );
+  expect(de.feedback).toBe(
+    "Ohne Bewertung gespeichert: Die gespeicherte Antwort hat „war“, wo du „bin“ geschrieben hast.",
+  );
+  // A missing word is marked where it belongs.
+  expect(markedAnswer("I ready.", [{ start: 2, end: 2, explanation: "x" }])).toEqual([
+    { text: "I " },
+    { text: "", note: "x" },
+    { text: "ready." },
+  ]);
 });
 function attempt(overrides: Partial<TaskIdentity> = {}): AttemptEvent {
   return {

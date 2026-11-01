@@ -1,6 +1,10 @@
 import { normalizeText } from "../text";
 import { discourseFeedback } from "../discourse";
-import { alignAnswers, describeAnswerEdits } from "./answer-alignment";
+import {
+  alignAnswers,
+  answerDifference,
+  unscoredFeedback,
+} from "./answer-alignment";
 import {
   parseAutomaticityEvent,
   type AssessmentEvent,
@@ -240,10 +244,7 @@ export function assessControlledTask(
       base.feedback = english
         ? "Check the capitalization, including sentence starts and names."
         : "Prüfe die Groß- und Kleinschreibung, besonders am Satzanfang und bei Nomen.";
-    } else
-      base.feedback = english
-        ? "Your answer differs from the stored forms. It has been saved without a correctness score. Compare the meaning or request a review; a different correct answer should not be marked wrong."
-        : "Deine Antwort unterscheidet sich von den gespeicherten Formen. Sie wurde ohne Richtigkeitswert gespeichert. Vergleiche die Bedeutung oder lasse sie prüfen; eine andere richtige Antwort soll nicht als falsch gelten.";
+    }
   }
   return finishControlledAssessment(
     base,
@@ -252,7 +253,9 @@ export function assessControlledTask(
     accepted ? null : value,
   );
 }
-/** Adds the token edits to the nearest stored form for any answer that did not pass. */
+/** Marks the token edits to the nearest stored form for any answer that did
+ * not pass. An unscored answer gets one sentence; a verdict keeps its own and
+ * names a single difference. */
 function finishControlledAssessment(
   base: AssessmentEvent,
   attempt: AttemptEvent,
@@ -264,11 +267,16 @@ function finishControlledAssessment(
       alignAnswers(attempt.response.text, answer),
     );
     const edits = choices.sort((a, b) => a.length - b.length)[0] ?? [];
-    base.feedback += " " + describeAnswerEdits(edits, attempt.language);
-    base.spans = edits.map((edit) => ({
+    const notes = edits.map((edit) =>
+      answerDifference(edit, attempt.language),
+    );
+    if (base.verdict === "not_assessed")
+      base.feedback = unscoredFeedback(edits, attempt.language);
+    else if (notes.length === 1) base.feedback += " " + notes[0];
+    base.spans = edits.map((edit, index) => ({
       start: edit.start,
       end: edit.end,
-      explanation: describeAnswerEdits([edit], attempt.language),
+      explanation: notes[index]!,
     }));
   }
   return parseAutomaticityEvent(base, attempt.language) as AssessmentEvent;

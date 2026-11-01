@@ -20,6 +20,7 @@ import {
 } from "./storage";
 import { preserveLegacyStateDurable } from "./migration";
 import { mountReviewPanel } from "./review-panel";
+import { appendLearnerFeedbackPanel } from "./learner-feedback-panel";
 import { reduceAutomaticityEvents } from "./evidence";
 import { assessControlledTask } from "./assessment";
 import {
@@ -2534,6 +2535,14 @@ export async function mountPractice(
           ),
         );
       }
+      if (saved && task.modality === "writing" && task.answerPolicy === "closed")
+        appendLearnerFeedbackPanel(taskPanel, {
+          language,
+          contentVersion: pack.version,
+          task,
+          attempt: saved.attempt,
+          assessment: saved.assessment ?? null,
+        });
       taskPanel.append(
         button(
           t("Try again as a repair", "Als Korrektur erneut versuchen"),

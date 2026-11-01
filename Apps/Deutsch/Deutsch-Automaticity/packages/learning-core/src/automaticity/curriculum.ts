@@ -54,6 +54,8 @@ export interface PracticeTask extends TaskIdentity {
     | "free_output"
     | "reflection";
   acceptedAnswers: string[];
+  /** Owner-reviewed wrong forms; matching one is marked for repair with its explanation. */
+  rejectedAnswers?: { answer: string; explanation: string }[];
   hints: string[];
   solution: string | null;
   normalisation: {

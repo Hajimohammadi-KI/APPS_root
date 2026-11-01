@@ -8,7 +8,7 @@ import {
 } from "./contracts";
 import type { PracticeTask } from "./curriculum";
 import { resolveRepresentativeTask } from "./representative-tasks";
-import { auditClosedTask } from "./curriculum-audit";
+import { auditClosedTask, correctionSource } from "./curriculum-audit";
 import {
   CONSTRUCTION_RULE_VERSION,
   constructionFeedback,
@@ -186,6 +186,32 @@ export function assessControlledTask(
       ? "This matches an accepted form for this controlled task. Now use the pattern in your own words."
       : "Diese Antwort entspricht einer zulässigen Form der kontrollierten Aufgabe. Verwende das Muster nun mit eigenen Worten.";
   } else {
+    // Certainly wrong: a form the owner rejected after review, or the very
+    // sentence the prompt declares wrong. A reformulation source is not an error.
+    const rejected = task.rejectedAnswers?.find(
+      (row) => normaliseAnswer(row.answer, task) === value,
+    );
+    const source =
+      task.responseKind === "correction" ? correctionSource(task.prompt) : null;
+    const unchanged = !!source && normaliseAnswer(source, task) === value;
+    if (rejected || unchanged) {
+      base.verdict = "needs_repair";
+      base.uncertainty = false;
+      base.dimensions = {
+        grammar: "fail",
+        target: "unknown",
+        relevance: "unknown",
+        opportunities: 1,
+      };
+      base.feedback = rejected
+        ? english
+          ? `This form was reviewed and is not correct here. ${rejected.explanation}`
+          : `Diese Form wurde geprüft und ist hier nicht richtig. ${rejected.explanation}`
+        : english
+          ? "This is still the sentence to correct. Change the part the instruction names and write the full sentence."
+          : "Das ist noch der Satz, der korrigiert werden soll. Ändere die genannte Stelle und schreibe den ganzen Satz.";
+      return finishControlledAssessment(base, attempt, task, value);
+    }
     const caseOnly = task.acceptedAnswers.some(
       (answer) =>
         normaliseAnswer(answer, task).toLocaleLowerCase(attempt.language) ===
@@ -208,7 +234,21 @@ export function assessControlledTask(
         ? "Your answer differs from the stored forms. It has been saved without a correctness score. Compare the meaning or request a review; a different correct answer should not be marked wrong."
         : "Deine Antwort unterscheidet sich von den gespeicherten Formen. Sie wurde ohne Richtigkeitswert gespeichert. Vergleiche die Bedeutung oder lasse sie prüfen; eine andere richtige Antwort soll nicht als falsch gelten.";
   }
-  if (!accepted && task.acceptedAnswers.length) {
+  return finishControlledAssessment(
+    base,
+    attempt,
+    task,
+    accepted ? null : value,
+  );
+}
+/** Adds the token edits to the nearest stored form for any answer that did not pass. */
+function finishControlledAssessment(
+  base: AssessmentEvent,
+  attempt: AttemptEvent,
+  task: PracticeTask,
+  unmatched: string | null,
+): AssessmentEvent {
+  if (unmatched !== null && task.acceptedAnswers.length) {
     const choices = task.acceptedAnswers.map((answer) =>
       alignAnswers(attempt.response.text, answer),
     );

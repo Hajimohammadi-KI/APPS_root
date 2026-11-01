@@ -2,6 +2,7 @@ import type { CurriculumPack } from "./curriculum";
 import { collectAssessmentFeedback } from "./assessment-feedback";
 import { readAutomaticityEvents } from "./storage";
 import { mountTrainingContributionPanel } from "./training-contribution-panel";
+import { mountLearnerFeedbackReceipts } from "./learner-feedback-panel";
 
 /** The report is downloaded only on request; no feedback or learner text is uploaded. */
 export function mountAssessmentFeedbackPanel(
@@ -27,6 +28,7 @@ export function mountAssessmentFeedbackPanel(
   section.append(description, status, download);
   root.append(section);
   const refreshContributions = mountTrainingContributionPanel(section, pack);
+  const refreshReceipts = mountLearnerFeedbackReceipts(section, pack.language);
   let generation = 0;
   const read = () =>
     collectAssessmentFeedback(
@@ -35,6 +37,7 @@ export function mountAssessmentFeedbackPanel(
       new Date().toISOString(),
     );
   const refresh = () => {
+    refreshReceipts();
     const request = ++generation;
     void read()
       .then((report) => {

@@ -9,6 +9,10 @@ import {
 import type { HumanReviewManifest } from "../shared/learning-core/src/automaticity/human-review";
 import { reviseVariationTasks } from "./lib/variation-revisions";
 import { reviseMasteryContent } from "./lib/mastery-content-revisions";
+import {
+  applyLearnerDecisions,
+  type LearnerDecisionFile,
+} from "./lib/learner-decisions";
 
 const root = resolve(import.meta.dir, "..");
 const checkOnly = Bun.argv.includes("--check");
@@ -46,7 +50,22 @@ for (const [language, app] of [
     !Array.isArray(manifest.scopes)
   )
     throw new Error(`Stale ${language} review manifest`);
-  const pack = reviseMasteryContent(reviseVariationTasks(source));
+  const decisions = JSON.parse(
+    await readFile(
+      resolve(
+        root,
+        `shared/learning-core/content/learner-decisions-${language}.json`,
+      ),
+      "utf8",
+    ),
+  ) as LearnerDecisionFile;
+  const applied = applyLearnerDecisions(
+    reviseMasteryContent(reviseVariationTasks(source)),
+    decisions,
+  );
+  for (const row of applied.skipped)
+    console.log(`${language}: decision #${row.issue} not applied: ${row.reason}`);
+  const pack = applied.pack;
   const revisedIssues = validateCurriculum(pack);
   if (revisedIssues.length) throw new Error(revisedIssues.join("\n"));
   const active = pack.units.flatMap(activePracticeTasks);

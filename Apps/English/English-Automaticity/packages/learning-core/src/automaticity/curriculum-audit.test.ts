@@ -156,6 +156,26 @@ test("W33 a closed answer never repeats the unit's rule or error description", (
     },
   ]);
 });
+test("a reviewed wrong form needs an explanation and can never also be accepted", () => {
+  expect(
+    auditClosedTask({
+      ...task,
+      rejectedAnswers: [{ answer: "She is here.", explanation: "Not this one." }],
+    }),
+  ).toContainEqual({ taskId: "fixture", code: "rejected-answer-conflict", severity: "error" });
+  expect(
+    auditClosedTask({
+      ...task,
+      rejectedAnswers: [{ answer: "She are here.", explanation: " " }],
+    }),
+  ).toContainEqual({ taskId: "fixture", code: "rejected-answer-conflict", severity: "error" });
+  expect(
+    auditClosedTask({
+      ...task,
+      rejectedAnswers: [{ answer: "She are here.", explanation: "Use is with she." }],
+    }),
+  ).toEqual([]);
+});
 test("W33 the content gate keeps genuine minimal repairs", () => {
   for (const [prompt, answer] of [
     ["Correct the sentence: I am agree.", "I agree."],

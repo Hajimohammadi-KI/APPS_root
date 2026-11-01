@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import {
   auditClosedTask,
+  auditGapCue,
   auditUnitAnswers,
   optionDistractors,
 } from "./curriculum-audit";
@@ -241,6 +242,90 @@ test("another option the prompt itself offers is a certain distractor", () => {
       cloze("Complete the sentence: She ___ here.", "She is here."),
     ),
   ).toEqual([]);
+});
+test("W33 build audit requires a cue for every content word a one-gap cloze leaves out", () => {
+  const codes = (language: "en" | "de", prompt: string, answer: string) =>
+    auditGapCue(
+      {
+        id: "fixture",
+        answerPolicy: "closed",
+        modality: "writing",
+        prompt,
+        acceptedAnswers: [answer],
+      },
+      language,
+    ).map((issue) => `${issue.code}:${issue.severity}`);
+  const setze =
+    "Setze die fehlende Form ein und schreibe die vollständige Antwort auf Deutsch: ";
+  for (const [language, prompt, answer] of [
+    ["en", "Complete the sentence: This is _____ book.", "This is Maya’s book."],
+    [
+      "de",
+      setze + "Ich ___ jeden Morgen um sieben Uhr auf.",
+      "Ich stehe jeden Morgen um sieben Uhr auf.",
+    ],
+    ["de", setze + "Ich stehe um ___ Uhr auf.", "Ich stehe um sieben Uhr auf."],
+    ["de", setze + "Ich habe gestern ___.", "Ich habe gestern gearbeitet."],
+    // The choice must be visible: a hint is help the learner has to request.
+    [
+      "en",
+      "Complete the sentence: _____ the rain, we went out.",
+      "Despite the rain, we went out.",
+    ],
+  ] as const)
+    expect(codes(language, prompt, answer)).toEqual(["uncued-gap:error"]);
+  expect(
+    codes(
+      "en",
+      "Complete the sentence: I am _____terested in photography.",
+      "I am interested in photography.",
+    ),
+  ).toEqual(["gap-inside-word:error"]);
+  for (const [language, prompt, answer] of [
+    // An explicit cue after the sentence, an option list, or the word itself
+    // in the instruction or the rest of the sentence.
+    [
+      "de",
+      setze + "Ich ___ jeden Morgen um sieben Uhr auf. (aufstehen)",
+      "Ich stehe jeden Morgen um sieben Uhr auf.",
+    ],
+    [
+      "en",
+      "Complete the sentence with bored or boring: I was _____ during the lecture.",
+      "I was bored during the lecture.",
+    ],
+    [
+      "de",
+      "Ergänze abschließen als Infinitiv mit zu und schreibe den ganzen Satz: Vergiss nicht, die Tür ___.",
+      "Vergiss nicht, die Tür abzuschließen.",
+    ],
+    [
+      "de",
+      setze + "das Buch – die ___; die Frau – die Frauen",
+      "das Buch – die Bücher; die Frau – die Frauen",
+    ],
+    [
+      "en",
+      "Use the present continuous passive of repair: The road _____.",
+      "The road is being repaired.",
+    ],
+    [
+      "de",
+      "Ergänze das Partizip II von schreiben und schreibe den ganzen Satz: Sie hat den Brief ___.",
+      "Sie hat den Brief geschrieben.",
+    ],
+    // Function words are the grammar target and need no cue.
+    ["en", "Complete the sentence: She is good ___ maths.", "She is good at maths."],
+    ["en", "Complete the sentence: We _____ work on Sundays.", "We don’t work on Sundays."],
+    [
+      "de",
+      "Ergänze das Fragewort für eine Sache und schreibe beide Sätze: ___ freust du dich? Ich freue mich auf die Ferien.",
+      "Worauf freust du dich? Ich freue mich auf die Ferien.",
+    ],
+    // A gap the key does not fit is another rule's concern.
+    ["en", "Complete the sentence: She ___ here.", "They were there."],
+  ] as const)
+    expect(codes(language, prompt, answer)).toEqual([]);
 });
 test("W33 the content gate keeps genuine minimal repairs", () => {
   for (const [prompt, answer] of [

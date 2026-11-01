@@ -13,10 +13,13 @@ import {
   auditClosedTask,
   auditGapCue,
   auditUnitAnswers,
-  gapFill,
   optionDistractors,
 } from "../shared/learning-core/src/automaticity/curriculum-audit";
-import { GAP_CUE_REVISIONS } from "../shared/learning-core/src/content-revisions";
+import {
+  GAP_CUE_REVISIONS,
+  gapCueRevisionsFor,
+} from "../shared/learning-core/src/content-revisions";
+import { gapFill } from "../shared/learning-core/src/text";
 import { assertWritingPrecision } from "../shared/learning-core/src/writing-precision";
 test("W33 both legacy labs use repaired prompts while raw historical catalogs remain intact", async () => {
   const english =
@@ -261,28 +264,55 @@ test("W33 the complete corrected sentence earns the controlled pass, typed apost
 });
 test("W33 both Grammar Labs ship no defective closed exercise", async () => {
   const labs = [
-    (
-      await import("../Apps/English/English-Automaticity/packages/content/src/index")
-    ).grammarUnits,
-    (
-      await import("../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/index")
-    ).grammarUnits,
-  ];
-  const issues = labs.flatMap((units) =>
+    [
+      "en",
+      (
+        await import("../Apps/English/English-Automaticity/packages/content/src/index")
+      ).grammarUnits,
+    ],
+    [
+      "de",
+      (
+        await import("../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/index")
+      ).grammarUnits,
+    ],
+  ] as const;
+  const issues = labs.flatMap(([language, units]) =>
     units.flatMap((unit) =>
-      unit.exercises.flatMap(([prompt, answer], index) =>
-        auditClosedTask({
+      unit.exercises.flatMap(([prompt, answer], index) => {
+        const task = {
           id: `${unit.title}#${index}`,
-          answerPolicy: "closed",
+          answerPolicy: "closed" as const,
+          modality: "writing" as const,
           responseKind: /^(Correct|Repair|Korrigiere)/u.test(prompt)
-            ? "correction"
-            : "transformation",
+            ? ("correction" as const)
+            : ("transformation" as const),
           prompt,
           acceptedAnswers: [answer],
           solution: answer,
-        }),
-      ),
+        };
+        return [...auditClosedTask(task), ...auditGapCue(task, language)];
+      }),
     ),
   );
   expect(issues.filter((issue) => issue.severity === "error")).toEqual([]);
+});
+test("W33 the Labs find each gap-cue revision under its unit title and exercise number", () => {
+  for (const language of ["en", "de"] as const) {
+    const pack = built(language);
+    for (const revision of GAP_CUE_REVISIONS.filter((row) =>
+      row.taskId.startsWith(`${language}.`),
+    )) {
+      const index = revision.taskId.match(
+        /\.retrieve\.(?:content-\d+-)?(\d+)\.(?:forms-\d+\.)?writing$/u,
+      )?.[1];
+      if (!index) continue;
+      const unit = pack.units.find((row) =>
+        revision.taskId.startsWith(`${row.id}.`),
+      )!;
+      expect(gapCueRevisionsFor(language, unit.title).get(Number(index))).toBe(
+        revision,
+      );
+    }
+  }
 });

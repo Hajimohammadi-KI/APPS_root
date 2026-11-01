@@ -16,6 +16,25 @@ export function normalizeText(value: string, policy: TextPolicy = {}): string {
     : normalized;
 }
 
+/** What an answer puts into the single gap of the sentence after the last
+ * colon (a trailing bracket cue aside), or null when the answer does not fit. */
+export function gapFill(prompt: string, answer: string): string | null {
+  if ((prompt.match(/_{2,}/gu) ?? []).length !== 1) return null;
+  const [before = "", after = ""] = prompt
+    .slice(prompt.lastIndexOf(":") + 1)
+    .replace(/\s*\([^()]+\)\s*$/u, "")
+    .trim()
+    .split(/_{2,}/u);
+  const key = normalizeText(answer);
+  const pre = normalizeText(before).trimEnd(),
+    post = normalizeText(after).trimStart();
+  return key.startsWith(pre) &&
+    key.endsWith(post) &&
+    key.length >= pre.length + post.length
+    ? key.slice(pre.length, key.length - post.length).trim()
+    : null;
+}
+
 export interface TextToken {
   readonly text: string;
   readonly normalized: string;

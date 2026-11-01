@@ -1,4 +1,4 @@
-import { normalizeText } from "../text";
+import { gapFill, normalizeText } from "../text";
 import type { ConstructionUnit, PracticeTask } from "./curriculum";
 import { KNOWN_CONTENT_REPAIRS } from "../content-repairs";
 // Confirmed content defects, not a general semantic parser. Historical task
@@ -220,24 +220,6 @@ const cuedBy = (word: string, cue: string) => {
   const shared = [...a].filter((pair) => b.has(pair)).length;
   return (2 * shared) / (a.size + b.size) >= 0.5;
 };
-/** What an answer puts into the single gap of the sentence after the last
- * colon (a trailing bracket cue aside), or null when the answer does not fit. */
-export function gapFill(prompt: string, answer: string): string | null {
-  if ((prompt.match(/_{2,}/gu) ?? []).length !== 1) return null;
-  const [before = "", after = ""] = prompt
-    .slice(prompt.lastIndexOf(":") + 1)
-    .replace(/\s*\([^()]+\)\s*$/u, "")
-    .trim()
-    .split(/_{2,}/u);
-  const key = normalizeText(answer);
-  const pre = normalizeText(before).trimEnd(),
-    post = normalizeText(after).trimStart();
-  return key.startsWith(pre) &&
-    key.endsWith(post) &&
-    key.length >= pre.length + post.length
-    ? key.slice(pre.length, key.length - post.length).trim()
-    : null;
-}
 /** A one-gap cloze must let the learner work out what is missing: each
  * content word in the gap appears, in some form, in the instruction or the
  * rest of the sentence, or the prompt offers options or ends with a cue in

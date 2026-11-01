@@ -1,4 +1,4 @@
-import { normalizeText } from "../text";
+import { gapFill, normalizeText } from "../text";
 import type { ConstructionUnit, PracticeTask } from "./curriculum";
 import { KNOWN_CONTENT_REPAIRS } from "../content-repairs";
 // Confirmed content defects, not a general semantic parser. Historical task
@@ -175,6 +175,88 @@ export function optionDistractors(
   )
     return [];
   return candidates.filter((candidate) => !accepted.includes(plain(candidate)));
+}
+// Closed-class words a gap may leave out: choosing them is the grammar task.
+const FUNCTION_WORDS = {
+  en: new Set(
+    "a an the this that these those my your his her its our their whose who whom which what where when why how i you he she it we they me him us them myself yourself himself herself itself ourselves themselves am is are was were be been being have has had do does did will would can could shall should may might must can't won't not no some any much many few little more most less to of in on at by for with from about into onto over under after before since until as than if whether when while because although though so and but or nor either neither both there here very too enough".split(
+      " ",
+    ),
+  ),
+  de: new Set(
+    "der die das den dem des ein eine einen einem einer eines kein keine keinen keinem keiner mein meine meinen meinem meiner dein deine sein seine ihr ihre unser unsere euer eure dieser diese dieses diesen diesem ich du er sie es wir mich dich ihn uns euch mir dir ihm ihnen sich man bin bist ist sind seid war warst waren wart sei seien wäre wären habe hast hat haben habt hatte hattest hatten hätte hätten werde wirst wird werden werdet wurde wurden worden würde würden kann kannst können könnt könnte könnten muss musst müssen müsst müsste darf darfst dürfen dürfte soll sollst sollen sollte will willst wollen wollte mag möchte möchtest in an auf unter über neben zwischen vor hinter mit nach bei seit von zu zum zur aus für um durch gegen ohne bis wegen trotz während am im ins vom beim und aber oder denn sondern weil dass ob wenn als wie nachdem bevor damit obwohl je desto umso sowohl weder noch entweder allerdings jedoch deshalb daher darum deswegen folglich dennoch trotzdem gleichwohl außerdem zudem hingegen also auch nur schon doch ja mal halt eben nicht nie sehr wo wann warum was wer wen wem wessen welche welcher welches welchen welchem viel viele vielen wenig wenige einige alle allen manche mehrere andere".split(
+      " ",
+    ),
+  ),
+};
+const fold = (text: string) =>
+  normalizeText(text)
+    .toLocaleLowerCase()
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/ß/gu, "ss");
+const foldedWords = (text: string) => fold(text).match(/[\p{L}']+/gu) ?? [];
+const isFunctionWord = (word: string, language: "en" | "de") =>
+  language === "en"
+    ? word.startsWith("'") ||
+      FUNCTION_WORDS.en.has(word) ||
+      FUNCTION_WORDS.en.has(word.replace(/'(?:s|re|m|ve|ll|d)$|n't$/u, ""))
+    : [...FUNCTION_WORDS.de].some((known) => fold(known) === word) ||
+      /^(?:wo|da)r?(?:an|auf|aus|bei|durch|fur|gegen|in|mit|nach|uber|um|unter|von|vor|zu|zwischen)$/u.test(
+        word,
+      );
+const pairs = (word: string) =>
+  new Set([...word].slice(1).map((letter, at) => word[at] + letter));
+// Inflected, ge- or zu- forms keep a prefix or most letter pairs of their cue
+// (fährst/fahren, gearbeitet/arbeiten, abzuschließen/abschließen,
+// geschrieben/schreiben); suppletive forms such as ate/eat need a bracket cue.
+const cuedBy = (word: string, cue: string) => {
+  const [short, long] = word.length <= cue.length ? [word, cue] : [cue, word];
+  if (short.length >= 3 && long.startsWith(short)) return true;
+  if (short.length < 4) return false;
+  if (long.startsWith(short.slice(0, 4))) return true;
+  const a = pairs(short),
+    b = pairs(long);
+  const shared = [...a].filter((pair) => b.has(pair)).length;
+  return (2 * shared) / (a.size + b.size) >= 0.5;
+};
+/** A one-gap cloze must let the learner work out what is missing: each
+ * content word in the gap appears, in some form, in the instruction or the
+ * rest of the sentence, or the prompt offers options or ends with a cue in
+ * brackets. Otherwise any number of correct sentences fit (Sie ist ___.).
+ * Hints do not count: opening one is recorded as help. */
+export function auditGapCue(
+  task: Pick<
+    PracticeTask,
+    "id" | "answerPolicy" | "modality" | "prompt" | "acceptedAnswers"
+  >,
+  language: "en" | "de",
+): ContentAuditIssue[] {
+  if (task.answerPolicy !== "closed" || task.modality !== "writing") return [];
+  const issue = (code: string): ContentAuditIssue[] => [
+    { taskId: task.id, code, severity: "error" },
+  ];
+  if (/\p{L}_{2,}|_{2,}\p{L}/u.test(task.prompt))
+    return issue("gap-inside-word");
+  const fill = gapFill(task.prompt, task.acceptedAnswers[0] ?? "");
+  if (
+    fill === null ||
+    /\([^()]+\)\s*$/u.test(task.prompt) ||
+    offeredOptions(task.prompt).length > 1
+  )
+    return [];
+  const colon = task.prompt.lastIndexOf(":");
+  const cues = foldedWords(
+    task.prompt.slice(0, Math.max(0, colon)) +
+      " " +
+      task.prompt.slice(colon + 1).replace(/_{2,}/u, " "),
+  );
+  const uncued = foldedWords(fill).filter(
+    (word) =>
+      !isFunctionWord(word, language) &&
+      !cues.some((cue) => cuedBy(word, cue)),
+  );
+  return uncued.length ? issue("uncued-gap") : [];
 }
 /** A closed answer must be target language, not the unit's own rule or error description. */
 export function auditUnitAnswers(

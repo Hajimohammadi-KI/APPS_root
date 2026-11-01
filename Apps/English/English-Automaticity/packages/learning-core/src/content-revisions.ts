@@ -2444,6 +2444,968 @@ export const ACCEPTED_FORM_REVISIONS: readonly {
   ["en.c.122.repair.supplement.writing", "He’s a colleague of mine."],
 ].map(([taskId, answer]) => ({ taskId: taskId!, answers: [answer!] }));
 
+/** One-gap items whose missing words the learner could not work out (Sie ist
+ * ___.), each given a visible cue: the word in brackets, an instruction that
+ * names it, or options of which only one fits (2026-11-01, W33). Where the gap
+ * sat on a content word instead of the unit's target, it moved to the target;
+ * a second example that only repeated the first became a new sentence. The
+ * first answer fits the gap; further answers are reviewed equivalents. */
+export const GAP_CUE_VERSION = "2026-11-01.3";
+const setze =
+  "Setze die fehlende Form ein und schreibe die vollständige Antwort auf Deutsch: ";
+const zweites =
+  "Wende die Form in einem zweiten kontrollierten Beispiel an. Ergänze die Lücke und schreibe die vollständige Antwort auf Deutsch: ";
+export const GAP_CUE_REVISIONS: readonly {
+  readonly taskId: string;
+  readonly prompt: string;
+  readonly answers?: readonly string[];
+}[] = (
+  [
+    [
+      "en.c.048.retrieve.mastery-20261031-1.forms-202611012.writing",
+      "Use would and catch in the third conditional. Write the full sentence: If she had left earlier, she ___ the train. (catch)",
+    ],
+    [
+      "en.c.085.retrieve.1.writing",
+      "Complete the sentence with the possessive form of the name in brackets: This is _____ book. (Maya)",
+    ],
+    [
+      "en.c.085.retrieve.2.writing",
+      "Complete the sentence with the possessive form of the word in brackets: My _____ room is small. (brother)",
+    ],
+    [
+      "en.c.085.retrieve.4.writing",
+      "Complete the sentence with the possessive form of the word in brackets: The _____ bags are by the door. (children)",
+    ],
+    [
+      "en.c.087.retrieve.2.forms-202611012.writing",
+      "Complete the sentence with the right preposition: I am interested _____ photography.",
+    ],
+    [
+      "en.c.088.retrieve.1.writing",
+      "Say how you felt while you listened. Complete the sentence with bored or boring: I was _____ during the lecture.",
+    ],
+    [
+      "en.c.088.retrieve.2.writing",
+      "Complete the sentence with bored or boring: The lecture was _____.",
+    ],
+    [
+      "en.c.088.retrieve.3.writing",
+      "Complete the sentence with excited or exciting: We were _____ about the trip.",
+    ],
+    [
+      "en.c.088.retrieve.4.writing",
+      "Complete the sentence with surprised or surprising: The final scene was _____.",
+    ],
+    [
+      "en.c.089.retrieve.1.writing",
+      "Complete the sentence with the verb in brackets to show the purpose: I called _____ for your help. (ask)",
+      "I called to ask for your help.",
+      "I called in order to ask for your help.",
+    ],
+    [
+      "en.c.089.retrieve.2.writing",
+      "Complete the sentence with the verb in brackets to show the purpose: She went outside _____ some air. (get)",
+      "She went outside to get some air.",
+      "She went outside in order to get some air.",
+    ],
+    [
+      "en.c.089.retrieve.3.writing",
+      "Complete the sentence with the verb in brackets to show the purpose: We exercise _____ healthy. (stay)",
+      "We exercise to stay healthy.",
+      "We exercise in order to stay healthy.",
+    ],
+    [
+      "en.c.089.retrieve.4.writing",
+      "Complete the sentence with the verb in brackets to show the purpose: He saved money _____ a bicycle. (buy)",
+      "He saved money to buy a bicycle.",
+      "He saved money in order to buy a bicycle.",
+    ],
+    [
+      "en.c.091.retrieve.1.forms-202611012.writing",
+      "Complete the sentence with the word in brackets, using capital letters correctly: I’m visiting _____ in July. (france)",
+    ],
+    [
+      "en.c.091.retrieve.2.writing",
+      "Complete the sentence with the possessive form of the name in brackets, using capital letters correctly: _____ laptop is on the desk. (sarah)",
+    ],
+    [
+      "en.c.091.retrieve.3.writing",
+      "Complete the sentence with the possessive form of the plural word in brackets: The _____ projects are ready. (students)",
+    ],
+    [
+      "en.c.092.retrieve.2.writing",
+      "Complete the sentence: _____ the rain, we went out. (Despite / Although)",
+    ],
+    [
+      "en.c.092.retrieve.3.writing",
+      "Complete the sentence: The task was difficult; _____, we finished it. (however / although)",
+    ],
+    [
+      "en.c.092.retrieve.4.writing",
+      "Complete the sentence: _____ feeling tired, she continued. (In spite of / However)",
+    ],
+    [
+      "en.c.093.retrieve.1.writing",
+      "Write about a past state that is no longer true. Use used to and live: I _____ near the sea.",
+    ],
+    [
+      "en.c.093.retrieve.2.forms-202611012.writing",
+      "Say that working at night is normal for her. Use be used to and work: She is _____ at night.",
+    ],
+    [
+      "en.c.093.retrieve.3.forms-202611012.writing",
+      "Say that they are slowly becoming familiar with it. Use get used to: They are _____ the weather.",
+    ],
+    [
+      "en.c.093.retrieve.4.writing",
+      "Ask about a childhood habit. Use used to and play: Did you _____ outside?",
+    ],
+    [
+      "en.c.094.retrieve.2.writing",
+      "Complete the sentence with so or such: It was _____ an exciting film.",
+    ],
+    [
+      "en.c.094.retrieve.4.writing",
+      "Complete the sentence with so or such: We had _____ good weather.",
+    ],
+    [
+      "en.c.095.retrieve.2.writing",
+      "Say that they succeeded on one occasion. Use be able to: We _____ solve the problem.",
+    ],
+    [
+      "en.c.095.retrieve.3.writing",
+      "Say that she succeeded after trying. Use manage to: She _____ open the door.",
+    ],
+    [
+      "en.c.096.retrieve.1.writing",
+      "Write about a past state that has changed. Use used to: We _____ live in Madrid.",
+    ],
+    [
+      "en.c.096.retrieve.3.writing",
+      "Complete the sentence with the past simple of the verb in brackets: I _____ tennis every Saturday. (play)",
+    ],
+    [
+      "en.c.096.retrieve.4.forms-202611012.writing",
+      "Say that this past state was not true. Use not and use to: She _____ like coffee.",
+    ],
+    [
+      "en.c.097.retrieve.1.writing",
+      "Complete the sentence with the phrasal verb that means write the information on: Please _____ the form. (fill in / call off)",
+    ],
+    [
+      "en.c.097.retrieve.2.writing",
+      "Complete the sentence with the phrasal verb that means cancelled: They _____ the meeting. (called off / looked after)",
+    ],
+    [
+      "en.c.097.retrieve.3.writing",
+      "Complete the sentence with the phrasal verb that means take care of: Can you _____ my cat? (look after / fill in)",
+    ],
+    [
+      "en.c.097.retrieve.4.writing",
+      "Complete the sentence with the phrasal verb that means think of: We need to _____ a solution. (come up with / call off)",
+    ],
+    [
+      "en.c.098.retrieve.1.writing",
+      "Complete the sentence with just or yet: I have _____ finished.",
+    ],
+    [
+      "en.c.098.retrieve.2.writing",
+      "Complete the sentence with already or yet: She has _____ called.",
+    ],
+    [
+      "en.c.098.retrieve.3.writing",
+      "Complete the sentence with yet or still: Have they arrived _____?",
+    ],
+    [
+      "en.c.098.retrieve.4.forms-202611012.writing",
+      "Complete the sentence with still or yet: He _____ hasn’t replied.",
+    ],
+    [
+      "en.c.100.retrieve.1.writing",
+      "Use the verb in brackets in the correct present form: I _____ you. (believe)",
+    ],
+    [
+      "en.c.100.retrieve.2.writing",
+      "Use the verb in brackets in the correct present form: She _____ two bicycles. (own)",
+    ],
+    [
+      "en.c.100.retrieve.3.forms-202611012.writing",
+      "Use the verb in brackets in the correct present form: I _____ about the problem. (think)",
+    ],
+    [
+      "en.c.100.retrieve.4.writing",
+      "Use the verb in brackets in the correct present form: The soup _____ delicious. (taste)",
+    ],
+    [
+      "en.c.101.retrieve.1.writing",
+      "She is not a professional, but she sings well. Complete the sentence with as or like: She sings _____ a professional.",
+    ],
+    [
+      "en.c.101.retrieve.4.writing",
+      "Complete the sentence with as or like: It looks _____ rain.",
+    ],
+    [
+      "en.c.102.retrieve.1.writing",
+      "Use the verb in brackets with the right preposition: This book _____ me. (belong)",
+    ],
+    [
+      "en.c.102.retrieve.2.writing",
+      "Use the verb in brackets in the past simple with the right preposition: We _____ the proposal. (talk)",
+    ],
+    [
+      "en.c.102.retrieve.3.writing",
+      "Use the verb in brackets in the past simple with the right preposition: She _____ the delay. (apologize)",
+      "She apologized for the delay.",
+      "She apologised for the delay.",
+    ],
+    [
+      "en.c.102.retrieve.4.writing",
+      "Use the verb in brackets with the right preposition: I _____ your conclusion. (agree)",
+    ],
+    [
+      "en.c.103.retrieve.1.writing",
+      "Complete the sentence with fairly or absolutely: The room was _____ cold.",
+    ],
+    [
+      "en.c.103.retrieve.2.writing",
+      "Complete the sentence with absolutely or fairly: The water was _____ freezing.",
+    ],
+    [
+      "en.c.103.retrieve.4.writing",
+      "Complete the sentence: I was _____ tired after the journey. (a bit / absolutely)",
+    ],
+    [
+      "en.c.104.retrieve.1.writing",
+      "Write the sentence in typical British English with just and eat: I _____.",
+      "I’ve just eaten.",
+      "I have just eaten.",
+    ],
+    [
+      "en.c.104.retrieve.2.writing",
+      "Write the sentence in typical American English with just: I _____. (eat, past simple)",
+      "I just ate.",
+    ],
+    [
+      "en.c.105.retrieve.2.writing",
+      "Complete the sentence with slightly or almost: Sales were _____ lower.",
+    ],
+    [
+      "en.c.105.retrieve.3.forms-202611012.writing",
+      "Complete the sentence with almost or slightly: She is _____ as tall as her sister.",
+    ],
+    [
+      "en.c.105.retrieve.4.writing",
+      "Complete the sentence with exactly or slightly: The result was _____ the same as before.",
+    ],
+    [
+      "en.c.106.retrieve.1.writing",
+      "Report the question “Where do you live?”: She asked _____.",
+      "She asked where I lived.",
+      "She asked me where I lived.",
+    ],
+    [
+      "en.c.106.retrieve.2.writing",
+      "Report the question “Are you ready?”: He asked _____.",
+      "He asked if I was ready.",
+      "He asked whether I was ready.",
+      "He asked me if I was ready.",
+      "He asked me whether I was ready.",
+    ],
+    [
+      "en.c.106.retrieve.3.forms-202611012.writing",
+      "Report the question “What have you decided?”: They wanted to know _____.",
+    ],
+    [
+      "en.c.107.retrieve.1.writing",
+      "Complete the sentence with definitely or unlikely: The train will _____ be late.",
+    ],
+    [
+      "en.c.107.retrieve.2.forms-202611012.writing",
+      "You think this is likely but not certain. Complete the sentence with probably or definitely: She will _____ accept.",
+    ],
+    [
+      "en.c.107.retrieve.3.writing",
+      "Complete the sentence: Prices are _____ rise. (likely to / probably)",
+    ],
+    [
+      "en.c.107.retrieve.4.forms-202611012.writing",
+      "Complete the sentence: They are _____ arrive before noon. (unlikely to / probably)",
+    ],
+    [
+      "en.c.108.retrieve.1.writing",
+      "He no longer smokes. Complete the sentence with stop and smoke: He _____.",
+      "He stopped smoking.",
+      "He has stopped smoking.",
+      "He’s stopped smoking.",
+    ],
+    [
+      "en.c.108.retrieve.2.writing",
+      "He paused what he was doing in order to have a cigarette. Complete the sentence with stop and smoke: He _____.",
+    ],
+    [
+      "en.c.108.retrieve.3.writing",
+      "You met her in the past and you still have that memory. Complete the sentence with remember and meet: I _____ her.",
+    ],
+    [
+      "en.c.108.retrieve.4.writing",
+      "Tell someone not to forget this task. Complete the sentence with remember and lock: _____ the door.",
+    ],
+    [
+      "en.c.109.retrieve.1.writing",
+      "Use the present continuous passive of repair: The road _____.",
+    ],
+    [
+      "en.c.109.retrieve.2.writing",
+      "Use the future perfect passive of publish: The results _____ by noon.",
+    ],
+    [
+      "en.c.109.retrieve.3.forms-202611012.writing",
+      "Use believe in a passive reporting structure: She _____ to live abroad.",
+    ],
+    [
+      "en.c.109.retrieve.4.writing",
+      "Use should and the perfect passive of sign: The documents _____ earlier.",
+    ],
+    [
+      "en.c.110.retrieve.2.writing",
+      "Say that it is possible this happened. Use may and miss: She _____ the train.",
+    ],
+    [
+      "en.c.110.retrieve.3.forms-202611012.writing",
+      "Say that it is certain to happen. Use be bound to: They are _____ notice the change.",
+    ],
+    [
+      "en.c.110.retrieve.4.forms-202611012.writing",
+      "Say that the chance is very small. Use highly and likely: It is _____ that the result is random.",
+    ],
+    [
+      "en.c.111.retrieve.1.writing",
+      "Complete the sentence with the verb in brackets: It’s time we _____. (leave)",
+    ],
+    [
+      "en.c.111.retrieve.2.forms-202611012.writing",
+      "Complete the sentence with the negative of the verb in brackets: I’d rather you _____ it. (mention)",
+    ],
+    [
+      "en.c.111.retrieve.3.writing",
+      "Complete the sentence with the verb in brackets: She talks as though she _____ everything. (know)",
+    ],
+    [
+      "en.c.111.retrieve.4.forms-202611012.writing",
+      "Express regret about the past with the verb in brackets: I wish I _____ the offer. (accept)",
+    ],
+    [
+      "en.c.112.retrieve.1.writing",
+      "Put the noun object between the verb and the particle. Use radio and down: Turn the _____.",
+    ],
+    [
+      "en.c.112.retrieve.2.writing",
+      "Replace the radio with a pronoun. Use it and down: Turn _____.",
+    ],
+    [
+      "en.c.112.retrieve.3.writing",
+      "Complete the sentence with look after, which cannot be separated: She _____ her younger brother.",
+    ],
+    [
+      "en.c.112.retrieve.4.writing",
+      "Complete the sentence: We _____ time. (run out of, past simple)",
+    ],
+    ["de.c.001.retrieve.3.writing", zweites + "Sie ___ müde. (sein)"],
+    ["de.c.003.retrieve.1.writing", setze + "Ich ___ Deutsch. (lernen)"],
+    ["de.c.004.retrieve.1.writing", setze + "Du ___ nach Hause. (fahren)"],
+    ["de.c.004.retrieve.3.writing", zweites + "Er ___ ein Buch. (lesen)"],
+    ["de.c.005.retrieve.1.writing", setze + "Wo ___ du? (wohnen)"],
+    ["de.c.006.retrieve.1.writing", setze + "___ du morgen? (kommen)"],
+    [
+      "de.c.007.retrieve.3.writing",
+      "Ergänze den bestimmten Artikel und schreibe den ganzen Satz: ___ Buch ist neu.",
+    ],
+    ["de.c.009.retrieve.3.writing", zweites + "Ich kaufe ___ Tisch. (ein)"],
+    ["de.c.010.retrieve.3.writing", zweites + "___ Kurs beginnt heute. (wir)"],
+    [
+      "de.c.011.retrieve.3.writing",
+      zweites + "Ich komme heute ___. (nicht / kein)",
+    ],
+    [
+      "de.c.013.retrieve.1.writing",
+      setze + "Ich ___ um sieben Uhr auf. (aufstehen)",
+    ],
+    [
+      "de.c.013.retrieve.3.writing",
+      zweites + "Er ___ um sieben Uhr auf. (aufstehen)",
+      "Er steht um sieben Uhr auf.",
+    ],
+    [
+      "de.c.014.retrieve.3.writing",
+      zweites + "Das Buch liegt ___ Tisch. (auf)",
+    ],
+    [
+      "de.c.015.retrieve.1.writing",
+      setze + "Ich habe gestern ___. (arbeiten)",
+    ],
+    [
+      "de.c.015.retrieve.3.writing",
+      zweites + "Ich habe gestern Tennis ___. (spielen)",
+      "Ich habe gestern Tennis gespielt.",
+    ],
+    [
+      "de.c.016.retrieve.3.writing",
+      zweites + "Wir sind nach Berlin ___. (fahren)",
+    ],
+    [
+      "de.c.018.retrieve.3.writing",
+      zweites + "Ich gebe ___ Mann das Buch. (der)",
+    ],
+    ["de.c.019.retrieve.1.writing", setze + "Das Bild hängt ___ Wand. (an)"],
+    ["de.c.019.retrieve.3.writing", zweites + "Ich hänge es ___ Wand. (an)"],
+    [
+      "de.c.020.retrieve.1.writing",
+      setze + "Ich ___ heute lernen. (müssen)",
+    ],
+    ["de.c.021.retrieve.3.writing", zweites + "Das ist am ___. (gut)"],
+    [
+      "de.c.023.retrieve.1.writing",
+      setze + "Ich glaube, dass er heute ___. (kommen)",
+    ],
+    [
+      "de.c.023.retrieve.3.writing",
+      zweites + "Ich weiß, dass sie morgen ___. (arbeiten)",
+      "Ich weiß, dass sie morgen arbeitet.",
+    ],
+    [
+      "de.c.025.retrieve.3.writing",
+      zweites + "Ich interessiere ___ für Musik. (sich)",
+    ],
+    [
+      "de.c.026.retrieve.1.writing",
+      setze + "Der Kurs ist ___. (interessant)",
+    ],
+    [
+      "de.c.026.retrieve.3.writing",
+      zweites + "Die Aufgabe ist ___. (schwierig)",
+      "Die Aufgabe ist schwierig.",
+    ],
+    [
+      "de.c.027.retrieve.1.writing",
+      setze + "Morgen ___ ich mit dem Zug nach Berlin. (fahren)",
+    ],
+    [
+      "de.c.027.retrieve.3.writing",
+      zweites + "Heute ___ ich mit dem Bus zur Arbeit. (fahren)",
+      "Heute fahre ich mit dem Bus zur Arbeit.",
+    ],
+    [
+      "de.c.028.retrieve.1.writing",
+      setze + "In Deutschland ___ man viel Kaffee. (trinken)",
+    ],
+    [
+      "de.c.029.retrieve.1.writing",
+      setze + "Er ___ die Tür und ging hinaus. (öffnen)",
+    ],
+    [
+      "de.c.029.retrieve.3.writing",
+      zweites + "Sie ___ das Fenster und schaute hinaus. (öffnen)",
+      "Sie öffnete das Fenster und schaute hinaus.",
+    ],
+    [
+      "de.c.030.retrieve.3.writing",
+      zweites + "Nachdem ich ___ hatte, ging ich spazieren. (essen)",
+    ],
+    [
+      "de.c.032.retrieve.3.writing",
+      zweites + "Die Frau, mit ___ ich spreche, ist Ärztin.",
+    ],
+    [
+      "de.c.033.retrieve.1.writing",
+      setze + "Ich ___ gern mehr sprechen. (werden)",
+    ],
+    [
+      "de.c.033.retrieve.3.writing",
+      zweites + "Wir ___ gern länger bleiben. (werden)",
+      "Wir würden gern länger bleiben.",
+    ],
+    ["de.c.035.retrieve.1.writing", setze + "Das Haus wird ___. (bauen)"],
+    [
+      "de.c.035.retrieve.3.writing",
+      zweites + "Die Straße wird ___. (reparieren)",
+      "Die Straße wird repariert.",
+    ],
+    ["de.c.036.retrieve.3.writing", zweites + "Es ist ___ worden. (bauen)"],
+    [
+      "de.c.038.retrieve.1.writing",
+      setze + "Ich lerne, ___ die Prüfung zu bestehen. (um / damit)",
+    ],
+    [
+      "de.c.038.retrieve.3.writing",
+      zweites + "Ich erkläre es, ___ du es verstehst. (damit / um)",
+    ],
+    [
+      "de.c.040.retrieve.3.writing",
+      zweites + "Wir bleiben wegen des ___ zu Hause. (Wetter)",
+      "Wir bleiben wegen des Wetters zu Hause.",
+    ],
+    [
+      "de.c.041.retrieve.3.writing",
+      zweites + "Ich spreche mit einem ___ Lehrer. (gut)",
+      "Ich spreche mit einem guten Lehrer.",
+    ],
+    [
+      "de.c.042.retrieve.3.writing",
+      zweites + "Können Sie mir sagen, wann der Kurs ___? (beginnen)",
+    ],
+    [
+      "de.c.044.retrieve.3.writing",
+      zweites + "Der Bericht muss heute ___ werden. (schreiben)",
+    ],
+    ["de.c.045.retrieve.3.writing", zweites + "Die Tür ist ___. (schließen)"],
+    [
+      "de.c.046.retrieve.1.writing",
+      "Bilde aus dem Verb in Klammern ein Nomen und schreibe den ganzen Satz: Die ___ der Studie dauert ein Jahr. (durchführen)",
+      "Die Durchführung der Studie dauert ein Jahr.",
+    ],
+    [
+      "de.c.046.retrieve.3.writing",
+      "Bilde aus dem Verb in Klammern ein Nomen und schreibe den ganzen Satz: Nach der ___ der Daten beginnt die Analyse. (erheben)",
+      "Nach der Erhebung der Daten beginnt die Analyse.",
+    ],
+    [
+      "de.c.047.retrieve.1.writing",
+      setze + "Ich spreche mit dem ___. (Student)",
+      "Ich spreche mit dem Studenten.",
+    ],
+    [
+      "de.c.047.retrieve.3.writing",
+      zweites + "Ich sehe den ___. (Kollege)",
+      "Ich sehe den Kollegen.",
+    ],
+    [
+      "de.c.048.retrieve.1.writing",
+      setze + "Die ___ Gäste setzen sich. (warten)",
+      "Die wartenden Gäste setzen sich.",
+    ],
+    [
+      "de.c.048.retrieve.3.writing",
+      zweites + "Bitte öffne die ___ Tür. (schließen)",
+      "Bitte öffne die geschlossene Tür.",
+    ],
+    [
+      "de.c.050.retrieve.3.writing",
+      zweites + "Sie spricht sowohl Deutsch ___ Englisch.",
+    ],
+    [
+      "de.c.051.retrieve.3.writing",
+      zweites +
+        "Das Thema, ___ wir sprechen, betrifft alle Studierenden. (über)",
+    ],
+    ["de.c.052.retrieve.3.writing", zweites + "Worauf ___ du? (warten)"],
+    [
+      "de.c.053.retrieve.3.writing",
+      zweites + "Sie sagt, sie ___ müde. (sein)",
+      "Sie sagt, sie sei müde.",
+    ],
+    [
+      "de.c.054.retrieve.1.writing",
+      "Ergänze das passende Funktionsverb und schreibe den ganzen Satz: Wir müssen bald eine Entscheidung ___. (treffen / machen)",
+      "Wir müssen bald eine Entscheidung treffen.",
+    ],
+    [
+      "de.c.054.retrieve.3.writing",
+      "Ergänze das passende Funktionsverb und schreibe den ganzen Satz: Wir sollten diese Möglichkeit in Betracht ___. (ziehen / nehmen)",
+      "Wir sollten diese Möglichkeit in Betracht ziehen.",
+    ],
+    [
+      "de.c.055.retrieve.3.writing",
+      zweites + "Ich habe ___ gestern gegeben. (es, ihm)",
+    ],
+    [
+      "de.c.056.retrieve.3.writing",
+      zweites +
+        "Die Daten sind begrenzt; ___ ist der Trend klar. (dennoch / deshalb)",
+    ],
+    [
+      "de.c.057.retrieve.3.writing",
+      zweites + "Die Autorin erklärt, die Ergebnisse ___ vorläufig. (sein)",
+    ],
+    [
+      "de.c.058.retrieve.3.writing",
+      zweites + "Sie dürfte ___ sein. (ankommen)",
+    ],
+    [
+      "de.c.059.retrieve.1.writing",
+      setze + "Das Problem ___ sich lösen. (lassen)",
+    ],
+    [
+      "de.c.059.retrieve.3.writing",
+      zweites + "Die Aufgabe ist zu ___. (erledigen)",
+    ],
+    [
+      "de.c.060.retrieve.1.writing",
+      setze + "Wir analysieren die im Rahmen der Studie ___ Daten. (erheben)",
+      "Wir analysieren die im Rahmen der Studie erhobenen Daten.",
+    ],
+    [
+      "de.c.060.retrieve.3.writing",
+      zweites +
+        "Die von der Kommission ___ Maßnahmen treten morgen in Kraft. (beschließen)",
+      "Die von der Kommission beschlossenen Maßnahmen treten morgen in Kraft.",
+    ],
+    [
+      "de.c.061.retrieve.3.writing",
+      zweites +
+        "Von den Ergebnissen ___, schlagen wir eine neue Untersuchung vor. (ausgehen)",
+    ],
+    [
+      "de.c.062.retrieve.1.writing",
+      setze + "Ich spreche mit Frau Müller, ___. (die Projektleiterin)",
+      "Ich spreche mit Frau Müller, der Projektleiterin.",
+    ],
+    [
+      "de.c.062.retrieve.3.writing",
+      zweites + "Wir danken Herrn Kaya, ___. (unser Kollege)",
+      "Wir danken Herrn Kaya, unserem Kollegen.",
+    ],
+    [
+      "de.c.063.retrieve.3.writing",
+      zweites + "Besonders wichtig ___ die regelmäßige Wiederholung. (sein)",
+    ],
+    [
+      "de.c.064.retrieve.3.writing",
+      zweites +
+        "Es hat sich gezeigt, dass regelmäßiger Abruf entscheidend ___. (sein)",
+    ],
+    [
+      "de.c.065.retrieve.1.writing",
+      setze +
+        "___ die Stichprobe klein ist, sind die Ergebnisse relevant. (Wenngleich / Weil)",
+    ],
+    [
+      "de.c.065.retrieve.3.writing",
+      zweites +
+        "___ die Kosten hoch sind, lohnt sich die Investition. (Obgleich / Damit)",
+      "Obgleich die Kosten hoch sind, lohnt sich die Investition.",
+    ],
+    [
+      "de.c.066.retrieve.1.writing",
+      setze +
+        "Die Daten ___ nahe, dass weitere Untersuchungen erforderlich sind. (nahelegen)",
+    ],
+    [
+      "de.c.066.retrieve.3.writing",
+      zweites +
+        "Die Ergebnisse ___ zu bestätigen, dass die Methode wirkt. (scheinen)",
+      "Die Ergebnisse scheinen zu bestätigen, dass die Methode wirkt.",
+    ],
+    [
+      "de.c.067.retrieve.2.writing",
+      "Ergänze die Lücke, sodass der Text zusammenhängt. Schreibe den vollständigen deutschen Text: Die Finanzierung fehlt. ___ Faktor kann das Projekt verzögern. (solch)",
+    ],
+    [
+      "de.c.067.retrieve.3.writing",
+      "Überarbeite ein zweites kontrolliertes Textbeispiel. Ergänze die Lücke und schreibe den vollständigen deutschen Text: Viele Teilnehmende brachen ab. ___ Problem muss gelöst werden. (dies)",
+      "Viele Teilnehmende brachen ab. Dieses Problem muss gelöst werden.",
+    ],
+    [
+      "de.c.068.retrieve.3.writing",
+      zweites + "___ Sie mir die Unterlagen schicken? (können, höflich)",
+      "Könnten Sie mir die Unterlagen schicken?",
+    ],
+    [
+      "de.c.070.retrieve.1.writing",
+      setze +
+        "Wir müssen die Studie planen, ___ und auswerten. (die Durchführung)",
+      "Wir müssen die Studie planen, durchführen und auswerten.",
+    ],
+    [
+      "de.c.070.retrieve.3.writing",
+      zweites +
+        "Die Planung, die ___ und die Auswertung dauern ein Jahr. (durchführen)",
+      "Die Planung, die Durchführung und die Auswertung dauern ein Jahr.",
+    ],
+    [
+      "de.c.071.retrieve.3.writing",
+      zweites +
+        "Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen ___. (haben)",
+      "Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hat.",
+      "Es wäre denkbar, dass die Maßnahme unbeabsichtigte Folgen hätte.",
+    ],
+    [
+      "de.c.072.retrieve.3.writing",
+      zweites + "Dieses Ergebnis, das muss betont werden, ___ vorläufig. (sein)",
+    ],
+    [
+      "de.c.073.retrieve.1.writing",
+      setze +
+        "Obwohl die Studie klein war, ___ ihre Methode, weil sie transparent dokumentiert wurde, was wiederum die Replikation erleichterte. (überzeugen, Präteritum)",
+    ],
+    [
+      "de.c.073.retrieve.3.writing",
+      zweites +
+        "Obwohl die Studie klein war, überzeugte ihre Methode, weil sie transparent ___ wurde, was wiederum die Replikation erleichterte. (dokumentieren)",
+    ],
+    [
+      "de.c.074.retrieve.3.writing",
+      zweites + "Einige ___ zu, andere nicht. (zustimmen, Präteritum)",
+    ],
+    [
+      "de.c.076.retrieve.3.writing",
+      zweites +
+        "Die Forscherin informierte die ___, die ausgewählt worden war. (Teilnehmerin / Teilnehmerinnen)",
+    ],
+    [
+      "de.c.077.retrieve.1.writing",
+      "Ergänze das übliche Verb und schreibe den ganzen Satz: Wer leitet, muss Verantwortung ___. (übernehmen / machen)",
+      "Wer leitet, muss Verantwortung übernehmen.",
+    ],
+    [
+      "de.c.078.retrieve.1.writing",
+      "Ergänze die Lücke, sodass der Text zusammenhängt. Schreibe den vollständigen deutschen Text: Der Bericht ___ den Ausgangszustand, bewertet die Ergebnisse und empfiehlt konkrete Maßnahmen. (beschreiben)",
+    ],
+    [
+      "de.c.078.retrieve.2.writing",
+      "Ergänze die Lücke, sodass der Text zusammenhängt. Schreibe den vollständigen deutschen Text: Der Antrag begründet den Bedarf und ___ einen überprüfbaren Zeitplan. (nennen)",
+    ],
+    [
+      "de.c.079.retrieve.3.writing",
+      zweites +
+        "Die 2025 ___, mehrfach zitierte Studie bestätigt den langfristigen Effekt. (veröffentlichen)",
+    ],
+    [
+      "de.c.080.retrieve.3.writing",
+      zweites +
+        "___ Sie so freundlich, mir die Unterlagen bis Freitag zu senden? (sein, höflich)",
+    ],
+    [
+      "de.c.083.retrieve.3.writing",
+      zweites +
+        "Ich habe Interesse ___ einer Mitarbeit im Forschungsprojekt. (an / in)",
+    ],
+    [
+      "de.c.084.retrieve.1.writing",
+      setze +
+        "Die Methode spart Zeit, ___ setzt sie geschulte Fachkräfte voraus. (allerdings / deshalb)",
+      "Die Methode spart Zeit, allerdings setzt sie geschulte Fachkräfte voraus.",
+    ],
+    [
+      "de.c.084.retrieve.3.writing",
+      zweites +
+        "Zuerst fassen wir die Ergebnisse zusammen; ___ diskutieren wir offene Fragen. (anschließend / obwohl)",
+      "Zuerst fassen wir die Ergebnisse zusammen; anschließend diskutieren wir offene Fragen.",
+    ],
+    [
+      "de.c.086.retrieve.1.writing",
+      setze + "Ich ___ jeden Morgen um sieben Uhr auf. (aufstehen)",
+    ],
+    [
+      "de.c.089.retrieve.1.writing",
+      setze + "Ich ___ abends oft Deutsch. (lernen)",
+    ],
+    [
+      "de.c.091.retrieve.1.writing",
+      setze + "In Deutschland ___ man viel Kaffee. (trinken)",
+    ],
+    [
+      "de.c.091.retrieve.content-20261101-3.writing",
+      "Ergänze die Form von essen zu man und schreibe den ganzen Satz: Im Kino ___ man oft Popcorn. (essen)",
+    ],
+    [
+      "de.c.096.retrieve.1.writing",
+      setze + "Das ist die Frau, ___ nebenan wohnt.",
+    ],
+    [
+      "de.c.098.retrieve.1.writing",
+      setze + "Ich bin müde. Deshalb ___ ich früh ins Bett. (gehen)",
+    ],
+    [
+      "de.c.102.retrieve.1.writing",
+      setze + "Morgen ___ ich länger arbeiten. (werden)",
+    ],
+    [
+      "de.c.111.retrieve.1.writing",
+      setze + "Ich ___ mein Fahrrad reparieren. (lassen)",
+    ],
+    [
+      "de.c.116.retrieve.1.writing",
+      "Ergänze die Modalpartikel für eine freundliche Einladung und schreibe den ganzen Satz: Komm ___ morgen kurz vorbei.",
+    ],
+    [
+      "de.c.117.retrieve.1.writing",
+      "Ergänze den Konnektor für „direkt nachdem“ und schreibe den ganzen Satz: ___ die Ergebnisse vorliegen, informieren wir alle Beteiligten. (Sobald / Solange)",
+    ],
+    [
+      "de.c.117.retrieve.content-20261101-3.writing",
+      "Ergänze den Konnektor für die gleiche Dauer und schreibe den ganzen Satz: ___ das Projekt läuft, bleibt das Büro geöffnet. (Solange / Sobald)",
+    ],
+    [
+      "de.c.119.retrieve.content-20261101-3.writing",
+      "Ergänze den Konnektor für die Ursache und schreibe den ganzen Satz: ___ der Zug ausfiel, kamen wir zu spät. (Da / Obwohl)",
+    ],
+    [
+      "de.c.122.retrieve.1.writing",
+      "Ergänze die Genitivpräposition für „in Bezug auf“ und schreibe den ganzen Satz: ___ der Ergebnisse bleiben mehrere Fragen offen. (Hinsichtlich / Mittels)",
+      "Hinsichtlich der Ergebnisse bleiben mehrere Fragen offen.",
+      "Bezüglich der Ergebnisse bleiben mehrere Fragen offen.",
+    ],
+    [
+      "de.c.123.retrieve.content-20261101-3.writing",
+      "Ergänze das Funktionsverb zu einen Antrag und schreibe den ganzen Satz: Wir ___ morgen einen Antrag. (stellen / treffen)",
+    ],
+    [
+      "de.c.124.retrieve.1.writing",
+      setze + "Besonders wichtig ___ die transparente Dokumentation. (sein)",
+    ],
+    [
+      "de.c.130.retrieve.1.writing",
+      "Ergänze sollte für eine Bedingung ohne wenn und schreibe den ganzen Satz: ___ weitere Daten verfügbar werden, ließe sich die Hypothese erneut prüfen.",
+    ],
+    [
+      "de.c.137.retrieve.1.writing",
+      setze + "___ Ergebnisse waren signifikant. (nicht, alle)",
+    ],
+    [
+      "de.c.140.retrieve.content-20261101-3.writing",
+      "Ergänze sitzen im Präteritum für einen formellen Bericht und schreibe den ganzen Satz: Die Teilnehmenden ___ zwei Stunden im Labor. (sitzen)",
+    ],
+  ] as const
+).map(([taskId, prompt, ...answers]) =>
+  answers.length ? { taskId, prompt, answers } : { taskId, prompt },
+);
+
+/** Unit titles for the gap-cue revisions, so the Grammar Labs find them. */
+const GAP_CUE_UNIT_TITLES: ReadonlyMap<string, string> = new Map([
+  ["en.c.048", "Third conditional"],
+  ["en.c.085", "Possessive ’s and whose"],
+  ["en.c.087", "Adjectives and prepositions"],
+  ["en.c.088", "Adjectives ending in -ed and -ing"],
+  ["en.c.089", "Infinitive of purpose"],
+  ["en.c.091", "Capital letters and apostrophes"],
+  ["en.c.092", "Contrasting ideas: although, despite, however"],
+  ["en.c.093", "Used to, be used to, get used to"],
+  ["en.c.094", "Intensifiers: so and such"],
+  ["en.c.095", "Past ability: could, was able to, managed to"],
+  ["en.c.096", "Past habits: used to, would, past simple"],
+  ["en.c.097", "Phrasal verbs"],
+  ["en.c.098", "Present perfect: just, yet, still, already"],
+  ["en.c.100", "Stative and dynamic verbs"],
+  ["en.c.101", "Using as and like"],
+  ["en.c.102", "Verbs and prepositions"],
+  ["en.c.103", "Gradable and non-gradable adjectives"],
+  ["en.c.104", "British and American grammar"],
+  ["en.c.105", "Modifying comparatives"],
+  ["en.c.106", "Reported speech: questions"],
+  ["en.c.107", "Future degrees of certainty"],
+  ["en.c.108", "Gerund or infinitive: change in meaning"],
+  ["en.c.109", "Advanced passives review"],
+  ["en.c.110", "Modals and expressions of probability"],
+  ["en.c.111", "Unreal time"],
+  ["en.c.112", "Word order in phrasal verbs"],
+  ["de.c.001", "Personalpronomen und sein"],
+  ["de.c.003", "Präsens regelmäßiger Verben"],
+  ["de.c.004", "Präsens unregelmäßiger Verben"],
+  ["de.c.005", "W-Fragen"],
+  ["de.c.006", "Ja/Nein-Fragen"],
+  ["de.c.007", "bestimmter und unbestimmter Artikel"],
+  ["de.c.009", "Akkusativ"],
+  ["de.c.010", "Possessivartikel"],
+  ["de.c.011", "nicht und kein"],
+  ["de.c.013", "Trennbare Verben"],
+  ["de.c.014", "lokale Präpositionen"],
+  ["de.c.015", "Perfekt mit haben"],
+  ["de.c.016", "Perfekt mit sein"],
+  ["de.c.018", "Dativ"],
+  ["de.c.019", "Wechselpräpositionen"],
+  ["de.c.020", "Modalverben müssen, dürfen, sollen, wollen"],
+  ["de.c.021", "Komparativ und Superlativ"],
+  ["de.c.023", "Nebensatz mit dass"],
+  ["de.c.025", "Reflexive Verben"],
+  ["de.c.026", "Adjektiv nach sein"],
+  ["de.c.027", "Zeitangaben und Wortstellung"],
+  ["de.c.028", "Indefinitpronomen man/jemand/niemand"],
+  ["de.c.029", "Präteritum in Erzählungen"],
+  ["de.c.030", "Plusquamperfekt"],
+  ["de.c.032", "Relativsätze Dativ"],
+  ["de.c.033", "Konjunktiv II mit würde"],
+  ["de.c.035", "Passiv Präsens"],
+  ["de.c.036", "Passiv Präteritum und Perfekt"],
+  ["de.c.038", "um...zu / damit"],
+  ["de.c.040", "Genitivgrundlagen"],
+  ["de.c.041", "Adjektivdeklination Grundlagen"],
+  ["de.c.042", "indirekte Fragen"],
+  ["de.c.044", "Passiv mit Modalverben"],
+  ["de.c.045", "Zustandspassiv"],
+  ["de.c.046", "Nominalisierung"],
+  ["de.c.047", "N-Deklination"],
+  ["de.c.048", "Partizipien als Adjektive"],
+  ["de.c.050", "sowohl...als auch / weder...noch"],
+  ["de.c.051", "erweiterte Relativsätze"],
+  ["de.c.052", "Verben mit Präpositionen"],
+  ["de.c.053", "indirekte Rede Grundlagen"],
+  ["de.c.054", "Nomen-Verb-Verbindungen / Funktionsverbgefüge"],
+  ["de.c.055", "Wortstellung im Mittelfeld"],
+  ["de.c.056", "Konnektoren und Satzverknüpfung"],
+  ["de.c.057", "Konjunktiv I vollständig"],
+  ["de.c.058", "Subjektive Bedeutung der Modalverben"],
+  ["de.c.059", "Ersatzformen des Passivs"],
+  ["de.c.060", "Komplexe Nominalgruppen"],
+  ["de.c.061", "Partizipialkonstruktionen"],
+  ["de.c.062", "Appositionen"],
+  ["de.c.063", "Informationsstruktur und Vorfeld"],
+  ["de.c.064", "Ausklammerung und Nachfeld"],
+  ["de.c.065", "Konzessive und adversative Strukturen"],
+  ["de.c.066", "Wissenschaftliches Hedging"],
+  ["de.c.067", "Textkohäsion"],
+  ["de.c.068", "Register und Stil"],
+  ["de.c.070", "Parallelismus"],
+  ["de.c.071", "Feine Bedeutungsunterschiede im Modus"],
+  ["de.c.072", "Markierte Wortstellung"],
+  ["de.c.073", "Komplexe Einbettung"],
+  ["de.c.074", "Ellipsen und Substitution"],
+  ["de.c.076", "Ambiguitätskontrolle"],
+  ["de.c.077", "Idiomatizität und Kollokation"],
+  ["de.c.078", "Textsortenspezifische Grammatik"],
+  ["de.c.079", "Stilistische Verdichtung"],
+  ["de.c.080", "Pragmatische Feinsteuerung"],
+  ["de.c.083", "Mehrsprachige Interferenzkontrolle"],
+  ["de.c.084", "Integrierte automatische Produktion"],
+  ["de.c.086", "Satzklammer im einfachen Hauptsatz"],
+  ["de.c.089", "Häufigkeitsadverbien"],
+  ["de.c.091", "man für allgemeine Aussagen"],
+  ["de.c.096", "Relativsätze mit der, die und das"],
+  ["de.c.098", "darum, deshalb und deswegen"],
+  ["de.c.102", "Futur I mit werden"],
+  ["de.c.111", "lassen als Vollverb und Hilfsverb"],
+  ["de.c.116", "Modalpartikeln im Gespräch"],
+  ["de.c.117", "Komplexe Temporalsätze"],
+  ["de.c.119", "Kausale und konsekutive Verknüpfung"],
+  ["de.c.122", "Erweiterte Genitivpräpositionen"],
+  ["de.c.123", "Funktionsverbgefüge systematisch"],
+  ["de.c.124", "Informationsstruktur durch Vorfeldbesetzung"],
+  ["de.c.130", "Komplexe Konditionalstrukturen"],
+  ["de.c.137", "Skopus und Negation"],
+  ["de.c.140", "Regionale Variation und Standardregister"],
+]);
+
+/** Gap-cue revisions of one Grammar Lab unit by exercise number: Lab exercise
+ * N is the learning path's retrieve.N item (revised retrieval items keep N). */
+export function gapCueRevisionsFor(
+  language: Language,
+  title: string,
+): ReadonlyMap<number, (typeof GAP_CUE_REVISIONS)[number]> {
+  const unit = [...GAP_CUE_UNIT_TITLES].find(
+    ([id, name]) => id.startsWith(`${language}.`) && name === title,
+  )?.[0];
+  const revisions = new Map<number, (typeof GAP_CUE_REVISIONS)[number]>();
+  for (const revision of GAP_CUE_REVISIONS) {
+    const index = unit
+      ? revision.taskId.match(
+          /^(.+?)\.retrieve\.(?:content-\d+-)?(\d+)\.(?:forms-\d+\.)?writing$/u,
+        )
+      : null;
+    if (index?.[1] === unit) revisions.set(Number(index![2]), revision);
+  }
+  return revisions;
+}
+
 /** The 2026-11-01 revision of one unit, for the Grammar Labs and the curriculum build. */
 export function contentRevisionFor(
   language: Language,

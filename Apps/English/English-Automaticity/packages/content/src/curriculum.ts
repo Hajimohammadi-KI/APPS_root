@@ -5,10 +5,11 @@ import type { GrammarExercise, GrammarUnit } from "./types";
 import { knownContentRepair } from "@automaticity/learning-core/content-repairs";
 import {
   contentRevisionFor,
+  gapCueRevisionsFor,
   retiredRepairPrompt,
   type RevisedTask,
 } from "@automaticity/learning-core/content-revisions";
-import { normalizeText } from "@automaticity/learning-core/text";
+import { gapFill, normalizeText } from "@automaticity/learning-core/text";
 
 const MINIMUM_CONTROLLED_EXERCISES = 6;
 
@@ -93,6 +94,22 @@ function reviseContent(unit: GrammarUnit): GrammarUnit {
     }),
   };
 }
+/** The learning path's visible cue for a one-gap exercise that had none. */
+function cueGaps(unit: GrammarUnit): GrammarUnit {
+  const revisions = gapCueRevisionsFor("en", unit.title);
+  return {
+    ...unit,
+    exercises: unit.exercises.map<GrammarExercise>((exercise, index) => {
+      const revision = revisions.get(index);
+      const [answer, ...alternatives] = revision?.answers ?? [exercise[1]];
+      return revision &&
+        /_{2,}/u.test(exercise[0]) &&
+        gapFill(revision.prompt, answer!) !== null
+        ? revisedExercise({ prompt: revision.prompt, answer: answer!, alternatives })
+        : exercise;
+    }),
+  };
+}
 export { legacyGrammarUnits };
 export const grammarUnits: GrammarUnit[] = [
   ...legacyGrammarUnits,
@@ -100,5 +117,6 @@ export const grammarUnits: GrammarUnit[] = [
 ]
   .map(repairKnownContent)
   .map(reviseContent)
+  .map(cueGaps)
   .map(ensureSixExercises)
   .map(repairGrammarUnitLinks);

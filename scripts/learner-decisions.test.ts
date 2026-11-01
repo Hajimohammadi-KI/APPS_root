@@ -2,8 +2,10 @@ import { expect, test } from "bun:test";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import {
+  appendDecisionBatch,
   applyLearnerDecisions,
   learnerDecisionRows,
+  type LearnerDecision,
   type LearnerDecisionFile,
 } from "./lib/learner-decisions";
 import { reviseMasteryContent } from "./lib/mastery-content-revisions";
@@ -41,7 +43,7 @@ const decision = (
   issue: number,
   kind: "accept_answer" | "known_wrong",
   answer: string,
-  overrides: Partial<LearnerDecisionFile["decisions"][number]> = {},
+  overrides: Partial<LearnerDecision> = {},
 ) => ({
   issue,
   taskId,
@@ -54,12 +56,41 @@ const decision = (
   ...overrides,
 });
 const file = (
-  decisions: LearnerDecisionFile["decisions"],
+  decisions: LearnerDecision[],
+  ...later: LearnerDecision[][]
 ): LearnerDecisionFile => ({
-  schemaVersion: 1,
+  schemaVersion: 2,
   language: "en",
-  version: "2026-11-05.1",
-  decisions,
+  batches: [decisions, ...later].map((rows, index) => ({
+    version: `2026-11-0${5 + index}.1`,
+    decisions: rows,
+  })),
+});
+
+test("a later batch builds on the released version instead of replacing it", () => {
+  const first = file([decision(4, "accept_answer", "The keys are lying on the table.")]);
+  const both = file(
+    [decision(4, "accept_answer", "The keys are lying on the table.")],
+    [decision(8, "accept_answer", "The keys are sitting on the table.")],
+  );
+  const one = applyLearnerDecisions(built(), first).pack;
+  const two = applyLearnerDecisions(built(), both).pack;
+  const unitOne = one.units.find((row) => row.id === "en.c.013")!;
+  const unitTwo = two.units.find((row) => row.id === "en.c.013")!;
+  const released = activePracticeTasks(unitOne).find((row) => row.prompt === prompt)!;
+  // The version learners already answered stays byte-identical, now retired.
+  expect(unitTwo.tasks.find((row) => row.id === released.id)).toEqual(released);
+  const latest = activePracticeTasks(unitTwo).find((row) => row.prompt === prompt)!;
+  expect(latest.version).toBe("2026-11-06.1");
+  expect(latest.acceptedAnswers).toEqual([
+    "The keys are on the table.",
+    "The keys are lying on the table.",
+    "The keys are sitting on the table.",
+  ]);
+  // Old links follow one hop to the newest version.
+  for (const retired of unitTwo.retiredTasks ?? [])
+    expect(unitTwo.retiredTasks!.some((row) => row.taskId === retired.replacementTaskId)).toBe(false);
+  expect(validateCurriculum(two)).toEqual([]);
 });
 const sha = (text: string) => createHash("sha256").update(text).digest("hex");
 const verdict = (pack: CurriculumPack, text: string) => {
@@ -244,4 +275,13 @@ test("only answer decisions are imported; fixes are listed for authoring", () =>
   expect(rows.en.map((row) => row.issue)).toEqual([4]);
   expect(rows.de).toEqual([]);
   expect(rows.fixes).toEqual([{ issue: 5, language: "en", taskId, prompt }]);
+});
+
+test("an import only appends a batch of new decisions and never removes a released one", () => {
+  const start = file([decision(4, "accept_answer", "The keys are lying on the table.")]);
+  // Issue 4 was withdrawn after release, so GitHub no longer returns it.
+  const next = appendDecisionBatch(start, [decision(9, "known_wrong", "The keys are at the table.")], "2026-11-07.1");
+  expect(next.batches.map((batch) => batch.decisions.map((row) => row.issue))).toEqual([[4], [9]]);
+  expect(next.batches[1]!.version).toBe("2026-11-07.1");
+  expect(appendDecisionBatch(next, [decision(9, "known_wrong", "The keys are at the table.")], "2026-11-08.1")).toBe(next);
 });

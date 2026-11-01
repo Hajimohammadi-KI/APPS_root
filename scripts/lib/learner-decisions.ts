@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import {
   activePracticeTasks,
   type CurriculumPack,
@@ -10,25 +9,42 @@ import type {
 } from "../../shared/learning-core/src/automaticity/learner-feedback";
 import { normalizeText } from "../../shared/learning-core/src/text";
 
-/** Owner decisions on learner comments, imported from the private repository
- * and committed, so every curriculum build stays reproducible. */
-export interface LearnerDecisionFile {
-  schemaVersion: 1;
-  language: "en" | "de";
-  /** The task version of every exercise these decisions revise. */
-  version: string | null;
-  decisions: {
-    issue: number;
-    taskId: string;
-    taskVersion: string;
-    prompt: string;
-    decision: "accept_answer" | "known_wrong";
-    answer: string;
-    explanation: string;
-    decidedAt: string;
-  }[];
+export interface LearnerDecision {
+  issue: number;
+  taskId: string;
+  taskVersion: string;
+  prompt: string;
+  decision: "accept_answer" | "known_wrong";
+  answer: string;
+  explanation: string;
+  decidedAt: string;
 }
-type Row = LearnerDecisionFile["decisions"][number];
+/** Owner decisions on learner comments, imported from the private repository
+ * and committed so every build is reproducible. Batches are only appended:
+ * each builds a new version on top of the previous one, so a version learners
+ * already answered is never regenerated differently or dropped. */
+export interface LearnerDecisionFile {
+  schemaVersion: 2;
+  language: "en" | "de";
+  batches: { version: string; decisions: LearnerDecision[] }[];
+}
+type Row = LearnerDecision;
+
+/** Appends the decisions not recorded yet as one batch; returns the same file when there are none. */
+export function appendDecisionBatch(
+  file: LearnerDecisionFile,
+  rows: readonly LearnerDecision[],
+  version: string,
+): LearnerDecisionFile {
+  const known = new Set(
+    file.batches.flatMap((batch) => batch.decisions.map((row) => row.issue)),
+  );
+  const fresh = rows.filter((row) => !known.has(row.issue));
+  if (!fresh.length) return file;
+  if (file.batches.some((batch) => batch.version >= version))
+    throw Error(`Batch version ${version} must follow the earlier ones`);
+  return { ...file, batches: [...file.batches, { version, decisions: fresh }] };
+}
 
 /** Answer decisions per language; fix requests need authored content instead. */
 export function learnerDecisionRows(
@@ -84,14 +100,24 @@ export function applyLearnerDecisions(
   source: CurriculumPack,
   file: LearnerDecisionFile,
 ): { pack: CurriculumPack; skipped: { issue: number; reason: string }[] } {
-  if (file.schemaVersion !== 1 || file.language !== source.language)
+  if (file.schemaVersion !== 2 || file.language !== source.language)
     throw Error(`Learner decisions do not match ${source.language}`);
   const pack = structuredClone(source);
   const skipped: { issue: number; reason: string }[] = [];
-  if (!file.decisions.length) return { pack, skipped };
-  if (!file.version) throw Error("Learner decisions need a version");
+  for (const batch of file.batches)
+    if (applyBatch(pack, batch.version, batch.decisions, skipped))
+      pack.version = batch.version;
+  return { pack, skipped: skipped.sort((a, b) => a.issue - b.issue) };
+}
+
+function applyBatch(
+  pack: CurriculumPack,
+  version: string,
+  decisions: readonly Row[],
+  skipped: { issue: number; reason: string }[],
+): boolean {
   const groups = new Map<string, { task: PracticeTask; rows: Row[] }>();
-  for (const row of file.decisions) {
+  for (const row of decisions) {
     const unit = pack.units.find((candidate) =>
       row.taskId.startsWith(`${candidate.id}.`),
     );
@@ -166,29 +192,24 @@ export function applyLearnerDecisions(
     )
       continue;
     const applied = rows.filter((row) => !conflicts.has(plain(row.answer)));
-    const digest = createHash("sha256")
-      .update(
-        JSON.stringify(
-          applied.map((row) => [row.issue, row.decision, row.answer]),
-        ),
-      )
-      .digest("hex")
-      .slice(0, 8);
     const base = task.id.replace(
-      /\.learner-[a-f0-9]{8}(?=\.(?:writing|speaking)$)/u,
+      /\.learner-\d+(?=\.(?:writing|speaking)$)/u,
       "",
     );
-    const id = base.replace(/\.(writing|speaking)$/u, `.learner-${digest}.$1`);
+    const id = base.replace(
+      /\.(writing|speaking)$/u,
+      `.learner-${version.replace(/\D/gu, "")}.$1`,
+    );
     const unit = pack.units.find((row) => row.tasks.includes(task))!;
     if (unit.tasks.some((row) => row.id === id)) continue;
     const replacement: PracticeTask = {
       ...task,
       id,
-      version: file.version,
+      version,
       contentReview: "authored",
       acceptedAnswers: answers,
       ...(wrong.length ? { rejectedAnswers: wrong } : {}),
-      sourceId: `learner-decisions-${file.version}:${applied.map((row) => row.issue).join(",")}`,
+      sourceId: `learner-decisions-${version}:${applied.map((row) => row.issue).join(",")}`,
     };
     unit.tasks.splice(unit.tasks.indexOf(task) + 1, 0, replacement);
     unit.retiredTasks ??= [];
@@ -200,10 +221,9 @@ export function applyLearnerDecisions(
       replacementTaskId: id,
       reason:
         "Apply the owner's reviewed decisions on learner comments: accepted answers and reviewed wrong forms.",
-      retiredOn: file.version.slice(0, 10),
+      retiredOn: version.slice(0, 10),
     });
     changed = true;
   }
-  if (changed) pack.version = file.version;
-  return { pack, skipped: skipped.sort((a, b) => a.issue - b.issue) };
+  return changed;
 }

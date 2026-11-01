@@ -14,6 +14,7 @@ import {
   readDecidedLearnerFeedback,
 } from "../shared/learning-core/src/automaticity/learner-feedback-server";
 import {
+  appendDecisionBatch,
   learnerDecisionRows,
   type LearnerDecisionFile,
 } from "./lib/learner-decisions";
@@ -35,25 +36,24 @@ for (const language of ["en", "de"] as const) {
   const current = JSON.parse(
     await readFile(path, "utf8"),
   ) as LearnerDecisionFile;
-  const decisions = rows[language];
-  if (JSON.stringify(current.decisions) === JSON.stringify(decisions)) {
-    console.log(`${language}: ${decisions.length} decisions, unchanged.`);
+  // A new batch per import; the date keeps task versions after earlier releases.
+  const used = current.batches
+    .map((batch) => batch.version)
+    .filter((version) => version.startsWith(today)).length;
+  const next = appendDecisionBatch(
+    current,
+    rows[language],
+    `${today}.${used + 1}`,
+  );
+  if (next === current) {
+    console.log(`${language}: no new decisions.`);
     continue;
   }
   stale = true;
-  // A new task version per import; the date keeps versions ordered after earlier releases.
-  const used = current.version?.startsWith(today)
-    ? Number(current.version.split(".")[1] ?? 0)
-    : 0;
-  const next: LearnerDecisionFile = {
-    schemaVersion: 1,
-    language,
-    version: `${today}.${used + 1}`,
-    decisions,
-  };
+  const added = next.batches.at(-1)!;
   if (!checkOnly) await writeFile(path, JSON.stringify(next, null, 2) + "\n");
   console.log(
-    `${language}: ${decisions.length} decisions ${checkOnly ? "differ from" : "written to"} ${path}`,
+    `${language}: ${added.decisions.length} new decisions ${checkOnly ? "not yet imported" : `written as batch ${added.version}`}.`,
   );
 }
 for (const fix of rows.fixes)

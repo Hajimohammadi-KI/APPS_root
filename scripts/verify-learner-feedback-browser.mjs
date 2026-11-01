@@ -16,7 +16,7 @@ const copy = {
   en: {
     check: /save and check/i,
     summary: "Comment on this check",
-    off: "not switched on yet",
+    repair: "Try again as a repair",
     category: "My answer is correct",
     send: "Send comment",
     receipts: "My comments",
@@ -27,7 +27,7 @@ const copy = {
   de: {
     check: /speichern und prüfen/i,
     summary: "Kommentar zu dieser Prüfung",
-    off: "noch nicht eingeschaltet",
+    repair: "Als Korrektur erneut versuchen",
     category: "Meine Antwort ist richtig",
     send: "Kommentar senden",
     receipts: "Meine Kommentare",
@@ -84,10 +84,11 @@ try {
       await page.goto(`${base}/practice`, { waitUntil: "networkidle" });
       await page.locator("#practice-response").fill(text);
       await page.getByRole("button", { name: t.check }).first().click();
-      await page.getByText(t.summary, { exact: true }).first().waitFor();
+      await page.getByRole("button", { name: t.repair }).first().waitFor();
+      await page.waitForLoadState("networkidle");
     };
     try {
-      // 1. Without the service, the panel says so and sends nothing.
+      // 1. Without the service, the panel stays hidden and nothing is sent.
       const off = await browser.newContext();
       const offPage = await off.newPage();
       const offPosts = [];
@@ -99,8 +100,11 @@ try {
           offPosts.push(r.url()),
       );
       await answer(offPage, "A synthetic answer that is not stored.");
-      await offPage.getByText(t.summary, { exact: true }).first().click();
-      await offPage.getByText(t.off).first().waitFor();
+      assert.equal(
+        await offPage.getByText(t.summary, { exact: true }).first().isVisible(),
+        false,
+      );
+      assert.equal(await offPage.locator("#learner-feedback-receipts").isVisible(), false);
       assert.equal(offPosts.length, 0);
       await off.close();
 

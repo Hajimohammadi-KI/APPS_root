@@ -214,7 +214,11 @@ function withRevisedCorrection(
   const metadata = correction?.[2];
   if (!repair || !metadata) return exercises;
   const prompt = repair.transformation
-    ? { Deutsch: repair.prompt, English: repair.prompt, فارسی: repair.prompt }
+    ? {
+        Deutsch: repair.prompt,
+        English: `Follow this German instruction and write the complete answer in German: ${repair.prompt}`,
+        فارسی: `طبق این دستور آلمانی عمل کن و پاسخ کامل را به آلمانی بنویس: ${repair.prompt}`,
+      }
     : { ...metadata.prompt, Deutsch: repair.prompt };
   return [
     [
@@ -278,6 +282,22 @@ export const grammarUnits: readonly GrammarUnit[] = [
     });
   }),
 ];
+
+/** The payload of public/replacements/de/grammar-catalog.js for the browser Grammar Lab. */
+export const browserGrammarCatalog = grammarUnits.map((unit) => ({
+  level: unit.level,
+  title: unit.title,
+  contentType: unit.contentType,
+  rule: unit.rule,
+  explanation: unit.explanation,
+  examples: unit.examples,
+  commonError: unit.commonError,
+  exercises: unit.exercises,
+  testAnswer: unit.testAnswer,
+  recallTest: unit.recallTest,
+  repairTest: unit.repairTest,
+  transferTest: unit.transferTest,
+}));
 
 export const catalogSummary = {
   topicCount: speakingTopics.length,

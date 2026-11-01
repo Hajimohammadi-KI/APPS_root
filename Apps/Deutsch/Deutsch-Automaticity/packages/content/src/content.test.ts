@@ -2,6 +2,7 @@ import { describe, expect, it } from "bun:test";
 
 import {
   FERTIGKEITEN,
+  browserGrammarCatalog,
   cefrCurriculum,
   catalogSummary,
   deutschMitMarijaSharedWithMeUrl,
@@ -25,6 +26,22 @@ import {
 } from "./index";
 import { assessMediationContentRelease } from "@automaticity/learning-core";
 import { isRetiredGermanResource } from "./resource-links";
+
+describe("browser grammar catalog", () => {
+  it("liefert dem Grammatiklabor im Browser genau den erzeugten Katalog", async () => {
+    const source = await Bun.file(
+      new URL(
+        "../../../apps/web/public/replacements/de/grammar-catalog.js",
+        import.meta.url,
+      ),
+    ).text();
+    const prefix = "window.GERMAN_GRAMMAR_UNITS = ";
+    expect(source.startsWith(prefix)).toBe(true);
+    expect(
+      JSON.parse(source.slice(prefix.length).trim().replace(/;$/u, "")),
+    ).toEqual(JSON.parse(JSON.stringify(browserGrammarCatalog)));
+  });
+});
 
 describe("legacy content extraction", () => {
   it("hält den B1-Mediationspiloten bis zur unabhängigen menschlichen Prüfung zurück", () => {

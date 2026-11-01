@@ -50,7 +50,10 @@ test("learner feedback keeps only the previewed fields and requires current cons
     { ...feedback, response: " " },
     { ...feedback, response: "x".repeat(2001) },
     { ...feedback, comment: "x".repeat(1001) },
-    { ...feedback, task: { ...feedback.task, id: "de.c.013.repair.0.writing" } },
+    {
+      ...feedback,
+      task: { ...feedback.task, id: "de.c.013.repair.0.writing" },
+    },
     { ...feedback, release: "latest" },
   ])
     expect(() => parseLearnerFeedback(broken)).toThrow();
@@ -71,7 +74,10 @@ test("an issue never turns learner text into mentions, links or markup", () => {
     "category:answer_correct",
   ]);
   // Learner-written text sits only inside code fences longer than any run in it.
-  const outside = issue.body.replace(/(`{4,})[^\n]*\n[\s\S]*?\n\1(?=\n|$)/g, "");
+  const outside = issue.body.replace(
+    /(`{4,})[^\n]*\n[\s\S]*?\n\1(?=\n|$)/g,
+    "",
+  );
   expect(outside).not.toContain("@");
   expect(outside).not.toContain("<img");
   expect(outside).not.toContain("evil.example");
@@ -84,7 +90,10 @@ test("an issue never turns learner text into mentions, links or markup", () => {
 test("the learner sees a state derived only from decision labels", () => {
   expect(learnerFeedbackState(["learner-feedback"], "open")).toBe("received");
   expect(
-    learnerFeedbackState(["learner-feedback", "decision:accept_answer"], "closed"),
+    learnerFeedbackState(
+      ["learner-feedback", "decision:accept_answer"],
+      "closed",
+    ),
   ).toBe("answer_accepted");
   expect(learnerFeedbackState(["decision:known_wrong"], "closed")).toBe(
     "answer_rejected",

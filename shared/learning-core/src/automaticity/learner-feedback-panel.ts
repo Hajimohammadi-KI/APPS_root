@@ -75,7 +75,8 @@ const copy = {
       exercise_wrong: "The exercise is wrong",
       other: "Something else",
     },
-    comment: "Your comment (optional). Do not include names or contact details.",
+    comment:
+      "Your comment (optional). Do not include names or contact details.",
     preview: "Exactly this will be sent",
     excluded:
       "Not sent: your name, profile, other answers, recordings or practice history.",
@@ -87,7 +88,8 @@ const copy = {
       `Sent. Receipt #${id}. Check its status or withdraw it under “My comments” in Saved responses.`,
     unsaved: (id: number) =>
       `Sent as #${id}, but this browser could not save the receipt. Note the number; the owner can delete it on request.`,
-    failed: "The comment was not sent. Your answer is unchanged; try again later.",
+    failed:
+      "The comment was not sent. Your answer is unchanged; try again later.",
     invalid: "This comment cannot be sent: ",
   },
   de: {
@@ -224,7 +226,10 @@ export function appendLearnerFeedbackPanel(
           },
           category: category ?? "other",
           comment: comment.value,
-          consent: { policy: LEARNER_FEEDBACK_POLICY, at: new Date().toISOString() },
+          consent: {
+            policy: LEARNER_FEEDBACK_POLICY,
+            at: new Date().toISOString(),
+          },
         });
       } catch (error) {
         return error instanceof Error ? error.message : String(error);
@@ -323,7 +328,8 @@ const receiptCopy = {
     empty: "Du hast von diesem Browser aus noch keine Kommentare gesendet.",
     check: "Status prüfen",
     withdraw: "Zurückziehen",
-    confirm: "Diesen Kommentar zurückziehen? Sein Text wird aus der Prüfliste entfernt.",
+    confirm:
+      "Diesen Kommentar zurückziehen? Sein Text wird aus der Prüfliste entfernt.",
     states: {
       received: "Eingegangen, noch nicht geprüft",
       answer_accepted: "Deine Antwort wurde als richtig angenommen",
@@ -334,7 +340,8 @@ const receiptCopy = {
       deleted: "Zurückgezogen und gelöscht",
     },
     reply: "Antwort: ",
-    failed: "Der Status konnte nicht geprüft werden; versuche es später erneut.",
+    failed:
+      "Der Status konnte nicht geprüft werden; versuche es später erneut.",
   },
 };
 

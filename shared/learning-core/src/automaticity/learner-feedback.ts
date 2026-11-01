@@ -122,7 +122,10 @@ export function parseLearnerFeedback(raw: unknown): LearnerFeedback {
     throw Error("Invalid version.");
   if (
     raw.release !== null &&
-    !(typeof raw.release === "string" && /^\d{4}\.\d{2}\.\d{2}\.\d+$/u.test(raw.release))
+    !(
+      typeof raw.release === "string" &&
+      /^\d{4}\.\d{2}\.\d{2}\.\d+$/u.test(raw.release)
+    )
   )
     throw Error("Invalid release.");
   if (
@@ -253,7 +256,8 @@ export function learnerFeedbackState(
 function parseDecision(raw: unknown): LearnerFeedbackDecision {
   if (!isRecord(raw)) throw Error("A decision is required.");
   const decision = oneOf(raw.decision, LEARNER_FEEDBACK_DECISIONS, "Decision");
-  const needsAnswer = decision === "accept_answer" || decision === "known_wrong";
+  const needsAnswer =
+    decision === "accept_answer" || decision === "known_wrong";
   const answer = text(raw.answer ?? "", LIMITS.response, "Answer", needsAnswer);
   const explanation = text(
     raw.explanation ?? "",

@@ -88,7 +88,10 @@ function mount(root: HTMLElement) {
       section.append(
         node("h2", id, "ltr"),
         node("p", first.task.prompt, "ltr"),
-        node("p", `پاسخ‌های ذخیره‌شده: ${first.task.acceptedAnswers.join(" | ")}`),
+        node(
+          "p",
+          `پاسخ‌های ذخیره‌شده: ${first.task.acceptedAnswers.join(" | ")}`,
+        ),
       );
       const repeats = new Map<string, number>();
       for (const row of rows) {
@@ -110,9 +113,14 @@ function mount(root: HTMLElement) {
         `#${item.number} · ${item.createdAt.slice(0, 10)} · ${categories[feedback.category]}${count > 1 ? ` · همین پاسخ ${count} بار` : ""}`,
       ),
       node("p", `پاسخ یادگیرنده: ${feedback.response}`, "ltr"),
-      node("p", `بررسی اپ: ${feedback.check.verdict} — ${feedback.check.feedback}`, "ltr"),
+      node(
+        "p",
+        `بررسی اپ: ${feedback.check.verdict} — ${feedback.check.feedback}`,
+        "ltr",
+      ),
     );
-    if (feedback.comment) box.append(node("p", `کامنت: ${feedback.comment}`, "ltr"));
+    if (feedback.comment)
+      box.append(node("p", `کامنت: ${feedback.comment}`, "ltr"));
     if (item.url) {
       const link = node("a", "مشاهده در GitHub");
       link.href = item.url;
@@ -143,7 +151,8 @@ function mount(root: HTMLElement) {
       fields.replaceChildren();
       if (kind === "accept_answer" || kind === "known_wrong")
         fields.append(node("label", "شکل دقیق پاسخ"), answer);
-      if (kind === "known_wrong") fields.append(node("label", "توضیح (لازم)"), explanation);
+      if (kind === "known_wrong")
+        fields.append(node("label", "توضیح (لازم)"), explanation);
       fields.append(node("label", "پاسخ به یادگیرنده"), reply);
     };
     choice.onchange = sync;
@@ -161,7 +170,11 @@ function mount(root: HTMLElement) {
         });
         result.textContent =
           "ثبت شد. برای اعمال در تمرین‌ها: bun scripts/import-learner-decisions.ts و سپس build و انتشار.";
-        choice.disabled = answer.disabled = explanation.disabled = reply.disabled = true;
+        choice.disabled =
+          answer.disabled =
+          explanation.disabled =
+          reply.disabled =
+            true;
       } catch (error) {
         result.textContent = `ثبت نشد: ${error instanceof Error ? error.message : error}`;
         save.disabled = false;

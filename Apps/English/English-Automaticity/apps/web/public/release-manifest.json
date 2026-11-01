@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-01",
   "version": "27.4.4",
-  "webRelease": "2026.11.01.1",
+  "webRelease": "2026.11.01.2",
   "changes": [
-    "209 checkable exercises in both languages were re-authored because their stored answer was a fragment, placeholder, rule label or note, so a complete correct answer could not pass; a typed apostrophe now matches a typographic one, and the build blocks these defect types. Earlier definitions stay for saved work. No automatic uploads, model training or validated CEFR claims."
+    "Optional comments on a checked answer with an exact preview and fresh consent each time, a receipt to check status or withdraw, and an owner review page; approved decisions become new exercise versions. Off until the owner sets the private repository and token. A learner's claim never changes a result by itself."
   ]
 }

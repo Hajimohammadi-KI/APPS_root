@@ -54,18 +54,19 @@ export default function PrivacyPage() {
         <SectionBox title="Kommentare zu einer geprüften Antwort">
           Unter einer geprüften schriftlichen Antwort kannst du einen Kommentar
           senden, etwa dass du deine Antwort für richtig hältst. Erst nachdem du
-          die Vorschau jedes Mal bestätigst, sendet die App genau diese Vorschau:
-          Aufgabe, gespeicherte Antworten, deine Antwort, die Prüfung der App,
-          den gewählten Grund und deinen Kommentar. Name, Profil, andere
-          Antworten, Aufnahmen und Verlauf werden nicht gesendet. Der Kommentar
-          wird als Issue in einem privaten GitHub-Repository (GitHub, USA)
-          gespeichert, das nur die Verantwortlichen der App lesen, und dient zur
-          Prüfung von Antworten und zur Verbesserung der Aufgaben. Ein Kommentar
-          ändert dein Ergebnis nie von selbst; wird deine Antwort als richtig
-          angenommen oder eine falsche Form erklärt, kann diese Form ohne Bezug
-          zu dir Teil der Aufgabe werden. Dein Browser speichert eine Quittung
-          unter „Meine Kommentare“; dort kannst du den Status und die Antwort
-          lesen oder den Kommentar zurückziehen, wodurch sein Text entfernt wird.
+          die Vorschau jedes Mal bestätigst, sendet die App genau diese
+          Vorschau: Aufgabe, gespeicherte Antworten, deine Antwort, die Prüfung
+          der App, den gewählten Grund und deinen Kommentar. Name, Profil,
+          andere Antworten, Aufnahmen und Verlauf werden nicht gesendet. Der
+          Kommentar wird als Issue in einem privaten GitHub-Repository (GitHub,
+          USA) gespeichert, das nur die Verantwortlichen der App lesen, und
+          dient zur Prüfung von Antworten und zur Verbesserung der Aufgaben. Ein
+          Kommentar ändert dein Ergebnis nie von selbst; wird deine Antwort als
+          richtig angenommen oder eine falsche Form erklärt, kann diese Form
+          ohne Bezug zu dir Teil der Aufgabe werden. Dein Browser speichert eine
+          Quittung unter „Meine Kommentare“; dort kannst du den Status und die
+          Antwort lesen oder den Kommentar zurückziehen, wodurch sein Text
+          entfernt wird.
         </SectionBox>
 
         <SectionBox title="Mikrofon und Sprache">

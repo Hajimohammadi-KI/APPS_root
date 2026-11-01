@@ -2535,7 +2535,11 @@ export async function mountPractice(
           ),
         );
       }
-      if (saved && task.modality === "writing" && task.answerPolicy === "closed")
+      if (
+        saved &&
+        task.modality === "writing" &&
+        task.answerPolicy === "closed"
+      )
         appendLearnerFeedbackPanel(taskPanel, {
           language,
           contentVersion: pack.version,

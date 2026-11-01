@@ -21,7 +21,12 @@ type Issue = {
 function fakeGitHub({ canDelete = false } = {}) {
   const issues: Issue[] = [];
   const comments = new Map<number, { id: number; body: string }[]>();
-  const calls: { method: string; path: string; auth: string | null; body: unknown }[] = [];
+  const calls: {
+    method: string;
+    path: string;
+    auth: string | null;
+    body: unknown;
+  }[] = [];
   let commentId = 100;
   const fetcher = (async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = new URL(String(input));
@@ -57,7 +62,11 @@ function fakeGitHub({ canDelete = false } = {}) {
     if (method === "GET" && path === "/issues")
       return json(
         url.searchParams.get("page") === "1"
-          ? issues.filter((i) => i.state === url.searchParams.get("state") || url.searchParams.get("state") === "all")
+          ? issues.filter(
+              (i) =>
+                i.state === url.searchParams.get("state") ||
+                url.searchParams.get("state") === "all",
+            )
           : [],
       );
     const match = path.match(/^\/issues\/(\d+)(\/comments|\/labels)?$/);
@@ -82,7 +91,8 @@ function fakeGitHub({ canDelete = false } = {}) {
     }
     if (match[2] === "/labels") {
       for (const name of body.labels)
-        if (!issue.labels.some((l) => l.name === name)) issue.labels.push({ name });
+        if (!issue.labels.some((l) => l.name === name))
+          issue.labels.push({ name });
       return json(issue.labels);
     }
     if (method === "PATCH") {
@@ -114,16 +124,26 @@ const feedback = {
     id: "de.c.014.repair.content-20261101.writing",
     version: "2026-11-01.1",
     constructionId: "de.c.014",
-    prompt: "Korrigiere den Artikel nach auf und schreibe den ganzen Satz: Das Buch liegt auf den Tisch.",
+    prompt:
+      "Korrigiere den Artikel nach auf und schreibe den ganzen Satz: Das Buch liegt auf den Tisch.",
     acceptedAnswers: ["Das Buch liegt auf dem Tisch."],
   },
   response: "Das Buch liegt jetzt auf dem Tisch.",
-  check: { verdict: "not_assessed", evaluator: "controlled-answer 1.0.0", feedback: "Unterscheidet sich." },
+  check: {
+    verdict: "not_assessed",
+    evaluator: "controlled-answer 1.0.0",
+    feedback: "Unterscheidet sich.",
+  },
   category: "answer_correct",
   comment: "",
   consent: { policy: LEARNER_FEEDBACK_POLICY, at: "2026-11-01T10:00:00.000Z" },
 };
-const send = (handler: typeof handleLearnerFeedback, github: ReturnType<typeof fakeGitHub>, body: unknown, ip = "1.2.3.4") =>
+const send = (
+  handler: typeof handleLearnerFeedback,
+  github: ReturnType<typeof fakeGitHub>,
+  body: unknown,
+  ip = "1.2.3.4",
+) =>
   handler(
     new Request("https://app.example/api/learner-feedback", {
       method: "POST",
@@ -131,7 +151,10 @@ const send = (handler: typeof handleLearnerFeedback, github: ReturnType<typeof f
       body: JSON.stringify(body),
     }),
     config,
-    { fetcher: github.fetcher, limiter: createGrammarRateLimiter({ limit: 5 }) },
+    {
+      fetcher: github.fetcher,
+      limiter: createGrammarRateLimiter({ limit: 5 }),
+    },
   );
 
 test("without a token and repository nothing is sent anywhere", async () => {
@@ -165,7 +188,9 @@ test("a consented comment becomes one private issue; the receipt secret stays wi
   const github = fakeGitHub();
   const response = await send(handleLearnerFeedback, github, feedback);
   expect(response.status).toBe(201);
-  const { receipt } = (await response.json()) as { receipt: { id: number; token: string } };
+  const { receipt } = (await response.json()) as {
+    receipt: { id: number; token: string };
+  };
   expect(receipt.id).toBe(1);
   expect(receipt.token.length).toBeGreaterThanOrEqual(40);
   const issue = github.issues[0]!;
@@ -176,8 +201,13 @@ test("a consented comment becomes one private issue; the receipt secret stays wi
     "app:de",
     "category:answer_correct",
   ]);
-  expect(github.calls.every((call) => call.auth === "Bearer github_pat_secret")).toBe(true);
-  const refused = await send(handleLearnerFeedback, github, { ...feedback, consent: undefined });
+  expect(
+    github.calls.every((call) => call.auth === "Bearer github_pat_secret"),
+  ).toBe(true);
+  const refused = await send(handleLearnerFeedback, github, {
+    ...feedback,
+    consent: undefined,
+  });
   expect(refused.status).toBe(400);
   expect(github.issues).toHaveLength(1);
 });
@@ -203,17 +233,27 @@ test("sending is rate limited per client", async () => {
 
 test("status and the owner's reply need the receipt; withdrawal removes the text", async () => {
   const github = fakeGitHub();
-  const { receipt } = (await (await send(handleLearnerFeedback, github, feedback)).json()) as {
+  const { receipt } = (await (
+    await send(handleLearnerFeedback, github, feedback)
+  ).json()) as {
     receipt: { id: number; token: string };
   };
   const ask = (token: string, method = "GET") =>
     handleLearnerFeedback(
-      new Request(`https://app.example/api/learner-feedback?id=${receipt.id}&token=${token}`, { method }),
+      new Request(
+        `https://app.example/api/learner-feedback?id=${receipt.id}&token=${token}`,
+        { method },
+      ),
       config,
       { fetcher: github.fetcher },
     );
-  expect(await (await ask(receipt.token)).json()).toEqual({ state: "received", reply: "" });
-  expect((await ask("wrong-token-wrong-token-wrong-token-1234")).status).toBe(404);
+  expect(await (await ask(receipt.token)).json()).toEqual({
+    state: "received",
+    reply: "",
+  });
+  expect((await ask("wrong-token-wrong-token-wrong-token-1234")).status).toBe(
+    404,
+  );
 
   const review = (body?: unknown, key = "review-key-with-enough-length-123") =>
     handleLearnerFeedbackReview(
@@ -226,15 +266,28 @@ test("status and the owner's reply need the receipt; withdrawal removes the text
       { fetcher: github.fetcher },
     );
   expect((await review(undefined, "guess")).status).toBe(401);
-  const listed = (await (await review()).json()) as { items: { number: number; feedback: unknown }[] };
+  const listed = (await (await review()).json()) as {
+    items: { number: number; feedback: unknown }[];
+  };
   expect(listed.items).toHaveLength(1);
   expect(JSON.stringify(listed.items)).not.toContain("receipt");
-  expect((await review({ issue: 1, decision: "known_wrong", explanation: " " })).status).toBe(400);
   expect(
-    (await review({ issue: 1, decision: "accept_answer", reply: "Danke, das ist richtig." })).status,
+    (await review({ issue: 1, decision: "known_wrong", explanation: " " }))
+      .status,
+  ).toBe(400);
+  expect(
+    (
+      await review({
+        issue: 1,
+        decision: "accept_answer",
+        reply: "Danke, das ist richtig.",
+      })
+    ).status,
   ).toBe(200);
   expect(github.issues[0]!.state).toBe("closed");
-  expect(github.issues[0]!.labels.map((l) => l.name)).toContain("decision:accept_answer");
+  expect(github.issues[0]!.labels.map((l) => l.name)).toContain(
+    "decision:accept_answer",
+  );
   expect(await (await ask(receipt.token)).json()).toEqual({
     state: "answer_accepted",
     reply: "Danke, das ist richtig.",

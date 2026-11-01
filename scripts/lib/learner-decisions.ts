@@ -39,11 +39,25 @@ export function learnerDecisionRows(
   }[],
 ) {
   const rows: Record<"en" | "de", Row[]> = { en: [], de: [] };
-  const fixes: { issue: number; language: "en" | "de"; taskId: string; prompt: string }[] = [];
+  const fixes: {
+    issue: number;
+    language: "en" | "de";
+    taskId: string;
+    prompt: string;
+  }[] = [];
   for (const { issue, feedback, decision } of decided) {
     if (decision.decision === "fix_exercise")
-      fixes.push({ issue, language: feedback.language, taskId: feedback.task.id, prompt: feedback.task.prompt });
-    if (decision.decision !== "accept_answer" && decision.decision !== "known_wrong") continue;
+      fixes.push({
+        issue,
+        language: feedback.language,
+        taskId: feedback.task.id,
+        prompt: feedback.task.prompt,
+      });
+    if (
+      decision.decision !== "accept_answer" &&
+      decision.decision !== "known_wrong"
+    )
+      continue;
     rows[feedback.language].push({
       issue,
       taskId: feedback.task.id,
@@ -55,7 +69,8 @@ export function learnerDecisionRows(
       decidedAt: decision.decidedAt,
     });
   }
-  for (const list of Object.values(rows)) list.sort((a, b) => a.issue - b.issue);
+  for (const list of Object.values(rows))
+    list.sort((a, b) => a.issue - b.issue);
   return { ...rows, fixes: fixes.sort((a, b) => a.issue - b.issue) };
 }
 
@@ -88,11 +103,17 @@ export function applyLearnerDecisions(
     }
     const task = unit && activePracticeTasks(unit).find((t) => t.id === id);
     if (!task || task.answerPolicy !== "closed") {
-      skipped.push({ issue: row.issue, reason: "The exercise is no longer in the curriculum." });
+      skipped.push({
+        issue: row.issue,
+        reason: "The exercise is no longer in the curriculum.",
+      });
       continue;
     }
     if (normalizeText(task.prompt) !== normalizeText(row.prompt)) {
-      skipped.push({ issue: row.issue, reason: "The exercise text changed after the comment." });
+      skipped.push({
+        issue: row.issue,
+        reason: "The exercise text changed after the comment.",
+      });
       continue;
     }
     const group = groups.get(task.id) ?? { task, rows: [] };
@@ -105,34 +126,58 @@ export function applyLearnerDecisions(
     const rejected = rows.filter((row) => row.decision === "known_wrong");
     const conflicts = new Set(
       accepted
-        .filter((a) => rejected.some((r) => plain(r.answer) === plain(a.answer)))
+        .filter((a) =>
+          rejected.some((r) => plain(r.answer) === plain(a.answer)),
+        )
         .map((a) => plain(a.answer)),
     );
     for (const row of rows)
       if (conflicts.has(plain(row.answer)))
-        skipped.push({ issue: row.issue, reason: "Another decision on the same form contradicts it." });
+        skipped.push({
+          issue: row.issue,
+          reason: "Another decision on the same form contradicts it.",
+        });
     const answers = [...task.acceptedAnswers];
     for (const row of accepted)
-      if (!conflicts.has(plain(row.answer)) && !answers.some((a) => plain(a) === plain(row.answer)))
+      if (
+        !conflicts.has(plain(row.answer)) &&
+        !answers.some((a) => plain(a) === plain(row.answer))
+      )
         answers.push(row.answer.trim());
     const wrong = [...(task.rejectedAnswers ?? [])];
     for (const row of rejected) {
       if (conflicts.has(plain(row.answer))) continue;
       if (answers.some((a) => plain(a) === plain(row.answer))) {
-        skipped.push({ issue: row.issue, reason: "This form is an accepted answer." });
+        skipped.push({
+          issue: row.issue,
+          reason: "This form is an accepted answer.",
+        });
         continue;
       }
       if (!wrong.some((w) => plain(w.answer) === plain(row.answer)))
-        wrong.push({ answer: row.answer.trim(), explanation: row.explanation.trim() });
+        wrong.push({
+          answer: row.answer.trim(),
+          explanation: row.explanation.trim(),
+        });
     }
-    if (answers.length === task.acceptedAnswers.length && wrong.length === (task.rejectedAnswers?.length ?? 0))
+    if (
+      answers.length === task.acceptedAnswers.length &&
+      wrong.length === (task.rejectedAnswers?.length ?? 0)
+    )
       continue;
     const applied = rows.filter((row) => !conflicts.has(plain(row.answer)));
     const digest = createHash("sha256")
-      .update(JSON.stringify(applied.map((row) => [row.issue, row.decision, row.answer])))
+      .update(
+        JSON.stringify(
+          applied.map((row) => [row.issue, row.decision, row.answer]),
+        ),
+      )
       .digest("hex")
       .slice(0, 8);
-    const base = task.id.replace(/\.learner-[a-f0-9]{8}(?=\.(?:writing|speaking)$)/u, "");
+    const base = task.id.replace(
+      /\.learner-[a-f0-9]{8}(?=\.(?:writing|speaking)$)/u,
+      "",
+    );
     const id = base.replace(/\.(writing|speaking)$/u, `.learner-${digest}.$1`);
     const unit = pack.units.find((row) => row.tasks.includes(task))!;
     if (unit.tasks.some((row) => row.id === id)) continue;
@@ -153,7 +198,8 @@ export function applyLearnerDecisions(
     unit.retiredTasks.push({
       taskId: task.id,
       replacementTaskId: id,
-      reason: "Apply the owner's reviewed decisions on learner comments: accepted answers and reviewed wrong forms.",
+      reason:
+        "Apply the owner's reviewed decisions on learner comments: accepted answers and reviewed wrong forms.",
       retiredOn: file.version.slice(0, 10),
     });
     changed = true;

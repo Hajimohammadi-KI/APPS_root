@@ -160,19 +160,31 @@ test("a reviewed wrong form needs an explanation and can never also be accepted"
   expect(
     auditClosedTask({
       ...task,
-      rejectedAnswers: [{ answer: "She is here.", explanation: "Not this one." }],
+      rejectedAnswers: [
+        { answer: "She is here.", explanation: "Not this one." },
+      ],
     }),
-  ).toContainEqual({ taskId: "fixture", code: "rejected-answer-conflict", severity: "error" });
+  ).toContainEqual({
+    taskId: "fixture",
+    code: "rejected-answer-conflict",
+    severity: "error",
+  });
   expect(
     auditClosedTask({
       ...task,
       rejectedAnswers: [{ answer: "She are here.", explanation: " " }],
     }),
-  ).toContainEqual({ taskId: "fixture", code: "rejected-answer-conflict", severity: "error" });
+  ).toContainEqual({
+    taskId: "fixture",
+    code: "rejected-answer-conflict",
+    severity: "error",
+  });
   expect(
     auditClosedTask({
       ...task,
-      rejectedAnswers: [{ answer: "She are here.", explanation: "Use is with she." }],
+      rejectedAnswers: [
+        { answer: "She are here.", explanation: "Use is with she." },
+      ],
     }),
   ).toEqual([]);
 });

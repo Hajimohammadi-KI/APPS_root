@@ -32,7 +32,9 @@ for (const language of ["en", "de"] as const) {
     import.meta.dir,
     `../shared/learning-core/content/learner-decisions-${language}.json`,
   );
-  const current = JSON.parse(await readFile(path, "utf8")) as LearnerDecisionFile;
+  const current = JSON.parse(
+    await readFile(path, "utf8"),
+  ) as LearnerDecisionFile;
   const decisions = rows[language];
   if (JSON.stringify(current.decisions) === JSON.stringify(decisions)) {
     console.log(`${language}: ${decisions.length} decisions, unchanged.`);

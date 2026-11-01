@@ -64,7 +64,9 @@ for (const [language, app] of [
     decisions,
   );
   for (const row of applied.skipped)
-    console.log(`${language}: decision #${row.issue} not applied: ${row.reason}`);
+    console.log(
+      `${language}: decision #${row.issue} not applied: ${row.reason}`,
+    );
   const pack = applied.pack;
   const revisedIssues = validateCurriculum(pack);
   if (revisedIssues.length) throw new Error(revisedIssues.join("\n"));

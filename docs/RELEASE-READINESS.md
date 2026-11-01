@@ -87,3 +87,33 @@ included in another deployment; that causes the hosted copy to lag again.
 
 If deployment access is unavailable, finish the local work, keep the item at
 `tested`, and record the exact outstanding publication and verification steps.
+
+## 5. Learner comments (optional service)
+
+Comments on a checked answer are stored as issues in one private GitHub
+repository. Without the variables below both apps show "not switched on yet"
+and send nothing. Set them in both Vercel projects (Production), then redeploy:
+
+- `LEARNER_FEEDBACK_GITHUB_REPO`: `<owner>/<repository>` of the private repository.
+- `LEARNER_FEEDBACK_GITHUB_TOKEN`: a fine-grained token limited to that
+  repository with Issues read/write. Deleting a withdrawn issue additionally
+  needs admin rights; without them the text is removed and the issue closed.
+- `LEARNER_FEEDBACK_REVIEW_KEY`: a random string of at least 24 characters for
+  the review page `<canonical URL>/learning-core/feedback-review.html`.
+
+Check `<canonical URL>/api/learner-feedback` returns `{"available":true}`.
+Decisions on the review page change nothing until they are imported and
+released:
+
+```powershell
+$env:LEARNER_FEEDBACK_GITHUB_TOKEN = "<token>"
+$env:LEARNER_FEEDBACK_GITHUB_REPO = "<owner>/<repository>"
+bun scripts/import-learner-decisions.ts
+bun scripts/build-automaticity-curriculum.ts
+```
+
+The import writes `shared/learning-core/content/learner-decisions-{en,de}.json`
+(accepted answers and reviewed wrong forms only) and lists "fix the exercise"
+requests for authoring. The build adds a new version of each affected exercise
+and keeps the old one for saved work; a decision whose exercise text changed
+since the comment is reported and not applied. Then follow sections 1–4.

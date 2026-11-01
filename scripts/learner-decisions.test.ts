@@ -25,7 +25,10 @@ const built = () =>
     reviseVariationTasks(
       JSON.parse(
         readFileSync(
-          new URL("../shared/learning-core/content/curriculum-en.json", import.meta.url),
+          new URL(
+            "../shared/learning-core/content/curriculum-en.json",
+            import.meta.url,
+          ),
           "utf8",
         ),
       ) as CurriculumPack,
@@ -50,7 +53,9 @@ const decision = (
   decidedAt: "2026-11-05T09:00:00.000Z",
   ...overrides,
 });
-const file = (decisions: LearnerDecisionFile["decisions"]): LearnerDecisionFile => ({
+const file = (
+  decisions: LearnerDecisionFile["decisions"],
+): LearnerDecisionFile => ({
   schemaVersion: 1,
   language: "en",
   version: "2026-11-05.1",
@@ -69,7 +74,12 @@ const verdict = (pack: CurriculumPack, text: string) => {
       language: "en",
       at: "2026-11-06T10:00:00.000Z",
       task: { ...task },
-      response: { text, sha256: sha(text), originalTranscriptSha256: null, transcriptEdited: false },
+      response: {
+        text,
+        sha256: sha(text),
+        originalTranscriptSha256: null,
+        transcriptEdited: false,
+      },
     } as never,
     task,
     "2026-11-06T10:00:00.000Z",
@@ -91,7 +101,9 @@ test("owner decisions become a new version of the exercise and keep the old one 
   expect(skipped).toEqual([]);
   expect(validateCurriculum(pack)).toEqual([]);
   const unit = pack.units.find((row) => row.id === "en.c.013")!;
-  const active = activePracticeTasks(unit).find((row) => row.prompt === prompt)!;
+  const active = activePracticeTasks(unit).find(
+    (row) => row.prompt === prompt,
+  )!;
   expect(active.id).not.toBe(taskId);
   expect(active.version).toBe("2026-11-05.1");
   expect(active.acceptedAnswers).toEqual([
@@ -99,27 +111,38 @@ test("owner decisions become a new version of the exercise and keep the old one 
     "The keys are lying on the table.",
   ]);
   expect(active.rejectedAnswers).toEqual([
-    { answer: "The keys are at the table.", explanation: "At marks a point, not a surface." },
+    {
+      answer: "The keys are at the table.",
+      explanation: "At marks a point, not a surface.",
+    },
   ]);
   expect(unit.tasks.find((row) => row.id === taskId)).toEqual(
-    source.units.find((row) => row.id === "en.c.013")!.tasks.find((row) => row.id === taskId),
+    source.units
+      .find((row) => row.id === "en.c.013")!
+      .tasks.find((row) => row.id === taskId),
   );
   expect(unit.retiredTasks).toContainEqual(
     expect.objectContaining({ taskId, replacementTaskId: active.id }),
   );
   expect(
-    [...activePracticeTasks(unit).flatMap(auditClosedTask), ...auditUnitAnswers(unit, activePracticeTasks(unit))].filter(
-      (issue) => issue.severity === "error",
-    ),
+    [
+      ...activePracticeTasks(unit).flatMap(auditClosedTask),
+      ...auditUnitAnswers(unit, activePracticeTasks(unit)),
+    ].filter((issue) => issue.severity === "error"),
   ).toEqual([]);
-  expect(verdict(pack, "The keys are lying on the table.").verdict).toBe("pass");
+  expect(verdict(pack, "The keys are lying on the table.").verdict).toBe(
+    "pass",
+  );
   const rejected = verdict(pack, "The keys are at the table.");
   expect(rejected.verdict).toBe("needs_repair");
   expect(rejected.feedback).toContain("At marks a point, not a surface.");
-  const again = applyLearnerDecisions(pack, file([
-    decision(4, "accept_answer", "The keys are lying on the table."),
-    decision(7, "known_wrong", "The keys are at the table."),
-  ]));
+  const again = applyLearnerDecisions(
+    pack,
+    file([
+      decision(4, "accept_answer", "The keys are lying on the table."),
+      decision(7, "known_wrong", "The keys are at the table."),
+    ]),
+  );
   expect(JSON.stringify(again.pack)).toBe(JSON.stringify(pack));
 });
 
@@ -162,18 +185,61 @@ test("only answer decisions are imported; fixes are listed for authoring", () =>
     language: "en" as const,
     contentVersion: "2026-11-01.1",
     release: "2026.11.01.1",
-    task: { id: taskId, version: "2026-11-01.1", constructionId: "en.c.013", prompt, acceptedAnswers: ["The keys are on the table."] },
+    task: {
+      id: taskId,
+      version: "2026-11-01.1",
+      constructionId: "en.c.013",
+      prompt,
+      acceptedAnswers: ["The keys are on the table."],
+    },
     response: "The keys are lying on the table.",
-    check: { verdict: "not_assessed", evaluator: "controlled-answer 1.0.0", feedback: "" },
+    check: {
+      verdict: "not_assessed",
+      evaluator: "controlled-answer 1.0.0",
+      feedback: "",
+    },
     category: "answer_correct" as const,
     comment: "",
-    consent: { policy: LEARNER_FEEDBACK_POLICY, at: "2026-11-01T10:00:00.000Z" },
+    consent: {
+      policy: LEARNER_FEEDBACK_POLICY,
+      at: "2026-11-01T10:00:00.000Z",
+    },
   };
   const at = "2026-11-05T09:00:00.000Z";
   const rows = learnerDecisionRows([
-    { issue: 4, feedback, decision: { decision: "accept_answer", answer: "The keys are lying on the table.", explanation: "", reply: "", decidedAt: at } },
-    { issue: 5, feedback, decision: { decision: "fix_exercise", answer: "", explanation: "", reply: "", decidedAt: at } },
-    { issue: 6, feedback, decision: { decision: "no_change", answer: "", explanation: "", reply: "", decidedAt: at } },
+    {
+      issue: 4,
+      feedback,
+      decision: {
+        decision: "accept_answer",
+        answer: "The keys are lying on the table.",
+        explanation: "",
+        reply: "",
+        decidedAt: at,
+      },
+    },
+    {
+      issue: 5,
+      feedback,
+      decision: {
+        decision: "fix_exercise",
+        answer: "",
+        explanation: "",
+        reply: "",
+        decidedAt: at,
+      },
+    },
+    {
+      issue: 6,
+      feedback,
+      decision: {
+        decision: "no_change",
+        answer: "",
+        explanation: "",
+        reply: "",
+        decidedAt: at,
+      },
+    },
   ]);
   expect(rows.en.map((row) => row.issue)).toEqual([4]);
   expect(rows.de).toEqual([]);

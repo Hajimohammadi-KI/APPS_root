@@ -54,13 +54,13 @@ export default function PrivacyPage() {
           <section className="legal-card">
             <h2>Comments on a checked answer</h2>
             <p>
-              Under a checked written answer you can send a comment, for
-              example that you think your answer is correct. Only after you
-              confirm the preview each time, the app sends exactly that preview:
-              the exercise, the stored answers, your answer, the app&apos;s
-              check, your chosen reason and your comment. Your name, profile,
-              other answers, recordings and history are not sent. The comment
-              is stored as an issue in a private GitHub repository (GitHub, USA)
+              Under a checked written answer you can send a comment, for example
+              that you think your answer is correct. Only after you confirm the
+              preview each time, the app sends exactly that preview: the
+              exercise, the stored answers, your answer, the app&apos;s check,
+              your chosen reason and your comment. Your name, profile, other
+              answers, recordings and history are not sent. The comment is
+              stored as an issue in a private GitHub repository (GitHub, USA)
               that only the app owner can read, and is used to review answers
               and improve exercises. A comment never changes your result by
               itself; if the owner accepts your answer as correct or explains a

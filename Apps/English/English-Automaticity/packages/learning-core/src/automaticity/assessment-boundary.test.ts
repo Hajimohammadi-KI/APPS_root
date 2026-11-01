@@ -63,19 +63,26 @@ test("an unchanged copy of the sentence to correct is marked for repair", () => 
   const correction: PracticeTask = {
     ...task,
     responseKind: "correction",
-    prompt: "Correct the preposition and write the full sentence: The keys are in the table.",
+    prompt:
+      "Correct the preposition and write the full sentence: The keys are in the table.",
     acceptedAnswers: ["The keys are on the table."],
     solution: "The keys are on the table.",
   };
   const response = { ...attempt(), task: correction };
-  for (const text of ["The keys are in the table.", "The keys are in the table"]) {
+  for (const text of [
+    "The keys are in the table.",
+    "The keys are in the table",
+  ]) {
     response.response.text = text;
     const result = assessControlledTask(response, correction, at, "unchanged");
     expect(result.verdict).toBe("needs_repair");
     expect(result.feedback).toContain("still the sentence to correct");
   }
   // A reformulation task starts from acceptable language; copying it is not an error.
-  const transformation = { ...correction, responseKind: "transformation" as const };
+  const transformation = {
+    ...correction,
+    responseKind: "transformation" as const,
+  };
   response.task = transformation;
   response.response.text = "The keys are in the table.";
   expect(

@@ -23,6 +23,7 @@ import { mountReviewPanel } from "./review-panel";
 import { appendLearnerFeedbackPanel } from "./learner-feedback-panel";
 import { reduceAutomaticityEvents } from "./evidence";
 import { assessControlledTask } from "./assessment";
+import { markedAnswer } from "./answer-alignment";
 import {
   collectAssessmentFeedback,
   guardAssessmentWithFeedback,
@@ -106,6 +107,49 @@ function element<K extends keyof HTMLElementTagNameMap>(
   if (text !== undefined) node.textContent = text;
   if (className) node.className = className;
   return node;
+}
+/** The check's sentence and, when it names differences, the learner's own
+ * answer with those words marked; several differences are listed on request. */
+function showAssessmentFeedback(
+  target: HTMLElement,
+  feedback: string,
+  response: string,
+  spans: readonly { start: number; end: number; explanation: string }[],
+  language: "en" | "de",
+): void {
+  target.replaceChildren(element("p", feedback));
+  if (!spans.length || !response) return;
+  const answer = element("p", undefined, "answer-diff");
+  answer.lang = language;
+  answer.dir = "ltr";
+  answer.append(
+    element(
+      "span",
+      language === "en" ? "Your answer: " : "Deine Antwort: ",
+      "answer-diff-label",
+    ),
+  );
+  for (const part of markedAnswer(response, spans)) {
+    if (part.note === undefined) {
+      answer.append(part.text);
+      continue;
+    }
+    const mark = element(
+      "mark",
+      part.text || "‸",
+      part.text ? undefined : "answer-gap",
+    );
+    mark.title = part.note;
+    answer.append(mark);
+  }
+  target.append(answer);
+  if (spans.length < 2) return;
+  const notes = element("details", undefined, "answer-diff-notes");
+  notes.append(
+    element("summary", language === "en" ? "What differs" : "Was abweicht"),
+    ...spans.slice(0, 8).map((span) => element("p", span.explanation)),
+  );
+  target.append(notes);
 }
 function button(
   label: string,
@@ -2240,7 +2284,14 @@ export async function mountPractice(
           return guarded;
         };
         const guarded = await applyFeedback(assessment);
-        feedback.textContent = (guarded ?? assessment).feedback;
+        const shown = guarded ?? assessment;
+        showAssessmentFeedback(
+          feedback,
+          shown.feedback,
+          attempt.response.text,
+          shown.spans,
+          language,
+        );
         if (
           !guarded &&
           (typeof navigator === "undefined" || navigator.onLine !== false)
@@ -2251,7 +2302,14 @@ export async function mountPractice(
           );
           if (modelAssessment) {
             const modelGuard = await applyFeedback(modelAssessment);
-            feedback.textContent = (modelGuard ?? modelAssessment).feedback;
+            const shown = modelGuard ?? modelAssessment;
+            showAssessmentFeedback(
+              feedback,
+              shown.feedback,
+              attempt.response.text,
+              shown.spans,
+              language,
+            );
           }
         }
       })()
@@ -2281,12 +2339,17 @@ export async function mountPractice(
         (row) => row.attempt.id === session.submittedId,
       );
       if (saved) observeResponse(saved.attempt);
-      feedback.textContent =
+      showAssessmentFeedback(
+        feedback,
         saved?.assessment?.feedback ??
-        t(
-          "Saved. The check was interrupted; this response has no assessment yet.",
-          "Gespeichert. Die Prüfung wurde unterbrochen; diese Antwort hat noch keine Bewertung.",
-        );
+          t(
+            "Saved. The check was interrupted; this response has no assessment yet.",
+            "Gespeichert. Die Prüfung wurde unterbrochen; diese Antwort hat noch keine Bewertung.",
+          ),
+        saved?.attempt.response.text ?? "",
+        saved?.assessment?.spans ?? [],
+        language,
+      );
       if (saved?.assessment?.correction) {
         taskPanel.append(
           element(

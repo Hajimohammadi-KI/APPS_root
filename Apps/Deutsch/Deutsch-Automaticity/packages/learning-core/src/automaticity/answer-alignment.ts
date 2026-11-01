@@ -82,6 +82,78 @@ export function alignAnswers(actual: string, expected: string): AnswerEdit[] {
   return edits.reverse();
 }
 
+/** One edit as a sentence about the nearest stored form. */
+export function answerDifference(
+  edit: AnswerEdit,
+  language: "en" | "de",
+): string {
+  if (language === "en")
+    return edit.type === "missing"
+      ? `The stored answer also has “${edit.expected}” here.`
+      : edit.type === "extra"
+        ? `The stored answer does not have “${edit.original}”.`
+        : edit.type === "order"
+          ? "The stored answer has these words in another order."
+          : `The stored answer has “${edit.expected}” where you wrote “${edit.original}”.`;
+  return edit.type === "missing"
+    ? `Die gespeicherte Antwort hat hier zusätzlich „${edit.expected}“.`
+    : edit.type === "extra"
+      ? `Die gespeicherte Antwort enthält „${edit.original}“ nicht.`
+      : edit.type === "order"
+        ? "Die gespeicherte Antwort hat diese Wörter in anderer Reihenfolge."
+        : `Die gespeicherte Antwort hat „${edit.expected}“, wo du „${edit.original}“ geschrieben hast.`;
+}
+
+/** The single sentence for an answer that matched no stored form: the one
+ * difference when there is one, otherwise how many places are marked. */
+export function unscoredFeedback(
+  edits: readonly AnswerEdit[],
+  language: "en" | "de",
+): string {
+  const lead =
+    language === "en" ? "Saved without a score: " : "Ohne Bewertung gespeichert: ";
+  if (edits.length === 1) {
+    const sentence = answerDifference(edits[0]!, language);
+    return (
+      lead +
+      (language === "en"
+        ? sentence[0]!.toLowerCase() + sentence.slice(1)
+        : sentence)
+    );
+  }
+  if (language === "en")
+    return (
+      lead +
+      (edits.length
+        ? `it differs from the stored answer in ${edits.length} places, marked in your answer.`
+        : "it differs from the stored answer.")
+    );
+  return (
+    lead +
+    (edits.length
+      ? `Deine Antwort weicht an ${edits.length} markierten Stellen von der gespeicherten ab.`
+      : "Deine Antwort weicht von der gespeicherten ab.")
+  );
+}
+
+/** The learner's text cut into plain and marked parts; a missing word is an
+ * empty marked part where it belongs. */
+export function markedAnswer(
+  text: string,
+  spans: readonly { start: number; end: number; explanation: string }[],
+): { text: string; note?: string }[] {
+  const parts: { text: string; note?: string }[] = [];
+  let at = 0;
+  for (const span of [...spans].sort((a, b) => a.start - b.start)) {
+    if (span.start < at) continue;
+    if (span.start > at) parts.push({ text: text.slice(at, span.start) });
+    parts.push({ text: text.slice(span.start, span.end), note: span.explanation });
+    at = span.end;
+  }
+  if (at < text.length) parts.push({ text: text.slice(at) });
+  return parts;
+}
+
 export function describeAnswerEdits(
   edits: readonly AnswerEdit[],
   language: "en" | "de",

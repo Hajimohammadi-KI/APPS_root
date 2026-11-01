@@ -709,6 +709,28 @@ textarea {
   background: var(--worksheet-cyan);
   border-color: #b6d7d9;
 }
+.feedback > p:last-child,
+.answer-diff-notes > p:last-child {
+  margin-bottom: 0;
+}
+.answer-diff-label {
+  font-weight: 700;
+}
+.answer-diff mark {
+  background: var(--worksheet-yellow);
+  color: inherit;
+  border-bottom: 2px solid #b8860b;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+.answer-diff mark.answer-gap {
+  padding: 0 4px;
+}
+.answer-diff-notes {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
 .metric,
 details {
   border-color: var(--worksheet-line);

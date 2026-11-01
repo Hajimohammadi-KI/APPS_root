@@ -1,5 +1,6 @@
 import grammarData from "./data/grammar.json";
 import { knownContentRepair } from "@automaticity/learning-core/content-repairs";
+import { contentRevisionFor } from "@automaticity/learning-core/content-revisions";
 import topicsData from "./data/topics.json";
 import {
   classifyGrammarContent,
@@ -177,21 +178,77 @@ type LegacyGrammarUnit = Omit<GrammarUnit, "explanation">;
 const legacyGrammarUnits =
   grammarData as unknown as readonly LegacyGrammarUnit[];
 
+/** The same authored 2026-11-01 revision as the independent learning path;
+ * the controlled exercises are generated from these fields. */
+function reviseUnit<
+  T extends {
+    readonly title: string;
+    readonly commonError: string;
+    readonly repairTest: string;
+    readonly examples: readonly string[];
+  },
+>(unit: T): T {
+  const revision = contentRevisionFor("de", unit.title);
+  if (!revision) return unit;
+  const repair = revision.repair;
+  return {
+    ...unit,
+    ...(revision.examples ? { examples: [...revision.examples] } : {}),
+    ...(repair
+      ? {
+          commonError: `${repair.source} → ${repair.answer}`,
+          repairTest: repair.answer,
+        }
+      : {}),
+  };
+}
+
+/** Show the authored instruction and accept its alternatives. A source that is
+ * acceptable German is never presented under "Nicht richtig". */
+function withRevisedCorrection(
+  title: string,
+  exercises: readonly GrammarExercise[],
+): readonly GrammarExercise[] {
+  const repair = contentRevisionFor("de", title)?.repair;
+  const [correction, ...rest] = exercises;
+  const metadata = correction?.[2];
+  if (!repair || !metadata) return exercises;
+  const prompt = repair.transformation
+    ? { Deutsch: repair.prompt, English: repair.prompt, فارسی: repair.prompt }
+    : { ...metadata.prompt, Deutsch: repair.prompt };
+  return [
+    [
+      repair.prompt,
+      repair.answer,
+      {
+        ...metadata,
+        prompt,
+        ...(repair.alternatives?.length
+          ? { acceptedAnswers: [...repair.alternatives] }
+          : {}),
+      },
+    ],
+    ...rest,
+  ];
+}
+
 export const grammarUnits: readonly GrammarUnit[] = [
   ...legacyGrammarUnits.map((original) => {
     const repair = knownContentRepair("de", original.title);
-    const unit = repair
-      ? {
-          ...original,
-          commonError: `${repair.source} → ${repair.answer}`,
-          repairTest: repair.answer,
-          exercises: original.exercises.map<GrammarExercise>((exercise) =>
-            exercise[0] === repair.legacyPrompt
-              ? [repair.prompt, repair.answer]
-              : exercise,
-          ),
-        }
-      : original;
+    const unit = reviseUnit(
+      repair
+        ? {
+            ...original,
+            commonError: `${repair.source} → ${repair.answer}`,
+            repairTest: repair.answer,
+            exercises: original.exercises.map<GrammarExercise>((exercise) =>
+              exercise[0] === repair.legacyPrompt
+                ? [repair.prompt, repair.answer]
+                : exercise,
+            ),
+          }
+        : original,
+    );
     const explanation =
       grammarExplanations[unit.title as keyof typeof grammarExplanations];
 
@@ -202,17 +259,24 @@ export const grammarUnits: readonly GrammarUnit[] = [
     return repairGermanGrammarLinks({
       ...unit,
       contentType: classifyGrammarContent(unit),
-      exercises: completeControlledExercises(unit),
+      exercises: withRevisedCorrection(
+        unit.title,
+        completeControlledExercises(unit),
+      ),
       explanation,
     });
   }),
-  ...supplementalGrammarUnits.map((unit) =>
-    repairGermanGrammarLinks({
+  ...supplementalGrammarUnits.map((original) => {
+    const unit = reviseUnit(original);
+    return repairGermanGrammarLinks({
       ...unit,
       contentType: classifyGrammarContent(unit),
-      exercises: completeControlledExercises(unit),
-    }),
-  ),
+      exercises: withRevisedCorrection(
+        unit.title,
+        completeControlledExercises(unit),
+      ),
+    });
+  }),
 ];
 
 export const catalogSummary = {

@@ -1,5 +1,5 @@
 import { normalizeText } from "../text";
-import type { PracticeTask } from "./curriculum";
+import type { ConstructionUnit, PracticeTask } from "./curriculum";
 import { KNOWN_CONTENT_REPAIRS } from "../content-repairs";
 // Confirmed content defects, not a general semantic parser. Historical task
 // definitions stay readable, but these prompts must never earn new credit.
@@ -13,6 +13,36 @@ export interface ContentAuditIssue {
   readonly taskId: string;
   readonly code: string;
   readonly severity: "error" | "warning";
+}
+/** The text a correction prompt marks as wrong, or null when it shows none. */
+export function correctionSource(prompt: string): string | null {
+  const german = prompt.match(/Nicht richtig:\s*(.+)$/su)?.[1];
+  if (german)
+    return german
+      .replace(/\s*Schreibe die vollständige richtige Antwort[^.]*\.\s*$/u, "")
+      .trim();
+  const colon = prompt.lastIndexOf(":");
+  return colon < 0 ? null : prompt.slice(colon + 1).trim() || null;
+}
+const words = (text: string) =>
+  normalizeText(text)
+    .toLocaleLowerCase()
+    .match(/[\p{L}\p{N}']+/gu) ?? [];
+// Inflection stays comparable (studied/studying, Student/Studenten); short
+// function words must match exactly.
+const sameStem = (a: string, b: string) => {
+  if (a === b) return true;
+  let shared = 0;
+  while (shared < Math.min(a.length, b.length) && a[shared] === b[shared])
+    shared++;
+  return shared >= Math.max(4, Math.min(a.length, b.length) - 2);
+};
+/** Share of the source's distinct words that the answer keeps. */
+function retainedShare(source: string, answer: string): number {
+  const from = [...new Set(words(source))],
+    to = [...new Set(words(answer))];
+  const kept = from.filter((word) => to.some((other) => sameStem(word, other)));
+  return kept.length / Math.max(1, Math.min(from.length, to.length));
 }
 export function auditClosedTask(
   task: Pick<
@@ -39,15 +69,71 @@ export function auditClosedTask(
     add("missing-answer", "error");
   if (!task.solution || !answers.includes(normalizeText(task.solution)))
     add("solution-not-accepted", "error");
+  // A word cut off by an ellipsis is a placeholder no learner can type.
+  if (answers.some((answer) => /\p{L}(?:\.{3}|…)/u.test(answer)))
+    add("incomplete-answer", "error");
+  // Notes such as "Nicht: … Sondern: …" or "These → Begründung" describe
+  // language for the learner; they are not language to produce.
+  if (
+    answers.some((answer) =>
+      /\b(?:Nicht|Sondern|Besser|Direkt|Indirekt|Vorgang|Zustand)\s*:|→/u.test(
+        answer,
+      ),
+    )
+  )
+    add("note-as-answer", "error");
   if (new Set(answers).size !== answers.length)
     add("duplicate-answer", "warning");
   const gaps = task.prompt.match(/_{2,}/gu) ?? [];
   if (task.responseKind === "cloze" && gaps.length > 1)
     add("multiple-gaps", "warning");
-  if (task.responseKind === "correction" && task.solution) {
-    const source = task.prompt.slice(task.prompt.lastIndexOf(":") + 1).trim();
-    if (normalizeText(source) === normalizeText(task.solution))
-      add("unchanged-correction", "warning");
+  const source =
+    task.responseKind === "correction" ? correctionSource(task.prompt) : null;
+  if (task.responseKind === "correction" && !source)
+    add("missing-correction-source", "error");
+  if (source && answers.length) {
+    const length = words(source).length;
+    if (
+      length >= 3 &&
+      answers.every(
+        (answer) =>
+          (/^\p{Lu}/u.test(source) && /^\p{Ll}/u.test(answer)) ||
+          words(answer).length < length / 2,
+      )
+    )
+      add("fragment-answer", "error");
+    if (
+      length &&
+      answers.every((answer) => retainedShare(source, answer) < 1 / 3)
+    )
+      add("unrelated-correction", "error");
+    if (answers.includes(normalizeText(source)))
+      add("unchanged-correction", "error");
   }
   return issues;
+}
+/** A closed answer must be target language, not the unit's own rule or error description. */
+export function auditUnitAnswers(
+  unit: Pick<ConstructionUnit, "rule" | "commonError">,
+  tasks: readonly Pick<
+    PracticeTask,
+    "id" | "answerPolicy" | "acceptedAnswers"
+  >[],
+): ContentAuditIssue[] {
+  const plain = (text: string) =>
+    normalizeText(text)
+      .replace(/[.!?]$/u, "")
+      .toLocaleLowerCase();
+  const statements = new Set([unit.rule, unit.commonError].map(plain));
+  return tasks
+    .filter(
+      (task) =>
+        task.answerPolicy === "closed" &&
+        task.acceptedAnswers.some((answer) => statements.has(plain(answer))),
+    )
+    .map((task) => ({
+      taskId: task.id,
+      code: "rule-as-answer",
+      severity: "error" as const,
+    }));
 }

@@ -1,12 +1,18 @@
 import { expect, test } from "bun:test";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { reviseMasteryContent } from "./lib/mastery-content-revisions";
+import { reviseVariationTasks } from "./lib/variation-revisions";
+import { assessControlledTask } from "../shared/learning-core/src/automaticity/assessment";
 import {
   activePracticeTasks,
   validateCurriculum,
   type CurriculumPack,
 } from "../shared/learning-core/src/automaticity/curriculum";
-import { auditClosedTask } from "../shared/learning-core/src/automaticity/curriculum-audit";
+import {
+  auditClosedTask,
+  auditUnitAnswers,
+} from "../shared/learning-core/src/automaticity/curriculum-audit";
 import { assertWritingPrecision } from "../shared/learning-core/src/writing-precision";
 test("W33 both legacy labs use repaired prompts while raw historical catalogs remain intact", async () => {
   const english =
@@ -91,3 +97,122 @@ for (const language of ["en", "de"] as const)
       JSON.stringify(revised),
     );
   });
+
+const built = (language: "en" | "de") =>
+  reviseMasteryContent(
+    reviseVariationTasks(
+      JSON.parse(
+        readFileSync(
+          new URL(
+            `../shared/learning-core/content/curriculum-${language}.json`,
+            import.meta.url,
+          ),
+          "utf8",
+        ),
+      ) as CurriculumPack,
+    ),
+  );
+// Every definition shipped in 2026-10-31.1, sorted by id: learners' saved
+// attempts point at these hashes, so a repair may only add and retire tasks.
+const shippedDefinitions = {
+  en: "8c7da4da64cc6784529319b4bb84eaaf158b64879f0067a27c5a6c3b7a313195",
+  de: "e9d645004aff584bc2828b060dc09993655720753178b0b22af48cf6b0ce3a8c",
+};
+for (const language of ["en", "de"] as const) {
+  test(`W33 ${language}: no active closed task in the built curriculum fails the content audit`, () => {
+    const issues = built(language)
+      .units.flatMap((unit) => [
+        ...activePracticeTasks(unit).flatMap(auditClosedTask),
+        ...auditUnitAnswers(unit, activePracticeTasks(unit)),
+      ])
+      .filter((issue) => issue.severity === "error");
+    expect(issues).toEqual([]);
+  });
+  test(`W33 ${language}: repairs keep every earlier task definition byte-identical`, () => {
+    const pack = built(language);
+    const earlier = pack.units
+      .flatMap((unit) => unit.tasks)
+      .filter((task) => task.version < "2026-11-01")
+      .sort((a, b) => (a.id < b.id ? -1 : 1));
+    expect(
+      createHash("sha256")
+        .update(earlier.map((task) => JSON.stringify(task)).join("\n"))
+        .digest("hex"),
+    ).toBe(shippedDefinitions[language]);
+    expect(validateCurriculum(pack)).toEqual([]);
+  });
+}
+test("W33 the complete corrected sentence earns the controlled pass, typed apostrophe included", () => {
+  const sha = (text: string) => createHash("sha256").update(text).digest("hex");
+  for (const [language, source, answer] of [
+    ["de", "Das Buch liegt auf den Tisch.", "Das Buch liegt auf dem Tisch."],
+    ["de", "Ich gehe in der Schule.", "Ich gehe in die Schule."],
+    ["en", "I don’t have some time.", "I don't have any time."],
+    ["en", "You’re ready, isn’t it?", "You're ready, aren't you?"],
+  ] as const) {
+    const task = built(language)
+      .units.flatMap(activePracticeTasks)
+      .find(
+        (row) =>
+          row.answerPolicy === "closed" &&
+          row.modality === "writing" &&
+          row.prompt.includes(source),
+      );
+    expect(task?.prompt).toBeDefined();
+    const verdict = assessControlledTask(
+      {
+        language,
+        id: "attempt",
+        task: { ...task! },
+        response: { text: answer, sha256: sha(answer) },
+      } as never,
+      task!,
+      "2026-11-01T10:00:00.000Z",
+      "assessment",
+    ).verdict;
+    expect(`${source} → ${answer}: ${verdict}`).toBe(
+      `${source} → ${answer}: pass`,
+    );
+    for (const wrong of [source, source.replace(/[.?]$/u, "")]) {
+      const result = assessControlledTask(
+        {
+          language,
+          id: "attempt",
+          task: { ...task! },
+          response: { text: wrong, sha256: sha(wrong) },
+        } as never,
+        task!,
+        "2026-11-01T10:00:00.000Z",
+        "assessment",
+      );
+      expect(result.verdict).not.toBe("pass");
+    }
+  }
+});
+test("W33 both Grammar Labs ship no defective closed exercise", async () => {
+  const labs = [
+    (
+      await import("../Apps/English/English-Automaticity/packages/content/src/index")
+    ).grammarUnits,
+    (
+      await import("../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/index")
+    ).grammarUnits,
+  ];
+  const issues = labs.flatMap((units) =>
+    units.flatMap((unit) =>
+      unit.exercises.flatMap(([prompt, answer], index) =>
+        auditClosedTask({
+          id: `${unit.title}#${index}`,
+          answerPolicy: "closed",
+          responseKind: /^(Correct|Repair|Korrigiere)/u.test(prompt)
+            ? "correction"
+            : "transformation",
+          prompt,
+          acceptedAnswers: [answer],
+          solution: answer,
+        }),
+      ),
+    ),
+  );
+  expect(issues.filter((issue) => issue.severity === "error")).toEqual([]);
+});

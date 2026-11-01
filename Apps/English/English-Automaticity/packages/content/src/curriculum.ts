@@ -3,10 +3,18 @@ import { grammarUnits as legacyGrammarUnits } from "./generated/grammar";
 import { repairGrammarUnitLinks } from "./resource-links";
 import type { GrammarExercise, GrammarUnit } from "./types";
 import { knownContentRepair } from "@automaticity/learning-core/content-repairs";
+import {
+  contentRevisionFor,
+  retiredRepairPrompt,
+  type RevisedTask,
+} from "@automaticity/learning-core/content-revisions";
+import { normalizeText } from "@automaticity/learning-core/text";
 
 const MINIMUM_CONTROLLED_EXERCISES = 6;
 
 function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
+  // The learner needs to see the error, written left of "→" in commonError.
+  const error = unit.commonError.split("→")[0]!.trim();
   const candidates: GrammarExercise[] = [
     [`State the rule for “${unit.title}” from memory.`, unit.recallTest],
     [
@@ -14,7 +22,7 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
       unit.transferTest,
     ],
     [
-      `Repair this common error for “${unit.title}” and write the full corrected sentence.`,
+      `Repair this common error for “${unit.title}” and write the full corrected sentence: ${error}`,
       unit.repairTest,
     ],
   ];
@@ -48,11 +56,49 @@ function repairKnownContent(unit: GrammarUnit): GrammarUnit {
     ),
   };
 }
+const revisedExercise = ({
+  prompt,
+  answer,
+  alternatives,
+}: RevisedTask): GrammarExercise =>
+  alternatives?.length
+    ? [prompt, answer, { acceptedAnswers: [...alternatives] }]
+    : [prompt, answer];
+
+/** The same authored 2026-11-01 revision as the independent learning path. */
+function reviseContent(unit: GrammarUnit): GrammarUnit {
+  const revision = contentRevisionFor("en", unit.title);
+  if (!revision) return unit;
+  const examples = revision.examples ?? unit.examples;
+  const renamed = new Map(
+    unit.examples.map((old, index) => [old, examples[index] ?? examples[0]!]),
+  );
+  const repair = revision.repair;
+  const retired =
+    repair && normalizeText(retiredRepairPrompt("en", repair.old));
+  return {
+    ...unit,
+    examples: [...examples],
+    ...(repair && {
+      commonError: `${repair.source} → ${repair.answer}`,
+      repairTest: repair.answer,
+    }),
+    exercises: unit.exercises.map<GrammarExercise>(([prompt, answer]) => {
+      if (repair && normalizeText(prompt) === retired)
+        return revisedExercise(repair);
+      const example = renamed.get(answer);
+      return example && example !== answer
+        ? [prompt.replace(answer, example), example]
+        : [prompt, answer];
+    }),
+  };
+}
 export { legacyGrammarUnits };
 export const grammarUnits: GrammarUnit[] = [
   ...legacyGrammarUnits,
   ...cefrSupplementalUnits,
 ]
   .map(repairKnownContent)
+  .map(reviseContent)
   .map(ensureSixExercises)
   .map(repairGrammarUnitLinks);

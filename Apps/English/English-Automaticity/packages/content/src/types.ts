@@ -25,7 +25,15 @@ export type GrammarResource = [
   description: string,
   role: GrammarResourceRole,
 ];
-export type GrammarExercise = [prompt: string, answer: string];
+/** Further complete answers the Grammar Lab accepts besides the stored one. */
+export interface GrammarExerciseMetadata {
+  acceptedAnswers?: string[];
+}
+export type GrammarExercise = [
+  prompt: string,
+  answer: string,
+  metadata?: GrammarExerciseMetadata,
+];
 
 export interface GrammarUnit {
   level: CefrLevel;

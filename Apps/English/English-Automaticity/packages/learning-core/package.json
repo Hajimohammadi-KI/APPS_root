@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     "./content-repairs": "./src/content-repairs.ts",
+    "./content-revisions": "./src/content-revisions.ts",
     "./discourse": "./src/discourse.ts",
     "./speech": "./src/speech.ts",
     "./writing-rules": "./src/writing-rules.ts",

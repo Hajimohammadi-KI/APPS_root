@@ -1,8 +1,8 @@
 {
-  "publishedAt": "2026-10-31",
+  "publishedAt": "2026-11-01",
   "version": "27.4.4",
-  "webRelease": "2026.10.31.1",
+  "webRelease": "2026.11.01.1",
   "changes": [
-    "A shared A1–C2 mastery roadmap, repaired content and 24 authored target exercises; optional selected-text contributions require preview and separate per-download consent. Exports are review candidates, without automatic uploads, model training or validated CEFR claims."
+    "209 checkable exercises in both languages were re-authored because their stored answer was a fragment, placeholder, rule label or note, so a complete correct answer could not pass; a typed apostrophe now matches a typographic one, and the build blocks these defect types. Earlier definitions stay for saved work. No automatic uploads, model training or validated CEFR claims."
   ]
 }

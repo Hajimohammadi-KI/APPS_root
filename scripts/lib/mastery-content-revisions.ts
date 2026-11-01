@@ -6,6 +6,14 @@ import {
 
 const version = "2026-10-31.1";
 import { KNOWN_CONTENT_REPAIRS } from "../../shared/learning-core/src/content-repairs";
+import {
+  CONTENT_REVISION,
+  CONTENT_REVISION_VERSION,
+  UNIT_CONTENT_REVISIONS,
+  retiredRepairPrompt,
+  type RevisedTask,
+} from "../../shared/learning-core/src/content-revisions";
+import { normalizeText } from "../../shared/learning-core/src/text";
 interface TargetPractice {
   unit: string;
   level: string;
@@ -256,5 +264,142 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
     changed = true;
   }
   if (changed) pack.version = version;
+  if (reviseUnitContent(pack)) pack.version = CONTENT_REVISION_VERSION;
   return pack;
+}
+
+const tag = `content-${CONTENT_REVISION.replaceAll("-", "")}`;
+const same = (a: string, b: string) => normalizeText(a) === normalizeText(b);
+const responseKindFor = (prompt: string): PracticeTask["responseKind"] =>
+  /_{2,}/u.test(prompt)
+    ? "cloze"
+    : /^Wähle\b/u.test(prompt)
+      ? "choice"
+      : "transformation";
+
+/** Apply the authored 2026-11-01 revisions. Originals stay for saved attempts
+ * and are retired with a link to their replacement; a second run changes nothing. */
+function reviseUnitContent(pack: CurriculumPack): boolean {
+  let changed = false;
+  for (const revision of UNIT_CONTENT_REVISIONS.filter(
+    (row) => row.language === pack.language,
+  )) {
+    const unit = pack.units.find((row) => row.id === revision.constructionId);
+    if (!unit || unit.title !== revision.title)
+      throw Error(`Changed revision scope: ${revision.constructionId}`);
+    const active = activePracticeTasks(unit);
+    // Speaking variants repeat the written prompt after an instruction to record.
+    const spoken = (written: PracticeTask) =>
+      active.filter(
+        (task) =>
+          task.modality === "speaking" &&
+          task.stage === written.stage &&
+          normalizeText(task.prompt).endsWith(normalizeText(written.prompt)),
+      );
+    const replace = (
+      original: PracticeTask,
+      id: string,
+      revised: RevisedTask,
+      responseKind: PracticeTask["responseKind"],
+      reason: string,
+    ) => {
+      const speaking = original.modality === "speaking";
+      const family = id.replace(/\.(?:writing|speaking)$/u, "");
+      const replacement: PracticeTask = {
+        ...original,
+        id,
+        version: CONTENT_REVISION_VERSION,
+        itemFamily: family,
+        contextId: family,
+        contentReview: "authored",
+        transferCondition: "none",
+        prompt: revised.prompt,
+        answerPolicy: speaking ? "open" : "closed",
+        responseKind: speaking ? "free_output" : responseKind,
+        acceptedAnswers: speaking
+          ? []
+          : [revised.answer, ...(revised.alternatives ?? [])],
+        solution: speaking ? null : revised.answer,
+        sourceId: `authored-content-revision-${CONTENT_REVISION_VERSION}:${unit.id}`,
+      };
+      delete replacement.constructionAssessment;
+      unit.tasks.splice(unit.tasks.indexOf(original) + 1, 0, replacement);
+      unit.retiredTasks ??= [];
+      unit.retiredTasks.push({
+        taskId: original.id,
+        replacementTaskId: id,
+        reason,
+        retiredOn: CONTENT_REVISION,
+      });
+      changed = true;
+    };
+    const replaceWithSpoken = (
+      written: PracticeTask,
+      id: string,
+      revised: RevisedTask,
+      responseKind: PracticeTask["responseKind"],
+      reason: string,
+    ) => {
+      for (const variant of spoken(written)) {
+        const lead = variant.prompt.endsWith(written.prompt)
+          ? variant.prompt.slice(0, -written.prompt.length)
+          : pack.language === "en"
+            ? "Say and record your answer. "
+            : "Sprich deine Antwort und nimm sie auf. ";
+        replace(
+          variant,
+          id.replace(/\.writing$/u, ".speaking"),
+          { ...revised, prompt: lead + revised.prompt },
+          responseKind,
+          reason,
+        );
+      }
+      replace(written, id, revised, responseKind, reason);
+    };
+    const repair = revision.repair;
+    const repairId = `${unit.id}.repair.${tag}.writing`;
+    if (
+      repair &&
+      !repair.labOnly &&
+      !unit.tasks.some((t) => t.id === repairId)
+    ) {
+      const primary = retiredRepairPrompt(pack.language, repair.old);
+      const matches = active.filter(
+        (task) =>
+          task.modality === "writing" &&
+          task.answerPolicy === "closed" &&
+          same(task.prompt, primary),
+      );
+      if (matches.length !== 1)
+        throw Error(`Repair target not found once: ${unit.id} ${primary}`);
+      replaceWithSpoken(
+        matches[0]!,
+        repairId,
+        repair,
+        repair.transformation ? "transformation" : "correction",
+        "Replace a correction whose key was a fragment, placeholder or rule label, or whose prompt marked a rule statement as wrong.",
+      );
+    }
+    if (repair) unit.commonError = `${repair.source} → ${repair.answer}`;
+    if (revision.examples) unit.examples = [...revision.examples];
+    for (const item of revision.retrieval ?? []) {
+      const id = item.taskId.replace(
+        /\.retrieve\.(\d+)\.writing$/u,
+        `.retrieve.${tag}-$1.writing`,
+      );
+      if (id === item.taskId)
+        throw Error(`Unexpected retrieval id: ${item.taskId}`);
+      if (unit.tasks.some((task) => task.id === id)) continue;
+      const original = active.find((task) => task.id === item.taskId);
+      if (!original) throw Error(`Retrieval target not active: ${item.taskId}`);
+      replaceWithSpoken(
+        original,
+        id,
+        item,
+        responseKindFor(item.prompt),
+        "Replace a retrieval item built from a rule statement or note with practice of the target language.",
+      );
+    }
+  }
+  return changed;
 }

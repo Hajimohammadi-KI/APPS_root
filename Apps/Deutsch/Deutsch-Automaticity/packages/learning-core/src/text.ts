@@ -3,9 +3,14 @@ export interface TextPolicy {
 }
 export { detectTextLanguage } from "./language";
 
-/** Canonical comparison only. Case, accents, apostrophes and punctuation are meaningful. */
+/** Canonical comparison only. Case, accents, apostrophes and punctuation are
+ * meaningful; a keyboard apostrophe and a typographic one are the same sign. */
 export function normalizeText(value: string, policy: TextPolicy = {}): string {
-  const normalized = value.normalize("NFC").trim().replace(/\s+/gu, " ");
+  const normalized = value
+    .normalize("NFC")
+    .trim()
+    .replace(/\s+/gu, " ")
+    .replace(/[’‘ʼ]/gu, "'");
   return policy.allowOptionalFinalPeriod
     ? normalized.replace(/(?<![.!?])\.$/u, "")
     : normalized;

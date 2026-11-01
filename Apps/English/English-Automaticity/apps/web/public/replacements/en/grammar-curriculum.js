@@ -32,7 +32,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Verb be: am/is/are accurately."
       ],
       [
-        "Repair this common error for “Verb be: am/is/are” and write the full corrected sentence.",
+        "Repair this common error for “Verb be: am/is/are” and write the full corrected sentence: I am agree.",
         "I agree."
       ]
     ],
@@ -86,7 +86,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Subject pronouns accurately."
       ],
       [
-        "Repair this common error for “Subject pronouns” and write the full corrected sentence.",
+        "Repair this common error for “Subject pronouns” and write the full corrected sentence: Her works here.",
         "She works here."
       ]
     ],
@@ -140,7 +140,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Articles a/an/the accurately."
       ],
       [
-        "Repair this common error for “Articles a/an/the” and write the full corrected sentence.",
+        "Repair this common error for “Articles a/an/the” and write the full corrected sentence: I have car.",
         "I have a car."
       ]
     ],
@@ -193,7 +193,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Plural nouns accurately."
       ],
       [
-        "Repair this common error for “Plural nouns” and write the full corrected sentence.",
+        "Repair this common error for “Plural nouns” and write the full corrected sentence: two childs",
         "two children"
       ]
     ],
@@ -247,7 +247,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Possessive adjectives accurately."
       ],
       [
-        "Repair this common error for “Possessive adjectives” and write the full corrected sentence.",
+        "Repair this common error for “Possessive adjectives” and write the full corrected sentence: This is mine phone.",
         "This is my phone."
       ]
     ],
@@ -301,7 +301,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Have/has got accurately."
       ],
       [
-        "Repair this common error for “Have/has got” and write the full corrected sentence.",
+        "Repair this common error for “Have/has got” and write the full corrected sentence: She have a car.",
         "She has a car."
       ]
     ],
@@ -355,7 +355,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Present simple affirmative accurately."
       ],
       [
-        "Repair this common error for “Present simple affirmative” and write the full corrected sentence.",
+        "Repair this common error for “Present simple affirmative” and write the full corrected sentence: He study every day.",
         "He studies every day."
       ]
     ],
@@ -409,7 +409,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Present simple negatives accurately."
       ],
       [
-        "Repair this common error for “Present simple negatives” and write the full corrected sentence.",
+        "Repair this common error for “Present simple negatives” and write the full corrected sentence: She doesn’t works.",
         "She doesn’t work."
       ]
     ],
@@ -463,7 +463,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Present simple questions accurately."
       ],
       [
-        "Repair this common error for “Present simple questions” and write the full corrected sentence.",
+        "Repair this common error for “Present simple questions” and write the full corrected sentence: Does he speaks?",
         "Does he speak?"
       ]
     ],
@@ -517,7 +517,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use There is/There are accurately."
       ],
       [
-        "Repair this common error for “There is/There are” and write the full corrected sentence.",
+        "Repair this common error for “There is/There are” and write the full corrected sentence: There have a bank.",
         "There is a bank."
       ]
     ],
@@ -571,7 +571,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Can/can’t accurately."
       ],
       [
-        "Repair this common error for “Can/can’t” and write the full corrected sentence.",
+        "Repair this common error for “Can/can’t” and write the full corrected sentence: I can to swim.",
         "I can swim."
       ]
     ],
@@ -602,11 +602,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       "Open the door.",
       "Don’t worry."
     ],
-    "commonError": "You open the door. → Open the door.",
+    "commonError": "Don’t to touch the screen. → Don’t touch the screen.",
     "exercises": [
       [
-        "Correct the sentence: You open the door.",
-        "Open the door."
+        "Correct the negative instruction and write the full sentence: Don’t to touch the screen.",
+        "Don’t touch the screen.",
+        {
+          "acceptedAnswers": [
+            "Do not touch the screen."
+          ]
+        }
       ],
       [
         "Type the model sentence: Open the door.",
@@ -625,8 +630,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Imperatives accurately."
       ],
       [
-        "Repair this common error for “Imperatives” and write the full corrected sentence.",
-        "Open the door."
+        "Repair this common error for “Imperatives” and write the full corrected sentence: Don’t to touch the screen.",
+        "Don’t touch the screen."
       ]
     ],
     "links": [
@@ -645,7 +650,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "Open the door.",
     "recallTest": "Use the base verb for instructions; use don’t for negative instructions.",
-    "repairTest": "Open the door.",
+    "repairTest": "Don’t touch the screen.",
     "transferTest": "In a new situation, I can use Imperatives accurately."
   },
   {
@@ -655,11 +660,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "The keys are on the table."
     ],
-    "commonError": "The keys are in the table. → on the table.",
+    "commonError": "The keys are in the table. → The keys are on the table.",
     "exercises": [
       [
-        "Correct the sentence: The keys are in the table.",
-        "on the table."
+        "Correct the preposition and write the full sentence: The keys are in the table.",
+        "The keys are on the table."
       ],
       [
         "Type the model sentence: The keys are on the table.",
@@ -678,8 +683,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Prepositions of place accurately."
       ],
       [
-        "Repair this common error for “Prepositions of place” and write the full corrected sentence.",
-        "on the table."
+        "Repair this common error for “Prepositions of place” and write the full corrected sentence: The keys are in the table.",
+        "The keys are on the table."
       ]
     ],
     "links": [
@@ -698,7 +703,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The keys are on the table.",
     "recallTest": "Use in, on, at, under, next to, between to locate things.",
-    "repairTest": "on the table.",
+    "repairTest": "The keys are on the table.",
     "transferTest": "In a new situation, I can use Prepositions of place accurately."
   },
   {
@@ -731,7 +736,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Countable and uncountable nouns accurately."
       ],
       [
-        "Repair this common error for “Countable and uncountable nouns” and write the full corrected sentence.",
+        "Repair this common error for “Countable and uncountable nouns” and write the full corrected sentence: many information",
         "much information"
       ]
     ],
@@ -785,7 +790,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Present continuous accurately."
       ],
       [
-        "Repair this common error for “Present continuous” and write the full corrected sentence.",
+        "Repair this common error for “Present continuous” and write the full corrected sentence: I studying now.",
         "I am studying now."
       ]
     ],
@@ -838,7 +843,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Present simple vs continuous accurately."
       ],
       [
-        "Repair this common error for “Present simple vs continuous” and write the full corrected sentence.",
+        "Repair this common error for “Present simple vs continuous” and write the full corrected sentence: I am knowing him.",
         "I know him."
       ]
     ],
@@ -891,7 +896,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Past simple regular accurately."
       ],
       [
-        "Repair this common error for “Past simple regular” and write the full corrected sentence.",
+        "Repair this common error for “Past simple regular” and write the full corrected sentence: We have visited Rome last year.",
         "We visited Rome last year."
       ]
     ],
@@ -944,7 +949,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Past simple irregular accurately."
       ],
       [
-        "Repair this common error for “Past simple irregular” and write the full corrected sentence.",
+        "Repair this common error for “Past simple irregular” and write the full corrected sentence: She goed home.",
         "She went home."
       ]
     ],
@@ -998,7 +1003,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Past simple questions and negatives accurately."
       ],
       [
-        "Repair this common error for “Past simple questions and negatives” and write the full corrected sentence.",
+        "Repair this common error for “Past simple questions and negatives” and write the full corrected sentence: Did you called?",
         "Did you call?"
       ]
     ],
@@ -1052,7 +1057,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Future with will accurately."
       ],
       [
-        "Repair this common error for “Future with will” and write the full corrected sentence.",
+        "Repair this common error for “Future with will” and write the full corrected sentence: I will to help.",
         "I will help."
       ]
     ],
@@ -1105,7 +1110,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Be going to accurately."
       ],
       [
-        "Repair this common error for “Be going to” and write the full corrected sentence.",
+        "Repair this common error for “Be going to” and write the full corrected sentence: I going to study.",
         "I am going to study."
       ]
     ],
@@ -1158,7 +1163,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Comparatives accurately."
       ],
       [
-        "Repair this common error for “Comparatives” and write the full corrected sentence.",
+        "Repair this common error for “Comparatives” and write the full corrected sentence: more easier",
         "easier"
       ]
     ],
@@ -1211,7 +1216,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Superlatives accurately."
       ],
       [
-        "Repair this common error for “Superlatives” and write the full corrected sentence.",
+        "Repair this common error for “Superlatives” and write the full corrected sentence: the most easiest",
         "the easiest"
       ]
     ],
@@ -1242,11 +1247,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       "I have some questions.",
       "Do you have any time?"
     ],
-    "commonError": "I don’t have some time. → any time.",
+    "commonError": "I don’t have some time. → I don’t have any time.",
     "exercises": [
       [
-        "Correct the sentence: I don’t have some time.",
-        "any time."
+        "Correct the determiner and write the full sentence: I don’t have some time.",
+        "I don’t have any time."
       ],
       [
         "Type the model sentence: I have some questions.",
@@ -1265,8 +1270,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Some/any/no accurately."
       ],
       [
-        "Repair this common error for “Some/any/no” and write the full corrected sentence.",
-        "any time."
+        "Repair this common error for “Some/any/no” and write the full corrected sentence: I don’t have some time.",
+        "I don’t have any time."
       ]
     ],
     "links": [
@@ -1285,7 +1290,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "I have some questions.",
     "recallTest": "Use some mainly in affirmative statements; any in questions/negatives.",
-    "repairTest": "any time.",
+    "repairTest": "I don’t have any time.",
     "transferTest": "In a new situation, I can use Some/any/no accurately."
   },
   {
@@ -1318,7 +1323,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Much/many/a lot of accurately."
       ],
       [
-        "Repair this common error for “Much/many/a lot of” and write the full corrected sentence.",
+        "Repair this common error for “Much/many/a lot of” and write the full corrected sentence: much books",
         "many books"
       ]
     ],
@@ -1372,7 +1377,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Adverbs of frequency accurately."
       ],
       [
-        "Repair this common error for “Adverbs of frequency” and write the full corrected sentence.",
+        "Repair this common error for “Adverbs of frequency” and write the full corrected sentence: I am often study.",
         "I often study."
       ]
     ],
@@ -1403,11 +1408,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       "Please call me.",
       "I saw them."
     ],
-    "commonError": "Please call I. → call me.",
+    "commonError": "Please call I. → Please call me.",
     "exercises": [
       [
-        "Correct the sentence: Please call I.",
-        "call me."
+        "Correct the pronoun and write the full sentence: Please call I.",
+        "Please call me."
       ],
       [
         "Type the model sentence: Please call me.",
@@ -1426,8 +1431,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Object pronouns accurately."
       ],
       [
-        "Repair this common error for “Object pronouns” and write the full corrected sentence.",
-        "call me."
+        "Repair this common error for “Object pronouns” and write the full corrected sentence: Please call I.",
+        "Please call me."
       ]
     ],
     "links": [
@@ -1446,7 +1451,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "Please call me.",
     "recallTest": "Use me, you, him, her, it, us, them as objects.",
-    "repairTest": "call me.",
+    "repairTest": "Please call me.",
     "transferTest": "In a new situation, I can use Object pronouns accurately."
   },
   {
@@ -1480,7 +1485,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Must/have to accurately."
       ],
       [
-        "Repair this common error for “Must/have to” and write the full corrected sentence.",
+        "Repair this common error for “Must/have to” and write the full corrected sentence: I must to go.",
         "I must go."
       ]
     ],
@@ -1513,8 +1518,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "commonError": "I live here since three years. → I have lived here for three years.",
     "exercises": [
       [
-        "Correct the sentence: I live here since three years.",
-        "I have lived here for three years."
+        "Correct the tense and the time word, then write the full sentence: I live here since three years.",
+        "I have lived here for three years.",
+        {
+          "acceptedAnswers": [
+            "I’ve lived here for three years.",
+            "I have been living here for three years.",
+            "I’ve been living here for three years."
+          ]
+        }
       ],
       [
         "Type the model sentence: I have lived here for three years.",
@@ -1533,7 +1545,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Present perfect accurately."
       ],
       [
-        "Repair this common error for “Present perfect” and write the full corrected sentence.",
+        "Repair this common error for “Present perfect” and write the full corrected sentence: I live here since three years.",
         "I have lived here for three years."
       ]
     ],
@@ -1587,7 +1599,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Present perfect vs past simple accurately."
       ],
       [
-        "Repair this common error for “Present perfect vs past simple” and write the full corrected sentence.",
+        "Repair this common error for “Present perfect vs past simple” and write the full corrected sentence: I have seen it yesterday.",
         "I saw it yesterday."
       ]
     ],
@@ -1640,7 +1652,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use For and since accurately."
       ],
       [
-        "Repair this common error for “For and since” and write the full corrected sentence.",
+        "Repair this common error for “For and since” and write the full corrected sentence: since two years",
         "for two years"
       ]
     ],
@@ -1670,11 +1682,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "I was studying when you called."
     ],
-    "commonError": "I studied when you called. → was studying",
+    "commonError": "I studied when you called. → I was studying when you called.",
     "exercises": [
       [
-        "Correct the sentence: I studied when you called.",
-        "was studying"
+        "Correct the verb for the action in progress with the past continuous. Write the full sentence: I studied when you called.",
+        "I was studying when you called."
       ],
       [
         "Type the model sentence: I was studying when you called.",
@@ -1693,8 +1705,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Past continuous accurately."
       ],
       [
-        "Repair this common error for “Past continuous” and write the full corrected sentence.",
-        "was studying"
+        "Repair this common error for “Past continuous” and write the full corrected sentence: I studied when you called.",
+        "I was studying when you called."
       ]
     ],
     "links": [
@@ -1713,7 +1725,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "I was studying when you called.",
     "recallTest": "Use was/were + verb-ing for an action in progress at a past time.",
-    "repairTest": "was studying",
+    "repairTest": "I was studying when you called.",
     "transferTest": "In a new situation, I can use Past continuous accurately."
   },
   {
@@ -1723,11 +1735,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "We were eating when the phone rang."
     ],
-    "commonError": "The phone was ringing once. → rang.",
+    "commonError": "We were eating when the phone was ringing. → We were eating when the phone rang.",
     "exercises": [
       [
-        "Correct the sentence: The phone was ringing once.",
-        "rang."
+        "Correct the verb for the short interrupting event with the past simple. Write the full sentence: We were eating when the phone was ringing.",
+        "We were eating when the phone rang."
       ],
       [
         "Type the model sentence: We were eating when the phone rang.",
@@ -1746,8 +1758,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Past continuous vs past simple accurately."
       ],
       [
-        "Repair this common error for “Past continuous vs past simple” and write the full corrected sentence.",
-        "rang."
+        "Repair this common error for “Past continuous vs past simple” and write the full corrected sentence: We were eating when the phone was ringing.",
+        "We were eating when the phone rang."
       ]
     ],
     "links": [
@@ -1766,7 +1778,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "We were eating when the phone rang.",
     "recallTest": "Use continuous for background, simple for the interrupting event.",
-    "repairTest": "rang.",
+    "repairTest": "We were eating when the phone rang.",
     "transferTest": "In a new situation, I can use Past continuous vs past simple accurately."
   },
   {
@@ -1799,7 +1811,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use First conditional accurately."
       ],
       [
-        "Repair this common error for “First conditional” and write the full corrected sentence.",
+        "Repair this common error for “First conditional” and write the full corrected sentence: If I will have time",
         "If I have time."
       ]
     ],
@@ -1852,7 +1864,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Second conditional accurately."
       ],
       [
-        "Repair this common error for “Second conditional” and write the full corrected sentence.",
+        "Repair this common error for “Second conditional” and write the full corrected sentence: If I would have time",
         "If I had time."
       ]
     ],
@@ -1882,11 +1894,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "The woman who called is my teacher."
     ],
-    "commonError": "The woman which called → who called.",
+    "commonError": "The woman which called is my aunt. → The woman who called is my aunt.",
     "exercises": [
       [
-        "Correct the sentence: The woman which called",
-        "who called."
+        "Correct the relative pronoun for a person and write the full sentence: The woman which called is my aunt.",
+        "The woman who called is my aunt.",
+        {
+          "acceptedAnswers": [
+            "The woman that called is my aunt."
+          ]
+        }
       ],
       [
         "Type the model sentence: The woman who called is my teacher.",
@@ -1905,8 +1922,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Relative clauses accurately."
       ],
       [
-        "Repair this common error for “Relative clauses” and write the full corrected sentence.",
-        "who called."
+        "Repair this common error for “Relative clauses” and write the full corrected sentence: The woman which called is my aunt.",
+        "The woman who called is my aunt."
       ]
     ],
     "links": [
@@ -1925,7 +1942,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The woman who called is my teacher.",
     "recallTest": "Use who for people, which for things, that for either in defining clauses.",
-    "repairTest": "who called.",
+    "repairTest": "The woman who called is my aunt.",
     "transferTest": "In a new situation, I can use Relative clauses accurately."
   },
   {
@@ -1936,11 +1953,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       "I enjoy reading.",
       "I decided to leave."
     ],
-    "commonError": "I enjoy to read. → enjoy reading.",
+    "commonError": "I enjoy to read. → I enjoy reading.",
     "exercises": [
       [
-        "Correct the sentence: I enjoy to read.",
-        "enjoy reading."
+        "Correct the verb pattern after enjoy and write the full sentence: I enjoy to read.",
+        "I enjoy reading."
       ],
       [
         "Type the model sentence: I enjoy reading.",
@@ -1959,8 +1976,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Gerunds and infinitives accurately."
       ],
       [
-        "Repair this common error for “Gerunds and infinitives” and write the full corrected sentence.",
-        "enjoy reading."
+        "Repair this common error for “Gerunds and infinitives” and write the full corrected sentence: I enjoy to read.",
+        "I enjoy reading."
       ]
     ],
     "links": [
@@ -1979,7 +1996,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "I enjoy reading.",
     "recallTest": "Some verbs take -ing, others to-infinitive; meaning can change.",
-    "repairTest": "enjoy reading.",
+    "repairTest": "I enjoy reading.",
     "transferTest": "In a new situation, I can use Gerunds and infinitives accurately."
   },
   {
@@ -1989,11 +2006,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "You should practise every day."
     ],
-    "commonError": "You should to practise. → should practise.",
+    "commonError": "You should to practise every day. → You should practise every day.",
     "exercises": [
       [
-        "Correct the sentence: You should to practise.",
-        "should practise."
+        "Correct the verb after should and write the full sentence: You should to practise every day.",
+        "You should practise every day.",
+        {
+          "acceptedAnswers": [
+            "You should practice every day."
+          ]
+        }
       ],
       [
         "Type the model sentence: You should practise every day.",
@@ -2012,8 +2034,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Modal verbs of advice accurately."
       ],
       [
-        "Repair this common error for “Modal verbs of advice” and write the full corrected sentence.",
-        "should practise."
+        "Repair this common error for “Modal verbs of advice” and write the full corrected sentence: You should to practise every day.",
+        "You should practise every day."
       ]
     ],
     "links": [
@@ -2032,7 +2054,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "You should practise every day.",
     "recallTest": "Use should/shouldn’t + base verb for advice.",
-    "repairTest": "should practise.",
+    "repairTest": "You should practise every day.",
     "transferTest": "In a new situation, I can use Modal verbs of advice accurately."
   },
   {
@@ -2043,11 +2065,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       "English is spoken worldwide.",
       "The bridge was built in 1990."
     ],
-    "commonError": "The bridge built in 1990. → was built.",
+    "commonError": "The bridge built in 1990. → The bridge was built in 1990.",
     "exercises": [
       [
-        "Correct the sentence: The bridge built in 1990.",
-        "was built."
+        "Correct the passive and write the full sentence: The bridge built in 1990.",
+        "The bridge was built in 1990."
       ],
       [
         "Type the model sentence: English is spoken worldwide.",
@@ -2066,8 +2088,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Passive present and past accurately."
       ],
       [
-        "Repair this common error for “Passive present and past” and write the full corrected sentence.",
-        "was built."
+        "Repair this common error for “Passive present and past” and write the full corrected sentence: The bridge built in 1990.",
+        "The bridge was built in 1990."
       ]
     ],
     "links": [
@@ -2086,7 +2108,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "English is spoken worldwide.",
     "recallTest": "Use be + past participle when the action/result matters more than the agent.",
-    "repairTest": "was built.",
+    "repairTest": "The bridge was built in 1990.",
     "transferTest": "In a new situation, I can use Passive present and past accurately."
   },
   {
@@ -2096,11 +2118,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "She said that she was tired."
     ],
-    "commonError": "She said she is tired yesterday. → was tired.",
+    "commonError": "Yesterday she said that she is tired. → Yesterday she said that she was tired.",
     "exercises": [
       [
-        "Correct the sentence: She said she is tired yesterday.",
-        "was tired."
+        "Correct the reported verb by moving it one tense back. Write the full sentence: Yesterday she said that she is tired.",
+        "Yesterday she said that she was tired."
       ],
       [
         "Type the model sentence: She said that she was tired.",
@@ -2119,8 +2141,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Reported statements accurately."
       ],
       [
-        "Repair this common error for “Reported statements” and write the full corrected sentence.",
-        "was tired."
+        "Repair this common error for “Reported statements” and write the full corrected sentence: Yesterday she said that she is tired.",
+        "Yesterday she said that she was tired."
       ]
     ],
     "links": [
@@ -2139,7 +2161,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "She said that she was tired.",
     "recallTest": "Backshift tense when reporting past speech if the situation is no longer current.",
-    "repairTest": "was tired.",
+    "repairTest": "Yesterday she said that she was tired.",
     "transferTest": "In a new situation, I can use Reported statements accurately."
   },
   {
@@ -2149,11 +2171,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "You’re ready, aren’t you?"
     ],
-    "commonError": "You’re ready, isn’t it? → aren’t you?",
+    "commonError": "You’re ready, isn’t it? → You’re ready, aren’t you?",
     "exercises": [
       [
-        "Correct the sentence: You’re ready, isn’t it?",
-        "aren’t you?"
+        "Correct the question tag and write the full sentence: You’re ready, isn’t it?",
+        "You’re ready, aren’t you?",
+        {
+          "acceptedAnswers": [
+            "You are ready, aren’t you?"
+          ]
+        }
       ],
       [
         "Type the model sentence: You’re ready, aren’t you?",
@@ -2172,8 +2199,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Question tags accurately."
       ],
       [
-        "Repair this common error for “Question tags” and write the full corrected sentence.",
-        "aren’t you?"
+        "Repair this common error for “Question tags” and write the full corrected sentence: You’re ready, isn’t it?",
+        "You’re ready, aren’t you?"
       ]
     ],
     "links": [
@@ -2192,7 +2219,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "You’re ready, aren’t you?",
     "recallTest": "Use an opposite-polarity auxiliary tag to check information.",
-    "repairTest": "aren’t you?",
+    "repairTest": "You’re ready, aren’t you?",
     "transferTest": "In a new situation, I can use Question tags accurately."
   },
   {
@@ -2226,7 +2253,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Too/enough accurately."
       ],
       [
-        "Repair this common error for “Too/enough” and write the full corrected sentence.",
+        "Repair this common error for “Too/enough” and write the full corrected sentence: enough clear",
         "clear enough."
       ]
     ],
@@ -2256,11 +2283,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "I have been working since eight."
     ],
-    "commonError": "I am working since eight. → have been working.",
+    "commonError": "I am working since eight. → I have been working since eight.",
     "exercises": [
       [
-        "Correct the sentence: I am working since eight.",
-        "have been working."
+        "Correct the tense with the present perfect continuous. Write the full sentence: I am working since eight.",
+        "I have been working since eight.",
+        {
+          "acceptedAnswers": [
+            "I’ve been working since eight."
+          ]
+        }
       ],
       [
         "Type the model sentence: I have been working since eight.",
@@ -2279,8 +2311,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Present perfect continuous accurately."
       ],
       [
-        "Repair this common error for “Present perfect continuous” and write the full corrected sentence.",
-        "have been working."
+        "Repair this common error for “Present perfect continuous” and write the full corrected sentence: I am working since eight.",
+        "I have been working since eight."
       ]
     ],
     "links": [
@@ -2299,7 +2331,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "I have been working since eight.",
     "recallTest": "Use have/has been + verb-ing for duration or recent repeated activity.",
-    "repairTest": "have been working.",
+    "repairTest": "I have been working since eight.",
     "transferTest": "In a new situation, I can use Present perfect continuous accurately."
   },
   {
@@ -2309,11 +2341,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "The train had left before we arrived."
     ],
-    "commonError": "The train left before we had arrived. → had left.",
+    "commonError": "The train left before we had arrived. → The train had left before we arrived.",
     "exercises": [
       [
-        "Correct the sentence: The train left before we had arrived.",
-        "had left."
+        "Correct the verbs so that only the earlier action is in the past perfect. Write the full sentence: The train left before we had arrived.",
+        "The train had left before we arrived."
       ],
       [
         "Type the model sentence: The train had left before we arrived.",
@@ -2332,8 +2364,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Past perfect accurately."
       ],
       [
-        "Repair this common error for “Past perfect” and write the full corrected sentence.",
-        "had left."
+        "Repair this common error for “Past perfect” and write the full corrected sentence: The train left before we had arrived.",
+        "The train had left before we arrived."
       ]
     ],
     "links": [
@@ -2352,7 +2384,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The train had left before we arrived.",
     "recallTest": "Use had + past participle for an earlier past action.",
-    "repairTest": "had left.",
+    "repairTest": "The train had left before we arrived.",
     "transferTest": "In a new situation, I can use Past perfect accurately."
   },
   {
@@ -2362,11 +2394,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "She had been waiting for an hour."
     ],
-    "commonError": "She was waiting for an hour before he came. → had been waiting.",
+    "commonError": "She was waiting for an hour before he came. → She had been waiting for an hour before he came.",
     "exercises": [
       [
-        "Correct the sentence: She was waiting for an hour before he came.",
-        "had been waiting."
+        "Correct the verb with the past perfect continuous to show the waiting before he came. Write the full sentence: She was waiting for an hour before he came.",
+        "She had been waiting for an hour before he came.",
+        {
+          "acceptedAnswers": [
+            "She’d been waiting for an hour before he came."
+          ]
+        }
       ],
       [
         "Type the model sentence: She had been waiting for an hour.",
@@ -2385,8 +2422,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Past perfect continuous accurately."
       ],
       [
-        "Repair this common error for “Past perfect continuous” and write the full corrected sentence.",
-        "had been waiting."
+        "Repair this common error for “Past perfect continuous” and write the full corrected sentence: She was waiting for an hour before he came.",
+        "She had been waiting for an hour before he came."
       ]
     ],
     "links": [
@@ -2405,7 +2442,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "She had been waiting for an hour.",
     "recallTest": "Use had been + verb-ing to emphasize duration before a past point.",
-    "repairTest": "had been waiting.",
+    "repairTest": "She had been waiting for an hour before he came.",
     "transferTest": "In a new situation, I can use Past perfect continuous accurately."
   },
   {
@@ -2415,11 +2452,18 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "This time tomorrow, I will be travelling."
     ],
-    "commonError": "I will travelling. → will be travelling.",
+    "commonError": "This time tomorrow, I will travelling. → This time tomorrow, I will be travelling.",
     "exercises": [
       [
-        "Correct the sentence: I will travelling.",
-        "will be travelling."
+        "Correct the future continuous and write the full sentence: This time tomorrow, I will travelling.",
+        "This time tomorrow, I will be travelling.",
+        {
+          "acceptedAnswers": [
+            "This time tomorrow, I will be traveling.",
+            "This time tomorrow, I’ll be travelling.",
+            "This time tomorrow, I’ll be traveling."
+          ]
+        }
       ],
       [
         "Type the model sentence: This time tomorrow, I will be travelling.",
@@ -2438,8 +2482,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Future continuous accurately."
       ],
       [
-        "Repair this common error for “Future continuous” and write the full corrected sentence.",
-        "will be travelling."
+        "Repair this common error for “Future continuous” and write the full corrected sentence: This time tomorrow, I will travelling.",
+        "This time tomorrow, I will be travelling."
       ]
     ],
     "links": [
@@ -2458,7 +2502,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "This time tomorrow, I will be travelling.",
     "recallTest": "Use will be + verb-ing for an action in progress at a future time.",
-    "repairTest": "will be travelling.",
+    "repairTest": "This time tomorrow, I will be travelling.",
     "transferTest": "In a new situation, I can use Future continuous accurately."
   },
   {
@@ -2468,11 +2512,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "By Friday, I will have finished."
     ],
-    "commonError": "By Friday, I will finish already. → will have finished.",
+    "commonError": "By Friday, I finish the report. → By Friday, I will have finished the report.",
     "exercises": [
       [
-        "Correct the sentence: By Friday, I will finish already.",
-        "will have finished."
+        "Correct the verb with the future perfect for completion before Friday. Write the full sentence: By Friday, I finish the report.",
+        "By Friday, I will have finished the report.",
+        {
+          "acceptedAnswers": [
+            "By Friday, I’ll have finished the report."
+          ]
+        }
       ],
       [
         "Type the model sentence: By Friday, I will have finished.",
@@ -2491,8 +2540,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Future perfect accurately."
       ],
       [
-        "Repair this common error for “Future perfect” and write the full corrected sentence.",
-        "will have finished."
+        "Repair this common error for “Future perfect” and write the full corrected sentence: By Friday, I finish the report.",
+        "By Friday, I will have finished the report."
       ]
     ],
     "links": [
@@ -2511,7 +2560,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "By Friday, I will have finished.",
     "recallTest": "Use will have + past participle for completion before a future time.",
-    "repairTest": "will have finished.",
+    "repairTest": "By Friday, I will have finished the report.",
     "transferTest": "In a new situation, I can use Future perfect accurately."
   },
   {
@@ -2521,11 +2570,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "If I had studied, I would have passed."
     ],
-    "commonError": "If I studied, I would have passed. → had studied.",
+    "commonError": "If I studied, I would have passed. → If I had studied, I would have passed.",
     "exercises": [
       [
-        "Correct the sentence: If I studied, I would have passed.",
-        "had studied."
+        "Correct the if-clause of this unreal past condition. Write the full sentence: If I studied, I would have passed.",
+        "If I had studied, I would have passed.",
+        {
+          "acceptedAnswers": [
+            "If I’d studied, I would have passed."
+          ]
+        }
       ],
       [
         "Type the model sentence: If I had studied, I would have passed.",
@@ -2544,8 +2598,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Third conditional accurately."
       ],
       [
-        "Repair this common error for “Third conditional” and write the full corrected sentence.",
-        "had studied."
+        "Repair this common error for “Third conditional” and write the full corrected sentence: If I studied, I would have passed.",
+        "If I had studied, I would have passed."
       ]
     ],
     "links": [
@@ -2564,7 +2618,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "If I had studied, I would have passed.",
     "recallTest": "Use if + past perfect, would have + past participle for unreal past situations.",
-    "repairTest": "had studied.",
+    "repairTest": "If I had studied, I would have passed.",
     "transferTest": "In a new situation, I can use Third conditional accurately."
   },
   {
@@ -2597,7 +2651,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Mixed conditionals accurately."
       ],
       [
-        "Repair this common error for “Mixed conditionals” and write the full corrected sentence.",
+        "Repair this common error for “Mixed conditionals” and write the full corrected sentence: If I would have taken",
         "If I had taken."
       ]
     ],
@@ -2628,11 +2682,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       "She must be busy.",
       "He can’t know."
     ],
-    "commonError": "She must to be busy. → must be.",
+    "commonError": "She must to be busy. → She must be busy.",
     "exercises": [
       [
-        "Correct the sentence: She must to be busy.",
-        "must be."
+        "Correct the verb after must and write the full sentence: She must to be busy.",
+        "She must be busy."
       ],
       [
         "Type the model sentence: She must be busy.",
@@ -2651,8 +2705,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Modal deduction present accurately."
       ],
       [
-        "Repair this common error for “Modal deduction present” and write the full corrected sentence.",
-        "must be."
+        "Repair this common error for “Modal deduction present” and write the full corrected sentence: She must to be busy.",
+        "She must be busy."
       ]
     ],
     "links": [
@@ -2671,7 +2725,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "She must be busy.",
     "recallTest": "Use must/might/can’t + base verb for degrees of certainty now.",
-    "repairTest": "must be.",
+    "repairTest": "She must be busy.",
     "transferTest": "In a new situation, I can use Modal deduction present accurately."
   },
   {
@@ -2681,11 +2735,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "They must have forgotten."
     ],
-    "commonError": "They must forgot. → must have forgotten.",
+    "commonError": "They must forgot. → They must have forgotten.",
     "exercises": [
       [
-        "Correct the sentence: They must forgot.",
-        "must have forgotten."
+        "Correct the past deduction with must have and write the full sentence: They must forgot.",
+        "They must have forgotten."
       ],
       [
         "Type the model sentence: They must have forgotten.",
@@ -2704,8 +2758,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Modal deduction past accurately."
       ],
       [
-        "Repair this common error for “Modal deduction past” and write the full corrected sentence.",
-        "must have forgotten."
+        "Repair this common error for “Modal deduction past” and write the full corrected sentence: They must forgot.",
+        "They must have forgotten."
       ]
     ],
     "links": [
@@ -2724,7 +2778,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "They must have forgotten.",
     "recallTest": "Use must/might/can’t have + past participle for past deduction.",
-    "repairTest": "must have forgotten.",
+    "repairTest": "They must have forgotten.",
     "transferTest": "In a new situation, I can use Modal deduction past accurately."
   },
   {
@@ -2734,11 +2788,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "I had my laptop repaired."
     ],
-    "commonError": "I repaired my laptop by technician. → had it repaired.",
+    "commonError": "I repaired my laptop yesterday. → I had my laptop repaired yesterday.",
     "exercises": [
       [
-        "Correct the sentence: I repaired my laptop by technician.",
-        "had it repaired."
+        "Change the sentence because a technician did the work: use have + object + past participle. Write the full sentence: I repaired my laptop yesterday.",
+        "I had my laptop repaired yesterday."
       ],
       [
         "Type the model sentence: I had my laptop repaired.",
@@ -2757,8 +2811,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Causative have/get accurately."
       ],
       [
-        "Repair this common error for “Causative have/get” and write the full corrected sentence.",
-        "had it repaired."
+        "Repair this common error for “Causative have/get” and write the full corrected sentence: I repaired my laptop yesterday.",
+        "I had my laptop repaired yesterday."
       ]
     ],
     "links": [
@@ -2777,7 +2831,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "I had my laptop repaired.",
     "recallTest": "Use have/get + object + past participle for services or arranged actions.",
-    "repairTest": "had it repaired.",
+    "repairTest": "I had my laptop repaired yesterday.",
     "transferTest": "In a new situation, I can use Causative have/get accurately."
   },
   {
@@ -2788,11 +2842,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       "He is believed to be abroad.",
       "It should be completed soon."
     ],
-    "commonError": "He believes to be abroad. → is believed.",
+    "commonError": "He believes to be abroad. → He is believed to be abroad.",
     "exercises": [
       [
-        "Correct the sentence: He believes to be abroad.",
-        "is believed."
+        "Correct the sentence with a passive reporting structure: He believes to be abroad.",
+        "He is believed to be abroad."
       ],
       [
         "Type the model sentence: He is believed to be abroad.",
@@ -2811,8 +2865,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Advanced passive accurately."
       ],
       [
-        "Repair this common error for “Advanced passive” and write the full corrected sentence.",
-        "is believed."
+        "Repair this common error for “Advanced passive” and write the full corrected sentence: He believes to be abroad.",
+        "He is believed to be abroad."
       ]
     ],
     "links": [
@@ -2831,7 +2885,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "He is believed to be abroad.",
     "recallTest": "Use passive reporting structures and modal passives.",
-    "repairTest": "is believed.",
+    "repairTest": "He is believed to be abroad.",
     "transferTest": "In a new situation, I can use Advanced passive accurately."
   },
   {
@@ -2841,11 +2895,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "Having finished the report, she left."
     ],
-    "commonError": "Finished the report, she left. → Having finished.",
+    "commonError": "Finished the report, she left. → Having finished the report, she left.",
     "exercises": [
       [
-        "Correct the sentence: Finished the report, she left.",
-        "Having finished."
+        "Correct the participle clause so that it shows the earlier action. Write the full sentence: Finished the report, she left.",
+        "Having finished the report, she left."
       ],
       [
         "Type the model sentence: Having finished the report, she left.",
@@ -2864,8 +2918,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Participle clauses accurately."
       ],
       [
-        "Repair this common error for “Participle clauses” and write the full corrected sentence.",
-        "Having finished."
+        "Repair this common error for “Participle clauses” and write the full corrected sentence: Finished the report, she left.",
+        "Having finished the report, she left."
       ]
     ],
     "links": [
@@ -2884,7 +2938,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "Having finished the report, she left.",
     "recallTest": "Use -ing/-ed clauses to reduce repeated subjects and add background.",
-    "repairTest": "Having finished.",
+    "repairTest": "Having finished the report, she left.",
     "transferTest": "In a new situation, I can use Participle clauses accurately."
   },
   {
@@ -2918,7 +2972,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Wish and if only accurately."
       ],
       [
-        "Repair this common error for “Wish and if only” and write the full corrected sentence.",
+        "Repair this common error for “Wish and if only” and write the full corrected sentence: I wish I would know.",
         "I wish I knew."
       ]
     ],
@@ -2971,7 +3025,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Inversion after negative adverbials accurately."
       ],
       [
-        "Repair this common error for “Inversion after negative adverbials” and write the full corrected sentence.",
+        "Repair this common error for “Inversion after negative adverbials” and write the full corrected sentence: Never I have seen",
         "Never have I seen."
       ]
     ],
@@ -3025,7 +3079,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Cleft sentences accurately."
       ],
       [
-        "Repair this common error for “Cleft sentences” and write the full corrected sentence.",
+        "Repair this common error for “Cleft sentences” and write the full corrected sentence: What I need it is practice.",
         "What I need is practice."
       ]
     ],
@@ -3078,7 +3132,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Inversion in conditionals accurately."
       ],
       [
-        "Repair this common error for “Inversion in conditionals” and write the full corrected sentence.",
+        "Repair this common error for “Inversion in conditionals” and write the full corrected sentence: Had I knew",
         "Had I known."
       ]
     ],
@@ -3106,17 +3160,23 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "title": "Nominalisation",
     "rule": "Turn verbs/adjectives into nouns for dense formal writing.",
     "examples": [
-      "The committee decided → The committee’s decision"
+      "The committee’s decision surprised everyone.",
+      "The analysis of the data took a week."
     ],
-    "commonError": "The decide of the committee → decision.",
+    "commonError": "The decide of the committee surprised everyone. → The decision of the committee surprised everyone.",
     "exercises": [
       [
-        "Correct the sentence: The decide of the committee",
-        "decision."
+        "Correct the noun form and write the full sentence: The decide of the committee surprised everyone.",
+        "The decision of the committee surprised everyone.",
+        {
+          "acceptedAnswers": [
+            "The committee’s decision surprised everyone."
+          ]
+        }
       ],
       [
-        "Type the model sentence: The committee decided → The committee’s decision",
-        "The committee decided → The committee’s decision"
+        "Type the model sentence: The committee’s decision surprised everyone.",
+        "The committee’s decision surprised everyone."
       ],
       [
         "Explain the rule: Nominalisation",
@@ -3131,8 +3191,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Nominalisation accurately."
       ],
       [
-        "Repair this common error for “Nominalisation” and write the full corrected sentence.",
-        "decision."
+        "Repair this common error for “Nominalisation” and write the full corrected sentence: The decide of the committee surprised everyone.",
+        "The decision of the committee surprised everyone."
       ]
     ],
     "links": [
@@ -3151,7 +3211,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The committee decided → The committee’s decision",
     "recallTest": "Turn verbs/adjectives into nouns for dense formal writing.",
-    "repairTest": "decision.",
+    "repairTest": "The decision of the committee surprised everyone.",
     "transferTest": "In a new situation, I can use Nominalisation accurately."
   },
   {
@@ -3161,11 +3221,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "The results appear to support the hypothesis."
     ],
-    "commonError": "The results prove absolutely → appear to support.",
+    "commonError": "The results absolutely prove the hypothesis. → The results appear to support the hypothesis.",
     "exercises": [
       [
-        "Correct the sentence: The results prove absolutely",
-        "appear to support."
+        "Change the claim to a hedged one with appear to support. Write the full sentence: The results absolutely prove the hypothesis.",
+        "The results appear to support the hypothesis."
       ],
       [
         "Type the model sentence: The results appear to support the hypothesis.",
@@ -3184,8 +3244,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Hedging and stance accurately."
       ],
       [
-        "Repair this common error for “Hedging and stance” and write the full corrected sentence.",
-        "appear to support."
+        "Repair this common error for “Hedging and stance” and write the full corrected sentence: The results absolutely prove the hypothesis.",
+        "The results appear to support the hypothesis."
       ]
     ],
     "links": [
@@ -3204,7 +3264,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The results appear to support the hypothesis.",
     "recallTest": "Use may, tends to, appears to, arguably, and likely to limit claims.",
-    "repairTest": "appear to support.",
+    "repairTest": "The results appear to support the hypothesis.",
     "transferTest": "In a new situation, I can use Hedging and stance accurately."
   },
   {
@@ -3214,11 +3274,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "Nevertheless, the limitation remains significant."
     ],
-    "commonError": "On the other hand used without contrast.",
+    "commonError": "The findings are promising. On the other hand, they confirm earlier studies. → The findings are promising. Moreover, they confirm earlier studies.",
     "exercises": [
       [
-        "Correct the sentence: On the other hand used without contrast.",
-        "Nevertheless, the limitation remains significant."
+        "Correct the discourse marker: the second sentence adds a point and does not contrast. Write both sentences: The findings are promising. On the other hand, they confirm earlier studies.",
+        "The findings are promising. Moreover, they confirm earlier studies.",
+        {
+          "acceptedAnswers": [
+            "The findings are promising. Furthermore, they confirm earlier studies.",
+            "The findings are promising. In addition, they confirm earlier studies.",
+            "The findings are promising. Additionally, they confirm earlier studies.",
+            "The findings are promising. What is more, they confirm earlier studies."
+          ]
+        }
       ],
       [
         "Type the model sentence: Nevertheless, the limitation remains significant.",
@@ -3237,8 +3305,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Advanced discourse markers accurately."
       ],
       [
-        "Repair this common error for “Advanced discourse markers” and write the full corrected sentence.",
-        "Nevertheless, the limitation remains significant."
+        "Repair this common error for “Advanced discourse markers” and write the full corrected sentence: The findings are promising. On the other hand, they confirm earlier studies.",
+        "The findings are promising. Moreover, they confirm earlier studies."
       ]
     ],
     "links": [
@@ -3257,7 +3325,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "Nevertheless, the limitation remains significant.",
     "recallTest": "Use concessive, causal, additive, and reformulation markers accurately.",
-    "repairTest": "Nevertheless, the limitation remains significant.",
+    "repairTest": "The findings are promising. Moreover, they confirm earlier studies.",
     "transferTest": "In a new situation, I can use Advanced discourse markers accurately."
   },
   {
@@ -3267,11 +3335,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "I expected her to call, and she did."
     ],
-    "commonError": "She did it call. → she did.",
+    "commonError": "I expected her to call, and she did it call. → I expected her to call, and she did.",
     "exercises": [
       [
-        "Correct the sentence: She did it call.",
-        "she did."
+        "Correct the ending by leaving out the repeated words after did. Write the full sentence: I expected her to call, and she did it call.",
+        "I expected her to call, and she did."
       ],
       [
         "Type the model sentence: I expected her to call, and she did.",
@@ -3290,8 +3358,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Substitution and ellipsis accurately."
       ],
       [
-        "Repair this common error for “Substitution and ellipsis” and write the full corrected sentence.",
-        "she did."
+        "Repair this common error for “Substitution and ellipsis” and write the full corrected sentence: I expected her to call, and she did it call.",
+        "I expected her to call, and she did."
       ]
     ],
     "links": [
@@ -3310,7 +3378,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "I expected her to call, and she did.",
     "recallTest": "Avoid repetition with do so, so/neither, one/ones, and omitted repeated material.",
-    "repairTest": "she did.",
+    "repairTest": "I expected her to call, and she did.",
     "transferTest": "In a new situation, I can use Substitution and ellipsis accurately."
   },
   {
@@ -3320,11 +3388,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "The method on which we relied was robust."
     ],
-    "commonError": "The method which we relied on it → on which we relied.",
+    "commonError": "This is the method which we relied on it. → This is the method on which we relied.",
     "exercises": [
       [
-        "Correct the sentence: The method which we relied on it",
-        "on which we relied."
+        "Correct the relative clause: remove the extra pronoun and put on before which. Write the full sentence: This is the method which we relied on it.",
+        "This is the method on which we relied."
       ],
       [
         "Type the model sentence: The method on which we relied was robust.",
@@ -3343,8 +3411,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Complex relative clauses accurately."
       ],
       [
-        "Repair this common error for “Complex relative clauses” and write the full corrected sentence.",
-        "on which we relied."
+        "Repair this common error for “Complex relative clauses” and write the full corrected sentence: This is the method which we relied on it.",
+        "This is the method on which we relied."
       ]
     ],
     "links": [
@@ -3363,7 +3431,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The method on which we relied was robust.",
     "recallTest": "Use preposition + whom/which and sentential which in formal language.",
-    "repairTest": "on which we relied.",
+    "repairTest": "This is the method on which we relied.",
     "transferTest": "In a new situation, I can use Complex relative clauses accurately."
   },
   {
@@ -3373,11 +3441,17 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "He admitted making the error."
     ],
-    "commonError": "He admitted to make → admitted making.",
+    "commonError": "He admitted to make the mistake. → He admitted making the mistake.",
     "exercises": [
       [
-        "Correct the sentence: He admitted to make",
-        "admitted making."
+        "Correct the verb pattern after admitted and write the full sentence: He admitted to make the mistake.",
+        "He admitted making the mistake.",
+        {
+          "acceptedAnswers": [
+            "He admitted to making the mistake.",
+            "He admitted having made the mistake."
+          ]
+        }
       ],
       [
         "Type the model sentence: He admitted making the error.",
@@ -3396,8 +3470,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Advanced reporting verbs accurately."
       ],
       [
-        "Repair this common error for “Advanced reporting verbs” and write the full corrected sentence.",
-        "admitted making."
+        "Repair this common error for “Advanced reporting verbs” and write the full corrected sentence: He admitted to make the mistake.",
+        "He admitted making the mistake."
       ]
     ],
     "links": [
@@ -3416,7 +3490,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "He admitted making the error.",
     "recallTest": "Use reporting verb patterns: admit doing, deny doing, urge someone to do.",
-    "repairTest": "admitted making.",
+    "repairTest": "He admitted making the mistake.",
     "transferTest": "In a new situation, I can use Advanced reporting verbs accurately."
   },
   {
@@ -3426,11 +3500,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "I do understand your concern."
     ],
-    "commonError": "I am understand. → I do understand.",
+    "commonError": "I am understand your concern. → I do understand your concern.",
     "exercises": [
       [
-        "Correct the sentence: I am understand.",
-        "I do understand."
+        "Correct the sentence and add emphasis with do: I am understand your concern.",
+        "I do understand your concern."
       ],
       [
         "Type the model sentence: I do understand your concern.",
@@ -3449,8 +3523,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Emphasis with auxiliaries accurately."
       ],
       [
-        "Repair this common error for “Emphasis with auxiliaries” and write the full corrected sentence.",
-        "I do understand."
+        "Repair this common error for “Emphasis with auxiliaries” and write the full corrected sentence: I am understand your concern.",
+        "I do understand your concern."
       ]
     ],
     "links": [
@@ -3469,7 +3543,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "I do understand your concern.",
     "recallTest": "Use do/does/did to emphasize an affirmative statement.",
-    "repairTest": "I do understand.",
+    "repairTest": "I do understand your concern.",
     "transferTest": "In a new situation, I can use Emphasis with auxiliaries accurately."
   },
   {
@@ -3479,11 +3553,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "This issue, we must address immediately."
     ],
-    "commonError": "This issue we must to address.",
+    "commonError": "This issue we must to address. → This issue we must address.",
     "exercises": [
       [
-        "Correct the sentence: This issue we must to address.",
-        "This issue, we must address immediately."
+        "Correct the verb after must and keep the fronted object. Write the full sentence: This issue we must to address.",
+        "This issue we must address.",
+        {
+          "acceptedAnswers": [
+            "This issue, we must address."
+          ]
+        }
       ],
       [
         "Type the model sentence: This issue, we must address immediately.",
@@ -3502,8 +3581,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Fronting accurately."
       ],
       [
-        "Repair this common error for “Fronting” and write the full corrected sentence.",
-        "This issue, we must address immediately."
+        "Repair this common error for “Fronting” and write the full corrected sentence: This issue we must to address.",
+        "This issue we must address."
       ]
     ],
     "links": [
@@ -3522,7 +3601,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "This issue, we must address immediately.",
     "recallTest": "Move elements to the front for focus while preserving grammar.",
-    "repairTest": "This issue, we must address immediately.",
+    "repairTest": "This issue we must address.",
     "transferTest": "In a new situation, I can use Fronting accurately."
   },
   {
@@ -3532,11 +3611,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "a carefully designed longitudinal study of adult learners"
     ],
-    "commonError": "a study carefully design → carefully designed study.",
+    "commonError": "They published a study carefully design. → They published a carefully designed study.",
     "exercises": [
       [
-        "Correct the sentence: a study carefully design",
-        "carefully designed study."
+        "Correct the noun phrase and write the full sentence: They published a study carefully design.",
+        "They published a carefully designed study."
       ],
       [
         "Type the model sentence: a carefully designed longitudinal study of adult learners",
@@ -3555,8 +3634,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Complex noun phrases accurately."
       ],
       [
-        "Repair this common error for “Complex noun phrases” and write the full corrected sentence.",
-        "carefully designed study."
+        "Repair this common error for “Complex noun phrases” and write the full corrected sentence: They published a study carefully design.",
+        "They published a carefully designed study."
       ]
     ],
     "links": [
@@ -3575,7 +3654,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "a carefully designed longitudinal study of adult learners",
     "recallTest": "Build precise noun phrases with pre- and post-modification.",
-    "repairTest": "carefully designed study.",
+    "repairTest": "They published a carefully designed study.",
     "transferTest": "In a new situation, I can use Complex noun phrases accurately."
   },
   {
@@ -3584,21 +3663,26 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "rule": "Choose grammatical forms appropriate to formal, neutral, or informal contexts.",
     "examples": [
       "Could you clarify the requirement?",
-      "vs What do you mean?"
+      "Would you mind explaining the deadline?"
     ],
-    "commonError": "Using slang in a formal report.",
+    "commonError": "What do you mean by the requirement? → Could you clarify the requirement?",
     "exercises": [
       [
-        "Correct the sentence: Using slang in a formal report.",
-        "Could you clarify the requirement?"
+        "Change this informal question for a formal meeting, using Could you clarify. Write the full question: What do you mean by the requirement?",
+        "Could you clarify the requirement?",
+        {
+          "acceptedAnswers": [
+            "Could you clarify what you mean by the requirement?"
+          ]
+        }
       ],
       [
         "Type the model sentence: Could you clarify the requirement?",
         "Could you clarify the requirement?"
       ],
       [
-        "Type another model sentence: vs What do you mean?",
-        "vs What do you mean?"
+        "Type another model sentence: Would you mind explaining the deadline?",
+        "Would you mind explaining the deadline?"
       ],
       [
         "State the rule for “Register control” from memory.",
@@ -3609,7 +3693,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Register control accurately."
       ],
       [
-        "Repair this common error for “Register control” and write the full corrected sentence.",
+        "Repair this common error for “Register control” and write the full corrected sentence: What do you mean by the requirement?",
         "Could you clarify the requirement?"
       ]
     ],
@@ -3637,22 +3721,22 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "title": "Advanced tense-aspect choices",
     "rule": "Use tense and aspect to control viewpoint, relevance, and temporal framing.",
     "examples": [
-      "The study has demonstrated...",
-      "/ The study demonstrated..."
+      "The study has demonstrated a clear effect.",
+      "In 2019, the study demonstrated a clear effect."
     ],
-    "commonError": "Switching time frames without purpose.",
+    "commonError": "In 2019, the study has demonstrated a clear effect. → In 2019, the study demonstrated a clear effect.",
     "exercises": [
       [
-        "Correct the sentence: Switching time frames without purpose.",
-        "The study has demonstrated..."
+        "Correct the tense for a finished past time and write the full sentence: In 2019, the study has demonstrated a clear effect.",
+        "In 2019, the study demonstrated a clear effect."
       ],
       [
-        "Type the model sentence: The study has demonstrated...",
-        "The study has demonstrated..."
+        "Type the model sentence: The study has demonstrated a clear effect.",
+        "The study has demonstrated a clear effect."
       ],
       [
-        "Type another model sentence: / The study demonstrated...",
-        "/ The study demonstrated..."
+        "Type another model sentence: In 2019, the study demonstrated a clear effect.",
+        "In 2019, the study demonstrated a clear effect."
       ],
       [
         "State the rule for “Advanced tense-aspect choices” from memory.",
@@ -3663,8 +3747,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Advanced tense-aspect choices accurately."
       ],
       [
-        "Repair this common error for “Advanced tense-aspect choices” and write the full corrected sentence.",
-        "The study has demonstrated..."
+        "Repair this common error for “Advanced tense-aspect choices” and write the full corrected sentence: In 2019, the study has demonstrated a clear effect.",
+        "In 2019, the study demonstrated a clear effect."
       ]
     ],
     "links": [
@@ -3683,7 +3767,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The study has demonstrated...",
     "recallTest": "Use tense and aspect to control viewpoint, relevance, and temporal framing.",
-    "repairTest": "The study has demonstrated...",
+    "repairTest": "In 2019, the study demonstrated a clear effect.",
     "transferTest": "In a new situation, I can use Advanced tense-aspect choices accurately."
   },
   {
@@ -3693,11 +3777,18 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "The role requires planning, analysing, and reporting."
     ],
-    "commonError": "planning, to analyse, and reports → parallel forms.",
+    "commonError": "The role requires planning, to analyse, and reports. → The role requires planning, analysing, and reporting.",
     "exercises": [
       [
-        "Correct the sentence: planning, to analyse, and reports",
-        "parallel forms."
+        "Correct the list so that all three items have the same form. Write the full sentence: The role requires planning, to analyse, and reports.",
+        "The role requires planning, analysing, and reporting.",
+        {
+          "acceptedAnswers": [
+            "The role requires planning, analysing and reporting.",
+            "The role requires planning, analyzing, and reporting.",
+            "The role requires planning, analyzing and reporting."
+          ]
+        }
       ],
       [
         "Type the model sentence: The role requires planning, analysing, and reporting.",
@@ -3716,8 +3807,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Parallelism accurately."
       ],
       [
-        "Repair this common error for “Parallelism” and write the full corrected sentence.",
-        "parallel forms."
+        "Repair this common error for “Parallelism” and write the full corrected sentence: The role requires planning, to analyse, and reports.",
+        "The role requires planning, analysing, and reporting."
       ]
     ],
     "links": [
@@ -3736,7 +3827,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The role requires planning, analysing, and reporting.",
     "recallTest": "Use matching grammatical structures in coordinated lists and comparisons.",
-    "repairTest": "parallel forms.",
+    "repairTest": "The role requires planning, analysing, and reporting.",
     "transferTest": "In a new situation, I can use Parallelism accurately."
   },
   {
@@ -3769,7 +3860,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Marked word order accurately."
       ],
       [
-        "Repair this common error for “Marked word order” and write the full corrected sentence.",
+        "Repair this common error for “Marked word order” and write the full corrected sentence: Only then the implications became clear.",
         "Only then did the implications become clear."
       ]
     ],
@@ -3822,7 +3913,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Layered subordination accurately."
       ],
       [
-        "Repair this common error for “Layered subordination” and write the full corrected sentence.",
+        "Repair this common error for “Layered subordination” and write the full corrected sentence: Although the data were limited, the pattern that emerge was consistent.",
         "Although the data were limited, the pattern that emerged was consistent."
       ]
     ],
@@ -3852,11 +3943,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "You needn’t have attended; you didn’t need to attend."
     ],
-    "commonError": "Confusing unnecessary completed action with absence of obligation.",
+    "commonError": "I needn’t have taken an umbrella, so I didn’t take one. → I didn’t need to take an umbrella, so I didn’t take one.",
     "exercises": [
       [
-        "Correct the sentence: Confusing unnecessary completed action with absence of obligation.",
-        "You needn’t have attended; you didn’t need to attend."
+        "Correct the modal, because no umbrella was taken. Write the full sentence: I needn’t have taken an umbrella, so I didn’t take one.",
+        "I didn’t need to take an umbrella, so I didn’t take one."
       ],
       [
         "Type the model sentence: You needn’t have attended; you didn’t need to attend.",
@@ -3875,8 +3966,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Nuanced modality accurately."
       ],
       [
-        "Repair this common error for “Nuanced modality” and write the full corrected sentence.",
-        "You needn’t have attended; you didn’t need to attend."
+        "Repair this common error for “Nuanced modality” and write the full corrected sentence: I needn’t have taken an umbrella, so I didn’t take one.",
+        "I didn’t need to take an umbrella, so I didn’t take one."
       ]
     ],
     "links": [
@@ -3895,7 +3986,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "You needn’t have attended; you didn’t need to attend.",
     "recallTest": "Distinguish obligation, inference, willingness, tentativeness, and counterfactuality.",
-    "repairTest": "You needn’t have attended; you didn’t need to attend.",
+    "repairTest": "I didn’t need to take an umbrella, so I didn’t take one.",
     "transferTest": "In a new situation, I can use Nuanced modality accurately."
   },
   {
@@ -3905,11 +3996,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "I wondered if you might be able to help."
     ],
-    "commonError": "I wonder if you can help in very formal context.",
+    "commonError": "I wonder if you can help. → I wondered if you might be able to help.",
     "exercises": [
       [
-        "Correct the sentence: I wonder if you can help in very formal context.",
-        "I wondered if you might be able to help."
+        "Change this request for a very formal letter, using the past tense of wonder and might be able to: I wonder if you can help.",
+        "I wondered if you might be able to help.",
+        {
+          "acceptedAnswers": [
+            "I was wondering if you might be able to help."
+          ]
+        }
       ],
       [
         "Type the model sentence: I wondered if you might be able to help.",
@@ -3928,7 +4024,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Counterfactual distance accurately."
       ],
       [
-        "Repair this common error for “Counterfactual distance” and write the full corrected sentence.",
+        "Repair this common error for “Counterfactual distance” and write the full corrected sentence: I wonder if you can help.",
         "I wondered if you might be able to help."
       ]
     ],
@@ -3956,23 +4052,23 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "title": "Advanced cohesion",
     "rule": "Use reference chains, lexical cohesion, and controlled repetition across long texts.",
     "examples": [
-      "This limitation...",
-      "Such a constraint...",
-      "the issue..."
+      "The sample was small. This limitation weakens the conclusions.",
+      "The response rate was low. Such a constraint affects every estimate.",
+      "Some data were missing. The issue was reported to the authors."
     ],
-    "commonError": "Unclear pronoun reference.",
+    "commonError": "The sample was small and the response rate was low. This weakens the conclusions. → The sample was small and the response rate was low. These limitations weaken the conclusions.",
     "exercises": [
       [
-        "Correct the sentence: Unclear pronoun reference.",
-        "This limitation..."
+        "Correct the vague reference by replacing This with These limitations. Write both sentences: The sample was small and the response rate was low. This weakens the conclusions.",
+        "The sample was small and the response rate was low. These limitations weaken the conclusions."
       ],
       [
-        "Type the model sentence: This limitation...",
-        "This limitation..."
+        "Type the model sentence: The sample was small. This limitation weakens the conclusions.",
+        "The sample was small. This limitation weakens the conclusions."
       ],
       [
-        "Type another model sentence: Such a constraint...",
-        "Such a constraint..."
+        "Type another model sentence: The response rate was low. Such a constraint affects every estimate.",
+        "The response rate was low. Such a constraint affects every estimate."
       ],
       [
         "State the rule for “Advanced cohesion” from memory.",
@@ -3983,8 +4079,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Advanced cohesion accurately."
       ],
       [
-        "Repair this common error for “Advanced cohesion” and write the full corrected sentence.",
-        "This limitation..."
+        "Repair this common error for “Advanced cohesion” and write the full corrected sentence: The sample was small and the response rate was low. This weakens the conclusions.",
+        "The sample was small and the response rate was low. These limitations weaken the conclusions."
       ]
     ],
     "links": [
@@ -4003,7 +4099,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "This limitation...",
     "recallTest": "Use reference chains, lexical cohesion, and controlled repetition across long texts.",
-    "repairTest": "This limitation...",
+    "repairTest": "The sample was small and the response rate was low. These limitations weaken the conclusions.",
     "transferTest": "In a new situation, I can use Advanced cohesion accurately."
   },
   {
@@ -4013,10 +4109,10 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "Not because the method failed, but because the data were incomplete."
     ],
-    "commonError": "Unbalanced rhetorical structure.",
+    "commonError": "Not because the method failed, but the data were incomplete. → Not because the method failed, but because the data were incomplete.",
     "exercises": [
       [
-        "Correct the sentence: Unbalanced rhetorical structure.",
+        "Correct the contrast so that both parts are parallel. Write the full sentence: Not because the method failed, but the data were incomplete.",
         "Not because the method failed, but because the data were incomplete."
       ],
       [
@@ -4036,7 +4132,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Rhetorical grammar accurately."
       ],
       [
-        "Repair this common error for “Rhetorical grammar” and write the full corrected sentence.",
+        "Repair this common error for “Rhetorical grammar” and write the full corrected sentence: Not because the method failed, but the data were incomplete.",
         "Not because the method failed, but because the data were incomplete."
       ]
     ],
@@ -4066,10 +4162,10 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "The model, trained on multilingual data, performed consistently."
     ],
-    "commonError": "Overcompression that hides the agent.",
+    "commonError": "The model, trained on multilingual data, it performed consistently. → The model, trained on multilingual data, performed consistently.",
     "exercises": [
       [
-        "Correct the sentence: Overcompression that hides the agent.",
+        "Correct the sentence by removing the repeated subject: The model, trained on multilingual data, it performed consistently.",
         "The model, trained on multilingual data, performed consistently."
       ],
       [
@@ -4089,7 +4185,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Compressed academic structures accurately."
       ],
       [
-        "Repair this common error for “Compressed academic structures” and write the full corrected sentence.",
+        "Repair this common error for “Compressed academic structures” and write the full corrected sentence: The model, trained on multilingual data, it performed consistently.",
         "The model, trained on multilingual data, performed consistently."
       ]
     ],
@@ -4119,10 +4215,10 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "Be that as it may, the proposal deserves consideration."
     ],
-    "commonError": "Literal translation of idiomatic structures.",
+    "commonError": "Be it as it may, the proposal deserves consideration. → Be that as it may, the proposal deserves consideration.",
     "exercises": [
       [
-        "Correct the sentence: Literal translation of idiomatic structures.",
+        "Correct the fixed expression and write the full sentence: Be it as it may, the proposal deserves consideration.",
         "Be that as it may, the proposal deserves consideration."
       ],
       [
@@ -4142,7 +4238,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Idiomatic clause patterns accurately."
       ],
       [
-        "Repair this common error for “Idiomatic clause patterns” and write the full corrected sentence.",
+        "Repair this common error for “Idiomatic clause patterns” and write the full corrected sentence: Be it as it may, the proposal deserves consideration.",
         "Be that as it may, the proposal deserves consideration."
       ]
     ],
@@ -4172,11 +4268,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "She discussed the result with the supervisor who approved it."
     ],
-    "commonError": "Unclear who approved what.",
+    "commonError": "She discussed the result with the supervisor, and she approved it. → She discussed the result with the supervisor, who approved it.",
     "exercises": [
       [
-        "Correct the sentence: Unclear who approved what.",
-        "She discussed the result with the supervisor who approved it."
+        "Correct the ambiguity so that the supervisor clearly approved the result. Write the full sentence: She discussed the result with the supervisor, and she approved it.",
+        "She discussed the result with the supervisor, who approved it.",
+        {
+          "acceptedAnswers": [
+            "She discussed the result with the supervisor who approved it."
+          ]
+        }
       ],
       [
         "Type the model sentence: She discussed the result with the supervisor who approved it.",
@@ -4195,8 +4296,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Ambiguity control accurately."
       ],
       [
-        "Repair this common error for “Ambiguity control” and write the full corrected sentence.",
-        "She discussed the result with the supervisor who approved it."
+        "Repair this common error for “Ambiguity control” and write the full corrected sentence: She discussed the result with the supervisor, and she approved it.",
+        "She discussed the result with the supervisor, who approved it."
       ]
     ],
     "links": [
@@ -4215,7 +4316,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "She discussed the result with the supervisor who approved it.",
     "recallTest": "Revise attachment, pronoun, and scope ambiguity.",
-    "repairTest": "She discussed the result with the supervisor who approved it.",
+    "repairTest": "She discussed the result with the supervisor, who approved it.",
     "transferTest": "In a new situation, I can use Ambiguity control accurately."
   },
   {
@@ -4223,22 +4324,22 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "title": "Style shifting",
     "rule": "Recast the same meaning for conversation, interview, report, and academic argument.",
     "examples": [
-      "I found out...",
-      "/ The analysis revealed..."
+      "I found out that the policy had failed.",
+      "The analysis revealed that the policy had failed."
     ],
-    "commonError": "Same register in every context.",
+    "commonError": "I found out that the policy had failed. → The analysis revealed that the policy had failed.",
     "exercises": [
       [
-        "Correct the sentence: Same register in every context.",
-        "I found out..."
+        "Change this sentence for an academic report, beginning with The analysis revealed. Write the full sentence: I found out that the policy had failed.",
+        "The analysis revealed that the policy had failed."
       ],
       [
-        "Type the model sentence: I found out...",
-        "I found out..."
+        "Type the model sentence: I found out that the policy had failed.",
+        "I found out that the policy had failed."
       ],
       [
-        "Type another model sentence: / The analysis revealed...",
-        "/ The analysis revealed..."
+        "Type another model sentence: The analysis revealed that the policy had failed.",
+        "The analysis revealed that the policy had failed."
       ],
       [
         "State the rule for “Style shifting” from memory.",
@@ -4249,8 +4350,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Style shifting accurately."
       ],
       [
-        "Repair this common error for “Style shifting” and write the full corrected sentence.",
-        "I found out..."
+        "Repair this common error for “Style shifting” and write the full corrected sentence: I found out that the policy had failed.",
+        "The analysis revealed that the policy had failed."
       ]
     ],
     "links": [
@@ -4269,7 +4370,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "I found out...",
     "recallTest": "Recast the same meaning for conversation, interview, report, and academic argument.",
-    "repairTest": "I found out...",
+    "repairTest": "The analysis revealed that the policy had failed.",
     "transferTest": "In a new situation, I can use Style shifting accurately."
   },
   {
@@ -4279,11 +4380,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "The result, however, was inconclusive."
     ],
-    "commonError": "Comma splices and uncontrolled semicolons.",
+    "commonError": "The result was promising, however it was inconclusive. → The result was promising; however, it was inconclusive.",
     "exercises": [
       [
-        "Correct the sentence: Comma splices and uncontrolled semicolons.",
-        "The result, however, was inconclusive."
+        "Correct the comma splice before however and write the full sentence: The result was promising, however it was inconclusive.",
+        "The result was promising; however, it was inconclusive.",
+        {
+          "acceptedAnswers": [
+            "The result was promising. However, it was inconclusive."
+          ]
+        }
       ],
       [
         "Type the model sentence: The result, however, was inconclusive.",
@@ -4302,8 +4408,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Advanced punctuation and grammar accurately."
       ],
       [
-        "Repair this common error for “Advanced punctuation and grammar” and write the full corrected sentence.",
-        "The result, however, was inconclusive."
+        "Repair this common error for “Advanced punctuation and grammar” and write the full corrected sentence: The result was promising, however it was inconclusive.",
+        "The result was promising; however, it was inconclusive."
       ]
     ],
     "links": [
@@ -4322,7 +4428,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The result, however, was inconclusive.",
     "recallTest": "Use punctuation to clarify clause hierarchy and information structure.",
-    "repairTest": "The result, however, was inconclusive.",
+    "repairTest": "The result was promising; however, it was inconclusive.",
     "transferTest": "In a new situation, I can use Advanced punctuation and grammar accurately."
   },
   {
@@ -4330,17 +4436,23 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "title": "Editing for naturalness",
     "rule": "Identify grammatically possible but pragmatically unnatural forms.",
     "examples": [
-      "I strongly recommend that..."
+      "I strongly recommend that you revise the budget.",
+      "We strongly recommend reviewing the figures."
     ],
-    "commonError": "Formally correct but non-idiomatic collocations.",
+    "commonError": "I strongly recommend you to revise the budget. → I strongly recommend that you revise the budget.",
     "exercises": [
       [
-        "Correct the sentence: Formally correct but non-idiomatic collocations.",
-        "I strongly recommend that..."
+        "Correct the verb pattern after recommend with a that-clause. Write the full sentence: I strongly recommend you to revise the budget.",
+        "I strongly recommend that you revise the budget.",
+        {
+          "acceptedAnswers": [
+            "I strongly recommend that you should revise the budget."
+          ]
+        }
       ],
       [
-        "Type the model sentence: I strongly recommend that...",
-        "I strongly recommend that..."
+        "Type the model sentence: I strongly recommend that you revise the budget.",
+        "I strongly recommend that you revise the budget."
       ],
       [
         "Explain the rule: Editing for naturalness",
@@ -4355,8 +4467,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Editing for naturalness accurately."
       ],
       [
-        "Repair this common error for “Editing for naturalness” and write the full corrected sentence.",
-        "I strongly recommend that..."
+        "Repair this common error for “Editing for naturalness” and write the full corrected sentence: I strongly recommend you to revise the budget.",
+        "I strongly recommend that you revise the budget."
       ]
     ],
     "links": [
@@ -4375,7 +4487,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "I strongly recommend that...",
     "recallTest": "Identify grammatically possible but pragmatically unnatural forms.",
-    "repairTest": "I strongly recommend that...",
+    "repairTest": "I strongly recommend that you revise the budget.",
     "transferTest": "In a new situation, I can use Editing for naturalness accurately."
   },
   {
@@ -4383,17 +4495,23 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "title": "Genre-specific grammar",
     "rule": "Control the grammar of narratives, arguments, reports, proposals, and presentations.",
     "examples": [
-      "The report outlines..., evaluates..., and recommends..."
+      "The report outlines the problem, evaluates two options, and recommends a solution.",
+      "The proposal explains the need and sets out a clear timetable."
     ],
-    "commonError": "Mixing narrative and report conventions.",
+    "commonError": "The report outlined the problem, evaluates two options, and recommends a solution. → The report outlines the problem, evaluates two options, and recommends a solution.",
     "exercises": [
       [
-        "Correct the sentence: Mixing narrative and report conventions.",
-        "The report outlines..., evaluates..., and recommends..."
+        "Correct the tense so that the report is described consistently in the present. Write the full sentence: The report outlined the problem, evaluates two options, and recommends a solution.",
+        "The report outlines the problem, evaluates two options, and recommends a solution.",
+        {
+          "acceptedAnswers": [
+            "The report outlines the problem, evaluates two options and recommends a solution."
+          ]
+        }
       ],
       [
-        "Type the model sentence: The report outlines..., evaluates..., and recommends...",
-        "The report outlines..., evaluates..., and recommends..."
+        "Type the model sentence: The report outlines the problem, evaluates two options, and recommends a solution.",
+        "The report outlines the problem, evaluates two options, and recommends a solution."
       ],
       [
         "Explain the rule: Genre-specific grammar",
@@ -4408,8 +4526,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Genre-specific grammar accurately."
       ],
       [
-        "Repair this common error for “Genre-specific grammar” and write the full corrected sentence.",
-        "The report outlines..., evaluates..., and recommends..."
+        "Repair this common error for “Genre-specific grammar” and write the full corrected sentence: The report outlined the problem, evaluates two options, and recommends a solution.",
+        "The report outlines the problem, evaluates two options, and recommends a solution."
       ]
     ],
     "links": [
@@ -4428,7 +4546,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "The report outlines..., evaluates..., and recommends...",
     "recallTest": "Control the grammar of narratives, arguments, reports, proposals, and presentations.",
-    "repairTest": "The report outlines..., evaluates..., and recommends...",
+    "repairTest": "The report outlines the problem, evaluates two options, and recommends a solution.",
     "transferTest": "In a new situation, I can use Genre-specific grammar accurately."
   },
   {
@@ -4438,11 +4556,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "examples": [
       "Two-minute answer with target structures and self-repair."
     ],
-    "commonError": "Accuracy collapses when speed increases.",
+    "commonError": "Yesterday the team finish the analysis and sended the report. → Yesterday the team finished the analysis and sent the report.",
     "exercises": [
       [
-        "Correct the sentence: Accuracy collapses when speed increases.",
-        "Two-minute answer with target structures and self-repair."
+        "Correct both verb forms and write the full sentence: Yesterday the team finish the analysis and sended the report.",
+        "Yesterday the team finished the analysis and sent the report."
       ],
       [
         "Type the model sentence: Two-minute answer with target structures and self-repair.",
@@ -4461,8 +4579,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In a new situation, I can use Integrated automatic production accurately."
       ],
       [
-        "Repair this common error for “Integrated automatic production” and write the full corrected sentence.",
-        "Two-minute answer with target structures and self-repair."
+        "Repair this common error for “Integrated automatic production” and write the full corrected sentence: Yesterday the team finish the analysis and sended the report.",
+        "Yesterday the team finished the analysis and sent the report."
       ]
     ],
     "links": [
@@ -4481,7 +4599,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     ],
     "testAnswer": "Two-minute answer with target structures and self-repair.",
     "recallTest": "Maintain accuracy, speed, cohesion, and register under realistic time pressure.",
-    "repairTest": "Two-minute answer with target structures and self-repair.",
+    "repairTest": "Yesterday the team finished the analysis and sent the report.",
     "transferTest": "In a new situation, I can use Integrated automatic production accurately."
   },
   {
@@ -5046,8 +5164,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "commonError": "Yesterday I could fix the computer after three hours. → Yesterday I managed to fix the computer after three hours.",
     "exercises": [
       [
-        "Correct the sentence: Yesterday I could fix the computer after three hours.",
-        "Yesterday I managed to fix the computer after three hours."
+        "Correct the verb for one successful action and write the full sentence: Yesterday I could fix the computer after three hours.",
+        "Yesterday I managed to fix the computer after three hours.",
+        {
+          "acceptedAnswers": [
+            "Yesterday I was able to fix the computer after three hours."
+          ]
+        }
       ],
       [
         "Complete the sentence: I _____ swim when I was six.",
@@ -5156,8 +5279,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
     "commonError": "Please fill the form in it. → Please fill in the form.",
     "exercises": [
       [
-        "Correct the sentence: Please fill the form in it.",
-        "Please fill in the form."
+        "Correct the phrasal verb and write the full sentence: Please fill the form in it.",
+        "Please fill in the form.",
+        {
+          "acceptedAnswers": [
+            "Please fill the form in."
+          ]
+        }
       ],
       [
         "Complete the sentence: Please _____ the form.",

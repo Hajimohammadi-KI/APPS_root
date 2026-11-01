@@ -169,7 +169,6 @@ test.each([
   ["You are ready.", "You are ready"],
   ["Are you ready?", "Are you ready?"],
   ["You are ready!", "You are ready!"],
-  ["You are ready...", "You are ready..."],
 ])(
   "accepts optional plain full stop and unchanged punctuation: %s",
   (text, expected) => {
@@ -185,3 +184,20 @@ test.each([
     ).toBe("pass");
   },
 );
+
+test("W33 a key that ends in a placeholder ellipsis is withheld as content needing repair", () => {
+  const response = attempt();
+  response.response.text = "You are ready...";
+  const result = assessControlledTask(
+    response,
+    {
+      ...task,
+      acceptedAnswers: ["You are ready..."],
+      solution: "You are ready...",
+    },
+    at,
+    "punctuation",
+  );
+  expect(result.verdict).toBe("not_assessed");
+  expect(result.feedback).toContain("needs content repair");
+});

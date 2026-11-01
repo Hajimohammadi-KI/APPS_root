@@ -11,6 +11,14 @@ test("W07 shared normalization preserves grammatical distinctions", () => {
     expect(normalizeText(value)).toBe(value);
 });
 
+test("W33 a typed apostrophe matches the typographic one in a stored answer", () => {
+  for (const variant of ["doesn’t", "doesn‘t", "doesnʼt"])
+    expect(normalizeText(`She ${variant} work.`)).toBe(
+      normalizeText("She doesn't work."),
+    );
+  expect(normalizeText("dont")).not.toBe(normalizeText("don’t"));
+});
+
 test("W07 tokens keep UTF-16 offsets in the original, before NFC", () => {
   const source = "🙂 Gru\u0308ße, don't re-enter!";
   const tokens = tokenizeText(source);

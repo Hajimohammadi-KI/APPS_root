@@ -150,6 +150,9 @@ test("Vercel upload includes only the two roadmap source files from root docs an
   }
   for (const [app, directory] of [["en", "English/English-Automaticity"], ["de", "Deutsch/Deutsch-Automaticity"]]) {
     const pkg = JSON.parse(await readFile(resolve(repositoryRoot, `Apps/${directory}/apps/web/package.json`), "utf8"));
-    expect(pkg.scripts.build).toStartWith(`bun ../../../../../scripts/language-apps-roadmap.mjs --check --app=${app} && `);
+    // The content audit may run first; the roadmap check must still gate `next build`.
+    const guard = `bun ../../../../../scripts/language-apps-roadmap.mjs --check --app=${app} && `;
+    expect(pkg.scripts.build).toContain(guard);
+    expect(pkg.scripts.build.indexOf(guard)).toBeLessThan(pkg.scripts.build.indexOf("next build"));
   }
 });

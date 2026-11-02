@@ -21,10 +21,11 @@ const buildScript = readFileSync(
   ),
   "utf8",
 );
+// A Windows checkout has CRLF and Linux CI has LF; compare the same text on both.
 const desktopMain = readFileSync(
   resolve(projectRoot, "distribution/windows-desktop/main.cjs"),
   "utf8",
-);
+).replace(/\r\n/gu, "\n");
 const updateConfig = JSON.parse(
   readFileSync(
     resolve(projectRoot, "distribution/windows-modern/update-config.json"),
@@ -287,7 +288,11 @@ describe("Windows installation roadmap", () => {
       expect(resource.from).not.toMatch(/^[A-Za-z]:[\\/]/);
       expect(resource.from).not.toContain("APPS_root");
       // electron-builder resolves extraResources from the desktop package directory.
-      const resolved = resolve(projectRoot, "distribution/windows-desktop", resource.from);
+      const resolved = resolve(
+        projectRoot,
+        "distribution/windows-desktop",
+        resource.from,
+      );
       expect(existsSync(resolved)).toBe(true);
       // Every installer input lives inside this project, so copying the project folder is enough.
       expect(resolved.startsWith(projectRoot)).toBe(true);
@@ -296,19 +301,35 @@ describe("Windows installation roadmap", () => {
     // the desktop app then opens the online reader instead of failing to start.
     expect(buildScript).toContain("ENGLISH_GRAMMAR_READER_PROJECT");
     expect(buildScript).toContain("Skipping the embedded PDF Reader");
-    expect(buildScript).not.toContain('throw "PDF Reader project does not exist');
+    expect(buildScript).not.toContain(
+      'throw "PDF Reader project does not exist',
+    );
     expect(desktopMain).toContain("https://research-pdf-studio.vercel.app/");
-    expect(desktopMain).toContain("localReaderAvailable ? [waitForReaderHealth()] : []");
-    expect(desktopMain).not.toContain("readerEntry,\n    path.join(readerRoot");
+    expect(desktopMain).toContain(
+      "localReaderAvailable ? [waitForReaderHealth()] : []",
+    );
+    // The reader is checked as optional, never as a file the installation requires.
+    const requiredFiles =
+      desktopMain.match(/for \(const requiredFile of \[([^\]]*)\]\)/u)?.[1] ??
+      "";
+    expect(requiredFiles).toContain("apiEntry");
+    expect(requiredFiles).not.toMatch(/reader/iu);
+    expect(desktopMain).toContain(
+      "localReaderAvailable = readerFiles.every((file) => fs.existsSync(file));",
+    );
     expect(buildScript).not.toContain("shared\\GoogleOAuthPackaging.ps1");
-    expect(buildScript).toContain("distribution\\windows-release\\GoogleOAuthPackaging.ps1");
+    expect(buildScript).toContain(
+      "distribution\\windows-release\\GoogleOAuthPackaging.ps1",
+    );
     for (const file of [
       "GoogleOAuthPackaging.ps1",
       "publish-language-update.ps1",
       "setup-language-payload.ps1",
       "check-for-updates.ps1",
     ]) {
-      expect(existsSync(resolve(projectRoot, "distribution/windows-release", file))).toBe(true);
+      expect(
+        existsSync(resolve(projectRoot, "distribution/windows-release", file)),
+      ).toBe(true);
     }
     const icon = readFileSync(
       resolve(

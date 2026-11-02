@@ -78,15 +78,25 @@ test("the review page uses the release review's checks, digest and cells", async
         `${unit.id} ${unitDigest(unit)}`,
       );
       const cells = coverage.cells.filter(
-        (cell) => cell.language === pack.language && cell.constructionId === unit.id,
+        (cell) =>
+          cell.language === pack.language && cell.constructionId === unit.id,
       );
       expect(
         reviewCells(unit)
-          .map((cell) => `${cell.stage}:${cell.modality}=${cell.tasks.map((t) => t.id).sort().join(",")}`)
+          .map(
+            (cell) =>
+              `${cell.stage}:${cell.modality}=${cell.tasks
+                .map((t) => t.id)
+                .sort()
+                .join(",")}`,
+          )
           .sort(),
       ).toEqual(
         cells
-          .map((cell) => `${cell.stage}:${cell.modality}=${[...cell.taskIds].sort().join(",")}`)
+          .map(
+            (cell) =>
+              `${cell.stage}:${cell.modality}=${[...cell.taskIds].sort().join(",")}`,
+          )
           .sort(),
       );
     }
@@ -119,7 +129,10 @@ test("an incomplete review approves nothing and becomes findings for the owner",
   const form = confirmed(pack, 0);
   const [first] = activePracticeTasks(unit);
   form.tasks[first!.id] = {
-    checks: { ...form.tasks[first!.id]!.checks, acceptedAnswersAccurate: false },
+    checks: {
+      ...form.tasks[first!.id]!.checks,
+      acceptedAnswersAccurate: false,
+    },
     note: "„Ich bin es“ fehlt als richtige Antwort.",
   };
   expect(reviewProblems(unit, form)).toEqual([

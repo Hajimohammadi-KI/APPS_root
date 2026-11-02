@@ -6,7 +6,9 @@ import {
 } from "./backup";
 import { ownsStorageKey, type LocalStore } from "./storage";
 
-const memoryStorage = (entries: [string, string][]): LocalStore & {
+const memoryStorage = (
+  entries: [string, string][],
+): LocalStore & {
   keys: () => string[];
 } => {
   const map = new Map(entries);

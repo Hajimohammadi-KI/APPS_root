@@ -51,7 +51,8 @@ const COPY = {
     checks: {
       formAccurate: "The form in the rule and examples is correct.",
       meaningAccurate: "The meaning described is correct.",
-      useAppropriate: "When to use it is described appropriately for the level.",
+      useAppropriate:
+        "When to use it is described appropriately for the level.",
       contrastsAccurate: "Contrasts with similar forms are correct.",
       alternativesAccurate: "Accepted alternatives are correct.",
       prerequisitesAppropriate: "The prerequisites are appropriate.",
@@ -87,7 +88,8 @@ const COPY = {
     approve: "Diese Einheit freigeben",
     findings: "Als Befund speichern",
     missing: "Es fehlt noch:",
-    stale: "Die Einheit hat sich seit deiner Prüfung geändert; prüfe sie erneut.",
+    stale:
+      "Die Einheit hat sich seit deiner Prüfung geändert; prüfe sie erneut.",
     exportApproved: (n: number) => `Freigaben herunterladen (${n})`,
     exportFindings: (n: number) => `Befunde herunterladen (${n})`,
     checks: {
@@ -97,7 +99,8 @@ const COPY = {
       contrastsAccurate: "Abgrenzungen zu ähnlichen Formen sind korrekt.",
       alternativesAccurate: "Zulässige Alternativen sind korrekt.",
       prerequisitesAppropriate: "Die Voraussetzungen sind passend.",
-      sourcesChecked: "Ich habe den Inhalt mit einer verlässlichen Grammatik abgeglichen.",
+      sourcesChecked:
+        "Ich habe den Inhalt mit einer verlässlichen Grammatik abgeglichen.",
       promptClear: "Die Anweisung ist klar.",
       targetElicited: "Die Übung verlangt die Zielstruktur.",
       stageAppropriate: "Sie passt zu ihrer Stufe im Lernweg.",
@@ -205,7 +208,8 @@ async function mount(root: HTMLElement) {
     );
     for (const [index, unit] of pack.units.entries()) {
       const state = current(unit)?.state;
-      select.options[index]!.textContent = `${state === "approved" ? "✓ " : state === "findings" ? "⚑ " : ""}${unit.level} · ${unit.title}`;
+      select.options[index]!.textContent =
+        `${state === "approved" ? "✓ " : state === "findings" ? "⚑ " : ""}${unit.level} · ${unit.title}`;
     }
   };
   for (const unit of pack.units) select.append(node("option", unit.title));
@@ -281,7 +285,10 @@ async function mount(root: HTMLElement) {
         prompt.lang = language;
         card.append(node("small", task.id), prompt);
         if (task.answerPolicy === "closed") {
-          const list = node("p", `${t.accepted}: ${task.acceptedAnswers.join(" | ")}`);
+          const list = node(
+            "p",
+            `${t.accepted}: ${task.acceptedAnswers.join(" | ")}`,
+          );
           list.lang = language;
           card.append(list);
           if (task.rejectedAnswers?.length)
@@ -308,8 +315,15 @@ async function mount(root: HTMLElement) {
           },
         );
         const details = node("details");
-        details.append(node("summary", t.taskAll), ...boxes.map((box) => box.wrapper));
-        card.append(all.wrapper, details, note(row.note, (text) => (row.note = text)));
+        details.append(
+          node("summary", t.taskAll),
+          ...boxes.map((box) => box.wrapper),
+        );
+        card.append(
+          all.wrapper,
+          details,
+          note(row.note, (text) => (row.note = text)),
+        );
         panel.append(card);
       }
     }

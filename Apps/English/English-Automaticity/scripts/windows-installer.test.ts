@@ -369,8 +369,8 @@ describe("Windows update channel", () => {
   const read = (path: string) =>
     readFileSync(resolve(projectRoot, path), "utf8");
   const git = (...args: string[]) =>
-    Bun.spawnSync(["git", ...args], { cwd: projectRoot }).stdout
-      .toString()
+    Bun.spawnSync(["git", ...args], { cwd: projectRoot })
+      .stdout.toString()
       .trim();
   // owner/name of the repository this code is published from.
   const repository = git("config", "--get", "remote.origin.url")
@@ -385,14 +385,17 @@ describe("Windows update channel", () => {
     expect(updateConfig.defaultManifestUrl).toBe(
       `https://raw.githubusercontent.com/${repository}/main/${projectPath}releases/english-grammar-update.json`,
     );
-    expect(read("distribution/windows-release/publish-language-update.ps1")).toContain(
-      `https://github.com/${repository}/releases/download/`,
-    );
+    expect(
+      read("distribution/windows-release/publish-language-update.ps1"),
+    ).toContain(`https://github.com/${repository}/releases/download/`);
     // The update file itself may be committed; only packages stay out of git.
     expect(
-      Bun.spawnSync(["git", "check-ignore", "-q", "releases/english-grammar-update.json"], {
-        cwd: projectRoot,
-      }).exitCode,
+      Bun.spawnSync(
+        ["git", "check-ignore", "-q", "releases/english-grammar-update.json"],
+        {
+          cwd: projectRoot,
+        },
+      ).exitCode,
     ).toBe(1);
   });
   test("a missing update file means nothing is published yet, not an error", () => {

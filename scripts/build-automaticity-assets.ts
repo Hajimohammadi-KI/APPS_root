@@ -35,4 +35,3 @@ for (const command of [
   if ((await child.exited) !== 0)
     throw new Error(`Failed ${command.join(" ")}`);
 }
-

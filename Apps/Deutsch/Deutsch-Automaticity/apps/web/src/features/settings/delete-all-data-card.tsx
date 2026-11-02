@@ -83,7 +83,9 @@ export function DeleteAllDataCard({
             onClick={() => void backup()}
             variant="outline"
           >
-            {backedUp ? "Sicherung heruntergeladen" : "1. Zuerst eine Sicherung herunterladen"}
+            {backedUp
+              ? "Sicherung heruntergeladen"
+              : "1. Zuerst eine Sicherung herunterladen"}
           </Button>
           <label className="flex items-center gap-2 text-sm">
             <input

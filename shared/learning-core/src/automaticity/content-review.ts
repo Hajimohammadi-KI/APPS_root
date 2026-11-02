@@ -48,7 +48,10 @@ const stable = (value: unknown): unknown =>
       ? Object.fromEntries(
           Object.keys(value)
             .sort()
-            .map((key) => [key, stable((value as Record<string, unknown>)[key])]),
+            .map((key) => [
+              key,
+              stable((value as Record<string, unknown>)[key]),
+            ]),
         )
       : value;
 /** The digest that pins a review to the exact unit content (unitDigest of the
@@ -88,8 +91,7 @@ export function reviewProblems(
   now = new Date().toISOString(),
 ): string[] {
   const problems: string[] = [];
-  if (!form.reviewerId.trim() || !form.role.trim())
-    problems.push("reviewer");
+  if (!form.reviewerId.trim() || !form.role.trim()) problems.push("reviewer");
   if (/codex|chatgpt|synthetic|fixture|automated/iu.test(form.reviewerId))
     problems.push("reviewer-not-human");
   if (
@@ -154,7 +156,9 @@ export async function approvedReviewDocuments(
 
 /** The file scripts/import-curriculum-review.ts takes. */
 export const contentReviewBundle = (
-  documents: readonly Awaited<ReturnType<typeof approvedReviewDocuments>>[number][],
+  documents: readonly Awaited<
+    ReturnType<typeof approvedReviewDocuments>
+  >[number][],
 ) => ({ schemaVersion: 1, contentReviews: documents, evaluatorReviews: [] });
 
 /** Problems a reviewer found, for the owner to author a fix: every check that

@@ -267,9 +267,7 @@ export function auditGapCue(
   // The fixed frames name no word of the answer ("… Antwort auf Deutsch"),
   // and a function word such as "auf" cues no content word (Aufgaben).
   const cues = foldedWords(
-    task.prompt
-      .slice(0, Math.max(0, colon))
-      .replace(GAP_FRAMES, " ") +
+    task.prompt.slice(0, Math.max(0, colon)).replace(GAP_FRAMES, " ") +
       " " +
       task.prompt.slice(colon + 1).replace(/_{2,}/u, " "),
   ).filter((cue) => !isFunctionWord(cue, language));

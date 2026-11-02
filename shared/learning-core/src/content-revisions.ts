@@ -3268,12 +3268,18 @@ export const GAP_CUE_REVISIONS: readonly {
  * one fits, so the other is recognised as wrong; the rest name the word to use.
  * The first answer fits the gap; further answers are reviewed equivalents. */
 export const CHECKED_PRACTICE_VERSION = "2026-11-01.4";
+/** The second round (2026-11-01.5): the English units that still had none of
+ * these (the Lab showed "State the rule" there) and the two German units with
+ * fewer than three checkable items. */
+export const RECALL_VERSION = "2026-11-01.5";
 export const CHECKED_PRACTICE: readonly {
   readonly unit: string;
   readonly prompt: string;
   readonly answers: readonly string[];
-}[] = (
-  [
+  readonly version: string;
+}[] = [
+  ...(
+    [
     [
       "en.c.002",
       "Complete the sentence: ___ lives near the station. (He / Him)",

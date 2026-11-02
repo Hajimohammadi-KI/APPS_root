@@ -134,6 +134,17 @@ const releasedForms = {
   en: "6bbe534ab49a4d8bacf37a97e9d72ba341b3d498f645990b7b91d20d8925f6d6",
   de: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
 };
+// Cued gaps and added checkable items published in 2026.11.01.4.
+const releasedCuesAndChecks = {
+  "2026-11-01.3": {
+    en: "83ee5d284b99782e1c7dbef8cc391b5704a1309631d491ca8f7d7f8f964fb196",
+    de: "2d8ac49ba28c92803d41ca644cda64bc6d8a45a21a96f43ded2c19d659ffa880",
+  },
+  "2026-11-01.4": {
+    en: "cce86aa3069f899966c3385efdc6a614a7ce0590d730fc7acbdc25a8e3baa348",
+    de: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  },
+} as const;
 for (const language of ["en", "de"] as const) {
   test(`W33 ${language}: no active closed task in the built curriculum fails the content audit`, () => {
     const issues = built(language)
@@ -176,6 +187,17 @@ for (const language of ["en", "de"] as const) {
         .update(forms.map((task) => JSON.stringify(task)).join("\n"))
         .digest("hex"),
     ).toBe(releasedForms[language]);
+    for (const [version, digests] of Object.entries(releasedCuesAndChecks)) {
+      const tasks = pack.units
+        .flatMap((unit) => unit.tasks)
+        .filter((task) => task.version === version)
+        .sort((a, b) => (a.id < b.id ? -1 : 1));
+      expect(
+        `${version}: ${createHash("sha256")
+          .update(tasks.map((task) => JSON.stringify(task)).join("\n"))
+          .digest("hex")}`,
+      ).toBe(`${version}: ${digests[language]}`);
+    }
     expect(validateCurriculum(pack)).toEqual([]);
   });
 }
@@ -235,15 +257,33 @@ test("W33 every unit offers at least three checkable written items, and offered 
         ).length,
       }))
       .filter((row) => row.checkable < 3);
-    if (language === "en") expect(thin).toEqual([]);
-    else expect(thin.length).toBeLessThanOrEqual(2);
+    expect(thin).toEqual([]);
+    // Two items of one unit never ask for the same sentence with the same answer.
+    const repeated = built(language).units.flatMap((unit) => {
+      const seen = new Set<string>();
+      return activePracticeTasks(unit)
+        .filter(
+          (task) => task.answerPolicy === "closed" && task.modality === "writing",
+        )
+        .flatMap((task) => {
+          const key = `${task.prompt.slice(task.prompt.lastIndexOf(":") + 1).trim()}=${task.acceptedAnswers[0]}`;
+          const twice = seen.has(key);
+          seen.add(key);
+          return twice ? [task.id] : [];
+        });
+    });
+    expect(repeated).toEqual([]);
   }
-  for (const task of built("en").units.flatMap(activePracticeTasks))
-    if (task.id.includes(".checks-202611014-")) {
+  for (const task of (["en", "de"] as const).flatMap((language) =>
+    built(language).units.flatMap(activePracticeTasks),
+  ))
+    if (/\.(?:checks|recall)-2026/u.test(task.id)) {
       expect(task.solution).toBe(task.acceptedAnswers[0]!);
-      expect(`${task.id}: ${gapFill(task.prompt, task.solution!)}`).not.toBe(
-        `${task.id}: null`,
-      );
+      if (/_{2,}/u.test(task.prompt))
+        expect(`${task.id}: ${gapFill(task.prompt, task.solution!)}`).not.toBe(
+          `${task.id}: null`,
+        );
+      else expect(task.responseKind).not.toBe("cloze");
       if (
         /\([^()]*\/[^()]*\)\s*$|\bwith [\p{L}’']+ or [\p{L}’']+:/u.test(
           task.prompt,

@@ -16,23 +16,47 @@ export function normalizeText(value: string, policy: TextPolicy = {}): string {
     : normalized;
 }
 
-/** What an answer puts into the single gap of the sentence after the last
- * colon (a trailing bracket cue aside), or null when the answer does not fit. */
+/** What an answer puts into the single gap (a trailing bracket cue aside), or
+ * null when the answer does not fit the words next to it. The answer may
+ * begin inside the instruction ("Complete: British English: We met ___.")
+ * and the sentence may be followed by one ("… Write the full sentence."). */
 export function gapFill(prompt: string, answer: string): string | null {
-  if ((prompt.match(/_{2,}/gu) ?? []).length !== 1) return null;
-  const [before = "", after = ""] = prompt
-    .slice(prompt.lastIndexOf(":") + 1)
-    .replace(/\s*\([^()]+\)\s*$/u, "")
-    .trim()
-    .split(/_{2,}/u);
+  const parts = prompt.replace(/\s*\([^()]+\)\s*$/u, "").split(/_{2,}/u);
+  if (parts.length !== 2) return null;
+  const spaced = (text: string) =>
+    text.normalize("NFC").replace(/\s+/gu, " ").replace(/[’‘ʼ]/gu, "'");
+  const before = spaced(parts[0]!),
+    after = spaced(parts[1]!);
   const key = normalizeText(answer);
-  const pre = normalizeText(before).trimEnd(),
-    post = normalizeText(after).trimStart();
-  return key.startsWith(pre) &&
-    key.endsWith(post) &&
-    key.length >= pre.length + post.length
-    ? key.slice(pre.length, key.length - post.length).trim()
-    : null;
+  const letter = /\p{L}/u;
+  const glued = (a = "", b = "") => letter.test(a) && letter.test(b);
+  let pre = "";
+  for (let at = 0; at < before.length && !pre; at++) {
+    const text = before.slice(at).trimEnd();
+    if ((at === 0 || before[at - 1] === " ") && text && key.startsWith(text))
+      if (!glued(text.at(-1), key[text.length])) pre = text;
+  }
+  let post = "";
+  for (let end = after.length; end > 0 && !post; end--) {
+    const text = after.slice(0, end).trimStart();
+    if ((end === after.length || after[end] === " ") && text)
+      if (
+        key.endsWith(text) &&
+        key.length - text.length >= pre.length &&
+        !glued(text[0], key[key.length - text.length - 1])
+      )
+        post = text;
+  }
+  // A word of the sentence next to the gap must belong to the answer; a word
+  // ending in a colon closes the instruction.
+  const last = before.trimEnd().split(" ").at(-1) ?? "",
+    next = after.trimStart().split(" ")[0] ?? "";
+  if (
+    (letter.test(last) && !last.endsWith(":") && !pre) ||
+    (letter.test(next) && !post)
+  )
+    return null;
+  return key.slice(pre.length, key.length - post.length).trim();
 }
 
 export interface TextToken {

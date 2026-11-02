@@ -16,7 +16,11 @@ import {
   releasedEnglishMediationB1,
 } from "./index";
 import { assessMediationContentRelease } from "@automaticity/learning-core";
-import { UNIT_CONTENT_REVISIONS } from "@automaticity/learning-core/content-revisions";
+import {
+  UNIT_CONTENT_REVISIONS,
+  checkedPracticeFor,
+} from "@automaticity/learning-core/content-revisions";
+import type { GrammarExercise } from "./types";
 import { repairGrammarUnitLinks } from "./resource-links";
 
 function sliceBetween(source: string, start: string, end: string): string {
@@ -283,6 +287,17 @@ describe("legacy content parity", () => {
       "Layered subordination",
       ...revisions.map((row) => row.title),
     ]);
+    // Two checkable items of the learning path replace "State the rule" and
+    // "Write the transfer model", which no one checked.
+    const checked = (title: string) =>
+      checkedPracticeFor("en", title)
+        .slice(0, 2)
+        .map(
+          ({ prompt, answers: [answer, ...alternatives] }): GrammarExercise =>
+            alternatives.length
+              ? [prompt, answer!, { acceptedAnswers: alternatives }]
+              : [prompt, answer!],
+        );
     const expected = legacyGrammarUnits
       .filter((unit) => !revised.has(unit.title))
       .map((unit) =>
@@ -290,21 +305,30 @@ describe("legacy content parity", () => {
           ...unit,
           exercises: [
             ...unit.exercises,
+            ...checked(unit.title),
             [
-              `State the rule for “${unit.title}” from memory.`,
-              unit.recallTest,
-            ],
-            [
-              `Write the transfer model for “${unit.title}” accurately.`,
-              unit.transferTest,
-            ],
-            [
-              `Repair this common error for “${unit.title}” and write the full corrected sentence: ${unit.commonError.split("→")[0]!.trim()}`,
+              `Correct this common error for “${unit.title}” and write the full corrected sentence: ${unit.commonError.split("→")[0]!.trim()}`,
               unit.repairTest,
             ],
           ],
         }),
       );
+    // The Lab checks a prompt with a gap or one that asks to correct,
+    // complete, choose, change or transform; any other prompt is self-checked.
+    const checkedInLab = (prompt: string) =>
+      /_{2,}|…|\.\.\.|^(correct|complete|choose|change|transform)\b/i.test(
+        prompt,
+      );
+    for (const unit of grammarUnits) {
+      expect(
+        unit.exercises.filter(([prompt]) =>
+          /^(State the rule|Write the transfer model)/u.test(prompt),
+        ),
+      ).toEqual([]);
+      expect(
+        `${unit.title}: ${unit.exercises.filter(([prompt]) => checkedInLab(prompt)).length}`,
+      ).not.toMatch(/: [0-3]$/u);
+    }
     expect(
       grammarUnits.filter((unit) =>
         expected.some((row) => row.title === unit.title),

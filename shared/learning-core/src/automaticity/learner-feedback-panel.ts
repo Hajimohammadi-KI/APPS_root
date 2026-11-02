@@ -10,6 +10,35 @@ import {
 } from "./learner-feedback";
 
 const ENDPOINT = "/api/learner-feedback";
+const pausedRequests = new Map<string, Promise<ReadonlySet<string>>>();
+/** Exercises that several learners reported as wrong (R100), one request per
+ * page; without the comment service or a network nothing is paused. */
+export function pausedTaskIds(
+  language: "en" | "de",
+): Promise<ReadonlySet<string>> {
+  let request = pausedRequests.get(language);
+  if (!request) {
+    request = available()
+      .then((on) =>
+        on
+          ? fetch(`${ENDPOINT}?paused=${language}`, {
+              signal: AbortSignal.timeout(5000),
+            }).then((response) => (response.ok ? response.json() : null))
+          : null,
+      )
+      .then(
+        (body: { paused?: unknown } | null) =>
+          new Set(
+            Array.isArray(body?.paused)
+              ? body.paused.filter((id): id is string => typeof id === "string")
+              : [],
+          ),
+      )
+      .catch(() => new Set<string>());
+    pausedRequests.set(language, request);
+  }
+  return request;
+}
 let availability: Promise<boolean> | null = null;
 /** One availability request per page; a missing route counts as switched off. */
 function available(): Promise<boolean> {

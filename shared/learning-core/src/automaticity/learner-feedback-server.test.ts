@@ -370,3 +370,36 @@ test("the review endpoint stays closed without its own key", async () => {
   expect(response.status).toBe(503);
   expect(github.calls).toEqual([]);
 });
+test("R100: three open reports that an exercise is wrong pause it; nothing else does", async () => {
+  const github = fakeGitHub();
+  const wrong = { ...feedback, category: "exercise_wrong" };
+  const paused = async () =>
+    (await (
+      await handleLearnerFeedback(
+        new Request("https://app.example/api/learner-feedback?paused=de"),
+        config,
+        { fetcher: github.fetcher, limiter: createGrammarRateLimiter({ limit: 50 }) },
+      )
+    ).json()) as { paused: string[] };
+  // Different learners send different answers; identical repeats are refused.
+  for (const [index, response] of ["Eins.", "Zwei."].entries())
+    expect(
+      (await send(handleLearnerFeedback, github, { ...wrong, response }, `1.2.3.${index}`)).status,
+    ).toBe(201);
+  await send(handleLearnerFeedback, github, { ...feedback, response: "Drei." }, "1.2.3.7");
+  expect((await paused()).paused).toEqual([]);
+  expect(
+    (await send(handleLearnerFeedback, github, { ...wrong, response: "Vier." }, "1.2.3.8")).status,
+  ).toBe(201);
+  expect((await paused()).paused).toEqual([feedback.task.id]);
+  // The owner's decision or a withdrawal ends the pause.
+  github.issues[0]!.labels.push({ name: "decision:no_change" });
+  github.issues[0]!.state = "closed";
+  expect((await paused()).paused).toEqual([]);
+  // Without the service nothing is paused and GitHub is never asked.
+  const response = await handleLearnerFeedback(
+    new Request("https://app.example/api/learner-feedback?paused=en"),
+    null,
+  );
+  expect(await response.json()).toEqual({ paused: [] });
+});

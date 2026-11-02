@@ -60,6 +60,20 @@ test("an owner-approved wrong form is marked for repair with its explanation", (
     "pass",
   );
 });
+test("R100 a paused exercise saves even the stored answer without a score", () => {
+  const response = { ...attempt(), task };
+  response.response.text = "works";
+  const result = assessControlledTask(response, task, at, "paused", {
+    paused: true,
+  });
+  expect(result.verdict).toBe("not_assessed");
+  expect(result.feedback).toBe(
+    "Saved without a score: several learners reported this exercise as wrong, so it is paused until it is reviewed.",
+  );
+  expect(
+    assessControlledTask(response, task, at, "running").verdict,
+  ).toBe("pass");
+});
 test("an unchanged copy of the sentence to correct is marked for repair", () => {
   const correction: PracticeTask = {
     ...task,

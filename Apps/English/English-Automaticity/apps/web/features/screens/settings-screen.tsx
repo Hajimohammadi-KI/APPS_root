@@ -56,6 +56,7 @@ import {
 	supportsBackupDirectoryPicker,
 	writeBackupToDirectory,
 } from "@/lib/backup-directory";
+import { DeleteAllDataCard } from "@/features/settings/delete-all-data-card";
 import { ImplementationIntentionsCard } from "@/features/settings/implementation-intentions-card";
 import { InstallAppControl } from "@/features/components/install-app-control";
 
@@ -205,7 +206,8 @@ export function SettingsScreen() {
 	}
 
 
-  async function exportData() {
+  /** True once a complete backup was saved or downloaded. */
+  async function exportData(): Promise<boolean> {
     setExporting(true); setExportStatus("");
     let contents: string | null = null;
     try {
@@ -215,11 +217,15 @@ export function SettingsScreen() {
       if (directory) { await writeBackupToDirectory(directory, contents); setExportStatus(`Complete backup saved to "${directory.name}".`); }
       else { downloadBackup(contents); setExportStatus(`Complete backup downloaded as "${BACKUP_FILE_NAME}".`); }
       noteBackup();
+      return true;
     } catch (error) {
       if (contents !== null && error instanceof DOMException && ["AbortError", "SecurityError"].includes(error.name)) {
         downloadBackup(contents); setExportStatus("Folder access was unavailable. The complete backup was downloaded instead.");
         noteBackup();
-      } else setExportStatus(error instanceof Error ? error.message : "Backup export failed.");
+        return true;
+      }
+      setExportStatus(error instanceof Error ? error.message : "Backup export failed.");
+      return false;
     } finally { setExporting(false); }
   }
 
@@ -694,6 +700,7 @@ export function SettingsScreen() {
 					) : null}
 				</CardContent>
 			</Card>
+			<DeleteAllDataCard onExport={exportData} />
 		</div>
 	);
 }

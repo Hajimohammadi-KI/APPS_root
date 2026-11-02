@@ -80,7 +80,15 @@ export function ownsStorageKey(key: string, language: Language): boolean {
   const prefixes =
     language === "en"
       ? ["english-", "english:", "grammar-lab-en"]
-      : ["deutsch-", "deutsch:", "german-", "grammar-lab-de"];
+      : [
+          "deutsch-",
+          "deutsch:",
+          "german-",
+          "grammar-lab-de",
+          // Since 2026-11-02: Lab error patterns, case trainer, help settings.
+          "deutschflow-",
+          "deutschflow:",
+        ];
   return (
     exact.includes(key) || prefixes.some((prefix) => key.startsWith(prefix))
   );

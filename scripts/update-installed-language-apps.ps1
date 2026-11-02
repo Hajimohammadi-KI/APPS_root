@@ -10,7 +10,7 @@ $workspace = [IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $output = Join-Path $workspace ('artifacts\installed-language-update\' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
 $products = @(
   @{ Name='English'; Prefix='ENGLISH_GRAMMAR'; Directory='English Grammar Automaticity Desktop'; Profile='English Grammar Automaticity'; Setup='EnglishGrammar-Setup'; Executable='English Grammar Automaticity.exe'; Version='27.3.41'; Source='Apps\English\English-Automaticity'; Port=3202 },
-  @{ Name='German'; Prefix='DEUTSCHFLOW'; Directory='DeutschFlow'; Profile='DeutschFlow'; Setup='DeutschFlow-Setup'; Executable='DeutschFlow.exe'; Version='20.8.45'; Source='Apps\Deutsch-Automaticity'; Port=3210 }
+  @{ Name='German'; Prefix='DEUTSCHFLOW'; Directory='DeutschFlow'; Profile='DeutschFlow'; Setup='DeutschFlow-Setup'; Executable='DeutschFlow.exe'; Version='20.8.45'; Source='Apps\Deutsch\Deutsch-Automaticity'; Port=3210 }
 )
 $products = @($products | Where-Object { $ProductSelection -eq 'All' -or $_.Name -eq $ProductSelection })
 function Assert-VerifiedInstaller($ProductSpec, [string]$SetupPath, [string]$PayloadPath, [array]$Receipts) {

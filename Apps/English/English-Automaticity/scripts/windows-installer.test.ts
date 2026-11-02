@@ -364,3 +364,40 @@ describe("Windows installation roadmap", () => {
     expect(updaterSource).toContain("payloadSha256");
   });
 });
+
+describe("Windows update channel", () => {
+  const read = (path: string) =>
+    readFileSync(resolve(projectRoot, path), "utf8");
+  const git = (...args: string[]) =>
+    Bun.spawnSync(["git", ...args], { cwd: projectRoot }).stdout
+      .toString()
+      .trim();
+  // owner/name of the repository this code is published from.
+  const repository = git("config", "--get", "remote.origin.url")
+    .replace(/^(?:https:\/\/github\.com\/|git@github\.com:)/u, "")
+    .replace(/\.git$/u, "");
+  const projectPath = git("rev-parse", "--show-prefix");
+  test("reads its update file from where this project publishes it", () => {
+    expect(repository).toMatch(/^[\w.-]+\/[\w.-]+$/u);
+    const updateConfig = JSON.parse(
+      read("distribution/windows-modern/update-config.json"),
+    ) as Record<string, string>;
+    expect(updateConfig.defaultManifestUrl).toBe(
+      `https://raw.githubusercontent.com/${repository}/main/${projectPath}releases/english-grammar-update.json`,
+    );
+    expect(read("distribution/windows-release/publish-language-update.ps1")).toContain(
+      `https://github.com/${repository}/releases/download/`,
+    );
+    // The update file itself may be committed; only packages stay out of git.
+    expect(
+      Bun.spawnSync(["git", "check-ignore", "-q", "releases/english-grammar-update.json"], {
+        cwd: projectRoot,
+      }).exitCode,
+    ).toBe(1);
+  });
+  test("a missing update file means nothing is published yet, not an error", () => {
+    const check = read("distribution/windows-release/check-for-updates.ps1");
+    expect(check).toContain("No update has been published yet.");
+    expect(check).toContain("Es wurde noch kein Update veröffentlicht.");
+  });
+});

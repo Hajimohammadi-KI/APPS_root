@@ -530,17 +530,78 @@ async function applySnapshot(
     }
   }
   // Keep databases absent from a backup: additive restore avoids deleting newer media.
-  const managed = new Set(backup.localStorage.map(([key]) => key));
   const existing: string[] = [];
   for (let i = 0; i < p.storage.length; i++) {
     const key = p.storage.key(i);
     if (key && ownsStorageKey(key, backup.language)) existing.push(key);
   }
   for (const [key, value] of backup.localStorage) p.storage.setItem(key, value);
-  for (const key of existing) if (!managed.has(key)) p.storage.removeItem(key);
+  for (const key of keysRemovedByRestore(
+    existing,
+    backup.localStorage.map(([key]) => key),
+  ))
+    p.storage.removeItem(key);
   for (const [key, value] of backup.localStorage)
     if (p.storage.getItem(key) !== value)
       throw new Error("Restored state could not be verified.");
+}
+// Keys an app owns that backups made before 2026-11-02 did not include.
+const LATER_OWNED_PREFIXES = ["deutschflow-", "deutschflow:"];
+/** The app's keys a restore removes: those absent from the backup, except
+ * keys of a kind the backup could not yet contain (it has none of that kind). */
+export function keysRemovedByRestore(
+  existing: readonly string[],
+  restored: readonly string[],
+): string[] {
+  const kept = new Set(restored);
+  const laterKind = (key: string) =>
+    LATER_OWNED_PREFIXES.some((prefix) => key.startsWith(prefix));
+  const backupHasLaterKind = restored.some(laterKind);
+  return existing.filter(
+    (key) => !kept.has(key) && (backupHasLaterKind || !laterKind(key)),
+  );
+}
+
+/** Deletes every record of one language that a complete backup covers, on the
+ * learner's explicit request (the settings offer a backup first). Other apps'
+ * keys and stored credentials stay. Databases go first: when another tab keeps
+ * one open, the deletion stops before any progress in localStorage is removed. */
+export async function deleteCompleteLearnerData(
+  persistence: BrowserPersistence,
+  language: Language,
+  blockedAfterMs = 10_000,
+): Promise<{ keys: number; databases: number }> {
+  const names = [...databaseNames(language), journalName(language)];
+  for (const name of names)
+    await new Promise<void>((resolve, reject) => {
+      const deleting = persistence.indexedDB.deleteDatabase(name);
+      const timer = setTimeout(
+        () =>
+          reject(
+            new Error(
+              language === "en"
+                ? "Close the app's other tabs and windows, then try again. Your learning progress was not deleted."
+                : "Schließe die anderen Tabs und Fenster der App und versuche es erneut. Dein Lernfortschritt wurde nicht gelöscht.",
+            ),
+          ),
+        blockedAfterMs,
+      );
+      deleting.onsuccess = () => {
+        clearTimeout(timer);
+        resolve();
+      };
+      deleting.onerror = () => {
+        clearTimeout(timer);
+        reject(deleting.error ?? new Error("A database could not be deleted."));
+      };
+    });
+  const keys: string[] = [];
+  for (let i = 0; i < persistence.storage.length; i++) {
+    const key = persistence.storage.key(i);
+    if (key && ownsStorageKey(key, language)) keys.push(key);
+  }
+  for (const key of keys) persistence.storage.removeItem(key);
+  return { keys: keys.length, databases: names.length };
 }
 export async function recoverInterruptedRestore(
   persistence: BrowserPersistence,

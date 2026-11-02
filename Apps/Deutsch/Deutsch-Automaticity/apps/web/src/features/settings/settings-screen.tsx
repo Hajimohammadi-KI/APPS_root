@@ -51,6 +51,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { InstallAppButton } from "@/features/pwa/install-app-button";
+import { DeleteAllDataCard } from "@/features/settings/delete-all-data-card";
 import { ImplementationIntentionsCard } from "@/features/settings/implementation-intentions-card";
 import {
   STORAGE_RECOVERY_NAMESPACE,
@@ -217,7 +218,8 @@ export function SettingsScreen() {
     );
   }
 
-  async function exportData() {
+  /** True once a complete backup was downloaded. */
+  async function exportData(): Promise<boolean> {
     setExportStatus("");
     try {
       const backup = await captureCompleteBackup(
@@ -248,12 +250,14 @@ export function SettingsScreen() {
       setReminder(
         backupReminder(window.localStorage, STORAGE_RECOVERY_NAMESPACE, now),
       );
+      return true;
     } catch (error) {
       setExportStatus(
         error instanceof Error
           ? error.message
           : "Die Sicherung ist fehlgeschlagen.",
       );
+      return false;
     }
   }
 
@@ -605,7 +609,7 @@ export function SettingsScreen() {
             </article>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Button onClick={exportData}>
+            <Button onClick={() => void exportData()}>
               <Download />
               Lerndaten exportieren
             </Button>
@@ -671,6 +675,7 @@ export function SettingsScreen() {
           </div>
         </CardContent>
       </Card>
+      <DeleteAllDataCard onExport={exportData} />
     </div>
   );
 }

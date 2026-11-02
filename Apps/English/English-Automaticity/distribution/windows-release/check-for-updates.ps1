@@ -136,7 +136,14 @@ function Get-Manifest {
   $isRemote = $source -match '^https://'
   if ($isRemote) {
     [void](Assert-TrustedHttps $source @("raw.githubusercontent.com"))
-    $manifest = Invoke-RestMethod -Uri $source -Headers @{"User-Agent"="$ProductId-Updater";"Cache-Control"="no-cache"} -TimeoutSec 20
+    try {
+      $manifest = Invoke-RestMethod -Uri $source -Headers @{"User-Agent"="$ProductId-Updater";"Cache-Control"="no-cache"} -TimeoutSec 20
+    } catch {
+      # 404: no update file has been published to the channel yet.
+      $status = $_.Exception.Response.StatusCode
+      if ($null -ne $status -and [int]$status -eq 404) { return $null }
+      throw
+    }
     $base = $null
   } else {
     $source = [IO.Path]::GetFullPath($source)
@@ -242,6 +249,15 @@ try {
   $current = Get-InstalledVersion
   if ([string]::IsNullOrWhiteSpace($current)) { throw (T "Installierte Versionsnummer fehlt. Bitte Reparatur ausführen." "Installed version is missing. Please run Repair.") }
   $manifestInfo = Get-Manifest
+  if ($null -eq $manifestInfo) {
+    Write-UpdateLog ((T "Kein veröffentlichtes Update; installiert: " "No published update; installed: ") + $current)
+    if ($CheckOnly -or $NoDialogs) {
+      [pscustomobject]@{updateAvailable=$false;currentVersion=$current;published=$false;source=(Resolve-Manifest)} | ConvertTo-Json
+    } elseif (-not $Automatic) {
+      Show-Info ((T "Es wurde noch kein Update veröffentlicht. Die installierte Version bleibt unverändert: " "No update has been published yet. The installed version stays as it is: ") + $current)
+    }
+    exit 0
+  }
   $manifest = $manifestInfo.Manifest
   $remote = [string]$manifest.version
   if ((ConvertTo-AppVersion $remote) -le (ConvertTo-AppVersion $current)) {

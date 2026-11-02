@@ -65,7 +65,7 @@ endlocal
 $manifest = [ordered]@{
   schemaVersion = 1; productId = $ProductId; version = $version; publishedAt = (Get-Date -Format "yyyy-MM-dd")
   fileName = $packageName; localPackagePath = $packageName
-  downloadUrl = "https://github.com/Hajimohammadi-KI/APPS_root_new/releases/download/$ReleaseSlug-v$version/$packageName"
+  downloadUrl = "https://github.com/Hajimohammadi-KI/APPS_root/releases/download/$ReleaseSlug-v$version/$packageName"
   sha256 = Get-Sha256Hex $packagePath
   setupFile = "SETUP-WINDOWS.bat"; setupSha256 = Get-Sha256Hex $batchStaging
   payloadFile = $PayloadFile; payloadSha256 = Get-Sha256Hex $payloadPath

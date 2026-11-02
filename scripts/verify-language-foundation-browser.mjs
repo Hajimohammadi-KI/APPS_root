@@ -312,6 +312,14 @@ try {
             await readFile(resolve(root, app, "apps/web/public", publicPath)),
           ),
         );
+        // The German Lab explains in Persian by default; these checks read German text.
+        if (language === "de")
+          await context.addInitScript(() =>
+            localStorage.setItem(
+              "deutsch-automaticity:explanation-language",
+              "Deutsch",
+            ),
+          );
         await page.goto(base + grammarRoute);
         await page.locator("#answerInput").waitFor();
         const unit = await page.evaluate(

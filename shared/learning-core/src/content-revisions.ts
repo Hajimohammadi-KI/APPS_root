@@ -4102,11 +4102,107 @@ export const CHECKED_PRACTICE: readonly {
       "Use the past simple of the verb in brackets: Then they ___ the report to the client. (send)",
       "Then they sent the report to the client.",
     ],
-  ] as const
-).map(([unit, prompt, ...answers]) => ({ unit, prompt, answers }));
+    ] as const
+  ).map(([unit, prompt, ...answers]) => ({
+    unit,
+    prompt,
+    answers,
+    version: CHECKED_PRACTICE_VERSION,
+  })),
+  ...(
+    [
+      ["en.c.001", "Complete the sentence with is or are: My parents ___ at home today.", "My parents are at home today."],
+      ["en.c.001", "Complete the sentence with am or is: My brother ___ a nurse.", "My brother is a nurse."],
+      ["en.c.015", "Use the present continuous of the verb in brackets: Look, the baby ___. (sleep)", "Look, the baby is sleeping.", "Look, the baby’s sleeping."],
+      ["en.c.015", "Use the present continuous of the verb in brackets: We ___ in a hotel this week. (stay)", "We are staying in a hotel this week.", "We’re staying in a hotel this week."],
+      ["en.c.034", "Use the present simple of the verb in brackets after if: If you ___ now, you will catch the train. (leave)", "If you leave now, you will catch the train.", "If you leave now, you’ll catch the train."],
+      ["en.c.034", "Use will and the verb in brackets: If she calls, I ___ her the news. (tell)", "If she calls, I will tell her the news.", "If she calls, I’ll tell her the news."],
+      ["en.c.048", "Use the past perfect of the verb in brackets: If we ___ the map, we would have found the hotel. (check)", "If we had checked the map, we would have found the hotel.", "If we’d checked the map, we would have found the hotel."],
+      ["en.c.048", "Use would have and the verb in brackets: If he had asked, I ___ him. (help)", "If he had asked, I would have helped him.", "If he had asked, I’d have helped him."],
+      ["en.c.058", "Complete the sentence: ___ the instructions, she would not have made the mistake. (Had she read / She had read)", "Had she read the instructions, she would not have made the mistake."],
+      ["en.c.058", "Complete the sentence: ___ any problems arise, please contact us. (Should / Would)", "Should any problems arise, please contact us."],
+      ["en.c.072", "Complete the sentence with which or that: The report, ___ was published last week, includes data that nobody had checked.", "The report, which was published last week, includes data that nobody had checked."],
+      ["en.c.072", "Complete the sentence: ___ the sample was small, the results, which were consistent, convinced the reviewers. (Although / Because)", "Although the sample was small, the results, which were consistent, convinced the reviewers."],
+      ["en.c.085", "Write the possessive form of the plural word in brackets: This is my ___ car. (parents)", "This is my parents’ car."],
+      ["en.c.086", "Complete the sentence with on or in: The shop opens ___ 2 May.", "The shop opens on 2 May."],
+      ["en.c.087", "Complete the sentence with of or at: I am afraid ___ dogs.", "I am afraid of dogs.", "I’m afraid of dogs."],
+      ["en.c.088", "Say how she felt. Complete the sentence with confused or confusing: She was ___ by the instructions.", "She was confused by the instructions."],
+      ["en.c.089", "Complete the sentence with the verb in brackets to show the purpose: I went to the library ___ a book. (borrow)", "I went to the library to borrow a book.", "I went to the library in order to borrow a book."],
+      ["en.c.090", "Complete the sentence: Can I have ___ sugar, please? (a little / a few)", "Can I have a little sugar, please?"],
+      ["en.c.091", "Complete the sentence with its or it’s: The dog wagged ___ tail.", "The dog wagged its tail."],
+      ["en.c.092", "Complete the sentence with although or despite: She passed the exam ___ she was ill.", "She passed the exam although she was ill."],
+      ["en.c.093", "Ask about a past habit that has changed. Complete the question with use or used: Did you ___ to walk to school?", "Did you use to walk to school?"],
+      ["en.c.094", "Complete the sentence with so or such: The music was ___ loud that we left.", "The music was so loud that we left."],
+      ["en.c.095", "Say that he succeeded once after trying. Complete the sentence with could or managed: He ___ to find a seat on the busy train.", "He managed to find a seat on the busy train."],
+      ["en.c.096", "Use would and the verb in brackets for a repeated past action: Every evening, my grandfather ___ us stories. (tell)", "Every evening, my grandfather would tell us stories."],
+      ["en.c.097", "Complete the sentence with the phrasal verb that means postpone: We had to ___ the trip. (put off / put on)", "We had to put off the trip."],
+      ["en.c.098", "Complete the sentence with yet or already: I haven’t finished my homework ___.", "I haven’t finished my homework yet.", "I have not finished my homework yet."],
+      ["en.c.099", "Complete the sentence with themselves or theirselves: The children dressed ___.", "The children dressed themselves."],
+      ["en.c.100", "Use the verb in the correct present form: This bag ___ to my sister. (belongs / is belonging)", "This bag belongs to my sister."],
+      ["en.c.101", "Complete the sentence with as or like: My brother looks ___ my father.", "My brother looks like my father."],
+      ["en.c.102", "Use the verb in brackets with the right preposition: It ___ the weather. (depend)", "It depends on the weather."],
+      ["en.c.103", "Complete the sentence with very or absolutely: The film was ___ good.", "The film was very good."],
+      ["en.c.104", "Use the typical American English form: Your English has ___ much better. (gotten / got)", "Your English has gotten much better."],
+      ["en.c.105", "Complete the sentence with much or very: This test is ___ easier than the last one.", "This test is much easier than the last one."],
+      ["en.c.106", "Report the question “Where is the station?”: She asked where ___. (the station was / was the station)", "She asked where the station was."],
+      ["en.c.107", "Complete the sentence: It ___ rain tomorrow, so take an umbrella. (is likely to / likely)", "It is likely to rain tomorrow, so take an umbrella.", "It’s likely to rain tomorrow, so take an umbrella."],
+      ["en.c.108", "You planned to send it, but you did not. Complete the sentence with the verb in brackets: I forgot ___ the email. (send)", "I forgot to send the email."],
+      ["en.c.109", "Use the present perfect passive of the verb in brackets: The new rules ___ to all staff. (explain)", "The new rules have been explained to all staff."],
+      ["en.c.110", "Say that it is almost certain. Use must have and the verb in brackets: The streets are wet; it ___ in the night. (rain)", "The streets are wet; it must have rained in the night."],
+      ["en.c.111", "Use the past form of the verb in brackets after would rather: I’d rather you ___ here tomorrow. (come)", "I’d rather you came here tomorrow."],
+      ["en.c.112", "Replace the form with a pronoun: Please fill ___. (it in / in it)", "Please fill it in."],
+      ["de.c.069", "Formuliere „nach der Analyse der Daten“ als Nebensatz und schreibe den ganzen Satz: Nachdem wir die Daten ___ hatten, veröffentlichten wir die Ergebnisse. (analysieren)", "Nachdem wir die Daten analysiert hatten, veröffentlichten wir die Ergebnisse."],
+      ["de.c.069", "Bilde für einen dichten Bericht aus dem Verb in Klammern ein Nomen und schreibe den ganzen Satz: Nach der ___ der Daten veröffentlichten wir die Ergebnisse. (analysieren)", "Nach der Analyse der Daten veröffentlichten wir die Ergebnisse."],
+      ["de.c.069", "Bilde aus dem Verb in Klammern ein Nomen und schreibe den ganzen Satz: Die ___ der Ergebnisse folgt im nächsten Kapitel. (darstellen)", "Die Darstellung der Ergebnisse folgt im nächsten Kapitel."],
+      ["de.c.090", "Setze die richtige Akkusativform ein und schreibe den vollständigen Satz: In meinem Zimmer gibt es ___ Schreibtisch. (ein / einen)", "In meinem Zimmer gibt es einen Schreibtisch."],
+      ["de.c.090", "Setze die richtige Akkusativform ein und schreibe den vollständigen Satz: In der Nähe gibt es ___ Bahnhof. (kein / keinen)", "In der Nähe gibt es keinen Bahnhof."],
+    ] as const
+  ).map(([unit, prompt, ...answers]) => ({
+    unit,
+    prompt,
+    answers,
+    version: RECALL_VERSION,
+  })),
+];
 
-/** Unit titles for the gap-cue revisions, so the Grammar Labs find them. */
-const GAP_CUE_UNIT_TITLES: ReadonlyMap<string, string> = new Map([
+/** Items that gave their answer away or repeated another item of the unit
+ * (2026-11-01.5): a bracket cue that was already the answer now has to be
+ * changed (another form, another order, options), a repeated sentence became a
+ * new one, and a gap whose answer held words the sentence did not show now
+ * shows them. The first answer fits; further answers are reviewed equivalents. */
+export const RECALL_REVISIONS: readonly {
+  readonly taskId: string;
+  readonly prompt: string;
+  readonly answers?: readonly string[];
+}[] = (
+  [
+    ["en.c.012.retrieve.checks-202611014-1.writing", "Complete the instruction: ___ down, please. (Sit / Sits)", "Sit down, please."],
+    ["en.c.026.retrieve.checks-202611014-0.writing", "Put the words in brackets in the right order: She ___ early. (usually, is)"],
+    ["en.c.026.retrieve.checks-202611014-1.writing", "Put the words in brackets in the right order: We ___ breakfast at home. (have, always)"],
+    ["en.c.070.retrieve.checks-202611014-1.writing", "Keep the list parallel with the verb of the noun in brackets: We want to reduce costs and ___ quality. (improvement)"],
+    ["en.c.077.retrieve.checks-202611014-1.writing", "Correct the punctuation so that two commas mark the apposition: Dr Lee the project leader presented the results.", "Dr Lee, the project leader, presented the results."],
+    ["en.c.078.retrieve.checks-202611014-1.writing", "Transform the sentence with as it may seem: Although it may seem strange, the plan worked.", "Strange as it may seem, the plan worked."],
+    ["en.c.082.retrieve.checks-202611014-1.writing", "Use suggest with a that-clause: I suggest ___ the manager. (that he call / him to call)", "I suggest that he call the manager.", "I suggest that he calls the manager.", "I suggest that he should call the manager."],
+    ["en.c.100.retrieve.1.cues-202611013.writing", "Use the verb in the correct present form: I _____ you. (believe / am believing)"],
+    ["en.c.104.retrieve.3.writing", "Say when you met in typical British English, using at and weekend: We met _____.", "We met at the weekend."],
+    ["en.c.104.retrieve.4.writing", "Say when you met in typical American English, using on and weekend: We met _____.", "We met on the weekend."],
+    ["de.c.008.retrieve.3.writing", zweites + "Im Park spielen drei ___. (Kind)", "Im Park spielen drei Kinder."],
+    ["de.c.026.retrieve.1.cues-202611013.writing", setze + "Der Kurs ist ___. (interessant / interessante)"],
+    ["de.c.026.retrieve.3.cues-202611013.writing", zweites + "Die Aufgabe ist ___. (schwierig / schwierige)"],
+    ["de.c.037.retrieve.3.writing", zweites + "Es ist wichtig, pünktlich ___. (ankommen)", "Es ist wichtig, pünktlich anzukommen."],
+    ["de.c.055.retrieve.3.cues-202611013.writing", zweites + "Ich habe ___ gestern gegeben. (ihm, es)"],
+    ["de.c.059.retrieve.3.cues-202611013.writing", "Formuliere mit sein + zu um und schreibe den ganzen Satz: Die Aufgabe muss erledigt werden.", "Die Aufgabe ist zu erledigen."],
+    ["de.c.066.retrieve.3.cues-202611013.writing", zweites + "Das Ergebnis ___ zu bestätigen, dass die Methode wirkt. (scheinen)", "Das Ergebnis scheint zu bestätigen, dass die Methode wirkt."],
+    ["de.c.082.retrieve.2.writing", "Wähle die passende Selbstkorrektur und schreibe sie vollständig auf Deutsch: A: Wir treffen uns am Montag—nein, falsch, alles falsch. / B: Wir treffen uns am Montag—Verzeihung, ich meine: am Dienstag.", "Wir treffen uns am Montag—Verzeihung, ich meine: am Dienstag."],
+    ["de.c.082.retrieve.3.writing", zweites + "Ich habe—besser gesagt: ich ___—bereits begonnen. (haben, Präteritum)"],
+    ["de.c.137.retrieve.1.cues-202611013.writing", setze + "___ Ergebnisse waren signifikant. (alle, nicht)"],
+  ] as const
+).map(([taskId, prompt, ...answers]) =>
+  answers.length ? { taskId, prompt, answers } : { taskId, prompt },
+);
+
+/** Unit titles for the revisions above, so the Grammar Labs find them. */
+const UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["en.c.048", "Third conditional"],
   ["en.c.085", "Possessive ’s and whose"],
   ["en.c.087", "Adjectives and prepositions"],

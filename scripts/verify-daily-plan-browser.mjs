@@ -186,6 +186,11 @@ try {
         .map((row) => row.verdict);
       assert.ok(firstVerdicts.includes("not_assessed"));
       assert.ok(!firstVerdicts.includes("pass"));
+      // The feedback names the unit's rule next to the marked differences.
+      await expect(page.locator(".answer-rule")).toHaveCount(1);
+      await expect(page.locator(".answer-rule")).toContainText(
+        language === "en" ? "Rule: " : "Regel: ",
+      );
       await action(
         "Try again as a repair",
         "Als Korrektur erneut versuchen",

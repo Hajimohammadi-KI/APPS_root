@@ -319,6 +319,73 @@ test("W33 every unit offers at least three checkable written items, and offered 
         );
     }
 });
+test("W33 a gap that several words fill correctly names its meaning or options and accepts equal alternatives", () => {
+  // Each of these prompts once held a bare sentence that other correct words
+  // fill too ("The keys ___ be upstairs": must, might, may, can’t).
+  const ambiguous = [
+    "Complete the sentence: _____ coat is this?",
+    "Complete the sentence: I have _____ questions.",
+    "Complete the sentence: _____ people knew the answer.",
+    "Complete the sentence: There is _____ milk left.",
+    "Complete the sentence: We _____ work on Sundays.",
+    "Complete the sentence: The film was _____ exciting.",
+    "Complete the sentence: She has _____ ideas.",
+    "Complete the sentence: I _____ swim when I was six.",
+    "Complete the sentence: He _____ read the sign.",
+    "Complete the sentence: Every summer, we _____ visit my aunt.",
+    "Complete the sentence: She taught _____ Spanish.",
+    "Complete the sentence: Do it _____ I showed you.",
+    "Complete the sentence: He works _____ a designer.",
+    "Complete the sentence: The new route is _____ shorter.",
+    "Complete the sentence: I asked _____ the train had left.",
+    "Complete the sentence: The keys _____ be upstairs.",
+    ": ___ du mir helfen?",
+    ": Ich ___ krank.",
+    ": Du ___ hier parken.",
+    ": ___ ich klein war, spielte ich oft draußen.",
+    ": ___ ich Zeit habe, lese ich ein Buch.",
+    ": ___ Haus wurde gebaut.",
+    ": ___ es regnet, gehe ich raus.",
+    ": Es regnet; ___ gehe ich raus.",
+    ": Die Tür ___ geschlossen.",
+    ": ___ Sie dies näher erläutern?",
+    ": Die ___ veröffentlichte, mehrfach zitierte Studie bestätigt den langfristigen Effekt.",
+    ": ___ habe—besser gesagt: ich hatte—bereits begonnen.",
+    ": ___ lerne Deutsch, denn ich lebe in Berlin.",
+    ": ___ fahre nicht, sondern ich gehe zu Fuß.",
+    ": ___ versuche, früher aufzustehen.",
+  ];
+  const active = (["en", "de"] as const).flatMap((language) =>
+    built(language).units.flatMap(activePracticeTasks),
+  );
+  expect(
+    active
+      .filter((task) =>
+        ambiguous.some((prompt) =>
+          prompt.startsWith(":")
+            ? task.prompt.endsWith(prompt)
+            : task.prompt === prompt,
+        ),
+      )
+      .map((task) => task.id),
+  ).toEqual([]);
+  const accepts = (answer: string) =>
+    active.some((task) =>
+      task.acceptedAnswers.some(
+        (accepted) =>
+          normalizeText(accepted, { allowOptionalFinalPeriod: true }) ===
+          normalizeText(answer, { allowOptionalFinalPeriod: true }),
+      ),
+    );
+  for (const answer of [
+    "I asked if the train had left.",
+    "I was able to swim when I was six.",
+    "Könntest du mir helfen?",
+    "Der Zug hatte Verspätung; dennoch kam ich pünktlich an.",
+    "Sie mag sowohl Tee wie auch Kaffee.",
+  ])
+    expect(`${answer} ${accepts(answer)}`).toBe(`${answer} true`);
+});
 test("W33 the complete corrected sentence earns the controlled pass, typed apostrophe included", () => {
   const sha = (text: string) => createHash("sha256").update(text).digest("hex");
   for (const [language, source, answer] of [

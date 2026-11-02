@@ -109,15 +109,28 @@ function element<K extends keyof HTMLElementTagNameMap>(
   return node;
 }
 /** The check's sentence and, when it names differences, the learner's own
- * answer with those words marked; several differences are listed on request. */
+ * answer with those words marked; several differences are listed on request.
+ * A closed answer that did not pass also gets the unit's rule; every attempt
+ * already records an example exposure, so showing it adds no help. */
 function showAssessmentFeedback(
   target: HTMLElement,
   feedback: string,
   response: string,
   spans: readonly { start: number; end: number; explanation: string }[],
   language: "en" | "de",
+  rule?: string,
 ): void {
   target.replaceChildren(element("p", feedback));
+  if (rule) {
+    const line = element("p", undefined, "answer-rule");
+    line.lang = language;
+    line.dir = "ltr";
+    line.append(
+      element("strong", language === "en" ? "Rule: " : "Regel: "),
+      rule,
+    );
+    target.append(line);
+  }
   if (!spans.length || !response) return;
   const answer = element("p", undefined, "answer-diff");
   answer.lang = language;
@@ -2205,6 +2218,7 @@ export async function mountPractice(
           "Deine Antwort wird gespeichert und geprüft…",
         );
         const value = answer.value;
+        const closedRule = task.answerPolicy === "closed" ? unit.rule : "";
         const hash = await sha256(value);
         const capturedAt = now();
         const attempt: AttemptEvent = {
@@ -2266,6 +2280,8 @@ export async function mountPractice(
         session.submittedId = attempt.id;
         saveSession();
         const assessment = assessControlledTask(attempt, task, now(), id());
+        const ruleFor = (shown: typeof assessment) =>
+          closedRule && shown.verdict !== "pass" ? closedRule : undefined;
         const applyFeedback = async (proposal: typeof assessment) => {
           const history = await collectAssessmentFeedback(
             readAutomaticityEvents(localStorage, language).events,
@@ -2291,6 +2307,7 @@ export async function mountPractice(
           attempt.response.text,
           shown.spans,
           language,
+          ruleFor(shown),
         );
         if (
           !guarded &&
@@ -2309,6 +2326,7 @@ export async function mountPractice(
               attempt.response.text,
               shown.spans,
               language,
+              ruleFor(shown),
             );
           }
         }
@@ -2349,6 +2367,11 @@ export async function mountPractice(
         saved?.attempt.response.text ?? "",
         saved?.assessment?.spans ?? [],
         language,
+        saved?.assessment &&
+          saved.assessment.verdict !== "pass" &&
+          task.answerPolicy === "closed"
+          ? unit.rule
+          : undefined,
       );
       if (saved?.assessment?.correction) {
         taskPanel.append(

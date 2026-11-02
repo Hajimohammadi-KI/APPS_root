@@ -293,6 +293,7 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
       source: "authored-recall",
       reason:
         "Make the learner recall the form: the cue gave the answer away, the sentence repeated another item, or it hid words of the answer.",
+      retiredOn: "2026-11-02",
       kind: (prompt) =>
         /^(?:Correct|Korrigiere)\b/u.test(prompt)
           ? "correction"
@@ -368,6 +369,7 @@ function reviseTasks(
     readonly tag: string;
     readonly source: string;
     readonly reason: string;
+    readonly retiredOn?: string;
     readonly kind?: (prompt: string) => PracticeTask["responseKind"];
   },
 ): boolean {
@@ -396,7 +398,7 @@ function reviseTasks(
         taskId: task.id,
         replacementTaskId: replacement.id,
         reason: options.reason,
-        retiredOn: CONTENT_REVISION,
+        retiredOn: options.retiredOn ?? CONTENT_REVISION,
       });
     };
     for (const variant of active.filter(

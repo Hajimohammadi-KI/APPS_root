@@ -113,9 +113,11 @@ try {
         await expect(page.locator("#feedback")).toContainText("no correctness score");
         await page.locator("#repairInput").fill(expected); await page.locator("#repairBtn").click();
         await expect(page.locator("#feedback")).toContainText("does not establish independent recall");
-        // Move through this unit to its rule explanation. Matching forms only complete guided practice.
-        const index = unit.exercises.findIndex(exercise => exercise[1] === unit.recallTest);
+        // Move through this unit to its first open exercise (the Lab checks only gaps and
+        // correct/complete/choose/change/transform prompts). Matching forms only complete guided practice.
+        const index = unit.exercises.findIndex((exercise, i) => i > 0 && !/_{2,}|…|\.\.\.|^(correct|complete|choose|change|transform)\b/i.test(exercise[0]));
         assert(index > 0);
+        assert(!unit.exercises.some(exercise => exercise[1] === unit.recallTest));
         for (let i=1; i<=index; i++) {
           await page.locator("#nextBtn").click();
           await page.locator("#answerInput").fill(i === index ? "This is my unfinished explanation." : unit.exercises[i][1]);

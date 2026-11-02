@@ -24,15 +24,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She is tired."
       ],
       [
-        "State the rule for “Verb be: am/is/are” from memory.",
-        "Use be to identify, describe, locate, and state age or condition."
+        "Complete the sentence with is or are: My parents ___ at home today.",
+        "My parents are at home today."
       ],
       [
-        "Write the transfer model for “Verb be: am/is/are” accurately.",
-        "In a new situation, I can use Verb be: am/is/are accurately."
+        "Complete the sentence with am or is: My brother ___ a nurse.",
+        "My brother is a nurse."
       ],
       [
-        "Repair this common error for “Verb be: am/is/are” and write the full corrected sentence: I am agree.",
+        "Correct this common error for “Verb be: am/is/are” and write the full corrected sentence: I am agree.",
         "I agree."
       ]
     ],
@@ -78,15 +78,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "They live nearby."
       ],
       [
-        "State the rule for “Subject pronouns” from memory.",
-        "Use I, you, he, she, it, we, they as sentence subjects."
+        "Complete the sentence: ___ lives near the station. (He / Him)",
+        "He lives near the station."
       ],
       [
-        "Write the transfer model for “Subject pronouns” accurately.",
-        "In a new situation, I can use Subject pronouns accurately."
+        "Complete the sentence: My sister and I are students. ___ study at the same school. (We / Us)",
+        "My sister and I are students. We study at the same school."
       ],
       [
-        "Repair this common error for “Subject pronouns” and write the full corrected sentence: Her works here.",
+        "Correct this common error for “Subject pronouns” and write the full corrected sentence: Her works here.",
         "She works here."
       ]
     ],
@@ -132,15 +132,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The doctor was kind."
       ],
       [
-        "State the rule for “Articles a/an/the” from memory.",
-        "Use a/an for one non-specific countable noun; the for a specific or known noun."
+        "Complete the sentence with a or an: She is ___ engineer.",
+        "She is an engineer."
       ],
       [
-        "Write the transfer model for “Articles a/an/the” accurately.",
-        "In a new situation, I can use Articles a/an/the accurately."
+        "Complete the sentence: I bought a lamp. ___ lamp is in my bedroom. (The / A)",
+        "I bought a lamp. The lamp is in my bedroom."
       ],
       [
-        "Repair this common error for “Articles a/an/the” and write the full corrected sentence: I have car.",
+        "Correct this common error for “Articles a/an/the” and write the full corrected sentence: I have car.",
         "I have a car."
       ]
     ],
@@ -185,15 +185,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Most nouns add -s/-es; learn irregular plurals separately."
       ],
       [
-        "State the rule for “Plural nouns” from memory.",
-        "Most nouns add -s/-es; learn irregular plurals separately."
+        "Write the plural of the noun in brackets: There are three ___ on the table. (box)",
+        "There are three boxes on the table."
       ],
       [
-        "Write the transfer model for “Plural nouns” accurately.",
-        "In a new situation, I can use Plural nouns accurately."
+        "Write the plural of the noun in brackets: Two ___ are waiting outside. (child)",
+        "Two children are waiting outside."
       ],
       [
-        "Repair this common error for “Plural nouns” and write the full corrected sentence: two childs",
+        "Correct this common error for “Plural nouns” and write the full corrected sentence: two childs",
         "two children"
       ]
     ],
@@ -239,15 +239,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Their house is new."
       ],
       [
-        "State the rule for “Possessive adjectives” from memory.",
-        "Use my, your, his, her, its, our, their before nouns."
+        "Complete the sentence with my or mine: This is ___ phone.",
+        "This is my phone."
       ],
       [
-        "Write the transfer model for “Possessive adjectives” accurately.",
-        "In a new situation, I can use Possessive adjectives accurately."
+        "Complete the sentence: ___ house is new. (Their / They)",
+        "Their house is new."
       ],
       [
-        "Repair this common error for “Possessive adjectives” and write the full corrected sentence: This is mine phone.",
+        "Correct this common error for “Possessive adjectives” and write the full corrected sentence: This is mine phone.",
         "This is my phone."
       ]
     ],
@@ -293,15 +293,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She has a car."
       ],
       [
-        "State the rule for “Have/has got” from memory.",
-        "Use have/has (got) for possession and relationships."
+        "Complete the sentence with have or has: She ___ a car.",
+        "She has a car."
       ],
       [
-        "Write the transfer model for “Have/has got” accurately.",
-        "In a new situation, I can use Have/has got accurately."
+        "Complete the sentence with have or has: I ___ got a brother.",
+        "I have got a brother.",
+        {
+          "acceptedAnswers": [
+            "I’ve got a brother."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Have/has got” and write the full corrected sentence: She have a car.",
+        "Correct this common error for “Have/has got” and write the full corrected sentence: She have a car.",
         "She has a car."
       ]
     ],
@@ -347,15 +352,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Water boils at 100°C."
       ],
       [
-        "State the rule for “Present simple affirmative” from memory.",
-        "Use present simple for routines, facts, and permanent situations; add -s for he/she/it."
+        "Use the verb in brackets in the present simple: He ___ every day. (study)",
+        "He studies every day."
       ],
       [
-        "Write the transfer model for “Present simple affirmative” accurately.",
-        "In a new situation, I can use Present simple affirmative accurately."
+        "Use the verb in brackets in the present simple: She ___ to work by bus. (go)",
+        "She goes to work by bus."
       ],
       [
-        "Repair this common error for “Present simple affirmative” and write the full corrected sentence: He study every day.",
+        "Correct this common error for “Present simple affirmative” and write the full corrected sentence: He study every day.",
         "He studies every day."
       ]
     ],
@@ -401,15 +406,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She does not work here."
       ],
       [
-        "State the rule for “Present simple negatives” from memory.",
-        "Use do not/does not + base verb."
+        "Complete the sentence with don’t or doesn’t: She ___ work here.",
+        "She doesn’t work here.",
+        {
+          "acceptedAnswers": [
+            "She does not work here."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Present simple negatives” accurately.",
-        "In a new situation, I can use Present simple negatives accurately."
+        "Complete the sentence with don’t or doesn’t: I ___ drive.",
+        "I don’t drive.",
+        {
+          "acceptedAnswers": [
+            "I do not drive."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Present simple negatives” and write the full corrected sentence: She doesn’t works.",
+        "Correct this common error for “Present simple negatives” and write the full corrected sentence: She doesn’t works.",
         "She doesn’t work."
       ]
     ],
@@ -455,15 +470,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Does he speak English?"
       ],
       [
-        "State the rule for “Present simple questions” from memory.",
-        "Use Do/Does + subject + base verb."
+        "Complete the question with Do or Does: ___ he speak English?",
+        "Does he speak English?"
       ],
       [
-        "Write the transfer model for “Present simple questions” accurately.",
-        "In a new situation, I can use Present simple questions accurately."
+        "Complete the question with Do or Does: ___ you live here?",
+        "Do you live here?"
       ],
       [
-        "Repair this common error for “Present simple questions” and write the full corrected sentence: Does he speaks?",
+        "Correct this common error for “Present simple questions” and write the full corrected sentence: Does he speaks?",
         "Does he speak?"
       ]
     ],
@@ -509,15 +524,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "There are two parks."
       ],
       [
-        "State the rule for “There is/There are” from memory.",
-        "Use there is for singular and there are for plural existence."
+        "Complete the sentence with is or are: There ___ two parks near my flat.",
+        "There are two parks near my flat."
       ],
       [
-        "Write the transfer model for “There is/There are” accurately.",
-        "In a new situation, I can use There is/There are accurately."
+        "Complete the sentence with is or are: There ___ a bank on this street.",
+        "There is a bank on this street.",
+        {
+          "acceptedAnswers": [
+            "There’s a bank on this street."
+          ]
+        }
       ],
       [
-        "Repair this common error for “There is/There are” and write the full corrected sentence: There have a bank.",
+        "Correct this common error for “There is/There are” and write the full corrected sentence: There have a bank.",
         "There is a bank."
       ]
     ],
@@ -563,15 +583,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Can you help me?"
       ],
       [
-        "State the rule for “Can/can’t” from memory.",
-        "Use can + base verb for ability, permission, and possibility."
+        "Use can and the verb in brackets: I ___ very well. (swim)",
+        "I can swim very well."
       ],
       [
-        "Write the transfer model for “Can/can’t” accurately.",
-        "In a new situation, I can use Can/can’t accurately."
+        "Complete the sentence with can or can’t: I ___ come tomorrow because I am working.",
+        "I can’t come tomorrow because I am working.",
+        {
+          "acceptedAnswers": [
+            "I cannot come tomorrow because I am working."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Can/can’t” and write the full corrected sentence: I can to swim.",
+        "Correct this common error for “Can/can’t” and write the full corrected sentence: I can to swim.",
         "I can swim."
       ]
     ],
@@ -622,15 +647,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Don’t worry."
       ],
       [
-        "State the rule for “Imperatives” from memory.",
-        "Use the base verb for instructions; use don’t for negative instructions."
+        "Complete the instruction: ___ worry about the test. (Don’t / Not)",
+        "Don’t worry about the test.",
+        {
+          "acceptedAnswers": [
+            "Do not worry about the test."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Imperatives” accurately.",
-        "In a new situation, I can use Imperatives accurately."
+        "Complete the instruction: ___ down, please. (Sit / Sits)",
+        "Sit down, please."
       ],
       [
-        "Repair this common error for “Imperatives” and write the full corrected sentence: Don’t to touch the screen.",
+        "Correct this common error for “Imperatives” and write the full corrected sentence: Don’t to touch the screen.",
         "Don’t touch the screen."
       ]
     ],
@@ -675,15 +705,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use in, on, at, under, next to, between to locate things."
       ],
       [
-        "State the rule for “Prepositions of place” from memory.",
-        "Use in, on, at, under, next to, between to locate things."
+        "Complete the sentence with in or at: The milk is ___ the fridge.",
+        "The milk is in the fridge."
       ],
       [
-        "Write the transfer model for “Prepositions of place” accurately.",
-        "In a new situation, I can use Prepositions of place accurately."
+        "Complete the sentence with under or between: The cat is ___ the bed.",
+        "The cat is under the bed."
       ],
       [
-        "Repair this common error for “Prepositions of place” and write the full corrected sentence: The keys are in the table.",
+        "Correct this common error for “Prepositions of place” and write the full corrected sentence: The keys are in the table.",
         "The keys are on the table."
       ]
     ],
@@ -728,15 +758,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Countable nouns use many/few; uncountable nouns use much/little."
       ],
       [
-        "State the rule for “Countable and uncountable nouns” from memory.",
-        "Countable nouns use many/few; uncountable nouns use much/little."
+        "Complete the question with much or many: How ___ water do you drink?",
+        "How much water do you drink?"
       ],
       [
-        "Write the transfer model for “Countable and uncountable nouns” accurately.",
-        "In a new situation, I can use Countable and uncountable nouns accurately."
+        "Complete the sentence with much or many: There aren’t ___ chairs in the room.",
+        "There aren’t many chairs in the room.",
+        {
+          "acceptedAnswers": [
+            "There are not many chairs in the room."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Countable and uncountable nouns” and write the full corrected sentence: many information",
+        "Correct this common error for “Countable and uncountable nouns” and write the full corrected sentence: many information",
         "much information"
       ]
     ],
@@ -782,15 +817,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She is staying with friends."
       ],
       [
-        "State the rule for “Present continuous” from memory.",
-        "Use be + verb-ing for actions happening now or temporary situations."
+        "Use the present continuous of the verb in brackets: Look, the baby ___. (sleep)",
+        "Look, the baby is sleeping.",
+        {
+          "acceptedAnswers": [
+            "Look, the baby’s sleeping."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Present continuous” accurately.",
-        "In a new situation, I can use Present continuous accurately."
+        "Use the present continuous of the verb in brackets: We ___ in a hotel this week. (stay)",
+        "We are staying in a hotel this week.",
+        {
+          "acceptedAnswers": [
+            "We’re staying in a hotel this week."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Present continuous” and write the full corrected sentence: I studying now.",
+        "Correct this common error for “Present continuous” and write the full corrected sentence: I studying now.",
         "I am studying now."
       ]
     ],
@@ -835,15 +880,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use simple for routine; continuous for now or temporary situations."
       ],
       [
-        "State the rule for “Present simple vs continuous” from memory.",
-        "Use simple for routine; continuous for now or temporary situations."
+        "Use the verb in brackets in the present continuous for now: Look! It ___. (rain)",
+        "Look! It is raining.",
+        {
+          "acceptedAnswers": [
+            "Look! It’s raining."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Present simple vs continuous” accurately.",
-        "In a new situation, I can use Present simple vs continuous accurately."
+        "Use the verb in brackets in the present simple for a routine: She ___ to work every day. (drive)",
+        "She drives to work every day."
       ],
       [
-        "Repair this common error for “Present simple vs continuous” and write the full corrected sentence: I am knowing him.",
+        "Correct this common error for “Present simple vs continuous” and write the full corrected sentence: I am knowing him.",
         "I know him."
       ]
     ],
@@ -888,15 +938,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use verb-ed for completed past actions with a finished time."
       ],
       [
-        "State the rule for “Past simple regular” from memory.",
-        "Use verb-ed for completed past actions with a finished time."
+        "Use the past simple of the verb in brackets: They ___ the museum on Sunday. (visit)",
+        "They visited the museum on Sunday."
       ],
       [
-        "Write the transfer model for “Past simple regular” accurately.",
-        "In a new situation, I can use Past simple regular accurately."
+        "Use the past simple of the verb in brackets: I ___ my grandmother yesterday. (call)",
+        "I called my grandmother yesterday."
       ],
       [
-        "Repair this common error for “Past simple regular” and write the full corrected sentence: We have visited Rome last year.",
+        "Correct this common error for “Past simple regular” and write the full corrected sentence: We have visited Rome last year.",
         "We visited Rome last year."
       ]
     ],
@@ -941,15 +991,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use the irregular past form for completed past actions."
       ],
       [
-        "State the rule for “Past simple irregular” from memory.",
-        "Use the irregular past form for completed past actions."
+        "Use the past simple of the verb in brackets: She ___ an email last night. (write)",
+        "She wrote an email last night."
       ],
       [
-        "Write the transfer model for “Past simple irregular” accurately.",
-        "In a new situation, I can use Past simple irregular accurately."
+        "Use the past simple of the verb in brackets: We ___ home early yesterday. (go)",
+        "We went home early yesterday."
       ],
       [
-        "Repair this common error for “Past simple irregular” and write the full corrected sentence: She goed home.",
+        "Correct this common error for “Past simple irregular” and write the full corrected sentence: She goed home.",
         "She went home."
       ]
     ],
@@ -995,15 +1045,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I didn’t see him."
       ],
       [
-        "State the rule for “Past simple questions and negatives” from memory.",
-        "Use did/didn’t + base verb."
+        "Use didn’t and the verb in brackets: I ___ him at the party. (see)",
+        "I didn’t see him at the party.",
+        {
+          "acceptedAnswers": [
+            "I did not see him at the party."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Past simple questions and negatives” accurately.",
-        "In a new situation, I can use Past simple questions and negatives accurately."
+        "Complete the question with Did or Do: ___ you call her yesterday?",
+        "Did you call her yesterday?"
       ],
       [
-        "Repair this common error for “Past simple questions and negatives” and write the full corrected sentence: Did you called?",
+        "Correct this common error for “Past simple questions and negatives” and write the full corrected sentence: Did you called?",
         "Did you call?"
       ]
     ],
@@ -1049,15 +1104,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I’ll help you."
       ],
       [
-        "State the rule for “Future with will” from memory.",
-        "Use will for predictions, spontaneous decisions, and promises."
+        "Use will and the verb in brackets for a promise: I ___ you tomorrow. (help)",
+        "I will help you tomorrow.",
+        {
+          "acceptedAnswers": [
+            "I’ll help you tomorrow."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Future with will” accurately.",
-        "In a new situation, I can use Future with will accurately."
+        "Use will and the verb in brackets for a prediction: I think it ___ later. (rain)",
+        "I think it will rain later.",
+        {
+          "acceptedAnswers": [
+            "I think it’ll rain later."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Future with will” and write the full corrected sentence: I will to help.",
+        "Correct this common error for “Future with will” and write the full corrected sentence: I will to help.",
         "I will help."
       ]
     ],
@@ -1102,15 +1167,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use be going to for intentions and evidence-based predictions."
       ],
       [
-        "State the rule for “Be going to” from memory.",
-        "Use be going to for intentions and evidence-based predictions."
+        "Use be going to and the verb in brackets for a plan: I ___ German next year. (study)",
+        "I am going to study German next year.",
+        {
+          "acceptedAnswers": [
+            "I’m going to study German next year."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Be going to” accurately.",
-        "In a new situation, I can use Be going to accurately."
+        "Use be going to and the verb in brackets: Look at those clouds! It ___. (rain)",
+        "Look at those clouds! It is going to rain.",
+        {
+          "acceptedAnswers": [
+            "Look at those clouds! It’s going to rain."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Be going to” and write the full corrected sentence: I going to study.",
+        "Correct this common error for “Be going to” and write the full corrected sentence: I going to study.",
         "I am going to study."
       ]
     ],
@@ -1155,15 +1230,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use -er/more + than to compare two things."
       ],
       [
-        "State the rule for “Comparatives” from memory.",
-        "Use -er/more + than to compare two things."
+        "Use the comparative of the adjective in brackets: This book is ___ than that one. (easy)",
+        "This book is easier than that one."
       ],
       [
-        "Write the transfer model for “Comparatives” accurately.",
-        "In a new situation, I can use Comparatives accurately."
+        "Use the comparative of the adjective in brackets: Trains are ___ than buses. (comfortable)",
+        "Trains are more comfortable than buses."
       ],
       [
-        "Repair this common error for “Comparatives” and write the full corrected sentence: more easier",
+        "Correct this common error for “Comparatives” and write the full corrected sentence: more easier",
         "easier"
       ]
     ],
@@ -1208,15 +1283,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use the -est/most to compare one with a group."
       ],
       [
-        "State the rule for “Superlatives” from memory.",
-        "Use the -est/most to compare one with a group."
+        "Use the superlative of the adjective in brackets: It is ___ app on my phone. (useful)",
+        "It is the most useful app on my phone."
       ],
       [
-        "Write the transfer model for “Superlatives” accurately.",
-        "In a new situation, I can use Superlatives accurately."
+        "Use the superlative of the adjective in brackets: This is ___ room in the house. (small)",
+        "This is the smallest room in the house."
       ],
       [
-        "Repair this common error for “Superlatives” and write the full corrected sentence: the most easiest",
+        "Correct this common error for “Superlatives” and write the full corrected sentence: the most easiest",
         "the easiest"
       ]
     ],
@@ -1262,15 +1337,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Do you have any time?"
       ],
       [
-        "State the rule for “Some/any/no” from memory.",
-        "Use some mainly in affirmative statements; any in questions/negatives."
+        "Complete the sentence with some or any: I have ___ questions about the homework.",
+        "I have some questions about the homework."
       ],
       [
-        "Write the transfer model for “Some/any/no” accurately.",
-        "In a new situation, I can use Some/any/no accurately."
+        "Complete the sentence with some or any: We don’t have ___ milk left.",
+        "We don’t have any milk left.",
+        {
+          "acceptedAnswers": [
+            "We do not have any milk left."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Some/any/no” and write the full corrected sentence: I don’t have some time.",
+        "Correct this common error for “Some/any/no” and write the full corrected sentence: I don’t have some time.",
         "I don’t have any time."
       ]
     ],
@@ -1315,15 +1395,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use many with countable plural, much with uncountable, a lot of with both."
       ],
       [
-        "State the rule for “Much/many/a lot of” from memory.",
-        "Use many with countable plural, much with uncountable, a lot of with both."
+        "Complete the sentence with much or many: She has ___ ideas for the project.",
+        "She has many ideas for the project."
       ],
       [
-        "Write the transfer model for “Much/many/a lot of” accurately.",
-        "In a new situation, I can use Much/many/a lot of accurately."
+        "Complete the sentence with much or many: We don’t have ___ time.",
+        "We don’t have much time.",
+        {
+          "acceptedAnswers": [
+            "We do not have much time."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Much/many/a lot of” and write the full corrected sentence: much books",
+        "Correct this common error for “Much/many/a lot of” and write the full corrected sentence: much books",
         "many books"
       ]
     ],
@@ -1369,15 +1454,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She is usually early."
       ],
       [
-        "State the rule for “Adverbs of frequency” from memory.",
-        "Place usually/often before main verbs but after be."
+        "Put the words in brackets in the right order: She ___ early. (usually, is)",
+        "She is usually early."
       ],
       [
-        "Write the transfer model for “Adverbs of frequency” accurately.",
-        "In a new situation, I can use Adverbs of frequency accurately."
+        "Put the words in brackets in the right order: We ___ breakfast at home. (have, always)",
+        "We always have breakfast at home."
       ],
       [
-        "Repair this common error for “Adverbs of frequency” and write the full corrected sentence: I am often study.",
+        "Correct this common error for “Adverbs of frequency” and write the full corrected sentence: I am often study.",
         "I often study."
       ]
     ],
@@ -1423,15 +1508,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I saw them."
       ],
       [
-        "State the rule for “Object pronouns” from memory.",
-        "Use me, you, him, her, it, us, them as objects."
+        "Complete the sentence with them or they: I saw ___ at the station.",
+        "I saw them at the station."
       ],
       [
-        "Write the transfer model for “Object pronouns” accurately.",
-        "In a new situation, I can use Object pronouns accurately."
+        "Complete the question with me or I: Can you help ___?",
+        "Can you help me?"
       ],
       [
-        "Repair this common error for “Object pronouns” and write the full corrected sentence: Please call I.",
+        "Correct this common error for “Object pronouns” and write the full corrected sentence: Please call I.",
         "Please call me."
       ]
     ],
@@ -1477,15 +1562,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I have to work."
       ],
       [
-        "State the rule for “Must/have to” from memory.",
-        "Use must for strong speaker obligation; have to for external necessity."
+        "Use have to and the verb in brackets for a rule at work: I ___ a uniform at work. (wear)",
+        "I have to wear a uniform at work."
       ],
       [
-        "Write the transfer model for “Must/have to” accurately.",
-        "In a new situation, I can use Must/have to accurately."
+        "Use must and the verb in brackets for strong advice: You ___ careful on this road. (be)",
+        "You must be careful on this road."
       ],
       [
-        "Repair this common error for “Must/have to” and write the full corrected sentence: I must to go.",
+        "Correct this common error for “Must/have to” and write the full corrected sentence: I must to go.",
         "I must go."
       ]
     ],
@@ -1537,15 +1622,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use have/has + past participle for life experience, unfinished time, and present results."
       ],
       [
-        "State the rule for “Present perfect” from memory.",
-        "Use have/has + past participle for life experience, unfinished time, and present results."
+        "Use the present perfect of the verb in brackets: She ___ in Paris since 2020. (work)",
+        "She has worked in Paris since 2020.",
+        {
+          "acceptedAnswers": [
+            "She’s worked in Paris since 2020."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Present perfect” accurately.",
-        "In a new situation, I can use Present perfect accurately."
+        "Use the present perfect of the verb in brackets: I ___ this film before. (see)",
+        "I have seen this film before.",
+        {
+          "acceptedAnswers": [
+            "I’ve seen this film before."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Present perfect” and write the full corrected sentence: I live here since three years.",
+        "Correct this common error for “Present perfect” and write the full corrected sentence: I live here since three years.",
         "I have lived here for three years."
       ]
     ],
@@ -1591,15 +1686,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I saw it yesterday."
       ],
       [
-        "State the rule for “Present perfect vs past simple” from memory.",
-        "Use present perfect without finished past time; past simple with a finished time."
+        "Use the past simple or the present perfect of the verb in brackets: I ___ it yesterday. (see)",
+        "I saw it yesterday."
       ],
       [
-        "Write the transfer model for “Present perfect vs past simple” accurately.",
-        "In a new situation, I can use Present perfect vs past simple accurately."
+        "Use the past simple or the present perfect of the verb in brackets: I ___ to Japan twice so far. (be)",
+        "I have been to Japan twice so far.",
+        {
+          "acceptedAnswers": [
+            "I’ve been to Japan twice so far."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Present perfect vs past simple” and write the full corrected sentence: I have seen it yesterday.",
+        "Correct this common error for “Present perfect vs past simple” and write the full corrected sentence: I have seen it yesterday.",
         "I saw it yesterday."
       ]
     ],
@@ -1644,15 +1744,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use for + duration; since + starting point."
       ],
       [
-        "State the rule for “For and since” from memory.",
-        "Use for + duration; since + starting point."
+        "Complete the sentence with for or since: I have lived here ___ 2024.",
+        "I have lived here since 2024."
       ],
       [
-        "Write the transfer model for “For and since” accurately.",
-        "In a new situation, I can use For and since accurately."
+        "Complete the sentence with for or since: She has worked here ___ two years.",
+        "She has worked here for two years."
       ],
       [
-        "Repair this common error for “For and since” and write the full corrected sentence: since two years",
+        "Correct this common error for “For and since” and write the full corrected sentence: since two years",
         "for two years"
       ]
     ],
@@ -1697,15 +1797,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use was/were + verb-ing for an action in progress at a past time."
       ],
       [
-        "State the rule for “Past continuous” from memory.",
-        "Use was/were + verb-ing for an action in progress at a past time."
+        "Use the past continuous of the verb in brackets: They ___ TV at eight o’clock last night. (watch)",
+        "They were watching TV at eight o’clock last night."
       ],
       [
-        "Write the transfer model for “Past continuous” accurately.",
-        "In a new situation, I can use Past continuous accurately."
+        "Use the past continuous of the verb in brackets: She ___ dinner when I arrived. (cook)",
+        "She was cooking dinner when I arrived."
       ],
       [
-        "Repair this common error for “Past continuous” and write the full corrected sentence: I studied when you called.",
+        "Correct this common error for “Past continuous” and write the full corrected sentence: I studied when you called.",
         "I was studying when you called."
       ]
     ],
@@ -1750,15 +1850,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use continuous for background, simple for the interrupting event."
       ],
       [
-        "State the rule for “Past continuous vs past simple” from memory.",
-        "Use continuous for background, simple for the interrupting event."
+        "Use the past simple of the verb in brackets for the interrupting event: I was walking home when it ___ to rain. (start)",
+        "I was walking home when it started to rain."
       ],
       [
-        "Write the transfer model for “Past continuous vs past simple” accurately.",
-        "In a new situation, I can use Past continuous vs past simple accurately."
+        "Use the past continuous of the verb in brackets for the background: She ___ when the lights went out. (read)",
+        "She was reading when the lights went out."
       ],
       [
-        "Repair this common error for “Past continuous vs past simple” and write the full corrected sentence: We were eating when the phone was ringing.",
+        "Correct this common error for “Past continuous vs past simple” and write the full corrected sentence: We were eating when the phone was ringing.",
         "We were eating when the phone rang."
       ]
     ],
@@ -1803,15 +1903,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use if + present, will + base verb for a real future possibility."
       ],
       [
-        "State the rule for “First conditional” from memory.",
-        "Use if + present, will + base verb for a real future possibility."
+        "Use the present simple of the verb in brackets after if: If she ___ now, she will catch the train. (leave)",
+        "If she leaves now, she will catch the train.",
+        {
+          "acceptedAnswers": [
+            "If she leaves now, she’ll catch the train."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “First conditional” accurately.",
-        "In a new situation, I can use First conditional accurately."
+        "Use will and the verb in brackets: If she calls, I ___ her the news. (tell)",
+        "If she calls, I will tell her the news.",
+        {
+          "acceptedAnswers": [
+            "If she calls, I’ll tell her the news."
+          ]
+        }
       ],
       [
-        "Repair this common error for “First conditional” and write the full corrected sentence: If I will have time",
+        "Correct this common error for “First conditional” and write the full corrected sentence: If I will have time",
         "If I have time."
       ]
     ],
@@ -1856,15 +1966,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use if + past, would + base verb for hypothetical present/future situations."
       ],
       [
-        "State the rule for “Second conditional” from memory.",
-        "Use if + past, would + base verb for hypothetical present/future situations."
+        "Use the past simple of the verb in brackets: If I ___ more time, I would study German. (have)",
+        "If I had more time, I would study German."
       ],
       [
-        "Write the transfer model for “Second conditional” accurately.",
-        "In a new situation, I can use Second conditional accurately."
+        "Use would and the verb in brackets: If she lived closer, she ___ us more often. (visit)",
+        "If she lived closer, she would visit us more often.",
+        {
+          "acceptedAnswers": [
+            "If she lived closer, she’d visit us more often."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Second conditional” and write the full corrected sentence: If I would have time",
+        "Correct this common error for “Second conditional” and write the full corrected sentence: If I would have time",
         "If I had time."
       ]
     ],
@@ -1914,15 +2029,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use who for people, which for things, that for either in defining clauses."
       ],
       [
-        "State the rule for “Relative clauses” from memory.",
-        "Use who for people, which for things, that for either in defining clauses."
+        "Complete the sentence with who or which: The woman ___ called is my teacher.",
+        "The woman who called is my teacher."
       ],
       [
-        "Write the transfer model for “Relative clauses” accurately.",
-        "In a new situation, I can use Relative clauses accurately."
+        "Complete the sentence with who or which: This is the book ___ changed my mind.",
+        "This is the book which changed my mind."
       ],
       [
-        "Repair this common error for “Relative clauses” and write the full corrected sentence: The woman which called is my aunt.",
+        "Correct this common error for “Relative clauses” and write the full corrected sentence: The woman which called is my aunt.",
         "The woman who called is my aunt."
       ]
     ],
@@ -1968,15 +2083,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I decided to leave."
       ],
       [
-        "State the rule for “Gerunds and infinitives” from memory.",
-        "Some verbs take -ing, others to-infinitive; meaning can change."
+        "Use the verb in brackets after enjoy: I enjoy ___ in the park. (walk)",
+        "I enjoy walking in the park."
       ],
       [
-        "Write the transfer model for “Gerunds and infinitives” accurately.",
-        "In a new situation, I can use Gerunds and infinitives accurately."
+        "Use the verb in brackets after decided: She decided ___ early. (leave)",
+        "She decided to leave early."
       ],
       [
-        "Repair this common error for “Gerunds and infinitives” and write the full corrected sentence: I enjoy to read.",
+        "Correct this common error for “Gerunds and infinitives” and write the full corrected sentence: I enjoy to read.",
         "I enjoy reading."
       ]
     ],
@@ -2026,15 +2141,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use should/shouldn’t + base verb for advice."
       ],
       [
-        "State the rule for “Modal verbs of advice” from memory.",
-        "Use should/shouldn’t + base verb for advice."
+        "Use should and the verb in brackets: You ___ more water. (drink)",
+        "You should drink more water."
       ],
       [
-        "Write the transfer model for “Modal verbs of advice” accurately.",
-        "In a new situation, I can use Modal verbs of advice accurately."
+        "Use shouldn’t and the verb in brackets: You ___ so late. (stay up)",
+        "You shouldn’t stay up so late.",
+        {
+          "acceptedAnswers": [
+            "You should not stay up so late."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Modal verbs of advice” and write the full corrected sentence: You should to practise every day.",
+        "Correct this common error for “Modal verbs of advice” and write the full corrected sentence: You should to practise every day.",
         "You should practise every day."
       ]
     ],
@@ -2080,15 +2200,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The bridge was built in 1990."
       ],
       [
-        "State the rule for “Passive present and past” from memory.",
-        "Use be + past participle when the action/result matters more than the agent."
+        "Use the present simple passive of the verb in brackets: English ___ in many countries. (speak)",
+        "English is spoken in many countries."
       ],
       [
-        "Write the transfer model for “Passive present and past” accurately.",
-        "In a new situation, I can use Passive present and past accurately."
+        "Use the past simple passive of the verb in brackets: The letter ___ last week. (send)",
+        "The letter was sent last week."
       ],
       [
-        "Repair this common error for “Passive present and past” and write the full corrected sentence: The bridge built in 1990.",
+        "Correct this common error for “Passive present and past” and write the full corrected sentence: The bridge built in 1990.",
         "The bridge was built in 1990."
       ]
     ],
@@ -2133,15 +2253,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Backshift tense when reporting past speech if the situation is no longer current."
       ],
       [
-        "State the rule for “Reported statements” from memory.",
-        "Backshift tense when reporting past speech if the situation is no longer current."
+        "Report the statement “I am tired.”: She said that she ___.",
+        "She said that she was tired."
       ],
       [
-        "Write the transfer model for “Reported statements” accurately.",
-        "In a new situation, I can use Reported statements accurately."
+        "Report the statement “We live in Leeds.”: They said that they ___ in Leeds.",
+        "They said that they lived in Leeds."
       ],
       [
-        "Repair this common error for “Reported statements” and write the full corrected sentence: Yesterday she said that she is tired.",
+        "Correct this common error for “Reported statements” and write the full corrected sentence: Yesterday she said that she is tired.",
         "Yesterday she said that she was tired."
       ]
     ],
@@ -2191,15 +2311,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use an opposite-polarity auxiliary tag to check information."
       ],
       [
-        "State the rule for “Question tags” from memory.",
-        "Use an opposite-polarity auxiliary tag to check information."
+        "Complete the question tag: She works here, ___? (doesn’t she / isn’t she)",
+        "She works here, doesn’t she?"
       ],
       [
-        "Write the transfer model for “Question tags” accurately.",
-        "In a new situation, I can use Question tags accurately."
+        "Complete the question tag: They can swim, ___? (can’t they / don’t they)",
+        "They can swim, can’t they?"
       ],
       [
-        "Repair this common error for “Question tags” and write the full corrected sentence: You’re ready, isn’t it?",
+        "Correct this common error for “Question tags” and write the full corrected sentence: You’re ready, isn’t it?",
         "You’re ready, aren’t you?"
       ]
     ],
@@ -2245,15 +2365,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "It is clear enough."
       ],
       [
-        "State the rule for “Too/enough” from memory.",
-        "Use too + adjective for excess; adjective + enough for sufficiency."
+        "Complete the sentence with too or enough: The water is warm ___ for swimming.",
+        "The water is warm enough for swimming."
       ],
       [
-        "Write the transfer model for “Too/enough” accurately.",
-        "In a new situation, I can use Too/enough accurately."
+        "Complete the sentence with too or enough: It is ___ cold to go out.",
+        "It is too cold to go out."
       ],
       [
-        "Repair this common error for “Too/enough” and write the full corrected sentence: enough clear",
+        "Correct this common error for “Too/enough” and write the full corrected sentence: enough clear",
         "clear enough."
       ]
     ],
@@ -2303,15 +2423,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use have/has been + verb-ing for duration or recent repeated activity."
       ],
       [
-        "State the rule for “Present perfect continuous” from memory.",
-        "Use have/has been + verb-ing for duration or recent repeated activity."
+        "Use the present perfect continuous of the verb in brackets: She ___ for two hours. (study)",
+        "She has been studying for two hours.",
+        {
+          "acceptedAnswers": [
+            "She’s been studying for two hours."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Present perfect continuous” accurately.",
-        "In a new situation, I can use Present perfect continuous accurately."
+        "Use the present perfect continuous of the verb in brackets: It ___ all day. (rain)",
+        "It has been raining all day.",
+        {
+          "acceptedAnswers": [
+            "It’s been raining all day."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Present perfect continuous” and write the full corrected sentence: I am working since eight.",
+        "Correct this common error for “Present perfect continuous” and write the full corrected sentence: I am working since eight.",
         "I have been working since eight."
       ]
     ],
@@ -2356,15 +2486,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use had + past participle for an earlier past action."
       ],
       [
-        "State the rule for “Past perfect” from memory.",
-        "Use had + past participle for an earlier past action."
+        "Use the past perfect of the verb in brackets: When we arrived, the film ___. (start)",
+        "When we arrived, the film had started."
       ],
       [
-        "Write the transfer model for “Past perfect” accurately.",
-        "In a new situation, I can use Past perfect accurately."
+        "Use the past perfect of the verb in brackets: She ___ the book before she saw the film. (read)",
+        "She had read the book before she saw the film."
       ],
       [
-        "Repair this common error for “Past perfect” and write the full corrected sentence: The train left before we had arrived.",
+        "Correct this common error for “Past perfect” and write the full corrected sentence: The train left before we had arrived.",
         "The train had left before we arrived."
       ]
     ],
@@ -2414,15 +2544,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use had been + verb-ing to emphasize duration before a past point."
       ],
       [
-        "State the rule for “Past perfect continuous” from memory.",
-        "Use had been + verb-ing to emphasize duration before a past point."
+        "Use the past perfect continuous of the verb in brackets: She ___ for an hour when the bus came. (wait)",
+        "She had been waiting for an hour when the bus came."
       ],
       [
-        "Write the transfer model for “Past perfect continuous” accurately.",
-        "In a new situation, I can use Past perfect continuous accurately."
+        "Use the past perfect continuous of the verb in brackets: They were tired because they ___ all day. (work)",
+        "They were tired because they had been working all day."
       ],
       [
-        "Repair this common error for “Past perfect continuous” and write the full corrected sentence: She was waiting for an hour before he came.",
+        "Correct this common error for “Past perfect continuous” and write the full corrected sentence: She was waiting for an hour before he came.",
         "She had been waiting for an hour before he came."
       ]
     ],
@@ -2474,15 +2604,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use will be + verb-ing for an action in progress at a future time."
       ],
       [
-        "State the rule for “Future continuous” from memory.",
-        "Use will be + verb-ing for an action in progress at a future time."
+        "Use the future continuous of the verb in brackets: This time tomorrow, I ___ to Rome. (fly)",
+        "This time tomorrow, I will be flying to Rome.",
+        {
+          "acceptedAnswers": [
+            "This time tomorrow, I’ll be flying to Rome."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Future continuous” accurately.",
-        "In a new situation, I can use Future continuous accurately."
+        "Use the future continuous of the verb in brackets: At nine tonight, we ___ dinner. (have)",
+        "At nine tonight, we will be having dinner.",
+        {
+          "acceptedAnswers": [
+            "At nine tonight, we’ll be having dinner."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Future continuous” and write the full corrected sentence: This time tomorrow, I will travelling.",
+        "Correct this common error for “Future continuous” and write the full corrected sentence: This time tomorrow, I will travelling.",
         "This time tomorrow, I will be travelling."
       ]
     ],
@@ -2532,15 +2672,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use will have + past participle for completion before a future time."
       ],
       [
-        "State the rule for “Future perfect” from memory.",
-        "Use will have + past participle for completion before a future time."
+        "Use the future perfect of the verb in brackets: By June, they ___ the new library. (build)",
+        "By June, they will have built the new library.",
+        {
+          "acceptedAnswers": [
+            "By June, they’ll have built the new library."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Future perfect” accurately.",
-        "In a new situation, I can use Future perfect accurately."
+        "Use the future perfect of the verb in brackets: By the time you arrive, we ___ dinner. (cook)",
+        "By the time you arrive, we will have cooked dinner.",
+        {
+          "acceptedAnswers": [
+            "By the time you arrive, we’ll have cooked dinner."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Future perfect” and write the full corrected sentence: By Friday, I finish the report.",
+        "Correct this common error for “Future perfect” and write the full corrected sentence: By Friday, I finish the report.",
         "By Friday, I will have finished the report."
       ]
     ],
@@ -2590,15 +2740,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use if + past perfect, would have + past participle for unreal past situations."
       ],
       [
-        "State the rule for “Third conditional” from memory.",
-        "Use if + past perfect, would have + past participle for unreal past situations."
+        "Use the past perfect of the verb in brackets: If we ___ the map, we would have found the hotel. (check)",
+        "If we had checked the map, we would have found the hotel.",
+        {
+          "acceptedAnswers": [
+            "If we’d checked the map, we would have found the hotel."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Third conditional” accurately.",
-        "In a new situation, I can use Third conditional accurately."
+        "Use would have and the verb in brackets: If he had asked, I ___ him. (help)",
+        "If he had asked, I would have helped him.",
+        {
+          "acceptedAnswers": [
+            "If he had asked, I’d have helped him."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Third conditional” and write the full corrected sentence: If I studied, I would have passed.",
+        "Correct this common error for “Third conditional” and write the full corrected sentence: If I studied, I would have passed.",
         "If I had studied, I would have passed."
       ]
     ],
@@ -2643,15 +2803,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Combine past condition and present result, or present condition and past result."
       ],
       [
-        "State the rule for “Mixed conditionals” from memory.",
-        "Combine past condition and present result, or present condition and past result."
+        "Use the past perfect of the verb in brackets: If I ___ the job, I would live in Berlin now. (take)",
+        "If I had taken the job, I would live in Berlin now.",
+        {
+          "acceptedAnswers": [
+            "If I’d taken the job, I would live in Berlin now."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Mixed conditionals” accurately.",
-        "In a new situation, I can use Mixed conditionals accurately."
+        "Use would and the verb in brackets for a present result: If she had studied medicine, she ___ a doctor now. (be)",
+        "If she had studied medicine, she would be a doctor now.",
+        {
+          "acceptedAnswers": [
+            "If she had studied medicine, she’d be a doctor now."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Mixed conditionals” and write the full corrected sentence: If I would have taken",
+        "Correct this common error for “Mixed conditionals” and write the full corrected sentence: If I would have taken",
         "If I had taken."
       ]
     ],
@@ -2697,15 +2867,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "He can’t know."
       ],
       [
-        "State the rule for “Modal deduction present” from memory.",
-        "Use must/might/can’t + base verb for degrees of certainty now."
+        "Her light is on and her phone is engaged. Complete the sentence with must or can’t: She ___ be busy.",
+        "She must be busy."
       ],
       [
-        "Write the transfer model for “Modal deduction present” accurately.",
-        "In a new situation, I can use Modal deduction present accurately."
+        "He has never studied this topic. Complete the sentence with must or can’t: He ___ know the answer.",
+        "He can’t know the answer.",
+        {
+          "acceptedAnswers": [
+            "He cannot know the answer."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Modal deduction present” and write the full corrected sentence: She must to be busy.",
+        "Correct this common error for “Modal deduction present” and write the full corrected sentence: She must to be busy.",
         "She must be busy."
       ]
     ],
@@ -2750,15 +2925,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use must/might/can’t have + past participle for past deduction."
       ],
       [
-        "State the rule for “Modal deduction past” from memory.",
-        "Use must/might/can’t have + past participle for past deduction."
+        "Use must have and the verb in brackets: The door is open; they ___ to lock it. (forget)",
+        "The door is open; they must have forgotten to lock it."
       ],
       [
-        "Write the transfer model for “Modal deduction past” accurately.",
-        "In a new situation, I can use Modal deduction past accurately."
+        "Use can’t have and the verb in brackets: She ___ the email; she was offline all day. (read)",
+        "She can’t have read the email; she was offline all day.",
+        {
+          "acceptedAnswers": [
+            "She cannot have read the email; she was offline all day."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Modal deduction past” and write the full corrected sentence: They must forgot.",
+        "Correct this common error for “Modal deduction past” and write the full corrected sentence: They must forgot.",
         "They must have forgotten."
       ]
     ],
@@ -2803,15 +2983,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use have/get + object + past participle for services or arranged actions."
       ],
       [
-        "State the rule for “Causative have/get” from memory.",
-        "Use have/get + object + past participle for services or arranged actions."
+        "Use had, the object and the past participle of the verb in brackets: She ___ last week. (her hair, cut)",
+        "She had her hair cut last week."
       ],
       [
-        "Write the transfer model for “Causative have/get” accurately.",
-        "In a new situation, I can use Causative have/get accurately."
+        "Use have, the object and the past participle of the verb in brackets: We are going to ___ next month. (the house, paint)",
+        "We are going to have the house painted next month.",
+        {
+          "acceptedAnswers": [
+            "We are going to get the house painted next month."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Causative have/get” and write the full corrected sentence: I repaired my laptop yesterday.",
+        "Correct this common error for “Causative have/get” and write the full corrected sentence: I repaired my laptop yesterday.",
         "I had my laptop repaired yesterday."
       ]
     ],
@@ -2857,15 +3042,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "It should be completed soon."
       ],
       [
-        "State the rule for “Advanced passive” from memory.",
-        "Use passive reporting structures and modal passives."
+        "Use believe in a passive reporting structure: The painting ___ to be very old.",
+        "The painting is believed to be very old."
       ],
       [
-        "Write the transfer model for “Advanced passive” accurately.",
-        "In a new situation, I can use Advanced passive accurately."
+        "Use should and the passive of the verb in brackets: The work ___ by Friday. (complete)",
+        "The work should be completed by Friday."
       ],
       [
-        "Repair this common error for “Advanced passive” and write the full corrected sentence: He believes to be abroad.",
+        "Correct this common error for “Advanced passive” and write the full corrected sentence: He believes to be abroad.",
         "He is believed to be abroad."
       ]
     ],
@@ -2910,15 +3095,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use -ing/-ed clauses to reduce repeated subjects and add background."
       ],
       [
-        "State the rule for “Participle clauses” from memory.",
-        "Use -ing/-ed clauses to reduce repeated subjects and add background."
+        "Use having and the past participle of the verb in brackets: ___ the report, she went home. (finish)",
+        "Having finished the report, she went home."
       ],
       [
-        "Write the transfer model for “Participle clauses” accurately.",
-        "In a new situation, I can use Participle clauses accurately."
+        "Use a past participle clause with the verb in brackets: ___ in 1900, the house needs repairs. (build)",
+        "Built in 1900, the house needs repairs."
       ],
       [
-        "Repair this common error for “Participle clauses” and write the full corrected sentence: Finished the report, she left.",
+        "Correct this common error for “Participle clauses” and write the full corrected sentence: Finished the report, she left.",
         "Having finished the report, she left."
       ]
     ],
@@ -2964,15 +3149,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "If only I had listened."
       ],
       [
-        "State the rule for “Wish and if only” from memory.",
-        "Use past for present wishes and past perfect for past regrets."
+        "Use the past simple of the verb in brackets after wish: I wish I ___ the answer. (know)",
+        "I wish I knew the answer."
       ],
       [
-        "Write the transfer model for “Wish and if only” accurately.",
-        "In a new situation, I can use Wish and if only accurately."
+        "Use the past perfect of the verb in brackets after if only: If only I ___ to your advice. (listen)",
+        "If only I had listened to your advice.",
+        {
+          "acceptedAnswers": [
+            "If only I’d listened to your advice."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Wish and if only” and write the full corrected sentence: I wish I would know.",
+        "Correct this common error for “Wish and if only” and write the full corrected sentence: I wish I would know.",
         "I wish I knew."
       ]
     ],
@@ -3017,15 +3207,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Invert auxiliary and subject after restrictive negative expressions."
       ],
       [
-        "State the rule for “Inversion after negative adverbials” from memory.",
-        "Invert auxiliary and subject after restrictive negative expressions."
+        "Complete the sentence: Never ___ seen such a result. (have I / I have)",
+        "Never have I seen such a result."
       ],
       [
-        "Write the transfer model for “Inversion after negative adverbials” accurately.",
-        "In a new situation, I can use Inversion after negative adverbials accurately."
+        "Complete the sentence: Rarely ___ such a clear answer. (do we hear / we hear)",
+        "Rarely do we hear such a clear answer."
       ],
       [
-        "Repair this common error for “Inversion after negative adverbials” and write the full corrected sentence: Never I have seen",
+        "Correct this common error for “Inversion after negative adverbials” and write the full corrected sentence: Never I have seen",
         "Never have I seen."
       ]
     ],
@@ -3071,15 +3261,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "It was Anna who called."
       ],
       [
-        "State the rule for “Cleft sentences” from memory.",
-        "Use it-clefts and wh-clefts to focus information."
+        "Complete the sentence with who or which: It was Anna ___ called me.",
+        "It was Anna who called me."
       ],
       [
-        "Write the transfer model for “Cleft sentences” accurately.",
-        "In a new situation, I can use Cleft sentences accurately."
+        "Complete the sentence: What I need ___ more practice. (is / it is)",
+        "What I need is more practice."
       ],
       [
-        "Repair this common error for “Cleft sentences” and write the full corrected sentence: What I need it is practice.",
+        "Correct this common error for “Cleft sentences” and write the full corrected sentence: What I need it is practice.",
         "What I need is practice."
       ]
     ],
@@ -3124,15 +3314,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Omit if and invert had/should/were in formal conditionals."
       ],
       [
-        "State the rule for “Inversion in conditionals” from memory.",
-        "Omit if and invert had/should/were in formal conditionals."
+        "Complete the sentence: ___ the instructions, she would not have made the mistake. (Had she read / She had read)",
+        "Had she read the instructions, she would not have made the mistake."
       ],
       [
-        "Write the transfer model for “Inversion in conditionals” accurately.",
-        "In a new situation, I can use Inversion in conditionals accurately."
+        "Complete the sentence: ___ any problems arise, please contact us. (Should / Would)",
+        "Should any problems arise, please contact us."
       ],
       [
-        "Repair this common error for “Inversion in conditionals” and write the full corrected sentence: Had I knew",
+        "Correct this common error for “Inversion in conditionals” and write the full corrected sentence: Had I knew",
         "Had I known."
       ]
     ],
@@ -3183,15 +3373,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Turn verbs/adjectives into nouns for dense formal writing."
       ],
       [
-        "State the rule for “Nominalisation” from memory.",
-        "Turn verbs/adjectives into nouns for dense formal writing."
+        "Use the noun form of the verb in brackets: The ___ of the data took a week. (analyse)",
+        "The analysis of the data took a week."
       ],
       [
-        "Write the transfer model for “Nominalisation” accurately.",
-        "In a new situation, I can use Nominalisation accurately."
+        "Use the noun form of the verb in brackets: The ___ of the new rules caused confusion. (introduce)",
+        "The introduction of the new rules caused confusion."
       ],
       [
-        "Repair this common error for “Nominalisation” and write the full corrected sentence: The decide of the committee surprised everyone.",
+        "Correct this common error for “Nominalisation” and write the full corrected sentence: The decide of the committee surprised everyone.",
         "The decision of the committee surprised everyone."
       ]
     ],
@@ -3236,15 +3426,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use may, tends to, appears to, arguably, and likely to limit claims."
       ],
       [
-        "State the rule for “Hedging and stance” from memory.",
-        "Use may, tends to, appears to, arguably, and likely to limit claims."
+        "Use tend to to limit the claim: Older learners ___ need more practice.",
+        "Older learners tend to need more practice."
       ],
       [
-        "Write the transfer model for “Hedging and stance” accurately.",
-        "In a new situation, I can use Hedging and stance accurately."
+        "Use may to limit the claim: This method ___ reduce errors.",
+        "This method may reduce errors."
       ],
       [
-        "Repair this common error for “Hedging and stance” and write the full corrected sentence: The results absolutely prove the hypothesis.",
+        "Correct this common error for “Hedging and stance” and write the full corrected sentence: The results absolutely prove the hypothesis.",
         "The results appear to support the hypothesis."
       ]
     ],
@@ -3297,15 +3487,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use concessive, causal, additive, and reformulation markers accurately."
       ],
       [
-        "State the rule for “Advanced discourse markers” from memory.",
-        "Use concessive, causal, additive, and reformulation markers accurately."
+        "Complete the text with Moreover or However: The method is fast. ___, it is expensive.",
+        "The method is fast. However, it is expensive."
       ],
       [
-        "Write the transfer model for “Advanced discourse markers” accurately.",
-        "In a new situation, I can use Advanced discourse markers accurately."
+        "Complete the text with Moreover or Nevertheless: The study was small. ___, the results are useful.",
+        "The study was small. Nevertheless, the results are useful."
       ],
       [
-        "Repair this common error for “Advanced discourse markers” and write the full corrected sentence: The findings are promising. On the other hand, they confirm earlier studies.",
+        "Correct this common error for “Advanced discourse markers” and write the full corrected sentence: The findings are promising. On the other hand, they confirm earlier studies.",
         "The findings are promising. Moreover, they confirm earlier studies."
       ]
     ],
@@ -3350,15 +3540,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Avoid repetition with do so, so/neither, one/ones, and omitted repeated material."
       ],
       [
-        "State the rule for “Substitution and ellipsis” from memory.",
-        "Avoid repetition with do so, so/neither, one/ones, and omitted repeated material."
+        "Complete the sentence with so or neither: I like coffee, and ___ does my brother.",
+        "I like coffee, and so does my brother."
       ],
       [
-        "Write the transfer model for “Substitution and ellipsis” accurately.",
-        "In a new situation, I can use Substitution and ellipsis accurately."
+        "Complete the sentence with one or ones: I don’t like the red shoes; I prefer the black ___.",
+        "I don’t like the red shoes; I prefer the black ones.",
+        {
+          "acceptedAnswers": [
+            "I do not like the red shoes; I prefer the black ones."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Substitution and ellipsis” and write the full corrected sentence: I expected her to call, and she did it call.",
+        "Correct this common error for “Substitution and ellipsis” and write the full corrected sentence: I expected her to call, and she did it call.",
         "I expected her to call, and she did."
       ]
     ],
@@ -3403,15 +3598,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use preposition + whom/which and sentential which in formal language."
       ],
       [
-        "State the rule for “Complex relative clauses” from memory.",
-        "Use preposition + whom/which and sentential which in formal language."
+        "Complete the sentence with whom or which: The colleague with ___ I work is very helpful.",
+        "The colleague with whom I work is very helpful."
       ],
       [
-        "Write the transfer model for “Complex relative clauses” accurately.",
-        "In a new situation, I can use Complex relative clauses accurately."
+        "Complete the sentence with which or whom: The method on ___ we relied was robust.",
+        "The method on which we relied was robust."
       ],
       [
-        "Repair this common error for “Complex relative clauses” and write the full corrected sentence: This is the method which we relied on it.",
+        "Correct this common error for “Complex relative clauses” and write the full corrected sentence: This is the method which we relied on it.",
         "This is the method on which we relied."
       ]
     ],
@@ -3462,15 +3657,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use reporting verb patterns: admit doing, deny doing, urge someone to do."
       ],
       [
-        "State the rule for “Advanced reporting verbs” from memory.",
-        "Use reporting verb patterns: admit doing, deny doing, urge someone to do."
+        "Use the verb in brackets after deny: He denied ___ the money. (take)",
+        "He denied taking the money.",
+        {
+          "acceptedAnswers": [
+            "He denied having taken the money."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Advanced reporting verbs” accurately.",
-        "In a new situation, I can use Advanced reporting verbs accurately."
+        "Use urge with the object and the verb in brackets: She urged ___ carefully. (us, check)",
+        "She urged us to check carefully."
       ],
       [
-        "Repair this common error for “Advanced reporting verbs” and write the full corrected sentence: He admitted to make the mistake.",
+        "Correct this common error for “Advanced reporting verbs” and write the full corrected sentence: He admitted to make the mistake.",
         "He admitted making the mistake."
       ]
     ],
@@ -3515,15 +3715,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use do/does/did to emphasize an affirmative statement."
       ],
       [
-        "State the rule for “Emphasis with auxiliaries” from memory.",
-        "Use do/does/did to emphasize an affirmative statement."
+        "Add emphasis with does: She ___ like the idea, but she has questions.",
+        "She does like the idea, but she has questions."
       ],
       [
-        "Write the transfer model for “Emphasis with auxiliaries” accurately.",
-        "In a new situation, I can use Emphasis with auxiliaries accurately."
+        "Add emphasis with did: We ___ send the form last week.",
+        "We did send the form last week."
       ],
       [
-        "Repair this common error for “Emphasis with auxiliaries” and write the full corrected sentence: I am understand your concern.",
+        "Correct this common error for “Emphasis with auxiliaries” and write the full corrected sentence: I am understand your concern.",
         "I do understand your concern."
       ]
     ],
@@ -3573,15 +3773,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Move elements to the front for focus while preserving grammar."
       ],
       [
-        "State the rule for “Fronting” from memory.",
-        "Move elements to the front for focus while preserving grammar."
+        "Keep the fronted object and order the words in brackets: This issue, ___ immediately. (we, address, must)",
+        "This issue, we must address immediately."
       ],
       [
-        "Write the transfer model for “Fronting” accurately.",
-        "In a new situation, I can use Fronting accurately."
+        "Complete the sentence with the fronted place phrase: On the table ___ a letter. (lay / laid)",
+        "On the table lay a letter."
       ],
       [
-        "Repair this common error for “Fronting” and write the full corrected sentence: This issue we must to address.",
+        "Correct this common error for “Fronting” and write the full corrected sentence: This issue we must to address.",
         "This issue we must address."
       ]
     ],
@@ -3626,15 +3826,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Build precise noun phrases with pre- and post-modification."
       ],
       [
-        "State the rule for “Complex noun phrases” from memory.",
-        "Build precise noun phrases with pre- and post-modification."
+        "Use the -ing form of the verb in brackets after the noun: The students ___ in the study improved quickly. (take part)",
+        "The students taking part in the study improved quickly."
       ],
       [
-        "Write the transfer model for “Complex noun phrases” accurately.",
-        "In a new situation, I can use Complex noun phrases accurately."
+        "Use the past participle of the verb in brackets after the noun: The data ___ last year were incomplete. (collect)",
+        "The data collected last year were incomplete."
       ],
       [
-        "Repair this common error for “Complex noun phrases” and write the full corrected sentence: They published a study carefully design.",
+        "Correct this common error for “Complex noun phrases” and write the full corrected sentence: They published a study carefully design.",
         "They published a carefully designed study."
       ]
     ],
@@ -3685,15 +3885,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Would you mind explaining the deadline?"
       ],
       [
-        "State the rule for “Register control” from memory.",
-        "Choose grammatical forms appropriate to formal, neutral, or informal contexts."
+        "Write a formal request with could and send: ___ me the report by Friday?",
+        "Could you send me the report by Friday?"
       ],
       [
-        "Write the transfer model for “Register control” accurately.",
-        "In a new situation, I can use Register control accurately."
+        "Use would you mind and the verb in brackets: Would you mind ___ the door? (close)",
+        "Would you mind closing the door?"
       ],
       [
-        "Repair this common error for “Register control” and write the full corrected sentence: What do you mean by the requirement?",
+        "Correct this common error for “Register control” and write the full corrected sentence: What do you mean by the requirement?",
         "Could you clarify the requirement?"
       ]
     ],
@@ -3739,15 +3939,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In 2019, the study demonstrated a clear effect."
       ],
       [
-        "State the rule for “Advanced tense-aspect choices” from memory.",
-        "Use tense and aspect to control viewpoint, relevance, and temporal framing."
+        "Use the present perfect or past simple of the verb in brackets: Since then, several studies ___ the effect. (confirm)",
+        "Since then, several studies have confirmed the effect."
       ],
       [
-        "Write the transfer model for “Advanced tense-aspect choices” accurately.",
-        "In a new situation, I can use Advanced tense-aspect choices accurately."
+        "Use the present perfect or past simple of the verb in brackets: The researchers ___ the data in 2021. (publish)",
+        "The researchers published the data in 2021."
       ],
       [
-        "Repair this common error for “Advanced tense-aspect choices” and write the full corrected sentence: In 2019, the study has demonstrated a clear effect.",
+        "Correct this common error for “Advanced tense-aspect choices” and write the full corrected sentence: In 2019, the study has demonstrated a clear effect.",
         "In 2019, the study demonstrated a clear effect."
       ]
     ],
@@ -3799,15 +3999,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use matching grammatical structures in coordinated lists and comparisons."
       ],
       [
-        "State the rule for “Parallelism” from memory.",
-        "Use matching grammatical structures in coordinated lists and comparisons."
+        "Keep the list parallel with the verb in brackets: She likes swimming, cycling and ___. (run)",
+        "She likes swimming, cycling and running.",
+        {
+          "acceptedAnswers": [
+            "She likes swimming, cycling, and running."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Parallelism” accurately.",
-        "In a new situation, I can use Parallelism accurately."
+        "Keep the list parallel with the verb of the noun in brackets: We want to reduce costs and ___ quality. (improvement)",
+        "We want to reduce costs and improve quality.",
+        {
+          "acceptedAnswers": [
+            "We want to reduce costs and to improve quality."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Parallelism” and write the full corrected sentence: The role requires planning, to analyse, and reports.",
+        "Correct this common error for “Parallelism” and write the full corrected sentence: The role requires planning, to analyse, and reports.",
         "The role requires planning, analysing, and reporting."
       ]
     ],
@@ -3852,15 +4062,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use deliberate deviations from neutral order for information structure and style."
       ],
       [
-        "State the rule for “Marked word order” from memory.",
-        "Use deliberate deviations from neutral order for information structure and style."
+        "Complete the sentence: Only later ___ the mistake. (did she notice / she noticed)",
+        "Only later did she notice the mistake."
       ],
       [
-        "Write the transfer model for “Marked word order” accurately.",
-        "In a new situation, I can use Marked word order accurately."
+        "Complete the sentence: Not only ___ late, but he also forgot the documents. (was he / he was)",
+        "Not only was he late, but he also forgot the documents."
       ],
       [
-        "Repair this common error for “Marked word order” and write the full corrected sentence: Only then the implications became clear.",
+        "Correct this common error for “Marked word order” and write the full corrected sentence: Only then the implications became clear.",
         "Only then did the implications become clear."
       ]
     ],
@@ -3905,15 +4115,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Control multiple subordinate clauses without ambiguity."
       ],
       [
-        "State the rule for “Layered subordination” from memory.",
-        "Control multiple subordinate clauses without ambiguity."
+        "Complete the sentence with which or that: The report, ___ was published last week, includes data that nobody had checked.",
+        "The report, which was published last week, includes data that nobody had checked."
       ],
       [
-        "Write the transfer model for “Layered subordination” accurately.",
-        "In a new situation, I can use Layered subordination accurately."
+        "Complete the sentence: ___ the sample was small, the results, which were consistent, convinced the reviewers. (Although / Because)",
+        "Although the sample was small, the results, which were consistent, convinced the reviewers."
       ],
       [
-        "Repair this common error for “Layered subordination” and write the full corrected sentence: Although the data were limited, the pattern that emerge was consistent.",
+        "Correct this common error for “Layered subordination” and write the full corrected sentence: Although the data were limited, the pattern that emerge was consistent.",
         "Although the data were limited, the pattern that emerged was consistent."
       ]
     ],
@@ -3958,15 +4168,25 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Distinguish obligation, inference, willingness, tentativeness, and counterfactuality."
       ],
       [
-        "State the rule for “Nuanced modality” from memory.",
-        "Distinguish obligation, inference, willingness, tentativeness, and counterfactuality."
+        "The meeting was not necessary, but you went. Use needn’t have and the verb in brackets: You ___. (attend)",
+        "You needn’t have attended.",
+        {
+          "acceptedAnswers": [
+            "You need not have attended."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Nuanced modality” accurately.",
-        "In a new situation, I can use Nuanced modality accurately."
+        "It was not necessary, so you did not do it. Use didn’t need to and the verb in brackets: I ___ a taxi. (take)",
+        "I didn’t need to take a taxi.",
+        {
+          "acceptedAnswers": [
+            "I did not need to take a taxi."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Nuanced modality” and write the full corrected sentence: I needn’t have taken an umbrella, so I didn’t take one.",
+        "Correct this common error for “Nuanced modality” and write the full corrected sentence: I needn’t have taken an umbrella, so I didn’t take one.",
         "I didn’t need to take an umbrella, so I didn’t take one."
       ]
     ],
@@ -4016,15 +4236,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Manipulate tense remoteness to signal politeness, doubt, or unreality."
       ],
       [
-        "State the rule for “Counterfactual distance” from memory.",
-        "Manipulate tense remoteness to signal politeness, doubt, or unreality."
+        "Make the request more distant with the past tense of the verb in brackets: I ___ if you could help me. (wonder)",
+        "I wondered if you could help me.",
+        {
+          "acceptedAnswers": [
+            "I was wondering if you could help me."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Counterfactual distance” accurately.",
-        "In a new situation, I can use Counterfactual distance accurately."
+        "Use might to make the suggestion tentative: It ___ be worth checking the figures again.",
+        "It might be worth checking the figures again."
       ],
       [
-        "Repair this common error for “Counterfactual distance” and write the full corrected sentence: I wonder if you can help.",
+        "Correct this common error for “Counterfactual distance” and write the full corrected sentence: I wonder if you can help.",
         "I wondered if you might be able to help."
       ]
     ],
@@ -4071,15 +4296,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The response rate was low. Such a constraint affects every estimate."
       ],
       [
-        "State the rule for “Advanced cohesion” from memory.",
-        "Use reference chains, lexical cohesion, and controlled repetition across long texts."
+        "Complete the text with This or These: The sample was small. ___ limitation weakens the conclusions.",
+        "The sample was small. This limitation weakens the conclusions."
       ],
       [
-        "Write the transfer model for “Advanced cohesion” accurately.",
-        "In a new situation, I can use Advanced cohesion accurately."
+        "Complete the text with Such or This: The response rate was low. ___ a constraint affects every estimate.",
+        "The response rate was low. Such a constraint affects every estimate."
       ],
       [
-        "Repair this common error for “Advanced cohesion” and write the full corrected sentence: The sample was small and the response rate was low. This weakens the conclusions.",
+        "Correct this common error for “Advanced cohesion” and write the full corrected sentence: The sample was small and the response rate was low. This weakens the conclusions.",
         "The sample was small and the response rate was low. These limitations weaken the conclusions."
       ]
     ],
@@ -4124,15 +4349,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use syntax to create contrast, suspense, concession, and emphasis."
       ],
       [
-        "State the rule for “Rhetorical grammar” from memory.",
-        "Use syntax to create contrast, suspense, concession, and emphasis."
+        "Complete the contrast with but: Not the price ___ the quality decided the matter.",
+        "Not the price but the quality decided the matter."
       ],
       [
-        "Write the transfer model for “Rhetorical grammar” accurately.",
-        "In a new situation, I can use Rhetorical grammar accurately."
+        "Complete the sentence for emphasis: ___ was the result that nobody believed it. (So surprising / Such surprising)",
+        "So surprising was the result that nobody believed it."
       ],
       [
-        "Repair this common error for “Rhetorical grammar” and write the full corrected sentence: Not because the method failed, but the data were incomplete.",
+        "Correct this common error for “Rhetorical grammar” and write the full corrected sentence: Not because the method failed, but the data were incomplete.",
         "Not because the method failed, but because the data were incomplete."
       ]
     ],
@@ -4177,15 +4402,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use apposition, reduced clauses, and complex nominal groups without obscurity."
       ],
       [
-        "State the rule for “Compressed academic structures” from memory.",
-        "Use apposition, reduced clauses, and complex nominal groups without obscurity."
+        "Use the past participle of the verb in brackets: The survey, ___ in 2024, included 500 participants. (conduct)",
+        "The survey, conducted in 2024, included 500 participants."
       ],
       [
-        "Write the transfer model for “Compressed academic structures” accurately.",
-        "In a new situation, I can use Compressed academic structures accurately."
+        "Correct the punctuation so that two commas mark the apposition: Dr Lee the project leader presented the results.",
+        "Dr Lee, the project leader, presented the results."
       ],
       [
-        "Repair this common error for “Compressed academic structures” and write the full corrected sentence: The model, trained on multilingual data, it performed consistently.",
+        "Correct this common error for “Compressed academic structures” and write the full corrected sentence: The model, trained on multilingual data, it performed consistently.",
         "The model, trained on multilingual data, performed consistently."
       ]
     ],
@@ -4230,15 +4455,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use fixed and semi-fixed patterns with natural grammar."
       ],
       [
-        "State the rule for “Idiomatic clause patterns” from memory.",
-        "Use fixed and semi-fixed patterns with natural grammar."
+        "Complete the fixed expression: ___ it may, we must decide today. (Be that as / Be it as)",
+        "Be that as it may, we must decide today."
       ],
       [
-        "Write the transfer model for “Idiomatic clause patterns” accurately.",
-        "In a new situation, I can use Idiomatic clause patterns accurately."
+        "Transform the sentence with as it may seem: Although it may seem strange, the plan worked.",
+        "Strange as it may seem, the plan worked."
       ],
       [
-        "Repair this common error for “Idiomatic clause patterns” and write the full corrected sentence: Be it as it may, the proposal deserves consideration.",
+        "Correct this common error for “Idiomatic clause patterns” and write the full corrected sentence: Be it as it may, the proposal deserves consideration.",
         "Be that as it may, the proposal deserves consideration."
       ]
     ],
@@ -4288,15 +4513,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Revise attachment, pronoun, and scope ambiguity."
       ],
       [
-        "State the rule for “Ambiguity control” from memory.",
-        "Revise attachment, pronoun, and scope ambiguity."
+        "Use who so that the supervisor approved it: She discussed the result with the supervisor, ___ approved it.",
+        "She discussed the result with the supervisor, who approved it."
       ],
       [
-        "Write the transfer model for “Ambiguity control” accurately.",
-        "In a new situation, I can use Ambiguity control accurately."
+        "Complete the sentence with which or who: The manager praised the report, ___ was finished early.",
+        "The manager praised the report, which was finished early."
       ],
       [
-        "Repair this common error for “Ambiguity control” and write the full corrected sentence: She discussed the result with the supervisor, and she approved it.",
+        "Correct this common error for “Ambiguity control” and write the full corrected sentence: She discussed the result with the supervisor, and she approved it.",
         "She discussed the result with the supervisor, who approved it."
       ]
     ],
@@ -4342,15 +4567,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The analysis revealed that the policy had failed."
       ],
       [
-        "State the rule for “Style shifting” from memory.",
-        "Recast the same meaning for conversation, interview, report, and academic argument."
+        "Recast the sentence in academic style with indicate: The data ___ that costs have risen.",
+        "The data indicate that costs have risen.",
+        {
+          "acceptedAnswers": [
+            "The data indicates that costs have risen."
+          ]
+        }
       ],
       [
-        "Write the transfer model for “Style shifting” accurately.",
-        "In a new situation, I can use Style shifting accurately."
+        "Recast the sentence for a formal report with the verb in brackets: We ___ a survey of 200 users. (conduct, past simple)",
+        "We conducted a survey of 200 users."
       ],
       [
-        "Repair this common error for “Style shifting” and write the full corrected sentence: I found out that the policy had failed.",
+        "Correct this common error for “Style shifting” and write the full corrected sentence: I found out that the policy had failed.",
         "The analysis revealed that the policy had failed."
       ]
     ],
@@ -4400,15 +4630,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Use punctuation to clarify clause hierarchy and information structure."
       ],
       [
-        "State the rule for “Advanced punctuation and grammar” from memory.",
-        "Use punctuation to clarify clause hierarchy and information structure."
+        "Add however between commas: The plan, ___ was rejected.",
+        "The plan, however, was rejected."
       ],
       [
-        "Write the transfer model for “Advanced punctuation and grammar” accurately.",
-        "In a new situation, I can use Advanced punctuation and grammar accurately."
+        "Join the clauses with a semicolon and therefore: Costs rose ___ prices increased.",
+        "Costs rose; therefore, prices increased."
       ],
       [
-        "Repair this common error for “Advanced punctuation and grammar” and write the full corrected sentence: The result was promising, however it was inconclusive.",
+        "Correct this common error for “Advanced punctuation and grammar” and write the full corrected sentence: The result was promising, however it was inconclusive.",
         "The result was promising; however, it was inconclusive."
       ]
     ],
@@ -4459,15 +4689,21 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Identify grammatically possible but pragmatically unnatural forms."
       ],
       [
-        "State the rule for “Editing for naturalness” from memory.",
-        "Identify grammatically possible but pragmatically unnatural forms."
+        "Use recommend with the -ing form of the verb in brackets: We strongly recommend ___ the figures. (review)",
+        "We strongly recommend reviewing the figures."
       ],
       [
-        "Write the transfer model for “Editing for naturalness” accurately.",
-        "In a new situation, I can use Editing for naturalness accurately."
+        "Use suggest with a that-clause: I suggest ___ the manager. (that he call / him to call)",
+        "I suggest that he call the manager.",
+        {
+          "acceptedAnswers": [
+            "I suggest that he calls the manager.",
+            "I suggest that he should call the manager."
+          ]
+        }
       ],
       [
-        "Repair this common error for “Editing for naturalness” and write the full corrected sentence: I strongly recommend you to revise the budget.",
+        "Correct this common error for “Editing for naturalness” and write the full corrected sentence: I strongly recommend you to revise the budget.",
         "I strongly recommend that you revise the budget."
       ]
     ],
@@ -4518,15 +4754,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Control the grammar of narratives, arguments, reports, proposals, and presentations."
       ],
       [
-        "State the rule for “Genre-specific grammar” from memory.",
-        "Control the grammar of narratives, arguments, reports, proposals, and presentations."
+        "Use the present simple of the verb in brackets, as in a report summary: The report ___ the problem and evaluates two options. (outline)",
+        "The report outlines the problem and evaluates two options."
       ],
       [
-        "Write the transfer model for “Genre-specific grammar” accurately.",
-        "In a new situation, I can use Genre-specific grammar accurately."
+        "Use the present simple of the verb in brackets: The proposal ___ a clear timetable. (set out)",
+        "The proposal sets out a clear timetable."
       ],
       [
-        "Repair this common error for “Genre-specific grammar” and write the full corrected sentence: The report outlined the problem, evaluates two options, and recommends a solution.",
+        "Correct this common error for “Genre-specific grammar” and write the full corrected sentence: The report outlined the problem, evaluates two options, and recommends a solution.",
         "The report outlines the problem, evaluates two options, and recommends a solution."
       ]
     ],
@@ -4571,15 +4807,15 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Maintain accuracy, speed, cohesion, and register under realistic time pressure."
       ],
       [
-        "State the rule for “Integrated automatic production” from memory.",
-        "Maintain accuracy, speed, cohesion, and register under realistic time pressure."
+        "Use the past simple of the verb in brackets: Yesterday the team ___ the analysis. (finish)",
+        "Yesterday the team finished the analysis."
       ],
       [
-        "Write the transfer model for “Integrated automatic production” accurately.",
-        "In a new situation, I can use Integrated automatic production accurately."
+        "Use the past simple of the verb in brackets: Then they ___ the report to the client. (send)",
+        "Then they sent the report to the client."
       ],
       [
-        "Repair this common error for “Integrated automatic production” and write the full corrected sentence: Yesterday the team finish the analysis and sended the report.",
+        "Correct this common error for “Integrated automatic production” and write the full corrected sentence: Yesterday the team finish the analysis and sended the report.",
         "Yesterday the team finished the analysis and sent the report."
       ]
     ],
@@ -4634,8 +4870,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The children’s bags are by the door."
       ],
       [
-        "State the rule for “Possessive ’s and whose” from memory.",
-        "Use ’s after a singular person or noun to show possession, and use whose to ask who owns something."
+        "Write the possessive form of the plural word in brackets: This is my ___ car. (parents)",
+        "This is my parents’ car."
       ]
     ],
     "links": [
@@ -4689,8 +4925,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I usually read at night."
       ],
       [
-        "State the rule for “Prepositions of time: at, in, on” from memory.",
-        "Use at with clock times, on with days and dates, and in with months, years, seasons, and longer periods."
+        "Complete the sentence with on or in: The shop opens ___ 2 May.",
+        "The shop opens on 2 May."
       ]
     ],
     "links": [
@@ -4744,8 +4980,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "You should be proud of your progress."
       ],
       [
-        "State the rule for “Adjectives and prepositions” from memory.",
-        "Learn common adjective–preposition combinations as complete patterns; a preposition is followed by a noun or an -ing form."
+        "Complete the sentence with of or at: I am afraid ___ dogs.",
+        "I am afraid of dogs.",
+        {
+          "acceptedAnswers": [
+            "I’m afraid of dogs."
+          ]
+        }
       ]
     ],
     "links": [
@@ -4799,8 +5040,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The final scene was surprising."
       ],
       [
-        "State the rule for “Adjectives ending in -ed and -ing” from memory.",
-        "Use -ed adjectives for how someone feels and -ing adjectives for the person, thing, or situation that causes the feeling."
+        "Say how she felt. Complete the sentence with confused or confusing: She was ___ by the instructions.",
+        "She was confused by the instructions."
       ]
     ],
     "links": [
@@ -4874,8 +5115,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         }
       ],
       [
-        "State the rule for “Infinitive of purpose” from memory.",
-        "Use to plus the base form of a verb to explain the purpose of an action or answer the question why."
+        "Complete the sentence with the verb in brackets to show the purpose: I went to the library ___ a book. (borrow)",
+        "I went to the library to borrow a book.",
+        {
+          "acceptedAnswers": [
+            "I went to the library in order to borrow a book."
+          ]
+        }
       ]
     ],
     "links": [
@@ -4929,8 +5175,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "We have very little time."
       ],
       [
-        "State the rule for “Quantifiers: few, a few, little, a little” from memory.",
-        "Use few or a few with plural countable nouns and little or a little with uncountable nouns; forms without a often suggest an insufficient amount."
+        "Complete the sentence: Can I have ___ sugar, please? (a little / a few)",
+        "Can I have a little sugar, please?"
       ]
     ],
     "links": [
@@ -4984,8 +5230,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "We don’t work on Sundays."
       ],
       [
-        "State the rule for “Capital letters and apostrophes” from memory.",
-        "Use capital letters for sentence beginnings and proper names; use apostrophes for possession and omitted letters, not for ordinary plurals."
+        "Complete the sentence with its or it’s: The dog wagged ___ tail.",
+        "The dog wagged its tail."
       ]
     ],
     "links": [
@@ -5039,8 +5285,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "In spite of feeling tired, she continued."
       ],
       [
-        "State the rule for “Contrasting ideas: although, despite, however” from memory.",
-        "Use although or even though before a clause, despite or in spite of before a noun or -ing form, and however to connect contrasting sentences."
+        "Complete the sentence with although or despite: She passed the exam ___ she was ill.",
+        "She passed the exam although she was ill."
       ]
     ],
     "links": [
@@ -5094,8 +5340,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Did you use to play outside?"
       ],
       [
-        "State the rule for “Used to, be used to, get used to” from memory.",
-        "Use used to plus a base verb for past states or habits, be used to plus a noun or -ing form for familiarity, and get used to for the process of becoming familiar."
+        "Ask about a past habit that has changed. Complete the question with use or used: Did you ___ to walk to school?",
+        "Did you use to walk to school?"
       ]
     ],
     "links": [
@@ -5149,8 +5395,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "We had such good weather."
       ],
       [
-        "State the rule for “Intensifiers: so and such” from memory.",
-        "Use so before an adjective or adverb, such before a noun phrase, and so much or so many before quantities."
+        "Complete the sentence with so or such: The music was ___ loud that we left.",
+        "The music was so loud that we left."
       ]
     ],
     "links": [
@@ -5209,8 +5455,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "He couldn’t read the sign."
       ],
       [
-        "State the rule for “Past ability: could, was able to, managed to” from memory.",
-        "Use could for general past ability and was able to or managed to for a successful action on one particular occasion."
+        "Say that he succeeded once after trying. Complete the sentence with could or managed: He ___ to find a seat on the busy train.",
+        "He managed to find a seat on the busy train."
       ]
     ],
     "links": [
@@ -5264,8 +5510,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She didn’t use to like coffee."
       ],
       [
-        "State the rule for “Past habits: used to, would, past simple” from memory.",
-        "Use used to for past states or repeated actions, would for repeated past actions, and the past simple for completed past facts and events."
+        "Use would and the verb in brackets for a repeated past action: Every evening, my grandfather ___ us stories. (tell)",
+        "Every evening, my grandfather would tell us stories."
       ]
     ],
     "links": [
@@ -5324,8 +5570,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "We need to come up with a solution."
       ],
       [
-        "State the rule for “Phrasal verbs” from memory.",
-        "A phrasal verb combines a verb with one or more particles; learn its meaning and whether an object can separate the verb and particle."
+        "Complete the sentence with the phrasal verb that means postpone: We had to ___ the trip. (put off / put on)",
+        "We had to put off the trip."
       ]
     ],
     "links": [
@@ -5379,8 +5625,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "He still hasn’t replied."
       ],
       [
-        "State the rule for “Present perfect: just, yet, still, already” from memory.",
-        "Use just and already mainly in affirmative present-perfect clauses, yet mainly in questions and negatives, and still to emphasize that a situation continues."
+        "Complete the sentence with yet or already: I haven’t finished my homework ___.",
+        "I haven’t finished my homework yet.",
+        {
+          "acceptedAnswers": [
+            "I have not finished my homework yet."
+          ]
+        }
       ]
     ],
     "links": [
@@ -5434,8 +5685,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Be careful not to hurt yourself."
       ],
       [
-        "State the rule for “Reflexive pronouns” from memory.",
-        "Use myself, yourself, himself, herself, itself, ourselves, yourselves, and themselves when the object refers back to the subject or to add emphasis."
+        "Complete the sentence with themselves or theirselves: The children dressed ___.",
+        "The children dressed themselves."
       ]
     ],
     "links": [
@@ -5473,7 +5724,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I know the answer."
       ],
       [
-        "Use the verb in brackets in the correct present form: I _____ you. (believe)",
+        "Use the verb in the correct present form: I _____ you. (believe / am believing)",
         "I believe you."
       ],
       [
@@ -5489,8 +5740,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The soup tastes delicious."
       ],
       [
-        "State the rule for “Stative and dynamic verbs” from memory.",
-        "Stative verbs normally describe states, thoughts, possession, or senses and usually avoid continuous forms, while dynamic verbs describe actions."
+        "Use the verb in the correct present form: This bag ___ to my sister. (belongs / is belonging)",
+        "This bag belongs to my sister."
       ]
     ],
     "links": [
@@ -5544,8 +5795,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "It looks like rain."
       ],
       [
-        "State the rule for “Using as and like” from memory.",
-        "Use like before a noun or pronoun to compare, and use as before a clause or to describe a role or function."
+        "Complete the sentence with as or like: My brother looks ___ my father.",
+        "My brother looks like my father."
       ]
     ],
     "links": [
@@ -5604,8 +5855,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I agree with your conclusion."
       ],
       [
-        "State the rule for “Verbs and prepositions” from memory.",
-        "Learn common verb–preposition combinations as complete patterns because the required preposition is determined by the verb and meaning."
+        "Use the verb in brackets with the right preposition: It ___ the weather. (depend)",
+        "It depends on the weather."
       ]
     ],
     "links": [
@@ -5659,8 +5910,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I was a bit tired after the journey."
       ],
       [
-        "State the rule for “Gradable and non-gradable adjectives” from memory.",
-        "Use degree adverbs such as fairly or very with gradable adjectives and absolute intensifiers such as absolutely or completely with non-gradable adjectives."
+        "Complete the sentence with very or absolutely: The film was ___ good.",
+        "The film was very good."
       ]
     ],
     "links": [
@@ -5711,16 +5962,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I just ate."
       ],
       [
-        "Complete the sentence: British English: We met _____.",
-        "British English: We met at the weekend."
+        "Say when you met in typical British English, using at and weekend: We met _____.",
+        "We met at the weekend."
       ],
       [
-        "Complete the sentence: American English: We met _____.",
-        "American English: We met on the weekend."
+        "Say when you met in typical American English, using on and weekend: We met _____.",
+        "We met on the weekend."
       ],
       [
-        "State the rule for “British and American grammar” from memory.",
-        "Recognize common British–American grammar differences and keep choices consistent with the intended variety and context."
+        "Use the typical American English form: Your English has ___ much better. (gotten / got)",
+        "Your English has gotten much better."
       ]
     ],
     "links": [
@@ -5774,8 +6025,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The result was exactly the same as before."
       ],
       [
-        "State the rule for “Modifying comparatives” from memory.",
-        "Use words such as much, far, slightly, or a bit to express the size of a difference, and almost or exactly with as … as comparisons."
+        "Complete the sentence with much or very: This test is ___ easier than the last one.",
+        "This test is much easier than the last one."
       ]
     ],
     "links": [
@@ -5841,8 +6092,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I asked whether the train had left."
       ],
       [
-        "State the rule for “Reported speech: questions” from memory.",
-        "In reported questions, use statement word order, backshift tense when appropriate, and use if or whether for yes/no questions."
+        "Report the question “Where is the station?”: She asked where ___. (the station was / was the station)",
+        "She asked where the station was."
       ]
     ],
     "links": [
@@ -5896,8 +6147,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "They are unlikely to arrive before noon."
       ],
       [
-        "State the rule for “Future degrees of certainty” from memory.",
-        "Express future certainty with adverbs and probability expressions such as definitely, probably, be likely to, and be unlikely to."
+        "Complete the sentence: It ___ rain tomorrow, so take an umbrella. (is likely to / likely)",
+        "It is likely to rain tomorrow, so take an umbrella.",
+        {
+          "acceptedAnswers": [
+            "It’s likely to rain tomorrow, so take an umbrella."
+          ]
+        }
       ]
     ],
     "links": [
@@ -5957,8 +6213,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "Remember to lock the door."
       ],
       [
-        "State the rule for “Gerund or infinitive: change in meaning” from memory.",
-        "Some verbs can take an -ing form or a to-infinitive with different meanings; learn each contrast as a complete pattern."
+        "You planned to send it, but you did not. Complete the sentence with the verb in brackets: I forgot ___ the email. (send)",
+        "I forgot to send the email."
       ]
     ],
     "links": [
@@ -6012,8 +6268,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The documents should have been signed earlier."
       ],
       [
-        "State the rule for “Advanced passives review” from memory.",
-        "Control passive forms across tense, aspect, modality, reporting structures, and clauses with two objects while choosing an appropriate focus."
+        "Use the present perfect passive of the verb in brackets: The new rules ___ to all staff. (explain)",
+        "The new rules have been explained to all staff."
       ]
     ],
     "links": [
@@ -6067,8 +6323,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "It is highly unlikely that the result is random."
       ],
       [
-        "State the rule for “Modals and expressions of probability” from memory.",
-        "Calibrate probability with modal verbs, modal perfect forms, adverbs, and expressions such as be bound to, be likely to, and it is conceivable that."
+        "Say that it is almost certain. Use must have and the verb in brackets: The streets are wet; it ___ in the night. (rain)",
+        "The streets are wet; it must have rained in the night."
       ]
     ],
     "links": [
@@ -6122,8 +6378,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "I wish I had accepted the offer."
       ],
       [
-        "State the rule for “Unreal time” from memory.",
-        "Use past forms after wish, it is time, would rather, and as if or as though to create distance from present or past reality."
+        "Use the past form of the verb in brackets after would rather: I’d rather you ___ here tomorrow. (come)",
+        "I’d rather you came here tomorrow."
       ]
     ],
     "links": [
@@ -6177,8 +6433,8 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "We ran out of time."
       ],
       [
-        "State the rule for “Word order in phrasal verbs” from memory.",
-        "Place noun objects according to whether a phrasal verb is separable, but put pronoun objects between a separable verb and its particle."
+        "Replace the form with a pronoun: Please fill ___. (it in / in it)",
+        "Please fill it in."
       ]
     ],
     "links": [

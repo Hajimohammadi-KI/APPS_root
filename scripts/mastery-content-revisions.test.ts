@@ -214,7 +214,7 @@ test("W33 every cued gap fits its stored answer, and offered options expose the 
   const recalled = new Set(RECALL_REVISIONS.map((row) => row.taskId));
   for (const [revision, suffix] of [
     ...GAP_CUE_REVISIONS.map((row) => [row, ".cues-202611013"] as const),
-    ...RECALL_REVISIONS.map((row) => [row, ".recall-202611015"] as const),
+    ...RECALL_REVISIONS.map((row) => [row, ".recall-202611021"] as const),
   ]) {
     const id = revision.taskId.replace(/\.writing$/u, `${suffix}.writing`);
     if (recalled.has(id)) continue;

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "language": "en",
-  "contentVersion": "2026-11-01.4",
+  "contentVersion": "2026-11-01.5",
   "mappingVersion": "2026-09-05.1+supplement-1",
-  "curriculumSha256": "f699847866f509c1b8c4ce66e14c0fa1d9618a742cb5832f63fc86c48c7e0ffd",
+  "curriculumSha256": "36e86f715e1725c81f3c5d180082c40fc2b35cada066a193a55f11241fc4e174",
   "scopes": []
 }

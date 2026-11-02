@@ -3268,10 +3268,10 @@ export const GAP_CUE_REVISIONS: readonly {
  * one fits, so the other is recognised as wrong; the rest name the word to use.
  * The first answer fits the gap; further answers are reviewed equivalents. */
 export const CHECKED_PRACTICE_VERSION = "2026-11-01.4";
-/** The second round (2026-11-01.5): the English units that still had none of
+/** The second round (2026-11-02.1): the English units that still had none of
  * these (the Lab showed "State the rule" there) and the two German units with
  * fewer than three checkable items. */
-export const RECALL_VERSION = "2026-11-01.5";
+export const RECALL_VERSION = "2026-11-02.1";
 export const CHECKED_PRACTICE: readonly {
   readonly unit: string;
   readonly prompt: string;
@@ -4166,7 +4166,7 @@ export const CHECKED_PRACTICE: readonly {
 ];
 
 /** Items that gave their answer away or repeated another item of the unit
- * (2026-11-01.5): a bracket cue that was already the answer now has to be
+ * (2026-11-02.1): a bracket cue that was already the answer now has to be
  * changed (another form, another order, options), a repeated sentence became a
  * new one, and a gap whose answer held words the sentence did not show now
  * shows them. The first answer fits; further answers are reviewed equivalents. */

@@ -1,10 +1,6 @@
 import { normalizeText } from "../text";
 import { discourseFeedback } from "../discourse";
-import {
-  alignAnswers,
-  answerDifference,
-  unscoredFeedback,
-} from "./answer-alignment";
+import { checkClosedAnswer } from "./closed-answer";
 import {
   parseAutomaticityEvent,
   type AssessmentEvent,
@@ -12,11 +8,7 @@ import {
 } from "./contracts";
 import type { PracticeTask } from "./curriculum";
 import { resolveRepresentativeTask } from "./representative-tasks";
-import {
-  auditClosedTask,
-  correctionSource,
-  optionDistractors,
-} from "./curriculum-audit";
+import { auditClosedTask } from "./curriculum-audit";
 import {
   CONSTRUCTION_RULE_VERSION,
   constructionFeedback,
@@ -170,113 +162,24 @@ export function assessControlledTask(
       : "Ohne Bewertung gespeichert: Diese Aufgabe muss inhaltlich überarbeitet werden. Fahre mit einer aktuellen Aufgabe fort; deine Originalantwort bleibt erhalten.";
     return base;
   }
-  const value = normaliseAnswer(attempt.response.text, task);
-  const accepted = task.acceptedAnswers.some((answer) => {
-    const expected = normaliseAnswer(answer, task);
-    return (
-      expected === value ||
-      (english &&
-        task.responseKind === "cloze" &&
-        /^[a-z]/u.test(expected) &&
-        value === expected[0]!.toUpperCase() + expected.slice(1))
-    );
-  });
-  if (accepted) {
-    base.verdict = "pass";
-    base.uncertainty = false;
-    base.dimensions = {
-      grammar: "pass",
-      target: "observed",
-      relevance: "pass",
-      opportunities: 1,
-    };
-    base.feedback = english
-      ? "This matches an accepted form for this controlled task. Now use the pattern in your own words."
-      : "Diese Antwort entspricht einer zulässigen Form der kontrollierten Aufgabe. Verwende das Muster nun mit eigenen Worten.";
-  } else {
-    // Certainly wrong: a form the owner rejected after review, or the very
-    // sentence the prompt declares wrong. A reformulation source is not an error.
-    const rejected = task.rejectedAnswers?.find(
-      (row) => normaliseAnswer(row.answer, task) === value,
-    );
-    const source =
-      task.responseKind === "correction" ? correctionSource(task.prompt) : null;
-    const unchanged = !!source && normaliseAnswer(source, task) === value;
-    const distractor = optionDistractors(task).some(
-      (sentence) => normaliseAnswer(sentence, task) === value,
-    );
-    if (rejected || unchanged || distractor) {
-      base.verdict = "needs_repair";
-      base.uncertainty = false;
-      base.dimensions = {
-        grammar: "fail",
-        target: "unknown",
-        relevance: "unknown",
-        opportunities: 1,
-      };
-      base.feedback = rejected
-        ? english
-          ? `This form was reviewed and is not correct here. ${rejected.explanation}`
-          : `Diese Form wurde geprüft und ist hier nicht richtig. ${rejected.explanation}`
-        : unchanged
-          ? english
-            ? "This is still the sentence to correct. Change the part the instruction names and write the full sentence."
-            : "Das ist noch der Satz, der korrigiert werden soll. Ändere die genannte Stelle und schreibe den ganzen Satz."
-          : english
-            ? "This is one of the given options, but not the one that fits here."
-            : "Das ist eine der angegebenen Möglichkeiten, aber nicht die passende.";
-      return finishControlledAssessment(base, attempt, task, value);
-    }
-    const caseOnly = task.acceptedAnswers.some(
-      (answer) =>
-        normaliseAnswer(answer, task).toLocaleLowerCase(attempt.language) ===
-        value.toLocaleLowerCase(attempt.language),
-    );
-    if (caseOnly && task.modality === "writing") {
-      base.verdict = "needs_repair";
-      base.uncertainty = false;
-      base.dimensions = {
-        grammar: "fail",
-        target: "observed",
-        relevance: "pass",
-        opportunities: 1,
-      };
-      base.feedback = english
-        ? "Check the capitalization, including sentence starts and names."
-        : "Prüfe die Groß- und Kleinschreibung, besonders am Satzanfang und bei Nomen.";
-    }
-  }
-  return finishControlledAssessment(
-    base,
-    attempt,
-    task,
-    accepted ? null : value,
+  // The Grammar Labs give the same verdict from the same function.
+  const check = checkClosedAnswer(
+    { ...task, terminalFullStop: task.normalisation.terminalFullStop },
+    attempt.response.text,
+    attempt.language,
   );
-}
-/** Marks the token edits to the nearest stored form for any answer that did
- * not pass. An unscored answer gets one sentence; a verdict keeps its own and
- * names a single difference. */
-function finishControlledAssessment(
-  base: AssessmentEvent,
-  attempt: AttemptEvent,
-  task: PracticeTask,
-  unmatched: string | null,
-): AssessmentEvent {
-  if (unmatched !== null && task.acceptedAnswers.length) {
-    const choices = task.acceptedAnswers.map((answer) =>
-      alignAnswers(attempt.response.text, answer),
-    );
-    const edits = choices.sort((a, b) => a.length - b.length)[0] ?? [];
-    const notes = edits.map((edit) => answerDifference(edit, attempt.language));
-    if (base.verdict === "not_assessed")
-      base.feedback = unscoredFeedback(edits, attempt.language);
-    else if (notes.length === 1) base.feedback += " " + notes[0];
-    base.spans = edits.map((edit, index) => ({
-      start: edit.start,
-      end: edit.end,
-      explanation: notes[index]!,
-    }));
+  if (check.verdict !== "not_assessed") {
+    base.verdict = check.verdict;
+    base.uncertainty = false;
+    base.dimensions =
+      check.reason === "accepted"
+        ? { grammar: "pass", target: "observed", relevance: "pass", opportunities: 1 }
+        : check.reason === "case"
+          ? { grammar: "fail", target: "observed", relevance: "pass", opportunities: 1 }
+          : { grammar: "fail", target: "unknown", relevance: "unknown", opportunities: 1 };
   }
+  if (check.feedback) base.feedback = check.feedback;
+  base.spans = check.spans;
   return parseAutomaticityEvent(base, attempt.language) as AssessmentEvent;
 }
 export interface ModelScopeApproval {

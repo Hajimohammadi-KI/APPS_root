@@ -111,6 +111,16 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         "Die deutschen Beispiele bleiben bis nach deinem eigenen Versuch verborgen.",
       wrongLanguage: "Die Antwort muss auf Deutsch geschrieben werden.",
       feedbackTitle: "Überprüfung deiner Antwort",
+      closedVerdict: {
+        option:
+          "Das ist eine der angegebenen Möglichkeiten, aber nicht die passende.",
+        unchanged:
+          "Das ist noch der Satz, der korrigiert werden soll. Ändere die genannte Stelle und schreibe den ganzen Satz.",
+        case: "Prüfe die Groß- und Kleinschreibung, besonders am Satzanfang und bei Nomen.",
+        unmatched:
+          "Ohne Bewertung gespeichert: Deine Antwort weicht von der gespeicherten Lösung ab. Sie kann trotzdem richtig sein; die markierten Stellen zeigen den Unterschied.",
+      },
+      rule: "Regel",
       nearlyCorrect:
         "Fast richtig. Nur wenige Stellen brauchen eine Korrektur.",
     },
@@ -154,6 +164,16 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         "The German examples stay hidden until after your own attempt.",
       wrongLanguage: "The answer must be written in German.",
       feedbackTitle: "Review of your answer",
+      closedVerdict: {
+        option:
+          "This is one of the given options, but not the one that fits here.",
+        unchanged:
+          "This is still the sentence to correct. Change the part the instruction names and write the full sentence.",
+        case: "Check the capitalization, especially at the start of the sentence and in nouns.",
+        unmatched:
+          "Saved without a score: your answer differs from the stored answer. It may still be correct; the marked words show the difference.",
+      },
+      rule: "Rule",
       nearlyCorrect: "Almost correct. Only a few parts need correction.",
     },
     فارسی: {
@@ -193,6 +213,15 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       exampleLocked: "مثال‌های آلمانی تا پس از تلاش خودت پنهان می‌مانند.",
       wrongLanguage: "پاسخ باید به آلمانی نوشته شود.",
       feedbackTitle: "بررسی پاسخ شما",
+      closedVerdict: {
+        option: "این یکی از گزینه‌های داده‌شده است، اما گزینهٔ مناسب اینجا نیست.",
+        unchanged:
+          "این هنوز همان جمله‌ای است که باید اصلاح شود. بخشی را که در دستور آمده تغییر بده و جملهٔ کامل را بنویس.",
+        case: "حروف بزرگ و کوچک را بررسی کن، به‌ویژه در آغاز جمله و در اسم‌ها.",
+        unmatched:
+          "بدون نمره ذخیره شد: پاسخ تو با پاسخ ذخیره‌شده فرق دارد. ممکن است باز هم درست باشد؛ بخش‌های علامت‌خورده تفاوت را نشان می‌دهند.",
+      },
+      rule: "قاعده",
       nearlyCorrect:
         "جملهٔ شما تقریباً درست است. فقط چند بخش نیاز به اصلاح دارد.",
     },
@@ -534,47 +563,39 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         corrected: "Ich gebe dem Mann das Buch.",
       };
     }
-    const answerWords = answer.replace(/[.!?]+$/gu, "").split(/\s+/u);
-    const expectedWords = expected.replace(/[.!?]+$/gu, "").split(/\s+/u);
-    const differenceIndex = expectedWords.findIndex(
-      (word, index) =>
-        normalizeAnswer(word) !== normalizeAnswer(answerWords[index] || ""),
-    );
-    if (differenceIndex >= 0) {
-      const userWord = answerWords[differenceIndex] || "(fehlt)";
-      const expectedWord = expectedWords[differenceIndex] || "(entfernen)";
-      return {
-        status: "nearly_correct",
-        points: [
-          {
-            type: "form",
-            message: localizedMessage({
-              Deutsch: `Prüfe diese Stelle: „${userWord}“ → „${expectedWord}“.`,
-              English: `Check this part: “${userWord}” → “${expectedWord}”.`,
-              فارسی: `این بخش را اصلاح کن: «${userWord}» → «${expectedWord}».`,
-            }),
-          },
-        ],
-        corrected: expected,
-      };
-    }
-    return {
-      status: "needs_revision",
-      points: [
-        {
-          type: "meaning",
-          message: localizedMessage({
-            Deutsch:
-              "Die deutsche Antwort passt noch nicht vollständig zur verlangten Bedeutung.",
-            English:
-              "The German answer does not yet fully match the required meaning.",
-            فارسی: "پاسخ آلمانی هنوز کاملاً با معنای خواسته‌شده مطابقت ندارد.",
-          }),
-        },
-      ],
-      corrected: expected,
-    };
+    // Any other answer gets the learning path's verdict (closedAnswerCheck).
+    return null;
   };
+  // The learning path's verdict on a closed answer: wrong only when certainly
+  // wrong (another offered option, the unchanged sentence, a wrong case);
+  // any other unmatched answer may be a correct alternative and gets no score.
+  const closedAnswerCheck = (exercise, acceptedAnswers, answer) => {
+    const prompt = String(exercise[0] || "");
+    return window.AutomaticityText.checkClosedAnswer(
+      {
+        prompt,
+        responseKind: window.AutomaticityText.closedResponseKind(prompt),
+        acceptedAnswers,
+        modality: "writing",
+        terminalFullStop: true,
+      },
+      answer,
+      "de",
+    );
+  };
+  const markedAnswerHtml = (answer, spans) =>
+    spans?.length
+      ? `<p class="answer-diff" lang="de" dir="ltr"><strong>${escapeHtml(localizedIssueLabel("answer"))}:</strong> ${window.AutomaticityText.markedAnswer(
+          answer,
+          spans,
+        )
+          .map((part) =>
+            part.note === undefined
+              ? escapeHtml(part.text)
+              : `<mark title="${escapeHtml(part.note)}"${part.text ? "" : ' class="answer-gap"'}>${escapeHtml(part.text || "‸")}</mark>`,
+          )
+          .join("")}</p>`
+      : "";
   const learnerAllowsOnlineAI = () =>
     readJson(learnerStateKey, {})?.learner?.allowOnlineAI === true;
 
@@ -1268,12 +1289,12 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     }
 
     const recitation = isRecitationExercise(unit, exercise);
+    const check = recitation
+      ? null
+      : closedAnswerCheck(exercise, acceptedAnswers, answer);
     const correct = recitation
       ? answer.trim().length > 0
-      : acceptedAnswers.some(
-          (acceptedAnswer) =>
-            normalizeAnswer(answer) === normalizeAnswer(acceptedAnswer),
-        );
+      : check.verdict === "pass";
     feedback.className = `feedback show ${correct ? "good" : "bad"}`;
     if (recitation) {
       drafts.markAssisted();
@@ -1285,30 +1306,35 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     } else if (!correct) {
       drafts.markAssisted();
       const localIssue = localClosedFeedback(answer, expected);
-      const points = localIssue?.points?.length
-        ? localIssue.points
-        : [
-            { type: "answer", message: answer || copy.empty },
-            { type: "expected", message: `${copy.expected} ${expected}` },
-            {
-              type: "check",
-              message: `${copy.dimensions}: ${localizedDimensions(metadata)}`,
-            },
-          ];
-      feedback.innerHTML = `<strong>${escapeHtml(copy.feedbackTitle)}</strong>${localIssue?.points?.some((point) => point.html) ? renderFeedbackHtml(localIssue.points) : renderFeedbackPoints(points)}${
+      // Only a certain error is called wrong and enters the error patterns.
+      const wrong = Boolean(localIssue) || check.verdict === "needs_repair";
+      feedback.className = `feedback show${wrong ? " bad" : ""}`;
+      const points = localIssue?.points || [
+        {
+          type: wrong ? "target_grammar" : "check",
+          message: copy.closedVerdict[check.reason] || copy.closedVerdict.unmatched,
+        },
+      ];
+      feedback.innerHTML = `<strong>${escapeHtml(copy.feedbackTitle)}</strong>${points.some((point) => point.html) ? renderFeedbackHtml(points) : renderFeedbackPoints(points)}${
+        localIssue ? "" : markedAnswerHtml(answer, check.spans)
+      }${
         localIssue?.corrected
           ? `<p><strong>${escapeHtml(copy.corrected)}:</strong> ${escapeHtml(localIssue.corrected)}</p>`
+          : `<p><strong>${escapeHtml(localizedIssueLabel("expected"))}:</strong> <span lang="de">${escapeHtml(expected)}</span></p>`
+      }${
+        unit.rule
+          ? `<p class="answer-rule"><strong>${escapeHtml(copy.rule)}:</strong> <span lang="de">${escapeHtml(unit.rule)}</span></p>`
           : ""
       }`;
-      if (localIssue?.points?.length) {
+      if (wrong)
         recordGrammarError(
           unit,
           exercise,
           answer,
-          localIssue.points[0]?.type || "needs_revision",
-          localIssue.corrected || expected,
+          localIssue?.points?.[0]?.type ||
+            (check.reason === "case" ? "spelling" : "target_grammar"),
+          localIssue?.corrected || expected,
         );
-      }
       return;
     }
     const completed = markExerciseComplete(unit);

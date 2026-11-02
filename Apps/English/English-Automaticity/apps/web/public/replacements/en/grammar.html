@@ -2531,10 +2531,23 @@
             feedback.textContent = "Write your own response first.";
             return;
           }
-          const isCorrect = task.acceptedAnswers.some(
-            (expected) => value === normalize(expected),
+          // The learning path's verdict: wrong only when certainly wrong.
+          const check = window.AutomaticityText.checkClosedAnswer(
+            {
+              prompt: task.prompt,
+              responseKind: window.AutomaticityText.closedResponseKind(
+                task.prompt,
+              ),
+              acceptedAnswers: task.acceptedAnswers,
+              modality: "writing",
+              terminalFullStop: true,
+            },
+            answer.value,
+            "en",
           );
-          feedback.className = `feedback show ${isCorrect ? "good" : ""}`;
+          const isCorrect = check.verdict === "pass";
+          const wrong = check.verdict === "needs_repair";
+          feedback.className = `feedback show ${isCorrect ? "good" : wrong ? "bad" : ""}`;
           if (isCorrect) {
             feedback.textContent = assistanceUsed
               ? "Correct stored form. Practice with help completed; this does not establish independent mastery."
@@ -2546,7 +2559,44 @@
             const correct = task.answer;
             assistanceUsed = true;
             drafts.markAssisted();
-            feedback.textContent = `Your answer differs from the stored forms, so it has no correctness score. Compare with this model: ${correct}. You can practise the model below.`;
+            // One sentence, the learner's answer with the differences marked,
+            // the model and the unit's rule.
+            const line = (label, text, className = "") => {
+              const row = document.createElement("p");
+              row.className = className;
+              const strong = document.createElement("strong");
+              strong.textContent = label;
+              row.append(strong, text);
+              return row;
+            };
+            const marked = document.createElement("p");
+            marked.className = "answer-diff";
+            marked.append(Object.assign(document.createElement("strong"), { textContent: "Your answer: " }));
+            for (const part of window.AutomaticityText.markedAnswer(answer.value, check.spans)) {
+              if (part.note === undefined) {
+                marked.append(part.text);
+                continue;
+              }
+              const mark = document.createElement("mark");
+              mark.textContent = part.text || "‸";
+              mark.title = part.note;
+              marked.append(mark);
+            }
+            feedback.replaceChildren(
+              Object.assign(document.createElement("p"), {
+                textContent: wrong
+                  ? `Not correct: ${check.feedback}`
+                  : `${check.feedback} It may still be correct.`,
+              }),
+              ...(check.spans.length ? [marked] : []),
+              line("Model: ", correct),
+              ...(grammarUnit().rule
+                ? [line("Rule: ", grammarUnit().rule, "answer-rule")]
+                : []),
+              Object.assign(document.createElement("p"), {
+                textContent: "You can practise the model below.",
+              }),
+            );
             repairBox.classList.add("show");
             repairInput.focus();
             lastMistake = `${task.prompt} — ${answer.value || "(no answer)"}`;

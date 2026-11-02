@@ -335,8 +335,14 @@ try {
         if (language === "en") {
           await page.locator("#answerInput").fill("Synthetic unmatched answer");
           await page.locator("#checkBtn").click();
+          // R96: the Lab gives the learning path's verdict; an unmatched answer
+          // is never called wrong, and the feedback names the unit's rule.
           await expect(page.locator("#feedback")).toContainText(
-            "no correctness score",
+            "Saved without a score",
+          );
+          await expect(page.locator("#feedback")).not.toHaveClass(/\bbad\b/);
+          await expect(page.locator("#feedback .answer-rule")).toContainText(
+            `Rule: ${unit.rule}`,
           );
           await page.locator("#repairInput").fill(expected);
           await page.locator("#repairBtn").click();
@@ -356,8 +362,31 @@ try {
           assert(
             !unit.exercises.some((exercise) => exercise[1] === unit.recallTest),
           );
+          // The other option a prompt offers ("with is or are") is certainly wrong.
+          const optionIndex = unit.exercises.findIndex(
+            (exercise, i) =>
+              i > 0 && i < index && /\bwith \w+ or \w+:/.test(exercise[0]),
+          );
+          assert(optionIndex > 0);
+          const [, first, second] = unit.exercises[optionIndex][0].match(
+            /\bwith (\w+) or (\w+):/,
+          );
+          const template = unit.exercises[optionIndex][0]
+            .slice(unit.exercises[optionIndex][0].lastIndexOf(":") + 1)
+            .trim();
+          const wrongOption = [first, second]
+            .map((option) => template.replace(/_{2,}/, option))
+            .find((sentence) => sentence !== unit.exercises[optionIndex][1]);
           for (let i = 1; i <= index; i++) {
             await page.locator("#nextBtn").click();
+            if (i === optionIndex) {
+              await page.locator("#answerInput").fill(wrongOption);
+              await page.locator("#checkBtn").click();
+              await expect(page.locator("#feedback")).toContainText(
+                "Not correct: This is one of the given options",
+              );
+              await expect(page.locator("#feedback")).toHaveClass(/\bbad\b/);
+            }
             await page
               .locator("#answerInput")
               .fill(
@@ -371,6 +400,28 @@ try {
             "saved without a correctness score",
           );
         } else {
+          // R96: the unchanged sentence to correct is certainly wrong; another
+          // answer may be a correct alternative and is saved without a score.
+          const source = unit.exercises[0][0].match(
+            /Nicht richtig:\s*(.+?)\s*Schreibe die vollständige/,
+          )?.[1];
+          assert(source);
+          await page.locator("#answerInput").fill(source);
+          await page.locator("#checkBtn").click();
+          await expect(page.locator("#feedback")).toContainText(
+            "Das ist noch der Satz, der korrigiert werden soll.",
+          );
+          await expect(page.locator("#feedback")).toHaveClass(/\bbad\b/);
+          await page.locator("#answerInput").fill("Synthetischer anderer Satz.");
+          await page.locator("#checkBtn").click();
+          await expect(page.locator("#feedback")).toContainText(
+            "Ohne Bewertung gespeichert",
+          );
+          await expect(page.locator("#feedback")).not.toHaveClass(/\bbad\b/);
+          await expect(page.locator("#feedback mark").first()).toBeVisible();
+          await expect(page.locator("#feedback .answer-rule")).toContainText(
+            unit.rule,
+          );
           // Select an actual open exercise and preserve its original text offline.
           const pick = await page.evaluate(() => {
             for (const [

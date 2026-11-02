@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-02",
   "version": "27.4.4",
-  "webRelease": "2026.11.02.1",
+  "webRelease": "2026.11.02.2",
   "changes": [
-    "The English Grammar Lab no longer asks to recite the rule or a can-do statement unchecked: two checkable items of the learning path take their place (504 of 672 Lab items are now checked). Every unit in both apps has at least three checkable items; a bracket cue that is already the answer, repeated items and gaps that hide words of the answer are fixed and rejected at build time."
+    "Both Grammar Labs now grade closed answers exactly like the learning path: only a certainly wrong answer (the other offered option, the unchanged sentence, a wrong case or mark) is called wrong; any other unmatched answer is saved without a score with its differences marked, and the unit's rule is shown. Every English Lab exercise is checked, no unit repeats an answer, ambiguous gaps name their meaning or options, an exercise that several learners report as wrong is paused, and the overview reports evidence for each skill."
   ]
 }

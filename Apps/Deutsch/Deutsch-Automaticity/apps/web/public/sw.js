@@ -1,9 +1,9 @@
 // Use only local, valid assets so installation can complete without unretrievable LFS media.
-const CACHE = "deutschflow-web-2026.11.02.1";
+const CACHE = "deutschflow-web-2026.11.02.2";
 const CORE = [
   "/learning-core/text.js",
-  "/replacements/de/grammar-runtime.js?v=2026.10.10.1",
-  "/replacements/de/grammar-catalog.js?v=20261102-content-1",
+  "/replacements/de/grammar-runtime.js?v=2026.11.02.2",
+  "/replacements/de/grammar-catalog.js?v=20261102-content-2",
   "/device-access/learning-path.js",
   "/device-access/grammar-drafts.js",
   "/device-access/writing.js",

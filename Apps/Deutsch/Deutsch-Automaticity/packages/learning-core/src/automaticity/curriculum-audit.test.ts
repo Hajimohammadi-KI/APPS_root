@@ -298,16 +298,40 @@ test("W33 build audit requires a cue for every content word a one-gap cloze leav
   ).toEqual(["gap-inside-word:error"]);
   // A bracket cue that is already the answer turns recall into copying.
   for (const [language, prompt, answer] of [
-    ["de", setze + "Der Kurs ist ___. (interessant)", "Der Kurs ist interessant."],
-    ["de", setze + "Ich habe ___ gestern gegeben. (es, ihm)", "Ich habe es ihm gestern gegeben."],
-    ["en", "Use the verb as an instruction: ___ the door, please. (open)", "Open the door, please."],
+    [
+      "de",
+      setze + "Der Kurs ist ___. (interessant)",
+      "Der Kurs ist interessant.",
+    ],
+    [
+      "de",
+      setze + "Ich habe ___ gestern gegeben. (es, ihm)",
+      "Ich habe es ihm gestern gegeben.",
+    ],
+    [
+      "en",
+      "Use the verb as an instruction: ___ the door, please. (open)",
+      "Open the door, please.",
+    ],
   ] as const)
     expect(codes(language, prompt, answer)).toEqual(["copied-cue:error"]);
   for (const [language, prompt, answer] of [
     // Capitalising a name inside the sentence is the task, not a copy.
-    ["en", "Use capital letters correctly: I’m visiting _____ in July. (france)", "I’m visiting France in July."],
-    ["de", setze + "Ich habe ___ gestern gegeben. (ihm, es)", "Ich habe es ihm gestern gegeben."],
-    ["de", setze + "Der Kurs ist ___. (interessant / interessante)", "Der Kurs ist interessant."],
+    [
+      "en",
+      "Use capital letters correctly: I’m visiting _____ in July. (france)",
+      "I’m visiting France in July.",
+    ],
+    [
+      "de",
+      setze + "Ich habe ___ gestern gegeben. (ihm, es)",
+      "Ich habe es ihm gestern gegeben.",
+    ],
+    [
+      "de",
+      setze + "Der Kurs ist ___. (interessant / interessante)",
+      "Der Kurs ist interessant.",
+    ],
   ] as const)
     expect(codes(language, prompt, answer)).toEqual([]);
   for (const [language, prompt, answer] of [

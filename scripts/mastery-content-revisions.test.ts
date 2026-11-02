@@ -271,7 +271,8 @@ test("W33 every unit offers at least three checkable written items, and offered 
       const seen = new Set<string>();
       return activePracticeTasks(unit)
         .filter(
-          (task) => task.answerPolicy === "closed" && task.modality === "writing",
+          (task) =>
+            task.answerPolicy === "closed" && task.modality === "writing",
         )
         .flatMap((task) => {
           const key = `${task.prompt.slice(task.prompt.lastIndexOf(":") + 1).trim()}=${task.acceptedAnswers[0]}`;
@@ -399,7 +400,8 @@ test("W33 the Labs find each gap-cue revision under its unit title and exercise 
         revision.taskId.match(
           /^(.+?)\.retrieve\.(?:content-\d+-)?(\d+)\.(?:(?:forms|cues)-\d+\.)*writing$/u,
         ) ?? [];
-      if (unit?.startsWith(`${language}.`)) latest.set(`${unit}#${index}`, revision);
+      if (unit?.startsWith(`${language}.`))
+        latest.set(`${unit}#${index}`, revision);
     }
     for (const [key, revision] of latest) {
       const [id, index] = key.split("#");
@@ -414,7 +416,8 @@ test("W33 the Labs find each gap-cue revision under its unit title and exercise 
       ).toEqual(
         activePracticeTasks(unit)
           .filter(
-            (task) => task.modality === "writing" && task.id.includes(".checks-"),
+            (task) =>
+              task.modality === "writing" && task.id.includes(".checks-"),
           )
           .map((task) => task.prompt),
       );

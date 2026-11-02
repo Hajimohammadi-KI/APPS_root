@@ -263,7 +263,8 @@ function withGapCues(
       (!cue.answers && gapFill(cue.prompt, answer!) === null)
     )
       return exercise;
-    const task = old.slice(old.lastIndexOf(":") + 1).trim();
+    // The instruction ends at its first colon; the sentence may contain more.
+    const task = old.slice(old.indexOf(":") + 1).trim();
     const frame = old.slice(0, old.length - task.length);
     const prompt =
       cue.prompt.startsWith(frame) &&

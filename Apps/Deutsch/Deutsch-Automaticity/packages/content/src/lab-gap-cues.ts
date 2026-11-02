@@ -64,7 +64,12 @@ export const LAB_GAP_CUES: readonly (readonly [
     3,
     "___ Winter beginnt der Kurs um neun Uhr. (Im / Am)",
   ],
-  ["Häufigkeitsadverbien", 3, "Wir ___ morgens selten Kaffee. (trinken)"],
+  [
+    "Häufigkeitsadverbien",
+    3,
+    "Er ___ morgens selten Kaffee. (trinken)",
+    "Er trinkt morgens selten Kaffee.",
+  ],
   ["Akkusativpronomen", 3, "Ich rufe meine Schwester an. Ich rufe ___ an."],
   [
     "Relativsätze mit der, die und das",
@@ -83,7 +88,12 @@ export const LAB_GAP_CUES: readonly (readonly [
     "Wir schenken ___ Lehrer ein Buch. (unser)",
   ],
   ["Verben mit Präpositionen Grundlagen", 3, "Sie denkt oft ___ ihre Familie."],
-  ["Futur I mit werden", 3, "Nächste Woche ___ wir umziehen. (werden)"],
+  [
+    "Futur I mit werden",
+    3,
+    "Nächste Woche ___ ich umziehen. (werden)",
+    "Nächste Woche werde ich umziehen.",
+  ],
   [
     "Infinitiv mit zu Grundlagen",
     3,
@@ -107,14 +117,14 @@ export const LAB_GAP_CUES: readonly (readonly [
   [
     "ohne zu und anstatt zu",
     3,
-    "___ zu lernen, sah sie fern. (anstatt)",
-    "Anstatt zu lernen, sah sie fern.",
-    "Statt zu lernen, sah sie fern.",
+    "Sie sah fern, ___ zu lernen. (anstatt / damit)",
+    "Sie sah fern, anstatt zu lernen.",
+    "Sie sah fern, statt zu lernen.",
   ],
   [
     "lassen als Vollverb und Hilfsverb",
     3,
-    "Sie lässt ihre Haare ___. (schneiden)",
+    "Sie ___ ihre Haare schneiden. (lassen)",
   ],
   ["brauchen nicht zu", 3, "Sie brauchen das Formular nicht ___. (ausdrucken)"],
   [
@@ -151,7 +161,8 @@ export const LAB_GAP_CUES: readonly (readonly [
   [
     "Informationsstruktur durch Vorfeldbesetzung",
     3,
-    "Im nächsten Schritt ___ wir die Daten. (prüfen)",
+    "Im nächsten Schritt ___ das Team die Daten. (prüfen)",
+    "Im nächsten Schritt prüft das Team die Daten.",
   ],
   [
     "Tempusfolge in Berichten",
@@ -211,13 +222,28 @@ export const LAB_GAP_CUES: readonly (readonly [
   ],
   [
     "Anapher und Katapher",
+    1,
+    "Das war unerwartet: dass sämtliche Messungen ___. (übereinstimmen, Präteritum)",
+  ],
+  [
+    "Interpunktion als Bedeutungssignal",
+    1,
+    "Ein Ergebnis blieb stabil: die hohe ___. (präzise)",
+  ],
+  [
+    "Selbstreparatur im Sprechen",
+    1,
+    "Ich habe—besser gesagt: ich ___—bereits begonnen. (haben, Präteritum)",
+  ],
+  [
+    "Anapher und Katapher",
     3,
     "Der Professor begrüßte den Studenten, bevor ___ seinen Vortrag hielt.",
   ],
   [
     "Skopus und Negation",
     3,
-    "Sie hat ___ die Daten geprüft, sondern auch die Methode. (nicht nur)",
+    "Sie hat ___ die Daten geprüft, sondern auch die Methode. (nur, nicht)",
   ],
   [
     "Präsupposition und Implikatur",
@@ -285,6 +311,7 @@ export function labGapCueFor(
   );
   if (!row) return undefined;
   const [, , sentence, ...answers] = row;
-  const cued = `${prompt.slice(0, prompt.lastIndexOf(":") + 1)} ${sentence}`;
+  // The instruction ends at its first colon; the sentence may contain more.
+  const cued = `${prompt.slice(0, prompt.indexOf(":") + 1)} ${sentence}`;
   return answers.length ? { prompt: cued, answers } : { prompt: cued };
 }

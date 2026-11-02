@@ -4188,7 +4188,7 @@ export const RECALL_REVISIONS: readonly {
     ["en.c.104.retrieve.4.writing", "Say when you met in typical American English, using on and weekend: We met _____.", "We met on the weekend."],
     ["de.c.008.retrieve.3.writing", zweites + "Im Park spielen drei ___. (Kind)", "Im Park spielen drei Kinder."],
     ["de.c.026.retrieve.1.cues-202611013.writing", setze + "Der Kurs ist ___. (interessant / interessante)"],
-    ["de.c.026.retrieve.3.cues-202611013.writing", zweites + "Die Aufgabe ist ___. (schwierig / schwierige)"],
+    ["de.c.026.retrieve.3.cues-202611013.writing", zweites + "Die Aufgabe ist ___. (schwierig / schwierige)", "Die Aufgabe ist schwierig."],
     ["de.c.037.retrieve.3.writing", zweites + "Es ist wichtig, pünktlich ___. (ankommen)", "Es ist wichtig, pünktlich anzukommen."],
     ["de.c.055.retrieve.3.cues-202611013.writing", zweites + "Ich habe ___ gestern gegeben. (ihm, es)"],
     ["de.c.059.retrieve.3.cues-202611013.writing", "Formuliere mit sein + zu um und schreibe den ganzen Satz: Die Aufgabe muss erledigt werden.", "Die Aufgabe ist zu erledigen."],

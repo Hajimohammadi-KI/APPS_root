@@ -349,24 +349,23 @@ try {
           await expect(page.locator("#feedback")).toContainText(
             "does not establish independent recall",
           );
-          // Move through this unit to its first open exercise (the Lab checks only gaps and
-          // correct/complete/choose/change/transform prompts). Matching forms only complete guided practice.
-          const index = unit.exercises.findIndex(
-            (exercise, i) =>
-              i > 0 &&
-              !/_{2,}|…|\.\.\.|^(correct|complete|choose|change|transform)\b/i.test(
+          // Since 2026.11.02.2 the Lab checks every exercise of the unit (gaps and
+          // correct/complete/choose/change/transform prompts); none is left unchecked.
+          assert(
+            unit.exercises.every((exercise) =>
+              /_{2,}|…|\.\.\.|^(correct|complete|choose|change|transform)\b/i.test(
                 exercise[0],
               ),
+            ),
           );
-          assert(index > 0);
           assert(
             !unit.exercises.some((exercise) => exercise[1] === unit.recallTest),
           );
           // The other option a prompt offers ("with is or are") is certainly wrong.
           const optionIndex = unit.exercises.findIndex(
-            (exercise, i) =>
-              i > 0 && i < index && /\bwith \w+ or \w+:/.test(exercise[0]),
+            (exercise, i) => i > 0 && /\bwith \w+ or \w+:/.test(exercise[0]),
           );
+          const index = optionIndex;
           assert(optionIndex > 0);
           const [, first, second] = unit.exercises[optionIndex][0].match(
             /\bwith (\w+) or (\w+):/,
@@ -387,17 +386,12 @@ try {
               );
               await expect(page.locator("#feedback")).toHaveClass(/\bbad\b/);
             }
-            await page
-              .locator("#answerInput")
-              .fill(
-                i === index
-                  ? "This is my unfinished explanation."
-                  : unit.exercises[i][1],
-              );
+            await page.locator("#answerInput").fill(unit.exercises[i][1]);
             await page.locator("#checkBtn").click();
           }
+          // A matching form only completes guided practice.
           await expect(page.locator("#feedback")).toContainText(
-            "saved without a correctness score",
+            "Correct stored form",
           );
         } else {
           // R96: the unchanged sentence to correct is certainly wrong; another
@@ -414,7 +408,7 @@ try {
           await expect(page.locator("#feedback")).toHaveClass(/\bbad\b/);
           await page
             .locator("#answerInput")
-            .fill("Synthetischer anderer Satz.");
+            .fill("Ich habe heute leider keine Zeit für den Kurs.");
           await page.locator("#checkBtn").click();
           await expect(page.locator("#feedback")).toContainText(
             "Ohne Bewertung gespeichert",

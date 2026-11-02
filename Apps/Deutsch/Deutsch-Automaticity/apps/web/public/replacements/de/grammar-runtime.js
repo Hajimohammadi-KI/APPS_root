@@ -117,6 +117,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         unchanged:
           "Das ist noch der Satz, der korrigiert werden soll. Ändere die genannte Stelle und schreibe den ganzen Satz.",
         case: "Prüfe die Groß- und Kleinschreibung, besonders am Satzanfang und bei Nomen.",
+        punctuation:
+          "Prüfe die Zeichensetzung: Die Wörter stimmen, aber ein Satzzeichen weicht von der gespeicherten Lösung ab.",
         unmatched:
           "Ohne Bewertung gespeichert: Deine Antwort weicht von der gespeicherten Lösung ab. Sie kann trotzdem richtig sein; die markierten Stellen zeigen den Unterschied.",
       },
@@ -170,6 +172,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         unchanged:
           "This is still the sentence to correct. Change the part the instruction names and write the full sentence.",
         case: "Check the capitalization, especially at the start of the sentence and in nouns.",
+        punctuation:
+          "Check the punctuation: the words match, but a mark differs from the stored answer.",
         unmatched:
           "Saved without a score: your answer differs from the stored answer. It may still be correct; the marked words show the difference.",
       },
@@ -218,6 +222,8 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         unchanged:
           "این هنوز همان جمله‌ای است که باید اصلاح شود. بخشی را که در دستور آمده تغییر بده و جملهٔ کامل را بنویس.",
         case: "حروف بزرگ و کوچک را بررسی کن، به‌ویژه در آغاز جمله و در اسم‌ها.",
+        punctuation:
+          "علامت‌گذاری را بررسی کن: واژه‌ها درست‌اند، اما یک علامت با پاسخ ذخیره‌شده فرق دارد.",
         unmatched:
           "بدون نمره ذخیره شد: پاسخ تو با پاسخ ذخیره‌شده فرق دارد. ممکن است باز هم درست باشد؛ بخش‌های علامت‌خورده تفاوت را نشان می‌دهند.",
       },
@@ -1332,7 +1338,9 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
           exercise,
           answer,
           localIssue?.points?.[0]?.type ||
-            (check.reason === "case" ? "spelling" : "target_grammar"),
+            (check.reason === "case" || check.reason === "punctuation"
+              ? "spelling"
+              : "target_grammar"),
           localIssue?.corrected || expected,
         );
       return;

@@ -292,9 +292,20 @@ test.each([
       acceptedAnswers: [expected],
       solution: expected,
     };
-    expect(
-      assessControlledTask(response, currentTask, at, "punctuation").verdict,
-    ).toBe("not_assessed");
+    // Never a pass; the same words with a malformed mark are certainly wrong.
+    // A key ending in an ellipsis is withheld as content needing repair (W33).
+    const result = assessControlledTask(
+      response,
+      currentTask,
+      at,
+      "punctuation",
+    );
+    if (expected.endsWith("...")) {
+      expect(result.verdict).toBe("not_assessed");
+      return;
+    }
+    expect(result.verdict).toBe("needs_repair");
+    expect(result.feedback).toStartWith("Check the punctuation");
   },
 );
 

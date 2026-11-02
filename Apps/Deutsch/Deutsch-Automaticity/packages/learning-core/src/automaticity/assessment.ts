@@ -187,7 +187,7 @@ export function assessControlledTask(
             relevance: "pass",
             opportunities: 1,
           }
-        : check.reason === "case"
+        : check.reason === "case" || check.reason === "punctuation"
           ? {
               grammar: "fail",
               target: "observed",

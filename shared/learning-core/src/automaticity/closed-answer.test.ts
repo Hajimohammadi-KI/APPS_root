@@ -76,3 +76,54 @@ test("the unchanged sentence to correct and a wrong case are certainly wrong", (
     checkClosedAnswer(task, "she goes to work every day.", "en").reason,
   ).toBe("case");
 });
+
+test("the same words with a different mark are certainly wrong; a possibly optional comma is not", () => {
+  const statement = labTask("Ergänze: Sie ___.", "Sie kommt.");
+  for (const answer of [
+    "Sie kommt?",
+    "Sie kommt!",
+    "Sie kommt...",
+    "Sie kommt. .",
+  ])
+    expect(
+      `${answer} ${checkClosedAnswer(statement, answer, "de").reason}`,
+    ).toBe(`${answer} punctuation`);
+  const clause = labTask(
+    "Ergänze: Ich weiß, ___ er kommt.",
+    "Ich weiß, dass er kommt.",
+  );
+  expect(
+    checkClosedAnswer(clause, "Ich weiß dass er kommt.", "de"),
+  ).toMatchObject({
+    verdict: "needs_repair",
+    reason: "punctuation",
+  });
+  // A comma before an infinitive group without um/ohne/statt may be left out.
+  const infinitive = labTask(
+    "Ergänze: Ich versuche, früher ___. (aufstehen)",
+    "Ich versuche, früher aufzustehen.",
+  );
+  expect(
+    checkClosedAnswer(infinitive, "Ich versuche früher aufzustehen.", "de")
+      .verdict,
+  ).toBe("not_assessed");
+  const purpose = labTask(
+    "Ergänze: Sie lernt, ___ die Prüfung zu bestehen.",
+    "Sie lernt, um die Prüfung zu bestehen.",
+  );
+  expect(
+    checkClosedAnswer(purpose, "Sie lernt um die Prüfung zu bestehen.", "de")
+      .reason,
+  ).toBe("punctuation");
+  // English commas are often optional: a comma-only difference stays unscored.
+  const english = labTask(
+    "Complete the sentence: After lunch, we ___ home.",
+    "After lunch, we went home.",
+  );
+  expect(
+    checkClosedAnswer(english, "After lunch we went home.", "en").verdict,
+  ).toBe("not_assessed");
+  expect(
+    checkClosedAnswer(english, "After lunch, we went home?", "en").reason,
+  ).toBe("punctuation");
+});

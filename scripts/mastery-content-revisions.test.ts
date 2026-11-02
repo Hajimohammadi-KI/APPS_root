@@ -17,6 +17,8 @@ import {
 } from "../shared/learning-core/src/automaticity/curriculum-audit";
 import {
   GAP_CUE_REVISIONS,
+  RECALL_REVISIONS,
+  checkedPracticeFor,
   gapCueRevisionsFor,
 } from "../shared/learning-core/src/content-revisions";
 import { gapFill } from "../shared/learning-core/src/text";
@@ -209,14 +211,20 @@ test("W33 every cued gap fits its stored answer, and offered options expose the 
         .map((task) => [task.id, task] as const),
     ),
   );
-  for (const revision of GAP_CUE_REVISIONS) {
-    const task = active.get(
-      revision.taskId.replace(/\.writing$/u, ".cues-202611013.writing"),
-    );
-    expect(task?.prompt).toBe(revision.prompt);
-    expect(`${task!.id}: ${gapFill(task!.prompt, task!.solution!)}`).not.toBe(
-      `${task!.id}: null`,
-    );
+  const recalled = new Set(RECALL_REVISIONS.map((row) => row.taskId));
+  for (const [revision, suffix] of [
+    ...GAP_CUE_REVISIONS.map((row) => [row, ".cues-202611013"] as const),
+    ...RECALL_REVISIONS.map((row) => [row, ".recall-202611015"] as const),
+  ]) {
+    const id = revision.taskId.replace(/\.writing$/u, `${suffix}.writing`);
+    if (recalled.has(id)) continue;
+    const task = active.get(id);
+    expect(`${id}: ${task?.prompt}`).toBe(`${id}: ${revision.prompt}`);
+    if (/_{2,}/u.test(task!.prompt))
+      expect(`${task!.id}: ${gapFill(task!.prompt, task!.solution!)}`).not.toBe(
+        `${task!.id}: null`,
+      );
+    else expect(task!.responseKind).not.toBe("cloze");
     if (
       /\([^()]*\/[^()]*\)\s*$|\bwith [\p{L}’']+ or [\p{L}’']+:/u.test(
         task!.prompt,
@@ -277,7 +285,10 @@ test("W33 every unit offers at least three checkable written items, and offered 
   for (const task of (["en", "de"] as const).flatMap((language) =>
     built(language).units.flatMap(activePracticeTasks),
   ))
-    if (/\.(?:checks|recall)-2026/u.test(task.id)) {
+    if (
+      task.modality === "writing" &&
+      /\.(?:checks|recall)-2026/u.test(task.id)
+    ) {
       expect(task.solution).toBe(task.acceptedAnswers[0]!);
       if (/_{2,}/u.test(task.prompt))
         expect(`${task.id}: ${gapFill(task.prompt, task.solution!)}`).not.toBe(
@@ -382,19 +393,30 @@ test("W33 both Grammar Labs ship no defective closed exercise", async () => {
 test("W33 the Labs find each gap-cue revision under its unit title and exercise number", () => {
   for (const language of ["en", "de"] as const) {
     const pack = built(language);
-    for (const revision of GAP_CUE_REVISIONS.filter((row) =>
-      row.taskId.startsWith(`${language}.`),
-    )) {
-      const index = revision.taskId.match(
-        /\.retrieve\.(?:content-\d+-)?(\d+)\.(?:forms-\d+\.)?writing$/u,
-      )?.[1];
-      if (!index) continue;
-      const unit = pack.units.find((row) =>
-        revision.taskId.startsWith(`${row.id}.`),
-      )!;
+    const latest = new Map<string, (typeof GAP_CUE_REVISIONS)[number]>();
+    for (const revision of [...GAP_CUE_REVISIONS, ...RECALL_REVISIONS]) {
+      const [, unit, index] =
+        revision.taskId.match(
+          /^(.+?)\.retrieve\.(?:content-\d+-)?(\d+)\.(?:(?:forms|cues)-\d+\.)*writing$/u,
+        ) ?? [];
+      if (unit?.startsWith(`${language}.`)) latest.set(`${unit}#${index}`, revision);
+    }
+    for (const [key, revision] of latest) {
+      const [id, index] = key.split("#");
+      const unit = pack.units.find((row) => row.id === id)!;
       expect(gapCueRevisionsFor(language, unit.title).get(Number(index))).toBe(
         revision,
       );
     }
+    for (const unit of pack.units)
+      expect(
+        checkedPracticeFor(language, unit.title).map((row) => row.prompt),
+      ).toEqual(
+        activePracticeTasks(unit)
+          .filter(
+            (task) => task.modality === "writing" && task.id.includes(".checks-"),
+          )
+          .map((task) => task.prompt),
+      );
   }
 });

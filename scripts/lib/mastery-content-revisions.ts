@@ -15,6 +15,8 @@ import {
   CONTENT_REVISION_VERSION,
   GAP_CUE_REVISIONS,
   GAP_CUE_VERSION,
+  RECALL_REVISIONS,
+  RECALL_VERSION,
   UNIT_CONTENT_REVISIONS,
   retiredRepairPrompt,
   type RevisedTask,
@@ -272,15 +274,39 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
   if (changed) pack.version = version;
   if (reviseUnitContent(pack)) pack.version = CONTENT_REVISION_VERSION;
   if (reviseAcceptedForms(pack)) pack.version = ACCEPTED_FORM_VERSION;
-  if (reviseGapCues(pack)) pack.version = GAP_CUE_VERSION;
-  if (addCheckedPractice(pack)) pack.version = CHECKED_PRACTICE_VERSION;
+  if (
+    reviseTasks(pack, GAP_CUE_REVISIONS, {
+      version: GAP_CUE_VERSION,
+      tag: "cues",
+      source: "authored-gap-cue",
+      reason:
+        "Show a cue for the missing words; without one, many correct sentences fit the gap.",
+    })
+  )
+    pack.version = GAP_CUE_VERSION;
+  const added = addCheckedPractice(pack);
+  if (added) pack.version = added;
+  if (
+    reviseTasks(pack, RECALL_REVISIONS, {
+      version: RECALL_VERSION,
+      tag: "recall",
+      source: "authored-recall",
+      reason:
+        "Make the learner recall the form: the cue gave the answer away, the sentence repeated another item, or it hid words of the answer.",
+      kind: (prompt) =>
+        /^(?:Correct|Korrigiere)\b/u.test(prompt)
+          ? "correction"
+          : responseKindFor(prompt),
+    })
+  )
+    pack.version = RECALL_VERSION;
   return pack;
 }
 
-/** Adds the authored checkable items as new retrieval tasks of their unit. */
-function addCheckedPractice(pack: CurriculumPack): boolean {
-  let changed = false;
-  const tag = `checks-${CHECKED_PRACTICE_VERSION.replace(/\D/gu, "")}`;
+/** Adds the authored checkable items as new retrieval tasks of their unit;
+ * item N of a version is checks-<version>-N. Returns the latest version added. */
+function addCheckedPractice(pack: CurriculumPack): string | null {
+  let added: string | null = null;
   const rows = CHECKED_PRACTICE.filter((row) =>
     row.unit.startsWith(`${pack.language}.`),
   );
@@ -291,13 +317,17 @@ function addCheckedPractice(pack: CurriculumPack): boolean {
       (task) => task.modality === "writing" && task.partition === "practice",
     );
     if (!template) throw Error(`Missing written target: ${unit.id}`);
-    own.forEach((row, index) => {
+    const count = new Map<string, number>();
+    for (const row of own) {
+      const index = count.get(row.version) ?? 0;
+      count.set(row.version, index + 1);
+      const tag = `checks-${row.version.replace(/\D/gu, "")}`;
       const id = `${unit.id}.retrieve.${tag}-${index}.writing`;
-      if (unit.tasks.some((task) => task.id === id)) return;
+      if (unit.tasks.some((task) => task.id === id)) continue;
       const task: PracticeTask = {
         ...template,
         id,
-        version: CHECKED_PRACTICE_VERSION,
+        version: row.version,
         itemFamily: `${unit.id}.${tag}-${index}`,
         contextId: `${unit.id}.${tag}-${index}`,
         rubricVersion: "closed-nfc-case-v1",
@@ -312,23 +342,39 @@ function addCheckedPractice(pack: CurriculumPack): boolean {
         acceptedAnswers: [...row.answers],
         hints: [unit.rule],
         solution: row.answers[0]!,
-        sourceId: `authored-checked-practice-${CHECKED_PRACTICE_VERSION}:${unit.id}:${index}`,
+        sourceId: `authored-checked-practice-${row.version}:${unit.id}:${index}`,
       };
       delete task.constructionAssessment;
       delete task.rejectedAnswers;
       unit.tasks.push(task);
-      changed = true;
-    });
+      if (!added || row.version > added) added = row.version;
+    }
   }
-  return changed;
+  return added;
 }
 
-/** Gives each uncued one-gap item its authored cue as a new version; spoken
- * variants that repeat the written prompt move with it. */
-function reviseGapCues(pack: CurriculumPack): boolean {
+/** Replaces each listed task with its authored revision as a new version;
+ * spoken variants that repeat the written prompt move with it, and links to
+ * earlier versions follow one hop. */
+function reviseTasks(
+  pack: CurriculumPack,
+  revisions: readonly {
+    readonly taskId: string;
+    readonly prompt: string;
+    readonly answers?: readonly string[];
+  }[],
+  options: {
+    readonly version: string;
+    readonly tag: string;
+    readonly source: string;
+    readonly reason: string;
+    readonly kind?: (prompt: string) => PracticeTask["responseKind"];
+  },
+): boolean {
   let changed = false;
-  const suffix = `.cues-${GAP_CUE_VERSION.replace(/\D/gu, "")}`;
-  for (const revision of GAP_CUE_REVISIONS) {
+  const { version, source } = options;
+  const suffix = `.${options.tag}-${version.replace(/\D/gu, "")}`;
+  for (const revision of revisions) {
     if (!revision.taskId.startsWith(`${pack.language}.`)) continue;
     const unit = pack.units.find((row) =>
       revision.taskId.startsWith(`${row.id}.`),
@@ -338,7 +384,7 @@ function reviseGapCues(pack: CurriculumPack): boolean {
     const active = activePracticeTasks(unit);
     const original = active.find((task) => task.id === revision.taskId);
     if (!original || original.answerPolicy !== "closed")
-      throw Error(`Gap-cue target not active: ${revision.taskId}`);
+      throw Error(`Revision target not active: ${revision.taskId}`);
     const answers = revision.answers ?? original.acceptedAnswers;
     const replace = (task: PracticeTask, replacement: PracticeTask) => {
       unit.tasks.splice(unit.tasks.indexOf(task) + 1, 0, replacement);
@@ -349,8 +395,7 @@ function reviseGapCues(pack: CurriculumPack): boolean {
       unit.retiredTasks.push({
         taskId: task.id,
         replacementTaskId: replacement.id,
-        reason:
-          "Show a cue for the missing words; without one, many correct sentences fit the gap.",
+        reason: options.reason,
         retiredOn: CONTENT_REVISION,
       });
     };
@@ -363,7 +408,7 @@ function reviseGapCues(pack: CurriculumPack): boolean {
       replace(variant, {
         ...variant,
         id: variant.id.replace(/\.speaking$/u, `${suffix}.speaking`),
-        version: GAP_CUE_VERSION,
+        version,
         contentReview: "authored",
         prompt:
           (variant.prompt.endsWith(original.prompt)
@@ -371,17 +416,18 @@ function reviseGapCues(pack: CurriculumPack): boolean {
             : pack.language === "en"
               ? "Say and record your answer. "
               : "Sprich deine Antwort und nimm sie auf. ") + revision.prompt,
-        sourceId: `authored-gap-cue-${GAP_CUE_VERSION}:${variant.id}`,
+        sourceId: `${source}-${version}:${variant.id}`,
       });
     replace(original, {
       ...original,
       id,
-      version: GAP_CUE_VERSION,
+      version,
       contentReview: "authored",
+      ...(options.kind ? { responseKind: options.kind(revision.prompt) } : {}),
       prompt: revision.prompt,
       acceptedAnswers: [...answers],
       solution: answers[0]!,
-      sourceId: `authored-gap-cue-${GAP_CUE_VERSION}:${original.id}`,
+      sourceId: `${source}-${version}:${original.id}`,
     });
     changed = true;
   }

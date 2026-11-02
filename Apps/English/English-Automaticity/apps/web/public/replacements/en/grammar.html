@@ -2571,8 +2571,15 @@
             };
             const marked = document.createElement("p");
             marked.className = "answer-diff";
-            marked.append(Object.assign(document.createElement("strong"), { textContent: "Your answer: " }));
-            for (const part of window.AutomaticityText.markedAnswer(answer.value, check.spans)) {
+            marked.append(
+              Object.assign(document.createElement("strong"), {
+                textContent: "Your answer: ",
+              }),
+            );
+            for (const part of window.AutomaticityText.markedAnswer(
+              answer.value,
+              check.spans,
+            )) {
               if (part.note === undefined) {
                 marked.append(part.text);
                 continue;

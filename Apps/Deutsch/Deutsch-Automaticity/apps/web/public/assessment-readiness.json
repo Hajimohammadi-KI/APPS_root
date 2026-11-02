@@ -1,6 +1,6 @@
 {
   "language": "de",
-  "contentVersion": "2026-10-31.1",
+  "contentVersion": "2026-11-02.2",
   "units": [
     {
       "id": "de.c.001",
@@ -1301,7 +1301,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 9,
+          "tasks": 12,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -1700,7 +1700,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 11,
+          "tasks": 13,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },

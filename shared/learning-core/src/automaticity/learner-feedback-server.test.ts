@@ -378,18 +378,40 @@ test("R100: three open reports that an exercise is wrong pause it; nothing else 
       await handleLearnerFeedback(
         new Request("https://app.example/api/learner-feedback?paused=de"),
         config,
-        { fetcher: github.fetcher, limiter: createGrammarRateLimiter({ limit: 50 }) },
+        {
+          fetcher: github.fetcher,
+          limiter: createGrammarRateLimiter({ limit: 50 }),
+        },
       )
     ).json()) as { paused: string[] };
   // Different learners send different answers; identical repeats are refused.
   for (const [index, response] of ["Eins.", "Zwei."].entries())
     expect(
-      (await send(handleLearnerFeedback, github, { ...wrong, response }, `1.2.3.${index}`)).status,
+      (
+        await send(
+          handleLearnerFeedback,
+          github,
+          { ...wrong, response },
+          `1.2.3.${index}`,
+        )
+      ).status,
     ).toBe(201);
-  await send(handleLearnerFeedback, github, { ...feedback, response: "Drei." }, "1.2.3.7");
+  await send(
+    handleLearnerFeedback,
+    github,
+    { ...feedback, response: "Drei." },
+    "1.2.3.7",
+  );
   expect((await paused()).paused).toEqual([]);
   expect(
-    (await send(handleLearnerFeedback, github, { ...wrong, response: "Vier." }, "1.2.3.8")).status,
+    (
+      await send(
+        handleLearnerFeedback,
+        github,
+        { ...wrong, response: "Vier." },
+        "1.2.3.8",
+      )
+    ).status,
   ).toBe(201);
   expect((await paused()).paused).toEqual([feedback.task.id]);
   // The owner's decision or a withdrawal ends the pause.

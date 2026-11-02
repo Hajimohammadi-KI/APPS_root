@@ -41,7 +41,13 @@ test("R97 every skill is reported, and a skill without evidence says so", () => 
     "none",
   ]);
   const report = skillReport([
-    mode("writing", { attempts: 9, assessed: 4, accuracy: 0.75, delayed: 1, transfer: 2 }),
+    mode("writing", {
+      attempts: 9,
+      assessed: 4,
+      accuracy: 0.75,
+      delayed: 1,
+      transfer: 2,
+    }),
     mode("speaking", { attempts: 3 }),
   ]);
   expect(report.find((row) => row.skill === "writing")).toEqual({

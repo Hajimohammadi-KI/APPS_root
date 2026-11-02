@@ -19,12 +19,14 @@ export function normaliseAnswer(text: string, task: PracticeTask): string {
     allowOptionalFinalPeriod: task.normalisation.terminalFullStop,
   });
 }
-/** Practice feedback is independent of approved mastery/evaluator scope. */
+/** Practice feedback is independent of approved mastery/evaluator scope.
+ * `paused`: learners reported the exercise as wrong (pausedExercises). */
 export function assessControlledTask(
   attempt: AttemptEvent,
   task: PracticeTask,
   at: string,
   id: string,
+  { paused = false }: { paused?: boolean } = {},
 ): AssessmentEvent {
   const english = attempt.language === "en";
   const base: AssessmentEvent = {
@@ -162,6 +164,12 @@ export function assessControlledTask(
       : "Ohne Bewertung gespeichert: Diese Aufgabe muss inhaltlich überarbeitet werden. Fahre mit einer aktuellen Aufgabe fort; deine Originalantwort bleibt erhalten.";
     return base;
   }
+  if (paused) {
+    base.feedback = english
+      ? "Saved without a score: several learners reported this exercise as wrong, so it is paused until it is reviewed."
+      : "Ohne Bewertung gespeichert: Mehrere Lernende haben diese Aufgabe als fehlerhaft gemeldet; sie ist bis zur Prüfung pausiert.";
+    return base;
+  }
   // The Grammar Labs give the same verdict from the same function.
   const check = checkClosedAnswer(
     { ...task, terminalFullStop: task.normalisation.terminalFullStop },
@@ -173,10 +181,25 @@ export function assessControlledTask(
     base.uncertainty = false;
     base.dimensions =
       check.reason === "accepted"
-        ? { grammar: "pass", target: "observed", relevance: "pass", opportunities: 1 }
+        ? {
+            grammar: "pass",
+            target: "observed",
+            relevance: "pass",
+            opportunities: 1,
+          }
         : check.reason === "case"
-          ? { grammar: "fail", target: "observed", relevance: "pass", opportunities: 1 }
-          : { grammar: "fail", target: "unknown", relevance: "unknown", opportunities: 1 };
+          ? {
+              grammar: "fail",
+              target: "observed",
+              relevance: "pass",
+              opportunities: 1,
+            }
+          : {
+              grammar: "fail",
+              target: "unknown",
+              relevance: "unknown",
+              opportunities: 1,
+            };
   }
   if (check.feedback) base.feedback = check.feedback;
   base.spans = check.spans;

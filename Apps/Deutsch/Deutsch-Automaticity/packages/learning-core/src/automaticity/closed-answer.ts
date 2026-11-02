@@ -8,12 +8,7 @@ import type { PracticeTask } from "./curriculum";
 import { correctionSource, optionDistractors } from "./curriculum-audit";
 
 export type ClosedAnswerReason =
-  | "accepted"
-  | "rejected"
-  | "unchanged"
-  | "option"
-  | "case"
-  | "unmatched";
+  "accepted" | "rejected" | "unchanged" | "option" | "case" | "unmatched";
 export interface ClosedAnswerCheck {
   verdict: "pass" | "needs_repair" | "not_assessed";
   reason: ClosedAnswerReason;
@@ -126,7 +121,8 @@ export function checkClosedAnswer(
                 : "Prüfe die Groß- und Kleinschreibung, besonders am Satzanfang und bei Nomen.",
             ]
           : ["not_assessed", "unmatched", ""];
-  if (!task.acceptedAnswers.length) return { verdict, reason, feedback, spans: [] };
+  if (!task.acceptedAnswers.length)
+    return { verdict, reason, feedback, spans: [] };
   // The token edits to the nearest stored form: an unscored answer gets one
   // sentence; a verdict keeps its own and names a single difference.
   const edits =

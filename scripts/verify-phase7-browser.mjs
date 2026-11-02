@@ -56,6 +56,8 @@ try{
   const routes=installed?(language==="en"?["/daily","/grammar","/studio","/?screen=errors","/teacher","/?screen=progress"]:["/heute","/grammatik","/studio","/fehler","/wiederholungen","/lehrkraft","/fortschritt"]):["/overview"];
   // Installed pages keep saved responses in collapsed disclosures; open them as a learner would before checking the link.
   for(const route of routes){report.lastRoute=language+route;await page.goto(base+route);const link=page.locator(`[data-repair-queue] a[data-attempt="${attemptId}"]`);await expect(link).toBeAttached();
+   // R97: all six skills are listed; skills without checked tasks say so instead of borrowing a score.
+   if(route==="/overview"){await expect(page.locator("[data-skill-report] li")).toHaveCount(6);for(const skill of ["reading","listening","interaction"])await expect(page.locator(`[data-skill-report] li[data-skill="${skill}"]`)).toHaveAttribute("data-status","not_measured");}
    const closed=page.locator("details:not([open])",{has:link});for(let depth=0;depth<5&&await closed.count();depth++)await closed.first().locator(":scope > summary").click();
    await expect(link).toBeVisible();assert((await link.getAttribute("href")).includes(`attempt=${attemptId}`));}
   await page.screenshot({path:resolve(folder,`${language}-overview.png`)});

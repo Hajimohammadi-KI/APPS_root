@@ -271,6 +271,41 @@ export function parseLearnerFeedbackIssue(body: string): {
   };
 }
 
+/** Open reports that pause an exercise until the owner decides. */
+export const EXERCISE_PAUSE_REPORTS = 3;
+/** Exercises of one app that several open, undecided, not withdrawn reports
+ * call wrong. Pausing is the only automatic effect of a comment, and the safe
+ * one: a paused exercise saves answers without a score, it never accepts one.
+ * Reports carry no learner identity, so three reports may come from fewer
+ * learners; the owner's decision on any of them ends the pause. */
+export function pausedExercises(
+  issues: readonly {
+    body: string | null;
+    state: "open" | "closed";
+    labels: readonly string[];
+  }[],
+  language: "en" | "de",
+): string[] {
+  const counts = new Map<string, number>();
+  for (const issue of issues) {
+    const header = parseLearnerFeedbackIssue(issue.body ?? "");
+    if (
+      issue.state !== "open" ||
+      header?.language !== language ||
+      header.category !== "exercise_wrong" ||
+      issue.labels.some(
+        (label) => label === "withdrawn" || label.startsWith("decision:"),
+      )
+    )
+      continue;
+    counts.set(header.taskId, (counts.get(header.taskId) ?? 0) + 1);
+  }
+  return [...counts]
+    .filter(([, count]) => count >= EXERCISE_PAUSE_REPORTS)
+    .map(([taskId]) => taskId)
+    .sort();
+}
+
 /** The learner's text from its comment, or null for any other comment. */
 export function parseLearnerFeedbackData(
   comment: string,

@@ -412,7 +412,9 @@ try {
             "Das ist noch der Satz, der korrigiert werden soll.",
           );
           await expect(page.locator("#feedback")).toHaveClass(/\bbad\b/);
-          await page.locator("#answerInput").fill("Synthetischer anderer Satz.");
+          await page
+            .locator("#answerInput")
+            .fill("Synthetischer anderer Satz.");
           await page.locator("#checkBtn").click();
           await expect(page.locator("#feedback")).toContainText(
             "Ohne Bewertung gespeichert",

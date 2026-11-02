@@ -111,7 +111,11 @@ export function skillReport(modes: readonly ModeView[]): {
     return {
       skill,
       status:
-        skill === "transfer" ? (transfer ? "evidence" : "none") : "not_measured",
+        skill === "transfer"
+          ? transfer
+            ? "evidence"
+            : "none"
+          : "not_measured",
       checked: skill === "transfer" ? transfer : 0,
       accuracy: null,
       delayed: 0,

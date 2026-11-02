@@ -14,7 +14,11 @@ test("R100 pausedExercises counts only open, undecided reports that an exercise 
   const issue = (
     taskId: string,
     category: string,
-    { language = "de", state = "open" as "open" | "closed", labels = [] as string[] } = {},
+    {
+      language = "de",
+      state = "open" as "open" | "closed",
+      labels = [] as string[],
+    } = {},
   ) => ({
     body: learnerFeedbackIssue(
       {
@@ -32,16 +36,28 @@ test("R100 pausedExercises counts only open, undecided reports that an exercise 
             acceptedAnswers: ["Answer."],
           },
           response: "Answer",
-          check: { verdict: "pass", evaluator: "controlled-answer 1.0.0", feedback: "" },
+          check: {
+            verdict: "pass",
+            evaluator: "controlled-answer 1.0.0",
+            feedback: "",
+          },
           category,
           comment: "",
-          consent: { policy: LEARNER_FEEDBACK_POLICY, at: "2026-11-02T10:00:00.000Z" },
+          consent: {
+            policy: LEARNER_FEEDBACK_POLICY,
+            at: "2026-11-02T10:00:00.000Z",
+          },
         }),
       },
       "a".repeat(64),
     ).body,
     state,
-    labels: ["learner-feedback", `app:${language}`, `category:${category}`, ...labels],
+    labels: [
+      "learner-feedback",
+      `app:${language}`,
+      `category:${category}`,
+      ...labels,
+    ],
   });
   const a = "de.c.001.retrieve.1.writing",
     b = "de.c.002.retrieve.1.writing";
@@ -62,8 +78,12 @@ test("R100 pausedExercises counts only open, undecided reports that an exercise 
   reports.push(
     issue("en.c.001.retrieve.1.writing", "exercise_wrong", { language: "en" }),
   );
-  expect(pausedExercises(reports, "en")).toEqual(["en.c.001.retrieve.1.writing"]);
-  reports.push(issue(b, "exercise_wrong", { labels: ["decision:fix_exercise"] }));
+  expect(pausedExercises(reports, "en")).toEqual([
+    "en.c.001.retrieve.1.writing",
+  ]);
+  reports.push(
+    issue(b, "exercise_wrong", { labels: ["decision:fix_exercise"] }),
+  );
   expect(pausedExercises(reports, "de")).toEqual([a]);
 });
 

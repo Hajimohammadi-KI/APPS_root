@@ -20,7 +20,10 @@ import {
 } from "./storage";
 import { preserveLegacyStateDurable } from "./migration";
 import { mountReviewPanel } from "./review-panel";
-import { appendLearnerFeedbackPanel } from "./learner-feedback-panel";
+import {
+  appendLearnerFeedbackPanel,
+  pausedTaskIds,
+} from "./learner-feedback-panel";
 import { reduceAutomaticityEvents } from "./evidence";
 import { assessControlledTask } from "./assessment";
 import { markedAnswer } from "./answer-alignment";
@@ -1873,6 +1876,20 @@ export async function mountPractice(
       return;
     }
     taskPanel.append(prompt);
+    const shownTask = task.id;
+    void pausedTaskIds(language).then((paused) => {
+      if (paused.has(shownTask) && prompt.isConnected && task.id === shownTask)
+        prompt.after(
+          element(
+            "p",
+            t(
+              "Paused for review: several learners reported this exercise as wrong. Your answer is saved without a score until it is checked.",
+              "Zur Prüfung pausiert: Mehrere Lernende haben diese Aufgabe als fehlerhaft gemeldet. Deine Antwort wird bis zur Prüfung ohne Bewertung gespeichert.",
+            ),
+            "muted",
+          ),
+        );
+    });
     if (task.stage === "retain")
       taskPanel.append(
         element(
@@ -2279,7 +2296,10 @@ export async function mountPractice(
         appendAutomaticityEvent(localStorage, attempt);
         session.submittedId = attempt.id;
         saveSession();
-        const assessment = assessControlledTask(attempt, task, now(), id());
+        const paused = (await pausedTaskIds(language)).has(task.id);
+        const assessment = assessControlledTask(attempt, task, now(), id(), {
+          paused,
+        });
         const ruleFor = (shown: typeof assessment) =>
           closedRule && shown.verdict !== "pass" ? closedRule : undefined;
         const applyFeedback = async (proposal: typeof assessment) => {

@@ -5058,7 +5058,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "My brother’s room is small."
       ],
       [
-        "Complete the sentence: _____ coat is this?",
+        "Ask who the coat belongs to. Complete the sentence: _____ coat is this?",
         "Whose coat is this?"
       ],
       [
@@ -5360,16 +5360,21 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "There are a few chairs."
       ],
       [
-        "Complete the sentence: I have _____ questions.",
+        "Say that you have a small number of questions, which is enough to ask. Complete the sentence: I have _____ questions. (few / a few)",
         "I have a few questions."
       ],
       [
-        "Complete the sentence: _____ people knew the answer.",
+        "Say that almost nobody knew the answer. Complete the sentence: _____ people knew the answer. (Few / A few)",
         "Few people knew the answer."
       ],
       [
-        "Complete the sentence: There is _____ milk left.",
-        "There is a little milk left."
+        "Say that there is a small amount of milk, enough for a cup of tea. Complete the sentence: There is _____ milk left. (little / a little)",
+        "There is a little milk left.",
+        {
+          "acceptedAnswers": [
+            "There’s a little milk left."
+          ]
+        }
       ],
       [
         "Complete the sentence: We have very _____ time.",
@@ -5427,7 +5432,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "The students’ projects are ready."
       ],
       [
-        "Complete the sentence: We _____ work on Sundays.",
+        "Say that you never work on Sundays. Use the short form of do not with an apostrophe: We _____ work on Sundays.",
         "We don’t work on Sundays."
       ],
       [
@@ -5580,7 +5585,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "It was such a good film."
       ],
       [
-        "Complete the sentence: The film was _____ exciting.",
+        "Complete the sentence with so or such: The film was _____ exciting.",
         "The film was so exciting."
       ],
       [
@@ -5588,7 +5593,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "It was such an exciting film."
       ],
       [
-        "Complete the sentence: She has _____ ideas.",
+        "Say that the number of her ideas is surprising. Use so and many: She has _____ ideas.",
         "She has so many ideas."
       ],
       [
@@ -5640,8 +5645,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         }
       ],
       [
-        "Complete the sentence: I _____ swim when I was six.",
-        "I could swim when I was six."
+        "Say that you had this general ability at the age of six. Complete the sentence: I _____ swim when I was six. (could / managed to)",
+        "I could swim when I was six.",
+        {
+          "acceptedAnswers": [
+            "I was able to swim when I was six."
+          ]
+        }
       ],
       [
         "Say that they succeeded on one occasion. Use be able to: We _____ solve the problem.",
@@ -5652,8 +5662,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She managed to open the door."
       ],
       [
-        "Complete the sentence: He _____ read the sign.",
-        "He couldn’t read the sign."
+        "Say that he did not have the ability. Use the negative of could: He _____ read the sign.",
+        "He couldn’t read the sign.",
+        {
+          "acceptedAnswers": [
+            "He could not read the sign."
+          ]
+        }
       ],
       [
         "Say that he succeeded once after trying. Complete the sentence with could or managed: He ___ to find a seat on the busy train.",
@@ -5699,8 +5714,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She used to have long hair."
       ],
       [
-        "Complete the sentence: Every summer, we _____ visit my aunt.",
-        "Every summer, we would visit my aunt."
+        "Use would for a repeated past action: Every summer, we _____ visit my aunt.",
+        "Every summer, we would visit my aunt.",
+        {
+          "acceptedAnswers": [
+            "Every summer, we’d visit my aunt."
+          ]
+        }
       ],
       [
         "Complete the sentence with the past simple of the verb in brackets: I _____ tennis every Saturday. (play)",
@@ -5870,19 +5890,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "He cut himself."
       ],
       [
-        "Complete the sentence: She taught _____ Spanish.",
+        "Complete the sentence with a reflexive pronoun: She taught _____ Spanish.",
         "She taught herself Spanish."
       ],
       [
-        "Complete the sentence: I made the cake _____.",
+        "Complete the sentence with a reflexive pronoun: I made the cake _____.",
         "I made the cake myself."
       ],
       [
-        "Complete the sentence: We enjoyed _____.",
+        "Complete the sentence with a reflexive pronoun: We enjoyed _____.",
         "We enjoyed ourselves."
       ],
       [
-        "Complete the sentence: Be careful not to hurt _____.",
+        "Complete the sentence with a reflexive pronoun: Be careful not to hurt _____.",
         "Be careful not to hurt yourself."
       ],
       [
@@ -5984,11 +6004,11 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "She sings like a professional."
       ],
       [
-        "Complete the sentence: Do it _____ I showed you.",
+        "In formal written English, complete the sentence with as or like: Do it _____ I showed you.",
         "Do it as I showed you."
       ],
       [
-        "Complete the sentence: He works _____ a designer.",
+        "Say that designing is his job. Complete the sentence with as or like: He works _____ a designer.",
         "He works as a designer."
       ],
       [
@@ -6210,7 +6230,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "This route is much shorter."
       ],
       [
-        "Complete the sentence: The new route is _____ shorter.",
+        "Say that the difference is big. Complete the sentence with much or slightly: The new route is _____ shorter.",
         "The new route is much shorter."
       ],
       [
@@ -6289,8 +6309,13 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "They wanted to know what we had decided."
       ],
       [
-        "Complete the sentence: I asked _____ the train had left.",
-        "I asked whether the train had left."
+        "Report the question “Has the train left?”: I asked _____ the train had left.",
+        "I asked whether the train had left.",
+        {
+          "acceptedAnswers": [
+            "I asked if the train had left."
+          ]
+        }
       ],
       [
         "Report the question “Where is the station?”: She asked where ___. (the station was / was the station)",
@@ -6513,7 +6538,7 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         "He must be at home."
       ],
       [
-        "Complete the sentence: The keys _____ be upstairs.",
+        "Say that you are almost certain. Complete the sentence with must or might: The keys _____ be upstairs.",
         "The keys must be upstairs."
       ],
       [

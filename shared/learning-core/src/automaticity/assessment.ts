@@ -181,10 +181,25 @@ export function assessControlledTask(
     base.uncertainty = false;
     base.dimensions =
       check.reason === "accepted"
-        ? { grammar: "pass", target: "observed", relevance: "pass", opportunities: 1 }
+        ? {
+            grammar: "pass",
+            target: "observed",
+            relevance: "pass",
+            opportunities: 1,
+          }
         : check.reason === "case"
-          ? { grammar: "fail", target: "observed", relevance: "pass", opportunities: 1 }
-          : { grammar: "fail", target: "unknown", relevance: "unknown", opportunities: 1 };
+          ? {
+              grammar: "fail",
+              target: "observed",
+              relevance: "pass",
+              opportunities: 1,
+            }
+          : {
+              grammar: "fail",
+              target: "unknown",
+              relevance: "unknown",
+              opportunities: 1,
+            };
   }
   if (check.feedback) base.feedback = check.feedback;
   base.spans = check.spans;

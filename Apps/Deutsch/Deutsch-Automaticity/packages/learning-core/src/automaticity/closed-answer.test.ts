@@ -10,12 +10,16 @@ const labTask = (prompt: string, ...acceptedAnswers: string[]) => ({
 });
 
 test("a Lab prompt names its response kind as the learning path does", () => {
-  expect(closedResponseKind("Complete the sentence: I ___ here.")).toBe("cloze");
+  expect(closedResponseKind("Complete the sentence: I ___ here.")).toBe(
+    "cloze",
+  );
   expect(closedResponseKind("Correct the sentence: She go home.")).toBe(
     "correction",
   );
   expect(
-    closedResponseKind("Korrigiere die vorgegebene Form: Ich bin gestern krank."),
+    closedResponseKind(
+      "Korrigiere die vorgegebene Form: Ich bin gestern krank.",
+    ),
   ).toBe("correction");
   expect(
     closedResponseKind(
@@ -32,9 +36,9 @@ test("only a stored form passes; the other offered option is certainly wrong", (
     "Complete the sentence with so or such: The film was _____ exciting.",
     "The film was so exciting.",
   );
-  expect(checkClosedAnswer(task, "The film was so exciting", "en")).toMatchObject(
-    { verdict: "pass", reason: "accepted", spans: [] },
-  );
+  expect(
+    checkClosedAnswer(task, "The film was so exciting", "en"),
+  ).toMatchObject({ verdict: "pass", reason: "accepted", spans: [] });
   const option = checkClosedAnswer(task, "The film was such exciting.", "en");
   expect(option).toMatchObject({ verdict: "needs_repair", reason: "option" });
   expect(option.feedback).toBe(
@@ -48,7 +52,11 @@ test("an answer that is not certainly wrong is saved without a score, never mark
     "Ergänze die Lücke: Es regnet; ___ gehe ich raus. (obwohl / trotzdem)",
     "Es regnet; trotzdem gehe ich raus.",
   );
-  const other = checkClosedAnswer(task, "Es regnet; dennoch gehe ich raus.", "de");
+  const other = checkClosedAnswer(
+    task,
+    "Es regnet; dennoch gehe ich raus.",
+    "de",
+  );
   expect(other).toMatchObject({ verdict: "not_assessed", reason: "unmatched" });
   expect(other.feedback.startsWith("Ohne Bewertung gespeichert: ")).toBe(true);
   expect(

@@ -8,7 +8,84 @@ import {
   parseLearnerFeedbackData,
   parseLearnerFeedbackDecision,
   parseLearnerFeedbackIssue,
+  pausedExercises,
 } from "./learner-feedback";
+test("R100 pausedExercises counts only open, undecided reports that an exercise is wrong", () => {
+  const issue = (
+    taskId: string,
+    category: string,
+    {
+      language = "de",
+      state = "open" as "open" | "closed",
+      labels = [] as string[],
+    } = {},
+  ) => ({
+    body: learnerFeedbackIssue(
+      {
+        ...parseLearnerFeedback({
+          kind: "automaticity.learner-feedback",
+          version: 1,
+          language,
+          contentVersion: "2026-11-02.2",
+          release: null,
+          task: {
+            id: taskId,
+            version: "2026-11-02.2",
+            constructionId: taskId.split(".").slice(0, 3).join("."),
+            prompt: "Prompt",
+            acceptedAnswers: ["Answer."],
+          },
+          response: "Answer",
+          check: {
+            verdict: "pass",
+            evaluator: "controlled-answer 1.0.0",
+            feedback: "",
+          },
+          category,
+          comment: "",
+          consent: {
+            policy: LEARNER_FEEDBACK_POLICY,
+            at: "2026-11-02T10:00:00.000Z",
+          },
+        }),
+      },
+      "a".repeat(64),
+    ).body,
+    state,
+    labels: [
+      "learner-feedback",
+      `app:${language}`,
+      `category:${category}`,
+      ...labels,
+    ],
+  });
+  const a = "de.c.001.retrieve.1.writing",
+    b = "de.c.002.retrieve.1.writing";
+  const reports = [
+    issue(a, "exercise_wrong"),
+    issue(a, "exercise_wrong"),
+    issue(a, "exercise_wrong"),
+    issue(b, "exercise_wrong"),
+    issue(b, "exercise_wrong"),
+    issue(b, "answer_correct"),
+    issue(b, "exercise_wrong", { labels: ["withdrawn"] }),
+    issue(b, "exercise_wrong", { state: "closed" }),
+    issue("en.c.001.retrieve.1.writing", "exercise_wrong", { language: "en" }),
+    issue("en.c.001.retrieve.1.writing", "exercise_wrong", { language: "en" }),
+  ];
+  expect(pausedExercises(reports, "de")).toEqual([a]);
+  expect(pausedExercises(reports, "en")).toEqual([]);
+  reports.push(
+    issue("en.c.001.retrieve.1.writing", "exercise_wrong", { language: "en" }),
+  );
+  expect(pausedExercises(reports, "en")).toEqual([
+    "en.c.001.retrieve.1.writing",
+  ]);
+  reports.push(
+    issue(b, "exercise_wrong", { labels: ["decision:fix_exercise"] }),
+  );
+  expect(pausedExercises(reports, "de")).toEqual([a]);
+});
 
 const feedback = {
   kind: "automaticity.learner-feedback",

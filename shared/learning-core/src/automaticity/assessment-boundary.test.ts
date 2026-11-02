@@ -70,9 +70,9 @@ test("R100 a paused exercise saves even the stored answer without a score", () =
   expect(result.feedback).toBe(
     "Saved without a score: several learners reported this exercise as wrong, so it is paused until it is reviewed.",
   );
-  expect(
-    assessControlledTask(response, task, at, "running").verdict,
-  ).toBe("pass");
+  expect(assessControlledTask(response, task, at, "running").verdict).toBe(
+    "pass",
+  );
 });
 test("an unchanged copy of the sentence to correct is marked for repair", () => {
   const correction: PracticeTask = {

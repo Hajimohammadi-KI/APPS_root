@@ -71,6 +71,58 @@ export function evidenceOverview(
     .slice(0, 3);
   return { modes, repairs };
 }
+type ModeView = ReturnType<typeof evidenceOverview>["modes"][number];
+export const SKILLS = [
+  "reading",
+  "listening",
+  "writing",
+  "speaking",
+  "interaction",
+  "transfer",
+] as const;
+/** Evidence per skill (R97). Reading, listening and interaction have no
+ * checked tasks yet, so they are reported as not measured rather than
+ * guessed from other skills; saved speech without a listener's review is
+ * practice, not evidence. */
+export function skillReport(modes: readonly ModeView[]): {
+  skill: (typeof SKILLS)[number];
+  status: "evidence" | "practice_only" | "none" | "not_measured";
+  checked: number;
+  accuracy: number | null;
+  delayed: number;
+  saved: number;
+}[] {
+  const transfer = modes.reduce((sum, mode) => sum + mode.transfer, 0);
+  return SKILLS.map((skill) => {
+    const mode = modes.find((row) => row.modality === skill);
+    if (mode)
+      return {
+        skill,
+        status: mode.assessed
+          ? "evidence"
+          : mode.attempts
+            ? "practice_only"
+            : "none",
+        checked: mode.assessed,
+        accuracy: mode.accuracy,
+        delayed: mode.delayed,
+        saved: mode.attempts,
+      };
+    return {
+      skill,
+      status:
+        skill === "transfer"
+          ? transfer
+            ? "evidence"
+            : "none"
+          : "not_measured",
+      checked: skill === "transfer" ? transfer : 0,
+      accuracy: null,
+      delayed: 0,
+      saved: 0,
+    };
+  });
+}
 /** Small shared DOM view used by static pages and React wrappers. */
 export function mountEvidenceOverview(
   root: HTMLElement,
@@ -206,6 +258,55 @@ export function mountEvidenceOverview(
       }
       root.append(list);
     }
+    // R97: every skill is listed, so a skill without evidence is visible.
+    const names = {
+      reading: t("Reading", "Lesen"),
+      listening: t("Listening", "Hören"),
+      writing: t("Writing", "Schreiben"),
+      speaking: t("Speaking", "Sprechen"),
+      interaction: t("Interaction", "Interaktion"),
+      transfer: t("Transfer to new contexts", "Transfer in neue Kontexte"),
+    };
+    const count = (n: number, one: string, many: string) =>
+      `${n} ${n === 1 ? one : many}`;
+    const skills = node("section");
+    skills.dataset.skillReport = "true";
+    const skillList = node("ul");
+    for (const row of skillReport(view.modes)) {
+      const name = names[row.skill];
+      const item = node(
+        "li",
+        row.status === "not_measured"
+          ? t(
+              `${name}: not measured; the app has no checked tasks for this skill yet.`,
+              `${name}: nicht gemessen; die App hat dafür noch keine geprüften Aufgaben.`,
+            )
+          : row.status === "none"
+            ? t(`${name}: no evidence yet.`, `${name}: noch kein Nachweis.`)
+            : row.status === "practice_only"
+              ? t(
+                  `${name}: ${count(row.saved, "saved response", "saved responses")}, none checked yet.`,
+                  `${name}: ${count(row.saved, "gespeicherte Antwort", "gespeicherte Antworten")}, noch keine geprüft.`,
+                )
+              : row.skill === "transfer"
+                ? t(
+                    `${name}: ${count(row.checked, "success", "successes")} in a new context.`,
+                    `${name}: ${count(row.checked, "Erfolg", "Erfolge")} in neuem Kontext.`,
+                  )
+                : t(
+                    `${name}: ${count(row.checked, "independent check", "independent checks")}, ${Math.round((row.accuracy ?? 0) * 100)}% matched · ${count(row.delayed, "delayed success", "delayed successes")}.`,
+                    `${name}: ${count(row.checked, "unabhängige Prüfung", "unabhängige Prüfungen")}, ${Math.round((row.accuracy ?? 0) * 100)} % richtig · ${count(row.delayed, "verzögerter Erfolg", "verzögerte Erfolge")}.`,
+                  ),
+      );
+      item.dataset.skill = row.skill;
+      item.dataset.status = row.status;
+      skillList.append(item);
+    }
+    skills.append(
+      node("h3", t("Evidence by skill", "Nachweise nach Fertigkeit")),
+      skillList,
+    );
+    root.append(skills);
     const details = node("details"),
       summary = node(
         "summary",

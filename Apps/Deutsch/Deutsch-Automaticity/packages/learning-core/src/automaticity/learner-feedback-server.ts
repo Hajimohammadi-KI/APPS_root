@@ -13,6 +13,7 @@ import {
   parseLearnerFeedbackData,
   parseLearnerFeedbackDecision,
   parseLearnerFeedbackIssue,
+  pausedExercises,
   type LearnerFeedback,
   type LearnerFeedbackDecision,
   type LearnerFeedbackDecisionKind,
@@ -240,6 +241,37 @@ export async function handleLearnerFeedback(
   const url = new URL(request.url);
   const id = url.searchParams.get("id"),
     secret = url.searchParams.get("token");
+  const pausedFor = url.searchParams.get("paused");
+  if (request.method === "GET" && (pausedFor === "en" || pausedFor === "de")) {
+    if (!config) return reply({ paused: [] });
+    const blocked = limited(request, limiter ?? readLimiter);
+    if (blocked) return blocked;
+    try {
+      const api = github(config, fetcher);
+      const issues: GitHubIssue[] = [];
+      for (let page = 1; page <= 5; page++) {
+        const rows = await api<GitHubIssue[]>(
+          "GET",
+          `/issues?labels=learner-feedback,category:exercise_wrong&state=open&per_page=100&page=${page}`,
+        );
+        issues.push(...rows);
+        if (rows.length < 100) break;
+      }
+      // Task ids only; the five-minute shared cache limits GitHub calls.
+      return reply(
+        {
+          paused: pausedExercises(
+            issues.map((issue) => ({ ...issue, labels: labelNames(issue) })),
+            pausedFor,
+          ),
+        },
+        200,
+        { "Cache-Control": "public, max-age=300, s-maxage=300" },
+      );
+    } catch {
+      return reply({ paused: [] }, 502);
+    }
+  }
   if (request.method === "GET" && !id)
     return reply({ available: Boolean(config) });
   if (!config)

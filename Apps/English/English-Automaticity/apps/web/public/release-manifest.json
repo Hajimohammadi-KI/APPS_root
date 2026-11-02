@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-02",
   "version": "27.4.4",
-  "webRelease": "2026.11.02.2",
+  "webRelease": "2026.11.02.3",
   "changes": [
-    "Both Grammar Labs now grade closed answers exactly like the learning path: only a certainly wrong answer (the other offered option, the unchanged sentence, a wrong case or mark) is called wrong; any other unmatched answer is saved without a score with its differences marked, and the unit's rule is shown. Every English Lab exercise is checked, no unit repeats an answer, ambiguous gaps name their meaning or options, an exercise that several learners report as wrong is paused, and the overview reports evidence for each skill."
+    "Settings: delete all your data on this device after a backup and a typed confirmation; German backups now include the Lab error patterns and trainer data. A new page lets an independent reviewer check every unit and download an importable review. The Windows desktop update check reads the right repository and reports when no update is published."
   ]
 }

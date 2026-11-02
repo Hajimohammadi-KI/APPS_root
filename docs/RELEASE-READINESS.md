@@ -123,3 +123,34 @@ The import writes `shared/learning-core/content/learner-decisions-{en,de}.json`
 requests for authoring. The build adds a new version of each affected exercise
 and keeps the old one for saved work; a decision whose exercise text changed
 since the comment is reported and not applied. Then follow sections 1–4.
+
+## 6. Independent content review
+
+A reviewer opens `<canonical URL>/learning-core/content-review.html` (English
+or German app), enters a name and role, and checks each unit and exercise.
+Drafts stay in the reviewer's browser. "Download approved reviews" gives the
+file the import takes; "Download findings" lists what is wrong for authoring.
+Nothing changes in the app until the owner imports and releases:
+
+```powershell
+bun scripts/import-curriculum-review.ts <approved-reviews.json>
+```
+
+The import stages validated output under `artifacts/curriculum-review-import/`
+and refuses an incomplete review, a changed unit or a non-human reviewer ID.
+Findings become a reviewed content change (a new task version), then sections
+1–4. `node scripts/verify-content-review-browser.mjs` checks the page.
+
+## 7. Windows desktop update channel
+
+The desktop apps read `Apps/<app>/releases/<name>-update.json` from the
+`main` branch of `Hajimohammadi-KI/APPS_root` and download the package from
+that repository's GitHub releases. Until a manifest is committed, the update
+check reports that no update is published. To publish one (owner, with GitHub
+release rights):
+
+1. In the app folder run `bun run package:windows-exe` after the installer
+   lifecycle check (`scripts/verify-language-installer-cycle.ps1`) passes.
+2. Create the release `<slug>-v<version>` (`english-grammar` or `deutschflow`)
+   and attach `releases/<ProductId>-<version>-Windows.zip`.
+3. Commit `Apps/<app>/releases/<name>-update.json`; the zip stays out of git.

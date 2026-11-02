@@ -184,7 +184,7 @@ const FUNCTION_WORDS = {
     ),
   ),
   de: new Set(
-    "der die das den dem des ein eine einen einem einer eines kein keine keinen keinem keiner mein meine meinen meinem meiner dein deine sein seine ihr ihre unser unsere euer eure dieser diese dieses diesen diesem ich du er sie es wir mich dich ihn uns euch mir dir ihm ihnen sich man bin bist ist sind seid war warst waren wart sei seien wäre wären habe hast hat haben habt hatte hattest hatten hätte hätten werde wirst wird werden werdet wurde wurden worden würde würden kann kannst können könnt könnte könnten muss musst müssen müsst müsste darf darfst dürfen dürfte soll sollst sollen sollte will willst wollen wollte mag möchte möchtest in an auf unter über neben zwischen vor hinter mit nach bei seit von zu zum zur aus für um durch gegen ohne bis wegen trotz während am im ins vom beim und aber oder denn sondern weil dass ob wenn als wie nachdem bevor damit obwohl je desto umso sowohl weder noch entweder allerdings jedoch deshalb daher darum deswegen folglich dennoch trotzdem gleichwohl außerdem zudem hingegen also auch nur schon doch ja mal halt eben nicht nie sehr wo wann warum was wer wen wem wessen welche welcher welches welchen welchem viel viele vielen wenig wenige einige alle allen manche mehrere andere".split(
+    "der die das den dem des ein eine einen einem einer eines kein keine keinen keinem keiner mein meine meinen meinem meiner dein deine sein seine ihr ihre unser unsere euer eure dieser diese dieses diesen diesem ich du er sie es wir mich dich ihn uns euch mir dir ihm ihnen sich man bin bist ist sind seid war warst waren wart sei seien wäre wären habe hast hat haben habt hatte hattest hatten hätte hätten werde wirst wird werden werdet wurde wurden worden würde würden kann kannst können könnt könnte könnten muss musst müssen müsst müsste darf darfst dürfen dürfte soll sollst sollen sollte will willst wollen wollte mag möchte möchtest in an auf unter über neben zwischen vor hinter mit nach bei seit von zu zum zur aus für um durch gegen ohne bis wegen trotz während am im ins vom beim und aber oder denn sondern weil dass ob wenn als wie nachdem bevor damit obwohl je desto umso sowohl weder noch entweder allerdings jedoch deshalb daher darum deswegen folglich dennoch trotzdem gleichwohl außerdem zudem hingegen also auch nur schon doch ja mal halt eben nicht nie sehr wo wann warum was wer wen wem wessen welche welcher welches welchen welchem viel viele vielen wenig wenige einige alle allen manche mehrere andere denen dessen deren meinem meinen meines deinem deinen deiner deines seinem seinen seiner seines ihrem ihren ihrer ihres unserem unseren unserer unseres eurem euren eurer eures diesen dieses könne müsse dürfe solle wolle möge habe werde konnte konnten musste mussten durfte durften sollten solltest wollten könntest müssten dürften".split(
       " ",
     ),
   ),
@@ -205,6 +205,8 @@ const isFunctionWord = (word: string, language: "en" | "de") =>
       /^(?:wo|da)r?(?:an|auf|aus|bei|durch|fur|gegen|in|mit|nach|uber|um|unter|von|vor|zu|zwischen)$/u.test(
         word,
       );
+const GAP_FRAMES =
+  /schreibe (?:die|den) (?:vollständige|ganzen|vollständigen)(?: richtige)? (?:Antwort|Satz|deutschen Text|Text)(?: auf Deutsch)?|schreibe (?:beide Sätze|ihn|sie) vollständig(?: auf Deutsch)?|Setze die fehlende Form ein|Wende die Form in einem zweiten kontrollierten Beispiel an|Ergänze die Lücke(?:, sodass der Text zusammenhängt)?|Write the full sentence|Complete the sentence/giu;
 const pairs = (word: string) =>
   new Set([...word].slice(1).map((letter, at) => word[at] + letter));
 // Inflected, ge- or zu- forms keep a prefix or most letter pairs of their cue
@@ -262,11 +264,15 @@ export function auditGapCue(
   )
     return [];
   const colon = task.prompt.lastIndexOf(":");
+  // The fixed frames name no word of the answer ("… Antwort auf Deutsch"),
+  // and a function word such as "auf" cues no content word (Aufgaben).
   const cues = foldedWords(
-    task.prompt.slice(0, Math.max(0, colon)) +
+    task.prompt
+      .slice(0, Math.max(0, colon))
+      .replace(GAP_FRAMES, " ") +
       " " +
       task.prompt.slice(colon + 1).replace(/_{2,}/u, " "),
-  );
+  ).filter((cue) => !isFunctionWord(cue, language));
   const uncued = foldedWords(fill).filter(
     (word) =>
       !isFunctionWord(word, language) && !cues.some((cue) => cuedBy(word, cue)),

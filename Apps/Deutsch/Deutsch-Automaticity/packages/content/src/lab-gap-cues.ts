@@ -9,6 +9,41 @@ export const LAB_GAP_CUES: readonly (readonly [
   ...answers: string[],
 ])[] = [
   ["haben", 1, "Ich ___ einen Termin. (haben)"],
+  // Generated gaps the cue audit missed while it read the frame as a cue.
+  [
+    "Uhrzeit, Datum und Reihenfolge",
+    3,
+    "Zuerst lese ich den Text, dann ___ ich die Antwort. (schreiben)",
+  ],
+  [
+    "und, aber, denn und oder",
+    3,
+    "Ich ___ zu Hause, denn ich bin krank. (bleiben)",
+  ],
+  [
+    "Adjektivdeklination nach Artikeln",
+    3,
+    "Wir wohnen in einem ___ Haus. (klein)",
+  ],
+  ["denn und sondern", 3, "Er ___ nicht, sondern er ruft an. (schreiben)"],
+  ["Infinitiv mit zu Grundlagen", 1, "Ich versuche, früher ___. (aufstehen)"],
+  [
+    "Partizipialattribute erweitern",
+    3,
+    "Die seit Jahren ___ Kosten belasten das Projekt. (steigen)",
+  ],
+  ["Nominalisierte Adjektive", 3, "Die ___ warten am Gleis. (reisen)"],
+  [
+    "Interpunktion als Bedeutungssignal",
+    2,
+    "Die Daten waren vollständig ___ die Analyse konnte beginnen. (Satzzeichen zwischen zwei Hauptsätzen)",
+  ],
+  [
+    "Interpunktion als Bedeutungssignal",
+    3,
+    "Die Frist ist abgelaufen ___ wir können nichts mehr ändern. (Satzzeichen zwischen zwei Hauptsätzen)",
+    "Die Frist ist abgelaufen; wir können nichts mehr ändern.",
+  ],
   ["haben", 3, "Er ___ zwei Kinder. (haben)"],
   ["Modalverb können", 1, "Ich ___ gut schwimmen. (können)"],
   ["Komparativ und Superlativ", 1, "Deutsch ist ___ als gedacht. (leicht)"],

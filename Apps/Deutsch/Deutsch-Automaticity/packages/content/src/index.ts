@@ -255,12 +255,15 @@ function withGapCues(
       oldAnswer,
       ...(metadata?.acceptedAnswers ?? []),
     ];
-    // A revision that keeps the stored answer must fit this exercise's answer.
+    // A revision that keeps the stored answer must fit this exercise's gap; one
+    // with its own answer may also replace a closed choice or ordering task.
     if (
       !cue ||
       !metadata ||
-      !/_{2,}/u.test(old) ||
-      (!cue.answers && gapFill(cue.prompt, answer!) === null)
+      metadata.mode !== "closed_recall" ||
+      (cue.answers
+        ? false
+        : !/_{2,}/u.test(old) || gapFill(cue.prompt, answer!) === null)
     )
       return exercise;
     // The instruction ends at its first colon; the sentence may contain more.

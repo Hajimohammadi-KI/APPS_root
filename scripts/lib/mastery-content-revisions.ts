@@ -14,7 +14,9 @@ import {
   CONTENT_REVISION,
   CONTENT_REVISION_VERSION,
   GAP_CUE_REVISIONS,
+  DISTINCT_REVISIONS,
   GAP_CUE_VERSION,
+  PARALLEL_PRACTICE_VERSION,
   RECALL_REVISIONS,
   RECALL_VERSION,
   UNIT_CONTENT_REVISIONS,
@@ -302,6 +304,20 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
           ? "correction"
           : responseKindFor(prompt),
     }) && RECALL_VERSION,
+  );
+  latest(
+    reviseTasks(pack, DISTINCT_REVISIONS, {
+      version: PARALLEL_PRACTICE_VERSION,
+      tag: "distinct",
+      source: "authored-distinct",
+      reason:
+        "Replace an item that asked for the same sentence and answer as another item of the unit.",
+      retiredOn: "2026-11-02",
+      kind: (prompt) =>
+        /^(?:Correct|Korrigiere)\b/u.test(prompt)
+          ? "correction"
+          : responseKindFor(prompt),
+    }) && PARALLEL_PRACTICE_VERSION,
   );
   return pack;
 }

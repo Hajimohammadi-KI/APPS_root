@@ -16,12 +16,13 @@ import {
   optionDistractors,
 } from "../shared/learning-core/src/automaticity/curriculum-audit";
 import {
+  DISTINCT_REVISIONS,
   GAP_CUE_REVISIONS,
   RECALL_REVISIONS,
   checkedPracticeFor,
   gapCueRevisionsFor,
 } from "../shared/learning-core/src/content-revisions";
-import { gapFill } from "../shared/learning-core/src/text";
+import { gapFill, normalizeText } from "../shared/learning-core/src/text";
 import { assertWritingPrecision } from "../shared/learning-core/src/writing-precision";
 test("W33 both legacy labs use repaired prompts while raw historical catalogs remain intact", async () => {
   const english =
@@ -216,13 +217,17 @@ test("W33 every cued gap fits its stored answer, and offered options expose the 
         .map((task) => [task.id, task] as const),
     ),
   );
-  const recalled = new Set(RECALL_REVISIONS.map((row) => row.taskId));
+  // A revision whose result was revised again is checked in its later form.
+  const revisedAgain = new Set(
+    [...RECALL_REVISIONS, ...DISTINCT_REVISIONS].map((row) => row.taskId),
+  );
   for (const [revision, suffix] of [
     ...GAP_CUE_REVISIONS.map((row) => [row, ".cues-202611013"] as const),
     ...RECALL_REVISIONS.map((row) => [row, ".recall-202611021"] as const),
+    ...DISTINCT_REVISIONS.map((row) => [row, ".distinct-202611022"] as const),
   ]) {
     const id = revision.taskId.replace(/\.writing$/u, `${suffix}.writing`);
-    if (recalled.has(id)) continue;
+    if (revisedAgain.has(id)) continue;
     const task = active.get(id);
     expect(`${id}: ${task?.prompt}`).toBe(`${id}: ${revision.prompt}`);
     if (/_{2,}/u.test(task!.prompt))
@@ -271,7 +276,8 @@ test("W33 every unit offers at least three checkable written items, and offered 
       }))
       .filter((row) => row.checkable < 3);
     expect(thin).toEqual([]);
-    // Two items of one unit never ask for the same sentence with the same answer.
+    // Two items of one unit never ask for the same sentence: one sentence
+    // practised as a correction, a gap and a choice counted three times.
     const repeated = built(language).units.flatMap((unit) => {
       const seen = new Set<string>();
       return activePracticeTasks(unit)
@@ -280,7 +286,9 @@ test("W33 every unit offers at least three checkable written items, and offered 
             task.answerPolicy === "closed" && task.modality === "writing",
         )
         .flatMap((task) => {
-          const key = `${task.prompt.slice(task.prompt.lastIndexOf(":") + 1).trim()}=${task.acceptedAnswers[0]}`;
+          const key = normalizeText(task.acceptedAnswers[0]!, {
+            allowOptionalFinalPeriod: true,
+          }).toLocaleLowerCase(language);
           const twice = seen.has(key);
           seen.add(key);
           return twice ? [task.id] : [];
@@ -293,7 +301,7 @@ test("W33 every unit offers at least three checkable written items, and offered 
   ))
     if (
       task.modality === "writing" &&
-      /\.(?:checks|recall)-2026/u.test(task.id)
+      /\.(?:checks|recall|distinct)-2026/u.test(task.id)
     ) {
       expect(task.solution).toBe(task.acceptedAnswers[0]!);
       if (/_{2,}/u.test(task.prompt))
@@ -400,10 +408,14 @@ test("W33 the Labs find each gap-cue revision under its unit title and exercise 
   for (const language of ["en", "de"] as const) {
     const pack = built(language);
     const latest = new Map<string, (typeof GAP_CUE_REVISIONS)[number]>();
-    for (const revision of [...GAP_CUE_REVISIONS, ...RECALL_REVISIONS]) {
+    for (const revision of [
+      ...GAP_CUE_REVISIONS,
+      ...RECALL_REVISIONS,
+      ...DISTINCT_REVISIONS,
+    ]) {
       const [, unit, index] =
         revision.taskId.match(
-          /^(.+?)\.retrieve\.(?:content-\d+-)?(\d+)\.(?:(?:forms|cues)-\d+\.)*writing$/u,
+          /^(.+?)\.retrieve\.(?:content-\d+-)?(\d+)\.(?:(?:forms|cues|recall)-\d+\.)*writing$/u,
         ) ?? [];
       if (unit?.startsWith(`${language}.`))
         latest.set(`${unit}#${index}`, revision);

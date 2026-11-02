@@ -18,7 +18,7 @@ import {
 } from "../shared/learning-core/src/automaticity/curriculum";
 import { unitDigest } from "./lib/automaticity-release-reviews";
 import * as evidence from "./lib/curriculum-review-evidence";
-import type { CoverageCell } from "./lib/automaticity-coverage";
+import type { CoverageCell } from "./lib/automaticity-release-reviews";
 import { prepareCurriculumReviewImport } from "./lib/reviewed-curriculum";
 
 // The review page reads the curriculum each app serves.

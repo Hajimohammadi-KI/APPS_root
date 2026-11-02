@@ -181,7 +181,7 @@ export function contentReviewFindings(
       const unconfirmed = CONTENT_TASK_CHECKS.filter(
         (check) => row?.checks[check] !== true,
       );
-      return unconfirmed.length || row?.note.trim()
+      return unconfirmed.length
         ? [
             {
               taskId: task.id,

@@ -205,6 +205,8 @@ const isFunctionWord = (word: string, language: "en" | "de") =>
       /^(?:wo|da)r?(?:an|auf|aus|bei|durch|fur|gegen|in|mit|nach|uber|um|unter|von|vor|zu|zwischen)$/u.test(
         word,
       );
+const GAP_FRAMES =
+  /schreibe (?:die|den) (?:vollständige|ganzen|vollständigen)(?: richtige)? (?:Antwort|Satz|deutschen Text|Text)(?: auf Deutsch)?|schreibe (?:beide Sätze|ihn|sie) vollständig(?: auf Deutsch)?|Setze die fehlende Form ein|Wende die Form in einem zweiten kontrollierten Beispiel an|Ergänze die Lücke(?:, sodass der Text zusammenhängt)?|Write the full sentence|Complete the sentence/giu;
 const pairs = (word: string) =>
   new Set([...word].slice(1).map((letter, at) => word[at] + letter));
 // Inflected, ge- or zu- forms keep a prefix or most letter pairs of their cue
@@ -262,11 +264,15 @@ export function auditGapCue(
   )
     return [];
   const colon = task.prompt.lastIndexOf(":");
+  // The fixed frames name no word of the answer ("… Antwort auf Deutsch"),
+  // and a function word such as "auf" cues no content word (Aufgaben).
   const cues = foldedWords(
-    task.prompt.slice(0, Math.max(0, colon)) +
+    task.prompt
+      .slice(0, Math.max(0, colon))
+      .replace(GAP_FRAMES, " ") +
       " " +
       task.prompt.slice(colon + 1).replace(/_{2,}/u, " "),
-  );
+  ).filter((cue) => !isFunctionWord(cue, language));
   const uncued = foldedWords(fill).filter(
     (word) =>
       !isFunctionWord(word, language) && !cues.some((cue) => cuedBy(word, cue)),

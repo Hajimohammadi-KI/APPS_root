@@ -276,6 +276,13 @@ test("W33 build audit requires a cue for every content word a one-gap cloze leav
       "Complete the sentence: _____ the rain, we went out.",
       "Despite the rain, we went out.",
     ],
+    // The fixed frame ("… auf Deutsch") and function words ("auf") cue nothing.
+    ["de", setze + "Warum lernst du ___?", "Warum lernst du Deutsch?"],
+    [
+      "de",
+      setze + "Ich habe wenig Zeit, aber viele ___.",
+      "Ich habe wenig Zeit, aber viele Aufgaben.",
+    ],
     // A colon inside the sentence or an instruction after it still aligns.
     [
       "en",

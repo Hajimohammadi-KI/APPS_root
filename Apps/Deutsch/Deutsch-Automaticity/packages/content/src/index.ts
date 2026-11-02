@@ -250,7 +250,8 @@ function withGapCues(
   const revisions = gapCueRevisionsFor("de", title);
   return exercises.map((exercise, index) => {
     const [old, oldAnswer, metadata] = exercise;
-    const cue = revisions.get(index) ?? labGapCueFor(title, index, old);
+    // A Lab row is written for this Lab exercise; it wins over the path's item.
+    const cue = labGapCueFor(title, index, old) ?? revisions.get(index);
     const [answer, ...alternatives] = cue?.answers ?? [
       oldAnswer,
       ...(metadata?.acceptedAnswers ?? []),

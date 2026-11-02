@@ -44,12 +44,29 @@ describe("browser grammar catalog", () => {
     ).toEqual(JSON.parse(JSON.stringify(browserGrammarCatalog)));
   });
   it("zeigt in jeder Lückenübung, welches Wort fehlt", () => {
-    for (const [title, index, sentence] of LAB_GAP_CUES) {
+    // The last row for an exercise is the one shown.
+    const latest = new Map(
+      LAB_GAP_CUES.map((row) => [`${row[0]}#${row[1]}`, row] as const),
+    );
+    for (const [title, index, sentence] of latest.values()) {
       const exercise = grammarUnits.find((unit) => unit.title === title)
         ?.exercises[index];
       expect(`${title}#${index}: ${exercise?.[0]}`).toEndWith(` ${sentence}`);
       expect(exercise?.[2]?.prompt.English).toEndWith(` ${sentence}`);
-      expect(gapFill(exercise![0], exercise![1])).not.toBeNull();
+      if (/_{2,}/u.test(sentence))
+        expect(gapFill(exercise![0], exercise![1])).not.toBeNull();
+    }
+    // No closed exercise of a unit repeats another one's sentence.
+    for (const unit of grammarUnits) {
+      const answers = unit.exercises
+        .filter(([, , metadata]) => metadata?.mode === "closed_recall")
+        .map(([, answer]) =>
+          answer.toLocaleLowerCase("de").replace(/[.!?]\s*$/u, ""),
+        );
+      const repeated = answers.length - new Set(answers).size;
+      expect(`${unit.title}: ${repeated}`).toBe(
+        `${unit.title}: ${unit.title === "es gibt mit Akkusativ" ? 1 : 0}`,
+      );
     }
     const exercise = grammarUnits.find(
       (unit) => unit.title === "Satzklammer im einfachen Hauptsatz",

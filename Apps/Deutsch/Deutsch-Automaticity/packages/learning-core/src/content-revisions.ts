@@ -3268,12 +3268,18 @@ export const GAP_CUE_REVISIONS: readonly {
  * one fits, so the other is recognised as wrong; the rest name the word to use.
  * The first answer fits the gap; further answers are reviewed equivalents. */
 export const CHECKED_PRACTICE_VERSION = "2026-11-01.4";
+/** The second round (2026-11-01.5): the English units that still had none of
+ * these (the Lab showed "State the rule" there) and the two German units with
+ * fewer than three checkable items. */
+export const RECALL_VERSION = "2026-11-01.5";
 export const CHECKED_PRACTICE: readonly {
   readonly unit: string;
   readonly prompt: string;
   readonly answers: readonly string[];
-}[] = (
-  [
+  readonly version: string;
+}[] = [
+  ...(
+    [
     [
       "en.c.002",
       "Complete the sentence: ___ lives near the station. (He / Him)",
@@ -4096,43 +4102,114 @@ export const CHECKED_PRACTICE: readonly {
       "Use the past simple of the verb in brackets: Then they ___ the report to the client. (send)",
       "Then they sent the report to the client.",
     ],
-  ] as const
-).map(([unit, prompt, ...answers]) => ({ unit, prompt, answers }));
+    ] as const
+  ).map(([unit, prompt, ...answers]) => ({
+    unit,
+    prompt,
+    answers,
+    version: CHECKED_PRACTICE_VERSION,
+  })),
+  ...(
+    [
+      ["en.c.001", "Complete the sentence with is or are: My parents ___ at home today.", "My parents are at home today."],
+      ["en.c.001", "Complete the sentence with am or is: My brother ___ a nurse.", "My brother is a nurse."],
+      ["en.c.015", "Use the present continuous of the verb in brackets: Look, the baby ___. (sleep)", "Look, the baby is sleeping.", "Look, the baby’s sleeping."],
+      ["en.c.015", "Use the present continuous of the verb in brackets: We ___ in a hotel this week. (stay)", "We are staying in a hotel this week.", "We’re staying in a hotel this week."],
+      ["en.c.034", "Use the present simple of the verb in brackets after if: If she ___ now, she will catch the train. (leave)", "If she leaves now, she will catch the train.", "If she leaves now, she’ll catch the train."],
+      ["en.c.034", "Use will and the verb in brackets: If she calls, I ___ her the news. (tell)", "If she calls, I will tell her the news.", "If she calls, I’ll tell her the news."],
+      ["en.c.048", "Use the past perfect of the verb in brackets: If we ___ the map, we would have found the hotel. (check)", "If we had checked the map, we would have found the hotel.", "If we’d checked the map, we would have found the hotel."],
+      ["en.c.048", "Use would have and the verb in brackets: If he had asked, I ___ him. (help)", "If he had asked, I would have helped him.", "If he had asked, I’d have helped him."],
+      ["en.c.058", "Complete the sentence: ___ the instructions, she would not have made the mistake. (Had she read / She had read)", "Had she read the instructions, she would not have made the mistake."],
+      ["en.c.058", "Complete the sentence: ___ any problems arise, please contact us. (Should / Would)", "Should any problems arise, please contact us."],
+      ["en.c.072", "Complete the sentence with which or that: The report, ___ was published last week, includes data that nobody had checked.", "The report, which was published last week, includes data that nobody had checked."],
+      ["en.c.072", "Complete the sentence: ___ the sample was small, the results, which were consistent, convinced the reviewers. (Although / Because)", "Although the sample was small, the results, which were consistent, convinced the reviewers."],
+      ["en.c.085", "Write the possessive form of the plural word in brackets: This is my ___ car. (parents)", "This is my parents’ car."],
+      ["en.c.086", "Complete the sentence with on or in: The shop opens ___ 2 May.", "The shop opens on 2 May."],
+      ["en.c.087", "Complete the sentence with of or at: I am afraid ___ dogs.", "I am afraid of dogs.", "I’m afraid of dogs."],
+      ["en.c.088", "Say how she felt. Complete the sentence with confused or confusing: She was ___ by the instructions.", "She was confused by the instructions."],
+      ["en.c.089", "Complete the sentence with the verb in brackets to show the purpose: I went to the library ___ a book. (borrow)", "I went to the library to borrow a book.", "I went to the library in order to borrow a book."],
+      ["en.c.090", "Complete the sentence: Can I have ___ sugar, please? (a little / a few)", "Can I have a little sugar, please?"],
+      ["en.c.091", "Complete the sentence with its or it’s: The dog wagged ___ tail.", "The dog wagged its tail."],
+      ["en.c.092", "Complete the sentence with although or despite: She passed the exam ___ she was ill.", "She passed the exam although she was ill."],
+      ["en.c.093", "Ask about a past habit that has changed. Complete the question with use or used: Did you ___ to walk to school?", "Did you use to walk to school?"],
+      ["en.c.094", "Complete the sentence with so or such: The music was ___ loud that we left.", "The music was so loud that we left."],
+      ["en.c.095", "Say that he succeeded once after trying. Complete the sentence with could or managed: He ___ to find a seat on the busy train.", "He managed to find a seat on the busy train."],
+      ["en.c.096", "Use would and the verb in brackets for a repeated past action: Every evening, my grandfather ___ us stories. (tell)", "Every evening, my grandfather would tell us stories."],
+      ["en.c.097", "Complete the sentence with the phrasal verb that means postpone: We had to ___ the trip. (put off / put on)", "We had to put off the trip."],
+      ["en.c.098", "Complete the sentence with yet or already: I haven’t finished my homework ___.", "I haven’t finished my homework yet.", "I have not finished my homework yet."],
+      ["en.c.099", "Complete the sentence with themselves or theirselves: The children dressed ___.", "The children dressed themselves."],
+      ["en.c.100", "Use the verb in the correct present form: This bag ___ to my sister. (belongs / is belonging)", "This bag belongs to my sister."],
+      ["en.c.101", "Complete the sentence with as or like: My brother looks ___ my father.", "My brother looks like my father."],
+      ["en.c.102", "Use the verb in brackets with the right preposition: It ___ the weather. (depend)", "It depends on the weather."],
+      ["en.c.103", "Complete the sentence with very or absolutely: The film was ___ good.", "The film was very good."],
+      ["en.c.104", "Use the typical American English form: Your English has ___ much better. (gotten / got)", "Your English has gotten much better."],
+      ["en.c.105", "Complete the sentence with much or very: This test is ___ easier than the last one.", "This test is much easier than the last one."],
+      ["en.c.106", "Report the question “Where is the station?”: She asked where ___. (the station was / was the station)", "She asked where the station was."],
+      ["en.c.107", "Complete the sentence: It ___ rain tomorrow, so take an umbrella. (is likely to / likely)", "It is likely to rain tomorrow, so take an umbrella.", "It’s likely to rain tomorrow, so take an umbrella."],
+      ["en.c.108", "You planned to send it, but you did not. Complete the sentence with the verb in brackets: I forgot ___ the email. (send)", "I forgot to send the email."],
+      ["en.c.109", "Use the present perfect passive of the verb in brackets: The new rules ___ to all staff. (explain)", "The new rules have been explained to all staff."],
+      ["en.c.110", "Say that it is almost certain. Use must have and the verb in brackets: The streets are wet; it ___ in the night. (rain)", "The streets are wet; it must have rained in the night."],
+      ["en.c.111", "Use the past form of the verb in brackets after would rather: I’d rather you ___ here tomorrow. (come)", "I’d rather you came here tomorrow."],
+      ["en.c.112", "Replace the form with a pronoun: Please fill ___. (it in / in it)", "Please fill it in."],
+      ["de.c.069", "Formuliere „nach der Analyse der Daten“ als Nebensatz und schreibe den ganzen Satz: Nachdem wir die Daten ___ hatten, veröffentlichten wir die Ergebnisse. (analysieren)", "Nachdem wir die Daten analysiert hatten, veröffentlichten wir die Ergebnisse."],
+      ["de.c.069", "Bilde für einen dichten Bericht aus dem Verb in Klammern ein Nomen und schreibe den ganzen Satz: Nach der ___ der Daten veröffentlichten wir die Ergebnisse. (analysieren)", "Nach der Analyse der Daten veröffentlichten wir die Ergebnisse."],
+      ["de.c.069", "Bilde aus dem Verb in Klammern ein Nomen und schreibe den ganzen Satz: Die ___ der Ergebnisse folgt im nächsten Kapitel. (darstellen)", "Die Darstellung der Ergebnisse folgt im nächsten Kapitel."],
+      ["de.c.090", "Setze die richtige Akkusativform ein und schreibe den vollständigen Satz: In meinem Zimmer gibt es ___ Schreibtisch. (ein / einen)", "In meinem Zimmer gibt es einen Schreibtisch."],
+      ["de.c.090", "Setze die richtige Akkusativform ein und schreibe den vollständigen Satz: In der Nähe gibt es ___ Bahnhof. (kein / keinen)", "In der Nähe gibt es keinen Bahnhof."],
+    ] as const
+  ).map(([unit, prompt, ...answers]) => ({
+    unit,
+    prompt,
+    answers,
+    version: RECALL_VERSION,
+  })),
+];
 
-/** Unit titles for the gap-cue revisions, so the Grammar Labs find them. */
-const GAP_CUE_UNIT_TITLES: ReadonlyMap<string, string> = new Map([
-  ["en.c.048", "Third conditional"],
-  ["en.c.085", "Possessive ’s and whose"],
-  ["en.c.087", "Adjectives and prepositions"],
-  ["en.c.088", "Adjectives ending in -ed and -ing"],
-  ["en.c.089", "Infinitive of purpose"],
-  ["en.c.091", "Capital letters and apostrophes"],
-  ["en.c.092", "Contrasting ideas: although, despite, however"],
-  ["en.c.093", "Used to, be used to, get used to"],
-  ["en.c.094", "Intensifiers: so and such"],
-  ["en.c.095", "Past ability: could, was able to, managed to"],
-  ["en.c.096", "Past habits: used to, would, past simple"],
-  ["en.c.097", "Phrasal verbs"],
-  ["en.c.098", "Present perfect: just, yet, still, already"],
-  ["en.c.100", "Stative and dynamic verbs"],
-  ["en.c.101", "Using as and like"],
-  ["en.c.102", "Verbs and prepositions"],
-  ["en.c.103", "Gradable and non-gradable adjectives"],
-  ["en.c.104", "British and American grammar"],
-  ["en.c.105", "Modifying comparatives"],
-  ["en.c.106", "Reported speech: questions"],
-  ["en.c.107", "Future degrees of certainty"],
-  ["en.c.108", "Gerund or infinitive: change in meaning"],
-  ["en.c.109", "Advanced passives review"],
-  ["en.c.110", "Modals and expressions of probability"],
-  ["en.c.111", "Unreal time"],
-  ["en.c.112", "Word order in phrasal verbs"],
+/** Items that gave their answer away or repeated another item of the unit
+ * (2026-11-01.5): a bracket cue that was already the answer now has to be
+ * changed (another form, another order, options), a repeated sentence became a
+ * new one, and a gap whose answer held words the sentence did not show now
+ * shows them. The first answer fits; further answers are reviewed equivalents. */
+export const RECALL_REVISIONS: readonly {
+  readonly taskId: string;
+  readonly prompt: string;
+  readonly answers?: readonly string[];
+}[] = (
+  [
+    ["en.c.012.retrieve.checks-202611014-1.writing", "Complete the instruction: ___ down, please. (Sit / Sits)", "Sit down, please."],
+    ["en.c.026.retrieve.checks-202611014-0.writing", "Put the words in brackets in the right order: She ___ early. (usually, is)"],
+    ["en.c.026.retrieve.checks-202611014-1.writing", "Put the words in brackets in the right order: We ___ breakfast at home. (have, always)"],
+    ["en.c.070.retrieve.checks-202611014-1.writing", "Keep the list parallel with the verb of the noun in brackets: We want to reduce costs and ___ quality. (improvement)"],
+    ["en.c.077.retrieve.checks-202611014-1.writing", "Correct the punctuation so that two commas mark the apposition: Dr Lee the project leader presented the results.", "Dr Lee, the project leader, presented the results."],
+    ["en.c.078.retrieve.checks-202611014-1.writing", "Transform the sentence with as it may seem: Although it may seem strange, the plan worked.", "Strange as it may seem, the plan worked."],
+    ["en.c.082.retrieve.checks-202611014-1.writing", "Use suggest with a that-clause: I suggest ___ the manager. (that he call / him to call)", "I suggest that he call the manager.", "I suggest that he calls the manager.", "I suggest that he should call the manager."],
+    ["en.c.100.retrieve.1.cues-202611013.writing", "Use the verb in the correct present form: I _____ you. (believe / am believing)"],
+    ["en.c.104.retrieve.3.writing", "Say when you met in typical British English, using at and weekend: We met _____.", "We met at the weekend."],
+    ["en.c.104.retrieve.4.writing", "Say when you met in typical American English, using on and weekend: We met _____.", "We met on the weekend."],
+    ["de.c.008.retrieve.3.writing", zweites + "Im Park spielen drei ___. (Kind)", "Im Park spielen drei Kinder."],
+    ["de.c.026.retrieve.1.cues-202611013.writing", setze + "Der Kurs ist ___. (interessant / interessante)"],
+    ["de.c.026.retrieve.3.cues-202611013.writing", zweites + "Die Aufgabe ist ___. (schwierig / schwierige)"],
+    ["de.c.037.retrieve.3.writing", zweites + "Es ist wichtig, pünktlich ___. (ankommen)", "Es ist wichtig, pünktlich anzukommen."],
+    ["de.c.055.retrieve.3.cues-202611013.writing", zweites + "Ich habe ___ gestern gegeben. (ihm, es)"],
+    ["de.c.059.retrieve.3.cues-202611013.writing", "Formuliere mit sein + zu um und schreibe den ganzen Satz: Die Aufgabe muss erledigt werden.", "Die Aufgabe ist zu erledigen."],
+    ["de.c.066.retrieve.3.cues-202611013.writing", zweites + "Das Ergebnis ___ zu bestätigen, dass die Methode wirkt. (scheinen)", "Das Ergebnis scheint zu bestätigen, dass die Methode wirkt."],
+    ["de.c.082.retrieve.2.writing", "Wähle die passende Selbstkorrektur und schreibe sie vollständig auf Deutsch: A: Wir treffen uns am Montag—nein, falsch, alles falsch. / B: Wir treffen uns am Montag—Verzeihung, ich meine: am Dienstag.", "Wir treffen uns am Montag—Verzeihung, ich meine: am Dienstag."],
+    ["de.c.082.retrieve.3.writing", zweites + "Ich habe—besser gesagt: ich ___—bereits begonnen. (haben, Präteritum)"],
+    ["de.c.137.retrieve.1.cues-202611013.writing", setze + "___ Ergebnisse waren signifikant. (alle, nicht)"],
+  ] as const
+).map(([taskId, prompt, ...answers]) =>
+  answers.length ? { taskId, prompt, answers } : { taskId, prompt },
+);
+
+/** Unit titles for the revisions above, so the Grammar Labs find them. */
+const UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["de.c.001", "Personalpronomen und sein"],
   ["de.c.003", "Präsens regelmäßiger Verben"],
   ["de.c.004", "Präsens unregelmäßiger Verben"],
   ["de.c.005", "W-Fragen"],
   ["de.c.006", "Ja/Nein-Fragen"],
   ["de.c.007", "bestimmter und unbestimmter Artikel"],
+  ["de.c.008", "Pluralformen"],
   ["de.c.009", "Akkusativ"],
   ["de.c.010", "Possessivartikel"],
   ["de.c.011", "nicht und kein"],
@@ -4155,6 +4232,7 @@ const GAP_CUE_UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["de.c.033", "Konjunktiv II mit würde"],
   ["de.c.035", "Passiv Präsens"],
   ["de.c.036", "Passiv Präteritum und Perfekt"],
+  ["de.c.037", "Infinitiv mit zu"],
   ["de.c.038", "um...zu / damit"],
   ["de.c.040", "Genitivgrundlagen"],
   ["de.c.041", "Adjektivdeklination Grundlagen"],
@@ -4183,6 +4261,7 @@ const GAP_CUE_UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["de.c.066", "Wissenschaftliches Hedging"],
   ["de.c.067", "Textkohäsion"],
   ["de.c.068", "Register und Stil"],
+  ["de.c.069", "Verbalisierung und Nominalisierung abwägen"],
   ["de.c.070", "Parallelismus"],
   ["de.c.071", "Feine Bedeutungsunterschiede im Modus"],
   ["de.c.072", "Markierte Wortstellung"],
@@ -4193,10 +4272,12 @@ const GAP_CUE_UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["de.c.078", "Textsortenspezifische Grammatik"],
   ["de.c.079", "Stilistische Verdichtung"],
   ["de.c.080", "Pragmatische Feinsteuerung"],
+  ["de.c.082", "Selbstreparatur im Sprechen"],
   ["de.c.083", "Mehrsprachige Interferenzkontrolle"],
   ["de.c.084", "Integrierte automatische Produktion"],
   ["de.c.086", "Satzklammer im einfachen Hauptsatz"],
   ["de.c.089", "Häufigkeitsadverbien"],
+  ["de.c.090", "es gibt mit Akkusativ"],
   ["de.c.091", "man für allgemeine Aussagen"],
   ["de.c.096", "Relativsätze mit der, die und das"],
   ["de.c.098", "darum, deshalb und deswegen"],
@@ -4211,26 +4292,164 @@ const GAP_CUE_UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["de.c.130", "Komplexe Konditionalstrukturen"],
   ["de.c.137", "Skopus und Negation"],
   ["de.c.140", "Regionale Variation und Standardregister"],
+  ["en.c.001", "Verb be: am/is/are"],
+  ["en.c.002", "Subject pronouns"],
+  ["en.c.003", "Articles a/an/the"],
+  ["en.c.004", "Plural nouns"],
+  ["en.c.005", "Possessive adjectives"],
+  ["en.c.006", "Have/has got"],
+  ["en.c.007", "Present simple affirmative"],
+  ["en.c.008", "Present simple negatives"],
+  ["en.c.009", "Present simple questions"],
+  ["en.c.010", "There is/There are"],
+  ["en.c.011", "Can/can’t"],
+  ["en.c.012", "Imperatives"],
+  ["en.c.013", "Prepositions of place"],
+  ["en.c.014", "Countable and uncountable nouns"],
+  ["en.c.015", "Present continuous"],
+  ["en.c.016", "Present simple vs continuous"],
+  ["en.c.017", "Past simple regular"],
+  ["en.c.018", "Past simple irregular"],
+  ["en.c.019", "Past simple questions and negatives"],
+  ["en.c.020", "Future with will"],
+  ["en.c.021", "Be going to"],
+  ["en.c.022", "Comparatives"],
+  ["en.c.023", "Superlatives"],
+  ["en.c.024", "Some/any/no"],
+  ["en.c.025", "Much/many/a lot of"],
+  ["en.c.026", "Adverbs of frequency"],
+  ["en.c.027", "Object pronouns"],
+  ["en.c.028", "Must/have to"],
+  ["en.c.029", "Present perfect"],
+  ["en.c.030", "Present perfect vs past simple"],
+  ["en.c.031", "For and since"],
+  ["en.c.032", "Past continuous"],
+  ["en.c.033", "Past continuous vs past simple"],
+  ["en.c.034", "First conditional"],
+  ["en.c.035", "Second conditional"],
+  ["en.c.036", "Relative clauses"],
+  ["en.c.037", "Gerunds and infinitives"],
+  ["en.c.038", "Modal verbs of advice"],
+  ["en.c.039", "Passive present and past"],
+  ["en.c.040", "Reported statements"],
+  ["en.c.041", "Question tags"],
+  ["en.c.042", "Too/enough"],
+  ["en.c.043", "Present perfect continuous"],
+  ["en.c.044", "Past perfect"],
+  ["en.c.045", "Past perfect continuous"],
+  ["en.c.046", "Future continuous"],
+  ["en.c.047", "Future perfect"],
+  ["en.c.048", "Third conditional"],
+  ["en.c.049", "Mixed conditionals"],
+  ["en.c.050", "Modal deduction present"],
+  ["en.c.051", "Modal deduction past"],
+  ["en.c.052", "Causative have/get"],
+  ["en.c.053", "Advanced passive"],
+  ["en.c.054", "Participle clauses"],
+  ["en.c.055", "Wish and if only"],
+  ["en.c.056", "Inversion after negative adverbials"],
+  ["en.c.057", "Cleft sentences"],
+  ["en.c.058", "Inversion in conditionals"],
+  ["en.c.059", "Nominalisation"],
+  ["en.c.060", "Hedging and stance"],
+  ["en.c.061", "Advanced discourse markers"],
+  ["en.c.062", "Substitution and ellipsis"],
+  ["en.c.063", "Complex relative clauses"],
+  ["en.c.064", "Advanced reporting verbs"],
+  ["en.c.065", "Emphasis with auxiliaries"],
+  ["en.c.066", "Fronting"],
+  ["en.c.067", "Complex noun phrases"],
+  ["en.c.068", "Register control"],
+  ["en.c.069", "Advanced tense-aspect choices"],
+  ["en.c.070", "Parallelism"],
+  ["en.c.071", "Marked word order"],
+  ["en.c.072", "Layered subordination"],
+  ["en.c.073", "Nuanced modality"],
+  ["en.c.074", "Counterfactual distance"],
+  ["en.c.075", "Advanced cohesion"],
+  ["en.c.076", "Rhetorical grammar"],
+  ["en.c.077", "Compressed academic structures"],
+  ["en.c.078", "Idiomatic clause patterns"],
+  ["en.c.079", "Ambiguity control"],
+  ["en.c.080", "Style shifting"],
+  ["en.c.081", "Advanced punctuation and grammar"],
+  ["en.c.082", "Editing for naturalness"],
+  ["en.c.083", "Genre-specific grammar"],
+  ["en.c.084", "Integrated automatic production"],
+  ["en.c.085", "Possessive ’s and whose"],
+  ["en.c.086", "Prepositions of time: at, in, on"],
+  ["en.c.087", "Adjectives and prepositions"],
+  ["en.c.088", "Adjectives ending in -ed and -ing"],
+  ["en.c.089", "Infinitive of purpose"],
+  ["en.c.090", "Quantifiers: few, a few, little, a little"],
+  ["en.c.091", "Capital letters and apostrophes"],
+  ["en.c.092", "Contrasting ideas: although, despite, however"],
+  ["en.c.093", "Used to, be used to, get used to"],
+  ["en.c.094", "Intensifiers: so and such"],
+  ["en.c.095", "Past ability: could, was able to, managed to"],
+  ["en.c.096", "Past habits: used to, would, past simple"],
+  ["en.c.097", "Phrasal verbs"],
+  ["en.c.098", "Present perfect: just, yet, still, already"],
+  ["en.c.099", "Reflexive pronouns"],
+  ["en.c.100", "Stative and dynamic verbs"],
+  ["en.c.101", "Using as and like"],
+  ["en.c.102", "Verbs and prepositions"],
+  ["en.c.103", "Gradable and non-gradable adjectives"],
+  ["en.c.104", "British and American grammar"],
+  ["en.c.105", "Modifying comparatives"],
+  ["en.c.106", "Reported speech: questions"],
+  ["en.c.107", "Future degrees of certainty"],
+  ["en.c.108", "Gerund or infinitive: change in meaning"],
+  ["en.c.109", "Advanced passives review"],
+  ["en.c.110", "Modals and expressions of probability"],
+  ["en.c.111", "Unreal time"],
+  ["en.c.112", "Word order in phrasal verbs"],
 ]);
 
-/** Gap-cue revisions of one Grammar Lab unit by exercise number: Lab exercise
- * N is the learning path's retrieve.N item (revised retrieval items keep N). */
+const unitFor = (language: Language, title: string) =>
+  [...UNIT_TITLES].find(
+    ([id, name]) => id.startsWith(`${language}.`) && name === title,
+  )?.[0];
+
+/** Gap-cue and recall revisions of one Grammar Lab unit by exercise number:
+ * Lab exercise N is the learning path's retrieve.N item (revised retrieval
+ * items keep N); the later revision of an item wins. */
 export function gapCueRevisionsFor(
   language: Language,
   title: string,
 ): ReadonlyMap<number, (typeof GAP_CUE_REVISIONS)[number]> {
-  const unit = [...GAP_CUE_UNIT_TITLES].find(
-    ([id, name]) => id.startsWith(`${language}.`) && name === title,
-  )?.[0];
+  const unit = unitFor(language, title);
   const revisions = new Map<number, (typeof GAP_CUE_REVISIONS)[number]>();
-  for (const revision of unit ? GAP_CUE_REVISIONS : []) {
+  for (const revision of unit
+    ? [...GAP_CUE_REVISIONS, ...RECALL_REVISIONS]
+    : []) {
     const [, id, index] =
       revision.taskId.match(
-        /^(.+?)\.retrieve\.(?:content-\d+-)?(\d+)\.(?:forms-\d+\.)?writing$/u,
+        /^(.+?)\.retrieve\.(?:content-\d+-)?(\d+)\.(?:(?:forms|cues)-\d+\.)*writing$/u,
       ) ?? [];
     if (id === unit) revisions.set(Number(index), revision);
   }
   return revisions;
+}
+
+/** The learning path's added checkable items of one unit, in their current
+ * revision, for the Grammar Lab. Task N of a version is checks-<version>-N. */
+export function checkedPracticeFor(
+  language: Language,
+  title: string,
+): readonly { readonly prompt: string; readonly answers: readonly string[] }[] {
+  const unit = unitFor(language, title);
+  const count = new Map<string, number>();
+  return CHECKED_PRACTICE.filter((row) => row.unit === unit).map((row) => {
+    const index = count.get(row.version) ?? 0;
+    count.set(row.version, index + 1);
+    const id = `${row.unit}.retrieve.checks-${row.version.replace(/\D/gu, "")}-${index}.writing`;
+    const revision = RECALL_REVISIONS.find((item) => item.taskId === id);
+    return {
+      prompt: revision?.prompt ?? row.prompt,
+      answers: revision?.answers ?? row.answers,
+    };
+  });
 }
 
 /** The 2026-11-01 revision of one unit, for the Grammar Labs and the curriculum build. */

@@ -255,11 +255,12 @@ function withGapCues(
       oldAnswer,
       ...(metadata?.acceptedAnswers ?? []),
     ];
+    // A revision that keeps the stored answer must fit this exercise's answer.
     if (
       !cue ||
       !metadata ||
       !/_{2,}/u.test(old) ||
-      gapFill(cue.prompt, answer!) === null
+      (!cue.answers && gapFill(cue.prompt, answer!) === null)
     )
       return exercise;
     const task = old.slice(old.lastIndexOf(":") + 1).trim();

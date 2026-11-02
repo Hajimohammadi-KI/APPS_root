@@ -4,6 +4,7 @@ import { repairGrammarUnitLinks } from "./resource-links";
 import type { GrammarExercise, GrammarUnit } from "./types";
 import { knownContentRepair } from "@automaticity/learning-core/content-repairs";
 import {
+  checkedPracticeFor,
   contentRevisionFor,
   gapCueRevisionsFor,
   retiredRepairPrompt,
@@ -13,17 +14,19 @@ import { gapFill, normalizeText } from "@automaticity/learning-core/text";
 
 const MINIMUM_CONTROLLED_EXERCISES = 6;
 
+/** Fills the unit to six exercises with the learning path's checkable items,
+ * then a checked repair of the unit's error. Reciting the rule or a can-do
+ * statement checked nothing and is no longer offered. */
 function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
   // The learner needs to see the error, written left of "→" in commonError.
   const error = unit.commonError.split("→")[0]!.trim();
   const candidates: GrammarExercise[] = [
-    [`State the rule for “${unit.title}” from memory.`, unit.recallTest],
+    ...checkedPracticeFor("en", unit.title).map(
+      ({ prompt, answers: [answer, ...alternatives] }) =>
+        revisedExercise({ prompt, answer: answer!, alternatives }),
+    ),
     [
-      `Write the transfer model for “${unit.title}” accurately.`,
-      unit.transferTest,
-    ],
-    [
-      `Repair this common error for “${unit.title}” and write the full corrected sentence: ${error}`,
+      `Correct this common error for “${unit.title}” and write the full corrected sentence: ${error}`,
       unit.repairTest,
     ],
   ];
@@ -105,9 +108,10 @@ function cueGaps(unit: GrammarUnit): GrammarUnit {
         exercise[1],
         ...(exercise[2]?.acceptedAnswers ?? []),
       ];
+      // A revision that keeps the stored answer must fit this exercise's answer.
       return revision &&
         /_{2,}/u.test(exercise[0]) &&
-        gapFill(revision.prompt, answer!) !== null
+        (revision.answers || gapFill(revision.prompt, answer!) !== null)
         ? revisedExercise({
             prompt: revision.prompt,
             answer: answer!,

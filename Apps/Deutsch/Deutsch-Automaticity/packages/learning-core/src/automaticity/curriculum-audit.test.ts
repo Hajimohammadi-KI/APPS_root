@@ -276,6 +276,17 @@ test("W33 build audit requires a cue for every content word a one-gap cloze leav
       "Complete the sentence: _____ the rain, we went out.",
       "Despite the rain, we went out.",
     ],
+    // A colon inside the sentence or an instruction after it still aligns.
+    [
+      "en",
+      "Complete the sentence: American English: We met _____.",
+      "American English: We met on the weekend.",
+    ],
+    [
+      "de",
+      setze + "Ich habe—besser gesagt: ich ___ begonnen.",
+      "Ich habe—besser gesagt: ich hatte—bereits begonnen.",
+    ],
   ] as const)
     expect(codes(language, prompt, answer)).toEqual(["uncued-gap:error"]);
   expect(
@@ -285,6 +296,20 @@ test("W33 build audit requires a cue for every content word a one-gap cloze leav
       "I am interested in photography.",
     ),
   ).toEqual(["gap-inside-word:error"]);
+  // A bracket cue that is already the answer turns recall into copying.
+  for (const [language, prompt, answer] of [
+    ["de", setze + "Der Kurs ist ___. (interessant)", "Der Kurs ist interessant."],
+    ["de", setze + "Ich habe ___ gestern gegeben. (es, ihm)", "Ich habe es ihm gestern gegeben."],
+    ["en", "Use the verb as an instruction: ___ the door, please. (open)", "Open the door, please."],
+  ] as const)
+    expect(codes(language, prompt, answer)).toEqual(["copied-cue:error"]);
+  for (const [language, prompt, answer] of [
+    // Capitalising a name inside the sentence is the task, not a copy.
+    ["en", "Use capital letters correctly: I’m visiting _____ in July. (france)", "I’m visiting France in July."],
+    ["de", setze + "Ich habe ___ gestern gegeben. (ihm, es)", "Ich habe es ihm gestern gegeben."],
+    ["de", setze + "Der Kurs ist ___. (interessant / interessante)", "Der Kurs ist interessant."],
+  ] as const)
+    expect(codes(language, prompt, answer)).toEqual([]);
   for (const [language, prompt, answer] of [
     // An explicit cue after the sentence, an option list, or the word itself
     // in the instruction or the rest of the sentence.

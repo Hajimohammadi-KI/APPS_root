@@ -179,7 +179,7 @@ export function optionDistractors(
 // Closed-class words a gap may leave out: choosing them is the grammar task.
 const FUNCTION_WORDS = {
   en: new Set(
-    "a an the this that these those my your his her its our their whose who whom which what where when why how i you he she it we they me him us them myself yourself himself herself itself ourselves themselves am is are was were be been being have has had do does did will would can could shall should may might must can't won't not no some any much many few little more most less to of in on at by for with from about into onto over under after before since until as than if whether when while because although though so and but or nor either neither both there here very too enough".split(
+    "a an the this that these those my your his her its our their whose who whom which what where when why how i you he she it we they me him us them mine yours hers ours theirs myself yourself himself herself itself ourselves themselves am is are was were be been being have has had do does did will would can could shall should may might must can't won't not no some any much many few little more most less to of in on at by for with from about into onto over under after before since until as than if whether when while because although though so and but or nor either neither both there here very too enough".split(
       " ",
     ),
   ),
@@ -239,8 +239,24 @@ export function auditGapCue(
   if (/\p{L}_{2,}|_{2,}\p{L}/u.test(task.prompt))
     return issue("gap-inside-word");
   const fill = gapFill(task.prompt, task.acceptedAnswers[0] ?? "");
+  if (fill === null) return [];
+  // A bracket cue that already is the answer leaves nothing to recall. Only a
+  // capital the sentence itself does not require (a name) is a task.
+  const bracket = task.prompt.match(/\(([^()/]+)\)\s*$/u)?.[1];
+  if (bracket) {
+    const plain = (text: string) =>
+      normalizeText(text).replace(/[,.;]/gu, " ").replace(/\s+/gu, " ").trim();
+    const opening = !/\p{L}/u.test(
+      task.prompt.slice(0, task.prompt.search(/_{2,}/u)).split(":").at(-1)!,
+    );
+    if (
+      plain(bracket) === plain(fill) ||
+      (opening &&
+        plain(bracket).toLocaleLowerCase() === plain(fill).toLocaleLowerCase())
+    )
+      return issue("copied-cue");
+  }
   if (
-    fill === null ||
     /\([^()]+\)\s*$/u.test(task.prompt) ||
     offeredOptions(task.prompt).length > 1
   )

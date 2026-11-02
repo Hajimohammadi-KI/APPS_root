@@ -11,6 +11,7 @@ import {
   type RevisedTask,
 } from "@automaticity/learning-core/content-revisions";
 import { gapFill, normalizeText } from "@automaticity/learning-core/text";
+import { modelSentenceCue } from "./lab-model-cues";
 
 const MINIMUM_CONTROLLED_EXERCISES = 6;
 
@@ -121,6 +122,22 @@ function cueGaps(unit: GrammarUnit): GrammarUnit {
     }),
   };
 }
+/** Copying a visible model sentence or explaining the rule checked nothing:
+ * the model sentence returns as a recall item, and the rule recital makes way
+ * for the learning path's checked items added by ensureSixExercises. */
+function recallModelSentences(unit: GrammarUnit): GrammarUnit {
+  return {
+    ...unit,
+    exercises: unit.exercises.flatMap<GrammarExercise>((exercise) => {
+      if (/^Explain the rule:/u.test(exercise[0])) return [];
+      const model = exercise[0].match(
+        /^Type (?:the|another) model sentence: (.+)$/u,
+      )?.[1];
+      const cue = model === undefined ? undefined : modelSentenceCue(model);
+      return [cue ? [cue.prompt, cue.answer] : exercise];
+    }),
+  };
+}
 export { legacyGrammarUnits };
 export const grammarUnits: GrammarUnit[] = [
   ...legacyGrammarUnits,
@@ -129,5 +146,6 @@ export const grammarUnits: GrammarUnit[] = [
   .map(repairKnownContent)
   .map(reviseContent)
   .map(cueGaps)
+  .map(recallModelSentences)
   .map(ensureSixExercises)
   .map(repairGrammarUnitLinks);

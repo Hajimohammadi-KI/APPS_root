@@ -287,53 +287,51 @@ describe("legacy content parity", () => {
       "Layered subordination",
       ...revisions.map((row) => row.title),
     ]);
-    // Two checkable items of the learning path replace "State the rule" and
-    // "Write the transfer model", which no one checked.
-    const checked = (title: string) =>
-      checkedPracticeFor("en", title)
-        .slice(0, 2)
-        .map(
-          ({ prompt, answers: [answer, ...alternatives] }): GrammarExercise =>
-            alternatives.length
-              ? [prompt, answer!, { acceptedAnswers: alternatives }]
-              : [prompt, answer!],
-        );
-    const expected = legacyGrammarUnits
-      .filter((unit) => !revised.has(unit.title))
-      .map((unit) =>
-        repairGrammarUnitLinks({
-          ...unit,
-          exercises: [
-            ...unit.exercises,
-            ...checked(unit.title),
-            [
-              `Correct this common error for “${unit.title}” and write the full corrected sentence: ${unit.commonError.split("→")[0]!.trim()}`,
-              unit.repairTest,
-            ],
-          ],
-        }),
-      );
+    // Copying a model sentence, explaining the rule, reciting it or a can-do
+    // statement, and repeating the first error checked nothing. The model
+    // sentence returns as a recall item and the learning path's checked items
+    // fill the unit; its first exercise stays as authored.
+    const exercise = ({
+      prompt,
+      answers: [answer, ...alternatives],
+    }: {
+      prompt: string;
+      answers: readonly string[];
+    }): GrammarExercise =>
+      alternatives.length
+        ? [prompt, answer!, { acceptedAnswers: alternatives }]
+        : [prompt, answer!];
     // The Lab checks a prompt with a gap or one that asks to correct,
     // complete, choose, change or transform; any other prompt is self-checked.
     const checkedInLab = (prompt: string) =>
       /_{2,}|…|\.\.\.|^(correct|complete|choose|change|transform)\b/i.test(
         prompt,
       );
+    for (const legacy of legacyGrammarUnits.filter(
+      (unit) => !revised.has(unit.title),
+    )) {
+      const unit = grammarUnits.find((row) => row.title === legacy.title)!;
+      expect(unit.exercises[0]).toEqual(legacy.exercises[0]!);
+      for (const row of checkedPracticeFor("en", unit.title).slice(0, 2))
+        expect(unit.exercises).toContainEqual(exercise(row));
+    }
     for (const unit of grammarUnits) {
+      expect(unit.exercises.length).toBeGreaterThanOrEqual(6);
       expect(
         unit.exercises.filter(([prompt]) =>
-          /^(State the rule|Write the transfer model)/u.test(prompt),
+          /^(State the rule|Write the transfer model|Explain the rule|Type (the|another) model sentence)/u.test(
+            prompt,
+          ),
         ),
       ).toEqual([]);
       expect(
-        `${unit.title}: ${unit.exercises.filter(([prompt]) => checkedInLab(prompt)).length}`,
-      ).not.toMatch(/: [0-3]$/u);
+        `${unit.title}: ${unit.exercises.filter(([prompt]) => !checkedInLab(prompt)).map(([prompt]) => prompt)}`,
+      ).toBe(`${unit.title}: `);
+      const answers = unit.exercises.map(([, answer]) => answer);
+      expect(`${unit.title}: ${answers.length - new Set(answers).size}`).toBe(
+        `${unit.title}: 0`,
+      );
     }
-    expect(
-      grammarUnits.filter((unit) =>
-        expected.some((row) => row.title === unit.title),
-      ),
-    ).toEqual(expected);
     const layered = grammarUnits.find(
       (unit) => unit.title === "Layered subordination",
     )!;

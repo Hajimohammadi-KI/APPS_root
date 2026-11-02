@@ -284,9 +284,12 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
     })
   )
     pack.version = GAP_CUE_VERSION;
-  const added = addCheckedPractice(pack);
-  if (added) pack.version = added;
-  if (
+  // The pack carries the latest content version applied.
+  const latest = (applied: string | null | false) => {
+    if (applied && applied > pack.version) pack.version = applied;
+  };
+  latest(addCheckedPractice(pack));
+  latest(
     reviseTasks(pack, RECALL_REVISIONS, {
       version: RECALL_VERSION,
       tag: "recall",
@@ -298,9 +301,8 @@ export function reviseMasteryContent(source: CurriculumPack): CurriculumPack {
         /^(?:Correct|Korrigiere)\b/u.test(prompt)
           ? "correction"
           : responseKindFor(prompt),
-    })
-  )
-    pack.version = RECALL_VERSION;
+    }) && RECALL_VERSION,
+  );
   return pack;
 }
 
@@ -339,7 +341,11 @@ function addCheckedPractice(pack: CurriculumPack): string | null {
         contentReview: "authored",
         prompt: row.prompt,
         answerPolicy: "closed",
-        responseKind: /_{2,}/u.test(row.prompt) ? "cloze" : "transformation",
+        responseKind: /_{2,}/u.test(row.prompt)
+          ? "cloze"
+          : /^(?:Correct|Korrigiere)\b/u.test(row.prompt)
+            ? "correction"
+            : "transformation",
         acceptedAnswers: [...row.answers],
         hints: [unit.rule],
         solution: row.answers[0]!,

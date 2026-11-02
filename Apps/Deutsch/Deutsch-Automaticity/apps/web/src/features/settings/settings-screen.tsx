@@ -51,6 +51,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { InstallAppButton } from "@/features/pwa/install-app-button";
+import { ContentReviewLinkCard } from "@/features/settings/content-review-link-card";
 import { DeleteAllDataCard } from "@/features/settings/delete-all-data-card";
 import { ImplementationIntentionsCard } from "@/features/settings/implementation-intentions-card";
 import {
@@ -675,6 +676,7 @@ export function SettingsScreen() {
           </div>
         </CardContent>
       </Card>
+      <ContentReviewLinkCard />
       <DeleteAllDataCard onExport={exportData} />
     </div>
   );

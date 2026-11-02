@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-02",
   "version": "27.4.4",
-  "webRelease": "2026.11.02.3",
+  "webRelease": "2026.11.02.4",
   "changes": [
-    "Settings: delete all your data on this device after a backup and a typed confirmation; German backups now include the Lab error patterns and trainer data. A new page lets an independent reviewer check every unit and download an importable review. The Windows desktop update check reads the right repository and reports when no update is published."
+    "Settings in both apps now show a red link to the independent content review page (/learning-core/content-review.html)."
   ]
 }

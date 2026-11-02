@@ -56,6 +56,7 @@ import {
 	supportsBackupDirectoryPicker,
 	writeBackupToDirectory,
 } from "@/lib/backup-directory";
+import { ContentReviewLinkCard } from "@/features/settings/content-review-link-card";
 import { DeleteAllDataCard } from "@/features/settings/delete-all-data-card";
 import { ImplementationIntentionsCard } from "@/features/settings/implementation-intentions-card";
 import { InstallAppControl } from "@/features/components/install-app-control";
@@ -700,6 +701,7 @@ export function SettingsScreen() {
 					) : null}
 				</CardContent>
 			</Card>
+			<ContentReviewLinkCard />
 			<DeleteAllDataCard onExport={exportData} />
 		</div>
 	);

@@ -152,6 +152,11 @@ const releasedCuesAndChecks = {
     en: "a1072288b12e27e5e20964aadd55b8dd19248575f5697a43ff6de3fe0b978ea9",
     de: "3829f5c674697eb227d085c1e72110215b9f5bafcc493dd9ad068f8a741634bd",
   },
+  // The learner's error-notebook items, published in 2026.11.03.1.
+  "2026-11-03.1": {
+    en: "2c3a507ab5c09865d3221a4e726330e94b491af4eb5d11f180731556d1ecf659",
+    de: "dad5d798d00ec6dc35b7d04872cd3613cdd95164bed3a2726a83e08c9a2cfb0a",
+  },
 } as const;
 for (const language of ["en", "de"] as const) {
   test(`W33 ${language}: no active closed task in the built curriculum fails the content audit`, () => {

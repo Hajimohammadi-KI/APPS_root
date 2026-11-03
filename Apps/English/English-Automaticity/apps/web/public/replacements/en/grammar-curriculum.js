@@ -34,6 +34,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct the sentence: She is agree with me.",
         "She agrees with me."
+      ],
+      [
+        "Correct the sentence: I study English because useful.",
+        "I study English because it is useful.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "I study English because it’s useful."
+          ]
+        }
       ]
     ],
     "links": [
@@ -142,6 +152,34 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct the sentence: She is teacher.",
         "She is a teacher."
+      ],
+      [
+        "Correct the sentence: How can program read text?",
+        "How can a program read text?",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "How can the program read text?",
+            "How can my program read text?"
+          ]
+        }
+      ],
+      [
+        "Correct the sentence: This letter is part of word.",
+        "This letter is part of a word.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "This letter is part of the word."
+          ]
+        }
+      ],
+      [
+        "Complete the sentence with a or an: It was ___ unwanted purchase.",
+        "It was an unwanted purchase.",
+        {
+          "answerRole": "expected"
+        }
       ]
     ],
     "links": [
@@ -362,6 +400,56 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct the sentence: She watch TV every evening.",
         "She watches TV every evening."
+      ],
+      [
+        "Use the verb in brackets in the present simple: My friend ___ coffee every morning. (drink)",
+        "My friend drinks coffee every morning.",
+        {
+          "answerRole": "expected",
+          "rejectedAnswers": [
+            {
+              "answer": "My friend drink coffee every morning.",
+              "explanation": "With he, she, it or one person, the present simple verb takes -s: drinks."
+            }
+          ]
+        }
+      ],
+      [
+        "Correct the sentence: My brother study English every evening.",
+        "My brother studies English every evening.",
+        {
+          "answerRole": "expected",
+          "rejectedAnswers": [
+            {
+              "answer": "My brother studys English every evening.",
+              "explanation": "After a consonant, y changes to -ies: studies."
+            }
+          ]
+        }
+      ],
+      [
+        "Correct the sentence: My mean is all words, not just this example.",
+        "I mean all words, not just this example.",
+        {
+          "answerRole": "expected"
+        }
+      ],
+      [
+        "Correct the sentence: It is my mean.",
+        "That’s what I mean.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "That is what I mean."
+          ]
+        }
+      ],
+      [
+        "Complete the sentence with brush or wash: I ___ my teeth before bed.",
+        "I brush my teeth before bed.",
+        {
+          "answerRole": "expected"
+        }
       ]
     ],
     "links": [
@@ -431,6 +519,22 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
             "He does not like coffee."
           ]
         }
+      ],
+      [
+        "Correct the sentence: My friend doesn’t drinks tea.",
+        "My friend doesn’t drink tea.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "My friend does not drink tea."
+          ],
+          "rejectedAnswers": [
+            {
+              "answer": "My friend don’t drink tea.",
+              "explanation": "With one person, use doesn’t: My friend doesn’t drink tea."
+            }
+          ]
+        }
       ]
     ],
     "links": [
@@ -485,6 +589,26 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct the sentence: Does she works here?",
         "Does she work here?"
+      ],
+      [
+        "Complete the question with Do or Does: ___ your friend study English?",
+        "Does your friend study English?",
+        {
+          "answerRole": "expected",
+          "rejectedAnswers": [
+            {
+              "answer": "Does your friend studies English?",
+              "explanation": "After does, the main verb stays in the base form: study."
+            }
+          ]
+        }
+      ],
+      [
+        "Correct the question: Does she can study today?",
+        "Can she study today?",
+        {
+          "answerRole": "expected"
+        }
       ]
     ],
     "links": [
@@ -603,6 +727,49 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct the sentence: She can to drive.",
         "She can drive."
+      ],
+      [
+        "Put the words in the right order and write the question: how / we / can / check / the result",
+        "How can we check the result?",
+        {
+          "answerRole": "expected",
+          "rejectedAnswers": [
+            {
+              "answer": "How we can check the result?",
+              "explanation": "In a direct question, can comes before the subject: How can we …?"
+            }
+          ]
+        }
+      ],
+      [
+        "Correct the question: How can open the files on my laptop?",
+        "How can I open the files on my laptop?",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "How can we open the files on my laptop?"
+          ]
+        }
+      ],
+      [
+        "Correct the question: How kann a program recognise the word?",
+        "How can a program recognise the word?",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "How can a program recognize the word?"
+          ]
+        }
+      ],
+      [
+        "Correct the sentence: Until next week, I may not to use a computer.",
+        "Until next week, I may not use a computer.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "Until next week, I am not allowed to use a computer."
+          ]
+        }
       ]
     ],
     "links": [
@@ -725,6 +892,20 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct the preposition and write the full sentence: The picture is in the wall.",
         "The picture is on the wall."
+      ],
+      [
+        "Complete the sentence with in or on: I was tired, so I stayed ___ bed.",
+        "I was tired, so I stayed in bed.",
+        {
+          "answerRole": "expected"
+        }
+      ],
+      [
+        "Complete the sentence with in or on: The bag is ___ the bed.",
+        "The bag is on the bed.",
+        {
+          "answerRole": "expected"
+        }
       ]
     ],
     "links": [
@@ -1510,6 +1691,30 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct the sentence: He is always works late.",
         "He always works late."
+      ],
+      [
+        "Correct the sentence: I study usually study in the evening.",
+        "I usually study in the evening.",
+        {
+          "answerRole": "expected"
+        }
+      ],
+      [
+        "Complete the sentence: I practise English ___. (every day / everyday)",
+        "I practise English every day.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "I practice English every day."
+          ]
+        }
+      ],
+      [
+        "Complete the sentence: These are ___ tasks. (every day / everyday)",
+        "These are everyday tasks.",
+        {
+          "answerRole": "expected"
+        }
       ]
     ],
     "links": [
@@ -2056,6 +2261,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         {
           "acceptedAnswers": [
             "If I was rich, I would travel."
+          ]
+        }
+      ],
+      [
+        "Complete the sentence with would and it: I ___ if you could reply soon. (appreciate)",
+        "I would appreciate it if you could reply soon.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "I’d appreciate it if you could reply soon."
           ]
         }
       ]
@@ -4830,6 +5045,26 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct the punctuation: The plan was good, however it was expensive.",
         "The plan was good; however, it was expensive."
+      ],
+      [
+        "Correct the spacing: In Python , can we check this ?",
+        "In Python, can we check this?",
+        {
+          "answerRole": "expected"
+        }
+      ],
+      [
+        "Correct the punctuation: I mean all words how can we check them",
+        "I mean all words. How can we check them?",
+        {
+          "answerRole": "expected",
+          "rejectedAnswers": [
+            {
+              "answer": "I mean all words, how can we check them?",
+              "explanation": "A comma cannot join a statement and a question. End the statement with a full stop: … words. How can we …?"
+            }
+          ]
+        }
       ]
     ],
     "links": [
@@ -5438,6 +5673,23 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Complete the sentence with its or it’s: The dog wagged ___ tail.",
         "The dog wagged its tail."
+      ],
+      [
+        "Correct the capital letters: in python, i can open a file.",
+        "In Python, I can open a file.",
+        {
+          "answerRole": "expected"
+        }
+      ],
+      [
+        "Correct the sentence: It isnot a plural marker.",
+        "It isn’t a plural marker.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "It is not a plural marker."
+          ]
+        }
       ]
     ],
     "links": [
@@ -6018,6 +6270,19 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Complete the sentence with as or like: My brother looks ___ my father.",
         "My brother looks like my father."
+      ],
+      [
+        "Complete the sentence with function and as: Here, the letter s does not ___ a plural marker. (function)",
+        "Here, the letter s does not function as a plural marker.",
+        {
+          "answerRole": "expected",
+          "rejectedAnswers": [
+            {
+              "answer": "Here, the letter s is not as a plural marker.",
+              "explanation": "Use as after a verb such as function or serve, or leave out as: The letter s is not a plural marker."
+            }
+          ]
+        }
       ]
     ],
     "links": [
@@ -6320,6 +6585,16 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Report the question “Where is the station?”: She asked where ___. (the station was / was the station)",
         "She asked where the station was."
+      ],
+      [
+        "Complete the question with whether or that: How can we tell ___ a file is empty or contains data?",
+        "How can we tell whether a file is empty or contains data?",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "How can we tell if a file is empty or contains data?"
+          ]
+        }
       ]
     ],
     "links": [

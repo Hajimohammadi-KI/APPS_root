@@ -32,6 +32,11 @@ export interface GrammarExerciseMetadata {
   readonly minimumSentences: number;
   readonly outputLanguage: "de";
   readonly acceptedAnswers?: readonly string[];
+  /** Reviewed wrong forms; the Lab marks one for repair with its explanation. */
+  readonly rejectedAnswers?: readonly {
+    readonly answer: string;
+    readonly explanation: string;
+  }[];
   readonly requiresLearnerIntentFa?: boolean;
 }
 
@@ -178,7 +183,7 @@ function reorderedParts(sentence: string): string {
   return `${words.slice(1).reverse().join(" / ")} / ${words[0]}${punctuation}`;
 }
 
-function feedbackDimensionsFor(
+export function feedbackDimensionsFor(
   contentType: GrammarContentType,
 ): readonly GrammarFeedbackDimension[] {
   return FEEDBACK_DIMENSIONS[contentType];
@@ -315,7 +320,9 @@ function localizedClosedPrompt(
   return frames[kind];
 }
 
-function closedHint(contentType: GrammarContentType): LocalizedExerciseCopy {
+export function closedHint(
+  contentType: GrammarContentType,
+): LocalizedExerciseCopy {
   const focus = feedbackDimensionsFor(contentType).join(", ");
   return {
     Deutsch: `Diese Aufgabe ist eindeutig prüfbar. Kontrolliere nur: ${focus}.`,

@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-03",
   "version": "20.9.4",
-  "webRelease": "2026.11.03.1",
+  "webRelease": "2026.11.03.2",
   "changes": [
-    "Practice from the learner's own error notebook: 151 new checkable items (123 German, 28 English) in the matching units practise the recorded writing errors in new, neutral sentences, and a recorded wrong form is marked for repair with its explanation. The practice page shows a \"My error notebook\" card with progress and the next item; /practice?notebook=1 opens it and the error workshop links to it."
+    "The error-notebook exercises are part of daily practice by grammar level: the daily page shows \"Today from your error notebook\" for the selected level (today's count against a goal of 5, passed items, and the next exercise), the Grammar Lab of each unit lists its notebook exercises after the earlier ones and marks the recorded wrong forms with their explanation, and the practice page card follows the selected level."
   ]
 }

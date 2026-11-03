@@ -21,11 +21,13 @@ const MINIMUM_CONTROLLED_EXERCISES = 6;
 function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
   // The learner needs to see the error, written left of "→" in commonError.
   const error = unit.commonError.split("→")[0]!.trim();
+  const practice = checkedPracticeFor("en", unit.title);
   const candidates: GrammarExercise[] = [
-    ...checkedPracticeFor("en", unit.title).map(
-      ({ prompt, answers: [answer, ...alternatives] }) =>
+    ...practice
+      .filter((row) => !row.notebook)
+      .map(({ prompt, answers: [answer, ...alternatives] }) =>
         revisedExercise({ prompt, answer: answer!, alternatives }),
-    ),
+      ),
     [
       `Correct this common error for “${unit.title}” and write the full corrected sentence: ${error}`,
       unit.repairTest,
@@ -39,6 +41,24 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
     if (prompts.has(candidate[0])) continue;
     exercises.push(candidate);
     prompts.add(candidate[0]);
+  }
+  // The learner's error-notebook items follow every earlier exercise, so saved
+  // Lab progress keeps its positions; their recorded wrong forms come along.
+  for (const row of practice) {
+    if (!row.notebook || prompts.has(row.prompt)) continue;
+    const [answer, ...alternatives] = row.answers;
+    exercises.push([
+      row.prompt,
+      answer!,
+      {
+        answerRole: "expected",
+        ...(alternatives.length && { acceptedAnswers: [...alternatives] }),
+        ...(row.rejected && {
+          rejectedAnswers: row.rejected.map((wrong) => ({ ...wrong })),
+        }),
+      },
+    ]);
+    prompts.add(row.prompt);
   }
 
   return {

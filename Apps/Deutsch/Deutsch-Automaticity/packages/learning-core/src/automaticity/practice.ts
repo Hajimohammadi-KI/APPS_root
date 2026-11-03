@@ -287,10 +287,13 @@ export async function mountPractice(
     ) ??
     activePracticeTasks(unit).find((row) => row.partition === "practice")!;
   const requestedTask = taskById.get(requested.get("task") ?? "");
-  // ?notebook=1 opens the next item from the learner's error notebook.
+  // ?notebook=1 opens the next item from the learner's error notebook, of the
+  // requested grammar level (&level=B1) while that level has one left.
   const notebookStart =
     requested.has("notebook") && !requestedTask
-      ? notebookProgress(pack, initialState.attempts).next
+      ? (notebookProgress(pack, initialState.attempts, {
+          level: requested.get("level") ?? undefined,
+        }).next ?? notebookProgress(pack, initialState.attempts).next)
       : null;
   if (requestedTask) {
     task = requestedTask;
@@ -298,6 +301,7 @@ export async function mountPractice(
   } else if (notebookStart) {
     task = notebookStart.task;
     unit = notebookStart.unit;
+    level = unit.level;
   }
   // The main path offers only checked writing; it never falls back to
   // unassessed practice. Explicit task links still open optional work.
@@ -953,19 +957,22 @@ export async function mountPractice(
     await fresh(next.task, next.previousAttemptId);
   }
   /** The items written from the learner's own error notebook: how many have
-   * passed, and the next one to try. */
+   * passed at the selected grammar level and overall, and the next one to
+   * try, of that level while it has one left. */
   function renderNotebook(): void {
-    const progress = notebookProgress(pack, ledger().attempts);
-    notebookPanel.hidden = !progress.total;
-    if (!progress.total) return;
-    const next = progress.next;
+    const attempts = ledger().attempts;
+    const all = notebookProgress(pack, attempts);
+    notebookPanel.hidden = !all.total;
+    if (!all.total) return;
+    const atLevel = notebookProgress(pack, attempts, { level });
+    const next = atLevel.next ?? all.next;
     notebookPanel.replaceChildren(
-      element("h2", t("My error notebook", "Mein Fehlerheft")),
+      element("h2", `${t("My error notebook", "Mein Fehlerheft")} · ${level}`),
       element(
         "p",
         t(
-          `${progress.passed} of ${progress.total} exercises from your own written errors passed.`,
-          `${progress.passed} von ${progress.total} Übungen zu deinen eigenen Schreibfehlern bestanden.`,
+          `${atLevel.passed} of ${atLevel.total} exercises at ${level} passed · all levels: ${all.passed} of ${all.total} from your own written errors.`,
+          `${atLevel.passed} von ${atLevel.total} Übungen auf ${level} bestanden · alle Niveaus: ${all.passed} von ${all.total} zu deinen eigenen Schreibfehlern.`,
         ),
         "muted",
       ),
@@ -993,12 +1000,13 @@ export async function mountPractice(
     else
       notebookPanel.append(
         button(
-          next.previousAttemptId
+          (next.previousAttemptId
             ? t(
                 "Repair an error-notebook exercise",
                 "Eine Fehlerheft-Übung korrigieren",
               )
-            : t("Next error-notebook exercise", "Nächste Fehlerheft-Übung"),
+            : t("Next error-notebook exercise", "Nächste Fehlerheft-Übung")) +
+            (atLevel.next ? "" : ` (${next.unit.level})`),
           () => fresh(next.task, next.previousAttemptId),
           isNotebookTask(task) && session?.submittedId ? "primary" : "",
         ),

@@ -6551,7 +6551,12 @@ export function gapCueRevisionsFor(
 export function checkedPracticeFor(
   language: Language,
   title: string,
-): readonly { readonly prompt: string; readonly answers: readonly string[] }[] {
+): readonly {
+  readonly prompt: string;
+  readonly answers: readonly string[];
+  readonly notebook?: string;
+  readonly rejected?: (typeof CHECKED_PRACTICE)[number]["rejected"];
+}[] {
   const unit = unitFor(language, title);
   const count = new Map<string, number>();
   return CHECKED_PRACTICE.filter((row) => row.unit === unit).map((row) => {
@@ -6570,6 +6575,8 @@ export function checkedPracticeFor(
     return {
       prompt: revision?.prompt ?? row.prompt,
       answers: revision?.answers ?? row.answers,
+      ...(row.notebook && { notebook: row.notebook }),
+      ...(row.rejected && { rejected: row.rejected }),
     };
   });
 }

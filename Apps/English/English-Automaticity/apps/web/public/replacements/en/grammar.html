@@ -2354,11 +2354,13 @@
             prompt,
             answer: expected,
             acceptedAnswers: [expected, ...(metadata?.acceptedAnswers || [])],
+            rejectedAnswers: metadata?.rejectedAnswers || [],
             open:
               metadata?.answerRole === "inspiration" ||
-              !/_{2,}|…|\.\.\.|^(correct|complete|choose|change|transform)\b/i.test(
-                prompt,
-              ),
+              (metadata?.answerRole !== "expected" &&
+                !/_{2,}|…|\.\.\.|^(correct|complete|choose|change|transform)\b/i.test(
+                  prompt,
+                )),
             hint: index === 0 ? unit.commonError : unit.rule,
           }));
         };
@@ -2539,6 +2541,7 @@
                 task.prompt,
               ),
               acceptedAnswers: task.acceptedAnswers,
+              rejectedAnswers: task.rejectedAnswers,
               modality: "writing",
               terminalFullStop: true,
             },

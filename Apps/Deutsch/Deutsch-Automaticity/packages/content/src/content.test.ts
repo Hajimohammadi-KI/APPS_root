@@ -25,6 +25,7 @@ import {
   releasedGermanMediationB1,
 } from "./index";
 import { assessMediationContentRelease } from "@automaticity/learning-core";
+import { checkedPracticeFor } from "@automaticity/learning-core/content-revisions";
 import { gapFill } from "@automaticity/learning-core/text";
 import { LAB_GAP_CUES } from "./lab-gap-cues";
 import { isRetiredGermanResource } from "./resource-links";
@@ -198,8 +199,19 @@ describe("legacy content extraction", () => {
 
     for (const unit of grammarUnits) {
       expect(unit.contentType).toBeDefined();
-      expect(unit.exercises).toHaveLength(5);
-      const closed = unit.exercises.slice(0, 4);
+      // The learner's error-notebook items follow the five exercises, so
+      // saved Lab progress keeps its positions; they are checked recall.
+      const notebook = checkedPracticeFor("de", unit.title).filter(
+        (row) => row.notebook,
+      );
+      expect(unit.exercises.slice(5).map(([prompt]) => prompt)).toEqual(
+        notebook.map((row) => row.prompt),
+      );
+      expect(unit.exercises).toHaveLength(5 + notebook.length);
+      const closed = [
+        ...unit.exercises.slice(0, 4),
+        ...unit.exercises.slice(5),
+      ];
       const open = unit.exercises[4];
 
       for (const exercise of closed) {

@@ -28,6 +28,10 @@ export type GrammarResource = [
 /** Further complete answers the Grammar Lab accepts besides the stored one. */
 export interface GrammarExerciseMetadata {
   acceptedAnswers?: string[];
+  /** Reviewed wrong forms; the Lab marks one for repair with its explanation. */
+  rejectedAnswers?: { answer: string; explanation: string }[];
+  /** An expected answer is checked even when the prompt names no gap or correction. */
+  answerRole?: "expected" | "inspiration";
 }
 export type GrammarExercise = [
   prompt: string,

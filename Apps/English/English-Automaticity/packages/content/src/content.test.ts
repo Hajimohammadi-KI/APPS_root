@@ -145,9 +145,16 @@ describe("legacy content parity", () => {
     );
 
     expect(grammarUnits).toHaveLength(112);
-    expect(grammarUnits.every((unit) => unit.exercises.length === 6)).toBe(
-      true,
-    );
+    // Six exercises, then the learner's error-notebook items of the unit.
+    for (const unit of grammarUnits) {
+      const notebook = checkedPracticeFor("en", unit.title).filter(
+        (row) => row.notebook,
+      );
+      expect(unit.exercises.slice(6).map(([prompt]) => prompt)).toEqual(
+        notebook.map((row) => row.prompt),
+      );
+      expect(unit.exercises).toHaveLength(6 + notebook.length);
+    }
     expect(browserCatalog).toEqual(grammarUnits);
   });
 
@@ -303,7 +310,9 @@ describe("legacy content parity", () => {
         : [prompt, answer!];
     // The Lab checks a prompt with a gap or one that asks to correct,
     // complete, choose, change or transform; any other prompt is self-checked.
-    const checkedInLab = (prompt: string) =>
+    // The Lab's rule: an expected answer, or a prompt with a gap or a task verb.
+    const checkedInLab = ([prompt, , metadata]: GrammarExercise) =>
+      metadata?.answerRole === "expected" ||
       /_{2,}|…|\.\.\.|^(correct|complete|choose|change|transform)\b/i.test(
         prompt,
       );
@@ -325,7 +334,7 @@ describe("legacy content parity", () => {
         ),
       ).toEqual([]);
       expect(
-        `${unit.title}: ${unit.exercises.filter(([prompt]) => !checkedInLab(prompt)).map(([prompt]) => prompt)}`,
+        `${unit.title}: ${unit.exercises.filter((row) => !checkedInLab(row)).map(([prompt]) => prompt)}`,
       ).toBe(`${unit.title}: `);
       const answers = unit.exercises.map(([, answer]) => answer);
       expect(`${unit.title}: ${answers.length - new Set(answers).size}`).toBe(

@@ -123,6 +123,28 @@ export function skillReport(modes: readonly ModeView[]): {
     };
   });
 }
+const packs = new Map<Language, Promise<CurriculumPack>>();
+/** One download of the catalog per page, shared by the views that need it. */
+export function loadCurriculumPack(
+  language: Language,
+): Promise<CurriculumPack> {
+  let pending = packs.get(language);
+  if (!pending) {
+    pending = fetch(`/learning-core/curriculum-${language}.json`).then(
+      async (response) => {
+        if (!response.ok) throw new Error("Catalog unavailable");
+        const value = (await response.json()) as CurriculumPack;
+        if (value.language !== language || !Array.isArray(value.units))
+          throw new Error("Invalid catalog");
+        return value;
+      },
+    );
+    // A failed download is tried again by the next caller.
+    pending.catch(() => packs.delete(language));
+    packs.set(language, pending);
+  }
+  return pending;
+}
 /** Small shared DOM view used by static pages and React wrappers. */
 export function mountEvidenceOverview(
   root: HTMLElement,
@@ -417,12 +439,8 @@ export function mountEvidenceOverview(
       t("Loading saved practice…", "Gespeicherte Übungen werden geladen…"),
     ),
   );
-  void fetch(`/learning-core/curriculum-${language}.json`)
-    .then(async (response) => {
-      if (!response.ok) throw new Error("Catalog unavailable");
-      const value = (await response.json()) as CurriculumPack;
-      if (value.language !== language || !Array.isArray(value.units))
-        throw new Error("Invalid catalog");
+  void loadCurriculumPack(language)
+    .then((value) => {
       pack = value;
       refresh();
     })

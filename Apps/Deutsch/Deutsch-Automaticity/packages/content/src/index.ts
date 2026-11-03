@@ -1,6 +1,7 @@
 import grammarData from "./data/grammar.json";
 import { knownContentRepair } from "@automaticity/learning-core/content-repairs";
 import {
+  checkedPracticeFor,
   contentRevisionFor,
   gapCueRevisionsFor,
 } from "@automaticity/learning-core/content-revisions";
@@ -9,7 +10,9 @@ import topicsData from "./data/topics.json";
 import { labGapCueFor } from "./lab-gap-cues";
 import {
   classifyGrammarContent,
+  closedHint,
   completeControlledExercises,
+  feedbackDimensionsFor,
   type GrammarContentType,
   type GrammarExercise,
 } from "./exercise-completion";
@@ -298,6 +301,48 @@ function withGapCues(
   });
 }
 
+/** The learner's error-notebook items of the learning path, after every
+ * earlier exercise so saved Lab progress keeps its positions. */
+function withNotebookItems(
+  title: string,
+  contentType: GrammarContentType,
+  exercises: readonly GrammarExercise[],
+): readonly GrammarExercise[] {
+  const prompts = new Set(exercises.map(([prompt]) => prompt));
+  const hint = closedHint(contentType);
+  const added = checkedPracticeFor("de", title)
+    .filter((row) => row.notebook && !prompts.has(row.prompt))
+    .map<GrammarExercise>(({ prompt, answers, rejected }) => {
+      const [answer, ...alternatives] = answers;
+      return [
+        prompt,
+        answer!,
+        {
+          mode: "closed_recall",
+          contentType,
+          validation: "exact",
+          answerRole: "expected",
+          prompt: {
+            Deutsch: prompt,
+            English: `Follow this German instruction and write the complete answer in German: ${prompt}`,
+            فارسی: `طبق این دستور آلمانی عمل کن و پاسخ کامل را به آلمانی بنویس: ${prompt}`,
+          },
+          hint: {
+            Deutsch: `Aus deinem Fehlerheft. ${hint.Deutsch}`,
+            English: `From your error notebook. ${hint.English}`,
+            فارسی: `از دفتر خطای خودت. ${hint.فارسی}`,
+          },
+          feedbackDimensions: feedbackDimensionsFor(contentType),
+          minimumSentences: 1,
+          outputLanguage: "de",
+          ...(alternatives.length ? { acceptedAnswers: alternatives } : {}),
+          ...(rejected ? { rejectedAnswers: rejected } : {}),
+        },
+      ];
+    });
+  return [...exercises, ...added];
+}
+
 export const grammarUnits: readonly GrammarUnit[] = [
   ...legacyGrammarUnits.map((original) => {
     const repair = knownContentRepair("de", original.title);
@@ -322,24 +367,34 @@ export const grammarUnits: readonly GrammarUnit[] = [
       throw new Error(`Missing complete explanation for "${unit.title}".`);
     }
 
+    const contentType = classifyGrammarContent(unit);
     return repairGermanGrammarLinks({
       ...unit,
-      contentType: classifyGrammarContent(unit),
-      exercises: withGapCues(
+      contentType,
+      exercises: withNotebookItems(
         unit.title,
-        withRevisedCorrection(unit.title, completeControlledExercises(unit)),
+        contentType,
+        withGapCues(
+          unit.title,
+          withRevisedCorrection(unit.title, completeControlledExercises(unit)),
+        ),
       ),
       explanation,
     });
   }),
   ...supplementalGrammarUnits.map((original) => {
     const unit = reviseUnit(original);
+    const contentType = classifyGrammarContent(unit);
     return repairGermanGrammarLinks({
       ...unit,
-      contentType: classifyGrammarContent(unit),
-      exercises: withGapCues(
+      contentType,
+      exercises: withNotebookItems(
         unit.title,
-        withRevisedCorrection(unit.title, completeControlledExercises(unit)),
+        contentType,
+        withGapCues(
+          unit.title,
+          withRevisedCorrection(unit.title, completeControlledExercises(unit)),
+        ),
       ),
     });
   }),

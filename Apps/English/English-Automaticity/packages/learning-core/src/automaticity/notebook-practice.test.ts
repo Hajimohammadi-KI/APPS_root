@@ -5,7 +5,11 @@ import type {
   PracticeTask,
 } from "./curriculum";
 import type { ReducedAttempt } from "./evidence";
-import { isNotebookTask, notebookProgress } from "./notebook-practice";
+import {
+  DAILY_NOTEBOOK_GOAL,
+  isNotebookTask,
+  notebookProgress,
+} from "./notebook-practice";
 
 const task = (id: string, sourceId: string): PracticeTask => ({
   id,
@@ -133,5 +137,30 @@ describe("error-notebook practice", () => {
       attempt("4", "en.c.040.a", "pass"),
     ]);
     expect(done).toMatchObject({ total: 3, passed: 3, next: null });
+  });
+
+  test("keeps to one grammar level and counts the items tried today", () => {
+    const b1 = notebookProgress(pack, [], { level: "B1" });
+    expect(b1).toMatchObject({ total: 1, passed: 0 });
+    expect(b1.next?.task.id).toBe("en.c.040.a");
+    expect(notebookProgress(pack, [], { level: "C2" })).toMatchObject({
+      total: 0,
+      passed: 0,
+      next: null,
+      today: 0,
+    });
+    const attempts = [
+      attempt("1", "en.c.002.a", "needs_repair", "2026-11-03T09:00:00.000Z"),
+      attempt("2", "en.c.002.a", "pass", "2026-11-03T10:00:00.000Z"),
+      attempt("3", "en.c.090.a", "pass", "2026-11-02T10:00:00.000Z"),
+      attempt("4", "en.c.040.a", "needs_repair", "2026-11-03T11:00:00.000Z"),
+    ];
+    const now = "2026-11-03T12:00:00.000Z";
+    // Two items were tried today, one twice; the A2 item was yesterday.
+    expect(notebookProgress(pack, attempts, { now }).today).toBe(2);
+    expect(
+      notebookProgress(pack, attempts, { level: "A1", now }),
+    ).toMatchObject({ total: 1, passed: 1, next: null, today: 1 });
+    expect(DAILY_NOTEBOOK_GOAL).toBeGreaterThan(0);
   });
 });

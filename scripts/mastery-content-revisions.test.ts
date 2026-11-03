@@ -458,7 +458,11 @@ test("W33 both Grammar Labs ship no defective closed exercise", async () => {
   ] as const;
   const issues = labs.flatMap(([language, units]) =>
     units.flatMap((unit) =>
-      unit.exercises.flatMap(([prompt, answer], index) => {
+      unit.exercises.flatMap(([prompt, answer, metadata], index) => {
+        // The Lab accepts the stored answer and its listed equivalents.
+        const alternatives =
+          (metadata as { acceptedAnswers?: readonly string[] } | undefined)
+            ?.acceptedAnswers ?? [];
         const task = {
           id: `${unit.title}#${index}`,
           answerPolicy: "closed" as const,
@@ -467,7 +471,7 @@ test("W33 both Grammar Labs ship no defective closed exercise", async () => {
             ? ("correction" as const)
             : ("transformation" as const),
           prompt,
-          acceptedAnswers: [answer],
+          acceptedAnswers: [answer, ...alternatives],
           solution: answer,
         };
         return [...auditClosedTask(task), ...auditGapCue(task, language)];

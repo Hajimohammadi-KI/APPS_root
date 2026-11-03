@@ -112,6 +112,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       wrongLanguage: "Die Antwort muss auf Deutsch geschrieben werden.",
       feedbackTitle: "Überprüfung deiner Antwort",
       closedVerdict: {
+        rejected: "Diese Form wurde geprüft und ist hier nicht richtig.",
         option:
           "Das ist eine der angegebenen Möglichkeiten, aber nicht die passende.",
         unchanged:
@@ -167,6 +168,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       wrongLanguage: "The answer must be written in German.",
       feedbackTitle: "Review of your answer",
       closedVerdict: {
+        rejected: "This form was reviewed and is not correct here.",
         option:
           "This is one of the given options, but not the one that fits here.",
         unchanged:
@@ -218,6 +220,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       wrongLanguage: "پاسخ باید به آلمانی نوشته شود.",
       feedbackTitle: "بررسی پاسخ شما",
       closedVerdict: {
+        rejected: "این شکل بررسی شده و اینجا درست نیست.",
         option: "این یکی از گزینه‌های داده‌شده است، اما گزینهٔ مناسب اینجا نیست.",
         unchanged:
           "این هنوز همان جمله‌ای است که باید اصلاح شود. بخشی را که در دستور آمده تغییر بده و جملهٔ کامل را بنویس.",
@@ -582,6 +585,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         prompt,
         responseKind: window.AutomaticityText.closedResponseKind(prompt),
         acceptedAnswers,
+        rejectedAnswers: exercise[2]?.rejectedAnswers,
         modality: "writing",
         terminalFullStop: true,
       },
@@ -1311,7 +1315,17 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       feedback.innerHTML = `<strong>Die Regel zum Vergleich:</strong> ${escapeHtml(expected)}<br><span>Es gibt hier keine einzig richtige Formulierung – vergleiche nur Bedeutung und Vollständigkeit.</span>`;
     } else if (!correct) {
       drafts.markAssisted();
-      const localIssue = localClosedFeedback(answer, expected);
+      // A reviewed wrong form (such as one from the learner's error notebook)
+      // gets its own explanation instead of a generic local check.
+      const rejectedExplanation =
+        check.reason === "rejected"
+          ? exercise[2]?.rejectedAnswers?.find(
+              (row) => normalizeAnswer(row.answer) === normalizeAnswer(answer),
+            )?.explanation
+          : "";
+      const localIssue = rejectedExplanation
+        ? null
+        : localClosedFeedback(answer, expected);
       // Only a certain error is called wrong and enters the error patterns.
       const wrong = Boolean(localIssue) || check.verdict === "needs_repair";
       feedback.className = `feedback show${wrong ? " bad" : ""}`;
@@ -1320,6 +1334,9 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
           type: wrong ? "target_grammar" : "check",
           message: copy.closedVerdict[check.reason] || copy.closedVerdict.unmatched,
         },
+        ...(rejectedExplanation
+          ? [{ type: "target_grammar", message: rejectedExplanation }]
+          : []),
       ];
       feedback.innerHTML = `<strong>${escapeHtml(copy.feedbackTitle)}</strong>${points.some((point) => point.html) ? renderFeedbackHtml(points) : renderFeedbackPoints(points)}${
         localIssue ? "" : markedAnswerHtml(answer, check.spans)

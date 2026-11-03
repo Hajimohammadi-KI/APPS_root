@@ -9,7 +9,12 @@ import {
   type CurriculumPack,
   type PracticeTask,
 } from "../shared/learning-core/src/automaticity/curriculum";
+import {
+  checkClosedAnswer,
+  closedResponseKind,
+} from "../shared/learning-core/src/automaticity/closed-answer";
 import { isNotebookTask } from "../shared/learning-core/src/automaticity/notebook-practice";
+import { LEARNER_NOTEBOOK_PRACTICE } from "../shared/learning-core/src/learner-notebook-practice";
 import { normalizeText } from "../shared/learning-core/src/text";
 import { assertWritingPrecision } from "../shared/learning-core/src/writing-precision";
 
@@ -301,3 +306,115 @@ for (const language of ["de", "en"] as const) {
     );
   });
 }
+
+// The daily mission opens the Grammar Labs, so each notebook item is also an
+// exercise of its unit there, after the unit's earlier exercises (saved Lab
+// progress counts exercises by position), and the Lab marks its wrong forms.
+test("learner notebook: every item is in its unit's Grammar Lab and the Lab marks its wrong forms", async () => {
+  const labs = {
+    en: (
+      await import("../Apps/English/English-Automaticity/packages/content/src/index")
+    ).grammarUnits,
+    de: (
+      await import("../Apps/Deutsch/Deutsch-Automaticity/packages/content/src/index")
+    ).grammarUnits,
+  };
+  const titles = new Map(
+    (["en", "de"] as const).flatMap((language) =>
+      built(language).units.map((unit) => [unit.id, unit] as const),
+    ),
+  );
+  // These units exist only in the learning path; the daily notebook block,
+  // which reads the learning path by level, carries their items.
+  const pathOnly = new Set<string>();
+  for (const row of LEARNER_NOTEBOOK_PRACTICE) {
+    const language = row.unit.slice(0, 2) as "en" | "de";
+    const source = titles.get(row.unit)!;
+    const unit = (
+      labs[language] as readonly {
+        level: string;
+        title: string;
+        exercises: readonly (readonly [string, string, unknown?])[];
+      }[]
+    ).find((lab) => lab.title === source.title && lab.level === source.level);
+    if (!unit) {
+      pathOnly.add(row.unit);
+      continue;
+    }
+    const index =
+      unit?.exercises.findIndex(([prompt]) => prompt === row.prompt) ?? -1;
+    expect(
+      `${row.notebook} ${row.prompt}: ${index < 0 ? "missing" : "Lab"}`,
+    ).toBe(`${row.notebook} ${row.prompt}: Lab`);
+    const ownPrompts = new Set(
+      LEARNER_NOTEBOOK_PRACTICE.filter((item) => item.unit === row.unit).map(
+        (item) => item.prompt,
+      ),
+    );
+    expect(
+      unit!.exercises.slice(index).every(([prompt]) => ownPrompts.has(prompt)),
+    ).toBe(true);
+    const [prompt, answer, metadata] = unit!.exercises[index]! as readonly [
+      string,
+      string,
+      {
+        acceptedAnswers?: readonly string[];
+        rejectedAnswers?: readonly { answer: string; explanation: string }[];
+        mode?: string;
+      }?,
+    ];
+    const accepted = [answer, ...(metadata?.acceptedAnswers ?? [])];
+    expect(accepted).toEqual([...row.answers]);
+    if (language === "de") expect(metadata?.mode).toBe("closed_recall");
+    const task = {
+      prompt,
+      responseKind: closedResponseKind(prompt),
+      acceptedAnswers: accepted,
+      rejectedAnswers: metadata?.rejectedAnswers?.map((item) => ({ ...item })),
+      modality: "writing" as const,
+      terminalFullStop: true,
+    };
+    expect(checkClosedAnswer(task, row.answers[0]!, language).verdict).toBe(
+      "pass",
+    );
+    for (const wrong of row.rejected ?? []) {
+      const check = checkClosedAnswer(task, wrong.answer, language);
+      expect(`${wrong.answer}: ${check.verdict}`).toBe(
+        `${wrong.answer}: needs_repair`,
+      );
+      expect(check.feedback).toContain(wrong.explanation);
+    }
+  }
+  expect([...pathOnly].sort()).toEqual([
+    "de.c.148",
+    "de.c.149",
+    "de.c.152",
+    "de.c.153",
+  ]);
+});
+
+test("learner notebook: both daily pages and Lab pages carry the notebook practice", () => {
+  const read = (path: string) =>
+    readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+  for (const page of [
+    "Apps/English/English-Automaticity/apps/web/public/replacements/en/daily.html",
+    "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/replacements/de/heute.html",
+  ]) {
+    const html = read(page);
+    // The block shows the notebook items of the page's selected level.
+    expect(html).toMatch(/<section[^>]*data-notebook-daily[^>]*>/u);
+    expect(html).toMatch(/notebookDaily\.dataset\.level\s*=/u);
+    expect(html).toContain('src="/learning-core/overview.js"');
+  }
+  // Both Labs pass the stored wrong forms to the shared verdict.
+  expect(
+    read(
+      "Apps/English/English-Automaticity/apps/web/public/replacements/en/grammar.html",
+    ),
+  ).toContain("rejectedAnswers: task.rejectedAnswers");
+  expect(
+    read(
+      "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/replacements/de/grammar-runtime.js",
+    ),
+  ).toContain("rejectedAnswers: exercise[2]?.rejectedAnswers");
+});

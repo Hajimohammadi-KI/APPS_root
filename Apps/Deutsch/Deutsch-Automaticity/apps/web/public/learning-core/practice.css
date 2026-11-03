@@ -782,3 +782,27 @@ details {
     min-width: 0;
   }
 }
+/* The learner's error-notebook items: progress and the next exercise. */
+.practice-notebook {
+  display: grid;
+  gap: 8px;
+  padding: 18px 20px;
+  background: var(--worksheet-yellow);
+  border-color: #eddfb8;
+  border-left: 4px solid #d6b54d;
+}
+.practice-notebook[hidden] {
+  display: none;
+}
+.practice-notebook h2 {
+  margin: 0;
+  font-size: 1.0625rem;
+  color: #08364a;
+}
+.practice-notebook p {
+  margin: 0;
+}
+.practice-notebook button {
+  justify-self: start;
+  max-width: 100%;
+}

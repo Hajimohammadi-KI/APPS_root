@@ -1,4 +1,8 @@
 import type { Language } from "./automaticity/contracts";
+import {
+  LEARNER_NOTEBOOK_PRACTICE,
+  LEARNER_NOTEBOOK_VERSION,
+} from "./learner-notebook-practice";
 
 /** Content revision of 1 November 2026 (W33): authored replacements for closed
  * items whose key was a fragment, placeholder, rule label or note, so that a
@@ -3273,11 +3277,19 @@ export const CHECKED_PRACTICE_VERSION = "2026-11-01.4";
  * fewer than three checkable items. */
 export const RECALL_VERSION = "2026-11-02.1";
 export const PARALLEL_PRACTICE_VERSION = "2026-11-02.2";
+export { LEARNER_NOTEBOOK_VERSION };
 export const CHECKED_PRACTICE: readonly {
   readonly unit: string;
   readonly prompt: string;
   readonly answers: readonly string[];
   readonly version: string;
+  /** The learner's error-notebook entry the item practises. */
+  readonly notebook?: string;
+  /** Recorded wrong forms; one is marked for repair with its explanation. */
+  readonly rejected?: readonly {
+    readonly answer: string;
+    readonly explanation: string;
+  }[];
 }[] = [
   ...(
     [
@@ -5096,6 +5108,11 @@ export const CHECKED_PRACTICE: readonly {
     answers,
     version: PARALLEL_PRACTICE_VERSION,
   })),
+  // 2026-11-03.1: items from the learner's error notebook (W33).
+  ...LEARNER_NOTEBOOK_PRACTICE.map((row) => ({
+    ...row,
+    version: LEARNER_NOTEBOOK_VERSION,
+  })),
 ];
 
 /** Items that gave their answer away or repeated another item of the unit
@@ -6273,6 +6290,7 @@ const UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["de.c.019", "Wechselpräpositionen"],
   ["de.c.020", "Modalverben müssen, dürfen, sollen, wollen"],
   ["de.c.021", "Komparativ und Superlativ"],
+  ["de.c.022", "Nebensatz mit weil"],
   ["de.c.023", "Nebensatz mit dass"],
   ["de.c.024", "wenn und als"],
   ["de.c.025", "Reflexive Verben"],
@@ -6334,12 +6352,15 @@ const UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["de.c.082", "Selbstreparatur im Sprechen"],
   ["de.c.083", "Mehrsprachige Interferenzkontrolle"],
   ["de.c.084", "Integrierte automatische Produktion"],
+  ["de.c.085", "Imperativ mit du, ihr und Sie"],
   ["de.c.086", "Satzklammer im einfachen Hauptsatz"],
+  ["de.c.088", "Temporale Präpositionen am, um und im"],
   ["de.c.089", "Häufigkeitsadverbien"],
   ["de.c.090", "es gibt mit Akkusativ"],
   ["de.c.091", "man für allgemeine Aussagen"],
   ["de.c.092", "und, aber, denn und oder"],
   ["de.c.093", "Mengenwörter viel, wenig und genug"],
+  ["de.c.095", "Adjektivdeklination nach Artikeln"],
   ["de.c.096", "Relativsätze mit der, die und das"],
   ["de.c.098", "darum, deshalb und deswegen"],
   ["de.c.099", "denn und sondern"],
@@ -6353,6 +6374,7 @@ const UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["de.c.111", "lassen als Vollverb und Hilfsverb"],
   ["de.c.112", "brauchen nicht zu"],
   ["de.c.113", "Zweiteilige Konnektoren"],
+  ["de.c.114", "Genitivpräpositionen"],
   ["de.c.115", "Indirekte Rede mit Konjunktiv I"],
   ["de.c.116", "Modalpartikeln im Gespräch"],
   ["de.c.117", "Komplexe Temporalsätze"],
@@ -6379,6 +6401,9 @@ const UNIT_TITLES: ReadonlyMap<string, string> = new Map([
   ["de.c.140", "Regionale Variation und Standardregister"],
   ["de.c.141", "Modalität und Evidentialität"],
   ["de.c.143", "Syntaktischer Rhythmus"],
+  ["de.c.148", "Demonstrative Determinierer und Pronomen"],
+  ["de.c.149", "Lexikalisches Genus und Kongruenz"],
+  ["de.c.152", "Korrelat-es und unpersönliche Muster"],
   ["de.c.153", "Nominale Wortbildung und Komposita"],
   ["de.c.155", "Negative Indefinita und Kongruenz"],
   ["en.c.001", "Verb be: am/is/are"],

@@ -118,6 +118,12 @@ export function ErrorEngine() {
       >
         Antworten aus eigenständigen Übungen prüfen und korrigieren
       </a>
+      <a
+        href="/practice?notebook=1"
+        className={buttonVariants({ variant: "outline", className: "w-fit" })}
+      >
+        Übungen aus meinem Fehlerheft
+      </a>
       <PageHeader
         description="Jede Studiokorrektur wird klassifiziert, zusammengeführt und als Reparaturkette wieder eingeplant. Wiederkehrende Fehler stehen zuerst."
         kicker="Gezielt reparieren"

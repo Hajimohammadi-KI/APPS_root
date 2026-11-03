@@ -77,6 +77,11 @@ export function ErrorsScreen() {
           Review and repair responses from independent practice
         </a>
       </Button>
+      <Button asChild className="w-fit" variant="outline">
+        <a href="/practice?notebook=1">
+          Practise the errors from my writing notebook
+        </a>
+      </Button>
       <PageHeading
         actions={
           <Badge variant={errors.length > 0 ? "warning" : "success"}>

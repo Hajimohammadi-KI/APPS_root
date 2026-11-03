@@ -88,6 +88,7 @@ import {
   schedulerPilotCards,
   readPilotEnrollment,
 } from "./scheduler-pilot";
+import { isNotebookTask, notebookProgress } from "./notebook-practice";
 
 const stages: Stage[] = [
   "notice",
@@ -286,14 +287,22 @@ export async function mountPractice(
     ) ??
     activePracticeTasks(unit).find((row) => row.partition === "practice")!;
   const requestedTask = taskById.get(requested.get("task") ?? "");
+  // ?notebook=1 opens the next item from the learner's error notebook.
+  const notebookStart =
+    requested.has("notebook") && !requestedTask
+      ? notebookProgress(pack, initialState.attempts).next
+      : null;
   if (requestedTask) {
     task = requestedTask;
     unit = unitById.get(task.constructionId)!;
+  } else if (notebookStart) {
+    task = notebookStart.task;
+    unit = notebookStart.unit;
   }
   // The main path offers only checked writing; it never falls back to
   // unassessed practice. Explicit task links still open optional work.
   let checkedUnavailable =
-    !requestedTask && !requestedUnit && !initialChoice?.task;
+    !requestedTask && !requestedUnit && !notebookStart && !initialChoice?.task;
   let session: Session;
   let timer: ResponseTimer | null = null;
   let recording: StoredRecording | null = null;
@@ -325,6 +334,7 @@ export async function mountPractice(
   });
   const progressPanel = element("section", undefined, "card");
   const focusPanel = element("div", undefined, "focus-list");
+  const notebookPanel = element("section", undefined, "card practice-notebook");
   const dailyPanel = element("div", undefined, "daily-plan");
   const historyPanel = element("section", undefined, "card");
   const controls = element("div", undefined, "toolbar");
@@ -894,7 +904,14 @@ export async function mountPractice(
       },
     ),
   );
-  root.replaceChildren(header, errorBox, focusSection, grid, tools);
+  root.replaceChildren(
+    header,
+    errorBox,
+    notebookPanel,
+    focusSection,
+    grid,
+    tools,
+  );
   refreshPilot = mountSchedulerPilotPanel(
     tools,
     pack,
@@ -935,7 +952,60 @@ export async function mountPractice(
     }
     await fresh(next.task, next.previousAttemptId);
   }
+  /** The items written from the learner's own error notebook: how many have
+   * passed, and the next one to try. */
+  function renderNotebook(): void {
+    const progress = notebookProgress(pack, ledger().attempts);
+    notebookPanel.hidden = !progress.total;
+    if (!progress.total) return;
+    const next = progress.next;
+    notebookPanel.replaceChildren(
+      element("h2", t("My error notebook", "Mein Fehlerheft")),
+      element(
+        "p",
+        t(
+          `${progress.passed} of ${progress.total} exercises from your own written errors passed.`,
+          `${progress.passed} von ${progress.total} Übungen zu deinen eigenen Schreibfehlern bestanden.`,
+        ),
+        "muted",
+      ),
+    );
+    if (!next)
+      notebookPanel.append(
+        element(
+          "p",
+          t(
+            "All passed. They return later with the learning path's reviews.",
+            "Alle bestanden. Sie kommen mit den Wiederholungen des Lernwegs später wieder.",
+          ),
+        ),
+      );
+    else if (next.task.id === task.id && !session?.submittedId)
+      notebookPanel.append(
+        element(
+          "p",
+          t(
+            "The task below is from your error notebook.",
+            "Die Aufgabe unten stammt aus deinem Fehlerheft.",
+          ),
+        ),
+      );
+    else
+      notebookPanel.append(
+        button(
+          next.previousAttemptId
+            ? t(
+                "Repair an error-notebook exercise",
+                "Eine Fehlerheft-Übung korrigieren",
+              )
+            : t("Next error-notebook exercise", "Nächste Fehlerheft-Übung"),
+          () => fresh(next.task, next.previousAttemptId),
+          isNotebookTask(task) && session?.submittedId ? "primary" : "",
+        ),
+      );
+  }
   function renderFocus(): void {
+    renderNotebook();
     renderDailyPlan();
     refreshPilot();
     const selection = selectDailyFocus(

@@ -1,6 +1,6 @@
 {
   "language": "en",
-  "contentVersion": "2026-11-02.2",
+  "contentVersion": "2026-11-03.1",
   "units": [
     {
       "id": "en.c.001",
@@ -9,7 +9,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 13,
+          "tasks": 14,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -47,7 +47,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 11,
+          "tasks": 14,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -123,7 +123,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 18,
+          "tasks": 23,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -142,7 +142,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 11,
+          "tasks": 12,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -161,7 +161,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 11,
+          "tasks": 13,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -199,7 +199,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 11,
+          "tasks": 15,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -237,7 +237,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 13,
+          "tasks": 15,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -484,7 +484,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 11,
+          "tasks": 14,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -655,7 +655,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 13,
+          "tasks": 14,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -1529,7 +1529,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 13,
+          "tasks": 15,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -1719,7 +1719,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 13,
+          "tasks": 15,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -1909,7 +1909,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 13,
+          "tasks": 14,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },
@@ -2004,7 +2004,7 @@
       "modes": [
         {
           "modality": "writing",
-          "tasks": 13,
+          "tasks": 14,
           "contentReviewed": 0,
           "evaluatorApproved": 0
         },

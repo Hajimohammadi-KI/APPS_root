@@ -365,10 +365,15 @@ function addCheckedPractice(pack: CurriculumPack): string | null {
         acceptedAnswers: [...row.answers],
         hints: [unit.rule],
         solution: row.answers[0]!,
-        sourceId: `authored-checked-practice-${row.version}:${unit.id}:${index}`,
+        // The practice page finds the error-notebook items by this source.
+        sourceId: row.notebook
+          ? `learner-notebook-${row.version}:${unit.id}:${index}:${row.notebook}`
+          : `authored-checked-practice-${row.version}:${unit.id}:${index}`,
       };
       delete task.constructionAssessment;
       delete task.rejectedAnswers;
+      if (row.rejected?.length)
+        task.rejectedAnswers = row.rejected.map((wrong) => ({ ...wrong }));
       unit.tasks.push(task);
       if (!added || row.version > added) added = row.version;
     }

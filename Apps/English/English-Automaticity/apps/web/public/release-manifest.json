@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-03",
   "version": "27.4.4",
-  "webRelease": "2026.11.03.2",
+  "webRelease": "2026.11.03.3",
   "changes": [
-    "The error-notebook exercises are part of daily practice by grammar level: the daily page shows \"Today from your error notebook\" for the selected level (today's count against a goal of 5, passed items, and the next exercise), the Grammar Lab of each unit lists its notebook exercises after the earlier ones and marks the recorded wrong forms with their explanation, and the practice page card follows the selected level."
+    "The error-notebook card, daily block and Grammar Lab hint no longer tell every visitor that the items are their own errors: they name the error notebook and say the items are written from a learner's real writing errors. On the daily page, an activity's bar stays empty until the activity is done (it showed full for activities not started), and the activity glyph icons are hidden from screen readers. No exercise, accepted answer or verdict changed."
   ]
 }

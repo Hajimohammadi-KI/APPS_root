@@ -418,3 +418,47 @@ test("learner notebook: both daily pages and Lab pages carry the notebook practi
     ),
   ).toContain("rejectedAnswers: exercise[2]?.rejectedAnswers");
 });
+
+test("learner notebook: no page tells a visitor the items are their own errors", () => {
+  // The items come from one learner's notebook and every visitor sees them,
+  // so no shipped page may call them the visitor's own errors.
+  const claim =
+    /your (own )?(error notebook|written errors)|my (error|writing) notebook|\b(dein|mein)(em|en)? (eigenen )?(Fehlerheft|Schreibfehler)|دفتر خطای خودت/iu;
+  for (const file of [
+    "shared/learning-core/browser/practice.js",
+    "shared/learning-core/browser/overview.js",
+    "Apps/English/English-Automaticity/apps/web/public/learning-core/practice.js",
+    "Apps/English/English-Automaticity/apps/web/public/learning-core/overview.js",
+    "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/learning-core/practice.js",
+    "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/learning-core/overview.js",
+    "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/replacements/de/grammar-catalog.js",
+    "Apps/English/English-Automaticity/apps/web/features/screens/errors-screen.tsx",
+    "Apps/Deutsch/Deutsch-Automaticity/apps/web/src/features/errors/error-engine.tsx",
+  ]) {
+    const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    expect(`${file}: ${text.match(claim)?.[0] ?? "none"}`).toBe(
+      `${file}: none`,
+    );
+  }
+});
+
+test("daily pages: an activity's bar stays empty until it is done; glyph icons are hidden from screen readers", () => {
+  for (const page of [
+    "Apps/English/English-Automaticity/apps/web/public/replacements/en/daily.html",
+    "Apps/Deutsch/Deutsch-Automaticity/apps/web/public/replacements/de/heute.html",
+  ]) {
+    const html = readFileSync(new URL(`../${page}`, import.meta.url), "utf8");
+    // A block span fills its bar unless it starts at width 0.
+    expect(`${page}: ${html.match(/\.bar span\{[^}]*\}/u)?.[0]}`).toContain(
+      "width:0",
+    );
+    // Rendering sets the width from the state, so it also resets.
+    expect(html).toContain(
+      "card.querySelector('.bar span').style.width=done?'100%':'0'",
+    );
+    expect(html).not.toContain('<div class="act-icon">');
+    expect(
+      html.match(/<div class="act-icon" aria-hidden="true">/gu)?.length,
+    ).toBe(7);
+  }
+});

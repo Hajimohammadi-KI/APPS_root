@@ -78,9 +78,7 @@ export function ErrorsScreen() {
         </a>
       </Button>
       <Button asChild className="w-fit" variant="outline">
-        <a href="/practice?notebook=1">
-          Practise the errors from my writing notebook
-        </a>
+        <a href="/practice?notebook=1">Practise the error-notebook exercises</a>
       </Button>
       <PageHeading
         actions={

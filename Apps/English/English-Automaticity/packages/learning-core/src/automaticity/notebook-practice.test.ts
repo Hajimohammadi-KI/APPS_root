@@ -8,6 +8,7 @@ import type { ReducedAttempt } from "./evidence";
 import {
   DAILY_NOTEBOOK_GOAL,
   isNotebookTask,
+  notebookCopy,
   notebookProgress,
 } from "./notebook-practice";
 
@@ -162,5 +163,39 @@ describe("error-notebook practice", () => {
       notebookProgress(pack, attempts, { level: "A1", now }),
     ).toMatchObject({ total: 1, passed: 1, next: null, today: 1 });
     expect(DAILY_NOTEBOOK_GOAL).toBeGreaterThan(0);
+  });
+
+  test("never tells a visitor the items are their own errors and says where they come from", () => {
+    // Every visitor sees the same items, written from one learner's notebook,
+    // so the wording names the notebook without claiming it is theirs.
+    const claim = {
+      en: /\b(your|my|own)\b/iu,
+      de: /\b(dein|mein|eigen)\w*/iu,
+    } as const;
+    for (const language of ["en", "de"] as const) {
+      const copy = notebookCopy(language);
+      const texts = [
+        copy.title,
+        copy.todayTitle,
+        copy.source,
+        copy.thisTask,
+        copy.noneAt("C2"),
+        copy.progress("A1", { passed: 0, total: 18 }, { passed: 0, total: 28 }),
+      ];
+      for (const text of texts)
+        expect(`${text}: ${text.match(claim[language])?.[0] ?? "none"}`).toBe(
+          `${text}: none`,
+        );
+      expect(copy.source).toMatch(
+        language === "en" ? /real writing errors/u : /echten Schreibfehlern/u,
+      );
+    }
+    expect(
+      notebookCopy("en").progress(
+        "A1",
+        { passed: 1, total: 18 },
+        { passed: 2, total: 28 },
+      ),
+    ).toBe("1 of 18 exercises at A1 passed · all levels: 2 of 28.");
   });
 });

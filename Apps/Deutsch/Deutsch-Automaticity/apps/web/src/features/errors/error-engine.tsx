@@ -122,7 +122,7 @@ export function ErrorEngine() {
         href="/practice?notebook=1"
         className={buttonVariants({ variant: "outline", className: "w-fit" })}
       >
-        Übungen aus meinem Fehlerheft
+        Übungen aus dem Fehlerheft
       </a>
       <PageHeader
         description="Jede Studiokorrektur wird klassifiziert, zusammengeführt und als Reparaturkette wieder eingeplant. Wiederkehrende Fehler stehen zuerst."

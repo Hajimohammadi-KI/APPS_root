@@ -301,7 +301,7 @@ function withGapCues(
   });
 }
 
-/** The learner's error-notebook items of the learning path, after every
+/** The error-notebook items of the learning path, after every
  * earlier exercise so saved Lab progress keeps its positions. */
 function withNotebookItems(
   title: string,
@@ -328,9 +328,9 @@ function withNotebookItems(
             فارسی: `طبق این دستور آلمانی عمل کن و پاسخ کامل را به آلمانی بنویس: ${prompt}`,
           },
           hint: {
-            Deutsch: `Aus deinem Fehlerheft. ${hint.Deutsch}`,
-            English: `From your error notebook. ${hint.English}`,
-            فارسی: `از دفتر خطای خودت. ${hint.فارسی}`,
+            Deutsch: `Aus dem Fehlerheft. ${hint.Deutsch}`,
+            English: `From the error notebook. ${hint.English}`,
+            فارسی: `از دفتر خطا. ${hint.فارسی}`,
           },
           feedbackDimensions: feedbackDimensionsFor(contentType),
           minimumSentences: 1,

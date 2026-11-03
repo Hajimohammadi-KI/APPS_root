@@ -1,11 +1,15 @@
 import type { Language } from "./contracts";
 import type { CurriculumPack } from "./curriculum";
 import { reduceAutomaticityEvents } from "./evidence";
-import { DAILY_NOTEBOOK_GOAL, notebookProgress } from "./notebook-practice";
+import {
+  DAILY_NOTEBOOK_GOAL,
+  notebookCopy,
+  notebookProgress,
+} from "./notebook-practice";
 import { loadCurriculumPack } from "./overview";
 import { readAutomaticityEvents } from "./storage";
 
-/** The daily plan's part of the learner's error notebook: the items of the
+/** The daily plan's part of the error notebook: the items of the
  * grammar level the daily page shows (its `data-level`), today's count and a
  * link to the next item in the learning path. */
 export function mountDailyNotebook(
@@ -41,22 +45,14 @@ export function mountDailyNotebook(
       now,
     );
     const progress = notebookProgress(pack, reduced.attempts, { level, now });
-    const heading = node(
-      "h3",
-      `${t("Today from your error notebook", "Heute aus deinem Fehlerheft")} · ${level}`,
-    );
+    const copy = notebookCopy(language);
+    const heading = node("h3", `${copy.todayTitle} · ${level}`);
     heading.style.margin = "0";
     root.hidden = false;
     if (!progress.total) {
       root.replaceChildren(
         heading,
-        node(
-          "p",
-          t(
-            `There are no exercises from your error notebook at ${level}.`,
-            `Auf ${level} gibt es keine Übungen aus deinem Fehlerheft.`,
-          ),
-        ),
+        node("p", copy.noneAt(level)),
         link(
           t("Practise another level", "Ein anderes Niveau üben"),
           "/practice?notebook=1",
@@ -68,7 +64,7 @@ export function mountDailyNotebook(
       heading,
       node(
         "p",
-        `${t(`Today: ${progress.today} of ${DAILY_NOTEBOOK_GOAL} exercises`, `Heute: ${progress.today} von ${DAILY_NOTEBOOK_GOAL} Übungen`)} · ${t(`${progress.passed} of ${progress.total} passed at ${level}`, `${progress.passed} von ${progress.total} auf ${level} bestanden`)}`,
+        `${t(`Today: ${progress.today} of ${DAILY_NOTEBOOK_GOAL} exercises`, `Heute: ${progress.today} von ${DAILY_NOTEBOOK_GOAL} Übungen`)} · ${t(`${progress.passed} of ${progress.total} passed at ${level}`, `${progress.passed} von ${progress.total} auf ${level} bestanden`)}. ${copy.source}`,
       ),
       progress.next
         ? link(

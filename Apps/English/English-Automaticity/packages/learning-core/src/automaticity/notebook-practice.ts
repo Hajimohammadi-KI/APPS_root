@@ -6,7 +6,7 @@ import {
 } from "./curriculum";
 import type { ReducedAttempt } from "./evidence";
 
-/** Items written from the learner's own error notebook carry this source. */
+/** Items written from a learner's error notebook carry this source. */
 const NOTEBOOK_SOURCE = "learner-notebook-";
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 /** Notebook items the daily plan suggests per day; more stay available. */
@@ -14,6 +14,34 @@ export const DAILY_NOTEBOOK_GOAL = 5;
 
 export const isNotebookTask = (task: Pick<PracticeTask, "sourceId">) =>
   task.sourceId.startsWith(NOTEBOOK_SOURCE);
+
+/** The wording of the notebook card and daily block. Every visitor sees the
+ * same items, written from one learner's notebook, so it names the notebook
+ * without calling the items the visitor's own errors. */
+export function notebookCopy(language: "en" | "de") {
+  const en = language === "en";
+  type Count = { passed: number; total: number };
+  return {
+    title: en ? "Error notebook" : "Fehlerheft",
+    todayTitle: en
+      ? "Today from the error notebook"
+      : "Heute aus dem Fehlerheft",
+    source: en
+      ? "Written from a learner's real writing errors."
+      : "Geschrieben nach echten Schreibfehlern einer lernenden Person.",
+    thisTask: en
+      ? "The task below is from the error notebook."
+      : "Die Aufgabe unten stammt aus dem Fehlerheft.",
+    noneAt: (level: string) =>
+      en
+        ? `There are no error-notebook exercises at ${level}.`
+        : `Auf ${level} gibt es keine Übungen aus dem Fehlerheft.`,
+    progress: (level: string, atLevel: Count, all: Count) =>
+      en
+        ? `${atLevel.passed} of ${atLevel.total} exercises at ${level} passed · all levels: ${all.passed} of ${all.total}.`
+        : `${atLevel.passed} von ${atLevel.total} Übungen auf ${level} bestanden · alle Niveaus: ${all.passed} von ${all.total}.`,
+  };
+}
 
 export interface NotebookProgress {
   total: number;

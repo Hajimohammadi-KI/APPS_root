@@ -88,7 +88,11 @@ import {
   schedulerPilotCards,
   readPilotEnrollment,
 } from "./scheduler-pilot";
-import { isNotebookTask, notebookProgress } from "./notebook-practice";
+import {
+  isNotebookTask,
+  notebookCopy,
+  notebookProgress,
+} from "./notebook-practice";
 
 const stages: Stage[] = [
   "notice",
@@ -956,7 +960,7 @@ export async function mountPractice(
     }
     await fresh(next.task, next.previousAttemptId);
   }
-  /** The items written from the learner's own error notebook: how many have
+  /** The items written from a learner's error notebook: how many have
    * passed at the selected grammar level and overall, and the next one to
    * try, of that level while it has one left. */
   function renderNotebook(): void {
@@ -966,14 +970,12 @@ export async function mountPractice(
     if (!all.total) return;
     const atLevel = notebookProgress(pack, attempts, { level });
     const next = atLevel.next ?? all.next;
+    const copy = notebookCopy(language);
     notebookPanel.replaceChildren(
-      element("h2", `${t("My error notebook", "Mein Fehlerheft")} · ${level}`),
+      element("h2", `${copy.title} · ${level}`),
       element(
         "p",
-        t(
-          `${atLevel.passed} of ${atLevel.total} exercises at ${level} passed · all levels: ${all.passed} of ${all.total} from your own written errors.`,
-          `${atLevel.passed} von ${atLevel.total} Übungen auf ${level} bestanden · alle Niveaus: ${all.passed} von ${all.total} zu deinen eigenen Schreibfehlern.`,
-        ),
+        `${copy.progress(level, atLevel, all)} ${copy.source}`,
         "muted",
       ),
     );
@@ -988,15 +990,7 @@ export async function mountPractice(
         ),
       );
     else if (next.task.id === task.id && !session?.submittedId)
-      notebookPanel.append(
-        element(
-          "p",
-          t(
-            "The task below is from your error notebook.",
-            "Die Aufgabe unten stammt aus deinem Fehlerheft.",
-          ),
-        ),
-      );
+      notebookPanel.append(element("p", copy.thisTask));
     else
       notebookPanel.append(
         button(

@@ -1,5 +1,16 @@
 import { describe, expect, test } from "bun:test";
-import { conversationTopics, spokenChunksUsed } from "./conversation-data";
+import {
+  conversationTopics,
+  copy,
+  spokenChunksUsed,
+} from "./conversation-data";
+
+test("the transcript check does not advertise audio or pronunciation assessment", () => {
+  expect(copy.en.evaluate).toBe("Check transcript grammar");
+  expect(copy.en.transcriptPlaceholder).toContain(
+    "not a pronunciation assessment",
+  );
+});
 
 describe("natural spoken English chunks", () => {
   test("W11 chunk anchors require complete words", () => {

@@ -36,15 +36,17 @@ export function SessionEvidence({
       <aside className="evidence">
         <section className="panel feedback">
           <h3>
-            {language === "de" ? "Echte Sprechdaten" : "Real speaking evidence"}
+            {language === "de"
+              ? "Aufnahme und Textfeedback"
+              : "Recording and transcript feedback"}
           </h3>
           <div className="feedback-row f0">
             <span>◫</span>
             <div>
-              <b>Fluency</b>
+              <b>Transcript word rate</b>
               <small>
                 {seconds
-                  ? `${wordsPerMinute} WPM from ${formatTime(seconds)} audio`
+                  ? `${wordsPerMinute} transcript words per minute of recording; not a fluency score`
                   : "Waiting for recorded timing"}
               </small>
             </div>
@@ -61,7 +63,7 @@ export function SessionEvidence({
           <div className="feedback-row f2">
             <span>G</span>
             <div>
-              <b>Grammar</b>
+              <b>Transcript grammar</b>
               <small>
                 {evaluation
                   ? `${evaluation.issues.length} LanguageTool issue(s)`
@@ -76,7 +78,7 @@ export function SessionEvidence({
               <b>Transcript</b>
               <small>
                 {transcript
-                  ? "Browser transcript reviewed by learner"
+                  ? "Recognized or edited text; review against the original audio"
                   : "Waiting for speech"}
               </small>
             </div>
@@ -86,7 +88,9 @@ export function SessionEvidence({
             <span>Ch</span>
             <div>
               <b>Natural chunks</b>
-              <small>Matched in the transcript for practice; not a mastery score</small>
+              <small>
+                Matched in the transcript for practice; not a mastery score
+              </small>
             </div>
             <strong>
               {matchedChunks}/{totalChunks}
@@ -110,15 +114,15 @@ export function SessionEvidence({
             </div>
             <div>
               <b>{formatTime(seconds)}</b>
-              <span>Speaking</span>
+              <span>Recording time</span>
             </div>
             <div>
               <b>{wordCount}</b>
-              <span>Words</span>
+              <span>Transcript words</span>
             </div>
             <div>
               <b>{wordsPerMinute}</b>
-              <span>WPM</span>
+              <span>Transcript WPM</span>
             </div>
           </div>
           <p className="encourage">♙ {selected.goal}</p>
@@ -142,7 +146,9 @@ export function SessionEvidence({
                 <p>{evaluation?.original ?? "—"}</p>
               </div>
               <div className="corrected">
-                <b>{evaluation?.issues.length ? "Corrected" : "Provider result"}</b>
+                <b>
+                  {evaluation?.issues.length ? "Corrected" : "Provider result"}
+                </b>
                 <p>{evaluation?.corrected ?? "—"}</p>
               </div>
             </>

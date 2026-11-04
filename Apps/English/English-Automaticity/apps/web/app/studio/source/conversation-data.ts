@@ -76,19 +76,20 @@ export const copy = {
     record: "Record answer",
     transcript: "Your transcript",
     transcriptPlaceholder:
-      "Your spoken answer will appear here. You can review recognition errors before evaluation.",
-    evaluate: "Evaluate my answer",
+      "Browser-recognized words, not a pronunciation assessment. Review recognition errors before checking transcript grammar.",
+    evaluate: "Check transcript grammar",
     evaluating: "Checking with LanguageTool…",
     saved: "Session saved on this device.",
     savedWithoutAudio:
       "Session saved on this device without the recording. To keep recordings, turn on “Save my recordings” in Settings.",
     consentNotice:
       "Evaluation sends your transcript (never the recording) to LanguageTool (languagetool.org). Online checks are off, so nothing has been sent.",
-    allowOnline: "Allow online checks and evaluate",
+    allowOnline: "Allow online checks and check transcript grammar",
     flagged: "Flagged",
     providerUnavailable:
       "LanguageTool is unavailable. No evaluation was invented; please try again.",
-    pronunciation: "Not evaluated — an audio-analysis provider is required.",
+    pronunciation:
+      "No verified pronunciation grade. Any audio-model observations appear separately below the recording.",
   },
   de: {
     title: "Gesprächsstudio",

@@ -112,15 +112,21 @@ test("keeps every legacy surface, catalog, and primary control available", async
     "Category",
     "Topic",
     "Grammar correction",
-    "Real speaking evidence",
+    "Recording and transcript feedback",
   ]) {
     await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
   }
-  await expect(page.getByRole("button", { name: "Record", exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Record", exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole("button", { name: /Pause/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /Stop/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Evaluate my answer/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Save practice/ })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /Check transcript grammar/ }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /Save practice/ }),
+  ).toBeVisible();
   await expect(page.locator(".record-controls button")).toHaveCount(5);
   await page.screenshot({
     fullPage: true,

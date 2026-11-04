@@ -200,3 +200,39 @@ follow-up after a day-7 test is not 30 days without retrieval. Local timestamps
 need teacher attestation; one learner's change does not establish causal or
 general effectiveness, CEFR level or automatic mastery. Stages 5 and 6 stay
 open until their real evidence requirements are met.
+
+## 9. English recording-based pronunciation observations
+
+The English Studio has a separate audio route at
+`/api/conversation/pronunciation`. Browser transcription and LanguageTool text
+feedback do not assess pronunciation. The optional audio adapter uses Microsoft
+Azure Speech pronunciation assessment and requires these server-only Production
+environment variables in the existing English Vercel project:
+
+- `AZURE_SPEECH_KEY`: the key for the owner's Azure Speech resource.
+- `AZURE_SPEECH_REGION`: that resource's region, for example `westeurope`.
+
+Configure secrets through Azure/Vercel account settings, never chat, source
+control, client bundles or `NEXT_PUBLIC_*` variables. The owner supplies the
+resource; this release does not create a paid subscription or provision one.
+Redeploy after configuring the variables. GET on the route reports availability
+without exposing credentials. A configured response is not proof that the key
+works or that pronunciation is validated: perform a consenting real recording
+check against the provider and compare with the teacher's judgement.
+
+Each send requires a target typed by the learner and separate audio consent.
+The complete current recording is converted on-device to mono 16 kHz PCM WAV;
+recordings longer than 30 seconds are refused, never silently trimmed. The
+chosen English variant is preserved. Named likely spoken phonemes are only
+available for `en-US`; `en-GB` must not silently switch to American English.
+The original recording can also be downloaded for teacher review without an
+external send. Local recording-storage consent remains separate.
+
+Provider observations show expected and likely heard sounds, not an app grade
+or established diagnosis. The existing W26 model-calibration gate stays closed;
+no pronunciation pass, mastery, CEFR or learning claim is granted. Missing
+configuration, consent, usable audio or valid provider evidence remains
+unassessed. Offline fixtures test the connection and UI, not detection of a
+real learner's pronunciation. Public endpoint limits are per server instance;
+configure an appropriate provider quota and Vercel firewall protection before
+opening a paid resource to a large learner group.

@@ -12,7 +12,7 @@
 // Text is compared with CRLF normalized to LF, so a Windows checkout and a
 // Linux CI runner agree.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
-import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const sourceRoot = resolve(dirname(fileURLToPath(import.meta.url)));
@@ -48,8 +48,14 @@ function packageFiles(root) {
   return files.sort();
 }
 
-function normalized(path) {
-  return readFileSync(path, "utf8").replaceAll("\r\n", "\n");
+const textExtensions = new Set([".ts", ".tsx", ".js", ".mjs", ".json", ".css", ".html", ".md", ".txt"]);
+function sameContent(source, target) {
+  const left = readFileSync(source), right = readFileSync(target);
+  // Model weights and WASM must be byte-identical. UTF-8 decoding can hide
+  // different invalid bytes, and newline normalization corrupts binary data.
+  return !source.replaceAll("\\", "/").includes("/browser/local-phoneme/") && textExtensions.has(extname(source))
+    ? left.toString("utf8").replaceAll("\r\n", "\n") === right.toString("utf8").replaceAll("\r\n", "\n")
+    : left.equals(right);
 }
 
 function assertInsideApps(path) {
@@ -73,7 +79,7 @@ function syncFile(source, target) {
   assertInsideApps(target);
   if (checkOnly) {
     if (!existsSync(target)) problems.push(`Missing: ${relative(repositoryRoot, target)}`);
-    else if (normalized(source) !== normalized(target)) problems.push(`Stale: ${relative(repositoryRoot, target)}`);
+    else if (!sameContent(source, target)) problems.push(`Stale: ${relative(repositoryRoot, target)}`);
     return;
   }
   mkdirSync(dirname(target), { recursive: true });

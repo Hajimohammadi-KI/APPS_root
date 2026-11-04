@@ -25,9 +25,16 @@ export function DailyContextBar({
   activity,
   onPrevious,
   onReturn,
-}: Readonly<{ activity: number; onPrevious: () => void; onReturn: () => void }>) {
+}: Readonly<{
+  activity: number;
+  onPrevious: () => void;
+  onReturn: () => void;
+}>) {
   return (
-    <section className="daily-context-bar" aria-label="Today's practice navigation">
+    <section
+      className="daily-context-bar"
+      aria-label="Today's practice navigation"
+    >
       <button onClick={onPrevious}>← Previous</button>
       <strong>Today’s speaking practice · activity {activity}</strong>
       <button onClick={onReturn}>Return to Today’s Practice</button>
@@ -40,7 +47,10 @@ export function IntegratedContextBar({
   onReturn,
 }: Readonly<{ context: IntegratedContext; onReturn: () => void }>) {
   return (
-    <section className="daily-context-bar" aria-label="Integrated Skills navigation">
+    <section
+      className="daily-context-bar"
+      aria-label="Integrated Skills navigation"
+    >
       <button onClick={onReturn}>← Integrated Skills</button>
       <strong>
         {context.level} · Unit {context.number} · {context.title}
@@ -54,7 +64,11 @@ export function StepPicker({
   stepLabels,
   active,
   onSelect,
-}: Readonly<{ stepLabels: readonly string[]; active: number; onSelect: (index: number) => void }>) {
+}: Readonly<{
+  stepLabels: readonly string[];
+  active: number;
+  onSelect: (index: number) => void;
+}>) {
   return (
     <details className="studio-step-picker">
       <summary>
@@ -103,15 +117,23 @@ export function CoachCard({
         <div className="coach-dialogue">
           <strong>
             Ava ·{" "}
-            {language === "de" ? "Deine Sprechtrainerin" : "Your speaking coach"}
+            {language === "de"
+              ? "Deine Sprechtrainerin"
+              : "Your speaking coach"}
           </strong>
           <p>{selected.task}</p>
-          <button className="prompt-audio" onClick={() => onSpeak(selected.task)}>
+          <button
+            className="prompt-audio"
+            onClick={() => onSpeak(selected.task)}
+          >
             ▶ {language === "de" ? "Aufgabe anhören" : "Hear prompt"}
           </button>
         </div>
       </div>
-      <section className="spoken-chunk-bank" aria-labelledby="spoken-chunk-title">
+      <section
+        className="spoken-chunk-bank"
+        aria-labelledby="spoken-chunk-title"
+      >
         <div className="spoken-chunk-heading">
           <div>
             <small>NATURAL SPOKEN ENGLISH</small>
@@ -159,6 +181,7 @@ export function CoachCard({
 export function RecordCard({
   text,
   recordingState,
+  starting,
   audioUrl,
   seconds,
   maxSeconds,
@@ -181,6 +204,7 @@ export function RecordCard({
 }: Readonly<{
   text: StudioCopy;
   recordingState: RecordingState;
+  starting: boolean;
   audioUrl: string | null;
   seconds: number;
   maxSeconds: number;
@@ -241,7 +265,11 @@ export function RecordCard({
           </p>
         )}
         {voiceRecoveryAvailable && (
-          <button className="prompt-audio" onClick={onContinueTyping} type="button">
+          <button
+            className="prompt-audio"
+            onClick={onContinueTyping}
+            type="button"
+          >
             Continue by typing
           </button>
         )}
@@ -258,10 +286,16 @@ export function RecordCard({
           <button onClick={onReplay} disabled={!audioUrl}>
             ♧ Replay
           </button>
-          <button onClick={onRecord} disabled={recordingState !== "idle"}>
+          <button
+            onClick={onRecord}
+            disabled={starting || recordingState !== "idle"}
+          >
             <em /> Record
           </button>
-          <button onClick={onPauseOrResume} disabled={recordingState === "idle"}>
+          <button
+            onClick={onPauseOrResume}
+            disabled={recordingState === "idle"}
+          >
             Ⅱ {recordingState === "paused" ? "Resume" : "Pause"}
           </button>
           <button onClick={onStop} disabled={recordingState === "idle"}>
@@ -269,14 +303,20 @@ export function RecordCard({
           </button>
           <button
             className="primary"
-            disabled={evaluating || (!transcript.trim() && !interimTranscript.trim())}
+            disabled={
+              evaluating || (!transcript.trim() && !interimTranscript.trim())
+            }
             onClick={onEvaluate}
           >
             ✣ {evaluating ? text.evaluating : text.evaluate}
           </button>
         </div>
         {consentNeeded && (
-          <button className="primary online-consent" onClick={onAllowOnline} type="button">
+          <button
+            className="primary online-consent"
+            onClick={onAllowOnline}
+            type="button"
+          >
             {text.allowOnline}
           </button>
         )}
@@ -288,11 +328,16 @@ export function RecordCard({
         <b>{text.transcript}</b>
         <textarea
           ref={transcriptRef}
+          aria-describedby="studio-transcript-basis"
           value={`${transcript}${interimTranscript ? ` ${interimTranscript}` : ""}`}
           placeholder={text.transcriptPlaceholder}
           onChange={(event) => onTranscriptChange(event.target.value)}
         />
       </label>
+      <p id="studio-transcript-basis" style={{ gridColumn: "1 / -1" }}>
+        Browser-recognized words can hide sound differences. This text is not a
+        pronunciation assessment.
+      </p>
     </div>
   );
 }
@@ -301,7 +346,11 @@ export function DailyCompleteDialog({
   onReturn,
   onPractiseAgain,
   onReviewMistakes,
-}: Readonly<{ onReturn: () => void; onPractiseAgain: () => void; onReviewMistakes: () => void }>) {
+}: Readonly<{
+  onReturn: () => void;
+  onPractiseAgain: () => void;
+  onReviewMistakes: () => void;
+}>) {
   return (
     <div
       className="daily-complete-backdrop"

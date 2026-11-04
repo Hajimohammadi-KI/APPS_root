@@ -1,5 +1,6 @@
 "use client";
 import { SpeechPracticePanel } from "./speech-practice-panel";
+import { PronunciationPanel } from "./pronunciation-panel";
 import { LearningNavigation } from "@/components/learning-navigation";
 import { Disclosure } from "@/components/ui/disclosure";
 import { AutomaticityEvidenceSummary } from "@/features/components/automaticity-evidence-summary";
@@ -264,7 +265,7 @@ export default function Home() {
           text={text}
           path={path}
           selected={selected}
-          disabled={recorder.recordingState !== "idle"}
+          disabled={recorder.starting || recorder.recordingState !== "idle"}
           levels={levels}
           skills={skills}
           categories={categories}
@@ -318,6 +319,7 @@ export default function Home() {
             <RecordCard
               text={text}
               recordingState={recorder.recordingState}
+              starting={recorder.starting}
               audioUrl={recorder.audioUrl}
               seconds={recorder.seconds}
               maxSeconds={maxSeconds}
@@ -347,6 +349,16 @@ export default function Home() {
                 void recorder.evaluateTranscript({ consented: true });
               }}
               onTranscriptChange={recorder.editTranscript}
+            />
+
+            <PronunciationPanel
+              audioBlob={recorder.audioBlob}
+              audioUrl={recorder.audioUrl}
+              recordingVersion={recorder.recordingVersion}
+              recordingBusy={
+                recorder.starting || recorder.recordingState !== "idle"
+              }
+              variant={state.settings.englishVariant}
             />
 
             <SpeechPracticePanel

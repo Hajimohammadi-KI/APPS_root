@@ -70,6 +70,9 @@ export function useStudioRecorder({
   const [transcript, setTranscript] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [recordingVersion, setRecordingVersion] = useState(0);
+  const [starting, setStarting] = useState(false);
   const [hasAudioBlob, setHasAudioBlob] = useState(false);
   const [evaluation, setEvaluation] = useState<EvaluationResponse | null>(null);
   const [baseline, setBaseline] = useState<EvaluationResponse | null>(null);
@@ -87,12 +90,14 @@ export function useStudioRecorder({
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
   const audioBlobRef = useRef<Blob | null>(null);
   const transcriptRef = useRef<HTMLTextAreaElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const attemptIdRef = useRef<string | null>(null);
   const savedEvidenceIdRef = useRef<string | null>(null);
+  const captureGenerationRef = useRef(0);
+  const startBusyRef = useRef(false);
+  const evaluationRequestRef = useRef(0);
 
   const wordCount = countWords(transcript);
   const wordsPerMinute =
@@ -119,6 +124,7 @@ export function useStudioRecorder({
 
   useEffect(
     () => () => {
+      captureGenerationRef.current += 1;
       streamRef.current?.getTracks().forEach((track) => track.stop());
       try {
         recognitionRef.current?.stop();
@@ -138,6 +144,21 @@ export function useStudioRecorder({
   );
 
   function resetSession(clearBaseline = true) {
+    captureGenerationRef.current += 1;
+    evaluationRequestRef.current += 1;
+    setEvaluating(false);
+    startBusyRef.current = false;
+    setStarting(false);
+    setRecordingVersion((current) => current + 1);
+    const recorder = recorderRef.current;
+    if (recorder && recorder.state !== "inactive") recorder.stop();
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    try {
+      recognitionRef.current?.stop();
+    } catch {
+      /* Already stopped. */
+    }
+    setRecordingState("idle");
     transcriptEditedRef.current = false;
     setRecognitionEvidence(null);
     setWaveform(null);
@@ -149,6 +170,7 @@ export function useStudioRecorder({
     setSeconds(0);
     setMessage(null);
     audioBlobRef.current = null;
+    setAudioBlob(null);
     attemptIdRef.current = null;
     savedEvidenceIdRef.current = null;
     setHasAudioBlob(false);
@@ -157,6 +179,8 @@ export function useStudioRecorder({
   }
 
   function editTranscript(value: string) {
+    evaluationRequestRef.current += 1;
+    setEvaluating(false);
     transcriptEditedRef.current = true;
     setRecognitionEvidence(null);
     setTranscript(value);
@@ -169,19 +193,30 @@ export function useStudioRecorder({
     const Recognition = recognitionConstructor();
     if (!Recognition) return false;
     const recognition = new Recognition();
+    const generation = captureGenerationRef.current;
     recognition.lang = speechLocale[language];
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.maxAlternatives = 3;
     const collector = new RecognitionCollector(initialText);
     recognition.onresult = (event) => {
-      if (transcriptEditedRef.current) return;
+      if (
+        generation !== captureGenerationRef.current ||
+        recognitionRef.current !== recognition ||
+        transcriptEditedRef.current
+      )
+        return;
       const evidence = collector.update(event);
       setRecognitionEvidence(evidence);
       setTranscript(evidence.finalText);
       setInterimTranscript(evidence.interimText);
     };
     recognition.onerror = (event) => {
+      if (
+        generation !== captureGenerationRef.current ||
+        recognitionRef.current !== recognition
+      )
+        return;
       if (event.error !== "aborted" && event.error !== "no-speech") {
         setMessage(
           `${language === "de" ? "Spracherkennung" : "Speech recognition"}: ${event.error}`,
@@ -189,8 +224,8 @@ export function useStudioRecorder({
       }
     };
     try {
-      recognition.start();
       recognitionRef.current = recognition;
+      recognition.start();
       return true;
     } catch {
       recognitionRef.current = null;
@@ -201,6 +236,24 @@ export function useStudioRecorder({
   async function startRecording({
     keepBaseline = false,
   }: { keepBaseline?: boolean } = {}) {
+    if (startBusyRef.current || recordingState !== "idle") return;
+    startBusyRef.current = true;
+    setStarting(true);
+    const generation = ++captureGenerationRef.current;
+    evaluationRequestRef.current += 1;
+    setEvaluating(false);
+    try {
+      recognitionRef.current?.stop();
+    } catch {
+      /* Already stopped. */
+    }
+    recognitionRef.current = null;
+    setRecordingVersion((current) => current + 1);
+    audioBlobRef.current = null;
+    setAudioBlob(null);
+    setHasAudioBlob(false);
+    setAudioUrl(null);
+    setWaveform(null);
     setMessage(null);
     setVoiceRecoveryAvailable(false);
     if (
@@ -213,13 +266,23 @@ export function useStudioRecorder({
           : "Audio recording is not supported in this browser.",
       );
       setVoiceRecoveryAvailable(true);
+      startBusyRef.current = false;
+      setStarting(false);
       return;
     }
     try {
       streamRef.current?.getTracks().forEach((track) => track.stop());
       const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: true },
+        audio: {
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+        },
       });
+      if (generation !== captureGenerationRef.current) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
       const nextAttemptId = crypto.randomUUID();
       if (savedEvidenceIdRef.current) {
         appendEvidenceInvalidationToStorage(window.localStorage, {
@@ -231,19 +294,22 @@ export function useStudioRecorder({
       attemptIdRef.current = nextAttemptId;
       savedEvidenceIdRef.current = null;
       streamRef.current = stream;
-      chunksRef.current = [];
+      const chunks: Blob[] = [];
       audioBlobRef.current = null;
       setHasAudioBlob(false);
       const recorder = new MediaRecorder(stream);
       recorderRef.current = recorder;
       recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) chunksRef.current.push(event.data);
+        if (event.data.size > 0) chunks.push(event.data);
       };
       recorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, {
+        stream.getTracks().forEach((track) => track.stop());
+        if (generation !== captureGenerationRef.current) return;
+        const blob = new Blob(chunks, {
           type: recorder.mimeType || "audio/webm",
         });
         audioBlobRef.current = blob;
+        setAudioBlob(blob.size > 0 ? blob : null);
         void describeRecording(blob)
           .then((description) => {
             if (audioBlobRef.current === blob) setWaveform(description);
@@ -280,6 +346,8 @@ export function useStudioRecorder({
       setRecordingState("recording");
       onRecordingStarted();
     } catch (error) {
+      if (generation !== captureGenerationRef.current) return;
+      streamRef.current?.getTracks().forEach((track) => track.stop());
       const blocked =
         error instanceof DOMException &&
         ["NotAllowedError", "SecurityError"].includes(error.name);
@@ -293,6 +361,11 @@ export function useStudioRecorder({
             : "The microphone could not be started.",
       );
       setVoiceRecoveryAvailable(true);
+    } finally {
+      if (generation === captureGenerationRef.current) {
+        startBusyRef.current = false;
+        setStarting(false);
+      }
     }
   }
 
@@ -347,6 +420,11 @@ export function useStudioRecorder({
       return;
     }
     setConsentNeeded(false);
+    const generation = captureGenerationRef.current;
+    const requestId = ++evaluationRequestRef.current;
+    const isCurrent = () =>
+      generation === captureGenerationRef.current &&
+      requestId === evaluationRequestRef.current;
     setEvaluating(true);
     setMessage(null);
     try {
@@ -361,6 +439,7 @@ export function useStudioRecorder({
         }),
       });
       const payload: unknown = await response.json();
+      if (!isCurrent()) return;
       if (response.status === 429 && providerError(payload)) {
         setEvaluation(null);
         setMessage(providerError(payload));
@@ -372,10 +451,11 @@ export function useStudioRecorder({
       setAttempts((current) => current + 1);
       onEvaluated();
     } catch {
+      if (!isCurrent()) return;
       setEvaluation(null);
       setMessage(text.providerUnavailable);
     } finally {
-      setEvaluating(false);
+      if (isCurrent()) setEvaluating(false);
     }
   }
 
@@ -455,6 +535,9 @@ export function useStudioRecorder({
     transcript,
     interimTranscript,
     audioUrl,
+    audioBlob,
+    recordingVersion,
+    starting,
     hasAudioBlob,
     evaluation,
     baseline,

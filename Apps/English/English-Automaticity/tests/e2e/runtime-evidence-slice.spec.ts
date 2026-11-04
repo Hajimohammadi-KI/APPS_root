@@ -28,9 +28,9 @@ async function installSyntheticAudioCapture(page: Page) {
       stop() {
         this.state = "inactive";
         const wavHeader = new Uint8Array([
-          82, 73, 70, 70, 36, 0, 0, 0, 87, 65, 86, 69, 102, 109, 116, 32,
-          16, 0, 0, 0, 1, 0, 1, 0, 64, 31, 0, 0, 128, 62, 0, 0, 2, 0, 16,
-          0, 100, 97, 116, 97, 0, 0, 0, 0,
+          82, 73, 70, 70, 36, 0, 0, 0, 87, 65, 86, 69, 102, 109, 116, 32, 16, 0,
+          0, 0, 1, 0, 1, 0, 64, 31, 0, 0, 128, 62, 0, 0, 2, 0, 16, 0, 100, 97,
+          116, 97, 0, 0, 0, 0,
         ]);
         this.ondataavailable?.({
           data: new Blob([wavHeader], { type: this.mimeType }),
@@ -48,7 +48,10 @@ async function installSyntheticAudioCapture(page: Page) {
         this.state = "recording";
       }
 
-      addEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+      addEventListener(
+        type: string,
+        listener: EventListenerOrEventListenerObject,
+      ) {
         if (type !== "stop") return;
         this.stopListeners.push(
           typeof listener === "function"
@@ -102,7 +105,7 @@ test("B1 Studio persists audio evidence, exposes provider failure, and invalidat
   await page.getByRole("button", { name: "Record", exact: true }).click();
   await page.getByRole("button", { name: /Stop/ }).click();
   await page.getByLabel("Your transcript").fill(TRANSCRIPT);
-  await page.getByRole("button", { name: "Evaluate my answer" }).click();
+  await page.getByRole("button", { name: "Check transcript grammar" }).click();
   await expect(page.getByText(/LanguageTool is unavailable/)).toBeVisible();
   expect(
     await page.evaluate(() =>
@@ -111,20 +114,30 @@ test("B1 Studio persists audio evidence, exposes provider failure, and invalidat
   ).toBeNull();
 
   providerAvailable = true;
-  await page.getByRole("button", { name: "Evaluate my answer" }).click();
-  await expect(page.getByRole("heading", { name: "Review your answer" })).toBeVisible();
+  await page.getByRole("button", { name: "Check transcript grammar" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Review your answer" }),
+  ).toBeVisible();
   await page.locator(".steps button").filter({ hasText: "Replay" }).click();
   await expect(
     page.getByRole("heading", { name: "Listen to your real recording" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Review →", exact: true }).click();
-  await page.getByRole("button", { name: "Corrections →", exact: true }).click();
-  await expect(page.getByText("LanguageTool detected no text errors.")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Corrections →", exact: true })
+    .click();
+  await expect(
+    page.getByText("LanguageTool detected no text errors."),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Improve →", exact: true }).click();
   await expect(page.getByText("Honest limit")).toBeVisible();
   await page.locator(".steps button").filter({ hasText: "Save" }).click();
-  await page.getByRole("button", { name: "✓ Save session", exact: true }).click();
-  await expect(page.getByRole("status")).toHaveText("Session saved on this device.");
+  await page
+    .getByRole("button", { name: "✓ Save session", exact: true })
+    .click();
+  await expect(page.getByRole("status")).toHaveText(
+    "Session saved on this device.",
+  );
 
   const saved = await page.evaluate(async () => {
     const ledger = JSON.parse(
@@ -185,7 +198,9 @@ test("B1 Studio persists audio evidence, exposes provider failure, and invalidat
       page.evaluate(() => {
         const ledger = JSON.parse(
           localStorage.getItem("automaticity:learning-evidence:v1") ?? "{}",
-        ) as { events?: Array<{ type?: string; payload?: { evidenceId?: string } }> };
+        ) as {
+          events?: Array<{ type?: string; payload?: { evidenceId?: string } }>;
+        };
         return ledger.events?.find(
           (event) => event.type === "learning.evidence.invalidated.v1",
         )?.payload?.evidenceId;

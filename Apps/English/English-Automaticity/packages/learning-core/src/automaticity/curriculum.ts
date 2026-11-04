@@ -1,4 +1,4 @@
-import type { Language, ReviewStatus, TaskIdentity } from "./contracts";
+import type { Language, ReviewStatus, Stage, TaskIdentity } from "./contracts";
 import type { RuleId } from "./construction-rules";
 export const GRAMMAR_FAMILIES = [
   ["G01", "Basic clause structure", "Satzgrundstruktur"],
@@ -81,6 +81,12 @@ export interface ConstructionUnit {
   review: ReviewStatus;
   sources: { title: string; url: string }[];
   tasks: PracticeTask[];
+  /** Authored practice sequence; its presence is not human qualification or evidence of learning. */
+  learningCycle?: {
+    version: string;
+    goals: { form: string; meaning: string; use: string };
+    steps: { stage: Stage; taskId: string; purpose: string }[];
+  };
   retiredTasks?: {
     taskId: string;
     replacementTaskId: string;
@@ -156,6 +162,40 @@ export function validateCurriculum(pack: CurriculumPack): string[] {
       )
         issues.push(`Invalid retired task ${unit.id}:${retired.taskId}`);
       retiredIds.add(retired.taskId);
+    }
+    if (unit.learningCycle) {
+      const cycle = unit.learningCycle;
+      const ordered = [
+        "notice",
+        "retrieve",
+        "vary",
+        "produce",
+        "repair",
+        "transfer",
+        "retain",
+      ];
+      if (
+        !cycle.version ||
+        ["form", "meaning", "use"].some(
+          (key) => !cycle.goals[key as keyof typeof cycle.goals]?.trim(),
+        ) ||
+        cycle.steps.length !== ordered.length
+      )
+        issues.push(`Invalid learning cycle ${unit.id}`);
+      cycle.steps.forEach((step, index) => {
+        const target = activePracticeTasks(unit).find(
+          (task) => task.id === step.taskId,
+        );
+        if (
+          step.stage !== ordered[index] ||
+          !step.purpose.trim() ||
+          !target ||
+          target.stage !== step.stage ||
+          target.modality !== "writing" ||
+          target.partition !== "practice"
+        )
+          issues.push(`Invalid learning cycle step ${unit.id}:${step.stage}`);
+      });
     }
   }
   const visiting = new Set<string>(),

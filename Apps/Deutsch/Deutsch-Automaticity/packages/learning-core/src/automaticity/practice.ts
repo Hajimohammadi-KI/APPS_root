@@ -26,6 +26,7 @@ import {
 } from "./learner-feedback-panel";
 import { reduceAutomaticityEvents } from "./evidence";
 import { assessControlledTask } from "./assessment";
+import { learningCycleTask } from "./learning-cycle";
 import { markedAnswer } from "./answer-alignment";
 import {
   collectAssessmentFeedback,
@@ -1720,7 +1721,7 @@ export async function mountPractice(
           "Vary",
           "Produce",
           "Repair",
-          "Transfer",
+          "New situation",
           "Return later",
         ]
       : [
@@ -1729,7 +1730,7 @@ export async function mountPractice(
           "Variieren",
           "Produzieren",
           "Korrigieren",
-          "Übertragen",
+          "Neue Situation",
           "Später abrufen",
         ];
     // Worksheet chrome: a teal corner tab names the step; a circular badge marks the task.
@@ -1793,6 +1794,27 @@ export async function mountPractice(
       ),
     );
     taskPanel.append(phaseHeader, languageGuideHost);
+    if (unit.learningCycle && task.modality === "writing") {
+      const goals = element("details", undefined, "learning-cycle-goals");
+      goals.append(
+        element("summary", t("What you are practising", "Was du übst")),
+      );
+      const labels = {
+        form: t("Form", "Form"),
+        meaning: t("Meaning", "Bedeutung"),
+        use: t("Use", "Gebrauch"),
+      };
+      for (const key of ["form", "meaning", "use"] as const)
+        goals.append(
+          element("p", `${labels[key]}: ${unit.learningCycle.goals[key]}`),
+        );
+      const step = unit.learningCycle.steps.find(
+        (row) => row.taskId === task.id,
+      );
+      if (step)
+        taskPanel.append(element("p", step.purpose, "learning-cycle-purpose"));
+      taskPanel.append(goals);
+    }
     languageGuide.update({
       stage: task.stage,
       constructionId: unit.id,
@@ -1859,17 +1881,15 @@ export async function mountPractice(
     const stageNav = element("div", undefined, "stage-nav");
     stageNav.setAttribute("aria-label", t("Learning cycle", "Lernzyklus"));
     stages.forEach((stage, index) => {
-      const available =
-        activeTasks.find(
-          (row) => row.stage === stage && row.modality === task.modality,
-        ) ?? activeTasks.find((row) => row.stage === stage);
+      const available = learningCycleTask(unit, stage, task.modality, true);
       if (!available) return;
       const btn = button(
         stageNames[index]!,
         () => fresh(available),
-        task.stage === stage ? "selected" : "",
+        task.id === available.id ? "selected" : "",
       );
-      btn.setAttribute("aria-pressed", String(task.stage === stage));
+      btn.setAttribute("aria-pressed", String(task.id === available.id));
+      btn.dataset.cycleStage = stage;
       stageNav.append(btn);
     });
     const stageOptions = element(
@@ -1895,11 +1915,26 @@ export async function mountPractice(
       ),
     );
     taskPanel.append(stageOptions);
+    if (unit.learningCycle && task.modality === "writing") {
+      const position = unit.learningCycle.steps.findIndex(
+        (row) => row.taskId === task.id,
+      );
+      const nextStep =
+        position >= 0 ? unit.learningCycle.steps[position + 1] : undefined;
+      const nextCycleTask = nextStep
+        ? learningCycleTask(unit, nextStep.stage, "writing")
+        : undefined;
+      if (nextCycleTask)
+        taskPanel.append(
+          button(
+            t("Next step in this topic", "Nächster Schritt in diesem Thema"),
+            () => fresh(nextCycleTask),
+          ),
+        );
+    }
     const modalityNav = element("div", undefined, "toolbar");
     for (const mode of ["writing", "speaking"] as Modality[]) {
-      const other = activeTasks.find(
-        (row) => row.stage === task.stage && row.modality === mode,
-      );
+      const other = learningCycleTask(unit, task.stage, mode);
       // From checked practice, unchecked modes are offered only as optional links.
       if (other && (!isCheckedTask(task) || isCheckedTask(other)))
         modalityNav.append(
@@ -2875,12 +2910,24 @@ export async function mountPractice(
         ),
       );
     }
+    const cyclePosition =
+      task.modality === "writing"
+        ? unit.learningCycle?.steps.findIndex((row) => row.taskId === task.id)
+        : undefined;
+    const nextCycleStep =
+      cyclePosition !== undefined && cyclePosition >= 0
+        ? unit.learningCycle!.steps[cyclePosition + 1]
+        : undefined;
     const current = activeTasks.findIndex((row) => row.id === task.id),
       next =
-        activeTasks
-          .slice(current + 1)
-          .find((row) => row.modality === task.modality) ??
-        activeTasks.find((row) => row.modality === task.modality)!;
+        cyclePosition !== undefined && cyclePosition >= 0
+          ? nextCycleStep
+            ? learningCycleTask(unit, nextCycleStep.stage, "writing")
+            : undefined
+          : (activeTasks
+              .slice(current + 1)
+              .find((row) => row.modality === task.modality) ??
+            activeTasks.find((row) => row.modality === task.modality)!);
     if (!session.submittedId && next)
       taskPanel.append(
         button(t("Next task", "Nächste Aufgabe"), () => fresh(next)),

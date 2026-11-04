@@ -1,10 +1,21 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { mkdtemp, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import {
+  mkdtemp,
+  mkdir,
+  readFile,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { createRequire } from "node:module";
 import { execFileSync } from "node:child_process";
-import { synchronizeRoadmap } from "./language-apps-roadmap.mjs";
+import {
+  renderRoadmap,
+  renderRoadmapMarkdown,
+  synchronizeRoadmap,
+} from "./language-apps-roadmap.mjs";
 
 const repositoryRoot = resolve(import.meta.dir, "..");
 const outputs = [
@@ -14,12 +25,110 @@ const outputs = [
   "docs/LANGUAGE-APPS-IMPROVEMENT-ROADMAP.md",
 ];
 const temporaryRoots = [];
+
+test("strategy tracks the two apps separately and counts only published deliveries", () => {
+  const data = fixture();
+  data.work = {
+    strategy: {
+      goal: "Independent grammar",
+      scope: "Both apps",
+      statusPolicy: "Verify first",
+    },
+  };
+  data.items[0].delivery = {
+    order: 1,
+    title: "Shared next step",
+    workIds: ["W07"],
+    outcome: "Consistent entry",
+    acceptance: ["Preserve explicit choices"],
+    apps: {
+      en: {
+        status: "tested",
+        updated: "2026-11-04",
+        evidence: "Local tests passed",
+        next: "Deploy English",
+        release: null,
+        verifiedAt: null,
+      },
+      de: {
+        status: "todo",
+        updated: "2026-11-04",
+        evidence: "Not implemented",
+        next: "Test German",
+        release: null,
+        verifiedAt: null,
+      },
+    },
+  };
+  const html = renderRoadmap(data);
+  expect(html).toContain('id="strategy-title"');
+  expect(html).toContain('href="#strategy-title"');
+  expect(html).toContain('data-language="en" data-status="tested"');
+  expect(html).toContain('data-language="de" data-status="todo"');
+  expect(html).toContain("انگلیسی: 0 از 1 مرحله منتشرشده");
+  expect(html).toContain("آلمانی: 0 از 1 مرحله منتشرشده");
+  expect(html).toContain("Deploy English");
+  expect(html).toContain("Preserve explicit choices");
+  const md = renderRoadmapMarkdown(data);
+  expect(md).toContain("Shared next step");
+  expect(md).toContain("Local tests passed");
+  expect(md).toContain("Test German");
+  data.items[0].delivery.apps.en = {
+    status: "published",
+    updated: "2026-11-04",
+    evidence: "Canonical marker and browser passed",
+    next: "Monitor",
+    release: "2026.11.04.1",
+    verifiedAt: "2026-11-04T10:00:00Z",
+  };
+  expect(renderRoadmap(data)).toContain("انگلیسی: 1 از 1 مرحله منتشرشده");
+  expect(renderRoadmap(data)).toContain("آلمانی: 0 از 1 مرحله منتشرشده");
+});
+
+test("a published strategy delivery needs release, verification date and evidence", () => {
+  const data = fixture();
+  data.items[0].delivery = {
+    order: 1,
+    title: "Stage",
+    workIds: [],
+    outcome: "Goal",
+    acceptance: [],
+    apps: {
+      en: {
+        status: "published",
+        evidence: "",
+        release: null,
+        verifiedAt: null,
+      },
+      de: { status: "todo", evidence: "Pending" },
+    },
+  };
+  expect(() => renderRoadmap(data)).toThrow(
+    "Published delivery R87/en requires release, verifiedAt and evidence",
+  );
+});
 const fixture = () => ({
   release: "2026.10.11.5",
   updated: "2026-10-11",
   summary: "Test roadmap",
-  apps: [{ id: "en", name: "English", url: "https://english-grammar-automaticity-pwa.vercel.app/", publication: "Tested" }],
-  items: [{ id: "R87", title: "Guard", status: "tested", finding: "Stale files", action: "Check", evidence: "Local checks" }],
+  apps: [
+    {
+      id: "en",
+      name: "English",
+      url: "https://english-grammar-automaticity-pwa.vercel.app/",
+      publication: "Tested",
+    },
+  ],
+  items: [
+    {
+      id: "R87",
+      title: "Guard",
+      status: "tested",
+      finding: "Stale files",
+      action: "Check",
+      evidence: "Local checks",
+    },
+  ],
   history: ["Initial check"],
 });
 
@@ -32,34 +141,55 @@ async function makeRoot() {
 }
 
 async function saveSource(root, data) {
-  await writeFile(resolve(root, "docs/language-apps-roadmap.json"), JSON.stringify(data));
+  await writeFile(
+    resolve(root, "docs/language-apps-roadmap.json"),
+    JSON.stringify(data),
+  );
 }
 
 async function snapshot(root) {
-  return Promise.all(outputs.map(async (path) => ({
-    path,
-    bytes: await readFile(resolve(root, path)),
-    modified: (await stat(resolve(root, path))).mtimeMs,
-  })));
+  return Promise.all(
+    outputs.map(async (path) => ({
+      path,
+      bytes: await readFile(resolve(root, path)),
+      modified: (await stat(resolve(root, path))).mtimeMs,
+    })),
+  );
 }
 
 afterEach(async () => {
-  for (const root of temporaryRoots.splice(0)) await rm(root, { recursive: true, force: true });
+  for (const root of temporaryRoots.splice(0))
+    await rm(root, { recursive: true, force: true });
 });
 
 describe("roadmap build guard", () => {
   test("a Windows checkout with autocrlf enabled keeps generated bytes current", async () => {
     const root = await makeRoot();
     await synchronizeRoadmap({ root });
-    await writeFile(resolve(root, ".gitattributes"), await readFile(resolve(repositoryRoot, ".gitattributes")));
-    const git = (...args) => execFileSync("git", args, { cwd: root, stdio: "pipe" });
+    await writeFile(
+      resolve(root, ".gitattributes"),
+      await readFile(resolve(repositoryRoot, ".gitattributes")),
+    );
+    const git = (...args) =>
+      execFileSync("git", args, { cwd: root, stdio: "pipe" });
     git("init", "--quiet");
     git("config", "core.autocrlf", "true");
     git("add", ".gitattributes", ...outputs);
-    git("-c", "user.name=Roadmap test", "-c", "user.email=roadmap-test@example.invalid", "commit", "--quiet", "-m", "Synthetic checkout fixture");
+    git(
+      "-c",
+      "user.name=Roadmap test",
+      "-c",
+      "user.email=roadmap-test@example.invalid",
+      "commit",
+      "--quiet",
+      "-m",
+      "Synthetic checkout fixture",
+    );
     for (const output of outputs) await rm(resolve(root, output));
     git("checkout", "--", ...outputs);
-    await expect(synchronizeRoadmap({ root, check: true })).resolves.toEqual(outputs);
+    await expect(synchronizeRoadmap({ root, check: true })).resolves.toEqual(
+      outputs,
+    );
   });
   test("generation writes all outputs and a matching check writes nothing", async () => {
     const root = await makeRoot();
@@ -84,7 +214,9 @@ describe("roadmap build guard", () => {
         throw new Error("Expected stale roadmap rejection");
       } catch (error) {
         for (const output of outputs) expect(error.message).toContain(output);
-        expect(error.message).toContain("bun scripts/language-apps-roadmap.mjs");
+        expect(error.message).toContain(
+          "bun scripts/language-apps-roadmap.mjs",
+        );
       }
       expect(await snapshot(root)).toEqual(before);
     });
@@ -95,7 +227,9 @@ describe("roadmap build guard", () => {
       const root = await makeRoot();
       await synchronizeRoadmap({ root });
       await rm(resolve(root, output));
-      await expect(synchronizeRoadmap({ root, check: true })).rejects.toThrow(output);
+      await expect(synchronizeRoadmap({ root, check: true })).rejects.toThrow(
+        output,
+      );
       await expect(stat(resolve(root, output))).rejects.toThrow();
     });
   }
@@ -104,19 +238,30 @@ describe("roadmap build guard", () => {
     const root = await makeRoot();
     await synchronizeRoadmap({ root });
     const path = resolve(root, outputs[3]);
-    await writeFile(path, Buffer.concat([await readFile(path), Buffer.from("\n")]));
-    await expect(synchronizeRoadmap({ root, check: true })).rejects.toThrow(outputs[3]);
+    await writeFile(
+      path,
+      Buffer.concat([await readFile(path), Buffer.from("\n")]),
+    );
+    await expect(synchronizeRoadmap({ root, check: true })).rejects.toThrow(
+      outputs[3],
+    );
   });
 
-  for (const [app, output] of [["en", outputs[1]], ["de", outputs[2]]]) {
+  for (const [app, output] of [
+    ["en", outputs[1]],
+    ["de", outputs[2]],
+  ]) {
     test(`${app} upload needs only its own generated page and source`, async () => {
       const root = await makeRoot();
       await synchronizeRoadmap({ root });
-      for (const other of outputs.filter((path) => path !== output)) await rm(resolve(root, other));
+      for (const other of outputs.filter((path) => path !== output))
+        await rm(resolve(root, other));
       await synchronizeRoadmap({ root, check: true, app });
       const before = await readFile(resolve(root, output));
       await writeFile(resolve(root, output), "stale");
-      await expect(synchronizeRoadmap({ root, check: true, app })).rejects.toThrow(output);
+      await expect(
+        synchronizeRoadmap({ root, check: true, app }),
+      ).rejects.toThrow(output);
       expect(await readFile(resolve(root, output), "utf8")).toBe("stale");
       expect(before.length).toBeGreaterThan(0);
     });
@@ -124,14 +269,31 @@ describe("roadmap build guard", () => {
 
   test("unknown apps and app-scoped generation are rejected before writes", async () => {
     const root = await makeRoot();
-    await expect(synchronizeRoadmap({ root, check: true, app: "fr" })).rejects.toThrow("Unknown app");
-    await expect(synchronizeRoadmap({ root, app: "en" })).rejects.toThrow("--app requires --check");
-    for (const output of outputs) await expect(stat(resolve(root, output))).rejects.toThrow();
+    await expect(
+      synchronizeRoadmap({ root, check: true, app: "fr" }),
+    ).rejects.toThrow("Unknown app");
+    await expect(synchronizeRoadmap({ root, app: "en" })).rejects.toThrow(
+      "--app requires --check",
+    );
+    for (const output of outputs)
+      await expect(stat(resolve(root, output))).rejects.toThrow();
   });
 
   test("CLI rejects app-scoped mutation and app-scoped serving", async () => {
-    for (const flags of [["--app=en"], ["--check", "--app=fr"], ["--serve", "--app=en"], ["--serve", "--check"]]) {
-      const child = Bun.spawn([process.execPath, resolve(repositoryRoot, "scripts/language-apps-roadmap.mjs"), ...flags], { stdout: "pipe", stderr: "pipe" });
+    for (const flags of [
+      ["--app=en"],
+      ["--check", "--app=fr"],
+      ["--serve", "--app=en"],
+      ["--serve", "--check"],
+    ]) {
+      const child = Bun.spawn(
+        [
+          process.execPath,
+          resolve(repositoryRoot, "scripts/language-apps-roadmap.mjs"),
+          ...flags,
+        ],
+        { stdout: "pipe", stderr: "pipe" },
+      );
       expect(await child.exited).toBe(1);
       expect(await new Response(child.stderr).text()).toContain("Roadmap:");
     }
@@ -139,20 +301,47 @@ describe("roadmap build guard", () => {
 });
 
 test("Vercel upload includes only the two roadmap source files from root docs and scripts", async () => {
-  const require = createRequire(resolve(repositoryRoot, "Apps/Deutsch/Deutsch-Automaticity/package.json"));
+  const require = createRequire(
+    resolve(repositoryRoot, "Apps/Deutsch/Deutsch-Automaticity/package.json"),
+  );
   const ignore = require("ignore");
-  const rules = ignore().add(await readFile(resolve(repositoryRoot, ".vercelignore"), "utf8"));
-  for (const path of ["docs/language-apps-roadmap.json", "scripts/language-apps-roadmap.mjs", outputs[1], outputs[2]]) {
+  const rules = ignore().add(
+    await readFile(resolve(repositoryRoot, ".vercelignore"), "utf8"),
+  );
+  for (const path of [
+    "docs/language-apps-roadmap.json",
+    "scripts/language-apps-roadmap.mjs",
+    outputs[1],
+    outputs[2],
+  ]) {
     expect(rules.ignores(path)).toBe(false);
   }
-  for (const path of ["docs/private.md", "docs/nested/private.json", outputs[0], outputs[3], "scripts/other.mjs", "scripts/nested/other.mjs", "scripts/language-apps-roadmap.test.mjs"]) {
+  for (const path of [
+    "docs/private.md",
+    "docs/nested/private.json",
+    outputs[0],
+    outputs[3],
+    "scripts/other.mjs",
+    "scripts/nested/other.mjs",
+    "scripts/language-apps-roadmap.test.mjs",
+  ]) {
     expect(rules.ignores(path)).toBe(true);
   }
-  for (const [app, directory] of [["en", "English/English-Automaticity"], ["de", "Deutsch/Deutsch-Automaticity"]]) {
-    const pkg = JSON.parse(await readFile(resolve(repositoryRoot, `Apps/${directory}/apps/web/package.json`), "utf8"));
+  for (const [app, directory] of [
+    ["en", "English/English-Automaticity"],
+    ["de", "Deutsch/Deutsch-Automaticity"],
+  ]) {
+    const pkg = JSON.parse(
+      await readFile(
+        resolve(repositoryRoot, `Apps/${directory}/apps/web/package.json`),
+        "utf8",
+      ),
+    );
     // The content audit may run first; the roadmap check must still gate `next build`.
     const guard = `bun ../../../../../scripts/language-apps-roadmap.mjs --check --app=${app} && `;
     expect(pkg.scripts.build).toContain(guard);
-    expect(pkg.scripts.build.indexOf(guard)).toBeLessThan(pkg.scripts.build.indexOf("next build"));
+    expect(pkg.scripts.build.indexOf(guard)).toBeLessThan(
+      pkg.scripts.build.indexOf("next build"),
+    );
   }
 });

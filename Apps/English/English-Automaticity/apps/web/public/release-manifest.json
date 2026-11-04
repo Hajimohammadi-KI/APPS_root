@@ -1,8 +1,8 @@
 {
-  "publishedAt": "2026-11-03",
+  "publishedAt": "2026-11-04",
   "version": "27.4.4",
-  "webRelease": "2026.11.03.3",
+  "webRelease": "2026.11.04.1",
   "changes": [
-    "The error-notebook card, daily block and Grammar Lab hint no longer tell every visitor that the items are their own errors: they name the error notebook and say the items are written from a learner's real writing errors. On the daily page, an activity's bar stays empty until the activity is done (it showed full for activities not started), and the activity glyph icons are hidden from screen readers. No exercise, accepted answer or verdict changed."
+    "The existing Persian roadmap now tracks six implementation stages for independent grammar use, with separate English/German status, acceptance criteria, evidence, next action and verified release details. Publishing this roadmap does not mark the educational stages complete."
   ]
 }

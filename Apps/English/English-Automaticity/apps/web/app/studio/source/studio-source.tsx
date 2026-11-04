@@ -217,7 +217,6 @@ export default function Home() {
 
   return (
     <div className="conversation-page conversation-standalone">
-      <AppUpdateNotice />
       <aside className="sidebar">
         <a className="studio-brand" href="/">
           English Automaticity
@@ -244,6 +243,8 @@ export default function Home() {
             <div className="profile">E</div>
           </div>
         </header>
+
+        <AppUpdateNotice />
 
         {dailyActivity !== null && (
           <DailyContextBar

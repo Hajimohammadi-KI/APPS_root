@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-04",
-  "version": "27.4.4",
-  "webRelease": "2026.11.04.8",
+  "version": "27.4.5",
+  "webRelease": "2026.11.04.9",
   "changes": [
-    "English Studio: local-only waveform-to-phoneme analysis, no automatic cloud speech recognition, manual transcript and original recording preserved. Experimental acoustic observations are not pronunciation grades."
+    "Conversation Studio remains accessible when an update is ready. Update now and Later stay inside the content area; saved learner data is preserved. Local-only speech analysis remains available."
   ]
 }

@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-04",
   "version": "20.9.4",
-  "webRelease": "2026.11.04.8",
+  "webRelease": "2026.11.04.9",
   "changes": [
-    "Shared local speech assets and roadmap synchronized; English Studio local-only integration. German pronunciation UI unchanged; no new mastery or pronunciation claims."
+    "The shared roadmap records the English Studio update-notice layout fix. German learning content, grading and learner data are unchanged."
   ]
 }

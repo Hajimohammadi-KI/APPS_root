@@ -2358,5 +2358,61 @@
         }
       ]
     }
-  ]
+  ],
+  "reviewReadiness": {
+    "status": "awaiting_human_evidence",
+    "contentReviewedTasks": 0,
+    "evaluatorApprovedTasks": 0,
+    "missingExpandedScopeFiles": [
+      "docs/grammar-scope/english-specifications.psv",
+      "docs/grammar-scope/german-specifications.psv",
+      "docs/grammar-scope/additions.psv",
+      "docs/grammar-scope/family-audit.psv",
+      "docs/grammar-scope/references.json",
+      "docs/grammar-scope/relationships.json",
+      "docs/grammar-scope/task-policy.json",
+      "docs/grammar-scope/transformation-examples.json",
+      "docs/grammar-scope/protected-material.json",
+      "docs/grammar-scope/baseline-lessons.json",
+      "docs/grammar-scope/inventory.json"
+    ],
+    "selectedCycleReviewLinks": [
+      {
+        "unitId": "en.c.001",
+        "title": "Verb be: am/is/are",
+        "level": "A1",
+        "url": "/learning-core/content-review.html?unit=en.c.001&focus=cycle"
+      },
+      {
+        "unitId": "en.c.015",
+        "title": "Present continuous",
+        "level": "A2",
+        "url": "/learning-core/content-review.html?unit=en.c.015&focus=cycle"
+      },
+      {
+        "unitId": "en.c.034",
+        "title": "First conditional",
+        "level": "B1",
+        "url": "/learning-core/content-review.html?unit=en.c.034&focus=cycle"
+      },
+      {
+        "unitId": "en.c.048",
+        "title": "Third conditional",
+        "level": "B2",
+        "url": "/learning-core/content-review.html?unit=en.c.048&focus=cycle"
+      },
+      {
+        "unitId": "en.c.058",
+        "title": "Inversion in conditionals",
+        "level": "C1",
+        "url": "/learning-core/content-review.html?unit=en.c.058&focus=cycle"
+      },
+      {
+        "unitId": "en.c.072",
+        "title": "Layered subordination",
+        "level": "C2",
+        "url": "/learning-core/content-review.html?unit=en.c.072&focus=cycle"
+      }
+    ]
+  }
 }

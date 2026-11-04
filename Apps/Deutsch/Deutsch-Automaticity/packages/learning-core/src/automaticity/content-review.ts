@@ -82,6 +82,49 @@ export function reviewCells(unit: ConstructionUnit) {
   }));
 }
 
+/** Resolve only installed unit IDs. Query parameters never alter stored review work. */
+export function contentReviewSelection(
+  pack: CurriculumPack,
+  search: string,
+): { unit: ConstructionUnit | undefined; cycleOnly: boolean } {
+  const query = new URLSearchParams(search);
+  const unit =
+    pack.units.find((row) => row.id === query.get("unit")) ?? pack.units[0];
+  return {
+    unit,
+    cycleOnly: query.get("focus") === "cycle" && !!unit?.learningCycle,
+  };
+}
+
+/** Display exact mapped practice tasks first without dropping the rest of the unit's approval scope. */
+export function reviewTaskGroups(unit: ConstructionUnit) {
+  const active = activePracticeTasks(unit);
+  const cycle = (unit.learningCycle?.steps ?? []).flatMap((step) => {
+    const task = active.find(
+      (task) =>
+        task.id === step.taskId &&
+        task.stage === step.stage &&
+        task.modality === "writing",
+    );
+    return task ? [task] : [];
+  });
+  const ids = new Set(cycle.map((task) => task.id));
+  return { cycle, other: active.filter((task) => !ids.has(task.id)) };
+}
+
+export function safeReviewSource(value: string): string | null {
+  try {
+    const url = new URL(value);
+    return ["https:", "http:"].includes(url.protocol) &&
+      !url.username &&
+      !url.password
+      ? url.href
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 const longEnough = (note: string) => note.trim().length >= 20;
 /** Everything still missing before the unit can be approved; empty when ready.
  * The import applies the same rules, so an approval here imports as is. */

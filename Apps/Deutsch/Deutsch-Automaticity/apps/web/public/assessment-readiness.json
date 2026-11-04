@@ -2966,5 +2966,61 @@
         }
       ]
     }
-  ]
+  ],
+  "reviewReadiness": {
+    "status": "awaiting_human_evidence",
+    "contentReviewedTasks": 0,
+    "evaluatorApprovedTasks": 0,
+    "missingExpandedScopeFiles": [
+      "docs/grammar-scope/english-specifications.psv",
+      "docs/grammar-scope/german-specifications.psv",
+      "docs/grammar-scope/additions.psv",
+      "docs/grammar-scope/family-audit.psv",
+      "docs/grammar-scope/references.json",
+      "docs/grammar-scope/relationships.json",
+      "docs/grammar-scope/task-policy.json",
+      "docs/grammar-scope/transformation-examples.json",
+      "docs/grammar-scope/protected-material.json",
+      "docs/grammar-scope/baseline-lessons.json",
+      "docs/grammar-scope/inventory.json"
+    ],
+    "selectedCycleReviewLinks": [
+      {
+        "unitId": "de.c.001",
+        "title": "Personalpronomen und sein",
+        "level": "A1",
+        "url": "/learning-core/content-review.html?unit=de.c.001&focus=cycle"
+      },
+      {
+        "unitId": "de.c.015",
+        "title": "Perfekt mit haben",
+        "level": "A2",
+        "url": "/learning-core/content-review.html?unit=de.c.015&focus=cycle"
+      },
+      {
+        "unitId": "de.c.033",
+        "title": "Konjunktiv II mit würde",
+        "level": "B1",
+        "url": "/learning-core/content-review.html?unit=de.c.033&focus=cycle"
+      },
+      {
+        "unitId": "de.c.043",
+        "title": "Konjunktiv II Vergangenheit",
+        "level": "B2",
+        "url": "/learning-core/content-review.html?unit=de.c.043&focus=cycle"
+      },
+      {
+        "unitId": "de.c.057",
+        "title": "Konjunktiv I vollständig",
+        "level": "C1",
+        "url": "/learning-core/content-review.html?unit=de.c.057&focus=cycle"
+      },
+      {
+        "unitId": "de.c.071",
+        "title": "Feine Bedeutungsunterschiede im Modus",
+        "level": "C2",
+        "url": "/learning-core/content-review.html?unit=de.c.071&focus=cycle"
+      }
+    ]
+  }
 }

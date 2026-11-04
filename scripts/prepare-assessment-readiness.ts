@@ -7,6 +7,7 @@ import {
   validateReleaseReviews,
 } from "./lib/automaticity-release-reviews";
 import { activePracticeTasks } from "../shared/learning-core/src/automaticity/curriculum";
+import { missingGrammarScopeFiles } from "./lib/installed-coverage";
 
 const root = resolve(import.meta.dir, ".."),
   runtime = await loadRepresentativeRuntime(root);
@@ -60,6 +61,7 @@ const report = {
     releaseEligible: verified.evaluatorApprovedCells,
   },
 };
+const missingExpandedScopeFiles = await missingGrammarScopeFiles(root);
 await save(
   "docs/automaticity-coverage.json",
   JSON.stringify(report, null, 2) + "\n",
@@ -113,12 +115,46 @@ for (const pack of runtime.packs) {
       };
     }),
   }));
-  const data = { language: pack.language, contentVersion: pack.version, units };
+  const selectedCycleReviewLinks = pack.units
+    .filter((unit) => unit.learningCycle)
+    .map((unit) => ({
+      unitId: unit.id,
+      title: unit.title,
+      level: unit.level,
+      url: `/learning-core/content-review.html?unit=${unit.id}&focus=cycle`,
+    }));
+  const contentReviewedTasks = units.reduce(
+    (sum, unit) =>
+      sum + unit.modes.reduce((n, mode) => n + mode.contentReviewed, 0),
+    0,
+  );
+  const evaluatorApprovedTasks = units.reduce(
+    (sum, unit) =>
+      sum + unit.modes.reduce((n, mode) => n + mode.evaluatorApproved, 0),
+    0,
+  );
+  const reviewReadiness = {
+    status: "awaiting_human_evidence",
+    contentReviewedTasks,
+    evaluatorApprovedTasks,
+    missingExpandedScopeFiles,
+    selectedCycleReviewLinks,
+  };
+  const data = {
+    language: pack.language,
+    contentVersion: pack.version,
+    units,
+    reviewReadiness,
+  };
   await save(
     `${app}/apps/web/public/assessment-readiness.json`,
     JSON.stringify(data, null, 2) + "\n",
   );
   const html = `<!doctype html><html lang="fa" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>پوشش ارزیابی تمرین‌ها</title><style>*{box-sizing:border-box}body{margin:0;background:#f5f6fb;color:#192139;font:16px/1.9 Tahoma,Arial,sans-serif}main{max-width:960px;margin:auto;padding:24px}a{color:#183ea6}a:focus-visible{outline:3px solid #7149bf}h1{font-size:28px}h2{font-size:19px}article{background:white;border:1px solid #ccd4e2;border-radius:12px;padding:18px;margin:14px 0;overflow-wrap:anywhere}.muted{color:#536176}summary{cursor:pointer;min-height:44px;padding:8px 0}bdi{unicode-bidi:isolate}@media(max-width:500px){main{padding:16px}}</style><main><a href="/practice">بازگشت به تمرین</a> · <a href="/roadmap.html">رودمپ</a> · <a href="/assessment-benchmarks.html">آزمون ارزیاب‌ها</a> · <a href="/microphone-check.html">آزمون میکروفن</a><h1>پوشش ارزیابی تمرین‌ها — ${pack.language === "en" ? "انگلیسی" : "آلمانی"}</h1><p>${units.length} مبحث در نسخه محتوای <bdi>${escape(pack.version)}</bdi></p><p>هر مبحث دو وضعیت جدا دارد: بازبینی محتوای سؤال و تأیید روش ارزیابی پاسخ. عدد صفر یعنی این تأیید هنوز ثبت نشده است. بازخورد عمومی متن و خودارزیابی، تأیید دقت ۹۰ درصد یا روانی گفتار نیستند.</p><p>برای گفتار، ارزیاب باید صوت اصلی و رونویسی وفادار به آن را بررسی کند. تأیید ضبط یا متن، به‌تنهایی سنجش روانی و تلفظ نیست.</p>${units.map((unit) => `<article><h2><bdi dir="ltr">${escape(unit.level + " · " + unit.title)}</bdi></h2><details><summary>وضعیت نوشتن و گفتن</summary>${unit.modes.map((mode) => `<p><strong>${mode.modality === "writing" ? "نوشتن" : "گفتن"}:</strong> ${mode.tasks ? `${mode.tasks} تمرین فعال؛ محتوای بازبینی‌شده ${mode.contentReviewed}؛ روش ارزیابی تأییدشده ${mode.evaluatorApproved}` : "این مبحث در این شیوه تمرین ندارد."}</p>`).join("")}<p class="muted"><bdi>${escape(unit.id)}</bdi></p></details></article>`).join("")}</main></html>`;
-  await save(`${app}/apps/web/public/assessment-readiness.html`, html + "\n");
+  const teacherGuide = `<section aria-label="بازبینی معلم"><h2>تحویل برنامه به معلم</h2><p>معلم بدون نصب، لینک یکی از مباحث زیر را باز می‌کند، نام و صلاحیت خود را می‌نویسد، هدف‌ها و تمرین‌ها را بررسی و نظر دقیق ثبت می‌کند. پس از ذخیرهٔ نظرها، دانلود فایل JSON را می‌زند و فایل را برای مالک برنامه می‌فرستد. دانلود، فایل را ارسال نمی‌کند و هیچ تغییری خودکار منتشر نمی‌شود. پیش‌نویس داوری در همان مرورگر می‌ماند.</p><p>بررسی فقط هفت قدم چرخه برای ثبت ایرادها مفید است؛ تأیید کل مبحث به بررسی همهٔ تمرین‌های فعال نوشتاری و گفتاری آن نیاز دارد. نظر یک معلم، جای دو داور مستقل برای اعتبارسنجی بانک آزمون ارزیاب را نمی‌گیرد.</p><p>تأیید محتوای ثبت‌شده: ${contentReviewedTasks} تمرین؛ روش ارزیابی تأییدشده: ${evaluatorApprovedTasks} تمرین. آماده‌بودن ابزار به معنی انجام داوری نیست.</p><ul>${selectedCycleReviewLinks.map((link) => `<li><a href="${escape(link.url)}"><bdi dir="ltr">${escape(link.level + " · " + link.title)}</bdi></a></li>`).join("")}</ul><p>بانک مستقل پاسخ‌های دیده‌نشده و فایل‌های واقعی داوری هنوز لازم‌اند. ${missingExpandedScopeFiles.length ? `ورودی‌های ممیزی دامنهٔ گسترده ناقص‌اند (${missingExpandedScopeFiles.length} فایل)؛ بررسی تمرین‌های نصب‌شده مجوز انتشار کل برنامهٔ آموزشی نیست.` : "وجود فایل‌های دامنه به‌تنهایی، تأیید انسانی نیست."}</p></section>`;
+  await save(
+    `${app}/apps/web/public/assessment-readiness.html`,
+    html.replace("</h1>", "</h1>" + teacherGuide) + "\n",
+  );
 }
 console.log(JSON.stringify(report.summary));

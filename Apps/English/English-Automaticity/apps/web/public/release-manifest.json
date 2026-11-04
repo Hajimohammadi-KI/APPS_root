@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-04",
   "version": "27.4.4",
-  "webRelease": "2026.11.04.5",
+  "webRelease": "2026.11.04.6",
   "changes": [
-    "Stage 4: error-notebook progress uses the latest relevant checked response. A later wrong or unscored response reopens an earlier pass; history remains unchanged. Practice counts are explicitly separate from independent mastery."
+    "Stage 5 tools: exact teacher review links, selected cycles with goals and purposes, download/send guide, full-unit approval safeguards and an installed-coverage audit that explicitly blocks full qualification when scope or human evidence is missing. No human approval or evaluator qualification has been fabricated."
   ]
 }

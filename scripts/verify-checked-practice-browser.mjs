@@ -141,6 +141,74 @@ try {
       row.checks.push(
         "main entry, reload and continuation after an unscored or failed answer stay within checked writing",
       );
+      // R96: an explicit level change keeps a global-only older draft usable.
+      const originalChecked = await currentTask();
+      await page
+        .locator("#practice-response")
+        .fill("Global-only learner draft to preserve");
+      const checkedBytes = await page.evaluate((lang) => {
+        const key = `automaticity:v2:${lang}:session`;
+        const bytes = localStorage.getItem(key);
+        const saved = JSON.parse(bytes);
+        localStorage.removeItem(
+          `${key}:task:${encodeURIComponent(saved.taskId)}`,
+        );
+        return bytes;
+      }, language);
+      await page.goto(`${base}/practice?level=B1`, {
+        waitUntil: "domcontentloaded",
+      });
+      await page.waitForURL(/[?&]task=/u);
+      const afterLevel = await currentTask();
+      assert.equal(
+        pack.units.find((u) => u.id === afterLevel.constructionId).level,
+        "B1",
+      );
+      const kept = await page.evaluate(
+        ({ lang, id }) => {
+          const key = `automaticity:v2:${lang}:session`;
+          return {
+            task: localStorage.getItem(`${key}:task:${encodeURIComponent(id)}`),
+            archives: Object.keys(localStorage)
+              .filter((k) => k.includes(":archived-session:"))
+              .map((k) => localStorage.getItem(k)),
+          };
+        },
+        { lang: language, id: originalChecked.id },
+      );
+      assert.equal(kept.task, checkedBytes);
+      assert.ok(kept.archives.includes(checkedBytes));
+      row.checks.push(
+        "explicit new level preserves and archives a global-only unfinished checked draft",
+      );
+      // A pinned main-path revisit starts fresh after completion, unlike an explicit historical link.
+      const revisited = await currentTask();
+      await page
+        .locator("#practice-response")
+        .fill("Synthetic completed revisit");
+      await page
+        .getByRole("button", {
+          name: t("Save and check", "Speichern und prüfen"),
+          exact: true,
+        })
+        .click();
+      await page.goto(
+        `${base}/practice?task=${encodeURIComponent(revisited.id)}&level=B1&from=learning-path`,
+        { waitUntil: "domcontentloaded" },
+      );
+      await expect(page.locator("#practice-response")).toHaveValue("");
+      assert.equal(
+        await page.evaluate(
+          (lang) =>
+            JSON.parse(localStorage.getItem(`automaticity:v2:${lang}:session`))
+              .submittedId,
+          language,
+        ),
+        null,
+      );
+      row.checks.push(
+        "pinned main-path revisit starts a fresh attempt after a completed response",
+      );
       const unit = pack.units.find((unit) =>
         unit.tasks.some(
           (task) =>

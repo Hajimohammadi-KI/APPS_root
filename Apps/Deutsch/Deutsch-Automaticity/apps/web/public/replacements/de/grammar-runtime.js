@@ -70,6 +70,43 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     }
   };
 
+  // Preserve unreadable preference bytes before an explicit replacement. A
+  // failed or silently ignored backup write must leave the original untouched.
+  const preserveUnreadableChoice = (key, canonical, at) => {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return;
+    let valid = false;
+    try {
+      const value = JSON.parse(raw);
+      const record = value && typeof value === "object" && !Array.isArray(value);
+      valid = !!record && levels.includes(value.level) && (
+        canonical
+          ? value.version === 1 && typeof value.updatedAt === "string" && Number.isFinite(Date.parse(value.updatedAt)) &&
+            (value.topic === undefined || (typeof value.topic === "string" && !!value.topic.trim())) &&
+            (value.constructionId === undefined || (typeof value.constructionId === "string" && value.constructionId.startsWith("de.")))
+          : typeof (value.topic ?? value.title) === "string" && !!(value.topic ?? value.title).trim() &&
+            (value.updatedAt === undefined || (typeof value.updatedAt === "string" && Number.isFinite(Date.parse(value.updatedAt))))
+      );
+    } catch { /* The original string is backed up below, never parsed away. */ }
+    if (valid) return;
+    const prefix = `${key}:recovery:${at}`;
+    let recoveryKey = prefix, suffix = 0;
+    while (localStorage.getItem(recoveryKey) !== null) recoveryKey = `${prefix}:${++suffix}`;
+    localStorage.setItem(recoveryKey, raw);
+    if (localStorage.getItem(recoveryKey) !== raw) throw new Error("Saved choice backup could not be verified.");
+  };
+
+  // Only the explicit "use today" action changes the shared topic preference.
+  const saveTodayChoice = (unit) => {
+    const updatedAt = new Date().toISOString();
+    const choice = { level: unit.level, topic: unit.title, updatedAt };
+    preserveUnreadableChoice("automaticity:v2:de:choice", true, updatedAt);
+    preserveUnreadableChoice("deutsch-automaticity:today-grammar", false, updatedAt);
+    localStorage.setItem("deutsch-automaticity:today-grammar", JSON.stringify(choice));
+    localStorage.setItem("automaticity:v2:de:choice", JSON.stringify({ version: 1, ...choice }));
+    window.dispatchEvent(new Event("automaticity-choice-updated"));
+  };
+
   const uiCopy = {
     Deutsch: {
       closedEyebrow: "Geschlossene Übung · eindeutig prüfbar",
@@ -1557,14 +1594,12 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
     );
     $("[data-action='use-today']")?.addEventListener("click", () => {
       const unit = currentUnit();
-      localStorage.setItem(
-        "deutsch-automaticity:today-grammar",
-        JSON.stringify({
-          level: unit.level,
-          topic: unit.title,
-          updatedAt: new Date().toISOString(),
-        }),
-      );
+      try {
+        saveTodayChoice(unit);
+      } catch {
+        notify("Das gewählte Thema konnte nicht sicher gespeichert werden. Bitte sichere deine Daten und versuche es erneut.");
+        return;
+      }
       location.href = `/heute?from=grammar&level=${encodeURIComponent(unit.level)}&topic=${encodeURIComponent(unit.title)}`;
     });
     $("[data-action='help']")?.addEventListener("click", () =>

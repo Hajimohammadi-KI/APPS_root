@@ -5,6 +5,8 @@ export * from "./storage";
 export * from "./backup";
 export * from "./curriculum";
 export * from "./selector";
+export * from "./learning-path";
+export * from "./learning-path-browser";
 export * from "./daily-plan";
 export * from "./daily-dashboard";
 export * from "./assessment";

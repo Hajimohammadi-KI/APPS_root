@@ -53,7 +53,6 @@ import {
   isCheckedTask,
   selectDailyFocus,
   selectDailyTask,
-  selectNextLearningTask,
   shouldResumeSavedPractice,
   repairTaskForAttempt,
 } from "./selector";
@@ -71,6 +70,11 @@ import {
   type DailyPracticePlan,
 } from "./daily-plan";
 import { syncLegacyPractice } from "./legacy";
+import {
+  resolveLearningPath,
+  saveLearningPathChoice,
+  type LearningPathRequest,
+} from "./learning-path";
 import { promptTextParts } from "./prompt-text";
 import { disablePracticeControls } from "./practice-controls";
 import { LEARNING_TARGET, learningTarget } from "./learning-target";
@@ -249,8 +253,22 @@ export async function mountPractice(
   );
   const settingKey = `automaticity:v2:${language}:level`;
   const requested = new URLSearchParams(location.search);
-  let level =
-    requested.get("level") ?? localStorage.getItem(settingKey) ?? "A1";
+  const learningPathLaunch = requested.get("from") === "learning-path";
+  const pathRequest: LearningPathRequest = {};
+  for (const key of ["level", "topic"] as const) {
+    const value = requested.get(key);
+    if (value) pathRequest[key] = value;
+  }
+  const requestedId = requested.get("task");
+  if (requestedId) pathRequest.taskId = requestedId;
+  const initialChoice = resolveLearningPath(
+    pack,
+    localStorage,
+    now(),
+    pathRequest,
+    recommendationPack(),
+  );
+  let level = initialChoice?.level ?? pathRequest.level ?? "A1";
   if (!pack.units.some((row) => row.level === level)) level = "A1";
   const timingKey = `automaticity:v2:${language}:timing`;
   let timingEnabled = localStorage.getItem(timingKey) !== "off";
@@ -265,19 +283,6 @@ export async function mountPractice(
     language,
     now(),
   );
-  const initialChoice = requestedUnit
-    ? {
-        unit: requestedUnit,
-        ...selectDailyTask(requestedUnit, initialState, now()),
-      }
-    : selectNextLearningTask(
-        recommendationPack(),
-        initialState,
-        now(),
-        level,
-        undefined,
-        "checked",
-      );
   let unit: ConstructionUnit =
     initialChoice?.unit ?? requestedUnit ?? pack.units[0]!;
   let task: PracticeTask =
@@ -437,12 +442,25 @@ export async function mountPractice(
       );
     }
   };
-  const archiveSession = (saved: Session) => {
-    localStorage.setItem(
-      `automaticity:v2:${language}:archived-session:${id()}`,
-      JSON.stringify(saved),
-    );
+  const preserveSessionBytes = (
+    bytes: string,
+    saved: Session | null = null,
+  ) => {
+    const archiveKey = `automaticity:v2:${language}:archived-session:${id()}`;
+    localStorage.setItem(archiveKey, bytes);
+    if (localStorage.getItem(archiveKey) !== bytes)
+      throw new Error("The original draft could not be preserved");
+    if (saved) {
+      const key = `${sessionKey(language)}:task:${encodeURIComponent(saved.taskId)}`;
+      if (localStorage.getItem(key) === null) {
+        localStorage.setItem(key, bytes);
+        if (localStorage.getItem(key) !== bytes)
+          throw new Error("The original task draft could not be preserved");
+      }
+    }
   };
+  const archiveSession = (saved: Session) =>
+    preserveSessionBytes(JSON.stringify(saved), saved);
   const fresh = async (
     next: PracticeTask,
     prior: string | null = null,
@@ -537,12 +555,32 @@ export async function mountPractice(
       busy = false;
     }
   };
-  const contextTask = requestedTask ?? (requestedUnit ? task : null);
-  const raw = contextTask
+  const contextTask =
+    requestedTask ??
+    (requestedUnit || initialChoice?.source === "saved_choice" ? task : null);
+  const generalRaw = localStorage.getItem(sessionKey(language));
+  let raw = contextTask
     ? localStorage.getItem(
         `${sessionKey(language)}:task:${encodeURIComponent(contextTask.id)}`,
       )
-    : localStorage.getItem(sessionKey(language));
+    : generalRaw;
+  // Entering another explicit topic must preserve a global-only draft as well
+  // as drafts already saved under their individual task keys.
+  if (contextTask && generalRaw && raw !== generalRaw) {
+    let general: Session | null = null;
+    try {
+      general = parseSavedPracticeSession(generalRaw);
+    } catch {
+      /* Archive original bytes below. */
+    }
+    if (
+      !raw &&
+      general?.taskId === contextTask.id &&
+      general.taskVersion === contextTask.version
+    )
+      raw = generalRaw;
+    else preserveSessionBytes(generalRaw, general);
+  }
   let resume: Session | null = null;
   let advancedFromCompleted = false;
   if (raw) {
@@ -563,9 +601,12 @@ export async function mountPractice(
         );
       if (
         !optionalDraft &&
+        (!initialChoice ||
+          initialChoice.task.id === savedTask.id ||
+          !!contextTask) &&
         shouldResumeSavedPractice(
           savedSession,
-          requestedTask
+          requestedTask && !learningPathLaunch
             ? "explicit_task"
             : requested.has("review")
               ? "review"
@@ -580,27 +621,10 @@ export async function mountPractice(
         if (session.audioId)
           recording = await readRecording(indexedDB, language, session.audioId);
       } else {
-        advancedFromCompleted = !!savedSession.submittedId;
-        if (!requestedUnit) {
-          const savedUnit = unitById.get(savedTask.constructionId)!;
-          const preferred =
-            requested.has("level") && level !== savedUnit.level
-              ? undefined
-              : savedUnit.id;
-          const next = selectNextLearningTask(
-            recommendationPack(),
-            ledger(),
-            now(),
-            requested.has("level") ? level : savedUnit.level,
-            preferred,
-            "checked",
-          );
-          if (next?.task) {
-            unit = next.unit;
-            task = next.task;
-            checkedUnavailable = false;
-          }
+        if (!optionalDraft && hasUnfinishedPractice(savedSession)) {
+          preserveSessionBytes(raw, savedSession);
         }
+        advancedFromCompleted = !!savedSession.submittedId;
       }
     } else {
       localStorage.setItem(
@@ -658,8 +682,22 @@ export async function mountPractice(
   levelSelect.value = level;
   levelSelect.onchange = () => {
     level = levelSelect.value;
-    localStorage.setItem(settingKey, level);
-    renderFocus();
+    try {
+      saveLearningPathChoice(localStorage, language, { level }, now());
+      localStorage.setItem(settingKey, level);
+      const next = resolveLearningPath(
+        pack,
+        localStorage,
+        now(),
+        { level },
+        recommendationPack(),
+      );
+      window.dispatchEvent(new Event("automaticity-choice-updated"));
+      if (next) void fresh(next.task, next.previousAttemptId).catch(writeError);
+      else renderFocus();
+    } catch (error) {
+      writeError(error);
+    }
   };
   const topicSelect = element("select");
   topicSelect.setAttribute("aria-label", t("Grammar topic", "Grammatikthema"));
@@ -671,6 +709,18 @@ export async function mountPractice(
   topicSelect.value = unit.id;
   topicSelect.onchange = () => {
     const selected = unitById.get(topicSelect.value)!;
+    try {
+      saveLearningPathChoice(
+        localStorage,
+        language,
+        { level: selected.level, constructionId: selected.id },
+        now(),
+      );
+      window.dispatchEvent(new Event("automaticity-choice-updated"));
+    } catch (error) {
+      writeError(error);
+      return;
+    }
     void fresh(
       activePracticeTasks(selected).find(
         (row) => row.stage === "retrieve" && row.modality === "writing",
@@ -938,13 +988,12 @@ export async function mountPractice(
     );
   }
   async function continueRecommended(): Promise<void> {
-    const next = selectNextLearningTask(
-      recommendationPack(),
-      ledger(),
+    const next = resolveLearningPath(
+      pack,
+      localStorage,
       now(),
-      level,
-      unit.id,
-      "checked",
+      {},
+      recommendationPack(),
     );
     if (!next?.task)
       throw new Error(
@@ -1016,13 +1065,12 @@ export async function mountPractice(
       now(),
       level,
     );
-    const next = selectNextLearningTask(
-      recommendationPack(),
-      ledger(),
+    const next = resolveLearningPath(
+      pack,
+      localStorage,
       now(),
-      level,
-      unit.id,
-      "checked",
+      {},
+      recommendationPack(),
     );
     const resumeDraft =
       !!session &&
@@ -2732,13 +2780,12 @@ export async function mountPractice(
         ),
       );
     }
-    const recommendation = selectNextLearningTask(
-      recommendationPack(),
-      ledger(),
+    const recommendation = resolveLearningPath(
+      pack,
+      localStorage,
       now(),
-      level,
-      unit.id,
-      "checked",
+      {},
+      recommendationPack(),
     );
     if (session.submittedId && recommendation?.task) {
       taskPanel.append(

@@ -34,7 +34,12 @@ interface AiVerdict {
 
 function grammarPage(
   expected: string,
-  options: { open?: boolean; alternatives?: string[]; ai?: AiVerdict } = {},
+  options: {
+    open?: boolean;
+    alternatives?: string[];
+    ai?: AiVerdict;
+    skipRecoveryWrite?: boolean;
+  } = {},
 ) {
   const storage = new Map<string, string>();
   if (options.ai)
@@ -96,7 +101,12 @@ function grammarPage(
         this.assisted = true;
       },
     },
-    window: { GERMAN_GRAMMAR_UNITS: [fixture], location: { search: "" } },
+    window: {
+      GERMAN_GRAMMAR_UNITS: [fixture],
+      location: { search: "" },
+      dispatchEvent: (_event: Event) => true,
+    },
+    Event,
     URLSearchParams,
     fetch,
     setTimeout: () => 0,
@@ -108,17 +118,21 @@ function grammarPage(
     },
     localStorage: {
       getItem: (key: string) => storage.get(key) ?? null,
-      setItem: (key: string, value: string) => storage.set(key, value),
+      setItem: (key: string, value: string) =>
+        options.skipRecoveryWrite && key.includes(":recovery:")
+          ? storage
+          : storage.set(key, value),
     },
     harness: {} as {
       checkAnswer: () => Promise<void>;
       detectAnswerLanguage: (text: string) => string;
+      saveTodayChoice?: (unit: typeof fixture) => void;
     },
   };
   // Load the actual runtime and expose its handler without starting unrelated UI setup.
   const instrumented = runtimeSource.replace(
     /\n\}\)\(\);\s*$/u,
-    "\n drafts = draftState; globalThis.harness = { checkAnswer, detectAnswerLanguage };\n})();",
+    "\n drafts = draftState; globalThis.harness = { checkAnswer, detectAnswerLanguage, saveTodayChoice: typeof saveTodayChoice === 'function' ? saveTodayChoice : undefined };\n})();",
   );
   runInNewContext(
     `${textBrowserSource}\nwindow.AutomaticityText = globalThis.AutomaticityText;\n${instrumented}`,
@@ -128,6 +142,7 @@ function grammarPage(
     detect: context.harness.detectAnswerLanguage,
     storage,
     draftState: context.draftState,
+    chooseToday: () => context.harness.saveTodayChoice?.(fixture),
     feedback: element("#feedback"),
     async answer(text: string) {
       element("#answerInput").value = text;
@@ -138,6 +153,78 @@ function grammarPage(
 }
 
 describe("active Grammar-Labor answer handler", () => {
+  it.each(["{broken", "null", "[]", '{"version":99,"level":"A2"}'])(
+    "preserves unreadable canonical choice bytes before explicit replacement: %s",
+    (raw) => {
+      const page = grammarPage("Ich lerne heute.");
+      const key = "automaticity:v2:de:choice";
+      page.storage.set(key, raw);
+      page.chooseToday();
+      const recovery = [...page.storage].filter(([savedKey]) =>
+        savedKey.startsWith(`${key}:recovery:`),
+      );
+      expect(recovery.map(([, value]) => value)).toContain(raw);
+      expect(JSON.parse(page.storage.get(key)!)).toMatchObject({
+        version: 1,
+        level: "A2",
+        topic: "Grammatik im Kontext",
+      });
+    },
+  );
+
+  it("preserves unreadable legacy choice bytes before explicit replacement", () => {
+    const page = grammarPage("Ich lerne heute.");
+    const key = "deutsch-automaticity:today-grammar",
+      raw = "{invalid legacy";
+    page.storage.set(key, raw);
+    page.chooseToday();
+    expect(
+      [...page.storage]
+        .filter(([savedKey]) => savedKey.startsWith(`${key}:recovery:`))
+        .map(([, value]) => value),
+    ).toContain(raw);
+  });
+
+  it("refuses replacement when the unreadable-choice backup is not persisted", () => {
+    const page = grammarPage("Ich lerne heute.", { skipRecoveryWrite: true });
+    const key = "automaticity:v2:de:choice",
+      raw = "{broken";
+    const legacy = JSON.stringify({
+      level: "B1",
+      topic: "Saved lesson",
+      updatedAt: "2026-11-03T10:00:00Z",
+    });
+    page.storage.set(key, raw);
+    page.storage.set("deutsch-automaticity:today-grammar", legacy);
+    expect(() => page.chooseToday()).toThrow("choice backup");
+    expect(page.storage.get(key)).toBe(raw);
+    expect(page.storage.get("deutsch-automaticity:today-grammar")).toBe(legacy);
+  });
+  it("an explicit use-today choice is shared without replacing stored learner data", () => {
+    const page = grammarPage("Ich lerne heute.");
+    const existing = JSON.stringify({
+      learner: { displayName: "Learner" },
+      answers: ["kept"],
+    });
+    page.storage.set("GrammarAutomaticityV11_de", existing);
+    page.chooseToday();
+    expect(
+      JSON.parse(page.storage.get("automaticity:v2:de:choice") ?? "null"),
+    ).toMatchObject({
+      version: 1,
+      level: "A2",
+      topic: "Grammatik im Kontext",
+    });
+    expect(
+      JSON.parse(
+        page.storage.get("deutsch-automaticity:today-grammar") ?? "null",
+      ),
+    ).toMatchObject({
+      level: "A2",
+      topic: "Grammatik im Kontext",
+    });
+    expect(page.storage.get("GrammarAutomaticityV11_de")).toBe(existing);
+  });
   it.each([
     ["Ich lese ein buch.", "Ich lese ein Buch."],
     ["Wir helfen ihnen.", "Wir helfen Ihnen."],

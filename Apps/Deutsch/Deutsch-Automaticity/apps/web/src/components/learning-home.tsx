@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
-import type { DailyDashboard } from "@automaticity/learning-core/automaticity";
+import type {
+  DailyDashboard,
+  LearningPathSelection,
+} from "@automaticity/learning-core/automaticity";
 import {
   ArrowRight,
   BookOpen,
@@ -149,6 +152,7 @@ export function LearningHome({
   level,
   daily,
   ready,
+  learningPath,
   children,
 }: {
   language: "en" | "de";
@@ -156,6 +160,7 @@ export function LearningHome({
   level: string;
   daily: DailyDashboard | null;
   ready: boolean;
+  learningPath?: LearningPathSelection | null;
   children: ReactNode;
 }) {
   const t = copy[language];
@@ -241,7 +246,16 @@ export function LearningHome({
           </p>
           <h2 id="lh-next-title">{t[priority]}</h2>
           <p>{reason}</p>
-          <a className="lh-primary" href="/practice">
+          {learningPath ? (
+            <p data-learning-path-topic>
+              {learningPath.unit.title} · {learningPath.level}
+            </p>
+          ) : null}
+          <a
+            className="lh-primary"
+            data-learning-path-primary
+            href={learningPath?.href ?? "/practice"}
+          >
             {daily?.paused ? t.resume : t.cta}
             <ArrowRight aria-hidden="true" />
           </a>

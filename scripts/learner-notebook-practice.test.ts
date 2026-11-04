@@ -449,12 +449,10 @@ test("daily pages: an activity's bar stays empty until it is done; glyph icons a
   ]) {
     const html = readFileSync(new URL(`../${page}`, import.meta.url), "utf8");
     // A block span fills its bar unless it starts at width 0.
-    expect(`${page}: ${html.match(/\.bar span\{[^}]*\}/u)?.[0]}`).toContain(
-      "width:0",
-    );
+    expect(html).toMatch(/\.bar span\s*\{[^}]*width:\s*0[;}]/u);
     // Rendering sets the width from the state, so it also resets.
-    expect(html).toContain(
-      "card.querySelector('.bar span').style.width=done?'100%':'0'",
+    expect(html).toMatch(
+      /card\.querySelector\(['"]\.bar span['"]\)\.style\.width\s*=\s*done\s*\?\s*['"]100%['"]\s*:\s*['"]0['"]/u,
     );
     expect(html).not.toContain('<div class="act-icon">');
     expect(

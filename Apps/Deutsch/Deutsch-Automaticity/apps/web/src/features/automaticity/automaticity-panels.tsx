@@ -97,15 +97,9 @@ export function MissionHero({
         <Badge className="mb-3 bg-worksheet-teal! border-worksheet-teal! text-white!">
           Heute · {missionMinutes} Minuten
         </Badge>
-        {embedded ? (
-          <h2 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
-            Vertiefender Nachweis
-          </h2>
-        ) : (
-          <h1 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
-            Automatik-Mission
-          </h1>
-        )}
+        <h2 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+          {embedded ? "Vertiefender Nachweis" : "Automatik-Mission"}
+        </h2>
         <p className="mt-2 max-w-3xl text-muted-foreground">
           Aktivieren, korrekt anwenden, laut automatisieren und frei übertragen.
           Die Mission endet mit einem gespeicherten Nachweis, nicht mit bloßem

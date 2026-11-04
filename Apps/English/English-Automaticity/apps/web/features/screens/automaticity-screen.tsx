@@ -49,6 +49,10 @@ import {
   speak,
 } from "./automaticity/lesson-content";
 import { useLessonRecorder } from "./automaticity/use-lesson-recorder";
+import {
+  watchLearningPath,
+  type LearningPathSelection,
+} from "@automaticity/learning-core/automaticity";
 
 const contentSourceId = "english-authored-grammar-curriculum-v27";
 
@@ -62,6 +66,10 @@ export function AutomaticityScreen({
   stepOffset?: number;
 } = {}) {
   const { state, hydrated, mutate, recordAttempt } = useAppStore();
+  const [nextStep, setNextStep] = React.useState<LearningPathSelection | null>(
+    null,
+  );
+  React.useEffect(() => watchLearningPath("en", setNextStep), []);
   const missionMinutes = state.settings.dailyStudyMinutes;
   const selectedLevel = state.learner.selfDeclaredLevel ?? "A1";
   const grammar =
@@ -405,8 +413,7 @@ export function AutomaticityScreen({
         Math.round((analysis.wordCount / Math.max(1, seconds) / 2) * 100),
       ),
       latencyMs: null,
-      passed:
-        analysis.masteryEligible && seconds >= 45 && Boolean(audio?.size),
+      passed: analysis.masteryEligible && seconds >= 45 && Boolean(audio?.size),
       verified: false,
     });
     addIssuesToErrorWorkshop(analysis, transcript);
@@ -439,6 +446,28 @@ export function AutomaticityScreen({
 
   return (
     <div className="page-stack">
+      <Card>
+        <CardHeader>
+          <h2 className="text-xl font-extrabold tracking-tight">
+            Your main learning path
+          </h2>
+          <CardDescription data-learning-path-focus>
+            {nextStep
+              ? `${nextStep.unit.title} · ${nextStep.level}`
+              : "Reading your next exercise…"}
+          </CardDescription>
+          <a
+            className="learning-path-link"
+            href={nextStep?.href ?? "/practice"}
+          >
+            Continue main learning path →
+          </a>
+          <p>
+            Additional activities below keep their own saved topic and
+            responses.
+          </p>
+        </CardHeader>
+      </Card>
       {!embedded ? (
         <PageHeading
           actions={
@@ -451,13 +480,13 @@ export function AutomaticityScreen({
                   ?.scrollIntoView({ behavior: "smooth" })
               }
             >
-              <Play className="size-4" /> Start evidence practice
+              <Play className="size-4" /> Open supplementary activities
             </Button>
           }
           className="automaticity-hero"
           description="Activate, use accurately, automate aloud, and transfer into free speech. The mission ends with saved evidence, not a simple click."
           eyebrow={<Badge>Today · {missionMinutes} minutes</Badge>}
-          title="Automaticity Mission"
+          title="Supplementary Automaticity Mission"
         />
       ) : focusedStep === undefined ? (
         <Card className="border-worksheet-line! bg-worksheet-cyan/70">
@@ -556,8 +585,12 @@ export function AutomaticityScreen({
                 ? Math.round((checkedAnswers.filter(Boolean).length / 3) * 100)
                 : (verifiedMastery?.recognitionScore ?? 0)
             }
-            writing={journalAnalysis?.score ?? verifiedMastery?.writingScore ?? 0}
-            speaking={speechAnalysis?.score ?? verifiedMastery?.speakingScore ?? 0}
+            writing={
+              journalAnalysis?.score ?? verifiedMastery?.writingScore ?? 0
+            }
+            speaking={
+              speechAnalysis?.score ?? verifiedMastery?.speakingScore ?? 0
+            }
             verifiedAutomaticity={verifiedMastery?.automaticityScore ?? 0}
           />
           <PatternPlanCard
@@ -569,7 +602,9 @@ export function AutomaticityScreen({
               setCheckedAnswers([]);
               setJournalAnalysis(null);
               setSpeechAnalysis(null);
-              setMessage("Review reset. Your saved evidence remains available.");
+              setMessage(
+                "Review reset. Your saved evidence remains available.",
+              );
             }}
           />
         </div>

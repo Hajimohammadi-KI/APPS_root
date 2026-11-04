@@ -1,8 +1,8 @@
 {
   "publishedAt": "2026-11-04",
   "version": "20.9.4",
-  "webRelease": "2026.11.04.1",
+  "webRelease": "2026.11.04.2",
   "changes": [
-    "The existing Persian roadmap now tracks six implementation stages for independent grammar use, with separate English/German status, acceptance criteria, evidence, next action and verified release details. Publishing this roadmap does not mark the educational stages complete."
+    "Primary continuation now shares one learning-path choice across Home and Today, preserving explicit topic/level preferences and unfinished checked drafts. Earlier missions and the error notebook are clearly supplementary; grading and curriculum definitions are unchanged."
   ]
 }

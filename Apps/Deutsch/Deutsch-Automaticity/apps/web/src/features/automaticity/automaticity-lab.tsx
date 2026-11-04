@@ -37,6 +37,7 @@ import {
 } from "./lesson-content";
 import { speakingEvidenceBlock } from "./speaking-evidence";
 import { useLessonRecorder } from "./use-lesson-recorder";
+import { useLearningPath } from "./use-learning-path";
 
 export function AutomaticityLab({
   embedded = false,
@@ -45,6 +46,7 @@ export function AutomaticityLab({
   embedded?: boolean;
   focusedStep?: number;
 } = {}) {
+  const learningPath = useLearningPath();
   const {
     state,
     hydrated,
@@ -394,9 +396,34 @@ export function AutomaticityLab({
   }
 
   const step = focusedStep ?? activeStep;
+  const MainHeading = embedded ? "h2" : "h1";
 
   return (
     <div className="space-y-5">
+      <section
+        className="rounded-2xl border border-violet-200 bg-violet-50 p-5"
+        aria-label="Dein nächster Schritt im Lernweg"
+      >
+        <MainHeading className="text-xl font-semibold">
+          Dein nächster Schritt im Lernweg
+        </MainHeading>
+        <p data-learning-path-topic className="my-3">
+          {learningPath
+            ? `${learningPath.unit.title} · ${learningPath.level}`
+            : "Dein Lernweg wird geladen. Du kannst ihn direkt öffnen."}
+        </p>
+        <a
+          data-learning-path-primary
+          href={learningPath?.href ?? "/practice"}
+          className="inline-flex min-h-11 items-center rounded-xl bg-violet-700 px-4 py-2 font-semibold text-white"
+        >
+          Lernweg fortsetzen →
+        </a>
+      </section>
+      <p className="text-sm text-slate-600">
+        Zusatzmission: {TOPIC} · {selectedLevel}. Diese ergänzende Übung behält
+        ihr eigenes Thema und deine gespeicherten Antworten.
+      </p>
       {!focusedStep && focusedStep !== 0 ? (
         <MissionHero embedded={embedded} missionMinutes={missionMinutes} />
       ) : null}

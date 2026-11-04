@@ -2734,8 +2734,66 @@
           const appStateKey = "grammar-automaticity:v27";
           let appState = {};
           try {
-            appState = JSON.parse(localStorage.getItem(appStateKey) || "{}");
-          } catch {}
+            const raw = localStorage.getItem(appStateKey);
+            if (raw !== null) {
+              appState = JSON.parse(raw);
+              if (
+                !appState ||
+                typeof appState !== "object" ||
+                Array.isArray(appState) ||
+                (appState.reviews !== undefined &&
+                  !Array.isArray(appState.reviews))
+              ) {
+                throw new Error("Unreadable saved learner data");
+              }
+            }
+          } catch {
+            notify(
+              "Your saved learner data could not be read. Existing data has been kept; export a backup before trying again.",
+            );
+            return;
+          }
+          try {
+            const intent = {
+              level: progress.activeLevel,
+              topic: progress.activeTopic,
+            };
+            const at = new Date().toISOString();
+            const writer = window.AutomaticityV2?.saveLearningPathChoice;
+            if (writer) {
+              writer(localStorage, "en", intent, at);
+            } else {
+              const key = "automaticity:v2:en:choice";
+              const raw = localStorage.getItem(key);
+              const valid = (value) =>
+                value &&
+                typeof value === "object" &&
+                !Array.isArray(value) &&
+                value.version === 1 &&
+                ["A1", "A2", "B1", "B2", "C1", "C2"].includes(value.level) &&
+                typeof value.updatedAt === "string" &&
+                Number.isFinite(Date.parse(value.updatedAt)) &&
+                (value.constructionId === undefined ||
+                  (typeof value.constructionId === "string" &&
+                    value.constructionId.startsWith("en."))) &&
+                (value.topic === undefined ||
+                  (typeof value.topic === "string" && value.topic.trim()));
+              if (raw !== null && !valid(JSON.parse(raw)))
+                throw new Error("Unreadable saved learning choice");
+              const value = { version: 1, ...intent, updatedAt: at };
+              if (!valid(value)) throw new Error("Invalid learning choice");
+              const bytes = JSON.stringify(value);
+              localStorage.setItem(key, bytes);
+              if (localStorage.getItem(key) !== bytes)
+                throw new Error("Learning choice was not saved");
+            }
+          } catch {
+            notify(
+              "Your saved learning choice could not be changed. Existing data has been kept; export a backup before trying again.",
+            );
+            return;
+          }
+
           const reviews = Array.isArray(appState.reviews)
             ? [...appState.reviews]
             : [];
@@ -2775,6 +2833,8 @@
               },
             }),
           );
+
+          window.dispatchEvent(new Event("automaticity-choice-updated"));
           location.href = `/daily?from=grammar&level=${encodeURIComponent(progress.activeLevel)}&topic=${encodeURIComponent(progress.activeTopic)}`;
         });
         $('[data-action="install"]').addEventListener("click", () =>

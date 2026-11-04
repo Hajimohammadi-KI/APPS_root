@@ -149,6 +149,7 @@ export function LearningHome({
   level,
   daily,
   ready,
+  nextStep,
   children,
 }: {
   language: "en" | "de";
@@ -156,6 +157,7 @@ export function LearningHome({
   level: string;
   daily: DailyDashboard | null;
   ready: boolean;
+  nextStep?: { level: string; unit: { title: string }; href: string } | null;
   children: ReactNode;
 }) {
   const t = copy[language];
@@ -227,7 +229,7 @@ export function LearningHome({
         >
           <Settings2 aria-hidden="true" />
           <span>
-            {t.level} <strong>{level}</strong>
+            {t.level} <strong>{nextStep?.level ?? level}</strong>
           </span>
           <span className="lh-sr-only"> · {t.settings}</span>
         </a>
@@ -241,7 +243,12 @@ export function LearningHome({
           </p>
           <h2 id="lh-next-title">{t[priority]}</h2>
           <p>{reason}</p>
-          <a className="lh-primary" href="/practice">
+          {nextStep ? (
+            <p data-learning-path-focus>
+              <strong>{nextStep.unit.title}</strong> · {nextStep.level}
+            </p>
+          ) : null}
+          <a className="lh-primary" href={nextStep?.href ?? "/practice"}>
             {daily?.paused ? t.resume : t.cta}
             <ArrowRight aria-hidden="true" />
           </a>
@@ -277,7 +284,7 @@ export function LearningHome({
           </p>
         ) : null}
         <div className="lh-metrics">
-          <a className="lh-metric lh-goal" href="/practice">
+          <a className="lh-metric lh-goal" href={nextStep?.href ?? "/practice"}>
             <span className="lh-metric-label">
               {t.daily}
               <ArrowRight aria-hidden="true" />
@@ -303,7 +310,7 @@ export function LearningHome({
               />
             ) : null}
           </a>
-          <a className="lh-metric" href="/practice">
+          <a className="lh-metric" href={nextStep?.href ?? "/practice"}>
             <span className="lh-metric-label">
               {t.due}
               <CalendarDays aria-hidden="true" />
@@ -314,7 +321,7 @@ export function LearningHome({
               <ChevronRight aria-hidden="true" />
             </span>
           </a>
-          <a className="lh-metric" href="/practice">
+          <a className="lh-metric" href={nextStep?.href ?? "/practice"}>
             <span className="lh-metric-label">
               {t.repairs}
               <Wrench aria-hidden="true" />

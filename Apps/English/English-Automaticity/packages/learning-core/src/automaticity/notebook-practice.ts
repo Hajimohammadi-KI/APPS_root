@@ -29,6 +29,9 @@ export function notebookCopy(language: "en" | "de") {
     source: en
       ? "Written from a learner's real writing errors."
       : "Geschrieben nach echten Schreibfehlern einer lernenden Person.",
+    progressBasis: en
+      ? "Counts use the latest response to each exercise. A checked pass is practice progress, not independent mastery."
+      : "Die Zählung folgt der jeweils letzten Antwort. Ein geprüftes Bestehen zeigt Übungsfortschritt, keinen Nachweis selbstständiger Beherrschung.",
     thisTask: en
       ? "The task below is from the error notebook."
       : "Die Aufgabe unten stammt aus dem Fehlerheft.",
@@ -57,9 +60,10 @@ export interface NotebookProgress {
 }
 
 /** The active error-notebook items in level order, or those of one grammar
- * level. An item counts once it has a passing attempt. The next item is one
- * not yet tried; once all were tried, one still not passed, as a repair of its
- * latest attempt. */
+ * level. Only the latest response to the active task version can count as a
+ * checked pass; an old pass never hides a newer error or unscored response.
+ * Daily effort is separate. The next item is one not yet tried; once all were
+ * tried, one still not passed, as a repair of its latest relevant attempt. */
 export function notebookProgress(
   pack: CurriculumPack,
   attempts: readonly ReducedAttempt[],
@@ -78,20 +82,38 @@ export function notebookProgress(
         .filter(isNotebookTask)
         .map((task) => ({ unit, task })),
     );
-  const ids = new Set(items.map(({ task }) => task.id));
-  const day = new Date(now ?? Date.now()).toDateString();
+  const definitions = new Map(items.map(({ task }) => [task.id, task]));
+  const cutoff = now === undefined ? Date.now() : Date.parse(now);
+  const day = new Date(cutoff).toDateString();
   const latest = new Map<string, ReducedAttempt>();
-  const passed = new Set<string>();
   const today = new Set<string>();
   for (const row of attempts) {
     const id = row.attempt.task.id;
-    if (!ids.has(id)) continue;
-    if (row.assessment?.verdict === "pass") passed.add(id);
-    if (new Date(row.attempt.at).toDateString() === day) today.add(id);
+    const definition = definitions.get(id);
+    const at = Date.parse(row.attempt.at);
+    if (
+      !definition ||
+      row.attempt.language !== pack.language ||
+      !Number.isFinite(at) ||
+      !Number.isFinite(cutoff) ||
+      at > cutoff
+    )
+      continue;
+    if (new Date(at).toDateString() === day) today.add(id);
+    if (row.attempt.task.version !== definition.version) continue;
     const known = latest.get(id);
-    if (!known || known.attempt.at <= row.attempt.at) latest.set(id, row);
+    const knownAt = known ? Date.parse(known.attempt.at) : -Infinity;
+    if (
+      !known ||
+      at > knownAt ||
+      (at === knownAt && row.attempt.id > known.attempt.id)
+    )
+      latest.set(id, row);
   }
-  const open = items.filter(({ task }) => !passed.has(task.id));
+  const open = items.filter(({ task }) => {
+    const row = latest.get(task.id);
+    return !row?.checked || row.assessment?.verdict !== "pass";
+  });
   const next = open.find(({ task }) => !latest.has(task.id)) ?? open[0] ?? null;
   return {
     total: items.length,

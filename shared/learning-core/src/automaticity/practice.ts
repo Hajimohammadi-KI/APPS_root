@@ -1032,6 +1032,7 @@ export async function mountPractice(
         `${copy.progress(level, atLevel, all)} ${copy.source}`,
         "muted",
       ),
+      element("p", copy.progressBasis, "muted"),
     );
     if (!next)
       notebookPanel.append(

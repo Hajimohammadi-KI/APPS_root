@@ -203,11 +203,41 @@ try {
     await panel.screenshot({
       path: resolve("artifacts", `pronunciation-local-${width}.png`),
     });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(panel).toBeVisible();
+    await page.getByRole("button", { name: "Record", exact: true }).click();
+    await page.waitForTimeout(3000);
+    await page.locator(".record-controls button", { hasText: /Stop/ }).click();
+    await expect(download).toBeVisible();
+    await load.click();
+    await expect(analyse).toBeEnabled({ timeout: 60000 });
+    await analyse.click();
+    await expect(result).toBeVisible({ timeout: 60000 });
+    assert.equal(await page.evaluate(() => window.recognitionStarts), 0);
+    for (const keys of await page.evaluate(() => window.workerMessages))
+      assert.ok(
+        JSON.stringify(keys) === JSON.stringify(["requestId", "type"]) ||
+          JSON.stringify(keys) ===
+            JSON.stringify(["requestId", "sampleRate", "samples", "type"]),
+      );
+    assert.equal(
+      requests.filter((r) => r.method !== "GET" || r.body > 0).length,
+      0,
+    );
+    assert.deepEqual(
+      requests.filter((r) => {
+        const url = new URL(r.url);
+        return url.protocol !== "edge:" && url.origin !== new URL(base).origin;
+      }),
+      [],
+    );
+    assert.deepEqual(errors, []);
     reports.push({
       width,
       realPublicCorpusInput: true,
       estimatedPhones: first.phonemes.length,
       offlineNewWorker: true,
+      offlinePageReload: true,
       speechRecognitionCalls: 0,
       uploads: 0,
       passed: true,

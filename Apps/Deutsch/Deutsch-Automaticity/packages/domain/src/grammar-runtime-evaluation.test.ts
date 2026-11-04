@@ -23,6 +23,7 @@ interface TestElement {
   querySelectorAll: () => readonly never[];
   focus: () => void;
   setAttribute: () => void;
+  addEventListener: (event: string, handler: () => void) => void;
   classList: { add: () => void; remove: () => void };
 }
 
@@ -48,6 +49,7 @@ function grammarPage(
       JSON.stringify({ learner: { allowOnlineAI: true } }),
     );
   const elements = new Map<string, TestElement>();
+  const listeners = new Map<string, () => void>();
   const element = (selector: string): TestElement => {
     if (!elements.has(selector))
       elements.set(selector, {
@@ -58,6 +60,8 @@ function grammarPage(
         querySelectorAll: () => [],
         focus: () => {},
         setAttribute: () => {},
+        addEventListener: (event, handler) =>
+          listeners.set(`${selector}:${event}`, handler),
         classList: { add: () => {}, remove: () => {} },
       });
     return elements.get(selector)!;
@@ -144,6 +148,8 @@ function grammarPage(
     draftState: context.draftState,
     chooseToday: () => context.harness.saveTodayChoice?.(fixture),
     feedback: element("#feedback"),
+    input: element("#answerInput"),
+    showModel: () => listeners.get("#showModelBtn:click")?.(),
     async answer(text: string) {
       element("#answerInput").value = text;
       element("#intentInput").value = options.open ? "معنی دلخواه" : "";
@@ -153,6 +159,81 @@ function grammarPage(
 }
 
 describe("active Grammar-Labor answer handler", () => {
+  it.each([
+    ["Ich lese ein buch.", "feedback show bad"],
+    ["Ich lese jeden Morgen.", "feedback show"],
+  ])(
+    "keeps the full model hidden after a non-pass and reveals it only on request: %s",
+    async (answer, className) => {
+      const expected = "Ich lese ein Buch.";
+      const page = grammarPage(expected);
+      await page.answer(answer);
+      expect(page.feedback.className).toBe(className);
+      expect(page.feedback.innerHTML).not.toContain(expected);
+      expect(page.feedback.innerHTML).toContain('id="showModelBtn"');
+      expect(page.input.value).toBe(answer);
+      const originalHistory = page.storage.get(
+        "deutsch-automaticity:grammar-open-responses:v1",
+      );
+      page.showModel();
+      expect(page.feedback.innerHTML).toContain(expected);
+      expect(page.input.value).toBe(answer);
+      expect(page.draftState.assisted).toBe(true);
+      expect(page.storage.has("deutsch-automaticity:grammar-progress:v3")).toBe(
+        false,
+      );
+      expect(
+        page.storage.get("deutsch-automaticity:grammar-open-responses:v1"),
+      ).toBe(originalHistory);
+    },
+  );
+
+  it("keeps a locally detected grammar error's full correction behind the model action", async () => {
+    const expected = "Ich sehe den Mann.";
+    const page = grammarPage(expected);
+    await page.answer("Ich sehe der Mann.");
+    expect(page.feedback.className).toBe("feedback show bad");
+    expect(page.feedback.innerHTML).toContain("Akkusativ");
+    expect(page.feedback.innerHTML).not.toContain(expected);
+    page.showModel();
+    expect(page.feedback.innerHTML).toContain(expected);
+  });
+
+  it("checks a repair against accepted alternatives and keeps the original attempt immutable", async () => {
+    const page = grammarPage("Heute bleibt sie zu Hause.", {
+      alternatives: ["Sie bleibt heute zu Hause."],
+    });
+    await page.answer("Heute bleibt sie zu hause.");
+    const historyKey = "deutsch-automaticity:grammar-open-responses:v1";
+    const original = JSON.parse(page.storage.get(historyKey)!)[0];
+    await page.answer("Sie bleibt heute zu Hause.");
+    expect(page.feedback.className).toContain("good");
+    expect(page.feedback.innerHTML).toContain(
+      "kein Nachweis selbstständiger Beherrschung",
+    );
+    const history = JSON.parse(page.storage.get(historyKey)!);
+    expect(history[0]).toEqual(original);
+    expect(history[0].assistanceUsed).toBe(false);
+    expect(history[1].assistanceUsed).toBe(true);
+    expect(history[1].outcome).toBe("guided-practice");
+    expect(
+      [...page.storage.keys()].some((key) => key.includes("mastery")),
+    ).toBe(false);
+  });
+
+  it("keeps a repeated error wrong and an unmatched repair unscored", async () => {
+    const page = grammarPage("Ich lese ein Buch.");
+    await page.answer("Ich lese ein buch.");
+    await page.answer("Ich lese ein buch.");
+    expect(page.feedback.className).toBe("feedback show bad");
+    await page.answer("Ich lese jeden Morgen.");
+    expect(page.feedback.className).toBe("feedback show");
+    expect(page.feedback.innerHTML).toContain("Ohne Bewertung gespeichert");
+    expect(page.storage.has("deutsch-automaticity:grammar-progress:v3")).toBe(
+      false,
+    );
+  });
+
   it.each(["{broken", "null", "[]", '{"version":99,"level":"A2"}'])(
     "preserves unreadable canonical choice bytes before explicit replacement: %s",
     (raw) => {

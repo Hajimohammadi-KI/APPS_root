@@ -25,7 +25,10 @@ import {
   releasedGermanMediationB1,
 } from "./index";
 import { assessMediationContentRelease } from "@automaticity/learning-core";
-import { checkedPracticeFor } from "@automaticity/learning-core/content-revisions";
+import {
+  checkedPracticeFor,
+  controlledPracticeFor,
+} from "@automaticity/learning-core/content-revisions";
 import { gapFill } from "@automaticity/learning-core/text";
 import { LAB_GAP_CUES } from "./lab-gap-cues";
 import { isRetiredGermanResource } from "./resource-links";
@@ -204,10 +207,13 @@ describe("legacy content extraction", () => {
       const notebook = checkedPracticeFor("de", unit.title).filter(
         (row) => row.notebook,
       );
-      expect(unit.exercises.slice(5).map(([prompt]) => prompt)).toEqual(
-        notebook.map((row) => row.prompt),
+      const focused = controlledPracticeFor("de", unit.title).filter((row) =>
+        unit.exercises.some(([prompt]) => prompt === row.prompt),
       );
-      expect(unit.exercises).toHaveLength(5 + notebook.length);
+      expect(unit.exercises.slice(5).map(([prompt]) => prompt)).toEqual(
+        [...notebook, ...focused].map((row) => row.prompt),
+      );
+      expect(unit.exercises).toHaveLength(5 + notebook.length + focused.length);
       const closed = [
         ...unit.exercises.slice(0, 4),
         ...unit.exercises.slice(5),

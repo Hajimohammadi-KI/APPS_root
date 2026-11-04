@@ -318,8 +318,29 @@ try {
           exact: true,
         }),
       ).toBeVisible();
+      await page
+        .locator("#practice-response")
+        .fill("Unverified spoken transcript for repair");
+      await page
+        .getByRole("button", {
+          name: t("Save response", "Antwort speichern"),
+          exact: true,
+        })
+        .click();
+      await page
+        .getByRole("button", {
+          name: t("Try again as a repair", "Als Korrektur erneut versuchen"),
+          exact: true,
+        })
+        .click();
+      await expect(
+        page.getByRole("button", {
+          name: t("Start recording", "Aufnahme starten"),
+          exact: true,
+        }),
+      ).toBeVisible();
       row.checks.push(
-        "explicit speech task retains recording controls and honest save label",
+        "explicit speech task retains recording controls, honest save label and a same-task repair action",
       );
       optionalOnly = true;
       const emptyContext = await browser.newContext({

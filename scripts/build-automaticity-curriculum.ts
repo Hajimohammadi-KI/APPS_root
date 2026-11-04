@@ -13,6 +13,7 @@ import {
   applyLearnerDecisions,
   type LearnerDecisionFile,
 } from "./lib/learner-decisions";
+import { applyControlledErrorRevisions } from "./lib/controlled-error-revisions";
 
 const root = resolve(import.meta.dir, "..");
 const checkOnly = Bun.argv.includes("--check");
@@ -67,7 +68,7 @@ for (const [language, app] of [
     console.log(
       `${language}: decision #${row.issue} not applied: ${row.reason}`,
     );
-  const pack = applied.pack;
+  const pack = applyControlledErrorRevisions(applied.pack);
   const revisedIssues = validateCurriculum(pack);
   if (revisedIssues.length) throw new Error(revisedIssues.join("\n"));
   const active = pack.units.flatMap(activePracticeTasks);

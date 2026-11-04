@@ -1,4 +1,5 @@
 import type { Language } from "./automaticity/contracts";
+import { CONTROLLED_ERROR_FORMS } from "./controlled-error-forms";
 import {
   LEARNER_NOTEBOOK_PRACTICE,
   LEARNER_NOTEBOOK_VERSION,
@@ -6524,6 +6525,22 @@ const unitFor = (language: Language, title: string) =>
   [...UNIT_TITLES].find(
     ([id, name]) => id.startsWith(`${language}.`) && name === title,
   )?.[0];
+
+/** Additional focused items are appended in the Labs, preserving every saved
+ * earlier exercise position. These authored forms are not human qualification. */
+export function controlledPracticeFor(language: Language, title: string) {
+  const constructionId = unitFor(language, title);
+  return CONTROLLED_ERROR_FORMS.filter(
+    (row) => row.language === language && row.constructionId === constructionId,
+  ).map((row) => ({
+    prompt:
+      language === "en"
+        ? `Practise this pattern: ${row.prompt}`
+        : `Übe diese Struktur: ${row.prompt}`,
+    answers: row.acceptedAnswers,
+    rejected: row.rejectedAnswers,
+  }));
+}
 
 /** Gap-cue and recall revisions of one Grammar Lab unit by exercise number:
  * Lab exercise N is the learning path's retrieve.N item (revised retrieval

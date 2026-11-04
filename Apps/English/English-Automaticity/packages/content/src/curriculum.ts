@@ -5,6 +5,7 @@ import type { GrammarExercise, GrammarUnit } from "./types";
 import { knownContentRepair } from "@automaticity/learning-core/content-repairs";
 import {
   checkedPracticeFor,
+  controlledPracticeFor,
   contentRevisionFor,
   gapCueRevisionsFor,
   retiredRepairPrompt,
@@ -56,6 +57,46 @@ function ensureSixExercises(unit: GrammarUnit): GrammarUnit {
         ...(row.rejected && {
           rejectedAnswers: row.rejected.map((wrong) => ({ ...wrong })),
         }),
+      },
+    ]);
+    prompts.add(row.prompt);
+  }
+
+  for (const row of controlledPracticeFor("en", unit.title)) {
+    if (prompts.has(row.prompt)) continue;
+    const [answer, ...alternatives] = row.answers;
+    const existingIndex = exercises.findIndex(
+      ([, key, metadata]) =>
+        metadata?.answerRole !== "inspiration" &&
+        normalizeText(key) === normalizeText(answer!) &&
+        (metadata?.acceptedAnswers ?? []).every((value) =>
+          row.answers.some(
+            (form) => normalizeText(form) === normalizeText(value),
+          ),
+        ),
+    );
+    if (existingIndex >= 0) {
+      const existing = exercises[existingIndex]!;
+      exercises[existingIndex] = [
+        existing[0],
+        existing[1],
+        {
+          ...existing[2],
+          rejectedAnswers: [
+            ...(existing[2]?.rejectedAnswers ?? []),
+            ...row.rejected.map((wrong) => ({ ...wrong })),
+          ],
+        },
+      ];
+      continue;
+    }
+    exercises.push([
+      row.prompt,
+      answer!,
+      {
+        answerRole: "expected",
+        acceptedAnswers: [...alternatives],
+        rejectedAnswers: row.rejected.map((wrong) => ({ ...wrong })),
       },
     ]);
     prompts.add(row.prompt);

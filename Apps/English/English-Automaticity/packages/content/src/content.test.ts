@@ -19,6 +19,7 @@ import { assessMediationContentRelease } from "@automaticity/learning-core";
 import {
   UNIT_CONTENT_REVISIONS,
   checkedPracticeFor,
+  controlledPracticeFor,
 } from "@automaticity/learning-core/content-revisions";
 import type { GrammarExercise } from "./types";
 import { repairGrammarUnitLinks } from "./resource-links";
@@ -150,10 +151,13 @@ describe("legacy content parity", () => {
       const notebook = checkedPracticeFor("en", unit.title).filter(
         (row) => row.notebook,
       );
-      expect(unit.exercises.slice(6).map(([prompt]) => prompt)).toEqual(
-        notebook.map((row) => row.prompt),
+      const focused = controlledPracticeFor("en", unit.title).filter((row) =>
+        unit.exercises.some(([prompt]) => prompt === row.prompt),
       );
-      expect(unit.exercises).toHaveLength(6 + notebook.length);
+      expect(unit.exercises.slice(6).map(([prompt]) => prompt)).toEqual(
+        [...notebook, ...focused].map((row) => row.prompt),
+      );
+      expect(unit.exercises).toHaveLength(6 + notebook.length + focused.length);
     }
     expect(browserCatalog).toEqual(grammarUnits);
   });

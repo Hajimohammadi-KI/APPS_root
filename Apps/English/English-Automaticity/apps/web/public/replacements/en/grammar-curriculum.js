@@ -44,6 +44,26 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
             "I study English because it’s useful."
           ]
         }
+      ],
+      [
+        "Practise this pattern: Complete with am, is or are. Write the full sentence: I ___ ready for the lesson.",
+        "I am ready for the lesson.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "I’m ready for the lesson."
+          ],
+          "rejectedAnswers": [
+            {
+              "answer": "I is ready for the lesson.",
+              "explanation": "Check which form of be agrees with I."
+            },
+            {
+              "answer": "I are ready for the lesson.",
+              "explanation": "Check which form of be agrees with I."
+            }
+          ]
+        }
       ]
     ],
     "links": [
@@ -1036,6 +1056,26 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
         {
           "acceptedAnswers": [
             "They’re playing football now."
+          ]
+        }
+      ],
+      [
+        "Practise this pattern: Use the present continuous of study. Write the completed sentence: She ___ for her exam.",
+        "She is studying for her exam.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "She’s studying for her exam."
+          ],
+          "rejectedAnswers": [
+            {
+              "answer": "She is study for her exam.",
+              "explanation": "After be, the continuous verb needs its -ing form."
+            },
+            {
+              "answer": "She studying for her exam.",
+              "explanation": "The continuous verb needs a finite form of be before the -ing form."
+            }
           ]
         }
       ]
@@ -2200,6 +2240,26 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
             "If it snows, we’ll stay at home."
           ]
         }
+      ],
+      [
+        "Practise this pattern: Use will and stay. Write the completed conditional sentence: If it rains, we ___ at home.",
+        "If it rains, we will stay at home.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "If it rains, we’ll stay at home."
+          ],
+          "rejectedAnswers": [
+            {
+              "answer": "If it rains, we will stays at home.",
+              "explanation": "After will, use the base form of the verb, without -s."
+            },
+            {
+              "answer": "If it rains, we will staying at home.",
+              "explanation": "Will cannot be followed directly by an -ing form; check the verb form."
+            }
+          ]
+        }
       ]
     ],
     "links": [
@@ -3103,6 +3163,26 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
             "If he’d left on time, he would have caught the bus."
           ]
         }
+      ],
+      [
+        "Practise this pattern: Use would and help in the third conditional. Write the full sentence: If I had known, I ___ you.",
+        "If I had known, I would have helped you.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [
+            "If I’d known, I would have helped you."
+          ],
+          "rejectedAnswers": [
+            {
+              "answer": "If I had known, I would have help you.",
+              "explanation": "After have in this verb group, use the past participle."
+            },
+            {
+              "answer": "If I had known, I would had helped you.",
+              "explanation": "After would, the next verb must be in its base form."
+            }
+          ]
+        }
       ]
     ],
     "links": [
@@ -3682,6 +3762,24 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct the sentence: Had she knew, she would have come.",
         "Had she known, she would have come."
+      ],
+      [
+        "Practise this pattern: Keep the meaning. Rewrite without if, beginning Had: If I had known about the delay, I would have called.",
+        "Had I known about the delay, I would have called.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [],
+          "rejectedAnswers": [
+            {
+              "answer": "Had I knew about the delay, I would have called.",
+              "explanation": "In the inverted perfect clause, had is followed by a past participle."
+            },
+            {
+              "answer": "Had I have known about the delay, I would have called.",
+              "explanation": "Do not add have after the inverted had; check the perfect verb group."
+            }
+          ]
+        }
       ]
     ],
     "links": [
@@ -4509,6 +4607,24 @@ window.__ENGLISH_GRAMMAR_UNITS__ = [
       [
         "Correct only the verb form: Although the test was short, the questions that remains were difficult.",
         "Although the test was short, the questions that remained were difficult."
+      ],
+      [
+        "Practise this pattern: Combine all three statements using Although and a relative clause beginning which. Keep their meaning: The study was small. Its method was transparent. Its method convinced the reviewers.",
+        "Although the study was small, its method, which was transparent, convinced the reviewers.",
+        {
+          "answerRole": "expected",
+          "acceptedAnswers": [],
+          "rejectedAnswers": [
+            {
+              "answer": "Although the study was small, its method, which were transparent, convinced the reviewers.",
+              "explanation": "Which refers to the singular noun method; check agreement inside the relative clause."
+            },
+            {
+              "answer": "Although the study was small, its method, which was transparent, have convinced the reviewers.",
+              "explanation": "The main-clause subject is the singular noun method; check its agreement with have."
+            }
+          ]
+        }
       ]
     ],
     "links": [

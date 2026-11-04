@@ -16,6 +16,7 @@ import {
 import { isNotebookTask } from "../shared/learning-core/src/automaticity/notebook-practice";
 import { LEARNER_NOTEBOOK_PRACTICE } from "../shared/learning-core/src/learner-notebook-practice";
 import { normalizeText } from "../shared/learning-core/src/text";
+import { controlledPracticeFor } from "../shared/learning-core/src/content-revisions";
 import { assertWritingPrecision } from "../shared/learning-core/src/writing-precision";
 
 const built = (language: "en" | "de") =>
@@ -352,7 +353,15 @@ test("learner notebook: every item is in its unit's Grammar Lab and the Lab mark
       ),
     );
     expect(
-      unit!.exercises.slice(index).every(([prompt]) => ownPrompts.has(prompt)),
+      unit!.exercises
+        .slice(index)
+        .filter(
+          ([prompt]) =>
+            !controlledPracticeFor(language, unit!.title).some(
+              (row) => row.prompt === prompt,
+            ),
+        )
+        .every(([prompt]) => ownPrompts.has(prompt)),
     ).toBe(true);
     const [prompt, answer, metadata] = unit!.exercises[index]! as readonly [
       string,

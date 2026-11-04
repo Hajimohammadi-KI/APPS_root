@@ -2,10 +2,11 @@ import grammarData from "./data/grammar.json";
 import { knownContentRepair } from "@automaticity/learning-core/content-repairs";
 import {
   checkedPracticeFor,
+  controlledPracticeFor,
   contentRevisionFor,
   gapCueRevisionsFor,
 } from "@automaticity/learning-core/content-revisions";
-import { gapFill } from "@automaticity/learning-core/text";
+import { gapFill, normalizeText } from "@automaticity/learning-core/text";
 import topicsData from "./data/topics.json";
 import { labGapCueFor } from "./lab-gap-cues";
 import {
@@ -340,7 +341,59 @@ function withNotebookItems(
         },
       ];
     });
-  return [...exercises, ...added];
+  const result = [...exercises, ...added];
+  const controlled: GrammarExercise[] = [];
+  for (const { prompt, answers, rejected } of controlledPracticeFor(
+    "de",
+    title,
+  ).filter((row) => !prompts.has(row.prompt))) {
+    const [answer, ...alternatives] = answers;
+    const existingIndex = result.findIndex(
+      ([, key, metadata]) =>
+        metadata?.mode === "closed_recall" &&
+        normalizeText(key) === normalizeText(answer!) &&
+        (metadata.acceptedAnswers ?? []).every((value) =>
+          answers.some((form) => normalizeText(form) === normalizeText(value)),
+        ),
+    );
+    if (existingIndex >= 0) {
+      const existing = result[existingIndex]!;
+      result[existingIndex] = [
+        existing[0],
+        existing[1],
+        {
+          ...existing[2]!,
+          rejectedAnswers: [
+            ...(existing[2]?.rejectedAnswers ?? []),
+            ...rejected.map((wrong) => ({ ...wrong })),
+          ],
+        },
+      ];
+      continue;
+    }
+    controlled.push([
+      prompt,
+      answer!,
+      {
+        mode: "closed_recall",
+        contentType,
+        validation: "exact",
+        answerRole: "expected",
+        prompt: {
+          Deutsch: prompt,
+          English: `Follow this German instruction and write the complete answer in German: ${prompt}`,
+          فارسی: `طبق این دستور آلمانی عمل کن و پاسخ کامل را به آلمانی بنویس: ${prompt}`,
+        },
+        hint: { ...hint },
+        feedbackDimensions: feedbackDimensionsFor(contentType),
+        minimumSentences: 1,
+        outputLanguage: "de",
+        acceptedAnswers: [...alternatives],
+        rejectedAnswers: rejected.map((wrong) => ({ ...wrong })),
+      },
+    ]);
+  }
+  return [...result, ...controlled];
 }
 
 export const grammarUnits: readonly GrammarUnit[] = [

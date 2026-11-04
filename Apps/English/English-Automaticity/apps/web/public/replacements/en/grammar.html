@@ -1646,6 +1646,7 @@
                   <button class="ghost-btn" id="hintBtn">
                     <svg class="icon"><use href="#i-bulb" /></svg>Hint
                   </button>
+                  <button class="ghost-btn" id="modelBtn">Show a model</button>
                   <button class="ghost-btn" id="nextBtn">
                     Next task<svg class="icon"><use href="#i-arrow" /></svg>
                   </button>
@@ -1658,13 +1659,13 @@
                 ></div>
                 <div class="repair-box" id="repairBox">
                   <label for="repairInput"
-                    >Now type the correct answer yourself</label
+                    >Revise your response before comparing with a model</label
                   >
                   <div class="repair-row">
                     <input
                       id="repairInput"
                       autocomplete="off"
-                      placeholder="Retype the complete correct answer"
+                      placeholder="Revise your sentence"
                     />
                     <button class="ghost-btn" id="repairBtn">
                       <svg class="icon"><use href="#i-check" /></svg>Confirm
@@ -2510,6 +2511,57 @@
             return false;
           }
         };
+        const checkTaskResponse = (task, response) =>
+          window.AutomaticityText.checkClosedAnswer(
+            {
+              prompt: task.prompt,
+              responseKind: window.AutomaticityText.closedResponseKind(
+                task.prompt,
+              ),
+              acceptedAnswers: task.acceptedAnswers,
+              rejectedAnswers: task.rejectedAnswers,
+              modality: "writing",
+              terminalFullStop: true,
+            },
+            response,
+            "en",
+          );
+        const showRepairFeedback = (task, check, response) => {
+          const wrong = check.verdict === "needs_repair";
+          feedback.removeAttribute("style");
+          feedback.className = `feedback show${wrong ? " bad" : ""}`;
+          const hints = {
+            rejected:
+              "This reviewed form needs repair. Check the requested pattern and revise your sentence.",
+            unchanged:
+              "This is still the sentence to correct. Change the part named in the instruction.",
+            option:
+              "This option does not fit this sentence. Check the options and try again.",
+            case: "Check capitalization, especially the sentence start and names.",
+            punctuation: "Check punctuation in the sentence, then try again.",
+          };
+          const reviewed =
+            check.reason === "rejected"
+              ? task.rejectedAnswers.find(
+                  (row) => normalize(row.answer) === normalize(response),
+                )?.explanation
+              : null;
+          const hint =
+            reviewed &&
+            reviewed.length <= 220 &&
+            !task.acceptedAnswers.some((model) =>
+              normalize(reviewed)
+                .toLowerCase()
+                .includes(normalize(model).toLowerCase()),
+            )
+              ? reviewed
+              : hints[check.reason] || hints.rejected;
+          feedback.textContent = wrong
+            ? `${hint} Try a revised response below. You can request a model when you want to compare.`
+            : "Saved without a score. This wording may be correct; check the instruction or request a review. You can revise it below or request a model.";
+          repairBox.classList.add("show");
+          repairInput.focus();
+        };
         $("#checkBtn").addEventListener("click", () => {
           if (!preserveResponse(answer.value, "writing")) return;
           const task = currentTask();
@@ -2521,7 +2573,8 @@
               return;
             }
             feedback.className = "feedback show";
-            feedback.textContent = `Practice saved without a correctness score. One model to compare: ${task.answer}. A different answer can be correct. Use independent practice to keep your original response and request review.`;
+            feedback.textContent =
+              "Practice saved without a correctness score. A different answer can be correct. Request a model when you want to compare, or use independent practice to request review.";
             repairBox.classList.remove("show");
             completeCurrent();
             finishDailyActivity();
@@ -2534,20 +2587,7 @@
             return;
           }
           // The learning path's verdict: wrong only when certainly wrong.
-          const check = window.AutomaticityText.checkClosedAnswer(
-            {
-              prompt: task.prompt,
-              responseKind: window.AutomaticityText.closedResponseKind(
-                task.prompt,
-              ),
-              acceptedAnswers: task.acceptedAnswers,
-              rejectedAnswers: task.rejectedAnswers,
-              modality: "writing",
-              terminalFullStop: true,
-            },
-            answer.value,
-            "en",
-          );
+          const check = checkTaskResponse(task, answer.value);
           const isCorrect = check.verdict === "pass";
           const wrong = check.verdict === "needs_repair";
           feedback.className = `feedback show ${isCorrect ? "good" : wrong ? "bad" : ""}`;
@@ -2559,57 +2599,11 @@
             completeCurrent();
             finishDailyActivity();
           } else {
-            const correct = task.answer;
             assistanceUsed = true;
             drafts.markAssisted();
-            // One sentence, the learner's answer with the differences marked,
-            // the model and the unit's rule.
-            const line = (label, text, className = "") => {
-              const row = document.createElement("p");
-              row.className = className;
-              const strong = document.createElement("strong");
-              strong.textContent = label;
-              row.append(strong, text);
-              return row;
-            };
-            const marked = document.createElement("p");
-            marked.className = "answer-diff";
-            marked.append(
-              Object.assign(document.createElement("strong"), {
-                textContent: "Your answer: ",
-              }),
-            );
-            for (const part of window.AutomaticityText.markedAnswer(
-              answer.value,
-              check.spans,
-            )) {
-              if (part.note === undefined) {
-                marked.append(part.text);
-                continue;
-              }
-              const mark = document.createElement("mark");
-              mark.textContent = part.text || "‸";
-              mark.title = part.note;
-              marked.append(mark);
-            }
-            feedback.replaceChildren(
-              Object.assign(document.createElement("p"), {
-                textContent: wrong
-                  ? `Not correct: ${check.feedback}`
-                  : `${check.feedback} It may still be correct.`,
-              }),
-              ...(check.spans.length ? [marked] : []),
-              line("Model: ", correct),
-              ...(grammarUnit().rule
-                ? [line("Rule: ", grammarUnit().rule, "answer-rule")]
-                : []),
-              Object.assign(document.createElement("p"), {
-                textContent: "You can practise the model below.",
-              }),
-            );
-            repairBox.classList.add("show");
-            repairInput.focus();
-            lastMistake = `${task.prompt} — ${answer.value || "(no answer)"}`;
+            repairInput.value = answer.value;
+            showRepairFeedback(task, check, answer.value);
+            if (wrong) lastMistake = `${task.prompt} — ${answer.value}`;
           }
         });
         $("#hintBtn").addEventListener("click", () => {
@@ -2618,24 +2612,46 @@
           feedback.className = "feedback show";
           feedback.style.background = "#f4efff";
           feedback.style.color = "#4e2aa9";
-          feedback.textContent = `Hint: ${currentTask().hint}`;
+          const task = currentTask();
+          const hint =
+            task.hint &&
+            !task.acceptedAnswers.some((model) =>
+              normalize(task.hint)
+                .toLowerCase()
+                .includes(normalize(model).toLowerCase()),
+            )
+              ? task.hint
+              : "Check the requested form and word order, then revise your sentence.";
+          feedback.textContent = `Hint: ${hint}`;
+        });
+        $("#modelBtn").addEventListener("click", () => {
+          assistanceUsed = true;
+          drafts.markAssisted();
+          feedback.removeAttribute("style");
+          feedback.className = "feedback show";
+          feedback.textContent = `One model to compare: ${currentTask().answer} Comparing with a model is assisted practice; it does not establish independent recall.`;
         });
         $("#repairBtn").addEventListener("click", () => {
+          if (!repairInput.value.trim()) {
+            feedback.className = "feedback show";
+            feedback.textContent = "Write your revised response first.";
+            repairInput.focus();
+            return;
+          }
+          assistanceUsed = true;
+          drafts.markAssisted();
           if (!preserveResponse(repairInput.value, "repair")) return;
-          if (
-            normalize(repairInput.value) === normalize(currentTask().answer)
-          ) {
+          const task = currentTask();
+          const check = checkTaskResponse(task, repairInput.value);
+          if (check.verdict === "pass") {
             feedback.className = "feedback show good";
             feedback.textContent =
-              "Model-copying practice completed. This repair does not establish independent recall.";
+              "Correct stored form. Assisted repair completed; this does not establish independent recall.";
             repairBox.classList.remove("show");
             completeCurrent();
             finishDailyActivity();
           } else {
-            feedback.className = "feedback show bad";
-            feedback.textContent =
-              "Copy the complete correct answer exactly once more.";
-            repairInput.focus();
+            showRepairFeedback(task, check, repairInput.value);
           }
         });
         nextBtn.addEventListener("click", () => {

@@ -148,6 +148,11 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         "Die deutschen Beispiele bleiben bis nach deinem eigenen Versuch verborgen.",
       wrongLanguage: "Die Antwort muss auf Deutsch geschrieben werden.",
       feedbackTitle: "Überprüfung deiner Antwort",
+      repairPrompt:
+        "Überarbeite deine eigene Antwort im Eingabefeld und prüfe sie erneut. Auch gespeicherte richtige Alternativen werden akzeptiert.",
+      showModel: "Beispiellösung anzeigen (mit Hilfe)",
+      assistedPractice:
+        "Mit Hilfe bearbeitet: Diese Übung ist begleitetes Training, kein Nachweis selbstständiger Beherrschung.",
       closedVerdict: {
         rejected: "Diese Form wurde geprüft und ist hier nicht richtig.",
         option:
@@ -204,6 +209,11 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
         "The German examples stay hidden until after your own attempt.",
       wrongLanguage: "The answer must be written in German.",
       feedbackTitle: "Review of your answer",
+      repairPrompt:
+        "Revise your own answer in the input field and check it again. Stored correct alternatives are accepted too.",
+      showModel: "Show model answer (with help)",
+      assistedPractice:
+        "Completed with help: this is guided practice, not evidence of independent mastery.",
       closedVerdict: {
         rejected: "This form was reviewed and is not correct here.",
         option:
@@ -256,6 +266,11 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
       exampleLocked: "مثال‌های آلمانی تا پس از تلاش خودت پنهان می‌مانند.",
       wrongLanguage: "پاسخ باید به آلمانی نوشته شود.",
       feedbackTitle: "بررسی پاسخ شما",
+      repairPrompt:
+        "پاسخ خودت را در کادر ویرایش کن و دوباره بررسی کن. پاسخ‌های جایگزینِ درستِ ثبت‌شده نیز پذیرفته می‌شوند.",
+      showModel: "نمایش پاسخ نمونه (با کمک)",
+      assistedPractice:
+        "با کمک انجام شد: این تمرین هدایت‌شده است و نشانهٔ تسلط مستقل نیست.",
       closedVerdict: {
         rejected: "این شکل بررسی شده و اینجا درست نیست.",
         option: "این یکی از گزینه‌های داده‌شده است، اما گزینهٔ مناسب اینجا نیست.",
@@ -1375,17 +1390,22 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
           ? [{ type: "target_grammar", message: rejectedExplanation }]
           : []),
       ];
-      feedback.innerHTML = `<strong>${escapeHtml(copy.feedbackTitle)}</strong>${points.some((point) => point.html) ? renderFeedbackHtml(points) : renderFeedbackPoints(points)}${
+      const repairFeedback = `<strong>${escapeHtml(copy.feedbackTitle)}</strong>${points.some((point) => point.html) ? renderFeedbackHtml(points) : renderFeedbackPoints(points)}${
         localIssue ? "" : markedAnswerHtml(answer, check.spans)
-      }${
-        localIssue?.corrected
-          ? `<p><strong>${escapeHtml(copy.corrected)}:</strong> ${escapeHtml(localIssue.corrected)}</p>`
-          : `<p><strong>${escapeHtml(localizedIssueLabel("expected"))}:</strong> <span lang="de">${escapeHtml(expected)}</span></p>`
-      }${
-        unit.rule
-          ? `<p class="answer-rule"><strong>${escapeHtml(copy.rule)}:</strong> <span lang="de">${escapeHtml(unit.rule)}</span></p>`
-          : ""
-      }`;
+      }<p>${escapeHtml(copy.repairPrompt)}</p>`;
+      feedback.innerHTML = `${repairFeedback}<button id="showModelBtn" type="button">${escapeHtml(copy.showModel)}</button>`;
+      // Keep the learner's editable response and immutable saved attempt. The
+      // existing check button evaluates every repair with the same answer set.
+      const repairUnit = unitKey(unit),
+        repairExercise = exerciseIndex;
+      $("#showModelBtn")?.addEventListener("click", () => {
+        if (
+          unitKey(currentUnit()) !== repairUnit ||
+          exerciseIndex !== repairExercise
+        ) return;
+        drafts.markAssisted();
+        feedback.innerHTML = `${repairFeedback}<p><strong>${escapeHtml(localizedIssueLabel("expected"))}:</strong> <span lang="de">${escapeHtml(expected)}</span></p><p>${escapeHtml(copy.assistedPractice)}</p>`;
+      });
       if (wrong)
         recordGrammarError(
           unit,
@@ -1432,6 +1452,7 @@ window.GERMAN_GRAMMAR_RUNTIME = true;
             ])
           : ""
       }${renderFeedbackPoints(correctRulePoints)}
+      ${drafts.assisted ? `<p>${escapeHtml(copy.assistedPractice)}</p>` : ""}
       <span>${completed}/${unit.exercises.length}</span>`;
     }
   };

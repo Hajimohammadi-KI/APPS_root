@@ -71,6 +71,10 @@ import {
 } from "./daily-plan";
 import { syncLegacyPractice } from "./legacy";
 import {
+  prepareLearnerRepair,
+  practiceFeedbackCategory,
+} from "./repair-session";
+import {
   resolveLearningPath,
   saveLearningPathChoice,
   type LearningPathRequest,
@@ -2513,6 +2517,66 @@ export async function mountPractice(
           ? unit.rule
           : undefined,
       );
+      if (
+        saved &&
+        saved.assessment?.verdict !== "pass" &&
+        task.modality === "writing" &&
+        task.answerPolicy !== "reflection"
+      ) {
+        const category = practiceFeedbackCategory(saved.assessment);
+        const box = element("section", undefined, "repair-guidance");
+        box.dataset.feedbackCategory = category;
+        const heading = {
+          unscored: t("Not scored yet", "Noch ohne Bewertung"),
+          grammar: t("Revise the grammar", "Grammatik überarbeiten"),
+          target: t(
+            "Try the requested pattern",
+            "Die gefragte Struktur versuchen",
+          ),
+          context: t(
+            "Check the meaning and situation",
+            "Bedeutung und Situation prüfen",
+          ),
+          accepted: t("Accepted practice form", "Zulässige Übungsform"),
+        }[category];
+        box.append(
+          element("h3", heading),
+          element(
+            "p",
+            category === "unscored"
+              ? t(
+                  "This wording has no score. It may be correct. You can revise it or request a review; the model is available only when you choose to open it.",
+                  "Diese Formulierung hat keine Bewertung. Sie kann richtig sein. Du kannst sie überarbeiten oder prüfen lassen; die Musterlösung wird nur auf deinen Wunsch geöffnet.",
+                )
+              : t(
+                  "Use the feedback to revise your own answer first. Open a hint if needed, then try the pattern in a new situation.",
+                  "Überarbeite zuerst deine eigene Antwort mit dem Feedback. Öffne bei Bedarf einen Hinweis und verwende die Struktur danach in einer neuen Situation.",
+                ),
+          ),
+        );
+        const repair = button(
+          t("Try again as a repair", "Als Korrektur erneut versuchen"),
+          async () => {
+            const original = saved.attempt;
+            await fresh(task, original.id);
+            const prepared = prepareLearnerRepair(session, original);
+            if (prepared !== session) {
+              session = prepared;
+              saveSession();
+              renderTask();
+            }
+            const input =
+              taskPanel.querySelector<HTMLTextAreaElement>(
+                "#practice-response",
+              );
+            input?.focus();
+          },
+          "primary",
+        );
+        repair.dataset.repairAction = "";
+        box.append(repair);
+        taskPanel.append(box);
+      }
       if (saved?.assessment?.correction) {
         taskPanel.append(
           element(
@@ -2773,12 +2837,18 @@ export async function mountPractice(
           attempt: saved.attempt,
           assessment: saved.assessment ?? null,
         });
-      taskPanel.append(
-        button(
-          t("Try again as a repair", "Als Korrektur erneut versuchen"),
-          () => fresh(task, session.submittedId),
-        ),
-      );
+      if (
+        !saved ||
+        saved.assessment?.verdict === "pass" ||
+        task.modality !== "writing" ||
+        task.answerPolicy === "reflection"
+      )
+        taskPanel.append(
+          button(
+            t("Try again as a repair", "Als Korrektur erneut versuchen"),
+            () => fresh(task, session.submittedId),
+          ),
+        );
     }
     const recommendation = resolveLearningPath(
       pack,

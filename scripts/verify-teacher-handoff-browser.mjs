@@ -21,6 +21,22 @@ try {
     const links = readiness.reviewReadiness.selectedCycleReviewLinks;
     assert.equal(links.length, 6);
     assert.equal(readiness.reviewReadiness.status, "awaiting_human_evidence");
+    if (process.argv.includes("--study")) {
+      assert.equal(readiness.personalStudyPreparation.activePlan, false);
+      assert.equal(readiness.personalStudyPreparation.actualObservations, 0);
+      assert.equal(
+        readiness.personalStudyPreparation.causalBenefitEstablished,
+        false,
+      );
+      assert.deepEqual(
+        readiness.personalStudyPreparation.phases.map((row) => row.phase),
+        ["pre", "post", "day7", "day30"],
+      );
+      assert.doesNotMatch(
+        JSON.stringify(readiness.personalStudyPreparation),
+        /"(?:prompt|acceptedAnswers|solution|response)"/u,
+      );
+    }
     for (const width of [390, 1280]) {
       const context = await browser.newContext({
         viewport: { width, height: 1000 },
@@ -36,6 +52,12 @@ try {
         await expect(
           page.getByRole("heading", { name: "تحویل برنامه به معلم" }),
         ).toBeVisible();
+        if (process.argv.includes("--study"))
+          await expect(
+            page.getByRole("heading", {
+              name: "آماده‌سازی مطالعهٔ شخصی با معلم",
+            }),
+          ).toBeVisible();
         for (const link of links)
           await expect(page.locator(`a[href="${link.url}"]`)).toBeVisible();
         await page.locator(`a[href="${links[0].url}"]`).click();
@@ -76,6 +98,11 @@ try {
             "seven cycle tasks and goals",
             "full-unit approval guarded",
             "share link",
+            ...(process.argv.includes("--study")
+              ? [
+                  "four preparation phases; no active study, observations or future questions",
+                ]
+              : []),
             "no errors or overflow",
           ],
         });

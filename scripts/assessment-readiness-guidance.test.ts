@@ -25,4 +25,25 @@ for (const [language, app] of [
     expect(html).toContain("دانلود فایل");
     expect(html).toContain("دو داور مستقل");
   });
+  test(`${language} study preparation is distinct from a completed study and exposes no future questions`, async () => {
+    const base = `Apps/${app}/apps/web/public/`;
+    const data = await Bun.file(base + "assessment-readiness.json").json();
+    const study = data.personalStudyPreparation;
+    expect(study?.status).toBe("awaiting_human_evidence");
+    expect(study?.actualObservations).toBe(0);
+    expect(study?.activePlan).toBe(false);
+    expect(study?.automaticMasteryGranted).toBe(false);
+    expect(study?.causalBenefitEstablished).toBe(false);
+    expect(
+      study?.phases.map((phase: { phase: string }) => phase.phase),
+    ).toEqual(["pre", "post", "day7", "day30"]);
+    expect(JSON.stringify(study)).not.toMatch(
+      /"(?:prompt|acceptedAnswers|solution|response)"/u,
+    );
+    const html = await Bun.file(base + "assessment-readiness.html").text();
+    expect(html).toContain("آماده‌سازی مطالعهٔ شخصی");
+    expect(html).toContain("۷ روز");
+    expect(html).toContain("۳۰ روز");
+    expect(html).toContain("پس از تمرین");
+  });
 }

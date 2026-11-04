@@ -3022,5 +3022,44 @@
         "url": "/learning-core/content-review.html?unit=de.c.071&focus=cycle"
       }
     ]
+  },
+  "personalStudyPreparation": {
+    "schemaVersion": 1,
+    "status": "awaiting_human_evidence",
+    "activePlan": false,
+    "actualObservations": 0,
+    "evaluationPerformed": false,
+    "automaticMasteryGranted": false,
+    "causalBenefitEstablished": false,
+    "phases": [
+      {
+        "phase": "pre",
+        "status": "awaiting_reviewed_private_form",
+        "opensAt": null,
+        "closesAt": null
+      },
+      {
+        "phase": "post",
+        "status": "awaiting_reviewed_private_form",
+        "opensAt": null,
+        "closesAt": null
+      },
+      {
+        "phase": "day7",
+        "status": "awaiting_reviewed_private_form",
+        "opensAt": null,
+        "closesAt": null
+      },
+      {
+        "phase": "day30",
+        "status": "awaiting_reviewed_private_form",
+        "opensAt": null,
+        "closesAt": null
+      }
+    ],
+    "timingPolicy": "follow_up_since_training",
+    "untouchedRetentionClaim": false,
+    "clockVerifiedByServer": false,
+    "teacherTimingAttestationRequired": true
   }
 }

@@ -141,6 +141,16 @@ and refuses an incomplete review, a changed unit or a non-human reviewer ID.
 Findings become a reviewed content change (a new task version), then sections
 1–4. `node scripts/verify-content-review-browser.mjs` checks the page.
 
+For the selected learning cycles, send the teacher the canonical site's
+`/assessment-readiness.html`, or a direct link such as
+`/learning-core/content-review.html?unit=en.c.001&focus=cycle` (German:
+`unit=de.c.001`). No installation or deployment credentials are needed.
+The teacher enters their name and qualification, saves findings and downloads
+the JSON to return to the owner. Reviewing only the seven cycle tasks cannot
+approve the whole unit: all its active writing and speaking tasks remain
+required. A teacher's findings are useful feedback, not two independent
+benchmark reviews or evaluator qualification.
+
 ## 7. Windows desktop update channel
 
 The desktop apps read `Apps/<app>/releases/<name>-update.json` from the
@@ -154,3 +164,39 @@ release rights):
 2. Create the release `<slug>-v<version>` (`english-grammar` or `deutschflow`)
    and attach `releases/<ProductId>-<version>-Windows.zip`.
 3. Commit `Apps/<app>/releases/<name>-update.json`; the zip stays out of git.
+
+## 8. Private personal-study preparation
+
+This writing-only preparation does not score responses, collect observations
+or replace `evaluate-learning-study.ts`. The existing v1 evaluator is unchanged;
+do not pass a frozen personal plan to it as a v1 study. Real reviews and actual
+follow-up still need to be collected and evaluated explicitly.
+
+Start with `bun scripts/prepare-personal-study.ts --empty`. The owner prepares
+a draft matching `PersonalStudyDraft` in `scripts/lib/personal-study-setup.ts`
+and a private catalog accepted by `loadStudyProbeCatalog`. Human review flags
+alone cannot qualify that catalog: actual review artifacts and the named
+teacher's procedure must validate. Use separate but comparable pre/post/day7/
+day30 forms, a UUID pseudonym, explicit consent and future windows. Keep the
+private bank under ignored `artifacts/learning-study/private/`, outside public
+folders and source control.
+
+```powershell
+bun scripts/prepare-personal-study.ts --freeze artifacts/learning-study/private/draft.json --catalog artifacts/learning-study/private/catalog.json
+bun scripts/prepare-personal-study.ts --status artifacts/learning-study/personal-plans/STUDY-UUID.v1.json
+bun scripts/prepare-personal-study.ts --deliver artifacts/learning-study/personal-plans/STUDY-UUID.v1.json --catalog artifacts/learning-study/private/catalog.json --phase pre --context artifacts/learning-study/private/current-context.json
+bun scripts/prepare-personal-study.ts --withdraw artifacts/learning-study/personal-plans/STUDY-UUID.v1.json
+```
+
+Replace `STUDY-UUID` with the returned ID. Files are created once under ignored,
+non-deployed `artifacts/learning-study/`; a revision gets a new version linked
+to the prior hash. Delivery requires fresh current consent plus the teacher's
+timeline context and only writes the due form privately. Withdrawal persists
+across revisions and is reflected in `--status`. Neither the status export nor
+the public readiness page exposes future questions or participant identity.
+
+Record both time since training and intervening practice/testing. A day-30
+follow-up after a day-7 test is not 30 days without retrieval. Local timestamps
+need teacher attestation; one learner's change does not establish causal or
+general effectiveness, CEFR level or automatic mastery. Stages 5 and 6 stay
+open until their real evidence requirements are met.

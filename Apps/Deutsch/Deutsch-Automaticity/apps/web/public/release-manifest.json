@@ -3,6 +3,6 @@
   "version": "20.9.4",
   "webRelease": "2026.11.04.8",
   "changes": [
-    "Shared pronunciation adapter and roadmap synchronized. The English Studio integration remains unavailable until provider configuration and real audio validation; German pronunciation UI unchanged."
+    "Shared local speech assets and roadmap synchronized; English Studio local-only integration. German pronunciation UI unchanged; no new mastery or pronunciation claims."
   ]
 }

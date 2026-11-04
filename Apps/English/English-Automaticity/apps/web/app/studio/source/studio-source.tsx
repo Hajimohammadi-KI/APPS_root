@@ -4,6 +4,7 @@ import { PronunciationPanel } from "./pronunciation-panel";
 import { LearningNavigation } from "@/components/learning-navigation";
 import { Disclosure } from "@/components/ui/disclosure";
 import { AutomaticityEvidenceSummary } from "@/features/components/automaticity-evidence-summary";
+import { AppUpdateNotice } from "@/features/components/app-update-notice";
 import { useAppStore } from "@/features/store/app-store";
 import { playTeacherAudioByContextKey } from "@/lib/teacher-content";
 import { useEffect, useMemo, useState } from "react";
@@ -216,6 +217,7 @@ export default function Home() {
 
   return (
     <div className="conversation-page conversation-standalone">
+      <AppUpdateNotice />
       <aside className="sidebar">
         <a className="studio-brand" href="/">
           English Automaticity

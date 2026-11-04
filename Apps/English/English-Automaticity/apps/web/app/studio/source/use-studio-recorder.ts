@@ -1,9 +1,7 @@
 import {
-  RecognitionCollector,
   spokenPracticeEvidence,
   describeRecording,
   type WaveformDescription,
-  type RecognitionEvidence,
 } from "@automaticity/learning-core/speech";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -13,7 +11,6 @@ import {
 } from "@automaticity/learning-core";
 import {
   copy,
-  speechLocale,
   type ConversationTopic,
   type StudioLanguage,
 } from "./conversation-data";
@@ -23,9 +20,7 @@ import {
   currentSessionMinutes,
   type EvaluationResponse,
   isEvaluationResponse,
-  recognitionConstructor,
   type RecordingState,
-  type SpeechRecognitionLike,
   studioAudioToStore,
 } from "./studio-helpers";
 
@@ -82,14 +77,11 @@ export function useStudioRecorder({
   const [attempts, setAttempts] = useState(0);
   const [voiceRecoveryAvailable, setVoiceRecoveryAvailable] = useState(false);
   const [consentNeeded, setConsentNeeded] = useState(false);
-  const [recognitionEvidence, setRecognitionEvidence] =
-    useState<RecognitionEvidence | null>(null);
-  const transcriptEditedRef = useRef(false);
+  const recognitionEvidence = null;
   const [waveform, setWaveform] = useState<WaveformDescription | null>(null);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const audioBlobRef = useRef<Blob | null>(null);
   const transcriptRef = useRef<HTMLTextAreaElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -115,22 +107,12 @@ export function useStudioRecorder({
     if (recordingState !== "recording" || seconds < maxSeconds) return;
     const recorder = recorderRef.current;
     if (recorder && recorder.state !== "inactive") recorder.stop();
-    try {
-      recognitionRef.current?.stop();
-    } catch {
-      /* already stopped */
-    }
   }, [maxSeconds, recordingState, seconds]);
 
   useEffect(
     () => () => {
       captureGenerationRef.current += 1;
       streamRef.current?.getTracks().forEach((track) => track.stop());
-      try {
-        recognitionRef.current?.stop();
-      } catch {
-        // The recognition engine can already be stopped by the browser.
-      }
       window.speechSynthesis?.cancel();
     },
     [],
@@ -153,14 +135,7 @@ export function useStudioRecorder({
     const recorder = recorderRef.current;
     if (recorder && recorder.state !== "inactive") recorder.stop();
     streamRef.current?.getTracks().forEach((track) => track.stop());
-    try {
-      recognitionRef.current?.stop();
-    } catch {
-      /* Already stopped. */
-    }
     setRecordingState("idle");
-    transcriptEditedRef.current = false;
-    setRecognitionEvidence(null);
     setWaveform(null);
     setTranscript("");
     setInterimTranscript("");
@@ -181,56 +156,10 @@ export function useStudioRecorder({
   function editTranscript(value: string) {
     evaluationRequestRef.current += 1;
     setEvaluating(false);
-    transcriptEditedRef.current = true;
-    setRecognitionEvidence(null);
     setTranscript(value);
     setInterimTranscript("");
     setEvaluation(null);
     setSavedId(null);
-  }
-
-  function startSpeechRecognition(initialText: string) {
-    const Recognition = recognitionConstructor();
-    if (!Recognition) return false;
-    const recognition = new Recognition();
-    const generation = captureGenerationRef.current;
-    recognition.lang = speechLocale[language];
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 3;
-    const collector = new RecognitionCollector(initialText);
-    recognition.onresult = (event) => {
-      if (
-        generation !== captureGenerationRef.current ||
-        recognitionRef.current !== recognition ||
-        transcriptEditedRef.current
-      )
-        return;
-      const evidence = collector.update(event);
-      setRecognitionEvidence(evidence);
-      setTranscript(evidence.finalText);
-      setInterimTranscript(evidence.interimText);
-    };
-    recognition.onerror = (event) => {
-      if (
-        generation !== captureGenerationRef.current ||
-        recognitionRef.current !== recognition
-      )
-        return;
-      if (event.error !== "aborted" && event.error !== "no-speech") {
-        setMessage(
-          `${language === "de" ? "Spracherkennung" : "Speech recognition"}: ${event.error}`,
-        );
-      }
-    };
-    try {
-      recognitionRef.current = recognition;
-      recognition.start();
-      return true;
-    } catch {
-      recognitionRef.current = null;
-      return false;
-    }
   }
 
   async function startRecording({
@@ -242,12 +171,6 @@ export function useStudioRecorder({
     const generation = ++captureGenerationRef.current;
     evaluationRequestRef.current += 1;
     setEvaluating(false);
-    try {
-      recognitionRef.current?.stop();
-    } catch {
-      /* Already stopped. */
-    }
-    recognitionRef.current = null;
     setRecordingVersion((current) => current + 1);
     audioBlobRef.current = null;
     setAudioBlob(null);
@@ -324,7 +247,6 @@ export function useStudioRecorder({
         onRecorded();
       };
 
-      setTranscript("");
       setInterimTranscript("");
       setEvaluation(null);
       if (!keepBaseline) setBaseline(null);
@@ -332,16 +254,9 @@ export function useStudioRecorder({
       setSeconds(0);
       setAudioUrl(null);
 
-      transcriptEditedRef.current = false;
-      setRecognitionEvidence(null);
-      if (!startSpeechRecognition("")) {
-        setMessage(
-          language === "de"
-            ? "Audio wird aufgenommen, aber Live-Transkription ist nicht verfügbar. Du kannst das Transkript manuell eingeben."
-            : "Audio is recording, but live transcription is unavailable. You can enter the transcript manually.",
-        );
-        setVoiceRecoveryAvailable(true);
-      }
+      setMessage(
+        "Local audio recording is on. Automatic browser transcription is off; type the words yourself if you want text feedback.",
+      );
       recorder.start(250);
       setRecordingState("recording");
       onRecordingStarted();
@@ -377,27 +292,16 @@ export function useStudioRecorder({
       const reviewedTranscript = `${transcript} ${interimTranscript}`.trim();
       setTranscript(reviewedTranscript);
       setInterimTranscript("");
-      try {
-        recognitionRef.current?.stop();
-      } catch {
-        /* already stopped */
-      }
       setRecordingState("paused");
       return;
     }
     recorder.resume();
-    startSpeechRecognition(transcript.trim());
     setRecordingState("recording");
   }
 
   function finishRecording() {
     const recorder = recorderRef.current;
     if (recorder && recorder.state !== "inactive") recorder.stop();
-    try {
-      recognitionRef.current?.stop();
-    } catch {
-      /* already stopped */
-    }
     setRecordingState("idle");
   }
 

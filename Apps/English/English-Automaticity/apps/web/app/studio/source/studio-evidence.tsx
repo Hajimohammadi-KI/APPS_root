@@ -78,7 +78,7 @@ export function SessionEvidence({
               <b>Transcript</b>
               <small>
                 {transcript
-                  ? "Recognized or edited text; review against the original audio"
+                  ? "Manually entered text; review against the original audio"
                   : "Waiting for speech"}
               </small>
             </div>

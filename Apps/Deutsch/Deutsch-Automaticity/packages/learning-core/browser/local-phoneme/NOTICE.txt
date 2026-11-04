@@ -1,0 +1,20 @@
+Local phoneme model assets and runtime
+
+Pinned source: hama-js 1.7.0, https://registry.npmjs.org/hama-js/-/hama-js-1.7.0.tgz
+Upstream: https://github.com/hamanlp/hama
+Source commit: fb81fe97e54c00b3f73192b9351f96fcd4427b03
+Author in npm metadata: Seongmin Park.
+
+The exact upstream source commit includes an MIT LICENSE, copyright (c) 2025 hama contributors.
+The npm package metadata and that commit's ts/package.json instead declare Apache-2.0.
+Both license texts are preserved here to document that metadata discrepancy; this is not a claim of an undocumented dual-license grant.
+The packaged WASM, ASR weights and vocabulary match that source commit. The runtime engine.js is copied unchanged from the published package.
+
+Only waveform-to-phoneme inference is used. No phoneme-to-word model or target-text correction is loaded.
+Training-data overlap, accuracy on Persian speakers and pronunciation diagnosis have not been established. Outputs are unverified acoustic estimates, never a score or mastery decision.
+
+SHA-256:
+hama.wasm 4525bd3d75df567434cd1ac6d01bbf26173136d2594289524ab780c9b636e661
+asr_waveform.hama a9fcfe73e179ca48e399cd76a90a6b3e1887bf5037ecc52b778d13a149563328
+g2p_vocab.json 520d19e4e6ae58658eed53594e0feab8ea8e1b4b04a7746e25e50c16c29b91bf
+engine.js 89d38ad2791c3f758b9dd0bffe01f457e3c9233d9360ec475f25fc049f3ed693

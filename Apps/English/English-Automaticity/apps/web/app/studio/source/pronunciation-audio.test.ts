@@ -3,8 +3,7 @@ import {
   encodePronunciationWav,
   validatePronunciationAudio,
   recordingDownloadName,
-  matchesPronunciationRequest,
-  pronunciationFitsRecording,
+  matchesLocalRecordingDuration,
   preparePronunciationAudio,
   wordReplayRange,
 } from "./pronunciation-audio";
@@ -90,23 +89,6 @@ test("decoded input must be one channel and at most 30 seconds before resampling
   ).not.toThrow();
 });
 
-test("returned audio observations must match the explicit target and selected dialect", () => {
-  const request = {
-    referenceText: "Hello. Hello. Hello. Hello.",
-    variant: "en-US",
-  };
-  expect(matchesPronunciationRequest({ ...request }, request)).toBe(true);
-  expect(
-    matchesPronunciationRequest(
-      { ...request, referenceText: "Goodbye." },
-      request,
-    ),
-  ).toBe(false);
-  expect(
-    matchesPronunciationRequest({ ...request, variant: "en-GB" }, request),
-  ).toBe(false);
-});
-
 test("download filename preserves recording format without personal data", () => {
   expect(recordingDownloadName("audio/webm;codecs=opus")).toBe(
     "my-pronunciation-recording.webm",
@@ -125,30 +107,13 @@ test("download filename preserves recording format without personal data", () =>
   );
 });
 
-test("acoustic timing cannot point outside the submitted recording", () => {
-  const words = [
-    {
-      offsetSeconds: 0,
-      durationSeconds: 1,
-      phonemes: [{ offsetSeconds: 0.2, durationSeconds: 0.1 }],
-    },
-  ];
-  expect(pronunciationFitsRecording(words, 1)).toBe(true);
-  expect(pronunciationFitsRecording(words, 0.5)).toBe(false);
-  expect(
-    pronunciationFitsRecording(
-      [
-        {
-          offsetSeconds: 0,
-          durationSeconds: 1,
-          phonemes: [{ offsetSeconds: 2, durationSeconds: 0.1 }],
-        },
-      ],
-      1,
-    ),
-  ).toBe(false);
-  expect(pronunciationFitsRecording([], 1)).toBe(false);
-  expect(pronunciationFitsRecording(words, NaN)).toBe(false);
+test("local model results must describe the current audio sample duration", () => {
+  expect(matchesLocalRecordingDuration(1000, 16000)).toBe(true);
+  expect(matchesLocalRecordingDuration(1001, 16000)).toBe(true);
+  expect(matchesLocalRecordingDuration(2000, 16000)).toBe(false);
+  expect(matchesLocalRecordingDuration(NaN, 16000)).toBe(false);
+  expect(matchesLocalRecordingDuration(0, 0)).toBe(false);
+  expect(matchesLocalRecordingDuration(31000, 496000)).toBe(false);
 });
 
 test("word replay supports loaded MediaRecorder WebM with unknown finite duration", () => {

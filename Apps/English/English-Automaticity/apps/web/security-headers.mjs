@@ -2,9 +2,14 @@
 // working as built today: Next.js and the hand-written practice pages rely on
 // inline scripts and styles, learners may point the optional assessment
 // service at a local or https origin, and audio practice uses blob URLs.
-// Development builds additionally need eval for source maps.
-export function contentSecurityPolicy(production = process.env.NODE_ENV === "production") {
-  const script = production ? "'self' 'unsafe-inline'" : "'self' 'unsafe-inline' 'unsafe-eval'";
+// The local phoneme model needs WASM compilation; JavaScript eval stays blocked
+// in production. Development builds additionally need eval for source maps.
+export function contentSecurityPolicy(
+  production = process.env.NODE_ENV === "production",
+) {
+  const script = production
+    ? "'self' 'unsafe-inline' 'wasm-unsafe-eval'"
+    : "'self' 'unsafe-inline' 'unsafe-eval'";
   return [
     "default-src 'self'",
     "base-uri 'self'",
@@ -24,10 +29,16 @@ export function contentSecurityPolicy(production = process.env.NODE_ENV === "pro
 
 export function securityHeaders(production) {
   return [
-    { key: "Content-Security-Policy", value: contentSecurityPolicy(production) },
+    {
+      key: "Content-Security-Policy",
+      value: contentSecurityPolicy(production),
+    },
     { key: "X-Frame-Options", value: "DENY" },
     { key: "X-Content-Type-Options", value: "nosniff" },
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-    { key: "Permissions-Policy", value: "microphone=(self), camera=(), geolocation=(), payment=()" },
+    {
+      key: "Permissions-Policy",
+      value: "microphone=(self), camera=(), geolocation=(), payment=()",
+    },
   ];
 }

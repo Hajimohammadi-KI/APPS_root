@@ -64,3 +64,5 @@ Apps/Deutsch/Deutsch-Automaticity/apps/web/public/roadmap.html text eol=lf
 shared/learning-core/browser/local-phoneme/** -text
 Apps/**/packages/learning-core/browser/local-phoneme/** -text
 Apps/**/apps/web/public/learning-core/local-phoneme/** -text
+shared/learning-core/src/vendor/hama-js/engine.js -text
+Apps/**/packages/learning-core/src/vendor/hama-js/engine.js -text

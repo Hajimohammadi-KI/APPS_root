@@ -9,7 +9,6 @@
     "./discourse": "./src/discourse.ts",
     "./speech": "./src/speech.ts",
     "./pronunciation-assessment": "./src/pronunciation-assessment.ts",
-    "./pronunciation-assessment-server": "./src/pronunciation-assessment-server.ts",
     "./writing-rules": "./src/writing-rules.ts",
     ".": "./src/index.ts",
     "./reference-answer": "./src/reference-answer.ts",

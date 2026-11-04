@@ -25,8 +25,10 @@ export function validatePronunciationAudio(audio: {
     );
 }
 
-/** Encode samples, not a transcript. Reject silence and malformed values. */
-export function encodePronunciationWav(samples: Float32Array): ArrayBuffer {
+/** Preserve float samples for local inference, with safe uniform attenuation. */
+export function normalizePronunciationSamples(
+  samples: Float32Array,
+): Float32Array<ArrayBuffer> {
   validatePronunciationAudio({
     numberOfChannels: 1,
     sampleRate: SAMPLE_RATE,
@@ -44,6 +46,14 @@ export function encodePronunciationWav(samples: Float32Array): ArrayBuffer {
     throw new Error(
       "This recording is silent or too quiet. Record again before checking pronunciation.",
     );
+  // Opus decoding/resampling may overshoot full scale. Preserve relative
+  // amplitudes rather than clipping peaks or wrapping integer samples.
+  return Float32Array.from(samples, (sample) => sample / peak);
+}
+
+/** Encode samples, not a transcript. Reject silence and malformed values. */
+export function encodePronunciationWav(samples: Float32Array): ArrayBuffer {
+  const normalizedSamples = normalizePronunciationSamples(samples);
   const buffer = new ArrayBuffer(44 + samples.length * 2);
   const view = new DataView(buffer);
   const write = (offset: number, text: string) => {
@@ -63,11 +73,7 @@ export function encodePronunciationWav(samples: Float32Array): ArrayBuffer {
   view.setUint16(34, 16, true);
   write(36, "data");
   view.setUint32(40, samples.length * 2, true);
-  samples.forEach((sample, index) => {
-    // Decoding Opus and resampling may overshoot full scale. Attenuate the
-    // whole clip uniformly, preserving relative amplitudes without wrapping
-    // PCM integers or clipping only the peaks. This is not a speech judgment.
-    const normalized = sample / peak;
+  normalizedSamples.forEach((normalized, index) => {
     view.setInt16(
       44 + index * 2,
       Math.round(normalized * (normalized < 0 ? 32768 : 32767)),
@@ -78,7 +84,9 @@ export function encodePronunciationWav(samples: Float32Array): ArrayBuffer {
 }
 
 /** Browser resampling uses its audio renderer, rather than dropping samples. */
-export async function preparePronunciationAudio(blob: Blob): Promise<Blob> {
+export async function preparePronunciationSamples(
+  blob: Blob,
+): Promise<Float32Array<ArrayBuffer>> {
   if (!blob.size || blob.size > MAX_RECORDING_BYTES)
     throw new Error(
       "The recording is empty or too large for pronunciation checking.",
@@ -111,49 +119,30 @@ export async function preparePronunciationAudio(blob: Blob): Promise<Blob> {
     source.connect(renderer.destination);
     source.start();
     const rendered = await renderer.startRendering();
-    return new Blob([encodePronunciationWav(rendered.getChannelData(0))], {
-      type: "audio/wav",
-    });
+    return normalizePronunciationSamples(rendered.getChannelData(0));
   } finally {
     await context.close();
   }
 }
 
-export function matchesPronunciationRequest(
-  result: { readonly referenceText: string; readonly variant: string },
-  request: { readonly referenceText: string; readonly variant: string },
-): boolean {
-  return (
-    result.referenceText === request.referenceText &&
-    result.variant === request.variant
+export async function preparePronunciationAudio(blob: Blob): Promise<Blob> {
+  return new Blob(
+    [encodePronunciationWav(await preparePronunciationSamples(blob))],
+    { type: "audio/wav" },
   );
 }
 
-export function pronunciationFitsRecording(
-  words: readonly {
-    readonly offsetSeconds: number;
-    readonly durationSeconds: number;
-    readonly phonemes: readonly {
-      readonly offsetSeconds: number;
-      readonly durationSeconds: number;
-    }[];
-  }[],
-  duration: number,
+/** Reject a late or mismatched result even when its phoneme shape is valid. */
+export function matchesLocalRecordingDuration(
+  durationMs: number,
+  samples: number,
 ): boolean {
-  const fits = (part: {
-    readonly offsetSeconds: number;
-    readonly durationSeconds: number;
-  }) =>
-    Number.isFinite(part.offsetSeconds) &&
-    Number.isFinite(part.durationSeconds) &&
-    part.offsetSeconds >= 0 &&
-    part.durationSeconds > 0 &&
-    part.offsetSeconds + part.durationSeconds <= duration + 1 / SAMPLE_RATE;
   return (
-    Number.isFinite(duration) &&
-    duration > 0 &&
-    words.length > 0 &&
-    words.every((word) => fits(word) && word.phonemes.every(fits))
+    Number.isSafeInteger(samples) &&
+    samples >= 320 &&
+    samples <= 480000 &&
+    Number.isFinite(durationMs) &&
+    Math.abs(durationMs - samples / 16) <= 1
   );
 }
 

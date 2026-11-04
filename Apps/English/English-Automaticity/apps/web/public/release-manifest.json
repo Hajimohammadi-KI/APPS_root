@@ -3,6 +3,6 @@
   "version": "27.4.4",
   "webRelease": "2026.11.04.8",
   "changes": [
-    "English Studio: optional actual-audio pronunciation observations with explicit target and audio consent, original recording download, stale-result isolation and honest text-only labels. Provider credentials and real learner audio validation remain pending; no pronunciation grade or mastery."
+    "English Studio: local-only waveform-to-phoneme analysis, no automatic cloud speech recognition, manual transcript and original recording preserved. Experimental acoustic observations are not pronunciation grades."
   ]
 }

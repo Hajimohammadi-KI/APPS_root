@@ -12,6 +12,8 @@ legacy
 packages/content/src/data
 apps/web/public
 packages/learning-core/browser
+# Pinned upstream runtime; build verifies its original byte hash.
+packages/learning-core/src/vendor/hama-js/engine.js
 # Vendored copies of the Windows desktop bridges and updater scripts.
 distribution/windows-release
 *.exe

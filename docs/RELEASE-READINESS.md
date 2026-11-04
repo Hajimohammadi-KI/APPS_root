@@ -201,38 +201,30 @@ need teacher attestation; one learner's change does not establish causal or
 general effectiveness, CEFR level or automatic mastery. Stages 5 and 6 stay
 open until their real evidence requirements are met.
 
-## 9. English recording-based pronunciation observations
+## 9. English local speech observations
 
-The English Studio has a separate audio route at
-`/api/conversation/pronunciation`. Browser transcription and LanguageTool text
-feedback do not assess pronunciation. The optional audio adapter uses Microsoft
-Azure Speech pronunciation assessment and requires these server-only Production
-environment variables in the existing English Vercel project:
+The owner requires pronunciation analysis without cloud speech services. The
+English Studio uses a local WebAssembly waveform-to-phoneme model. Ordinary
+browser SpeechRecognition is not started because it can transmit audio remotely.
+The transcript remains manually editable; it is not substituted for the audio.
+The pronunciation worker receives only waveform samples, never target text.
 
-- `AZURE_SPEECH_KEY`: the key for the owner's Azure Speech resource.
-- `AZURE_SPEECH_REGION`: that resource's region, for example `westeurope`.
+Model files are served from the app's own versioned learning-core assets, loaded
+on explicit action, checked against pinned SHA-256 values and cached for offline
+use. No audio POST, remote inference API, credential or paid resource is needed.
+The original recording can be downloaded for teacher review. The recording
+storage preference stays separate and is not enabled by analysis or download.
 
-Configure secrets through Azure/Vercel account settings, never chat, source
-control, client bundles or `NEXT_PUBLIC_*` variables. The owner supplies the
-resource; this release does not create a paid subscription or provision one.
-Redeploy after configuring the variables. GET on the route reports availability
-without exposing credentials. A configured response is not proof that the key
-works or that pronunciation is validated: perform a consenting real recording
-check against the provider and compare with the teacher's judgement.
+Clips are bounded to 30 seconds and decoded/resampled locally. Invalid or silent
+audio, failed hashes, unsupported devices and missing model output abstain.
+Cancellation terminates the worker; a new recording cannot reuse an old result.
+Finite decoder/resampling peaks above full scale are uniformly attenuated before
+waveform inference; the original recording stays intact.
 
-Each send requires a target typed by the learner and separate audio consent.
-The complete current recording is converted on-device to mono 16 kHz PCM WAV;
-recordings longer than 30 seconds are refused, never silently trimmed. The
-chosen English variant is preserved. Named likely spoken phonemes are only
-available for `en-US`; `en-GB` must not silently switch to American English.
-The original recording can also be downloaded for teacher review without an
-external send. Local recording-storage consent remains separate.
-
-Provider observations show expected and likely heard sounds, not an app grade
-or established diagnosis. The existing W26 model-calibration gate stays closed;
-no pronunciation pass, mastery, CEFR or learning claim is granted. Missing
-configuration, consent, usable audio or valid provider evidence remains
-unassessed. Offline fixtures test the connection and UI, not detection of a
-real learner's pronunciation. Public endpoint limits are per server instance;
-configure an appropriate provider quota and Vercel firewall protection before
-opening a paid resource to a large learner group.
+The model returns estimated IPA sounds with coarse playback spans. These are
+experimental observations, not pronunciation grades or validated error labels.
+The W26 calibration gate stays closed. Tests must cover real nonprivate audio,
+offline cached execution, asset corruption and zero audio network requests.
+Neither software tests nor public-corpus examples prove this learner's halo will
+be detected reliably; the user's actual recording and teacher review remain
+necessary. Keep upstream provenance and all license notices with the assets.

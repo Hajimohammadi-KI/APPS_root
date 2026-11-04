@@ -5,7 +5,8 @@ test("production policy blocks framing, plugins and eval while keeping local ser
   const csp = contentSecurityPolicy(true);
   expect(csp).toContain("frame-ancestors 'none'");
   expect(csp).toContain("object-src 'none'");
-  expect(csp).not.toContain("unsafe-eval");
+  expect(csp).not.toContain("'unsafe-eval'");
+  expect(csp).toContain("'wasm-unsafe-eval'");
   expect(csp).toContain("connect-src 'self' https: http://127.0.0.1:*");
   expect(csp).toContain("media-src 'self' blob:");
   expect(contentSecurityPolicy(false)).toContain("'unsafe-eval'");
@@ -20,6 +21,8 @@ test("every response carries the four protective headers", () => {
     "Referrer-Policy",
     "Permissions-Policy",
   ]);
-  const permissions = securityHeaders(true).find((header) => header.key === "Permissions-Policy");
+  const permissions = securityHeaders(true).find(
+    (header) => header.key === "Permissions-Policy",
+  );
   expect(permissions?.value).toContain("microphone=(self)");
 });

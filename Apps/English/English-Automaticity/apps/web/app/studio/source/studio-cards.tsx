@@ -335,8 +335,8 @@ export function RecordCard({
         />
       </label>
       <p id="studio-transcript-basis" style={{ gridColumn: "1 / -1" }}>
-        Browser-recognized words can hide sound differences. This text is not a
-        pronunciation assessment.
+        Type your own transcript if you want text feedback. Automatic browser
+        transcription is off; audio analysis stays on this device.
       </p>
     </div>
   );

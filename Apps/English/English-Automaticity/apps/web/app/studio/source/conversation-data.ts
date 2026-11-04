@@ -76,7 +76,7 @@ export const copy = {
     record: "Record answer",
     transcript: "Your transcript",
     transcriptPlaceholder:
-      "Browser-recognized words, not a pronunciation assessment. Review recognition errors before checking transcript grammar.",
+      "Type the words you said. Automatic browser transcription is off; this text is not a pronunciation assessment.",
     evaluate: "Check transcript grammar",
     evaluating: "Checking with LanguageTool…",
     saved: "Session saved on this device.",

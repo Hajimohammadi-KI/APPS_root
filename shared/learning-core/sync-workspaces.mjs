@@ -11,8 +11,21 @@
 // hand-kept list, so a new canonical file can never be silently skipped.
 // Text is compared with CRLF normalized to LF, so a Windows checkout and a
 // Linux CI runner agree.
-import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
-import { dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+} from "node:fs";
+import {
+  dirname,
+  extname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+} from "node:path";
 import { fileURLToPath } from "node:url";
 
 const sourceRoot = resolve(dirname(fileURLToPath(import.meta.url)));
@@ -37,24 +50,39 @@ function walk(root, directory, out) {
     if (IGNORED_NAMES.has(entry.name)) continue;
     const path = join(directory, entry.name);
     if (entry.isDirectory()) walk(root, path, out);
-    else if (entry.isFile()) out.push(relative(root, path).replaceAll("\\", "/"));
+    else if (entry.isFile())
+      out.push(relative(root, path).replaceAll("\\", "/"));
   }
   return out;
 }
 
 function packageFiles(root) {
   const files = MIRRORED_FILES.filter((name) => existsSync(join(root, name)));
-  for (const directory of MIRRORED_DIRECTORIES) walk(root, join(root, directory), files);
+  for (const directory of MIRRORED_DIRECTORIES)
+    walk(root, join(root, directory), files);
   return files.sort();
 }
 
-const textExtensions = new Set([".ts", ".tsx", ".js", ".mjs", ".json", ".css", ".html", ".md", ".txt"]);
+const textExtensions = new Set([
+  ".ts",
+  ".tsx",
+  ".js",
+  ".mjs",
+  ".json",
+  ".css",
+  ".html",
+  ".md",
+  ".txt",
+]);
 function sameContent(source, target) {
-  const left = readFileSync(source), right = readFileSync(target);
+  const left = readFileSync(source),
+    right = readFileSync(target);
   // Model weights and WASM must be byte-identical. UTF-8 decoding can hide
   // different invalid bytes, and newline normalization corrupts binary data.
-  return !source.replaceAll("\\", "/").includes("/browser/local-phoneme/") && textExtensions.has(extname(source))
-    ? left.toString("utf8").replaceAll("\r\n", "\n") === right.toString("utf8").replaceAll("\r\n", "\n")
+  return !source.replaceAll("\\", "/").includes("/browser/local-phoneme/") &&
+    textExtensions.has(extname(source))
+    ? left.toString("utf8").replaceAll("\r\n", "\n") ===
+        right.toString("utf8").replaceAll("\r\n", "\n")
     : left.equals(right);
 }
 
@@ -70,7 +98,9 @@ const sourceFiles = packageFiles(sourceRoot);
 
 for (const pending of PENDING.keys()) {
   if (!sourceFiles.includes(pending))
-    problems.push(`Pending entry no longer exists in the source; remove it from PENDING: ${pending}`);
+    problems.push(
+      `Pending entry no longer exists in the source; remove it from PENDING: ${pending}`,
+    );
 }
 const mirrored = sourceFiles.filter((file) => !PENDING.has(file));
 const browserBundles = mirrored.filter((file) => file.startsWith("browser/"));
@@ -78,8 +108,10 @@ const browserBundles = mirrored.filter((file) => file.startsWith("browser/"));
 function syncFile(source, target) {
   assertInsideApps(target);
   if (checkOnly) {
-    if (!existsSync(target)) problems.push(`Missing: ${relative(repositoryRoot, target)}`);
-    else if (!sameContent(source, target)) problems.push(`Stale: ${relative(repositoryRoot, target)}`);
+    if (!existsSync(target))
+      problems.push(`Missing: ${relative(repositoryRoot, target)}`);
+    else if (!sameContent(source, target))
+      problems.push(`Stale: ${relative(repositoryRoot, target)}`);
     return;
   }
   mkdirSync(dirname(target), { recursive: true });
@@ -88,10 +120,13 @@ function syncFile(source, target) {
 
 for (const app of apps) {
   const mirrorRoot = join(app, "packages/learning-core");
-  for (const file of mirrored) syncFile(join(sourceRoot, file), join(mirrorRoot, file));
+  for (const file of mirrored)
+    syncFile(join(sourceRoot, file), join(mirrorRoot, file));
   // Files left in a copy after their source was removed or never existed.
   const expected = new Set(mirrored);
-  for (const extra of packageFiles(mirrorRoot).filter((file) => !expected.has(file))) {
+  for (const extra of packageFiles(mirrorRoot).filter(
+    (file) => !expected.has(file),
+  )) {
     const reason = PENDING.get(extra);
     problems.push(
       `${reason ? "Pending file must not be mirrored yet" : "Not in the canonical source"}: ${relative(repositoryRoot, join(mirrorRoot, extra))}`,
@@ -99,7 +134,10 @@ for (const app of apps) {
   }
   for (const bundle of browserBundles) {
     const name = bundle.slice("browser/".length);
-    syncFile(join(sourceRoot, bundle), join(app, "apps/web/public/learning-core", name));
+    syncFile(
+      join(sourceRoot, bundle),
+      join(app, "apps/web/public/learning-core", name),
+    );
   }
 }
 
@@ -107,7 +145,10 @@ if (problems.length) {
   console.error(
     `Learning-core ${checkOnly ? "check" : "sync"} found ${problems.length} problem(s):\n${problems.map((p) => `- ${p}`).join("\n")}`,
   );
-  if (!checkOnly) console.error("Remove extra files from the app copies by hand after reviewing them.");
+  if (!checkOnly)
+    console.error(
+      "Remove extra files from the app copies by hand after reviewing them.",
+    );
   process.exit(1);
 }
 

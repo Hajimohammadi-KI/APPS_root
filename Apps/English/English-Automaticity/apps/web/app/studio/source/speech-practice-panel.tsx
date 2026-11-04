@@ -42,7 +42,7 @@ export function SpeechPracticePanel({
         <h3>{en ? "Read aloud practice" : "Laut lesen"}</h3>
         <p>
           {en
-            ? "Recognition can miss sounds. Review the transcript; these comparisons do not score pronunciation."
+            ? "These comparisons use your manually entered words. For sound estimates, use the local audio analysis above; text comparisons do not score pronunciation."
             : "Die Erkennung kann Laute übersehen. Prüfe das Transkript; dieser Vergleich bewertet keine Aussprache."}
         </p>
         {evidence && (
@@ -115,7 +115,7 @@ export function SpeechPracticePanel({
               : comparison.edits.length
                 ? describeAnswerEdits(comparison.edits, language)
                 : en
-                  ? "The recognized words match the target. Pronunciation still needs listening."
+                  ? "The entered words match the target. Pronunciation still needs listening."
                   : "Die erkannten Wörter entsprechen dem Ziel. Die Aussprache muss weiter angehört werden."}
           </p>
         )}

@@ -2,230 +2,342 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  parsePronunciationObservation,
-  type PronunciationObservation,
+  parseLocalPronunciationObservation,
+  type LocalPronunciationObservation,
 } from "@automaticity/learning-core/pronunciation-assessment";
 import {
-  matchesPronunciationRequest,
-  preparePronunciationAudio,
-  pronunciationFitsRecording,
+  preparePronunciationSamples,
   recordingDownloadName,
   wordReplayRange,
+  matchesLocalRecordingDuration,
 } from "./pronunciation-audio";
+import {
+  LOCAL_MODEL_ANALYSIS_TIMEOUT_MS,
+  LOCAL_MODEL_LOAD_TIMEOUT_MS,
+  startLocalModelDeadline,
+} from "./local-model-deadline";
 
-type Availability = "checking" | "available" | "unavailable";
+type ModelState = "unloaded" | "loading" | "ready" | "analysing";
 
 export function PronunciationResult({
   observation,
   onReplay,
 }: {
-  readonly observation: PronunciationObservation;
+  readonly observation: LocalPronunciationObservation;
   readonly onReplay: (start: number, duration: number) => void;
 }) {
   return (
     <section aria-label="Acoustic observations">
-      <h4>Sounds in your recording</h4>
+      <h4>Sounds estimated from your recording</h4>
       <p role="status">
-        Audio observations are ready. Review the sounds below.
+        Local sound estimates are ready. Listen to the original recording to
+        review them.
       </p>
       <p>
-        These are model observations from Microsoft Azure Speech, not a verified
-        pronunciation grade. Listen to the original with your teacher; a
-        different sound is not automatically an error.
+        This experimental model estimates sounds directly from audio. It can
+        make mistakes and does not verify pronunciation, accent or mastery.
       </p>
-      <p>Recognized spelling: {observation.recognizedText}</p>
-      <p>Spelling can stay the same even when the sounds differ.</p>
-      {!observation.spokenPhonemesAvailable && (
-        <p>
-          This service does not provide named likely spoken sounds for the
-          selected English variant. No phoneme diagnosis is available. Your
-          variant has not been changed.
-        </p>
-      )}
-      {observation.words.map((word, index) => (
-        <div
-          key={`${index}:${word.offsetSeconds}`}
-          style={{ marginBlock: "1rem" }}
-        >
-          <b>{word.word}</b>{" "}
-          <button
-            type="button"
-            onClick={() => onReplay(word.offsetSeconds, word.durationSeconds)}
-          >
-            Replay this word
-          </button>
-          {word.phonemes.length > 0 && (
-            <table
-              style={{
-                width: "100%",
-                tableLayout: "fixed",
-                overflowWrap: "anywhere",
-              }}
+      <p style={{ overflowWrap: "anywhere", fontSize: "1.25rem" }}>
+        /{observation.phonemes.join(" ")}/
+      </p>
+      <p>
+        The model received only your audio samples. It did not receive the
+        intended words or your transcript.
+      </p>
+      <ul style={{ paddingInlineStart: "1.5rem" }}>
+        {observation.spans.map((span, index) => (
+          <li key={`${index}:${span.startMs}`} style={{ marginBlock: ".4rem" }}>
+            /{span.phoneme}/{" "}
+            <button
+              type="button"
+              onClick={() =>
+                onReplay(
+                  span.startMs / 1000,
+                  (span.endMs - span.startMs) / 1000,
+                )
+              }
             >
-              <thead>
-                <tr>
-                  <th scope="col">Reference sound</th>
-                  <th scope="col">Likely heard (model)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {word.phonemes.map((phoneme, phoneIndex) => (
-                  <tr key={`${phoneIndex}:${phoneme.offsetSeconds}`}>
-                    <td>/{phoneme.expected}/</td>
-                    <td>
-                      {phoneme.heard ? `/${phoneme.heard}/` : "Not provided"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      ))}
+              Replay this sound
+            </button>
+          </li>
+        ))}
+      </ul>
+      <p>
+        Timing is approximate. Review unclear sounds with your teacher using the
+        original audio.
+      </p>
     </section>
   );
 }
 
-function PronunciationRequest({
+function LocalSoundAnalysis({
   audioBlob,
-  target,
-  variant,
-  availability,
   recordingBusy,
   onReplay,
 }: {
   readonly audioBlob: Blob | null;
-  readonly target: string;
-  readonly variant: string;
-  readonly availability: Availability;
   readonly recordingBusy: boolean;
   readonly onReplay: (start: number, duration: number) => void;
 }) {
-  const [consent, setConsent] = useState(false);
-  const [pending, setPending] = useState(false);
+  const [modelState, setModelState] = useState<ModelState>("unloaded");
   const [message, setMessage] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number | null>(null);
   const [observation, setObservation] =
-    useState<PronunciationObservation | null>(null);
-  const requestRef = useRef<AbortController | null>(null);
+    useState<LocalPronunciationObservation | null>(null);
+  const workerRef = useRef<Worker | null>(null);
+  const serialRef = useRef(0);
+  const cancelDeadlineRef = useRef<(() => void) | null>(null);
+  const activeRef = useRef<{
+    id: string;
+    phase: "load" | "analyse";
+    durationMs?: number;
+  } | null>(null);
+
   useEffect(
     () => () => {
-      requestRef.current?.abort();
+      activeRef.current = null;
+      cancelDeadlineRef.current?.();
+      workerRef.current?.terminate();
     },
     [],
   );
 
-  async function checkRecording() {
-    if (
-      requestRef.current ||
-      !consent ||
-      !audioBlob ||
-      !target.trim() ||
-      recordingBusy ||
-      availability !== "available"
-    )
-      return;
-    const controller = new AbortController();
-    requestRef.current = controller;
-    setPending(true);
-    setConsent(false);
+  function stopModel(reason: string) {
+    cancelDeadlineRef.current?.();
+    cancelDeadlineRef.current = null;
+    activeRef.current = null;
+    workerRef.current?.terminate();
+    workerRef.current = null;
+    setModelState("unloaded");
+    setProgress(null);
     setObservation(null);
+    setMessage(reason);
+  }
+
+  function armDeadline(id: string, phase: "load" | "analyse") {
+    cancelDeadlineRef.current?.();
+    cancelDeadlineRef.current = startLocalModelDeadline(
+      phase === "load"
+        ? LOCAL_MODEL_LOAD_TIMEOUT_MS
+        : LOCAL_MODEL_ANALYSIS_TIMEOUT_MS,
+      () => {
+        if (activeRef.current?.id !== id) return;
+        stopModel(
+          phase === "load"
+            ? "Loading the local model took too long. Try loading it again. Your recording and transcript are unchanged."
+            : "Local sound analysis took too long and was stopped. Try a shorter recording. Your recording and transcript are unchanged.",
+        );
+      },
+    );
+  }
+
+  function loadModel() {
+    if (workerRef.current || !audioBlob || recordingBusy) return;
+    if (typeof Worker === "undefined") {
+      setMessage(
+        "This browser cannot run the local sound model. Download the recording for your teacher.",
+      );
+      return;
+    }
+    const id = String(++serialRef.current);
+    activeRef.current = { id, phase: "load" };
+    armDeadline(id, "load");
+    setModelState("loading");
+    setProgress(null);
     setMessage(null);
-    const request = { referenceText: target.trim(), variant };
     try {
-      const wav = await preparePronunciationAudio(audioBlob);
-      if (controller.signal.aborted) return;
-      const form = new FormData();
-      form.set("audio", wav, "pronunciation.wav");
-      form.set("referenceText", request.referenceText);
-      form.set("variant", variant);
-      form.set("consent", "true");
-      const response = await fetch("/api/conversation/pronunciation", {
-        method: "POST",
-        body: form,
-        signal: controller.signal,
-        cache: "no-store",
-      });
-      const raw: unknown = await response.json();
-      if (controller.signal.aborted) return;
-      if (!response.ok) {
-        const reason =
-          typeof raw === "object" &&
-          raw !== null &&
-          "error" in raw &&
-          typeof raw.error === "string"
-            ? raw.error
-            : "Pronunciation checking is unavailable. No pronunciation result was created.";
-        throw new Error(reason);
-      }
-      const result = parsePronunciationObservation(raw);
-      if (
-        !matchesPronunciationRequest(result, request) ||
-        !pronunciationFitsRecording(result.words, (wav.size - 44) / 32000)
-      )
-        throw new Error(
-          "The response does not match this recording, target or English variant. It was not used.",
-        );
-      setObservation(result);
-    } catch (error) {
-      if (!controller.signal.aborted)
-        setMessage(
-          error instanceof Error
-            ? error.message
-            : "Pronunciation checking failed. Your recording and transcript are unchanged.",
-        );
-    } finally {
-      if (!controller.signal.aborted) {
-        requestRef.current = null;
-        setPending(false);
-      }
+      const worker = new Worker(
+        "/learning-core/local-pronunciation-worker.js",
+        { type: "module" },
+      );
+      workerRef.current = worker;
+      worker.onmessage = (event: MessageEvent<unknown>) => {
+        if (workerRef.current !== worker) return;
+        const raw = event.data;
+        if (
+          !raw ||
+          typeof raw !== "object" ||
+          !("requestId" in raw) ||
+          !("type" in raw) ||
+          raw.requestId !== activeRef.current?.id
+        )
+          return;
+        if (raw.type === "progress") {
+          if (
+            "loadedBytes" in raw &&
+            "totalBytes" in raw &&
+            typeof raw.loadedBytes === "number" &&
+            typeof raw.totalBytes === "number" &&
+            Number.isFinite(raw.loadedBytes) &&
+            Number.isFinite(raw.totalBytes) &&
+            raw.totalBytes > 0
+          ) {
+            setProgress(
+              Math.max(
+                0,
+                Math.min(
+                  100,
+                  Math.round((raw.loadedBytes / raw.totalBytes) * 100),
+                ),
+              ),
+            );
+          }
+        } else if (
+          raw.type === "ready" &&
+          activeRef.current?.phase === "load"
+        ) {
+          activeRef.current = null;
+          cancelDeadlineRef.current?.();
+          cancelDeadlineRef.current = null;
+          setModelState("ready");
+          setProgress(null);
+          setMessage(
+            "The local model is ready. Your audio stays on this device.",
+          );
+        } else if (
+          raw.type === "result" &&
+          activeRef.current?.phase === "analyse" &&
+          "result" in raw
+        ) {
+          try {
+            const result = parseLocalPronunciationObservation(raw.result);
+            if (
+              typeof activeRef.current.durationMs !== "number" ||
+              !matchesLocalRecordingDuration(
+                result.durationMs,
+                activeRef.current.durationMs * 16,
+              )
+            )
+              throw new Error(
+                "The local result does not match this recording.",
+              );
+            setObservation(result);
+            activeRef.current = null;
+            cancelDeadlineRef.current?.();
+            cancelDeadlineRef.current = null;
+            setModelState("ready");
+            setProgress(null);
+            setMessage(null);
+          } catch {
+            stopModel(
+              "The local model returned unusable sound estimates. No pronunciation result was created.",
+            );
+          }
+        } else if (raw.type === "error") {
+          const reason =
+            "error" in raw && typeof raw.error === "string"
+              ? raw.error.slice(0, 300)
+              : "The local model could not analyze this recording.";
+          stopModel(reason);
+        }
+      };
+      worker.onerror = () => {
+        if (workerRef.current === worker)
+          stopModel(
+            "The local speech model could not run. Check the download or try another browser; your recording is unchanged.",
+          );
+      };
+      worker.postMessage({ type: "load", requestId: id });
+    } catch {
+      stopModel("The local speech model could not start in this browser.");
     }
   }
 
+  async function analyse() {
+    const worker = workerRef.current;
+    if (
+      !worker ||
+      modelState !== "ready" ||
+      !audioBlob ||
+      recordingBusy ||
+      activeRef.current
+    )
+      return;
+    const id = String(++serialRef.current);
+    activeRef.current = { id, phase: "analyse" };
+    armDeadline(id, "analyse");
+    setModelState("analysing");
+    setMessage(null);
+    setProgress(null);
+    setObservation(null);
+    try {
+      const samples = await preparePronunciationSamples(audioBlob);
+      if (workerRef.current !== worker || activeRef.current?.id !== id) return;
+      activeRef.current = {
+        id,
+        phase: "analyse",
+        durationMs: samples.length / 16,
+      };
+      worker.postMessage(
+        { type: "analyse", requestId: id, samples, sampleRate: 16000 },
+        [samples.buffer],
+      );
+    } catch (error) {
+      if (workerRef.current !== worker || activeRef.current?.id !== id) return;
+      activeRef.current = null;
+      cancelDeadlineRef.current?.();
+      cancelDeadlineRef.current = null;
+      setModelState("ready");
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "The recording could not be prepared for local analysis.",
+      );
+    }
+  }
+
+  const busy = modelState === "loading" || modelState === "analysing";
   return (
     <div>
-      <label
+      <p>
+        Record first, then load the model. The first download is about 5 MB;
+        model files are cached for offline reuse. Audio is processed on this
+        device and is never uploaded.
+      </p>
+      <div
         style={{
           display: "flex",
-          alignItems: "start",
+          flexWrap: "wrap",
           gap: ".5rem",
-          marginBlock: "1rem",
+          marginBlock: ".75rem",
         }}
       >
-        <input
-          type="checkbox"
-          aria-label="Send this recording to Microsoft Azure Speech"
-          checked={consent}
-          disabled={
-            pending ||
-            recordingBusy ||
-            !audioBlob ||
-            availability !== "available"
-          }
-          onChange={(event) => setConsent(event.target.checked)}
-        />
-        <span>
-          I allow this recording and these target words to be sent to Microsoft
-          Azure Speech for this check. This is separate from text checking and
-          saving recordings.
-        </span>
-      </label>
-      <button
-        type="button"
-        className="primary"
-        disabled={
-          pending ||
-          recordingBusy ||
-          !audioBlob ||
-          !target.trim() ||
-          !consent ||
-          availability !== "available"
-        }
-        onClick={() => void checkRecording()}
-      >
-        {pending
-          ? "Checking the recording…"
-          : "Check pronunciation from recording"}
-      </button>
+        <button
+          type="button"
+          disabled={!audioBlob || recordingBusy || modelState !== "unloaded"}
+          onClick={loadModel}
+        >
+          Load local speech model
+        </button>
+        <button
+          type="button"
+          className="primary"
+          disabled={!audioBlob || recordingBusy || modelState !== "ready"}
+          onClick={() => void analyse()}
+        >
+          Analyze sounds on this device
+        </button>
+        {busy && (
+          <button
+            type="button"
+            onClick={() =>
+              stopModel(
+                "Local analysis was cancelled. Your recording is unchanged.",
+              )
+            }
+          >
+            Cancel local analysis
+          </button>
+        )}
+      </div>
+      {busy && (
+        <p role="status">
+          {modelState === "loading"
+            ? "Loading local model"
+            : "Analyzing audio on this device"}
+          {progress === null ? "…" : ` — ${progress}%`}
+        </p>
+      )}
       {message && <p role="status">{message}</p>}
       {observation && (
         <PronunciationResult observation={observation} onReplay={onReplay} />
@@ -238,16 +350,10 @@ function PronunciationRecording({
   audioBlob,
   audioUrl,
   recordingBusy,
-  target,
-  variant,
-  availability,
 }: {
   readonly audioBlob: Blob | null;
   readonly audioUrl: string | null;
   readonly recordingBusy: boolean;
-  readonly target: string;
-  readonly variant: string;
-  readonly availability: Availability;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const stopAtRef = useRef<number | null>(null);
@@ -259,31 +365,28 @@ function PronunciationRecording({
       audio?.pause();
     };
   }, []);
-
   function clearWordBoundary() {
     stopAtRef.current = null;
     seekTargetRef.current = null;
   }
-
   function replayWord(start: number, duration: number) {
     const audio = audioRef.current;
     const range = audio
       ? wordReplayRange(start, duration, audio.duration, audio.readyState)
       : null;
     if (!audio || !range) {
-      setPlaybackMessage("Use the recording player to listen to this word.");
+      setPlaybackMessage("Use the recording player to listen to this sound.");
       return;
     }
     setPlaybackMessage(null);
     stopAtRef.current = range.end;
     seekTargetRef.current = range.start;
-    audio.currentTime = seekTargetRef.current;
+    audio.currentTime = range.start;
     void audio.play().catch(() => {
       clearWordBoundary();
       setPlaybackMessage("Playback could not start. Use the recording player.");
     });
   }
-
   return (
     <>
       {audioUrl && audioBlob && !recordingBusy && (
@@ -302,11 +405,9 @@ function PronunciationRecording({
                 audio &&
                 seekTargetRef.current !== null &&
                 Math.abs(audio.currentTime - seekTargetRef.current) < 0.02
-              ) {
+              )
                 seekTargetRef.current = null;
-              } else {
-                clearWordBoundary();
-              }
+              else clearWordBoundary();
             }}
             onTimeUpdate={() => {
               const audio = audioRef.current;
@@ -331,11 +432,8 @@ function PronunciationRecording({
         </>
       )}
       {playbackMessage && <p role="status">{playbackMessage}</p>}
-      <PronunciationRequest
+      <LocalSoundAnalysis
         audioBlob={audioBlob}
-        target={target}
-        variant={variant}
-        availability={availability}
         recordingBusy={recordingBusy}
         onReplay={replayWord}
       />
@@ -357,35 +455,6 @@ export function PronunciationPanel({
   readonly variant: string;
 }) {
   const [target, setTarget] = useState("");
-  const [availability, setAvailability] = useState<Availability>("checking");
-  useEffect(() => {
-    const controller = new AbortController();
-    void fetch("/api/conversation/pronunciation", {
-      signal: controller.signal,
-      cache: "no-store",
-    })
-      .then(async (response) => {
-        const raw: unknown = await response.json();
-        if (controller.signal.aborted) return;
-        const available =
-          response.ok &&
-          typeof raw === "object" &&
-          raw !== null &&
-          "available" in raw &&
-          raw.available === true &&
-          "provider" in raw &&
-          raw.provider === "Microsoft Azure Speech" &&
-          "supportedVariants" in raw &&
-          Array.isArray(raw.supportedVariants) &&
-          raw.supportedVariants.includes(variant);
-        setAvailability(available ? "available" : "unavailable");
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setAvailability("unavailable");
-      });
-    return () => controller.abort();
-  }, [variant]);
-
   return (
     <section
       className="record-card speech-practice"
@@ -394,16 +463,9 @@ export function PronunciationPanel({
       <div className="record-main" style={{ minWidth: 0 }}>
         <h3>Pronunciation from recording</h3>
         <p>
-          Speech recognition guesses words and can hide sound differences. This
-          check uses the recording itself. Record a short phrase of up to 30
+          The local model estimates sounds from your recording instead of
+          replacing them with a guessed word. Record a short phrase of up to 30
           seconds.
-        </p>
-        <p role="status">
-          {availability === "checking"
-            ? "Checking audio-service availability…"
-            : availability === "available"
-              ? "Audio checking is available. Nothing is sent until you give permission and press the button."
-              : "Audio pronunciation checking is not switched on yet. No pronunciation result is available. You can download the original recording for your teacher."}
         </p>
         <label style={{ display: "block" }}>
           Words you intended to say
@@ -421,23 +483,14 @@ export function PronunciationPanel({
           />
         </label>
         <p>
-          Enter the intended words yourself, including repetitions. This field
-          is never filled from the recognized transcript. Selected variant:{" "}
-          {variant}.
+          Optional notes for your own comparison. These words are never sent to
+          the sound model. Selected practice variant: {variant}; the model does
+          not grade your accent.
         </p>
-        {variant === "en-GB" && (
-          <p>
-            Named likely spoken sounds are unavailable for British English with
-            this service. Your selected variant is preserved.
-          </p>
-        )}
         <PronunciationRecording
-          key={`${recordingVersion}:${audioUrl ?? ""}:${variant}:${target}`}
+          key={`${recordingVersion}:${audioUrl ?? ""}`}
           audioBlob={audioBlob}
           audioUrl={audioUrl}
-          target={target}
-          variant={variant}
-          availability={availability}
           recordingBusy={recordingBusy}
         />
       </div>
